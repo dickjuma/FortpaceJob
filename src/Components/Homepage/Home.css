@@ -1,0 +1,245 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+
+.home-page {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+
+.home-page {
+  background: #00e5ff;
+  color: #eaf6f6;
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+  width: 100vw; /* full width */
+}
+
+/* === HERO SECTION === */
+.home-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  flex-direction: column;
+  
+}
+
+.home-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.cursor {
+  animation: blink 1s step-end infinite;
+  color: #00e5ff;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.get-started-btn {
+  margin-top: 25px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  background-color: lab(3.92% -1.76 -0.62) 4% 94%);
+  color: #01161e;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.get-started-btn:hover {
+  background-color: #00bcd4;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 229, 255, 0.4);
+}
+
+/* === CATEGORIES SECTION === */
+.categories-section {
+  background: #f9fafa;
+  color: #111;
+  padding: 100px 5%; /* full width padding */
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #012a36;
+  margin-bottom: 10px;
+}
+
+.section-subtitle {
+  margin-top: 0;
+  color: #555;
+  font-size: 1.1rem;
+  margin-bottom: 50px;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  justify-items: center;
+  align-items: stretch;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.category-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 25px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+.categories-grid :hover{
+  background-color: #00acc1;
+}
+.category-card h3 {
+  margin-top: 15px;
+  font-size: 1.2rem;
+  color: #012a36;
+}
+
+.category-icon {
+  font-size: 2rem;
+  color: #00bcd4;
+}
+
+/* === CITIES SECTION === */
+.cities-section {
+  background: linear-gradient(135deg, #002f4b, #00acc1);
+  color: #fff;
+  text-align: center;
+  padding: 100px 5%;
+}
+
+.cities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 40px auto 0;
+}
+
+.city-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 30px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.city-card:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 229, 255, 0.3);
+}
+
+/* === MEMBERSHIP SECTION === */
+.membership-section {
+  background: #f9fafa;
+  color: #111;
+  padding: 100px 5%;
+  text-align: center;
+}
+
+.membership-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 35px;
+  max-width: 1200px;
+  margin: 40px auto 0;
+}
+
+.membership-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 30px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.membership-card .tier {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #012a36;
+}
+
+.membership-card .price {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #00bcd4;
+  margin: 10px 0 20px;
+}
+
+.membership-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+
+.membership-card li {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.join-btn {
+  background-color: #00bcd4;
+  border: none;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.join-btn:hover {
+  background-color: #0097a7;
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 229, 255, 0.4);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+  .categories-grid,
+  .cities-grid,
+  .membership-grid {
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-title {
+    font-size: 2.2rem;
+  }
+
+  .categories-section,
+  .cities-section,
+  .membership-section {
+    padding: 60px 5%;
+  }
+}
