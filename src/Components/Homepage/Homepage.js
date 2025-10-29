@@ -76,7 +76,7 @@ const HomePage = () => {
     <div className="home-page">
       {/* HERO SECTION */}
       <header className="hero-section">
-        {/* ✅ Fixed: replaced <Image> tag with proper <img> */}
+       
         <img src={Image3} alt="Hero background" className="hero-video" />
 
         <div className="hero-overlay" />
