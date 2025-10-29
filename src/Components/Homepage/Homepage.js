@@ -1,158 +1,189 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "./Home.css";
+import HomeVideo from "../../Assets/4828605-uhd_4096_2160_25fps.mp4";
+import Image from "../../Assets/Coloredlogo.jpg";
+import Image1 from "../../Assets/image2.jpg";
 
 const HomePage = () => {
-  const [displayedText, setDisplayedText] = useState("");
-  const [showButton, setShowButton] = useState(false);
+  const [typed, setTyped] = useState("");
+  const [showCTA, setShowCTA] = useState(false);
+  const [tagIndex, setTagIndex] = useState(0);
 
-  const fullText = "Welcome to Fortespace";
+  const title = "Welcome to Fortespace";
+  const taglines = [
+    "Hire top freelancers in tech, design, marketing & more",
+    "Find experts to bring your ideas to life",
+    "Get projects done faster, smarter, and better",
+    "Connect with talent and grow your business online",
+  ];
+
 
   useEffect(() => {
-    let index = 0;
-    const interval = setInterval(() => {
-      setDisplayedText(fullText.slice(0, index + 1));
-      index++;
-
-      if (index === fullText.length) {
-        clearInterval(interval);
-        setTimeout(() => setShowButton(true), 600);
+    let idx = 0;
+    const t = setInterval(() => {
+      setTyped(title.slice(0, idx + 1));
+      idx++;
+      if (idx >= title.length) {
+        clearInterval(t);
+        setTimeout(() => setShowCTA(true), 600);
       }
-    }, 70);
-
-    return () => clearInterval(interval);
+    }, 45);
+    return () => clearInterval(t);
   }, []);
 
+  // Rotating tagline effect
+  useEffect(() => {
+    const r = setInterval(() => setTagIndex((p) => (p + 1) % taglines.length), 4000);
+    return () => clearInterval(r);
+  }, []);
+
+  // Categories
   const categories = [
-    { title: "Information Technology", icon: "" },
-    { title: "Marketing & Sales", icon: "" },
-    { title: "Customer Support", icon: "" },
-    { title: "Human Resources", icon: "" },
-    { title: "Finance & Accounting", icon: "" },
-    { title: "Design & Creative", icon: "" },
-    { title: "Engineering", icon: "" },
-    { title: "Healthcare", icon: "" },
+    { name: "Design & Creative", desc: "Branding, logos, UI/UX, illustration", img: Image },
+    { name: "Development & Tech", desc: "Websites, apps, software, AI & automation", img: Image },
+    { name: "Digital Marketing", desc: "SEO, social media, advertising, content marketing", img: Image },
+    { name: "Writing & Translation", desc: "Copywriting, blogs, translations, editing", img: Image },
+    { name: "Video & Animation", desc: "Editing, motion graphics, explainer videos", img: Image },
+    { name: "Business & Admin", desc: "Data entry, virtual assistance, consulting", img: Image },
+    { name: "Business & Admin", desc: "Data entry, virtual assistance, consulting", img: Image },
+    { name: "Business & Admin", desc: "Data entry, virtual assistance, consulting", img: Image },
+  
   ];
 
-  const cities = [
-    "Nairobi", "Mombasa", "Kisumu", "Eldoret", 
-    "Nakuru", "Thika", "Machakos", "Naivasha",
-      "Bungoma", "Busia", "Turkana", "Kilifi"
+  // Freelancers
+  const freelancers = [
+    { name: "Dickson j.", role: "Logo Designer", rating: 4.9, img: Image1 },
+    { name: "Dickson j.", role: "Full-Stack Developer", rating: 4.8, img: Image1 },
+    { name: "Dickson j.", role: "Social Media Expert", rating: 5.0, img: Image1 },
+    { name: "Dickson j.", role: "Video Editor", rating: 4.7, img: Image1 },
+    { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
+     { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
+      { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
+       { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
+        { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
+         { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
+          { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
   ];
 
-  const memberships = [
-    { tier: "Basic", price: "Ksh:100", features: ["Access to job listings", "Email notifications", "Profile visibility"] },
-    { tier: "Premium", price: "Ksh:500", features: ["Priority listings", "Employer insights", "Advanced job filters", "1-on-1 support"] },
-    { tier: "Enterprise", price: "Ksh:1500", features: ["Dedicated account manager", "Team hiring tools", "Full analytics dashboard"] },
+  // Trending Projects
+  const trendingProjects = [
+    { name: "E-commerce Website", price: "from Ksh 2,500", img: Image },
+    { name: "Brand Logo Design", price: "from Ksh 500", img: Image },
+    { name: "Social Media Campaign", price: "from Ksh 700", img: Image },
+    { name: "Explainer Video", price: "from Ksh 900", img: Image },
+        { name: "Explainer Video", price: "from Ksh 900", img: Image },
+            { name: "Explainer Video", price: "from Ksh 900", img: Image },
+                { name: "Explainer Video", price: "from Ksh 900", img: Image },
+                    { name: "Explainer Video", price: "from Ksh 900", img: Image },
   ];
 
   return (
     <div className="home-page">
-     
-      <section className="home-container" id="hero">
-        <motion.div
-          className="home-content"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <h1 className="home-title">
-            {displayedText.split("").map((char, i) => (
-              <motion.span
-                key={i}
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.15 }}
-              >
-                {char}
-              </motion.span>
-            ))}
+      {/* HERO SECTION */}
+      <header className="hero-section">
+        <video className="hero-video" autoPlay muted loop playsInline>
+          <source src={HomeVideo} type="video/mp4" />
+        </video>
+        <div className="hero-overlay" />
+        <div className="hero-content">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="hero-title"
+          >
+            {typed}
             <span className="cursor">|</span>
-          </h1>
+          </motion.h1>
 
-          {showButton && (
-            <motion.button
-              className="get-started-btn"
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              onClick={() =>
-                window.scrollTo({ top: window.innerHeight, behavior: "smooth" })
-              }
-            >
-              Get-Started
+          <motion.p
+            key={tagIndex}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="hero-tagline"
+          >
+            {taglines[tagIndex]}
+          </motion.p>
+
+          <div className="hero-search">
+            <input placeholder="Search for freelancers or services..." />
+            <button>Search</button>
+          </div>
+
+          {showCTA && (
+            <motion.button className="hero-cta" whileHover={{ scale: 1.05 }}>
+              Get Started
             </motion.button>
           )}
-        </motion.div>
-      </section>
+        </div>
+      </header>
 
-      {/* ---- Categories Section ---- */}
-      <section className="categories-section" id="categories">
-        <h2 className="section-title">Explore Job Categories</h2>
-        <p className="section-subtitle">
-          Find your next opportunity in our top hiring sectors.
-        </p>
-
+      {/* CATEGORIES SECTION */}
+      <section className="categories-section full-width">
+        <h2>Explore Categories</h2>
+        <p>Find the perfect freelancer for any project or skill set.</p>
         <div className="categories-grid">
-          {categories.map((cat, index) => (
-            <motion.div
-              key={index}
-              className="category-card"
-              whileHover={{ scale: 1.07, y: -5 }}
-              transition={{ type: "spring", stiffness: 200 }}
-            >
-              <div className="category-icon">{cat.icon}</div>
-              <h3>{cat.title}</h3>
+          {categories.map((c, i) => (
+            <motion.div key={i} className="category-card" whileHover={{ scale: 1.05 }}>
+              <img src={c.img} alt={c.name} loading="lazy" />
+              <h3>{c.name}</h3>
+              <p>{c.desc}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* ---- Cities Section ---- */}
-      <section className="cities-section">
-        <h2 className="section-title">We’re Active In</h2>
-        <p className="section-subtitle">Find opportunities in your city.</p>
-
-        <div className="cities-grid">
-          {cities.map((city, i) => (
-            <motion.div
-              key={i}
-              className="city-card"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 200 }}
-            >
-              <h3>{city}</h3>
+      {/* FREELANCERS SECTION */}
+      <section className="freelancers-section full-width">
+        <h2>Top Rated Freelancers</h2>
+        <p>Hand-picked professionals ready to start your project.</p>
+        <div className="freelancers-carousel">
+          {freelancers.map((f, i) => (
+            <motion.div key={i} className="freelancer-card" whileHover={{ scale: 1.05 }}>
+              <img src={f.img} alt={f.name} loading="lazy" />
+              <h3>{f.name}</h3>
+              <p>{f.role}</p>
+              <p>⭐ {f.rating}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* ---- Membership Section ---- */}
-      <section className="membership-section">
-        <h2 className="section-title">Join Forte space Membership</h2>
-        <p className="section-subtitle">
-          Unlock benefits that help you stand out and connect with top employers.
-        </p>
-
-        <div className="membership-grid">
-          {memberships.map((plan, i) => (
-            <motion.div
-              key={i}
-              className="membership-card"
-              whileHover={{ y: -8, scale: 1.03 }}
-              transition={{ type: "spring", stiffness: 250 }}
-            >
-              <h3 className="tier">{plan.tier}</h3>
-              <p className="price">{plan.price}</p>
-              <ul>
-                {plan.features.map((feat, idx) => (
-                  <li key={idx}>{feat}</li>
-                ))}
-              </ul>
-              <button className="join-btn">Join Now</button>
+      {/* TRENDING PROJECTS SECTION */}
+      <section className="trending-section full-width">
+        <h2>Trending Projects</h2>
+        <p>Most requested services by clients this month.</p>
+        <div className="trending-grid">
+          {trendingProjects.map((t, i) => (
+            <motion.div key={i} className="trending-card" whileHover={{ y: -8 }}>
+              <img src={t.img} alt={t.name} loading="lazy" />
+              <h3>{t.name}</h3>
+              <p>{t.price}</p>
             </motion.div>
           ))}
         </div>
+      </section>
+
+      {/* POPULAR BADGES SECTION */}
+      <section className="badges-section full-width">
+        <h2>Popular Services</h2>
+        <div className="badges-grid">
+          {categories.map((c, i) => (
+            <motion.div key={i} className="badge-card" whileHover={{ scale: 1.05 }}>
+              <p>{c.name}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* CALL TO ACTION SECTION */}
+      <section className="cta-section full-width">
+        <motion.h2 whileHover={{ scale: 1.02 }}>
+          Ready to hire top freelancers or start your project?
+        </motion.h2>
+        <motion.button whileHover={{ scale: 1.05 }}>Explore Services</motion.button>
       </section>
     </div>
   );

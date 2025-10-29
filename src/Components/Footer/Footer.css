@@ -5,10 +5,11 @@
   --text-color: #eaf6f6;
 }
 
+/* ===== FOOTER BASE ===== */
 .classic-footer {
   background: linear-gradient(135deg, var(--dark-bg), var(--light-bg));
   color: var(--text-color);
-  padding: 50px 60px 20px;
+  padding: 60px 60px 25px;
   font-family: "Poppins", sans-serif;
   box-shadow: 0 -4px 25px rgba(0, 229, 255, 0.08);
   border-top: 1px solid rgba(0, 229, 255, 0.25);
@@ -24,7 +25,7 @@
   gap: 40px;
 }
 
-/* ---- About Section ---- */
+/* ===== ABOUT SECTION ===== */
 .footer-logo {
   font-size: 1.8rem;
   font-weight: 700;
@@ -43,7 +44,7 @@
   max-width: 280px;
 }
 
-/* ---- Links ---- */
+/* ===== LINKS ===== */
 .footer-section.links ul {
   list-style: none;
   padding: 0;
@@ -65,7 +66,7 @@
   text-decoration: underline;
 }
 
-/* ---- Newsletter ---- */
+/* ===== NEWSLETTER ===== */
 .footer-section.newsletter .subscribe-input {
   display: flex;
   align-items: center;
@@ -96,7 +97,7 @@
   background-color: #00bcd4;
 }
 
-/* ---- Socials ---- */
+/* ===== SOCIALS ===== */
 .social-icons {
   display: flex;
   flex-direction: column;
@@ -115,7 +116,7 @@
   transform: scale(1.2);
 }
 
-/* ---- Bottom Line ---- */
+/* ===== BOTTOM LINE ===== */
 .footer-bottom {
   text-align: center;
   margin-top: 40px;
@@ -125,12 +126,13 @@
   color: #b5e3e8;
 }
 
-/* ---- Responsive ---- */
+/* ===== TABLET VIEW ===== */
 @media (max-width: 900px) {
   .footer-container {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 30px;
   }
 
   .footer-section p {
@@ -144,5 +146,67 @@
 
   .subscribe-input {
     justify-content: center;
+  }
+}
+
+/* ===== MOBILE VIEW ===== */
+@media (max-width: 600px) {
+  .classic-footer {
+    padding: 50px 20px 25px;
+  }
+
+  .footer-logo {
+    font-size: 1.5rem;
+  }
+
+  .footer-container {
+    gap: 25px;
+  }
+
+  .footer-section {
+    width: 100%;
+  }
+
+  .footer-section p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .footer-section.links ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .footer-section.links li {
+    margin: 0;
+  }
+
+  .subscribe-input {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .subscribe-input input {
+    width: 100%;
+    border-radius: 25px;
+  }
+
+  .subscribe-input button {
+    width: 100%;
+    border-radius: 25px;
+  }
+
+  .social-icons {
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .footer-bottom {
+    font-size: 0.8rem;
+    margin-top: 30px;
   }
 }
