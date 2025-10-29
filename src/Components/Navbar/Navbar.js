@@ -36,8 +36,8 @@ const Navbar = () => {
       {/* ===== DESKTOP NAV LINKS ===== */}
       <ul className="nav-links">
         <li><NavLink to="/" className="nav-item">Home</NavLink></li>
-        <li><NavLink to="/jobs" className="nav-item">Find Jobs</NavLink></li>
-        <li><NavLink to="/apply" className="nav-item">Apply</NavLink></li>
+        <li><NavLink to="/jobs" className="nav-item">Hire Talent</NavLink></li>
+   
         <li><NavLink to="/contact" className="nav-item">Contact</NavLink></li>
         <li
           className="nav-item dropdown"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "./Home.css";
-import HomeVideo from "../../Assets/4828605-uhd_4096_2160_25fps.mp4";
+import Image3 from "../../Assets/Image3.jpg";
 import Image from "../../Assets/Coloredlogo.jpg";
 import Image1 from "../../Assets/image2.jpg";
 
@@ -18,7 +18,6 @@ const HomePage = () => {
     "Connect with talent and grow your business online",
   ];
 
-
   useEffect(() => {
     let idx = 0;
     const t = setInterval(() => {
@@ -32,13 +31,11 @@ const HomePage = () => {
     return () => clearInterval(t);
   }, []);
 
-  // Rotating tagline effect
   useEffect(() => {
     const r = setInterval(() => setTagIndex((p) => (p + 1) % taglines.length), 4000);
     return () => clearInterval(r);
   }, []);
 
-  // Categories
   const categories = [
     { name: "Design & Creative", desc: "Branding, logos, UI/UX, illustration", img: Image },
     { name: "Development & Tech", desc: "Websites, apps, software, AI & automation", img: Image },
@@ -48,43 +45,40 @@ const HomePage = () => {
     { name: "Business & Admin", desc: "Data entry, virtual assistance, consulting", img: Image },
     { name: "Business & Admin", desc: "Data entry, virtual assistance, consulting", img: Image },
     { name: "Business & Admin", desc: "Data entry, virtual assistance, consulting", img: Image },
-  
   ];
 
-  // Freelancers
   const freelancers = [
     { name: "Dickson j.", role: "Logo Designer", rating: 4.9, img: Image1 },
     { name: "Dickson j.", role: "Full-Stack Developer", rating: 4.8, img: Image1 },
     { name: "Dickson j.", role: "Social Media Expert", rating: 5.0, img: Image1 },
     { name: "Dickson j.", role: "Video Editor", rating: 4.7, img: Image1 },
     { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
-     { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
-      { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
-       { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
-        { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
-         { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
-          { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
+    { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
+    { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
+    { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
+    { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
+    { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
+    { name: "Dickson j.", role: "SEO Specialist", rating: 4.9, img: Image1 },
   ];
 
-  // Trending Projects
   const trendingProjects = [
     { name: "E-commerce Website", price: "from Ksh 2,500", img: Image },
     { name: "Brand Logo Design", price: "from Ksh 500", img: Image },
     { name: "Social Media Campaign", price: "from Ksh 700", img: Image },
     { name: "Explainer Video", price: "from Ksh 900", img: Image },
-        { name: "Explainer Video", price: "from Ksh 900", img: Image },
-            { name: "Explainer Video", price: "from Ksh 900", img: Image },
-                { name: "Explainer Video", price: "from Ksh 900", img: Image },
-                    { name: "Explainer Video", price: "from Ksh 900", img: Image },
+    { name: "Explainer Video", price: "from Ksh 900", img: Image },
+    { name: "Explainer Video", price: "from Ksh 900", img: Image },
+    { name: "Explainer Video", price: "from Ksh 900", img: Image },
+    { name: "Explainer Video", price: "from Ksh 900", img: Image },
   ];
 
   return (
     <div className="home-page">
       {/* HERO SECTION */}
       <header className="hero-section">
-        <video className="hero-video" autoPlay muted loop playsInline>
-          <source src={HomeVideo} type="video/mp4" />
-        </video>
+        {/* ✅ Fixed: replaced <Image> tag with proper <img> */}
+        <img src={Image3} alt="Hero background" className="hero-video" />
+
         <div className="hero-overlay" />
         <div className="hero-content">
           <motion.h1
