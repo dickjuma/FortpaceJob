@@ -52,6 +52,7 @@ const Navbar = () => {
               <li onClick={() => navigate("/categories")}>Categories</li>
               <li onClick={() => navigate("/talent")}>Top Talent</li>
               <li onClick={() => navigate("/insights")}>Insights</li>
+               <li onClick={() => navigate("/Postedjobs")}>Jobs/Projects</li>
             </ul>
           )}
         </li>

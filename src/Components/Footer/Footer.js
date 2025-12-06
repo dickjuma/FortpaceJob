@@ -10,14 +10,9 @@ const Footer = () => {
         {/* ---- About Section ---- */}
         <div className="footer-section about">
           <h2 className="footer-logo">
-            Forte space<span className="highlight">Jobs</span>
+            Forte space<span className="highlight"></span>
           </h2>
-          <p>
-            Empowering, Aspirational, Assuring, Vibrant, Youthful,
-           Hip and Disruptive. We are not just a tool; we are the catalyst for personal 
-           and financial transformation. We should also communicate authority and reliability.
-            We are also here to challenge 'the norms' of work culture.
-          </p>
+        
         </div>
 
         {/* ---- Quick Links ---- */}
@@ -29,6 +24,7 @@ const Footer = () => {
             <li><a href="/apply">Apply</a></li>
             <li><a href="/contact">Contact</a></li>
             <li><a href="/about">About Us</a></li>
+            <li><a href="/Howitworks">How it works</a></li>
           </ul>
         </div>
 
