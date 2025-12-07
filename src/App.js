@@ -4,7 +4,9 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar/Navbar"
 import Footer from "./Components/Footer/Footer";
-
+import Signup from "./Components/Loginsignup/signup";
+import Signin from "./Components/Loginsignup/Signin";
+import ForgotPassword from "./Components/Loginsignup/Forgotpassword";
 function App() {
   return (
     <div>
@@ -12,6 +14,9 @@ function App() {
     <main>
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/signin" element={<Signin />} />
+      <Route path="/forgot" element={<ForgotPassword />} />
     </Routes>
     </main>
     <Footer/>

@@ -1,0 +1,163 @@
+:root {
+  --primary: #4A312F;
+  --secondary: #F7F9FB;
+  --cta: #D34079;
+  --accent1: #FBB9C2;
+  --accent2: #B7E2BF;
+}
+
+body {
+  background: var(--secondary);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.login-card {
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-card h2 {
+  color: var(--primary);
+  margin-bottom: 10px;
+  font-size: 2rem;
+}
+
+.login-guidance {
+  color: #6B5B50;
+  margin-bottom: 25px;
+  font-size: 1rem;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.login-form input:focus {
+  border-color: var(--cta);
+  box-shadow: 0 0 10px rgba(211,64,121,0.2);
+}
+
+.forgot-password {
+  display: block;
+  text-align: right;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  color: var(--cta);
+}
+
+.btn-login {
+  width: 100%;
+  padding: 14px 0;
+  border: none;
+  border-radius: 14px;
+  background: var(--cta);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+  background: #b12f65;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.divider span {
+  flex: 1;
+  height: 1px;
+  background: #ccc;
+  position: relative;
+}
+
+.divider span::after {
+  content: "OR";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  padding: 0 10px;
+  color: #999;
+  font-weight: 600;
+}
+
+.alt-login {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.alt-btn {
+  padding: 12px 0;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.alt-btn.google {
+  background: #fbb9c2;
+  color: #4A312F;
+}
+
+.alt-btn.google:hover {
+  background: #e69fae;
+}
+
+.alt-btn.facebook {
+  background: #b7e2bf;
+  color: #4A312F;
+}
+
+.alt-btn.facebook:hover {
+  background: #a2d3a7;
+}
+
+.signup-link {
+  font-size: 0.95rem;
+  color: var(--primary);
+}
+
+.signup-link a {
+  color: var(--cta);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.signup-link a:hover {
+  color: #b12f65;
+}
