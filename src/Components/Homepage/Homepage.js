@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image3 from "../../Assets/Image3.jpg";
-import { categories, freelancers, trendingProjects } from "../../Assets/assets";
-import { useNavigate } from "react-router-dom";
+import { categories, } from "../../Assets/assets";
 import ToggleButton from "../ToggleButton";
 import Cards from "../Cards";
 import CTA from "../CTA";
 
 const HomePage = () => {
-  const navigate = useNavigate();
   const [typed, setTyped] = useState("");
   const [showCTA, setShowCTA] = useState(false);
   const [isHiring, setIsHiring] = useState(false);
