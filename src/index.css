@@ -1,3 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #4A312F;       /* Deep Chocolate Brown */
+  --color-secondary: #F7F9FB;     /* Clean White / Light Gray */
+  
+  --accent-pink: #FBB9C2;         /* Creamy Pink Pale */
+  --accent-mint: #B7E2BF;         /* Creamy Mint Pale */
+
+  --color-cta: #D34079;           /* Rich Raspberry */
+}
+
+*{
+  font-family: "Outfit", sans-serif;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

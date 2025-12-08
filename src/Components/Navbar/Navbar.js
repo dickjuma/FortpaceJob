@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import "./Navbar.css";
-import Logo from "../../Assets/Coloredlogo.jpg";
+import Logo from "../../Assets/logo.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -27,18 +27,14 @@ const Navbar = () => {
     <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
       {/* ===== LEFT SECTION ===== */}
       <div className="nav-left" onClick={() => navigate("/")}>
-        <img src={Logo} alt="Fortspace Logo" className="nav-logo" />
-        <h2 className="nav-brand">
-          Fortespace<span className="highlight">Jobs</span>
-        </h2>
+        <img src={Logo} alt="Fortspace Logo" className="w-32 sm:w-40 md:w-48 lg:w-56 h-auto" />
       </div>
 
       {/* ===== DESKTOP NAV LINKS ===== */}
       <ul className="nav-links">
-        <li><NavLink to="/" className="nav-item">Home</NavLink></li>
-        <li><NavLink to="/jobs" className="nav-item">Hire Talent</NavLink></li>
-   
-        <li><NavLink to="/contact" className="nav-item">Contact</NavLink></li>
+        <li><NavLink to="/talent" className="nav-item">Hire Talent</NavLink></li>
+        <li><NavLink to="/jobs" className="nav-item">Find Work</NavLink></li>
+  
         <li
           className="nav-item dropdown"
           onMouseEnter={() => setShowDropdown(true)}
@@ -56,6 +52,7 @@ const Navbar = () => {
             </ul>
           )}
         </li>
+        <li><NavLink to="/pricing" className="nav-item">Pricing</NavLink></li>
       </ul>
 
       {/* ===== RIGHT SECTION ===== */}

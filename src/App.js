@@ -1,5 +1,4 @@
 import React from "react";
-import HomePage from "./Components/Homepage/Homepage";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar/Navbar"
@@ -7,6 +6,7 @@ import Footer from "./Components/Footer/Footer";
 import Signup from "./Components/Loginsignup/signup";
 import Signin from "./Components/Loginsignup/Signin";
 import ForgotPassword from "./Components/Loginsignup/Forgotpassword";
+import HomePage from "./Components/Homepage/Homepage";
 function App() {
   return (
     <div>
