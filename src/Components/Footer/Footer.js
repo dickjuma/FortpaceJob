@@ -1,57 +1,86 @@
 import React from "react";
-import "./Footer.css";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from "react-icons/fa";
+import Logo from "../../Assets/logo.png";
+import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="classic-footer">
-      <div className="footer-container">
-
+    <footer className="bg-[var(--color-secondary)] text-[var(--color-primary)] p-8 px-6 md:px-16 lg:px-24 xl:px-32">
+      <div className="flex flex-wrap justify-between gap-12 md:gap-6">
         {/* ---- About Section ---- */}
         <div className="footer-section about">
-          <h2 className="footer-logo">
-            Forte space<span className="highlight"></span>
-          </h2>
-        
+          <img
+            src={Logo}
+            alt="Fortspace Logo"
+            className="w-32 sm:w-40 md:w-48 lg:w-56 h-auto"
+          />
         </div>
 
         {/* ---- Quick Links ---- */}
-        <div className="footer-section links">
-          <h3>Quick Links</h3>
-          <ul>
-            <li><a href="/home">Home</a></li>
-            <li><a href="/jobs">Find Jobs</a></li>
-            <li><a href="/apply">Apply</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/about">About Us</a></li>
-            <li><a href="/Howitworks">How it works</a></li>
+
+        <div>
+          <p className="text-lg ">FOR CLIENTS</p>
+          <ul className="mt-3 flex flex-col gap-2 text-sm">
+            <li>
+              <a href="/">How to Hire</a>
+            </li>
           </ul>
         </div>
 
-        {/* ---- Newsletter ---- */}
-        <div className="footer-section newsletter">
-          <h3>Stay Updated</h3>
-          <p>Subscribe for new job alerts and updates.</p>
-          <div className="subscribe-input">
-            <input type="email" placeholder="Your Email Address" />
-            <button>Subscribe</button>
-          </div>
+        <div>
+          <p className="text-lg">FOR TALENT</p>
+          <ul className="mt-3 flex flex-col gap-2 text-sm">
+            <li>
+              <a href="/">How to to find work</a>
+            </li>
+          </ul>
         </div>
 
-        {/* ---- Socials ---- */}
-        <div className="footer-section socials">
-          <h3>Connect</h3>
-          <div className="social-icons">
-            <a href="#"><FaFacebookF /></a>
-            <a href="#"><FaTwitter /></a>
-            <a href="#"><FaLinkedinIn /></a>
-            <a href="#"><FaInstagram /></a>
-          </div>
+        <div>
+          <p className="text-lg text-gray-800">COMPANY</p>
+          <ul className="mt-3 flex flex-col gap-2 text-sm">
+            <li>
+              <a href="/">About us</a>
+            </li>
+            <li>
+              <a href="/">Contact us</a>
+            </li>
+            <li>
+              <a href="/">Terms of Service</a>
+            </li>
+            <li>
+              <a href="/">FAQs / Help $ support</a>
+            </li>
+            <li>
+              <a href="/">Trust, Safety $ Security</a>
+            </li>
+            <li>
+              <a href="/">Impact</a>
+            </li>
+            <li>
+              <a href="/">Privacy Policy</a>
+            </li>
+            <li>
+              <a href="/">Careers</a>
+            </li>
+            <li>
+              <a href="/">Affiliates</a>
+            </li>
+            <li>
+              <a href="/">Investor Relations</a>
+            </li>
+          </ul>
         </div>
       </div>
 
       {/* ---- Bottom Line ---- */}
-      <div className="footer-bottom">
+      <hr className='border-gray-300 mt-8' />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3 mt-4">
+          <Instagram className="w-6 h-6" />
+          <Facebook className="w-6 h-6"/>
+          <Twitter className="w-6 h-6"/>
+          <Linkedin className="w-6 h-6"/>
+        </div>
         <p>© {new Date().getFullYear()} Fortspace Jobs — All Rights Reserved</p>
       </div>
     </footer>
