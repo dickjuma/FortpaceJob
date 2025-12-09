@@ -13,7 +13,7 @@ const HomePage = () => {
   const [tagIndex, setTagIndex] = useState(0);
 
   const title =
-    "A One Stop Shop for all your services and talent needs connecting clients to Experts";
+    "A one stop shop for all your service needs bridging the gap between talent and opportunity.";
   const taglines = [
     "Hire top freelancers in tech, design, marketing & more",
     "Find experts to bring your ideas to life",
