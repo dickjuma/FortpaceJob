@@ -7,6 +7,7 @@ import Signup from "./Components/Loginsignup/signup";
 import Signin from "./Components/Loginsignup/Signin";
 import ForgotPassword from "./Components/Loginsignup/Forgotpassword";
 import HomePage from "./Components/Homepage/Homepage";
+import Pricing from "./Components/PricingPage/Pricing";
 function App() {
   return (
     <div>
@@ -17,6 +18,7 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/signin" element={<Signin />} />
       <Route path="/forgot" element={<ForgotPassword />} />
+      <Route path="/pricing" element={<Pricing />} />
     </Routes>
     </main>
     <Footer/>

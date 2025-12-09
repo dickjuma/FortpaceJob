@@ -82,6 +82,7 @@ const Navbar = () => {
           <NavLink to="/categories" onClick={() => setMenuOpen(false)}>Categories</NavLink>
           <NavLink to="/talent" onClick={() => setMenuOpen(false)}>Top Talent</NavLink>
           <NavLink to="/insights" onClick={() => setMenuOpen(false)}>Insights</NavLink>
+          <NavLink to="/pricing" onClick={() => setMenuOpen(false)}>Pricing</NavLink>
 
           <button
             className="join-btn"
