@@ -7,7 +7,7 @@ const Pricing = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="py-12 md:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-[var(--color-primary)]">
+    <div className="py-8 md:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-[var(--color-primary)]">
     
       <div className="text-center max-w-3xl mx-auto mb-16">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--accent-mint)] rounded-full text-sm font-medium mb-6">
