@@ -1,6 +1,7 @@
 import React from "react";
 import Logo from "../../Assets/logo.png";
 import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -39,7 +40,7 @@ const Footer = () => {
           <p className="text-lg text-gray-800">COMPANY</p>
           <ul className="grid grid-cols-2 md:grid-cols-1 gap-x-6 gap-y-3">
             <li>
-              <a href="/">About us</a>
+              <NavLink to='/about'>About us</NavLink>
             </li>
             <li>
               <a href="/">Contact us</a>
@@ -48,10 +49,10 @@ const Footer = () => {
               <a href="/">Terms of Service</a>
             </li>
             <li>
-              <a href="/">FAQs / Help $ support</a>
+              <a href="/">FAQs / Help & support</a>
             </li>
             <li>
-              <a href="/">Trust, Safety $ Security</a>
+              <a href="/">Trust, Safety & Security</a>
             </li>
             <li>
               <a href="/">Impact</a>

@@ -8,9 +8,14 @@ import Signin from "./Components/Loginsignup/Signin";
 import ForgotPassword from "./Components/Loginsignup/Forgotpassword";
 import HomePage from "./Components/Homepage/Homepage";
 import Pricing from "./Components/PricingPage/Pricing";
+import ScrollToTop from "./Components/ScrollToTop";
+import About from "./Components/About/About";
+
+
 function App() {
   return (
     <div>
+    <ScrollToTop />
     <Navbar/>
     <main>
     <Routes>
@@ -19,6 +24,7 @@ function App() {
       <Route path="/signin" element={<Signin />} />
       <Route path="/forgot" element={<ForgotPassword />} />
       <Route path="/pricing" element={<Pricing />} />
+      <Route path="/about" element={<About />} />
     </Routes>
     </main>
     <Footer/>
