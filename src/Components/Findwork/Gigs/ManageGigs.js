@@ -1,15 +1,16 @@
-// src/components/findWork/Gigs/ManageGigs.jsx
 import React, { useState } from "react";
 import { 
   MoreVertical, Edit3, Eye, Trash2, 
   ChevronDown, ArrowUpRight, BarChart2, 
   Pause, Play, Copy, ExternalLink,
-  CheckSquare, Square, Download, Share2, TrendingUp
+  CheckSquare, Square, Download, Share2, TrendingUp,
+  Search, Filter, Grid, List
 } from "lucide-react";
 
 export default function ManageGigs() {
   const [activeTab, setActiveTab] = useState("Active");
   const [selectedGigs, setSelectedGigs] = useState([]);
+  const [viewMode, setViewMode] = useState("list"); // list or grid
 
   const gigs = [
     { 
@@ -30,178 +31,437 @@ export default function ManageGigs() {
       trend: "-2.1%",
       image: "https://images.unsplash.com/photo-1586717791821-3f44a563eb4c?auto=format&fit=crop&w=150&q=80" 
     },
+    { 
+      id: "GIG-7723", 
+      title: "Custom WordPress Theme Development", 
+      status: "Active", 
+      price: 850,
+      stats: { impressions: "8.9k", clicks: 312, ctr: "3.5%", orders: 9, revenue: "$7,650" },
+      trend: "+8.4%",
+      image: "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=150&q=80" 
+    },
   ];
 
   const toggleSelect = (id) => {
     setSelectedGigs(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
   };
 
+  const toggleSelectAll = () => {
+    setSelectedGigs(prev => prev.length === gigs.length ? [] : gigs.map(g => g.id));
+  };
+
   return (
-    <div className="w-full min-h-screen bg-[#FDFDFD] text-[#4A312F] p-6 lg:p-10 font-sans">
+    <div className="w-full min-h-screen bg-[#F7F7F7] text-gray-900 font-sans">
       
-      {/* 1. High-Impact Stats Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-        <QuickStat label="Pipeline" value="$24,800" icon={<TrendingUp size={18}/>} color="text-[#B7E2BF]" trend="+18%" />
-        <QuickStat label="Total Reach" value="84.2k" icon={<Eye size={18}/>} color="text-[#D34079]" trend="+5.4%" />
-        <QuickStat label="Avg. CTR" value="4.2%" icon={<BarChart2 size={18}/>} color="text-blue-400" trend="+0.8%" />
-        <QuickStat label="Active Orders" value="09" icon={<Play size={18}/>} color="text-[#B7E2BF]" trend="Steady" />
-      </div>
-
-      {/* 2. Main Fever-style Table Container */}
-      <div className="bg-white border border-gray-100 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] overflow-hidden">
-        
-        {/* Toolbar */}
-        <div className="px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray-50">
-          <div className="flex bg-gray-50 p-1 rounded-full border border-gray-100">
-            {["Active", "Pending", "Paused", "Draft"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
-                  activeTab === tab ? "bg-[#4A312F] text-white shadow-lg" : "text-gray-400 hover:text-black"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3">
-            {selectedGigs.length > 0 && (
-              <div className="flex items-center gap-4 px-6 py-2 bg-[#D34079] rounded-full animate-in fade-in slide-in-from-right-4">
-                <span className="text-[10px] font-black text-white uppercase">{selectedGigs.length} Selected</span>
-                <div className="w-px h-4 bg-white/20" />
-                <button className="text-white hover:scale-110 transition-transform"><Trash2 size={14}/></button>
-                <button className="text-white hover:scale-110 transition-transform"><Pause size={14}/></button>
-              </div>
-            )}
-            <button className="p-3 border border-gray-100 rounded-full hover:bg-gray-50 text-gray-400"><Download size={18}/></button>
-            <button className="bg-[#4A312F] text-white px-8 py-3 rounded-full font-black text-[10px] uppercase tracking-[0.2em] shadow-xl hover:shadow-[#4A312F]/20 transition-all flex items-center gap-2">
-               Create New Gig
+      {/* Header Section */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Gigs</h1>
+              <p className="text-sm text-gray-500 mt-1">Manage and track your service offerings</p>
+            </div>
+            <button className="bg-[#1DBF73] hover:bg-[#19A463] text-white px-6 py-3 rounded-lg font-semibold text-sm transition-all shadow-sm hover:shadow-md w-full sm:w-auto">
+              Create a New Gig
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Table Header */}
-        <div className="hidden lg:grid grid-cols-12 gap-4 px-10 py-5 bg-gray-50/30 text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-50">
-          <div className="col-span-1">Select</div>
-          <div className="col-span-4">Gig Overview</div>
-          <div className="col-span-1 text-center">Impressions</div>
-          <div className="col-span-1 text-center">Clicks</div>
-          <div className="col-span-1 text-center">CTR</div>
-          <div className="col-span-2 text-center">Revenue</div>
-          <div className="col-span-2 text-right">Actions</div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+          <StatCard 
+            label="Earnings (30d)" 
+            value="$25.9K" 
+            icon={<TrendingUp size={18}/>} 
+            trend="+18.2%" 
+            trendUp={true}
+          />
+          <StatCard 
+            label="Impressions" 
+            value="23.4K" 
+            icon={<Eye size={18}/>} 
+            trend="+5.4%" 
+            trendUp={true}
+          />
+          <StatCard 
+            label="Clicks" 
+            value="777" 
+            icon={<BarChart2 size={18}/>} 
+            trend="+2.1%" 
+            trendUp={true}
+          />
+          <StatCard 
+            label="Active Orders" 
+            value="23" 
+            icon={<Play size={18}/>} 
+            trend="Ongoing" 
+            trendUp={null}
+          />
         </div>
 
-        {/* List Content */}
-        <div className="divide-y divide-gray-50">
-          {gigs.map((gig) => (
-            <div key={gig.id} className={`grid grid-cols-1 lg:grid-cols-12 gap-4 px-10 py-8 items-center transition-all group ${selectedGigs.includes(gig.id) ? 'bg-[#B7E2BF]/5' : 'hover:bg-gray-50/50'}`}>
+        {/* Main Content Card */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          
+          {/* Toolbar */}
+          <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               
-              <div className="col-span-1">
-                <button onClick={() => toggleSelect(gig.id)} className="transition-colors">
-                  {selectedGigs.includes(gig.id) 
-                    ? <CheckSquare size={20} className="text-[#D34079]" /> 
-                    : <Square size={20} className="text-gray-200" />
-                  }
-                </button>
+              {/* Tabs */}
+              <div className="flex overflow-x-auto no-scrollbar">
+                <div className="flex bg-gray-100 p-1 rounded-lg">
+                  {["Active", "Pending", "Paused", "Draft"].map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`px-4 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${
+                        activeTab === tab 
+                          ? "bg-white text-gray-900 shadow-sm" 
+                          : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="col-span-4 flex items-center gap-6">
-                <div className="relative w-20 h-14 rounded-xl overflow-hidden shadow-md shrink-0">
-                  <img src={gig.image} alt={gig.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className={`absolute top-1 right-1 w-2 h-2 rounded-full border border-white ${gig.status === 'Active' ? 'bg-[#B7E2BF] shadow-[0_0_8px_#B7E2BF]' : 'bg-gray-400'}`} />
-                </div>
-                <div>
-                  <h3 className="text-[14px] font-black text-[#4A312F] group-hover:text-[#D34079] transition-colors leading-tight line-clamp-1">
-                    {gig.title}
-                  </h3>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest">{gig.id}</span>
-                    <span className="text-[9px] font-black text-[#B7E2BF] bg-[#4A312F] px-2 py-0.5 rounded uppercase">Starting ${gig.price}</span>
+              {/* Actions */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                {/* Search */}
+                <div className="flex-1 lg:flex-initial">
+                  <div className="relative">
+                    <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input 
+                      type="text" 
+                      placeholder="Search gigs..." 
+                      className="w-full lg:w-64 pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
+                    />
                   </div>
                 </div>
-              </div>
 
-              <MetricCell value={gig.stats.impressions} sub="Views" />
-              <MetricCell value={gig.stats.clicks} sub="Engagement" />
-              <MetricCell value={gig.stats.ctr} sub="Ratio" heat={parseFloat(gig.stats.ctr) > 5} />
-              
-              <div className="col-span-2 text-center">
-                <p className="text-sm font-black text-[#4A312F]">{gig.stats.revenue}</p>
-                <div className="flex items-center justify-center gap-1">
-                   <span className="text-[8px] font-black text-[#B7E2BF] uppercase">{gig.stats.orders} Orders</span>
-                   <ArrowUpRight size={10} className="text-[#B7E2BF]" />
+                {/* View Toggle */}
+                <div className="hidden sm:flex bg-gray-100 p-1 rounded-lg">
+                  <button 
+                    onClick={() => setViewMode('list')}
+                    className={`p-2 rounded ${viewMode === 'list' ? 'bg-white shadow-sm' : ''}`}
+                  >
+                    <List size={16} className="text-gray-600" />
+                  </button>
+                  <button 
+                    onClick={() => setViewMode('grid')}
+                    className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white shadow-sm' : ''}`}
+                  >
+                    <Grid size={16} className="text-gray-600" />
+                  </button>
                 </div>
-              </div>
 
-              <div className="col-span-2 flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
-                <ActionButton icon={<Edit3 size={16}/>} color="hover:bg-[#4A312F] hover:text-white" />
-                <ActionButton icon={gig.status === 'Active' ? <Pause size={16}/> : <Play size={16}/>} color="hover:bg-[#D34079] hover:text-white" />
-                <ActionButton icon={<Share2 size={16}/>} color="hover:bg-blue-50 hover:text-blue-600" />
-                <button className="p-2 text-gray-300 hover:text-black">
-                  <MoreVertical size={18} />
+                {/* Filter */}
+                <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  <Filter size={16} className="text-gray-600" />
                 </button>
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* Footer Info */}
-        <div className="px-10 py-6 bg-gray-50/50 flex justify-between items-center border-t border-gray-100">
-           <div className="flex gap-8">
-              <div className="flex flex-col">
-                 <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Next Settlement</span>
-                 <span className="text-[10px] font-black text-[#4A312F]">Jan 24, 2026</span>
+            {/* Bulk Actions Bar */}
+            {selectedGigs.length > 0 && (
+              <div className="mt-4 flex items-center justify-between p-3 bg-[#1DBF73]/10 border border-[#1DBF73]/20 rounded-lg">
+                <span className="text-sm font-semibold text-gray-900">
+                  {selectedGigs.length} gig{selectedGigs.length > 1 ? 's' : ''} selected
+                </span>
+                <div className="flex items-center gap-2">
+                  <button className="px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-white rounded transition-colors">
+                    Edit
+                  </button>
+                  <button className="px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-white rounded transition-colors">
+                    Pause
+                  </button>
+                  <button className="px-3 py-1.5 text-sm font-semibold text-red-600 hover:bg-white rounded transition-colors">
+                    Delete
+                  </button>
+                </div>
               </div>
-              <div className="flex flex-col">
-                 <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Avg. Response</span>
-                 <span className="text-[10px] font-black text-[#B7E2BF]">1.2 Hours</span>
+            )}
+          </div>
+
+          {/* Table/Grid Content */}
+          {viewMode === 'list' ? (
+            <>
+              {/* Desktop Table Header */}
+              <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-3 bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <div className="col-span-1 flex items-center">
+                  <button onClick={toggleSelectAll}>
+                    {selectedGigs.length === gigs.length 
+                      ? <CheckSquare size={18} className="text-[#1DBF73]" /> 
+                      : <Square size={18} className="text-gray-400" />
+                    }
+                  </button>
+                </div>
+                <div className="col-span-4">Gig</div>
+                <div className="col-span-1 text-center">Impressions</div>
+                <div className="col-span-1 text-center">Clicks</div>
+                <div className="col-span-1 text-center">Orders</div>
+                <div className="col-span-2 text-center">Revenue</div>
+                <div className="col-span-2 text-right">Actions</div>
               </div>
-           </div>
-           <button className="text-[9px] font-black uppercase tracking-[0.2em] text-[#D34079] hover:underline transition-all">
-             View Full Analytics Report &rarr;
-           </button>
+
+              {/* Gig Rows */}
+              <div className="divide-y divide-gray-100">
+                {gigs.map((gig) => (
+                  <GigRow 
+                    key={gig.id} 
+                    gig={gig} 
+                    selected={selectedGigs.includes(gig.id)}
+                    onToggle={() => toggleSelect(gig.id)}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 sm:p-6">
+              {gigs.map((gig) => (
+                <GigCard 
+                  key={gig.id} 
+                  gig={gig}
+                  selected={selectedGigs.includes(gig.id)}
+                  onToggle={() => toggleSelect(gig.id)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-function MetricCell({ value, sub, heat }) {
+// List View Row Component
+function GigRow({ gig, selected, onToggle }) {
+  const [showActions, setShowActions] = useState(false);
+
   return (
-    <div className="col-span-1 text-center">
-      <p className={`text-[13px] font-black ${heat ? 'text-[#D34079]' : 'text-[#4A312F]'}`}>
-        {value}
-      </p>
-      <p className="text-[8px] font-black text-gray-300 uppercase tracking-widest mt-0.5">{sub}</p>
+    <div 
+      className="grid grid-cols-1 lg:grid-cols-12 gap-4 px-4 sm:px-6 py-4 hover:bg-gray-50 transition-colors group"
+      onMouseEnter={() => setShowActions(true)}
+      onMouseLeave={() => setShowActions(false)}
+    >
+      {/* Mobile Layout */}
+      <div className="lg:hidden space-y-4">
+        <div className="flex items-start gap-4">
+          <button onClick={onToggle} className="mt-1">
+            {selected 
+              ? <CheckSquare size={20} className="text-[#1DBF73]" /> 
+              : <Square size={20} className="text-gray-300" />
+            }
+          </button>
+          
+          <div className="relative w-24 h-16 rounded-lg overflow-hidden flex-shrink-0">
+            <img src={gig.image} alt={gig.title} className="w-full h-full object-cover" />
+            <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ${
+              gig.status === 'Active' ? 'bg-[#1DBF73]' : 'bg-gray-400'
+            }`} />
+          </div>
+          
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-sm text-gray-900 line-clamp-2 mb-1">
+              {gig.title}
+            </h3>
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <span>{gig.id}</span>
+              <span>•</span>
+              <span className="font-semibold text-gray-900">From ${gig.price}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Stats */}
+        <div className="grid grid-cols-3 gap-2 text-center bg-gray-50 rounded-lg p-3 ml-9">
+          <div>
+            <div className="text-xs font-semibold text-gray-900">{gig.stats.impressions}</div>
+            <div className="text-xs text-gray-500">Views</div>
+          </div>
+          <div>
+            <div className="text-xs font-semibold text-gray-900">{gig.stats.clicks}</div>
+            <div className="text-xs text-gray-500">Clicks</div>
+          </div>
+          <div>
+            <div className="text-xs font-semibold text-gray-900">{gig.stats.revenue}</div>
+            <div className="text-xs text-gray-500">Revenue</div>
+          </div>
+        </div>
+
+        {/* Mobile Actions */}
+        <div className="flex items-center gap-2 ml-9">
+          <button className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-xs font-semibold hover:bg-gray-50 flex items-center justify-center gap-1">
+            <Edit3 size={14} /> Edit
+          </button>
+          <button className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-xs font-semibold hover:bg-gray-50 flex items-center justify-center gap-1">
+            {gig.status === 'Active' ? <><Pause size={14} /> Pause</> : <><Play size={14} /> Activate</>}
+          </button>
+          <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+            <MoreVertical size={16} className="text-gray-600" />
+          </button>
+        </div>
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden lg:contents">
+        <div className="col-span-1 flex items-center">
+          <button onClick={onToggle}>
+            {selected 
+              ? <CheckSquare size={20} className="text-[#1DBF73]" /> 
+              : <Square size={20} className="text-gray-300" />
+            }
+          </button>
+        </div>
+
+        <div className="col-span-4 flex items-center gap-4">
+          <div className="relative w-20 h-14 rounded-lg overflow-hidden flex-shrink-0">
+            <img src={gig.image} alt={gig.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+            <div className={`absolute top-1.5 right-1.5 w-2 h-2 rounded-full ${
+              gig.status === 'Active' ? 'bg-[#1DBF73] shadow-[0_0_6px_#1DBF73]' : 'bg-gray-400'
+            }`} />
+          </div>
+          <div className="min-w-0">
+            <h3 className="font-semibold text-sm text-gray-900 line-clamp-1 group-hover:text-[#1DBF73] transition-colors">
+              {gig.title}
+            </h3>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-xs text-gray-500">{gig.id}</span>
+              <span className="text-xs font-semibold text-gray-900">From ${gig.price}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-span-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-sm font-semibold text-gray-900">{gig.stats.impressions}</div>
+          </div>
+        </div>
+
+        <div className="col-span-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-sm font-semibold text-gray-900">{gig.stats.clicks}</div>
+            <div className="text-xs text-gray-500">{gig.stats.ctr} CTR</div>
+          </div>
+        </div>
+
+        <div className="col-span-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-sm font-semibold text-gray-900">{gig.stats.orders}</div>
+          </div>
+        </div>
+
+        <div className="col-span-2 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-base font-bold text-gray-900">{gig.stats.revenue}</div>
+            <div className={`text-xs font-semibold ${gig.trend.includes('+') ? 'text-[#1DBF73]' : 'text-gray-400'}`}>
+              {gig.trend}
+            </div>
+          </div>
+        </div>
+
+        <div className={`col-span-2 flex items-center justify-end gap-2 transition-all ${
+          showActions ? 'opacity-100' : 'opacity-0'
+        }`}>
+          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Edit">
+            <Edit3 size={16} className="text-gray-600" />
+          </button>
+          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors" title={gig.status === 'Active' ? 'Pause' : 'Activate'}>
+            {gig.status === 'Active' ? <Pause size={16} className="text-gray-600" /> : <Play size={16} className="text-gray-600" />}
+          </button>
+          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Share">
+            <Share2 size={16} className="text-gray-600" />
+          </button>
+          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <MoreVertical size={16} className="text-gray-600" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
 
-function QuickStat({ label, value, icon, color, trend }) {
+// Grid View Card Component
+function GigCard({ gig, selected, onToggle }) {
   return (
-    <div className="bg-white p-8 rounded-[2rem] border border-gray-50 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all group">
-      <div className="flex justify-between items-center mb-6">
-        <div className={`p-3 rounded-2xl bg-gray-50 ${color} group-hover:bg-[#4A312F] group-hover:text-white transition-all`}>
+    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow group">
+      <div className="relative">
+        <img src={gig.image} alt={gig.title} className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
+        <button 
+          onClick={onToggle}
+          className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm p-1.5 rounded-md"
+        >
+          {selected 
+            ? <CheckSquare size={18} className="text-[#1DBF73]" /> 
+            : <Square size={18} className="text-gray-400" />
+          }
+        </button>
+        <div className={`absolute top-3 right-3 w-2.5 h-2.5 rounded-full ${
+          gig.status === 'Active' ? 'bg-[#1DBF73] shadow-[0_0_8px_#1DBF73]' : 'bg-gray-400'
+        }`} />
+      </div>
+      
+      <div className="p-4">
+        <h3 className="font-semibold text-sm text-gray-900 line-clamp-2 mb-2 group-hover:text-[#1DBF73] transition-colors">
+          {gig.title}
+        </h3>
+        
+        <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+          <span>{gig.id}</span>
+          <span className="font-semibold text-gray-900">From ${gig.price}</span>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 py-3 border-t border-gray-100">
+          <div className="text-center">
+            <div className="text-xs font-semibold text-gray-900">{gig.stats.impressions}</div>
+            <div className="text-xs text-gray-500">Views</div>
+          </div>
+          <div className="text-center">
+            <div className="text-xs font-semibold text-gray-900">{gig.stats.clicks}</div>
+            <div className="text-xs text-gray-500">Clicks</div>
+          </div>
+          <div className="text-center">
+            <div className="text-xs font-semibold text-gray-900">{gig.stats.revenue}</div>
+            <div className="text-xs text-gray-500">Revenue</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 mt-3">
+          <button className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-xs font-semibold hover:bg-gray-50 transition-colors">
+            Edit
+          </button>
+          <button className="flex-1 px-3 py-2 bg-[#1DBF73] text-white rounded-lg text-xs font-semibold hover:bg-[#19A463] transition-colors">
+            View
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Stat Card Component
+function StatCard({ label, value, icon, trend, trendUp }) {
+  return (
+    <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+      <div className="flex items-start justify-between mb-3">
+        <div className="p-2 bg-gray-50 rounded-lg text-gray-600">
           {icon}
         </div>
-        <div className="text-right">
-           <span className={`text-[10px] font-black px-2 py-1 rounded-md ${trend.includes('+') ? 'bg-[#B7E2BF]/10 text-[#B7E2BF]' : 'bg-gray-50 text-gray-400'}`}>
+        {trend && (
+          <span className={`text-xs font-semibold px-2 py-1 rounded ${
+            trendUp === true ? 'bg-green-50 text-green-700' : 
+            trendUp === false ? 'bg-red-50 text-red-700' : 
+            'bg-gray-50 text-gray-600'
+          }`}>
             {trend}
           </span>
-        </div>
+        )}
       </div>
-      <p className="text-3xl font-black text-[#4A312F] tracking-tighter mb-1">{value}</p>
-      <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">{label}</p>
+      <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{value}</div>
+      <div className="text-xs sm:text-sm text-gray-500 font-medium">{label}</div>
     </div>
-  );
-}
-
-function ActionButton({ icon, color }) {
-  return (
-    <button className={`p-3 rounded-xl border border-gray-100 bg-white transition-all shadow-sm ${color}`}>
-      {icon}
-    </button>
   );
 }

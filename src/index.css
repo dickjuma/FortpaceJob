@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Outfit:wght@100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,40 +6,32 @@
 
 :root {
   --color-primary: #4A312F;       /* Deep Chocolate Brown */
-  --color-secondary: #F7F9FB;     /* Clean White / Light Gray */
-  
-  --accent-pink: #FBB9C2;         /* Creamy Pink Pale */
-  --accent-mint: #B7E2BF;         /* Creamy Mint Pale */
-
-  --color-cta: #D34079;           /* Rich Raspberry */
+  --color-secondary: #F7F9FB;     /* Light Gray */
+  --accent-pink: #FBB9C2;         /* Pale Pink */
+  --accent-mint: #B7E2BF;         /* Pale Mint */
+  --color-cta: #D34079;           /* Raspberry */
 }
 
-*{
+/* Apply Outfit font globally */
+* {
   font-family: "Outfit", sans-serif;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+  /* CHANGED: Set to a light gray to match the Dashboard design */
+  background-color: #F3F4F6; 
+  /* CHANGED: Set default text to a dark gray for visibility */
+  color: #111827; 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background: #001820;
-  color: white;
-  font-family: "Poppins", sans-serif;
-}
-
 main {
   padding-bottom: 100px; 
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

@@ -1,8 +1,8 @@
-// src/components/findWork/Gigs/CreateGig.jsx
 import React, { useState } from "react";
 import { 
-  Check, ChevronRight, DollarSign, Clock, 
-  Plus, X, Image as ImageIcon, MessageSquare, Rocket 
+  Check, ChevronRight, ChevronLeft, DollarSign, Clock, 
+  Plus, X, ImageIcon, MessageSquare, Rocket,
+  AlertCircle, Info, Star, Zap
 } from "lucide-react";
 
 export default function CreateGig() {
@@ -10,216 +10,526 @@ export default function CreateGig() {
   const [formData, setFormData] = useState({
     title: "",
     category: "Programming & Tech",
-    tags: ["React", "SaaS"],
+    subcategory: "",
+    tags: [],
     packages: {
-      basic: { desc: "", delivery: "3", price: "" },
-      standard: { desc: "", delivery: "5", price: "" },
-      premium: { desc: "", delivery: "7", price: "" },
+      basic: { name: "Basic", desc: "", delivery: "3", revisions: "1", price: "" },
+      standard: { name: "Standard", desc: "", delivery: "5", revisions: "3", price: "" },
+      premium: { name: "Premium", desc: "", delivery: "7", revisions: "Unlimited", price: "" },
     },
-    requirements: [{ id: 1, question: "" }],
+    description: "",
+    requirements: [{ id: 1, question: "", type: "text", required: true }],
     images: []
   });
 
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 4));
-  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+  const nextStep = () => {
+    if (currentStep < 5) setCurrentStep((prev) => prev + 1);
+  };
+  
+  const prevStep = () => {
+    if (currentStep > 1) setCurrentStep((prev) => prev - 1);
+  };
 
-  const steps = ["Overview", "Pricing", "Requirements", "Gallery"];
+  const steps = [
+    { id: 1, title: "Overview", subtitle: "Gig information" },
+    { id: 2, title: "Pricing", subtitle: "Packages & pricing" },
+    { id: 3, title: "Description", subtitle: "Details & FAQs" },
+    { id: 4, title: "Requirements", subtitle: "What you need" },
+    { id: 5, title: "Gallery", subtitle: "Images & media" }
+  ];
+
+  const addTag = (tag) => {
+    if (tag && !formData.tags.includes(tag) && formData.tags.length < 5) {
+      setFormData({...formData, tags: [...formData.tags, tag]});
+    }
+  };
+
+  const removeTag = (tagToRemove) => {
+    setFormData({...formData, tags: formData.tags.filter(t => t !== tagToRemove)});
+  };
 
   return (
-    <div className="w-full h-screen overflow-hidden bg-white text-[#4A312F] flex flex-col font-sans">
+    <div className="min-h-screen bg-gray-50">
       
-      {/* 1. Slim Progress Rail (Zero Scroll) */}
-      <header className="h-20 border-b border-gray-100 px-8 flex items-center justify-between shrink-0 bg-white z-20">
-        <div className="flex items-center gap-12">
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-6 bg-[#D34079] rounded-full" />
-            <h1 className="text-[10px] font-black uppercase tracking-[0.2em]">New Gig</h1>
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Create a New Gig</h1>
+              <p className="text-sm text-gray-500 mt-1 hidden sm:block">
+                Step {currentStep} of {steps.length}: {steps[currentStep - 1].subtitle}
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <button className="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors">
+                Save Draft
+              </button>
+              <div className="hidden sm:flex items-center gap-2 text-xs text-gray-500">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                Auto-saving
+              </div>
+            </div>
           </div>
-          <nav className="flex items-center gap-8">
+        </div>
+
+        {/* Progress Bar */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between pb-4">
             {steps.map((step, idx) => (
-              <div key={step} className="flex items-center gap-3">
-                <div className={`w-6 h-6 rounded flex items-center justify-center text-[9px] font-black transition-all ${
-                  currentStep >= idx + 1 ? "bg-[#4A312F] text-white" : "bg-gray-100 text-gray-400"
-                }`}>
-                  {currentStep > idx + 1 ? <Check size={10} strokeWidth={4} /> : idx + 1}
+              <div key={step.id} className="flex-1 relative">
+                <div className="flex flex-col items-center sm:items-start sm:flex-row sm:gap-3">
+                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                    currentStep > step.id 
+                      ? "bg-[#1DBF73] text-white" 
+                      : currentStep === step.id 
+                        ? "bg-[#1DBF73] text-white ring-4 ring-[#1DBF73]/20" 
+                        : "bg-gray-200 text-gray-400"
+                  }`}>
+                    {currentStep > step.id ? <Check size={16} strokeWidth={3} /> : step.id}
+                  </div>
+                  <div className="hidden sm:block mt-1">
+                    <div className={`text-sm font-semibold ${currentStep >= step.id ? 'text-gray-900' : 'text-gray-400'}`}>
+                      {step.title}
+                    </div>
+                    <div className="text-xs text-gray-500">{step.subtitle}</div>
+                  </div>
                 </div>
-                <span className={`text-[9px] font-black uppercase tracking-widest ${currentStep >= idx + 1 ? "text-black" : "text-gray-300"}`}>
-                  {step}
-                </span>
+                {idx < steps.length - 1 && (
+                  <div className={`hidden sm:block absolute top-5 left-10 right-0 h-0.5 -z-10 transition-all ${
+                    currentStep > step.id ? 'bg-[#1DBF73]' : 'bg-gray-200'
+                  }`} />
+                )}
               </div>
             ))}
-          </nav>
+          </div>
         </div>
-        <div className="flex items-center gap-4 text-[9px] font-black uppercase tracking-widest text-[#B7E2BF]">
-          <span className="w-2 h-2 rounded-full bg-[#B7E2BF] animate-pulse" /> System Sync Active
-        </div>
-      </header>
+      </div>
 
-      {/* 2. Main Workspace (Flexible Layout) */}
-      <main className="flex-1 grid grid-cols-12 overflow-hidden">
-        
-        {/* Editor Area */}
-        <div className="col-span-12 lg:col-span-8 p-12 flex flex-col justify-center overflow-hidden">
-          <div className="max-w-3xl w-full mx-auto space-y-10">
+      {/* Main Content */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          
+          {/* Step Content */}
+          <div className="p-6 sm:p-8 lg:p-12">
             
             {/* STEP 1: OVERVIEW */}
             {currentStep === 1 && (
-              <div className="space-y-12 animate-in fade-in slide-in-from-left-4 duration-500">
-                <div className="space-y-4">
-                  <label className="text-[9px] font-black uppercase tracking-[0.2em] text-[#D34079]">The Headline</label>
-                  <div className="relative border-b border-gray-100 focus-within:border-[#4A312F] transition-all pb-2">
-                    <span className="absolute left-0 top-0 text-3xl font-black text-gray-200">I will</span>
-                    <textarea 
-                      className="w-full pl-24 py-0 bg-transparent text-3xl font-black text-[#4A312F] placeholder:text-gray-100 outline-none resize-none h-24"
+              <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Gig Title <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
+                      placeholder="I will..."
                       value={formData.title}
                       onChange={(e) => setFormData({...formData, title: e.target.value})}
-                      placeholder="design your brand strategy..."
+                      maxLength={80}
                     />
+                    <div className="text-xs text-gray-500 mt-1 text-right">
+                      {formData.title.length}/80 characters
+                    </div>
                   </div>
+                  <p className="text-sm text-gray-500 mt-2">
+                    As your Gig storefront, your title is the most important place to include keywords that buyers would likely use to search for a service like yours.
+                  </p>
                 </div>
-                
-                <div className="grid grid-cols-2 gap-12">
-                  <FieldWrapper label="Category">
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Category <span className="text-red-500">*</span>
+                    </label>
                     <select 
-                      className="w-full py-2 bg-transparent border-b border-gray-100 font-bold text-xs text-[#4A312F] outline-none focus:border-[#B7E2BF]"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
                       value={formData.category}
                       onChange={(e) => setFormData({...formData, category: e.target.value})}
                     >
                       <option>Programming & Tech</option>
                       <option>Graphics & Design</option>
+                      <option>Digital Marketing</option>
+                      <option>Writing & Translation</option>
+                      <option>Video & Animation</option>
+                      <option>Music & Audio</option>
                     </select>
-                  </FieldWrapper>
-                  <FieldWrapper label="Search Tags">
-                    <div className="flex flex-wrap gap-2 pt-1">
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Subcategory <span className="text-red-500">*</span>
+                    </label>
+                    <select 
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
+                      value={formData.subcategory}
+                      onChange={(e) => setFormData({...formData, subcategory: e.target.value})}
+                    >
+                      <option value="">Select a subcategory</option>
+                      <option>Website Development</option>
+                      <option>Mobile Apps</option>
+                      <option>Desktop Applications</option>
+                      <option>Chatbots</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Search Tags <span className="text-gray-500 font-normal">(up to 5 tags)</span>
+                  </label>
+                  <div className="border border-gray-300 rounded-lg p-3 focus-within:ring-2 focus-within:ring-[#1DBF73] focus-within:border-transparent">
+                    <div className="flex flex-wrap gap-2 mb-2">
                       {formData.tags.map(tag => (
-                        <span key={tag} className="bg-[#B7E2BF]/10 text-[#4A312F] border border-[#B7E2BF]/30 px-3 py-1 rounded text-[8px] font-black flex items-center gap-2">
-                          {tag} <X size={10} className="cursor-pointer hover:text-[#D34079]" onClick={() => setFormData({...formData, tags: formData.tags.filter(t => t !== tag)})}/>
+                        <span key={tag} className="inline-flex items-center gap-1.5 bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-sm font-medium">
+                          {tag}
+                          <button onClick={() => removeTag(tag)} className="hover:text-red-600">
+                            <X size={14} />
+                          </button>
                         </span>
                       ))}
-                      <input 
-                        onKeyDown={(e) => {
-                          if(e.key === 'Enter') {
-                            setFormData({...formData, tags: [...formData.tags, e.target.value]});
-                            e.target.value = '';
-                          }
-                        }}
-                        className="bg-transparent border-none outline-none text-[10px] font-bold p-1 w-24" 
-                        placeholder="+ New tag" 
-                      />
                     </div>
-                  </FieldWrapper>
+                    <input
+                      type="text"
+                      className="w-full outline-none text-base"
+                      placeholder={formData.tags.length < 5 ? "Add a tag (press Enter)" : "Maximum 5 tags reached"}
+                      disabled={formData.tags.length >= 5}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && e.target.value.trim()) {
+                          e.preventDefault();
+                          addTag(e.target.value.trim());
+                          e.target.value = '';
+                        }
+                      }}
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Tag your Gig with buzz words that are relevant to the services you offer. Use all 5 tags to get found.
+                  </p>
                 </div>
               </div>
             )}
 
-            {/* STEP 2: PRICING (Rhyming Rows) */}
+            {/* STEP 2: PRICING */}
             {currentStep === 2 && (
-              <div className="space-y-2 animate-in fade-in duration-300">
-                {['basic', 'standard', 'premium'].map((tier) => (
-                  <div key={tier} className="flex items-center gap-8 py-6 border-b border-gray-50 hover:bg-gray-50/50 transition-all px-4 rounded-xl group">
-                    <span className="w-20 text-[9px] font-black uppercase tracking-[0.3em] text-[#D34079]">{tier}</span>
-                    <input 
-                      className="flex-1 bg-transparent text-xs font-bold text-[#4A312F] outline-none"
-                      placeholder="What is included?"
-                      value={formData.packages[tier].desc}
-                      onChange={(e) => {
-                        const p = {...formData.packages}; p[tier].desc = e.target.value; setFormData({...formData, packages: p});
-                      }}
-                    />
-                    <div className="flex items-center gap-6">
-                      <div className="flex items-center gap-2">
-                        <Clock size={14} className="text-[#B7E2BF]" />
-                        <input className="w-10 bg-transparent text-[10px] font-black text-[#4A312F] outline-none" placeholder="3d" />
-                      </div>
-                      <div className="flex items-center gap-1 border-l border-gray-100 pl-6">
-                        <span className="text-[10px] font-black text-gray-300">$</span>
-                        <input className="w-10 bg-transparent text-xl font-black text-[#4A312F] outline-none" placeholder="50" />
-                      </div>
-                    </div>
+              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-3">
+                  <Info size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-blue-900">
+                    <p className="font-semibold mb-1">Pricing Strategy Tips</p>
+                    <p>Offer 3 packages at different price points to maximize your earning potential. Each package should clearly show increasing value.</p>
                   </div>
-                ))}
+                </div>
+
+                <div className="overflow-x-auto -mx-6 sm:mx-0">
+                  <div className="inline-block min-w-full align-middle px-6 sm:px-0">
+                    <table className="min-w-full">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          <th className="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Package</th>
+                          <th className="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Description</th>
+                          <th className="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-24">Delivery</th>
+                          <th className="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-24">Revisions</th>
+                          <th className="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-28">Price</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100">
+                        {['basic', 'standard', 'premium'].map((tier) => (
+                          <tr key={tier} className="hover:bg-gray-50">
+                            <td className="py-4 px-4">
+                              <div className="flex items-center gap-2">
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                                  tier === 'basic' ? 'bg-blue-100 text-blue-600' :
+                                  tier === 'standard' ? 'bg-purple-100 text-purple-600' :
+                                  'bg-orange-100 text-orange-600'
+                                }`}>
+                                  {tier === 'basic' ? <Zap size={18} /> :
+                                   tier === 'standard' ? <Star size={18} /> :
+                                   <Rocket size={18} />}
+                                </div>
+                                <div>
+                                  <div className="font-semibold text-sm text-gray-900 capitalize">{tier}</div>
+                                  <div className="text-xs text-gray-500">Package</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-4 px-4">
+                              <input
+                                type="text"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
+                                placeholder="Describe what's included..."
+                                value={formData.packages[tier].desc}
+                                onChange={(e) => {
+                                  const p = {...formData.packages};
+                                  p[tier].desc = e.target.value;
+                                  setFormData({...formData, packages: p});
+                                }}
+                              />
+                            </td>
+                            <td className="py-4 px-4">
+                              <div className="relative">
+                                <input
+                                  type="number"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
+                                  placeholder="3"
+                                  value={formData.packages[tier].delivery}
+                                  onChange={(e) => {
+                                    const p = {...formData.packages};
+                                    p[tier].delivery = e.target.value;
+                                    setFormData({...formData, packages: p});
+                                  }}
+                                />
+                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">days</span>
+                              </div>
+                            </td>
+                            <td className="py-4 px-4">
+                              <input
+                                type="text"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
+                                placeholder="3"
+                                value={formData.packages[tier].revisions}
+                                onChange={(e) => {
+                                  const p = {...formData.packages};
+                                  p[tier].revisions = e.target.value;
+                                  setFormData({...formData, packages: p});
+                                }}
+                              />
+                            </td>
+                            <td className="py-4 px-4">
+                              <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                                <input
+                                  type="number"
+                                  className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
+                                  placeholder="50"
+                                  value={formData.packages[tier].price}
+                                  onChange={(e) => {
+                                    const p = {...formData.packages};
+                                    p[tier].price = e.target.value;
+                                    setFormData({...formData, packages: p});
+                                  }}
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             )}
 
-            {/* STEP 3 & 4: REQS & GALLERY */}
+            {/* STEP 3: DESCRIPTION */}
             {currentStep === 3 && (
-               <div className="space-y-6 animate-in fade-in">
-                 <div className="flex items-center gap-3 text-[#B7E2BF] mb-4">
-                    <MessageSquare size={16} />
-                    <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">Order Requirements</p>
-                 </div>
-                 {formData.requirements.map((req, idx) => (
-                    <textarea 
-                      key={req.id}
-                      className="w-full p-6 bg-gray-50 border border-gray-100 rounded-2xl text-xs font-bold text-[#4A312F] outline-none focus:border-[#4A312F] transition-all"
-                      placeholder={`Question #${idx + 1}`}
-                    />
-                 ))}
-               </div>
+              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Gig Description <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent resize-none"
+                    rows="12"
+                    placeholder="Briefly describe your gig..."
+                    value={formData.description}
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    maxLength={1200}
+                  />
+                  <div className="flex justify-between items-center mt-2">
+                    <p className="text-sm text-gray-500">
+                      Describe your service in detail. Include your experience, why you're qualified, and what makes you unique.
+                    </p>
+                    <div className="text-xs text-gray-500">
+                      {formData.description.length}/1200
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex gap-3">
+                  <AlertCircle size={20} className="text-yellow-600 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-yellow-900">
+                    <p className="font-semibold mb-1">Make Your Description Stand Out</p>
+                    <ul className="list-disc list-inside space-y-1 text-yellow-800">
+                      <li>Highlight what makes your service unique</li>
+                      <li>List the benefits buyers will get</li>
+                      <li>Explain your process and timeline</li>
+                      <li>Include relevant experience or credentials</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             )}
 
+            {/* STEP 4: REQUIREMENTS */}
             {currentStep === 4 && (
-              <div className="space-y-6 animate-in zoom-in-95 text-center">
-                 <div className="border-2 border-dashed border-[#B7E2BF]/40 rounded-[2.5rem] p-16 bg-gray-50 flex flex-col items-center gap-4 hover:border-[#D34079] cursor-pointer transition-all">
-                    <div className="p-4 bg-white rounded-2xl shadow-sm border border-gray-100"><ImageIcon size={32} className="text-[#4A312F]" /></div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#4A312F]">Drop Gallery Assets</p>
-                 </div>
+              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div className="flex items-start gap-3 bg-gray-50 rounded-lg p-4">
+                  <MessageSquare size={20} className="text-gray-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900 mb-1">Get the information you need</p>
+                    <p className="text-sm text-gray-600">Add questions to help buyers provide you with exactly what you need to start working on their order.</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {formData.requirements.map((req, idx) => (
+                    <div key={req.id} className="border border-gray-200 rounded-lg p-4 sm:p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-sm font-semibold text-gray-900">Question {idx + 1}</h4>
+                        {formData.requirements.length > 1 && (
+                          <button 
+                            onClick={() => setFormData({
+                              ...formData, 
+                              requirements: formData.requirements.filter(r => r.id !== req.id)
+                            })}
+                            className="text-red-600 hover:text-red-700 text-sm font-semibold"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Your question
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
+                            placeholder="e.g., What is your brand name?"
+                            value={req.question}
+                            onChange={(e) => {
+                              const reqs = [...formData.requirements];
+                              reqs[idx].question = e.target.value;
+                              setFormData({...formData, requirements: reqs});
+                            }}
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Answer type
+                            </label>
+                            <select className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent">
+                              <option>Free Text</option>
+                              <option>Multiple Choice</option>
+                              <option>Attachment</option>
+                            </select>
+                          </div>
+                          
+                          <div className="flex items-end">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="checkbox" className="w-4 h-4 text-[#1DBF73] border-gray-300 rounded focus:ring-[#1DBF73]" defaultChecked />
+                              <span className="text-sm font-medium text-gray-700">Required answer</span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setFormData({
+                    ...formData,
+                    requirements: [...formData.requirements, { id: Date.now(), question: "", type: "text", required: true }]
+                  })}
+                  className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm font-semibold text-gray-600 hover:border-[#1DBF73] hover:text-[#1DBF73] transition-colors flex items-center justify-center gap-2"
+                >
+                  <Plus size={16} /> Add Another Question
+                </button>
+              </div>
+            )}
+
+            {/* STEP 5: GALLERY */}
+            {currentStep === 5 && (
+              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div className="text-center">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 hover:border-[#1DBF73] transition-colors cursor-pointer group">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#1DBF73]/10 transition-colors">
+                      <ImageIcon size={28} className="text-gray-400 group-hover:text-[#1DBF73] transition-colors" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Upload Images or Videos</h3>
+                    <p className="text-sm text-gray-500 mb-4">
+                      Drag & drop files here or click to browse
+                    </p>
+                    <button className="px-6 py-2.5 bg-[#1DBF73] text-white rounded-lg font-semibold hover:bg-[#19A463] transition-colors">
+                      Choose Files
+                    </button>
+                  </div>
+                  
+                  <div className="mt-6 text-left">
+                    <h4 className="text-sm font-semibold text-gray-900 mb-3">Upload Guidelines</h4>
+                    <ul className="space-y-2 text-sm text-gray-600">
+                      <li className="flex items-start gap-2">
+                        <Check size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
+                        <span>Upload up to 3 images that best represent your service</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
+                        <span>Images should be at least 550x370px (recommended: 1270x760px)</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
+                        <span>Supported formats: JPG, PNG, GIF (max 5MB per file)</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
+                        <span>You can also add a video to showcase your work (max 75 seconds)</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             )}
           </div>
+
+          {/* Navigation Footer */}
+          <div className="border-t border-gray-200 px-6 sm:px-8 lg:px-12 py-4 sm:py-6 bg-gray-50">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={prevStep}
+                disabled={currentStep === 1}
+                className={`px-6 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${
+                  currentStep === 1
+                    ? 'opacity-0 pointer-events-none'
+                    : 'text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <ChevronLeft size={18} /> Back
+              </button>
+
+              <div className="flex items-center gap-3">
+                <button className="px-6 py-2.5 text-gray-700 hover:bg-gray-200 rounded-lg font-semibold text-sm transition-colors hidden sm:block">
+                  Save as Draft
+                </button>
+                <button
+                  onClick={nextStep}
+                  className="px-8 py-2.5 bg-[#1DBF73] text-white rounded-lg font-semibold text-sm hover:bg-[#19A463] transition-all shadow-sm hover:shadow-md flex items-center gap-2"
+                >
+                  {currentStep === 5 ? (
+                    <>
+                      Publish Gig <Rocket size={18} />
+                    </>
+                  ) : (
+                    <>
+                      Continue <ChevronRight size={18} />
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* 3. Dark Context Sidebar (Enterprise Look) */}
-        <div className="hidden lg:flex col-span-4 bg-[#4A312F] p-16 flex-col justify-between text-white border-l border-white/5">
-           <div className="space-y-12">
-              <div className="space-y-2">
-                <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-[#B7E2BF]">Enterprise Logic</h4>
-                <p className="text-xl font-black italic leading-tight">"Assigned Invoices depend on these parameters."</p>
-              </div>
-              <div className="p-8 border border-white/10 rounded-3xl bg-white/5">
-                 <Rocket className="text-[#D34079] mb-4" size={24} />
-                 <p className="text-[10px] text-gray-400 font-medium leading-relaxed">Once published, the system will allow clients to purchase and trigger the automated invoice workflow.</p>
-              </div>
-           </div>
-           <div className="space-y-3">
-              <div className="flex justify-between text-[8px] font-black uppercase tracking-widest text-gray-400">
-                <span>Optimization</span>
-                <span>{currentStep * 25}%</span>
-              </div>
-              <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                <div className="h-full bg-[#D34079] transition-all duration-700" style={{ width: `${currentStep * 25}%` }} />
-              </div>
-           </div>
+        {/* Progress Indicator - Mobile */}
+        <div className="mt-6 text-center text-sm text-gray-500 sm:hidden">
+          Step {currentStep} of {steps.length}
         </div>
-      </main>
-
-      {/* 4. Footer (Fixed height, Zero Scroll) */}
-      <footer className="h-24 border-t border-gray-100 px-8 flex items-center justify-between shrink-0 bg-white">
-        <button 
-          onClick={prevStep} 
-          className={`text-[9px] font-black uppercase tracking-[0.2em] transition-all ${currentStep === 1 ? 'opacity-0 pointer-events-none' : 'text-gray-400 hover:text-black'}`}
-        >
-          &larr; Back
-        </button>
-        <div className="flex gap-4">
-          <button className="px-8 py-3 bg-gray-50 rounded-full text-[9px] font-black uppercase tracking-widest text-[#4A312F] hover:bg-gray-100 transition-all">Save Draft</button>
-          <button 
-            onClick={nextStep}
-            className="bg-[#D34079] text-white px-16 py-3 rounded-full font-black text-[9px] uppercase tracking-[0.3em] shadow-2xl shadow-[#D34079]/20 hover:bg-[#4A312F] hover:scale-105 transition-all flex items-center gap-3"
-          >
-            {currentStep === 4 ? "Launch Gig" : "Continue"} <ChevronRight size={16} />
-          </button>
-        </div>
-      </footer>
-    </div>
-  );
-}
-
-function FieldWrapper({ label, children }) {
-  return (
-    <div className="space-y-3">
-      <label className="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400">{label}</label>
-      {children}
+      </div>
     </div>
   );
 }
