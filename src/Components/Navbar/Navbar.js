@@ -76,12 +76,12 @@ const Navbar = () => {
       {menuOpen && (
         <div className="mobile-menu">
           <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
-          <NavLink to="/findwork" onClick={() => setMenuOpen(false)}>Find Jobs</NavLink>
-          <NavLink to="/apply" onClick={() => setMenuOpen(false)}>Apply</NavLink>
-          <NavLink to="/contact" onClick={() => setMenuOpen(false)}>Contact</NavLink>
+          <NavLink to="/find-work/" onClick={() => setMenuOpen(false)}>Hire Talent </NavLink>
+          <NavLink to="/find-work/" onClick={() => setMenuOpen(false)}>Find Work</NavLink>
+          <NavLink to="/contact" onClick={() => setMenuOpen(false)}>Top talent</NavLink>
           <NavLink to="/categories" onClick={() => setMenuOpen(false)}>Categories</NavLink>
-          <NavLink to="/talent" onClick={() => setMenuOpen(false)}>Top Talent</NavLink>
-          <NavLink to="/insights" onClick={() => setMenuOpen(false)}>Insights</NavLink>
+          <NavLink to="/talent" onClick={() => setMenuOpen(false)}>insights</NavLink>
+          <NavLink to="/insights" onClick={() => setMenuOpen(false)}>Jobs/Projects</NavLink>
 
           <button
             className="join-btn"
