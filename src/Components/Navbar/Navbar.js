@@ -33,7 +33,7 @@ const Navbar = () => {
       {/* ===== DESKTOP NAV LINKS ===== */}
       <ul className="nav-links">
         <li><NavLink to="/talent" className="nav-item">Hire Talent</NavLink></li>
-        <li><NavLink to="/jobs" className="nav-item">Find Work</NavLink></li>
+        <li><NavLink to="/find-work/" className="nav-item">Find Work</NavLink></li>
   
         <li
           className="nav-item dropdown"
@@ -76,7 +76,7 @@ const Navbar = () => {
       {menuOpen && (
         <div className="mobile-menu">
           <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
-          <NavLink to="/jobs" onClick={() => setMenuOpen(false)}>Find Jobs</NavLink>
+          <NavLink to="/findwork" onClick={() => setMenuOpen(false)}>Find Jobs</NavLink>
           <NavLink to="/apply" onClick={() => setMenuOpen(false)}>Apply</NavLink>
           <NavLink to="/contact" onClick={() => setMenuOpen(false)}>Contact</NavLink>
           <NavLink to="/categories" onClick={() => setMenuOpen(false)}>Categories</NavLink>
