@@ -1,0 +1,7 @@
+{
+  "github": {
+    "silent": true
+  },
+  "installCommand": "npm install --legacy-peer-deps",
+  "buildCommand": "CI=false npm run build"
+}
