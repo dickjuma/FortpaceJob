@@ -1,92 +1,334 @@
 import React, { useState } from "react";
-import { Clock, CheckCircle2, XCircle, MoreVertical, ExternalLink, Filter, DollarSign, Search, Download, Eye, Trash2, MessageSquare, Calendar, TrendingUp, AlertCircle, ChevronDown, X } from "lucide-react";
+import { 
+  Clock, 
+  CheckCircle, 
+  XCircle, 
+  MoreVertical, 
+  ExternalLink, 
+  Filter, 
+  DollarSign, 
+  Search, 
+  Download, 
+  Eye, 
+  Trash2, 
+  MessageSquare, 
+  Calendar, 
+  TrendingUp, 
+  AlertCircle, 
+  ChevronDown, 
+  X,
+  FileText,
+  User,
+  BarChart,
+  Copy,
+  RefreshCw,
+  Edit,
+  Printer,
+  Share2,
+  Bell,
+  Briefcase,
+  Layers,
+  CheckCircle2
+} from "lucide-react";
+
+const ProposalCard = ({ proposal, onView, onActionMenu }) => {
+  const StatusIcon = {
+    pending: Clock,
+    accepted: CheckCircle,
+    rejected: XCircle
+  }[proposal.status];
+  
+  const StatusBadge = {
+    pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    accepted: "bg-green-100 text-green-800 border-green-200",
+    rejected: "bg-red-100 text-red-800 border-red-200"
+  }[proposal.status];
+
+  return (
+    <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
+      <div className="p-5">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-2">
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${StatusBadge}`}>
+                <StatusIcon size={12} />
+                {proposal.status.charAt(0).toUpperCase() + proposal.status.slice(1)}
+              </span>
+              <span className="text-xs text-gray-500 font-medium">{proposal.date}</span>
+            </div>
+            
+            <h3 className="font-semibold text-gray-900 mb-2">{proposal.title}</h3>
+            <p className="text-sm text-gray-600 mb-3 line-clamp-2">{proposal.description}</p>
+            
+            <div className="flex items-center gap-4 text-sm text-gray-500">
+              <div className="flex items-center gap-1">
+                <User size={14} />
+                {proposal.buyer}
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock size={14} />
+                {proposal.delivery}
+              </div>
+              <div className="flex items-center gap-1">
+                <Eye size={14} />
+                {proposal.views} views
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex flex-col items-end gap-2">
+            <div className="text-right">
+              <div className="text-lg font-semibold text-gray-900">${proposal.amount}</div>
+              <div className="text-xs text-gray-500">Net: ${proposal.net}</div>
+            </div>
+            
+            <button
+              onClick={onView}
+              className="px-3 py-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+            >
+              View Details
+            </button>
+          </div>
+        </div>
+        
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+          <div className="text-xs text-gray-500">
+            ID: {proposal.id} • Response: {proposal.responseTime}
+          </div>
+          <button
+            onClick={() => onActionMenu(proposal.id)}
+            className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"
+          >
+            <MoreVertical size={18} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ProposalDetailModal = ({ proposal, onClose, onAction }) => {
+  if (!proposal) return null;
+
+  const StatusIcon = {
+    pending: Clock,
+    accepted: CheckCircle,
+    rejected: XCircle
+  }[proposal.status];
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Proposal Details</h3>
+              <p className="text-sm text-gray-500">{proposal.buyer}</p>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <X size={20} />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6 overflow-y-auto max-h-[70vh] space-y-6">
+          {/* Header Info */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <div className="text-sm text-gray-500">Proposal ID</div>
+              <div className="font-medium text-gray-900">{proposal.id}</div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-sm text-gray-500">Submitted Date</div>
+              <div className="font-medium text-gray-900">{proposal.date}</div>
+            </div>
+          </div>
+
+          {/* Status & Amount */}
+          <div className="bg-gray-50 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-lg ${
+                  proposal.status === 'accepted' ? 'bg-green-100 text-green-600' :
+                  proposal.status === 'pending' ? 'bg-yellow-100 text-yellow-600' :
+                  'bg-red-100 text-red-600'
+                }`}>
+                  <StatusIcon size={20} />
+                </div>
+                <div>
+                  <div className="font-medium text-gray-900">
+                    {proposal.status.charAt(0).toUpperCase() + proposal.status.slice(1)}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {proposal.status === 'pending' ? 'Awaiting response' : 
+                     proposal.status === 'accepted' ? 'Project ready to start' : 'Not selected'}
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-lg font-semibold text-gray-900">${proposal.amount}</div>
+                <div className="text-sm text-gray-500">You earn: ${proposal.net}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Project Details */}
+          <div>
+            <h4 className="font-medium text-gray-900 mb-3">Project Overview</h4>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="space-y-3">
+                <div>
+                  <div className="text-sm text-gray-500 mb-1">Project Title</div>
+                  <div className="font-medium text-gray-900">{proposal.title}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-500 mb-1">Description</div>
+                  <div className="text-gray-700">{proposal.description}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <div className="text-sm text-gray-500">Delivery Time</div>
+              <div className="font-medium text-gray-900 flex items-center gap-2">
+                <Clock size={16} className="text-gray-400" />
+                {proposal.delivery}
+              </div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-sm text-gray-500">Views</div>
+              <div className="font-medium text-gray-900 flex items-center gap-2">
+                <Eye size={16} className="text-gray-400" />
+                {proposal.views} views
+              </div>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="border-t border-gray-200 pt-6">
+            <div className="flex flex-col sm:flex-row gap-3">
+              {proposal.status === 'accepted' ? (
+                <>
+                  <button className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 flex items-center justify-center gap-2">
+                    <ExternalLink size={16} />
+                    Start Project
+                  </button>
+                  <button className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 flex items-center justify-center gap-2">
+                    <MessageSquare size={16} />
+                    Message Client
+                  </button>
+                </>
+              ) : proposal.status === 'pending' ? (
+                <>
+                  <button className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 flex items-center justify-center gap-2">
+                    <Edit size={16} />
+                    Edit Proposal
+                  </button>
+                  <button className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 flex items-center justify-center gap-2">
+                    <Copy size={16} />
+                    Duplicate
+                  </button>
+                </>
+              ) : (
+                <button className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 flex items-center justify-center gap-2">
+                  <Trash2 size={16} />
+                  Delete Proposal
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default function ProposalManager() {
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("date");
   const [selectedProposal, setSelectedProposal] = useState(null);
-  const [showActions, setShowActions] = useState(null);
+  const [showActionMenu, setShowActionMenu] = useState(null);
+  const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
 
   const proposals = [
     {
       id: "PROP-9921",
       buyer: "TechFlow Solutions",
-      title: "Full-stack React & Node.js Developer",
+      title: "Full-stack React & Node.js Developer for SaaS Dashboard",
       amount: 1200,
       net: 960,
       status: "pending",
-      date: "Jan 12, 2026",
+      date: "Jan 12, 2024",
       delivery: "30 Days",
-      description: "Complete SaaS dashboard with Stripe integration",
-      responseTime: "2 days",
-      views: 8
+      description: "Complete SaaS dashboard with Stripe integration, PostgreSQL database, and admin panel. Requires experience with modern React patterns.",
+      responseTime: "2 days remaining",
+      views: 8,
+      category: "Web Development"
     },
     {
       id: "PROP-8842",
       buyer: "Studio Orbit",
-      title: "Logo & Brand Identity",
+      title: "Logo & Brand Identity Package",
       amount: 250,
       net: 200,
       status: "accepted",
-      date: "Jan 10, 2026",
+      date: "Jan 10, 2024",
       delivery: "7 Days",
-      description: "Minimalist design for organic coffee brand",
-      responseTime: "1 day",
-      views: 15
+      description: "Minimalist design for organic coffee brand including logo, color palette, and social media templates.",
+      responseTime: "Accepted on Jan 11",
+      views: 15,
+      category: "Design"
     },
     {
       id: "PROP-7712",
       buyer: "Digital Growth Lab",
-      title: "Technical Content Writer",
+      title: "Technical Content Writer for AI/ML Blog",
       amount: 400,
       net: 320,
       status: "rejected",
-      date: "Jan 05, 2026",
+      date: "Jan 05, 2024",
       delivery: "14 Days",
-      description: "10 SEO-optimized articles on AI and SaaS",
-      responseTime: "5 days",
-      views: 12
+      description: "Write 10 SEO-optimized articles on artificial intelligence and machine learning topics. Must have technical background.",
+      responseTime: "Declined on Jan 08",
+      views: 12,
+      category: "Writing"
     },
     {
       id: "PROP-6543",
       buyer: "FitLife Pro",
-      title: "Instagram Reels & TikTok Videos",
+      title: "Social Media Video Production",
       amount: 800,
       net: 640,
       status: "pending",
-      date: "Jan 08, 2026",
+      date: "Jan 08, 2024",
       delivery: "21 Days",
-      description: "20 short-form fitness videos with editing",
-      responseTime: "3 days",
-      views: 5
+      description: "Create 20 short-form fitness videos for Instagram Reels and TikTok. Need dynamic editing and trending audio.",
+      responseTime: "5 days remaining",
+      views: 5,
+      category: "Video"
     },
     {
       id: "PROP-5421",
       buyer: "CloudSync Inc",
-      title: "Backend API Development",
+      title: "Backend API Development with Node.js",
       amount: 1500,
       net: 1200,
       status: "accepted",
-      date: "Jan 03, 2026",
+      date: "Jan 03, 2024",
       delivery: "45 Days",
-      description: "RESTful API with authentication and database",
-      responseTime: "4 hours",
-      views: 22
+      description: "Build RESTful API with JWT authentication, PostgreSQL database, and integration with third-party services.",
+      responseTime: "Accepted on Jan 04",
+      views: 22,
+      category: "Web Development"
     }
   ];
-
-  const statusStyles = {
-    pending: "bg-amber-50 text-amber-600 border-amber-200",
-    accepted: "bg-green-50 text-green-600 border-green-200",
-    rejected: "bg-red-50 text-red-600 border-red-200"
-  };
-
-  const statusIcons = {
-    pending: Clock,
-    accepted: CheckCircle2,
-    rejected: XCircle
-  };
 
   const stats = {
     total: proposals.length,
@@ -94,365 +336,340 @@ export default function ProposalManager() {
     accepted: proposals.filter(p => p.status === "accepted").length,
     rejected: proposals.filter(p => p.status === "rejected").length,
     totalValue: proposals.reduce((sum, p) => sum + p.amount, 0),
-    avgResponseTime: "2.4 days"
+    activeValue: proposals.filter(p => p.status === "accepted").reduce((sum, p) => sum + p.amount, 0),
+    acceptanceRate: Math.round((proposals.filter(p => p.status === "accepted").length / proposals.length) * 100)
   };
 
   const filteredProposals = proposals
     .filter(p => filter === "all" || p.status === filter)
     .filter(p => 
       p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      p.buyer.toLowerCase().includes(searchQuery.toLowerCase())
+      p.buyer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.id.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .sort((a, b) => {
       if (sortBy === "amount-high") return b.amount - a.amount;
       if (sortBy === "amount-low") return a.amount - b.amount;
       if (sortBy === "views") return b.views - a.views;
-      return 0; // default date
+      // Default sort by date (newest first)
+      return new Date(b.date) - new Date(a.date);
     });
 
-  const ProposalDetailModal = ({ proposal, onClose }) => {
-    if (!proposal) return null;
-    
-    const StatusIcon = statusIcons[proposal.status];
-    
-    return (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
-        <div className="bg-white rounded-[2.5rem] max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom-8 duration-500">
-          {/* Header */}
-          <div className="bg-[#4A312F] p-8 text-white flex justify-between items-start sticky top-0 rounded-t-[2.5rem]">
-            <div>
-              <div className="flex items-center gap-2 text-[#B7E2BF] mb-2">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Proposal Details</span>
-              </div>
-              <h3 className="text-2xl font-black">{proposal.title}</h3>
-              <p className="text-sm text-gray-400 mt-1">{proposal.buyer}</p>
-            </div>
-            <button onClick={onClose} className="text-white/60 hover:text-white transition-colors">
-              <X size={24} />
-            </button>
-          </div>
+  const handleExport = () => {
+    alert("Exporting proposals to CSV...");
+  };
 
-          {/* Content */}
-          <div className="p-8 space-y-6">
-            {/* Status & Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-gray-50 rounded-2xl p-4">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Status</p>
-                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${statusStyles[proposal.status]}`}>
-                  <StatusIcon size={12} />
-                  {proposal.status}
-                </span>
-              </div>
-              <div className="bg-gray-50 rounded-2xl p-4">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Offer</p>
-                <p className="text-xl font-black text-black">${proposal.amount}</p>
-              </div>
-              <div className="bg-gray-50 rounded-2xl p-4">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">You Earn</p>
-                <p className="text-xl font-black text-[#B7E2BF]">${proposal.net}</p>
-              </div>
-              <div className="bg-gray-50 rounded-2xl p-4">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Views</p>
-                <p className="text-xl font-black text-black">{proposal.views}</p>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div>
-              <h4 className="text-sm font-black text-black uppercase mb-3">Your Proposal</h4>
-              <p className="text-sm text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-2xl">
-                {proposal.description}
-              </p>
-            </div>
-
-            {/* Timeline */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Submitted</p>
-                <p className="text-sm font-bold text-black">{proposal.date}</p>
-              </div>
-              <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Delivery Time</p>
-                <p className="text-sm font-bold text-black">{proposal.delivery}</p>
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="pt-6 border-t border-gray-100 flex flex-col md:flex-row gap-3">
-              {proposal.status === "accepted" ? (
-                <>
-                  <button className="flex-1 bg-black hover:bg-[#D34079] text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2">
-                    <ExternalLink size={16} /> Create Invoice
-                  </button>
-                  <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-black px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2">
-                    <MessageSquare size={16} /> Message Client
-                  </button>
-                </>
-              ) : proposal.status === "pending" ? (
-                <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-black px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2">
-                  <Download size={16} /> Download PDF
-                </button>
-              ) : (
-                <button className="flex-1 bg-gray-100 hover:bg-red-100 text-red-600 px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2">
-                  <Trash2 size={16} /> Delete Proposal
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  const handleBulkAction = (action) => {
+    alert(`Performing ${action} on selected proposals...`);
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 px-4 pb-20">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold text-gray-900">Proposal Manager</h1>
+        <p className="text-gray-600 mt-1">Track and manage your sent proposals</p>
+      </div>
+
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Sent</p>
-            <TrendingUp size={16} className="text-gray-300" />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-white border border-gray-200 rounded-lg p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <FileText size={18} className="text-blue-600" />
+            </div>
+            <div className="text-sm font-medium text-green-600">+12%</div>
           </div>
-          <p className="text-3xl font-black text-black">{stats.total}</p>
+          <div className="text-2xl font-semibold text-gray-900">{stats.total}</div>
+          <div className="text-sm text-gray-500">Total Proposals</div>
         </div>
-        <div className="bg-amber-50 border border-amber-100 rounded-2xl p-5">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest">Pending</p>
-            <Clock size={16} className="text-amber-400" />
+
+        <div className="bg-white border border-gray-200 rounded-lg p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-2 bg-yellow-100 rounded-lg">
+              <Clock size={18} className="text-yellow-600" />
+            </div>
+            <div className="text-sm font-medium text-gray-500">{stats.pending}</div>
           </div>
-          <p className="text-3xl font-black text-amber-600">{stats.pending}</p>
+          <div className="text-2xl font-semibold text-gray-900">{stats.pending}</div>
+          <div className="text-sm text-gray-500">Pending</div>
         </div>
-        <div className="bg-green-50 border border-green-100 rounded-2xl p-5">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-[10px] font-black text-green-600 uppercase tracking-widest">Accepted</p>
-            <CheckCircle2 size={16} className="text-green-400" />
+
+        <div className="bg-white border border-gray-200 rounded-lg p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <CheckCircle size={18} className="text-green-600" />
+            </div>
+            <div className="text-sm font-medium text-green-600">{stats.acceptanceRate}%</div>
           </div>
-          <p className="text-3xl font-black text-green-600">{stats.accepted}</p>
+          <div className="text-2xl font-semibold text-gray-900">{stats.accepted}</div>
+          <div className="text-sm text-gray-500">Accepted</div>
         </div>
-        <div className="bg-[#4A312F] rounded-2xl p-5 text-white">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-[10px] font-black text-[#B7E2BF] uppercase tracking-widest">Total Value</p>
-            <DollarSign size={16} className="text-[#B7E2BF]" />
+
+        <div className="bg-white border border-gray-200 rounded-lg p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <DollarSign size={18} className="text-gray-600" />
+            </div>
+            <div className="text-sm font-medium text-green-600">+${stats.activeValue}</div>
           </div>
-          <p className="text-3xl font-black">${stats.totalValue}</p>
+          <div className="text-2xl font-semibold text-gray-900">${stats.totalValue}</div>
+          <div className="text-sm text-gray-500">Total Value</div>
         </div>
       </div>
 
-      {/* Header & Controls */}
-      <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-black text-black tracking-tight">Sent Proposals</h2>
-            <p className="text-sm text-gray-400 font-bold uppercase tracking-widest mt-1">Track all your active bids</p>
-          </div>
-          <div className="flex gap-3">
-            <button className="bg-black hover:bg-[#D34079] text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-2">
-              <Download size={14} /> Export CSV
-            </button>
-          </div>
-        </div>
+      {/* Main Content Card */}
+      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+        {/* Toolbar */}
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex-1 max-w-md">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                  type="text"
+                  placeholder="Search proposals by title, client, or ID..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
 
-        {/* Search & Filter */}
-        <div className="flex flex-col md:flex-row gap-3">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#D34079] transition-colors" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search by title or buyer..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#F7F9FB] border border-gray-100 rounded-xl pl-12 pr-4 py-3 font-medium text-black outline-none focus:ring-2 focus:ring-[#B7E2BF]/50 transition-all"
-            />
-          </div>
-          <select 
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="bg-[#F7F9FB] border border-gray-100 rounded-xl px-4 py-3 font-black text-xs text-gray-600 uppercase tracking-widest outline-none focus:ring-2 focus:ring-[#B7E2BF]/50 cursor-pointer"
-          >
-            <option value="date">Sort: Most Recent</option>
-            <option value="amount-high">Amount: High to Low</option>
-            <option value="amount-low">Amount: Low to High</option>
-            <option value="views">Most Viewed</option>
-          </select>
-        </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowAdvancedFilter(!showAdvancedFilter)}
+                className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center gap-2"
+              >
+                <Filter size={16} />
+                Filter
+              </button>
 
-        {/* Status Filter */}
-        <div className="flex bg-[#F7F9FB] p-1 rounded-xl border border-gray-100 overflow-x-auto">
-          {[
-            { key: "all", label: "All Proposals" },
-            { key: "pending", label: "Pending" },
-            { key: "accepted", label: "Accepted" },
-            { key: "rejected", label: "Rejected" }
-          ].map((s) => (
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="date">Sort by: Most Recent</option>
+                <option value="amount-high">Budget: High to Low</option>
+                <option value="amount-low">Budget: Low to High</option>
+                <option value="views">Most Viewed</option>
+              </select>
+
+              <button
+                onClick={handleExport}
+                className="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 flex items-center gap-2"
+              >
+                <Download size={16} />
+                Export
+              </button>
+            </div>
+          </div>
+
+          {/* Status Filter */}
+          <div className="flex flex-wrap gap-2 mt-4">
             <button
-              key={s.key}
-              onClick={() => setFilter(s.key)}
-              className={`px-6 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
-                filter === s.key ? "bg-black text-white shadow-lg" : "text-gray-400 hover:text-black"
+              onClick={() => setFilter("all")}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                filter === "all" 
+                  ? "bg-blue-600 text-white" 
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              {s.label}
+              All ({stats.total})
             </button>
-          ))}
-        </div>
-      </div>
+            <button
+              onClick={() => setFilter("pending")}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                filter === "pending" 
+                  ? "bg-yellow-600 text-white" 
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Pending ({stats.pending})
+            </button>
+            <button
+              onClick={() => setFilter("accepted")}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                filter === "accepted" 
+                  ? "bg-green-600 text-white" 
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Accepted ({stats.accepted})
+            </button>
+            <button
+              onClick={() => setFilter("rejected")}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                filter === "rejected" 
+                  ? "bg-red-600 text-white" 
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Rejected ({stats.rejected})
+            </button>
+          </div>
 
-      {/* Proposal Cards (Mobile-friendly) */}
-      <div className="md:hidden space-y-3">
-        {filteredProposals.map((prop) => {
-          const StatusIcon = statusIcons[prop.status];
-          return (
-            <div key={prop.id} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <p className="text-sm font-black text-black">{prop.title}</p>
-                  <p className="text-xs font-bold text-gray-400 mt-1">{prop.buyer}</p>
-                </div>
-                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${statusStyles[prop.status]}`}>
-                  <StatusIcon size={10} />
-                  {prop.status}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-xs font-bold text-gray-500 mb-3">
-                <span className="flex items-center gap-1"><Clock size={12} /> {prop.delivery}</span>
-                <span className="flex items-center gap-1"><Eye size={12} /> {prop.views} views</span>
-              </div>
-              <div className="flex items-center justify-between pt-3 border-t border-gray-50">
+          {/* Advanced Filters */}
+          {showAdvancedFilter && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <p className="text-xs text-gray-400 font-bold uppercase">Offer</p>
-                  <p className="text-lg font-black text-black">${prop.amount}</p>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Budget Range</label>
+                  <div className="flex gap-2">
+                    <input 
+                      type="number" 
+                      placeholder="Min" 
+                      className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+                    />
+                    <input 
+                      type="number" 
+                      placeholder="Max" 
+                      className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+                    />
+                  </div>
                 </div>
-                <button 
-                  onClick={() => setSelectedProposal(prop)}
-                  className="bg-black text-white px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#D34079] transition-all"
-                >
-                  View
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+                  <div className="flex gap-2">
+                    <input 
+                      type="date" 
+                      className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+                    />
+                    <input 
+                      type="date" 
+                      className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <select className="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                    <option>All Categories</option>
+                    <option>Web Development</option>
+                    <option>Design</option>
+                    <option>Writing</option>
+                    <option>Video</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 mt-4">
+                <button className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900">
+                  Reset
+                </button>
+                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
+                  Apply Filters
                 </button>
               </div>
             </div>
-          );
-        })}
+          )}
+        </div>
+
+        {/* Proposals List */}
+        <div className="p-6">
+          {filteredProposals.length > 0 ? (
+            <div className="space-y-4">
+              {filteredProposals.map((proposal) => (
+                <ProposalCard
+                  key={proposal.id}
+                  proposal={proposal}
+                  onView={() => setSelectedProposal(proposal)}
+                  onActionMenu={(id) => setShowActionMenu(id === showActionMenu ? null : id)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FileText size={24} className="text-gray-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No proposals found</h3>
+              <p className="text-gray-600 mb-4">Try adjusting your filters or search terms</p>
+              <button
+                onClick={() => {
+                  setFilter("all");
+                  setSearchQuery("");
+                }}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200"
+              >
+                Clear All Filters
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Pagination */}
+        {filteredProposals.length > 0 && (
+          <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+            <div className="text-sm text-gray-600">
+              Showing {filteredProposals.length} of {proposals.length} proposals
+            </div>
+            <div className="flex items-center gap-2">
+              <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                Previous
+              </button>
+              <button className="px-3 py-2 bg-blue-600 text-white rounded-lg">1</button>
+              <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">2</button>
+              <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">3</button>
+              <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Proposal Table (Desktop) */}
-      <div className="hidden md:block bg-white border border-gray-100 rounded-[2.5rem] shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-gray-50 bg-[#F7F9FB]">
-                <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Brief / Buyer</th>
-                <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Offer / Net</th>
-                <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Duration</th>
-                <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Activity</th>
-                <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Status</th>
-                <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {filteredProposals.map((prop) => {
-                const StatusIcon = statusIcons[prop.status];
-                return (
-                  <tr key={prop.id} className="hover:bg-[#F7F9FB]/50 transition-colors group">
-                    <td className="p-6">
-                      <p className="text-sm font-black text-black group-hover:text-[#D34079] transition-colors cursor-pointer" onClick={() => setSelectedProposal(prop)}>{prop.title}</p>
-                      <p className="text-xs font-bold text-gray-400 mt-1">{prop.buyer} • {prop.date}</p>
-                    </td>
-                    <td className="p-6">
-                      <div className="flex flex-col">
-                        <span className="text-sm font-black text-black">${prop.amount}</span>
-                        <span className="text-[10px] font-bold text-[#B7E2BF] uppercase tracking-tighter">Net: ${prop.net}</span>
-                      </div>
-                    </td>
-                    <td className="p-6">
-                      <div className="flex items-center gap-2 text-xs font-bold text-gray-600">
-                        <Clock size={14} className="text-gray-300" /> {prop.delivery}
-                      </div>
-                    </td>
-                    <td className="p-6">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2 text-xs font-bold text-gray-600">
-                          <Eye size={12} className="text-gray-300" /> {prop.views} views
-                        </div>
-                        <p className="text-[10px] text-gray-400 font-bold">Response: {prop.responseTime}</p>
-                      </div>
-                    </td>
-                    <td className="p-6">
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${statusStyles[prop.status]}`}>
-                        <StatusIcon size={12} />
-                        {prop.status}
-                      </span>
-                    </td>
-                    <td className="p-6">
-                      <div className="flex items-center gap-2">
-                        {prop.status === "accepted" ? (
-                          <button className="bg-black text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-[#D34079] transition-all flex items-center gap-2">
-                            <ExternalLink size={12} /> Invoice
-                          </button>
-                        ) : (
-                          <div className="relative">
-                            <button 
-                              onClick={() => setShowActions(showActions === prop.id ? null : prop.id)}
-                              className="p-2 text-gray-300 hover:text-black transition-colors"
-                            >
-                              <MoreVertical size={18} />
-                            </button>
-                            {showActions === prop.id && (
-                              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-2xl z-10 py-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                                <button 
-                                  onClick={() => setSelectedProposal(prop)}
-                                  className="w-full px-4 py-2 text-left text-xs font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-2"
-                                >
-                                  <Eye size={14} /> View Details
-                                </button>
-                                <button className="w-full px-4 py-2 text-left text-xs font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-2">
-                                  <Download size={14} /> Download PDF
-                                </button>
-                                {prop.status === "rejected" && (
-                                  <button className="w-full px-4 py-2 text-left text-xs font-bold text-red-600 hover:bg-red-50 flex items-center gap-2">
-                                    <Trash2 size={14} /> Delete
-                                  </button>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+      {/* Tips Card */}
+      <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <div className="flex items-start gap-4">
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <CheckCircle2 size={20} className="text-blue-600" />
+          </div>
+          <div className="flex-1">
+            <h4 className="font-semibold text-gray-900 mb-2">Tips for Higher Acceptance Rates</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• Respond to requests within 24 hours for better visibility</li>
+              <li>• Include relevant portfolio samples in your proposals</li>
+              <li>• Be specific about deliverables and timelines</li>
+              <li>• Follow up on pending proposals after 3-4 days</li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      {filteredProposals.length === 0 && (
-        <div className="text-center py-20 bg-white rounded-[2rem] border border-gray-100">
-          <AlertCircle size={48} className="mx-auto text-gray-300 mb-4" />
-          <p className="text-gray-400 font-bold text-lg">No proposals found</p>
-          <p className="text-sm text-gray-400 mt-2">Try adjusting your filters or search query</p>
+      {/* Action Menu */}
+      {showActionMenu && (
+        <div className="fixed inset-0 z-40" onClick={() => setShowActionMenu(null)}>
+          <div className="absolute right-4 top-20 bg-white border border-gray-200 rounded-lg shadow-lg w-48 py-2">
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+              <Edit size={14} />
+              Edit Proposal
+            </button>
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+              <Copy size={14} />
+              Duplicate
+            </button>
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+              <Download size={14} />
+              Download PDF
+            </button>
+            <button className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
+              <Trash2 size={14} />
+              Delete
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Tip Card */}
-      <div className="bg-[#4A312F] p-8 rounded-[2rem] text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div className="space-y-2">
-          <h4 className="text-lg font-bold flex items-center gap-2 text-[#B7E2BF]">
-            <DollarSign size={20} /> Boost Your Acceptance Rate
-          </h4>
-          <p className="text-sm text-gray-400">Accepted proposals are automatically converted into Clients and active Invoices.</p>
-          <p className="text-xs text-gray-500">Average response time: {stats.avgResponseTime}</p>
-        </div>
-        <button className="bg-white text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-[#B7E2BF] transition-all whitespace-nowrap">
-          View Marketplace
-        </button>
-      </div>
-
-      {/* Detail Modal */}
+      {/* Proposal Detail Modal */}
       {selectedProposal && (
-        <ProposalDetailModal 
-          proposal={selectedProposal} 
-          onClose={() => setSelectedProposal(null)} 
+        <ProposalDetailModal
+          proposal={selectedProposal}
+          onClose={() => setSelectedProposal(null)}
+          onAction={(action) => {
+            alert(`Action: ${action} on ${selectedProposal.id}`);
+            setSelectedProposal(null);
+          }}
         />
       )}
     </div>

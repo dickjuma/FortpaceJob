@@ -1,15 +1,15 @@
 // src/components/findWork/performance/Promotion.jsx
 import React, { useState } from "react";
-import { Megaphone, Target, BarChart3, Rocket, Zap, ChevronRight, DollarSign } from "lucide-react";
+import { Megaphone, Target, BarChart3, Rocket, ChevronRight, DollarSign, TrendingUp, Eye, Users } from "lucide-react";
 
 const Benefit = ({ icon: Icon, title, desc }) => (
-  <div className="flex gap-4 p-5 rounded-2xl bg-white/60 border border-white hover:border-[#B7E2BF] hover:bg-white hover:shadow-xl hover:shadow-[#B7E2BF]/10 transition-all duration-300 group">
-    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#B7E2BF]/20 to-[#B7E2BF]/5 flex items-center justify-center text-[#4A312F] shrink-0 group-hover:scale-110 transition-transform">
-      <Icon size={24} />
+  <div className="flex gap-4 p-4 rounded-lg bg-white border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all duration-200">
+    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
+      <Icon size={20} />
     </div>
     <div>
-      <h4 className="font-bold text-[#4A312F] text-sm">{title}</h4>
-      <p className="text-[11px] text-[#4A312F]/60 leading-relaxed mt-1">{desc}</p>
+      <h4 className="font-semibold text-gray-900 text-sm mb-1">{title}</h4>
+      <p className="text-sm text-gray-600 leading-relaxed">{desc}</p>
     </div>
   </div>
 );
@@ -18,112 +18,197 @@ export default function Promotion() {
   const [dailyBudget, setDailyBudget] = useState(5);
 
   return (
-    <div className="bg-[#F7F9FB] rounded-[2.5rem] overflow-hidden border border-[#4A312F]/5 shadow-2xl shadow-[#4A312F]/5">
-      {/* 1. Hero / Main CTA Section */}
-      <div className="p-8 lg:p-16 flex flex-col lg:flex-row items-center gap-12 bg-white">
-        <div className="flex-1 space-y-8">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#D34079]/10 text-[#D34079] text-[10px] font-black uppercase tracking-[0.2em]">
-            <Zap size={14} fill="currentColor" />
-            Seller Accelerator
-          </div>
-          
-          <h2 className="text-4xl lg:text-5xl font-black text-[#4A312F] leading-[1.1] tracking-tight">
-            Skyrocket your <br /> 
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D34079] to-[#FBB9C2]">
-              Sales Visibility.
-            </span>
-          </h2>
-          
-          <p className="text-[#4A312F]/70 text-lg leading-relaxed max-w-xl">
-            Join the elite 5% of sellers using Promoted Gigs to secure top-tier placements and 3x their monthly invoice volume.
-          </p>
-          
-          {/* Quick Budget Preview */}
-          <div className="bg-[#F7F9FB] p-6 rounded-2xl border border-gray-100 max-w-md">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-xs font-bold text-[#4A312F]/60 uppercase">Estimated Daily Clicks</span>
-              <span className="text-sm font-black text-[#D34079]">{dailyBudget * 4} - {dailyBudget * 12}</span>
+    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      {/* Header Section */}
+      <div className="p-6 border-b border-gray-200 bg-gray-50">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Megaphone size={20} className="text-blue-600" />
             </div>
-            <input 
-              type="range" 
-              min="1" 
-              max="50" 
-              value={dailyBudget}
-              onChange={(e) => setDailyBudget(e.target.value)}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#D34079]"
-            />
-            <div className="flex justify-between mt-2 text-[10px] font-bold text-gray-400">
-              <span>$1/day</span>
-              <span>Daily Budget: ${dailyBudget}</span>
-              <span>$50/day</span>
+            <div>
+              <h1 className="text-xl font-semibold text-gray-900">Promoted Gigs</h1>
+              <p className="text-sm text-gray-600">Increase visibility and get more orders</p>
             </div>
           </div>
-
-          <div className="flex gap-4 pt-4">
-            <button className="bg-[#4A312F] hover:bg-black text-white px-10 py-5 rounded-2xl font-black shadow-2xl shadow-[#4A312F]/20 transition-all flex items-center gap-3 active:scale-95">
-              Launch Campaign <ChevronRight size={20} />
-            </button>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Eye size={16} />
+            <span>Only 5% of sellers use this feature</span>
           </div>
         </div>
+      </div>
 
-        {/* 2. Interactive Card Preview */}
-        <div className="hidden lg:block relative flex-1">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#B7E2BF]/20 blur-[100px] rounded-full"></div>
-          
-          {/* Mock Promoted Gig Card */}
-          <div className="relative bg-white p-6 rounded-[2rem] shadow-[0_30px_60px_-15px_rgba(74,49,47,0.15)] border border-gray-100 w-72 mx-auto rotate-2 hover:rotate-0 transition-all duration-700">
-            <div className="absolute top-4 right-4 bg-[#D34079] text-white text-[8px] font-black px-2 py-1 rounded-md tracking-widest shadow-lg">
-              PROMOTED
+      {/* Main Content */}
+      <div className="p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left Column - Content */}
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-3">Boost Your Sales Visibility</h2>
+              <p className="text-gray-600 mb-6">
+                Get your gigs featured in premium positions to reach more potential clients and increase your order volume.
+              </p>
             </div>
-            <div className="h-40 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl mb-4 overflow-hidden flex items-center justify-center">
-               <Rocket size={40} className="text-gray-200" />
-            </div>
-            <div className="space-y-3">
-              <div className="h-3 bg-gray-200 rounded-full w-full"></div>
-              <div className="h-3 bg-gray-100 rounded-full w-2/3"></div>
-              <div className="flex justify-between items-center pt-2">
-                <div className="flex gap-1">
-                  <div className="w-3 h-3 rounded-full bg-[#FBB9C2]"></div>
-                  <div className="w-12 h-3 bg-gray-50 rounded-full"></div>
+
+            {/* Benefits Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 bg-blue-100 rounded-md">
+                    <TrendingUp size={16} className="text-blue-600" />
+                  </div>
+                  <span className="font-medium text-gray-900">Higher Visibility</span>
                 </div>
-                <div className="h-6 w-12 bg-[#B7E2BF]/20 rounded-lg"></div>
+                <p className="text-sm text-gray-600">
+                  Appear in the top search results where most orders happen
+                </p>
               </div>
+              
+              <div className="p-4 bg-green-50 rounded-lg border border-green-100">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 bg-green-100 rounded-md">
+                    <DollarSign size={16} className="text-green-600" />
+                  </div>
+                  <span className="font-medium text-gray-900">Pay Per Click</span>
+                </div>
+                <p className="text-sm text-gray-600">
+                  Only pay when potential clients click on your gig
+                </p>
+              </div>
+            </div>
+
+            {/* Budget Selector */}
+            <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="font-medium text-gray-900 mb-1">Set Daily Budget</h3>
+                  <p className="text-sm text-gray-600">Control your daily spending</p>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-semibold text-gray-900">${dailyBudget}/day</div>
+                  <div className="text-sm text-gray-600">≈ {dailyBudget * 4}-{dailyBudget * 12} clicks/day</div>
+                </div>
+              </div>
+              
+              <input 
+                type="range" 
+                min="1" 
+                max="50" 
+                value={dailyBudget}
+                onChange={(e) => setDailyBudget(parseInt(e.target.value))}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600 mb-2"
+              />
+              <div className="flex justify-between text-sm text-gray-500">
+                <span>$1</span>
+                <span>Daily budget</span>
+                <span>$50</span>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <div className="pt-4">
+              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-sm hover:shadow transition-all flex items-center justify-center gap-2">
+                Start Campaign
+                <ChevronRight size={18} />
+              </button>
+              <p className="text-sm text-gray-500 text-center mt-3">
+                No minimum spend. Cancel anytime.
+              </p>
             </div>
           </div>
 
-          {/* Floating Metric Badge */}
-          <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-gray-50 animate-bounce transition-all duration-[3000ms]">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-50 text-green-500 rounded-lg">
-                <BarChart3 size={20} />
+          {/* Right Column - Preview */}
+          <div className="space-y-6">
+            {/* Stats Preview */}
+            <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
+              <h3 className="font-medium text-gray-900 mb-4">Expected Results</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
+                  <div className="text-2xl font-semibold text-blue-600 mb-1">+240%</div>
+                  <div className="text-sm text-gray-600">CTR Increase</div>
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
+                  <div className="text-2xl font-semibold text-green-600 mb-1">3x</div>
+                  <div className="text-sm text-gray-600">More Orders</div>
+                </div>
               </div>
-              <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase">CTR Increase</p>
-                <p className="text-lg font-black text-[#4A312F]">+240%</p>
+            </div>
+
+            {/* Promoted Gig Preview */}
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="bg-blue-50 px-4 py-2 border-b border-gray-200">
+                <div className="flex items-center gap-2">
+                  <div className="px-2 py-1 bg-blue-600 text-white text-xs font-medium rounded">
+                    PROMOTED
+                  </div>
+                  <span className="text-sm text-gray-600">Preview of how your gig will appear</span>
+                </div>
               </div>
+              
+              <div className="p-5 bg-white">
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <Rocket size={24} className="text-gray-400" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="h-2 bg-gray-200 rounded-full w-full"></div>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full w-2/3 mb-4"></div>
+                    
+                    <div className="flex items-center justify-between text-sm text-gray-600">
+                      <div className="flex items-center gap-1">
+                        <Star size={14} className="text-yellow-500 fill-yellow-500" />
+                        <span>4.9</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Users size={14} />
+                        <span>24 orders</span>
+                      </div>
+                      <div className="font-semibold text-gray-900">$125</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Benefits List */}
+            <div className="space-y-3">
+              <Benefit 
+                icon={Target} 
+                title="Targeted Exposure" 
+                desc="Your gig is shown to buyers with matching search intent"
+              />
+              <Benefit 
+                icon={BarChart3} 
+                title="Performance Tracking" 
+                desc="Monitor clicks, conversions, and ROI in real-time"
+              />
+              <Benefit 
+                icon={DollarSign} 
+                title="Optimized Spending" 
+                desc="Automatically adjust to maximize return on investment"
+              />
             </div>
           </div>
         </div>
       </div>
 
-      {/* 3. Detailed Benefits Grid */}
-      <div className="p-10 bg-gradient-to-t from-[#F7F9FB] to-white">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Benefit 
-            icon={Target} 
-            title="Surgical Precision" 
-            desc="Our AI shows your Gig to buyers whose search intent matches your history of high-value invoices."
-          />
-          <Benefit 
-            icon={Megaphone} 
-            title="Premium Placement" 
-            desc="Secure the top 4 slots in Search and Category pages where 80% of all platform orders happen."
-          />
-          <Benefit 
-            icon={DollarSign} 
-            title="Zero Risk Spending" 
-            desc="Only pay when a buyer clicks your ad. We optimize your spend to ensure maximum ROI on every cent."
-          />
+      {/* Footer */}
+      <div className="p-6 border-t border-gray-200 bg-gray-50">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <span>Active for sellers in your category</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <button className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium">
+              Learn More
+            </button>
+            <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">
+              Start Campaign
+            </button>
+          </div>
         </div>
       </div>
     </div>

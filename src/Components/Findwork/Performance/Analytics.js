@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { 
-  TrendingUp, ArrowUpRight, ArrowDownRight, Eye, 
+  TrendingUp, TrendingDown, Eye, 
   DollarSign, Percent, Wallet, BarChart2, ShieldCheck,
-  MessageSquare, Heart, Clock, Star, Download, Filter,
-  ChevronDown, RefreshCw
+  Users, Clock, Star, Download, Filter,
+  ChevronDown, RefreshCw, ShoppingBag,
+  ArrowRight, Calendar, CheckCircle, AlertCircle
 } from "lucide-react";
 
-// Mock API call - replace with actual backend endpoint
+// Mock API call
 const fetchAnalyticsData = async () => {
   await new Promise(resolve => setTimeout(resolve, 800));
   
@@ -52,39 +53,48 @@ const fetchAnalyticsData = async () => {
 // Stat Card Component
 function StatCard({ label, value, trend, isPositive, icon, prefix = "", suffix = "" }) {
   return (
-    <div className="bg-[#F7F9FB] rounded-xl p-6 border border-[#4A312F]/20 hover:border-[#D34079] hover:shadow-lg hover:shadow-[#D34079]/10 transition-all duration-300">
-      <div className="flex justify-between items-start mb-4">
-        <div className="p-2.5 rounded-lg bg-[#B7E2BF]/20 border border-[#B7E2BF]/30">
-          {React.cloneElement(icon, { size: 20, className: "text-[#4A312F]" })}
+    <div className="bg-white rounded-lg border border-gray-200 p-5 hover:border-gray-300 transition-colors">
+      <div className="flex justify-between items-start mb-3">
+        <div className="p-2 rounded-md bg-gray-50">
+          {React.cloneElement(icon, { size: 18, className: "text-gray-600" })}
         </div>
         {trend !== null && (
-          <div className={`flex items-center gap-1 text-xs font-semibold ${isPositive ? 'text-[#D34079]' : 'text-red-500'}`}>
-            {isPositive ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+          <div className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded ${
+            isPositive ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+          }`}>
+            {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
             {Math.abs(trend)}%
           </div>
         )}
       </div>
       <div>
-        <p className="text-2xl font-bold text-[#4A312F] mb-1">
+        <p className="text-2xl font-semibold text-gray-900 mb-1">
           {prefix}{typeof value === 'number' ? value.toLocaleString() : value}{suffix}
         </p>
-        <p className="text-sm text-[#4A312F] font-semibold">{label}</p>
+        <p className="text-sm text-gray-600">{label}</p>
       </div>
     </div>
   );
 }
 
 // Progress Bar Component
-function ProgressMetric({ label, percentage, colorClass }) {
+function ProgressMetric({ label, percentage, color = "blue" }) {
+  const colorClasses = {
+    blue: "bg-blue-500",
+    green: "bg-green-500",
+    purple: "bg-purple-500",
+    orange: "bg-orange-500"
+  };
+
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center">
-        <span className="text-sm font-semibold text-[#4A312F]">{label}</span>
-        <span className={`text-sm font-bold ${colorClass}`}>{percentage}%</span>
+        <span className="text-sm font-medium text-gray-700">{label}</span>
+        <span className="text-sm font-semibold text-gray-900">{percentage}%</span>
       </div>
-      <div className="w-full h-2 bg-[#F7F9FB]/50 rounded-full overflow-hidden border border-[#4A312F]/10">
+      <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
         <div 
-          className={`h-full rounded-full transition-all duration-1000 ${colorClass.replace('text', 'bg')} shadow-sm`} 
+          className={`h-full rounded-full ${colorClasses[color]}`} 
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -92,30 +102,50 @@ function ProgressMetric({ label, percentage, colorClass }) {
   );
 }
 
-// Mini Chart Component (SVG based)
-function MiniChart({ data }) {
+// Revenue Chart Component
+function RevenueChart({ data }) {
   const maxValue = Math.max(...data.map(d => Math.max(d.projected, d.actual)));
-  const points = data.length;
-  const width = 100;
-  const height = 40;
-  
-  const getY = (value) => height - (value / maxValue) * height;
-  
-  const actualPath = data.map((d, i) => 
-    `${i === 0 ? 'M' : 'L'} ${(i / (points - 1)) * width} ${getY(d.actual)}`
-  ).join(' ');
   
   return (
-    <svg width={width} height={height} className="ml-auto">
-      <path
-        d={actualPath}
-        fill="none"
-        stroke="#D34079"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <div className="mt-6">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900">Revenue Overview</h3>
+          <p className="text-sm text-gray-600">Last 30 days performance</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+            <span className="text-sm text-gray-600">Actual</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-gray-300"></div>
+            <span className="text-sm text-gray-600">Projected</span>
+          </div>
+        </div>
+      </div>
+      
+      <div className="flex items-end justify-between h-48">
+        {data.map((item, idx) => (
+          <div key={idx} className="flex flex-col items-center flex-1">
+            <div className="flex flex-col items-center w-full h-40 justify-end">
+              <div className="flex items-end gap-1 w-8">
+                <div 
+                  className="w-6 bg-gray-200 rounded-t-sm"
+                  style={{ height: `${(item.projected / maxValue) * 100}%` }}
+                />
+                <div 
+                  className="w-6 bg-blue-500 rounded-t-sm"
+                  style={{ height: `${(item.actual / maxValue) * 100}%` }}
+                />
+              </div>
+            </div>
+            <span className="text-xs font-medium text-gray-600 mt-2">{item.date}</span>
+            <span className="text-xs text-gray-500">${item.actual}</span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -149,10 +179,10 @@ export default function Analytics() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F7F9FB]">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center p-12">
-          <RefreshCw size={40} className="animate-spin text-[#D34079] mx-auto mb-4" />
-          <p className="text-[#4A312F] font-semibold text-lg">Loading analytics...</p>
+          <RefreshCw size={32} className="animate-spin text-gray-400 mx-auto mb-4" />
+          <p className="text-gray-600 font-medium">Loading analytics...</p>
         </div>
       </div>
     );
@@ -161,91 +191,114 @@ export default function Analytics() {
   const { earnings, stats, sellerLevel, revenueData, funnelData } = data;
 
   return (
-    <div className="min-h-screen bg-[#F7F9FB] p-4 md:p-8">
+    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-4xl font-bold text-[#4A312F]">Analytics</h1>
-            <p className="text-[#4A312F] mt-1 text-lg font-semibold opacity-90">Track your performance and earnings</p>
+            <h1 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h1>
+            <p className="text-gray-600 mt-1">Track your performance and earnings</p>
           </div>
           
           <div className="flex items-center gap-3 flex-wrap">
-            <button onClick={handleRefresh} disabled={refreshing} className="px-6 py-2.5 bg-[#D34079] ...">
-    <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
-    Refresh
-  </button>
-  <select value={timeRange} onChange={(e) => setTimeRange(e.target.value)} className="...">
-    {/* options */}
-  </select>
-
-            
-            <select 
-              value={timeRange}
-              onChange={(e) => setTimeRange(e.target.value)}
-              className="px-4 py-2.5 border-2 border-[#4A312F]/30 bg-white rounded-xl text-sm font-semibold text-[#4A312F] focus:outline-none focus:ring-4 focus:ring-[#FBB9C2]/30 focus:border-[#D34079] shadow-sm"
+            <button 
+              onClick={handleRefresh} 
+              disabled={refreshing}
+              className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center gap-2 text-sm font-medium"
             >
-              <option value="7d">Last 7 days</option>
-              <option value="30d">Last 30 days</option>
-              <option value="90d">Last 90 days</option>
-              <option value="1y">Last year</option>
-            </select>
+              <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
+              Refresh
+            </button>
             
-            <button className="px-6 py-2.5 bg-[#D34079] text-white rounded-xl hover:bg-[#B72F66] shadow-lg hover:shadow-xl flex items-center gap-2 text-sm font-bold transition-all duration-300 active:scale-95 transform">
+            <div className="relative">
+              <select 
+                value={timeRange}
+                onChange={(e) => setTimeRange(e.target.value)}
+                className="appearance-none px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
+              >
+                <option value="7d">Last 7 days</option>
+                <option value="30d">Last 30 days</option>
+                <option value="90d">Last 90 days</option>
+                <option value="1y">Last year</option>
+              </select>
+              <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+            
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 text-sm font-medium">
               <Download size={16} />
-              Export Data
+              Export
             </button>
           </div>
         </div>
 
-        {/* Earnings Card */}
-        <div className="bg-gradient-to-br from-[#4A312F] via-[#5A3F3A] to-[#3A2623] rounded-3xl p-10 text-white shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#FBB9C2]/10 to-[#B7E2BF]/5" />
-          <div className="relative flex items-center gap-3 mb-8">
-            <ShieldCheck size={22} className="text-[#FBB9C2]" />
-            <span className="text-lg font-bold bg-[#FBB9C2]/20 px-3 py-1 rounded-full backdrop-blur-sm">Seller Earnings</span>
+        {/* Earnings Summary */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">Earnings Summary</h2>
+              <p className="text-sm text-gray-600">Balance overview</p>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <Calendar size={16} />
+              <span>Last updated: Today</span>
+            </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <p className="text-sm text-white/80 mb-3 font-medium">Available for Withdrawal</p>
-              <p className="text-5xl font-black leading-tight">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <Wallet size={18} className="text-blue-600" />
+                </div>
+                <span className="text-sm font-medium text-gray-700">Available</span>
+              </div>
+              <p className="text-2xl font-bold text-gray-900">
                 ${earnings.available.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </p>
             </div>
             
-            <div>
-              <p className="text-sm text-white/80 mb-3 font-medium">Pending Clearance</p>
-              <p className="text-4xl font-bold text-[#FBB9C2]">
+            <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-100">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-yellow-100 rounded-lg">
+                  <Clock size={18} className="text-yellow-600" />
+                </div>
+                <span className="text-sm font-medium text-gray-700">Pending</span>
+              </div>
+              <p className="text-2xl font-bold text-gray-900">
                 ${earnings.pending.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </p>
             </div>
             
-            <div>
-              <p className="text-sm text-white/80 mb-3 font-medium">Withdrawn to Date</p>
-              <p className="text-4xl font-bold">
+            <div className="p-4 bg-green-50 rounded-lg border border-green-100">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <CheckCircle size={18} className="text-green-600" />
+                </div>
+                <span className="text-sm font-medium text-gray-700">Withdrawn</span>
+              </div>
+              <p className="text-2xl font-bold text-gray-900">
                 ${earnings.withdrawn.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </p>
             </div>
           </div>
           
-          <div className="mt-12 pt-8 border-t border-white/20 flex gap-4">
-            <button className="flex-1 bg-[#D34079] hover:bg-[#B72F66] text-white py-4 px-8 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 active:scale-95 transform backdrop-blur-sm flex items-center justify-center gap-3">
-              <Wallet size={20} />
-              Withdraw Now
+          <div className="flex gap-3">
+            <button className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 font-medium">
+              <Wallet size={16} />
+              Withdraw Funds
             </button>
-            <button className="px-8 py-4 border-2 border-white/30 hover:border-white backdrop-blur-sm hover:bg-white/10 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl">
-              <BarChart2 size={20} />
+            <button className="px-5 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center gap-2 font-medium">
+              <BarChart2 size={16} />
               View Details
             </button>
           </div>
         </div>
 
-        {/* Main Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Performance Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <StatCard 
-            label="Gig Impressions" 
+            label="Impressions" 
             value={stats.impressions.value}
             trend={stats.impressions.trend}
             isPositive={stats.impressions.isPositive}
@@ -256,7 +309,7 @@ export default function Analytics() {
             value={stats.clicks.value}
             trend={stats.clicks.trend}
             isPositive={stats.clicks.isPositive}
-            icon={<MessageSquare />}
+            icon={<ShoppingBag />}
           />
           <StatCard 
             label="Total Orders" 
@@ -291,120 +344,172 @@ export default function Analytics() {
           />
         </div>
 
-        {/* Level Progress & Revenue Chart */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Seller Level & Revenue Chart */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
           {/* Seller Level Card */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 border border-[#4A312F]/10 shadow-2xl">
-            <div className="flex items-center justify-between mb-8">
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-2xl font-black text-[#4A312F]">{sellerLevel.current}</h3>
-                <p className="text-lg text-[#4A312F]/80 font-semibold mt-1">Next: {sellerLevel.nextLevel}</p>
+                <h3 className="text-lg font-semibold text-gray-900">Seller Level</h3>
+                <p className="text-sm text-gray-600">Progress to next level</p>
               </div>
-              <Star size={32} className="text-[#D34079] fill-[#D34079] shadow-lg" />
+              <div className="flex items-center gap-2">
+                <Star size={20} className="text-yellow-500 fill-yellow-500" />
+                <span className="font-semibold text-gray-900">{sellerLevel.current}</span>
+              </div>
             </div>
             
-            <div className="space-y-6 mb-8">
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700">Next Level: {sellerLevel.nextLevel}</span>
+                <span className="text-sm font-semibold text-blue-600">{sellerLevel.ordersToNext} orders needed</span>
+              </div>
+              <div className="h-2 bg-gray-200 rounded-full">
+                <div 
+                  className="h-full bg-blue-500 rounded-full"
+                  style={{ width: '75%' }}
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-4">
               <ProgressMetric 
                 label="Response Rate" 
                 percentage={sellerLevel.responseRate} 
-                colorClass="text-[#D34079]" 
+                color="green"
               />
               <ProgressMetric 
                 label="On-Time Delivery" 
                 percentage={sellerLevel.onTimeDelivery} 
-                colorClass="text-[#B7E2BF]" 
+                color="blue"
               />
               <ProgressMetric 
                 label="Order Completion" 
                 percentage={sellerLevel.orderCompletion} 
-                colorClass="text-[#FBB9C2]" 
+                color="purple"
               />
-            </div>
-
-            <div className="p-6 bg-gradient-to-r from-[#FBB9C2]/20 to-[#D34079]/10 rounded-2xl border border-[#D34079]/20 shadow-lg">
-              <p className="text-lg text-[#4A312F] font-bold text-center">
-                {sellerLevel.ordersToNext} orders away from <span className="text-[#D34079]">{sellerLevel.nextLevel}</span>
-              </p>
             </div>
           </div>
 
           {/* Revenue Chart */}
-          <div className="lg:col-span-2 bg-white/80 backdrop-blur-sm rounded-3xl p-8 border border-[#4A312F]/10 shadow-2xl">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h3 className="text-2xl font-black text-[#4A312F]">Earnings Overview</h3>
-                <p className="text-lg text-[#4A312F]/80 font-semibold mt-1">Revenue trends over time</p>
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <RevenueChart data={revenueData} />
+          </div>
+        </div>
+
+        {/* Conversion Funnel */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">Conversion Funnel</h3>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="p-4 border border-gray-200 rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700">Search Views</span>
+                <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">100%</span>
               </div>
-              <div className="flex gap-6">
-                <div className="flex items-center gap-2">
-                  <span className="w-4 h-4 rounded-full bg-[#D34079] shadow-sm" />
-                  <span className="text-sm font-bold text-[#4A312F]">Actual</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-4 h-4 rounded-full bg-[#B7E2BF]/60" />
-                  <span className="text-sm font-semibold text-[#4A312F]/80">Projected</span>
-                </div>
-              </div>
+              <p className="text-xl font-bold text-gray-900">{funnelData.searchViews.toLocaleString()}</p>
             </div>
             
-            <div className="h-72 flex items-end justify-between gap-3 p-4">
-              {revenueData.map((item, idx) => (
-                <div key={idx} className="flex-1 flex flex-col items-center gap-3 group">
-                  <div className="w-full flex items-end justify-center gap-1 h-56 relative">
-                    <div 
-                      className="w-1.5 bg-[#B7E2BF]/40 group-hover:bg-[#B7E2BF]/60 rounded-lg transition-all duration-300 shadow-sm"
-                      style={{ height: `${(item.projected / 300) * 100}%` }}
-                      title={`Projected: $${item.projected}`}
-                    />
-                    <div 
-                      className="w-2 bg-gradient-to-t from-[#D34079] to-[#FBB9C2] rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-110"
-                      style={{ height: `${(item.actual / 300) * 100}%` }}
-                      title={`Actual: $${item.actual}`}
-                    />
+            <div className="p-4 border border-gray-200 rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700">Gig Clicks</span>
+                <span className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded">
+                  {((funnelData.gigClicks / funnelData.searchViews) * 100).toFixed(1)}%
+                </span>
+              </div>
+              <p className="text-xl font-bold text-gray-900">{funnelData.gigClicks.toLocaleString()}</p>
+            </div>
+            
+            <div className="p-4 border border-gray-200 rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700">Orders</span>
+                <span className="text-xs px-2 py-1 bg-green-50 text-green-600 rounded">
+                  {((funnelData.orders / funnelData.gigClicks) * 100).toFixed(1)}%
+                </span>
+              </div>
+              <p className="text-xl font-bold text-gray-900">{funnelData.orders}</p>
+            </div>
+            
+            <div className="p-4 border border-gray-200 rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700">Repeat Buyers</span>
+                <span className="text-xs px-2 py-1 bg-purple-50 text-purple-600 rounded">
+                  {funnelData.repeatBuyers}%
+                </span>
+              </div>
+              <p className="text-xl font-bold text-gray-900">{funnelData.repeatBuyers}%</p>
+            </div>
+          </div>
+
+          {/* Funnel Visualization */}
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-between">
+              {[
+                { label: 'Views', value: funnelData.searchViews, percentage: 100 },
+                { label: 'Clicks', value: funnelData.gigClicks, percentage: (funnelData.gigClicks / funnelData.searchViews) * 100 },
+                { label: 'Orders', value: funnelData.orders, percentage: (funnelData.orders / funnelData.gigClicks) * 100 },
+                { label: 'Repeat', value: funnelData.repeatBuyers, percentage: funnelData.repeatBuyers }
+              ].map((step, index) => (
+                <div key={index} className="flex flex-col items-center flex-1">
+                  <div className="w-16 h-16 rounded-full border-4 border-white bg-white shadow-sm flex items-center justify-center mb-2">
+                    <span className="font-bold text-gray-900">{step.value}</span>
                   </div>
-                  <span className="text-sm font-bold text-[#4A312F]">{item.date}</span>
+                  <span className="text-sm font-medium text-gray-700">{step.label}</span>
+                  <span className="text-xs text-gray-500">{step.percentage.toFixed(1)}%</span>
+                  {index < 3 && (
+                    <div className="flex-1 h-0.5 bg-gray-300 mt-2 w-full"></div>
+                  )}
                 </div>
               ))}
-              <MiniChart data={revenueData} className="absolute bottom-4 right-4 shadow-lg" />
             </div>
           </div>
         </div>
 
-        {/* Funnel Analysis */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-10 border border-[#4A312F]/10 shadow-2xl">
-          <h3 className="text-2xl font-black text-[#4A312F] mb-10 text-center">Conversion Funnel</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center group">
-              <div className="w-full h-28 bg-gradient-to-b from-[#D34079] via-[#FBB9C2] to-[#D34079] rounded-3xl flex items-center justify-center mb-4 shadow-2xl group-hover:scale-105 transition-all duration-300">
-                <span className="text-4xl font-black text-white drop-shadow-lg">{funnelData.searchViews.toLocaleString()}</span>
+        {/* Key Insights */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Key Insights</h3>
+            <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+              View All
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-blue-50 rounded-lg">
+                  <TrendingUp size={16} className="text-blue-600" />
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-1">Peak Sales Period</h4>
+                  <p className="text-sm text-gray-600">Wednesday at 2 PM sees 37% higher conversion rates</p>
+                </div>
               </div>
-              <p className="text-lg font-bold text-[#4A312F] mb-1">Search Views</p>
-              <p className="text-sm text-[#4A312F]/70 font-semibold">100%</p>
             </div>
             
-            <div className="text-center group">
-              <div className="w-full h-24 bg-gradient-to-b from-[#D34079]/90 to-[#FBB9C2]/80 rounded-3xl flex items-center justify-center mb-4 shadow-xl group-hover:scale-105 transition-all duration-300">
-                <span className="text-3xl font-black text-white">{funnelData.gigClicks.toLocaleString()}</span>
+            <div className="p-4 border border-gray-200 rounded-lg hover:border-green-300 transition-colors">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-green-50 rounded-lg">
+                  <Users size={16} className="text-green-600" />
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-1">Customer Retention</h4>
+                  <p className="text-sm text-gray-600">85% of buyers return for additional services</p>
+                </div>
               </div>
-              <p className="text-lg font-bold text-[#4A312F] mb-1">Gig Clicks</p>
-              <p className="text-sm text-[#4A312F]/70 font-semibold">{((funnelData.gigClicks / funnelData.searchViews) * 100).toFixed(1)}%</p>
             </div>
             
-            <div className="text-center group">
-              <div className="w-full h-20 bg-gradient-to-b from-[#B7E2BF] to-[#D34079]/80 rounded-3xl flex items-center justify-center mb-4 shadow-xl group-hover:scale-105 transition-all duration-300">
-                <span className="text-2xl font-black text-[#4A312F] drop-shadow-lg">{funnelData.orders}</span>
+            <div className="p-4 border border-gray-200 rounded-lg hover:border-orange-300 transition-colors">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-orange-50 rounded-lg">
+                  <AlertCircle size={16} className="text-orange-600" />
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-1">Response Time Alert</h4>
+                  <p className="text-sm text-gray-600">Response time increased by 15% this week</p>
+                </div>
               </div>
-              <p className="text-lg font-bold text-[#4A312F] mb-1">Orders</p>
-              <p className="text-sm text-[#4A312F]/70 font-semibold">{((funnelData.orders / funnelData.gigClicks) * 100).toFixed(1)}%</p>
-            </div>
-            
-            <div className="text-center group">
-              <div className="w-full h-16 bg-gradient-to-b from-[#FBB9C2] to-[#B7E2BF] rounded-3xl flex items-center justify-center mb-4 shadow-xl group-hover:scale-105 transition-all duration-300">
-                <span className="text-xl font-black text-[#4A312F] drop-shadow-md">{funnelData.repeatBuyers}%</span>
-              </div>
-              <p className="text-lg font-bold text-[#4A312F] mb-1">Repeat Buyers</p>
-              <p className="text-sm text-[#4A312F]/70 font-semibold">Retention Rate</p>
             </div>
           </div>
         </div>

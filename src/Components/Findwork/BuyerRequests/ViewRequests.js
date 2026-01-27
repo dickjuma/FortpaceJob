@@ -1,5 +1,31 @@
 import React, { useState } from "react";
-import { Clock, Tag, Users, ChevronRight, Zap, Filter, Search, Send, FileText, ShieldCheck, DollarSign, Paperclip, AlertCircle, Star, Heart, ChevronDown, X, Upload, CheckCircle } from "lucide-react";
+import { 
+  Clock, 
+  Tag, 
+  Users, 
+  ChevronRight, 
+  Zap, 
+  Filter, 
+  Search, 
+  Send, 
+  FileText, 
+  ShieldCheck, 
+  DollarSign, 
+  Paperclip, 
+  AlertCircle, 
+  Star, 
+  Heart, 
+  ChevronDown, 
+  X, 
+  Upload, 
+  CheckCircle,
+  Calendar,
+  MapPin,
+  Briefcase,
+  Eye,
+  TrendingUp,
+  CheckSquare
+} from "lucide-react";
 
 const SendProposalForm = ({ request, onBack }) => {
   const [formData, setFormData] = useState({
@@ -10,6 +36,7 @@ const SendProposalForm = ({ request, onBack }) => {
     attachments: []
   });
   const [dragActive, setDragActive] = useState(false);
+  const [step, setStep] = useState(1);
 
   const serviceFee = formData.price ? (parseFloat(formData.price) * 0.20).toFixed(2) : "0.00";
   const netIncome = formData.price ? (parseFloat(formData.price) - serviceFee).toFixed(2) : "0.00";
@@ -48,80 +75,129 @@ const SendProposalForm = ({ request, onBack }) => {
   };
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-8 duration-500">
-      <button onClick={onBack} className="mb-6 text-sm font-black text-gray-400 hover:text-black flex items-center gap-2 transition-colors">
-        ← BACK TO ACTIVE REQUESTS
+    <div className="max-w-6xl mx-auto">
+      <button 
+        onClick={onBack} 
+        className="mb-6 text-sm font-medium text-gray-500 hover:text-gray-800 flex items-center gap-2 transition-colors"
+      >
+        <ChevronDown className="rotate-90" size={16} />
+        Back to requests
       </button>
 
-      <div className="bg-white border border-gray-100 rounded-[2.5rem] shadow-2xl overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
         {/* Header Summary */}
-        <div className="bg-[#4A312F] p-8 md:p-10 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 text-[#B7E2BF] mb-2">
-              <ShieldCheck size={16} />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Custom Offer</span>
-            </div>
-            <h2 className="text-2xl font-black">{request.title}</h2>
-            <p className="text-sm text-gray-400 mt-1">Client: <span className="text-white">{request.buyer}</span></p>
-            <div className="flex items-center gap-4 mt-3">
-              <div className="flex items-center gap-1">
-                <Star size={14} className="fill-yellow-400 text-yellow-400" />
-                <span className="text-xs font-bold">{request.rating || "New"}</span>
+        <div className="bg-gray-50 p-6 border-b border-gray-200">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <ShieldCheck size={14} className="text-blue-600" />
+                <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">Custom Offer</span>
               </div>
-              <span className="text-xs text-gray-400">{request.jobsPosted || 3} jobs posted</span>
+              <h2 className="text-xl font-semibold text-gray-900">{request.title}</h2>
+              <div className="flex items-center gap-3 mt-2">
+                <span className="text-sm text-gray-600">Client: {request.buyer}</span>
+                <div className="flex items-center gap-1">
+                  <Star size={12} className="text-yellow-500 fill-yellow-500" />
+                  <span className="text-xs font-medium">{request.rating || "New"}</span>
+                </div>
+                <span className="text-xs text-gray-500">{request.jobsPosted || 3} jobs posted</span>
+              </div>
             </div>
-          </div>
-          <div className="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Buyer Budget</p>
-            <p className="text-xl font-black text-[#B7E2BF]">{request.budget}</p>
+            <div className="bg-white border border-gray-200 rounded-lg px-4 py-2">
+              <p className="text-xs font-medium text-gray-500 mb-1">Buyer Budget</p>
+              <p className="text-lg font-semibold text-gray-900">{request.budget}</p>
+            </div>
           </div>
         </div>
 
-        <div className="p-8 md:p-12 space-y-10">
+        <div className="p-6 space-y-8">
           {/* Request Details */}
-          <div className="bg-gray-50 rounded-3xl p-6 space-y-3">
-            <h3 className="text-sm font-black text-black uppercase">Request Details</h3>
-            <p className="text-sm text-gray-700 leading-relaxed">{request.description}</p>
+          <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+            <h3 className="text-sm font-semibold text-gray-900">Request Details</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">{request.description}</p>
             <div className="flex flex-wrap gap-2 pt-2">
               {request.tags.map(tag => (
-                <span key={tag} className="px-3 py-1 bg-white border border-gray-200 rounded-lg text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                <span 
+                  key={tag} 
+                  className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-medium text-gray-600"
+                >
                   {tag}
                 </span>
               ))}
             </div>
           </div>
 
+          {/* Step Indicator */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                step >= 1 ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-400"
+              }`}>
+                1
+              </div>
+              <span className={`text-sm ${step >= 1 ? "font-medium text-gray-900" : "text-gray-500"}`}>
+                Proposal
+              </span>
+            </div>
+            <div className="h-1 w-8 bg-gray-200"></div>
+            <div className="flex items-center gap-2">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                step >= 2 ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-400"
+              }`}>
+                2
+              </div>
+              <span className={`text-sm ${step >= 2 ? "font-medium text-gray-900" : "text-gray-500"}`}>
+                Details
+              </span>
+            </div>
+            <div className="h-1 w-8 bg-gray-200"></div>
+            <div className="flex items-center gap-2">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                step >= 3 ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-400"
+              }`}>
+                3
+              </div>
+              <span className={`text-sm ${step >= 3 ? "font-medium text-gray-900" : "text-gray-500"}`}>
+                Review
+              </span>
+            </div>
+          </div>
+
           <div className="space-y-4">
-            <label className="text-lg font-black text-black block">Your Proposal</label>
+            <label className="text-base font-medium text-gray-900 block">Your Proposal</label>
             <textarea 
-              className="w-full border-2 border-gray-50 rounded-3xl p-6 min-h-[200px] focus:border-[#B7E2BF] focus:outline-none text-black font-medium text-sm leading-relaxed"
+              className="w-full border border-gray-300 rounded-lg p-4 min-h-[180px] focus:border-blue-500 focus:outline-none text-gray-700 text-sm leading-relaxed"
               placeholder="Describe your approach, relevant experience, and why you're the best fit for this project..."
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
             />
-            <p className="text-xs text-gray-400 font-medium">{formData.description.length} / 1000 characters</p>
+            <div className="flex justify-between">
+              <p className="text-xs text-gray-500">{formData.description.length} / 1000 characters</p>
+              <p className="text-xs text-gray-500">Required</p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-400 uppercase">Offer Price</label>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium text-gray-700">Offer Price</label>
                   <div className="relative">
-                    <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-black" size={16} />
+                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                     <input 
                       type="number" 
-                      className="w-full bg-[#F7F9FB] border border-gray-100 rounded-xl py-3.5 pl-10 pr-4 font-black text-black outline-none focus:ring-2 focus:ring-[#B7E2BF]" 
+                      className="w-full border border-gray-300 rounded-lg py-2.5 pl-9 pr-3 font-medium text-gray-900 outline-none focus:border-blue-500" 
                       value={formData.price}
                       onChange={(e) => setFormData({...formData, price: e.target.value})}
+                      placeholder="0.00"
                     />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-400 uppercase">Delivery (Days)</label>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium text-gray-700">Delivery (Days)</label>
                   <input 
                     type="number" 
-                    className="w-full bg-[#F7F9FB] border border-gray-100 rounded-xl py-3.5 px-4 font-black text-black outline-none focus:ring-2 focus:ring-[#B7E2BF]" 
+                    className="w-full border border-gray-300 rounded-lg py-2.5 px-3 font-medium text-gray-900 outline-none focus:border-blue-500" 
                     value={formData.deliveryTime}
                     onChange={(e) => setFormData({...formData, deliveryTime: e.target.value})}
                   />
@@ -129,28 +205,34 @@ const SendProposalForm = ({ request, onBack }) => {
               </div>
 
               {/* File Upload */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-400 uppercase">Attachments (Portfolio, Resume)</label>
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-700">Attachments (Optional)</label>
                 <div 
-                  className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all ${dragActive ? 'border-[#B7E2BF] bg-[#B7E2BF]/5' : 'border-gray-200'}`}
+                  className={`border-2 border-dashed rounded-lg p-6 text-center transition-all ${dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}`}
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
                   onDragOver={handleDrag}
                   onDrop={handleDrop}
                 >
-                  <Upload className="mx-auto mb-3 text-gray-300" size={32} />
-                  <p className="text-sm font-bold text-gray-400 mb-2">Drag & drop files or <label className="text-[#D34079] cursor-pointer underline">browse<input type="file" multiple className="hidden" onChange={(e) => handleFiles(e.target.files)} /></label></p>
-                  <p className="text-xs text-gray-400">Max 3 files, 10MB each</p>
+                  <Upload className="mx-auto mb-3 text-gray-400" size={24} />
+                  <p className="text-sm text-gray-600 mb-1">
+                    Drag & drop files or <label className="text-blue-600 cursor-pointer font-medium">browse</label>
+                    <input type="file" multiple className="hidden" onChange={(e) => handleFiles(e.target.files)} />
+                  </p>
+                  <p className="text-xs text-gray-500">Max 3 files, 10MB each</p>
                 </div>
                 {formData.attachments.length > 0 && (
                   <div className="space-y-2 mt-3">
                     {formData.attachments.map((file, i) => (
-                      <div key={i} className="flex items-center justify-between bg-gray-50 rounded-xl p-3">
+                      <div key={i} className="flex items-center justify-between bg-gray-50 rounded-lg p-3">
                         <div className="flex items-center gap-2">
-                          <FileText size={16} className="text-gray-400" />
-                          <span className="text-xs font-bold text-black">{file.name}</span>
+                          <FileText size={16} className="text-gray-500" />
+                          <span className="text-sm font-medium text-gray-700">{file.name}</span>
                         </div>
-                        <button onClick={() => setFormData({...formData, attachments: formData.attachments.filter((_, idx) => idx !== i)})} className="text-gray-400 hover:text-red-500">
+                        <button 
+                          onClick={() => setFormData({...formData, attachments: formData.attachments.filter((_, idx) => idx !== i)})} 
+                          className="text-gray-400 hover:text-red-500"
+                        >
                           <X size={16} />
                         </button>
                       </div>
@@ -159,48 +241,69 @@ const SendProposalForm = ({ request, onBack }) => {
                 )}
               </div>
 
-              <div className="p-4 bg-gray-50 rounded-2xl flex items-center gap-3 text-gray-500">
-                <AlertCircle size={18} />
-                <p className="text-[11px] font-bold leading-tight uppercase">Ensure your price includes all labor and material costs.</p>
+              <div className="p-3 bg-yellow-50 border border-yellow-100 rounded-lg flex items-start gap-3 text-yellow-800">
+                <AlertCircle size={18} className="mt-0.5 flex-shrink-0" />
+                <p className="text-sm">Ensure your price includes all labor and material costs.</p>
               </div>
             </div>
 
             {/* Fee Breakdown Card */}
-            <div className="bg-[#B7E2BF]/10 rounded-[2rem] p-8 border border-[#B7E2BF]/20">
-              <p className="text-[10px] font-black text-[#4A312F] uppercase tracking-[0.2em] mb-4">Earnings Summary</p>
-              <div className="space-y-3">
+            <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
+              <p className="text-sm font-semibold text-gray-900 mb-4">Earnings Summary</p>
+              <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500 font-bold">Offer Total</span>
-                  <span className="text-black font-black">${formData.price || "0.00"}</span>
+                  <span className="text-gray-600">Offer Total</span>
+                  <span className="font-semibold text-gray-900">${formData.price || "0.00"}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500 font-bold">Platform Fee (20%)</span>
-                  <span className="text-red-500 font-bold">-${serviceFee}</span>
+                  <span className="text-gray-600">Platform Fee (20%)</span>
+                  <span className="font-semibold text-red-600">-${serviceFee}</span>
                 </div>
-                <div className="h-px bg-white my-4" />
+                <div className="border-t border-gray-200 my-3"></div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-black text-black uppercase tracking-widest">You'll Earn</span>
-                  <span className="text-3xl font-black text-[#4A312F] tracking-tighter">${netIncome}</span>
+                  <span className="font-semibold text-gray-900">You'll Earn</span>
+                  <span className="text-2xl font-bold text-gray-900">${netIncome}</span>
                 </div>
               </div>
-              <div className="mt-6 p-4 bg-white/50 rounded-xl">
-                <p className="text-xs font-bold text-gray-600 mb-2">Why send a custom offer?</p>
-                <ul className="text-xs text-gray-500 space-y-1">
-                  <li>• Stand out from competitors</li>
-                  <li>• Flexible pricing & timeline</li>
-                  <li>• Direct client communication</li>
+              <div className="border-t border-gray-200 pt-4">
+                <p className="text-sm font-medium text-gray-900 mb-2">Benefits of custom offers:</p>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li className="flex items-center gap-2">
+                    <CheckSquare size={14} className="text-green-500" />
+                    Stand out from competitors
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckSquare size={14} className="text-green-500" />
+                    Flexible pricing & timeline
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckSquare size={14} className="text-green-500" />
+                    Direct client communication
+                  </li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <div className="pt-8 border-t border-gray-50 flex flex-col md:flex-row justify-between items-center gap-6">
-            <button className="text-xs font-bold text-gray-400 hover:text-black uppercase tracking-widest transition-colors">
+          <div className="border-t border-gray-200 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <button className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium text-sm">
               Save as Draft
             </button>
-            <button onClick={handleSubmit} className="w-full md:w-auto bg-black hover:bg-[#D34079] text-white px-12 py-5 rounded-2xl font-black shadow-2xl transition-all transform active:scale-95 flex items-center gap-3">
-              Submit Offer <Send size={20} />
-            </button>
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => step > 1 && setStep(step - 1)}
+                className="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium"
+              >
+                Back
+              </button>
+              <button 
+                onClick={handleSubmit}
+                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-sm flex items-center gap-2"
+              >
+                Submit Offer
+                <Send size={16} />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -208,15 +311,22 @@ const SendProposalForm = ({ request, onBack }) => {
   );
 };
 
-// --- MAIN COMPONENT ---
 export default function ViewRequests() {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [activeFilter, setActiveFilter] = useState("all");
   const [sortBy, setSortBy] = useState("recent");
   const [searchQuery, setSearchQuery] = useState("");
   const [savedRequests, setSavedRequests] = useState([]);
+  const [showFilters, setShowFilters] = useState(false);
 
-  const categories = ["All", "Web Dev", "Design", "Marketing", "Writing", "Video"];
+  const categories = [
+    { id: "all", name: "All Categories" },
+    { id: "Web Dev", name: "Web Development" },
+    { id: "Design", name: "Design" },
+    { id: "Marketing", name: "Marketing" },
+    { id: "Writing", name: "Writing" },
+    { id: "Video", name: "Video Production" }
+  ];
 
   const requests = [
     { 
@@ -231,7 +341,10 @@ export default function ViewRequests() {
       tags: ["React", "Node.js", "Stripe"],
       category: "Web Dev",
       rating: "4.9",
-      jobsPosted: 8
+      jobsPosted: 8,
+      location: "Remote",
+      verified: true,
+      urgent: false
     },
     { 
       id: 2, 
@@ -245,7 +358,10 @@ export default function ViewRequests() {
       tags: ["Branding", "Logo Design"],
       category: "Design",
       rating: "5.0",
-      jobsPosted: 15
+      jobsPosted: 15,
+      location: "New York, USA",
+      verified: true,
+      urgent: true
     },
     { 
       id: 3, 
@@ -259,7 +375,10 @@ export default function ViewRequests() {
       tags: ["SEO", "Content Writing", "Tech"],
       category: "Writing",
       rating: "4.7",
-      jobsPosted: 5
+      jobsPosted: 5,
+      location: "Remote",
+      verified: true,
+      urgent: false
     },
     { 
       id: 4, 
@@ -273,17 +392,25 @@ export default function ViewRequests() {
       tags: ["Video Editing", "Social Media", "Fitness"],
       category: "Video",
       rating: "New",
-      jobsPosted: 1
+      jobsPosted: 1,
+      location: "Los Angeles, USA",
+      verified: false,
+      urgent: true
     }
   ];
 
   const filteredRequests = requests
     .filter(req => activeFilter === "all" || req.category === activeFilter)
-    .filter(req => req.title.toLowerCase().includes(searchQuery.toLowerCase()) || req.description.toLowerCase().includes(searchQuery.toLowerCase()))
+    .filter(req => 
+      req.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      req.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      req.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    )
     .sort((a, b) => {
       if (sortBy === "budget-high") return parseFloat(b.budget.replace(/[$,]/g, "")) - parseFloat(a.budget.replace(/[$,]/g, ""));
       if (sortBy === "budget-low") return parseFloat(a.budget.replace(/[$,]/g, "")) - parseFloat(b.budget.replace(/[$,]/g, ""));
-      return 0; // default "recent"
+      if (sortBy === "offers-low") return a.offers - b.offers;
+      return 0;
     });
 
   const toggleSave = (id) => {
@@ -292,72 +419,156 @@ export default function ViewRequests() {
     );
   };
 
+  const clearFilters = () => {
+    setActiveFilter("all");
+    setSearchQuery("");
+    setSortBy("recent");
+  };
+
   if (selectedRequest) {
     return <SendProposalForm request={selectedRequest} onBack={() => setSelectedRequest(null)} />;
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 pb-20 px-4">
-      {/* Stats Header */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-[#4A312F] p-5 rounded-2xl text-white flex justify-between items-center shadow-xl shadow-[#4A312F]/10">
+    <div className="max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
-            <p className="text-[10px] font-bold text-[#B7E2BF] uppercase tracking-widest">Offers Left Today</p>
-            <p className="text-2xl font-black">8 / 10</p>
+            <h1 className="text-2xl font-semibold text-gray-900">Buyer Requests</h1>
+            <p className="text-gray-600 mt-1">Find and apply to relevant projects</p>
           </div>
-          <Zap size={24} className="text-[#B7E2BF] fill-[#B7E2BF]/20" />
-        </div>
-        <div className="bg-white border border-gray-100 p-5 rounded-2xl flex justify-between items-center">
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Active Briefs</p>
-            <p className="text-2xl font-black text-black">{filteredRequests.length}</p>
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <div className="text-sm font-medium text-gray-900">8 offers left today</div>
+              <div className="text-xs text-gray-500">Reset in 4 hours</div>
+            </div>
+            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+              <Zap size={20} className="text-blue-600" />
+            </div>
           </div>
-          <Filter size={20} className="text-gray-300" />
         </div>
-        <div className="relative group">
-           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#D34079] transition-colors" size={18} />
-           <input 
-            type="text" 
-            placeholder="Search requests..." 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-full bg-white border border-gray-100 rounded-2xl pl-12 pr-4 font-medium text-black outline-none focus:ring-2 focus:ring-[#B7E2BF]/50 transition-all"
-           />
+
+        {/* Search and Filter Bar */}
+        <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            {/* Search */}
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <input 
+                  type="text" 
+                  placeholder="Search requests, skills, or keywords..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg py-2.5 pl-10 pr-3 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            {/* Filter Buttons */}
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => setShowFilters(!showFilters)}
+                className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center gap-2"
+              >
+                <Filter size={16} />
+                Filter
+              </button>
+              <select 
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:border-blue-500"
+              >
+                <option value="recent">Most Recent</option>
+                <option value="budget-high">Budget: High to Low</option>
+                <option value="budget-low">Budget: Low to High</option>
+                <option value="offers-low">Least Competition</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Category Filter */}
+          <div className="flex flex-wrap gap-2 mt-4">
+            {categories.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveFilter(cat.id)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  activeFilter === cat.id
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Advanced Filters */}
+          {showFilters && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Budget Range</label>
+                  <div className="flex gap-2">
+                    <input 
+                      type="number" 
+                      placeholder="Min" 
+                      className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+                    />
+                    <input 
+                      type="number" 
+                      placeholder="Max" 
+                      className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                  <select className="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                    <option>Anywhere</option>
+                    <option>North America</option>
+                    <option>Europe</option>
+                    <option>Asia</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Other Filters</label>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 text-sm">
+                      <input type="checkbox" className="rounded" />
+                      Verified Buyers Only
+                    </label>
+                    <label className="flex items-center gap-2 text-sm">
+                      <input type="checkbox" className="rounded" />
+                      Urgent Projects
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Category Filter */}
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-        {categories.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setActiveFilter(cat === "All" ? "all" : cat)}
-            className={`px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest whitespace-nowrap transition-all ${
-              (cat === "All" && activeFilter === "all") || activeFilter === cat
-                ? "bg-black text-white"
-                : "bg-gray-100 text-gray-400 hover:bg-gray-200"
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {/* Feed Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-gray-100 pb-4 gap-4">
-        <h2 className="text-xl font-black text-black tracking-tight uppercase">Marketplace Briefs</h2>
-        <div className="flex items-center gap-4 flex-wrap">
-          <select 
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="text-xs font-black text-gray-600 bg-transparent border-none outline-none cursor-pointer uppercase tracking-widest"
-          >
-            <option value="recent">Most Recent</option>
-            <option value="budget-high">Budget: High to Low</option>
-            <option value="budget-low">Budget: Low to High</option>
-          </select>
-          <button className="text-xs font-black text-[#D34079] underline underline-offset-8">Sent Offers</button>
-          <button className="text-xs font-black text-gray-400 hover:text-black transition-colors uppercase tracking-widest">Saved ({savedRequests.length})</button>
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="text-sm text-gray-600 mb-1">Total Requests</div>
+          <div className="text-xl font-semibold text-gray-900">{filteredRequests.length}</div>
+        </div>
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="text-sm text-gray-600 mb-1">Avg. Budget</div>
+          <div className="text-xl font-semibold text-gray-900">$688</div>
+        </div>
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="text-sm text-gray-600 mb-1">Avg. Competition</div>
+          <div className="text-xl font-semibold text-gray-900">28 bids</div>
+        </div>
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="text-sm text-gray-600 mb-1">Response Rate</div>
+          <div className="text-xl font-semibold text-gray-900">85%</div>
         </div>
       </div>
 
@@ -366,65 +577,98 @@ export default function ViewRequests() {
         {filteredRequests.map((req) => (
           <div
             key={req.id}
-            className="group bg-white border border-gray-100 hover:border-gray-300 p-0 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden"
+            className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors overflow-hidden"
           >
-            <div className="flex flex-col lg:flex-row">
-              <div className="flex-1 p-6 lg:p-10 space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-[#4A312F] text-[#B7E2BF] flex items-center justify-center font-black italic shadow-lg">
-                      {req.buyer.charAt(0)}
-                    </div>
+            <div className="p-6">
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* Left Column */}
+                <div className="flex-1 space-y-4">
+                  <div className="flex items-start justify-between">
                     <div>
-                      <h4 className="text-xs font-black text-black uppercase tracking-widest">{req.buyer}</h4>
-                      <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400">
-                        <Clock size={10} /> {req.date} • <Users size={10} /> {req.offers} BIDS
+                      <div className="flex items-center gap-2 mb-2">
+                        {req.verified && (
+                          <ShieldCheck size={14} className="text-blue-600" />
+                        )}
+                        <h3 className="text-lg font-semibold text-gray-900">{req.buyer}</h3>
+                        {req.urgent && (
+                          <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-medium rounded">
+                            Urgent
+                          </span>
+                        )}
+                      </div>
+                      
+                      <h4 className="text-base font-semibold text-gray-900 mb-2">{req.title}</h4>
+                      
+                      <p className="text-sm text-gray-600 line-clamp-2 mb-3">{req.description}</p>
+                      
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {req.tags.map(tag => (
+                          <span 
+                            key={tag} 
+                            className="px-2.5 py-1 bg-gray-100 text-gray-700 text-xs rounded"
+                          >
+                            {tag}
+                          </span>
+                        ))}
                       </div>
                     </div>
+                    
+                    <button 
+                      onClick={() => toggleSave(req.id)}
+                      className="text-gray-400 hover:text-red-500 transition-colors"
+                    >
+                      <Heart 
+                        size={20} 
+                        className={savedRequests.includes(req.id) ? "fill-red-500 text-red-500" : ""}
+                      />
+                    </button>
                   </div>
+
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                    <div className="flex items-center gap-1">
+                      <Clock size={14} />
+                      {req.duration}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Users size={14} />
+                      {req.offers} offers
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar size={14} />
+                      {req.date}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <MapPin size={14} />
+                      {req.location}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column */}
+                <div className="lg:w-48 space-y-4">
+                  <div className="text-right">
+                    <div className="text-2xl font-semibold text-gray-900">{req.budget}</div>
+                    <div className="text-sm text-gray-500">Fixed price</div>
+                  </div>
+                  
+                  <div className="flex items-center justify-end gap-2">
+                    <Star size={14} className="text-yellow-500 fill-yellow-500" />
+                    <span className="text-sm font-medium">{req.rating}</span>
+                    <span className="text-sm text-gray-500">({req.jobsPosted} jobs)</span>
+                  </div>
+
                   <button 
-                    onClick={() => toggleSave(req.id)}
-                    className="text-gray-300 hover:text-[#D34079] transition-colors"
+                    onClick={() => setSelectedRequest(req)}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-medium flex items-center justify-center gap-2"
                   >
-                    <Heart size={20} className={savedRequests.includes(req.id) ? "fill-[#D34079] text-[#D34079]" : ""} />
+                    <Send size={16} />
+                    Send Offer
+                  </button>
+                  
+                  <button className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 py-2.5 rounded-lg font-medium">
+                    View Details
                   </button>
                 </div>
-
-                <div className="space-y-3">
-                    <h3 className="text-xl font-black text-black leading-tight group-hover:text-[#D34079] transition-colors">
-                      {req.title}
-                    </h3>
-                    <p className="text-sm text-gray-700 leading-relaxed max-w-3xl line-clamp-3">
-                      {req.description}
-                    </p>
-                </div>
-
-                <div className="flex flex-wrap gap-2 pt-2">
-                    {req.tags.map(tag => (
-                        <span key={tag} className="px-3 py-1 bg-[#F7F9FB] border border-gray-200 rounded-lg text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                            {tag}
-                        </span>
-                    ))}
-                </div>
-              </div>
-
-              {/* Action Sidebar */}
-              <div className="bg-[#F7F9FB] lg:w-72 p-8 flex flex-row lg:flex-col justify-between items-center lg:justify-center border-t lg:border-t-0 lg:border-l border-gray-100 gap-6">
-                <div className="text-left lg:text-center">
-                  <p className="text-4xl font-black text-black tracking-tighter">{req.budget}</p>
-                  <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1">Fixed Budget</p>
-                  <div className="flex items-center gap-1 justify-start lg:justify-center mt-3">
-                    <Star size={12} className="fill-yellow-400 text-yellow-400" />
-                    <span className="text-xs font-bold text-black">{req.rating}</span>
-                  </div>
-                </div>
-
-                <button 
-                  onClick={() => setSelectedRequest(req)}
-                  className="bg-black hover:bg-[#D34079] text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all transform active:scale-95 shadow-xl flex items-center gap-2"
-                >
-                  Send Offer <ChevronRight size={16} />
-                </button>
               </div>
             </div>
           </div>
@@ -432,8 +676,36 @@ export default function ViewRequests() {
       </div>
 
       {filteredRequests.length === 0 && (
-        <div className="text-center py-20">
-          <p className="text-gray-400 font-bold text-lg">No requests found. Try adjusting your filters.</p>
+        <div className="text-center py-12 bg-white border border-gray-200 rounded-lg">
+          <Search size={48} className="mx-auto text-gray-400 mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No requests found</h3>
+          <p className="text-gray-600 mb-4">Try adjusting your filters or search terms</p>
+          <button 
+            onClick={clearFilters}
+            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium"
+          >
+            Clear All Filters
+          </button>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {filteredRequests.length > 0 && (
+        <div className="flex items-center justify-between mt-8">
+          <div className="text-sm text-gray-600">
+            Showing {filteredRequests.length} of {requests.length} requests
+          </div>
+          <div className="flex items-center gap-2">
+            <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+              Previous
+            </button>
+            <button className="px-3 py-2 bg-blue-600 text-white rounded-lg">1</button>
+            <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">2</button>
+            <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">3</button>
+            <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+              Next
+            </button>
+          </div>
         </div>
       )}
     </div>
