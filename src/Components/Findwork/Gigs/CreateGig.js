@@ -4,72 +4,286 @@ import {
   Plus, X, ImageIcon, MessageSquare, Rocket,
   AlertCircle, Info, Star, Zap, FileText, Video, 
   Upload, Trash2, Eye, Palette, Globe, TrendingUp,
-  Shield, Target, Users, FileCode, Package,
+  Shield, Target, Users, FileCode, Package, 
   Sparkles, DollarSign as Dollar, Palette as Paint,
-  Volume2, Camera, FileVideo, Link
+  Volume2, Camera, FileVideo, Link, Calendar,
+  Percent, Award, BarChart, Users as UserIcon,
+  Mail, Phone, MapPin, CreditCard, Lock,
+  CheckCircle, AlertTriangle, Key, Bell
 } from "lucide-react";
+
+// Validation utility functions
+const validators = {
+  required: (value) => !value || value.trim() === "" ? "This field is required" : "",
+  minLength: (value, min) => value.length < min ? `Minimum ${min} characters required` : "",
+  maxLength: (value, max) => value.length > max ? `Maximum ${max} characters allowed` : "",
+  minValue: (value, min) => parseFloat(value) < min ? `Minimum value is ${min}` : "",
+  maxValue: (value, max) => parseFloat(value) > max ? `Maximum value is ${max}` : "",
+  url: (value) => {
+    if (!value) return "";
+    const pattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+    return !pattern.test(value) ? "Please enter a valid URL" : "";
+  },
+  email: (value) => {
+    if (!value) return "";
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return !pattern.test(value) ? "Please enter a valid email" : "";
+  },
+  tagsCount: (tags, max) => tags.length > max ? `Maximum ${max} tags allowed` : "",
+  imagesCount: (images, min) => images.length < min ? `Minimum ${min} images required` : "",
+  priceRange: (value, min, max) => {
+    const num = parseFloat(value);
+    return num < min || num > max ? `Price must be between $${min} and $${max}` : "";
+  }
+};
 
 export default function CreateGig() {
   const [currentStep, setCurrentStep] = useState(1);
   const [autoSaveStatus, setAutoSaveStatus] = useState("saved");
   const [showPreview, setShowPreview] = useState(false);
-  const [gigViews, setGigViews] = useState(124);
-  
+  const [validationErrors, setValidationErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [gigStats, setGigStats] = useState({
+    estimatedViews: 1240,
+    potentialEarnings: 2450,
+    targetAudience: 15200,
+    completionScore: 25
+  });
+
   const [formData, setFormData] = useState({
     title: "",
-    category: "Programming & Tech",
-    subcategory: "",
+    category: "programming-tech",
+    subcategory: "web-development",
     tags: [],
-    packages: {
-      basic: { 
+    packages: [
+      { 
+        id: 1,
         name: "Basic", 
-        desc: "", 
-        features: [],
-        delivery: "3", 
-        deliveryType: "days",
-        revisions: "1", 
-        price: "",
-        popular: false
+        description: "Perfect for small projects", 
+        features: ["1 page design", "Basic revisions", "1 day delivery"],
+        deliveryTime: 3,
+        deliveryUnit: "days",
+        revisions: 1,
+        price: 50,
+        popular: false,
+        enabled: true
       },
-      standard: { 
+      { 
+        id: 2,
         name: "Standard", 
-        desc: "", 
-        features: [],
-        delivery: "5", 
-        deliveryType: "days",
-        revisions: "3", 
-        price: "",
-        popular: true
+        description: "Most popular choice", 
+        features: ["3 page design", "Multiple revisions", "Source files included"],
+        deliveryTime: 5,
+        deliveryUnit: "days",
+        revisions: 3,
+        price: 150,
+        popular: true,
+        enabled: true
       },
-      premium: { 
+      { 
+        id: 3,
         name: "Premium", 
-        desc: "", 
-        features: [],
-        delivery: "7", 
-        deliveryType: "days",
-        revisions: "Unlimited", 
-        price: "",
-        popular: false
-      },
-    },
+        description: "Complete solution", 
+        features: ["Unlimited pages", "Unlimited revisions", "Priority support", "Source files"],
+        deliveryTime: 7,
+        deliveryUnit: "days",
+        revisions: 999,
+        price: 300,
+        popular: false,
+        enabled: true
+      }
+    ],
     description: "",
-    requirements: [{ id: 1, question: "", type: "text", required: true }],
+    requirements: [
+      { 
+        id: 1, 
+        question: "What is your project about?", 
+        type: "text", 
+        required: true,
+        placeholder: "Briefly describe your project..."
+      }
+    ],
     images: [],
     videos: [],
-    faqs: [{ id: 1, question: "", answer: "" }],
+    faqs: [
+      { 
+        id: 1, 
+        question: "What information do you need to get started?", 
+        answer: "I need details about your project requirements, brand guidelines (if any), and any reference materials." 
+      }
+    ],
     gigExtras: [
-      { id: 1, title: "Express Delivery", desc: "Get it 2x faster", price: "50" },
-      { id: 2, title: "Source Files", desc: "Get all source files", price: "30" },
-      { id: 3, title: "Additional Revision", desc: "One extra revision", price: "20" }
+      { 
+        id: 1, 
+        title: "Express Delivery", 
+        description: "Get it 2x faster", 
+        price: 50,
+        enabled: true
+      },
+      { 
+        id: 2, 
+        title: "Source Files", 
+        description: "Get all source files", 
+        price: 30,
+        enabled: true
+      },
+      { 
+        id: 3, 
+        title: "Additional Revision", 
+        description: "One extra revision", 
+        price: 20,
+        enabled: true
+      }
     ],
     seo: {
       metaTitle: "",
       metaDescription: "",
-      slug: ""
+      slug: "",
+      keywords: []
     },
     visibility: "public",
-    aiAssist: false
+    publishDate: "",
+    aiAssist: false,
+    settings: {
+      allowCustomOffers: true,
+      enableGigExtras: true,
+      responseTime: "24h",
+      showOnlineStatus: true,
+      notifyOnOrder: true
+    }
   });
+
+  const steps = [
+    { id: 1, title: "Overview", subtitle: "Basic information", icon: Info, validation: validateStep1 },
+    { id: 2, title: "Pricing", subtitle: "Packages & extras", icon: DollarSign, validation: validateStep2 },
+    { id: 3, title: "Description", subtitle: "Details & FAQs", icon: FileText, validation: validateStep3 },
+    { id: 4, title: "Requirements", subtitle: "Client questions", icon: Target, validation: validateStep4 },
+    { id: 5, title: "Gallery", subtitle: "Portfolio & media", icon: ImageIcon, validation: validateStep5 },
+    { id: 6, title: "Publish", subtitle: "Review & launch", icon: Rocket, validation: validateStep6 }
+  ];
+
+  // Validation functions for each step
+  function validateStep1() {
+    const errors = {};
+    
+    if (!formData.title.trim()) {
+      errors.title = "Gig title is required";
+    } else if (formData.title.length < 15) {
+      errors.title = "Title should be at least 15 characters";
+    } else if (formData.title.length > 80) {
+      errors.title = "Title should not exceed 80 characters";
+    }
+    
+    if (!formData.category) {
+      errors.category = "Category is required";
+    }
+    
+    if (!formData.subcategory) {
+      errors.subcategory = "Subcategory is required";
+    }
+    
+    if (formData.tags.length === 0) {
+      errors.tags = "At least one tag is required";
+    } else if (formData.tags.length > 5) {
+      errors.tags = "Maximum 5 tags allowed";
+    }
+    
+    return errors;
+  }
+
+  function validateStep2() {
+    const errors = {};
+    
+    formData.packages.forEach((pkg, index) => {
+      if (pkg.enabled) {
+        if (!pkg.name.trim()) {
+          errors[`package_${index}_name`] = "Package name is required";
+        }
+        if (!pkg.description.trim()) {
+          errors[`package_${index}_desc`] = "Package description is required";
+        }
+        if (pkg.price < 5 || pkg.price > 10000) {
+          errors[`package_${index}_price`] = "Price must be between $5 and $10,000";
+        }
+        if (pkg.deliveryTime < 1) {
+          errors[`package_${index}_delivery`] = "Delivery time must be at least 1";
+        }
+      }
+    });
+    
+    return errors;
+  }
+
+  function validateStep3() {
+    const errors = {};
+    
+    if (!formData.description.trim()) {
+      errors.description = "Description is required";
+    } else if (formData.description.length < 120) {
+      errors.description = "Description should be at least 120 characters";
+    } else if (formData.description.length > 1200) {
+      errors.description = "Description should not exceed 1200 characters";
+    }
+    
+    formData.faqs.forEach((faq, index) => {
+      if (!faq.question.trim()) {
+        errors[`faq_${index}_question`] = "FAQ question is required";
+      }
+      if (!faq.answer.trim()) {
+        errors[`faq_${index}_answer`] = "FAQ answer is required";
+      }
+    });
+    
+    return errors;
+  }
+
+  function validateStep4() {
+    const errors = {};
+    
+    formData.requirements.forEach((req, index) => {
+      if (!req.question.trim()) {
+        errors[`req_${index}_question`] = "Question is required";
+      }
+    });
+    
+    return errors;
+  }
+
+  function validateStep5() {
+    const errors = {};
+    
+    if (formData.images.length < 3) {
+      errors.images = "At least 3 images are required";
+    }
+    
+    return errors;
+  }
+
+  function validateStep6() {
+    const errors = {};
+    
+    if (!formData.seo.metaTitle.trim() && formData.seo.metaTitle.length > 0) {
+      if (formData.seo.metaTitle.length < 30) {
+        errors.metaTitle = "SEO title should be at least 30 characters";
+      } else if (formData.seo.metaTitle.length > 60) {
+        errors.metaTitle = "SEO title should not exceed 60 characters";
+      }
+    }
+    
+    if (!formData.seo.metaDescription.trim() && formData.seo.metaDescription.length > 0) {
+      if (formData.seo.metaDescription.length < 120) {
+        errors.metaDescription = "Meta description should be at least 120 characters";
+      } else if (formData.seo.metaDescription.length > 160) {
+        errors.metaDescription = "Meta description should not exceed 160 characters";
+      }
+    }
+    
+    if (formData.visibility === "scheduled" && !formData.publishDate) {
+      errors.publishDate = "Publish date is required for scheduled gigs";
+    }
+    
+    return errors;
+  }
 
   // Auto-save simulation
   useEffect(() => {
@@ -77,88 +291,206 @@ export default function CreateGig() {
       setAutoSaveStatus("saving");
       const timer = setTimeout(() => {
         setAutoSaveStatus("saved");
+        // Simulate saving to localStorage
+        localStorage.setItem('gigDraft', JSON.stringify(formData));
       }, 1500);
       return () => clearTimeout(timer);
     }
   }, [formData]);
 
+  // Load draft from localStorage on mount
+  useEffect(() => {
+    const savedDraft = localStorage.getItem('gigDraft');
+    if (savedDraft) {
+      setFormData(JSON.parse(savedDraft));
+    }
+  }, []);
+
   const nextStep = () => {
-    if (currentStep < 6) setCurrentStep((prev) => prev + 1);
+    const validationFn = steps[currentStep - 1].validation;
+    const errors = validationFn();
+    
+    if (Object.keys(errors).length === 0) {
+      if (currentStep < 6) {
+        setCurrentStep(prev => prev + 1);
+        setValidationErrors({});
+      } else {
+        handlePublish();
+      }
+    } else {
+      setValidationErrors(errors);
+      // Scroll to first error
+      const firstErrorKey = Object.keys(errors)[0];
+      const element = document.querySelector(`[data-error="${firstErrorKey}"]`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
   };
   
   const prevStep = () => {
-    if (currentStep > 1) setCurrentStep((prev) => prev - 1);
+    if (currentStep > 1) {
+      setCurrentStep(prev => prev - 1);
+      setValidationErrors({});
+    }
   };
 
-  const steps = [
-    { id: 1, title: "Overview", subtitle: "Gig information", icon: Info },
-    { id: 2, title: "Pricing", subtitle: "Packages & pricing", icon: DollarSign },
-    { id: 3, title: "Description", subtitle: "Details & FAQs", icon: FileText },
-    { id: 4, title: "Requirements", subtitle: "What you need", icon: Target },
-    { id: 5, title: "Gallery", subtitle: "Images & media", icon: ImageIcon },
-    { id: 6, title: "Settings", subtitle: "SEO & visibility", icon: Settings }
-  ];
+  const handlePublish = async () => {
+    setSubmitting(true);
+    
+    try {
+      // Prepare data for backend
+      const gigData = {
+        ...formData,
+        status: 'draft',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        userId: "current-user-id", // This would come from auth context
+        // Process images for upload (convert to base64 or URLs)
+        images: formData.images.map(img => ({
+          url: img.preview,
+          type: img.type,
+          isThumbnail: img.id === formData.images[0]?.id
+        })),
+        // Calculate statistics
+        stats: {
+          completionScore: calculateCompletionScore(),
+          expectedCtr: calculateExpectedCTR(),
+          competitionLevel: "medium"
+        }
+      };
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Success - redirect or show success message
+      alert('🎉 Gig published successfully!');
+      localStorage.removeItem('gigDraft');
+      
+      // In real app, you would redirect to gig page
+      // router.push(`/gig/${gigId}`);
+      
+    } catch (error) {
+      alert('Error publishing gig. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const calculateCompletionScore = () => {
+    let score = 0;
+    const totalFields = 8;
+    
+    if (formData.title) score++;
+    if (formData.category && formData.subcategory) score++;
+    if (formData.tags.length >= 3) score++;
+    if (formData.description.length >= 120) score++;
+    if (formData.images.length >= 3) score++;
+    if (formData.packages.some(p => p.enabled)) score++;
+    if (formData.requirements.length > 0) score++;
+    if (formData.faqs.length > 0) score++;
+    
+    return Math.round((score / totalFields) * 100);
+  };
+
+  const calculateExpectedCTR = () => {
+    let ctr = 2.5; // Base CTR
+    
+    // Factors affecting CTR
+    if (formData.title.length >= 30 && formData.title.length <= 60) ctr += 0.5;
+    if (formData.images.length >= 3) ctr += 0.3;
+    if (formData.packages.some(p => p.popular)) ctr += 0.2;
+    if (formData.tags.length >= 3) ctr += 0.2;
+    
+    return ctr.toFixed(1);
+  };
 
   const categories = {
-    "Programming & Tech": ["Web Development", "Mobile Apps", "Chatbots", "AI Services", "Blockchain"],
-    "Graphics & Design": ["Logo Design", "Brand Style", "Illustration", "UI/UX Design"],
-    "Digital Marketing": ["SEO", "Social Media", "Content Strategy", "Email Marketing"],
-    "Writing & Translation": ["Content Writing", "Proofreading", "Translation", "Technical Writing"],
-    "Video & Animation": ["Video Editing", "Animation", "Motion Graphics", "Whiteboard"],
-    "Music & Audio": ["Voice Over", "Mixing & Mastering", "Sound Design", "Jingles"]
+    "graphics-design": {
+      name: "Graphics & Design",
+      subcategories: [
+        { id: "logo-design", name: "Logo Design" },
+        { id: "brand-style", name: "Brand Style Guides" },
+        { id: "business-cards", name: "Business Cards" },
+        { id: "illustration", name: "Illustration" },
+        { id: "ui-ux", name: "UI/UX Design" }
+      ]
+    },
+    "programming-tech": {
+      name: "Programming & Tech",
+      subcategories: [
+        { id: "web-development", name: "Web Development" },
+        { id: "mobile-apps", name: "Mobile Apps" },
+        { id: "chatbots", name: "Chatbots" },
+        { id: "ai-services", name: "AI Services" },
+        { id: "blockchain", name: "Blockchain" }
+      ]
+    },
+    "digital-marketing": {
+      name: "Digital Marketing",
+      subcategories: [
+        { id: "seo", name: "SEO" },
+        { id: "social-media", name: "Social Media Marketing" },
+        { id: "content-strategy", name: "Content Strategy" },
+        { id: "email-marketing", name: "Email Marketing" }
+      ]
+    }
+  };
+
+  const tagSuggestions = {
+    "web-development": ["React", "Next.js", "TypeScript", "Node.js", "MongoDB"],
+    "logo-design": ["Minimal", "Modern", "Vintage", "Typography", "Mascot"],
+    "seo": ["Technical SEO", "On-page SEO", "Off-page SEO", "Keyword Research", "Analytics"]
   };
 
   const addTag = (tag) => {
     if (tag && !formData.tags.includes(tag) && formData.tags.length < 5) {
-      setFormData({...formData, tags: [...formData.tags, tag]});
+      setFormData(prev => ({...prev, tags: [...prev.tags, tag]}));
+      clearError("tags");
     }
   };
 
   const removeTag = (tagToRemove) => {
-    setFormData({...formData, tags: formData.tags.filter(t => t !== tagToRemove)});
+    setFormData(prev => ({...prev, tags: prev.tags.filter(t => t !== tagToRemove)}));
   };
 
-  const addPackageFeature = (tier, feature) => {
-    if (feature.trim()) {
-      setFormData(prev => ({
-        ...prev,
-        packages: {
-          ...prev.packages,
-          [tier]: {
-            ...prev.packages[tier],
-            features: [...prev.packages[tier].features, feature.trim()]
-          }
-        }
-      }));
-    }
-  };
-
-  const removePackageFeature = (tier, index) => {
-    setFormData(prev => ({
-      ...prev,
-      packages: {
-        ...prev.packages,
-        [tier]: {
-          ...prev.packages[tier],
-          features: prev.packages[tier].features.filter((_, i) => i !== index)
-        }
-      }
-    }));
+  const updatePackage = (index, field, value) => {
+    setFormData(prev => {
+      const newPackages = [...prev.packages];
+      newPackages[index] = { ...newPackages[index], [field]: value };
+      return { ...prev, packages: newPackages };
+    });
+    
+    // Clear validation error for this field
+    clearError(`package_${index}_${field}`);
   };
 
   const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const newImages = files.map(file => ({
-      id: Date.now() + Math.random(),
-      file,
-      preview: URL.createObjectURL(file),
-      type: file.type.startsWith('image/') ? 'image' : 'video'
-    }));
+    const files = Array.from(e.target.files).slice(0, 10 - formData.images.length);
     
-    setFormData(prev => ({
-      ...prev,
-      images: [...prev.images, ...newImages]
-    }));
+    files.forEach(file => {
+      if (file.size > 5 * 1024 * 1024) {
+        alert(`File ${file.name} is too large. Maximum size is 5MB.`);
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFormData(prev => ({
+          ...prev,
+          images: [...prev.images, {
+            id: Date.now() + Math.random(),
+            file,
+            preview: e.target.result,
+            type: file.type.startsWith('image/') ? 'image' : 'video',
+            name: file.name,
+            size: file.size
+          }]
+        }));
+        clearError("images");
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   const removeMedia = (id) => {
@@ -168,86 +500,179 @@ export default function CreateGig() {
     }));
   };
 
-  const StatsCard = ({ icon: Icon, label, value, color }) => (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 flex items-center gap-3">
-      <div className={`p-2 rounded-lg ${color}`}>
-        <Icon size={20} className="text-white" />
-      </div>
-      <div>
-        <div className="text-2xl font-bold text-gray-900">{value}</div>
-        <div className="text-sm text-gray-500">{label}</div>
+  const addFAQ = () => {
+    setFormData(prev => ({
+      ...prev,
+      faqs: [...prev.faqs, {
+        id: Date.now(),
+        question: "",
+        answer: ""
+      }]
+    }));
+  };
+
+  const updateFAQ = (index, field, value) => {
+    setFormData(prev => {
+      const newFAQs = [...prev.faqs];
+      newFAQs[index] = { ...newFAQs[index], [field]: value };
+      return { ...prev, faqs: newFAQs };
+    });
+    clearError(`faq_${index}_${field}`);
+  };
+
+  const removeFAQ = (id) => {
+    if (formData.faqs.length > 1) {
+      setFormData(prev => ({
+        ...prev,
+        faqs: prev.faqs.filter(faq => faq.id !== id)
+      }));
+    }
+  };
+
+  const addRequirement = () => {
+    setFormData(prev => ({
+      ...prev,
+      requirements: [...prev.requirements, {
+        id: Date.now(),
+        question: "",
+        type: "text",
+        required: true,
+        placeholder: ""
+      }]
+    }));
+  };
+
+  const updateRequirement = (index, field, value) => {
+    setFormData(prev => {
+      const newReqs = [...prev.requirements];
+      newReqs[index] = { ...newReqs[index], [field]: value };
+      return { ...prev, requirements: newReqs };
+    });
+    clearError(`req_${index}_question`);
+  };
+
+  const removeRequirement = (id) => {
+    if (formData.requirements.length > 1) {
+      setFormData(prev => ({
+        ...prev,
+        requirements: prev.requirements.filter(req => req.id !== id)
+      }));
+    }
+  };
+
+  const clearError = (field) => {
+    setValidationErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[field];
+      return newErrors;
+    });
+  };
+
+  const StatsCard = ({ icon: Icon, label, value, color, trend }) => (
+    <div className="bg-white rounded-xl border border-[#E7E1DE] p-4 hover:shadow-sm transition-shadow">
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <div className={`p-2 rounded-lg ${color}`}>
+            <Icon size={20} className="text-white" />
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-[#2E2322]">{value}</div>
+            <div className="text-sm text-[#7A5A4C]">{label}</div>
+          </div>
+        </div>
+        {trend && (
+          <div className={`text-xs font-medium px-2 py-1 rounded-full ${
+            trend > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+          }`}>
+            {trend > 0 ? '↑' : '↓'} {Math.abs(trend)}%
+          </div>
+        )}
       </div>
     </div>
   );
 
+  const InputError = ({ error }) => (
+    error && (
+      <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
+        <AlertCircle size={14} />
+        <span>{error}</span>
+      </div>
+    )
+  );
+
+  // Update completion score
+  useEffect(() => {
+    const score = calculateCompletionScore();
+    setGigStats(prev => ({ ...prev, completionScore: score }));
+  }, [formData]);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      
-      {/* Enhanced Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div className="min-h-screen bg-[#F8F4F1]">
+      {/* Header */}
+      <div className="bg-white border-b border-[#E7E1DE] sticky top-0 z-50 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="hidden sm:block">
-                <h1 className="text-2xl font-bold text-gray-900">Create New Gig</h1>
-                <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
-                  <Sparkles size={14} className="text-yellow-500" />
-                  Complete all steps to launch your gig
-                </p>
+              <div>
+                <h1 className="text-2xl font-bold text-[#2E2322]">Create New Gig</h1>
+                <p className="text-sm text-[#7A5A4C] mt-1">Turn your skills into a successful freelance business</p>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
+              <div className="hidden md:flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${
+                  autoSaveStatus === "saving" ? "bg-yellow-500 animate-pulse" :
+                  autoSaveStatus === "saved" ? "bg-green-500" : "bg-[#C1B1A8]"
+                }`} />
+                <span className="text-sm text-[#7A5A4C]">
+                  {autoSaveStatus === "saving" ? "Saving..." : "Auto-saved"}
+                </span>
+              </div>
+              
               <button 
-                onClick={() => setShowPreview(!showPreview)}
-                className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                onClick={() => setShowPreview(true)}
+                className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-semibold text-[#4A312F] hover:text-[#2E2322] hover:bg-[#F3E9E5] rounded-lg transition-colors"
               >
                 <Eye size={16} />
                 Preview
               </button>
-              
-              <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${
-                  autoSaveStatus === "saving" ? "bg-yellow-500 animate-pulse" :
-                  autoSaveStatus === "saved" ? "bg-green-500" : "bg-gray-300"
-                }`} />
-                <span className="text-xs text-gray-500 hidden sm:inline">
-                  {autoSaveStatus === "saving" ? "Saving..." : "Auto-saved"}
-                </span>
-              </div>
             </div>
           </div>
 
-          {/* Enhanced Progress Bar */}
+          {/* Progress Steps */}
           <div className="mt-6">
             <div className="flex items-center justify-between">
               {steps.map((step, idx) => {
                 const StepIcon = step.icon;
+                const isActive = currentStep === step.id;
+                const isCompleted = currentStep > step.id;
+                
                 return (
                   <div key={step.id} className="flex-1 relative">
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => setCurrentStep(step.id)}
                         className={`flex items-center justify-center w-10 h-10 rounded-full transition-all ${
-                          currentStep > step.id 
-                            ? "bg-[#1DBF73] text-white" 
-                            : currentStep === step.id 
-                              ? "bg-[#1DBF73] text-white ring-4 ring-[#1DBF73]/20 shadow-lg" 
-                              : "bg-gray-100 text-gray-400"
+                          isCompleted 
+                            ? "bg-green-500 text-white" 
+                            : isActive 
+                              ? "bg-green-500 text-white ring-4 ring-green-500/20" 
+                              : "bg-[#F3E9E5] text-[#A38F85]"
                         }`}
                       >
-                        <StepIcon size={18} />
+                        {isCompleted ? <Check size={18} /> : <StepIcon size={18} />}
                       </button>
                       <div className="hidden lg:block">
-                        <div className={`text-sm font-semibold ${currentStep >= step.id ? 'text-gray-900' : 'text-gray-400'}`}>
+                        <div className={`text-sm font-semibold ${isActive || isCompleted ? 'text-[#2E2322]' : 'text-[#A38F85]'}`}>
                           {step.title}
                         </div>
-                        <div className="text-xs text-gray-500">{step.subtitle}</div>
+                        <div className="text-xs text-[#7A5A4C]">{step.subtitle}</div>
                       </div>
                     </div>
                     {idx < steps.length - 1 && (
                       <div className={`absolute top-5 left-10 right-0 h-0.5 -z-10 transition-all duration-300 ${
-                        currentStep > step.id ? 'bg-[#1DBF73]' : 'bg-gray-200'
+                        isCompleted ? 'bg-green-500' : 'bg-[#EFE7E2]'
                       }`} />
                     )}
                   </div>
@@ -258,146 +683,190 @@ export default function CreateGig() {
         </div>
       </div>
 
-      {/* Main Content with Stats */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Stats & AI Assistant */}
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Left Column - Stats & Progress */}
           <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Gig Performance</h3>
-              <div className="space-y-4">
-                <StatsCard 
-                  icon={TrendingUp} 
-                  label="Estimated Views"
-                  value={gigViews.toLocaleString()}
-                  color="bg-blue-500"
+            {/* Completion Card */}
+            <div className="bg-white rounded-xl border border-[#E7E1DE] p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-[#2E2322]">Completion</h3>
+                <span className="text-2xl font-bold text-green-500">{gigStats.completionScore}%</span>
+              </div>
+              <div className="w-full h-2 bg-[#EFE7E2] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-green-500 rounded-full transition-all duration-300"
+                  style={{ width: `${gigStats.completionScore}%` }}
                 />
-                <StatsCard 
-                  icon={Dollar} 
-                  label="Potential Earnings"
-                  value="$2,450"
-                  color="bg-green-500"
-                />
-                <StatsCard 
-                  icon={Users} 
-                  label="Target Audience"
-                  value="15.2K"
-                  color="bg-purple-500"
-                />
+              </div>
+              <div className="mt-4 space-y-2">
+                {[
+                  { label: "Title & Category", done: !!formData.title && !!formData.category },
+                  { label: "Pricing", done: formData.packages.some(p => p.enabled && p.price > 0) },
+                  { label: "Description", done: formData.description.length >= 120 },
+                  { label: "Portfolio", done: formData.images.length >= 3 },
+                  { label: "Requirements", done: formData.requirements.length > 0 },
+                  { label: "FAQs", done: formData.faqs.length > 0 }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
+                      item.done ? 'bg-green-500' : 'bg-[#EFE7E2]'
+                    }`}>
+                      {item.done && <Check size={10} className="text-white" />}
+                    </div>
+                    <span className={`text-sm ${item.done ? 'text-[#2E2322]' : 'text-[#7A5A4C]'}`}>
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* AI Assistant */}
-            <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl border border-purple-200 p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <Sparkles size={20} className="text-purple-600" />
+            {/* Performance Stats */}
+            <div className="bg-white rounded-xl border border-[#E7E1DE] p-6">
+              <h3 className="font-semibold text-[#2E2322] mb-4">Performance Insights</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="text-sm text-[#7A5A4C] mb-1">Expected CTR</div>
+                  <div className="text-2xl font-bold text-[#2E2322]">{calculateExpectedCTR()}%</div>
                 </div>
-                <h3 className="font-bold text-gray-900">AI Gig Assistant</h3>
+                <div>
+                  <div className="text-sm text-[#7A5A4C] mb-1">Competition Level</div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-full h-2 bg-[#EFE7E2] rounded-full overflow-hidden">
+                      <div className="w-3/4 h-full bg-yellow-500" />
+                    </div>
+                    <span className="text-sm font-medium text-[#4A312F]">Medium</span>
+                  </div>
+                </div>
               </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="bg-gradient-to-r from-[#FDECE7] to-[#F8F4F1] rounded-xl border border-[#F4C7A1] p-6">
+              <h3 className="font-semibold text-[#2E2322] mb-4">Quick Actions</h3>
               <div className="space-y-3">
-                <button className="w-full text-left p-3 bg-white rounded-lg border border-gray-200 hover:border-purple-300 transition-colors">
-                  ✨ Optimize gig title
+                <button className="w-full text-left p-3 bg-white rounded-lg border border-[#E7E1DE] hover:border-[#C9452F] transition-colors flex items-center gap-3">
+                  <Sparkles size={16} className="text-[#C9452F]" />
+                  <span>Optimize with AI</span>
                 </button>
-                <button className="w-full text-left p-3 bg-white rounded-lg border border-gray-200 hover:border-purple-300 transition-colors">
-                  📊 Suggest pricing
+                <button className="w-full text-left p-3 bg-white rounded-lg border border-[#E7E1DE] hover:border-[#C9452F] transition-colors flex items-center gap-3">
+                  <BarChart size={16} className="text-green-500" />
+                  <span>View Analytics</span>
                 </button>
-                <button className="w-full text-left p-3 bg-white rounded-lg border border-gray-200 hover:border-purple-300 transition-colors">
-                  🎯 Generate tags
+                <button className="w-full text-left p-3 bg-white rounded-lg border border-[#E7E1DE] hover:border-[#C9452F] transition-colors flex items-center gap-3">
+                  <Users size={16} className="text-purple-500" />
+                  <span>Target Audience</span>
                 </button>
               </div>
             </div>
           </div>
 
           {/* Right Column - Form */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="lg:col-span-3">
+            <div className="bg-white rounded-xl border border-[#E7E1DE] shadow-sm overflow-hidden">
               
               {/* Step Content */}
               <div className="p-6 sm:p-8">
-                
-                {/* STEP 1: OVERVIEW */}
                 {currentStep === 1 && (
-                  <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-                    <div className="flex items-center justify-between">
-                      <h2 className="text-xl font-bold text-gray-900">Gig Overview</h2>
-                      <button className="text-sm text-[#1DBF73] font-semibold hover:text-[#19A463] flex items-center gap-2">
-                        <Sparkles size={16} />
-                        AI Suggestions
-                      </button>
+                  <div className="space-y-8">
+                    <div>
+                      <h2 className="text-xl font-bold text-[#2E2322] mb-2">Gig Overview</h2>
+                      <p className="text-[#6B5B50]">Set up the basic information about your service</p>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <div data-error="title">
+                      <label className="block text-sm font-semibold text-[#2E2322] mb-2">
                         Gig Title <span className="text-red-500">*</span>
                       </label>
-                      <div className="relative">
-                        <input
-                          type="text"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
-                          placeholder="I will..."
-                          value={formData.title}
-                          onChange={(e) => setFormData({...formData, title: e.target.value})}
-                          maxLength={80}
-                        />
-                        <div className="flex justify-between mt-2">
-                          <div className="text-xs text-gray-500">
-                            {formData.title.length}/80 characters
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            🔥 Keywords: 3/5
-                          </div>
+                      <input
+                        type="text"
+                        className={`w-full px-4 py-3 border rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                          validationErrors.title ? 'border-red-500' : 'border-[#E7E1DE]'
+                        }`}
+                        placeholder="I will design a modern logo for your brand"
+                        value={formData.title}
+                        onChange={(e) => {
+                          setFormData(prev => ({...prev, title: e.target.value}));
+                          clearError("title");
+                        }}
+                        maxLength={80}
+                      />
+                      <div className="flex justify-between mt-2">
+                        <InputError error={validationErrors.title} />
+                        <div className="text-xs text-[#7A5A4C]">
+                          {formData.title.length}/80 characters
                         </div>
+                      </div>
+                      <div className="text-xs text-[#7A5A4C] mt-2">
+                        💡 Use keywords that buyers search for. Start with "I will..."
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div data-error="category">
+                        <label className="block text-sm font-semibold text-[#2E2322] mb-2">
                           Category <span className="text-red-500">*</span>
                         </label>
-                        <div className="relative">
-                          <select 
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent appearance-none"
-                            value={formData.category}
-                            onChange={(e) => setFormData({...formData, category: e.target.value, subcategory: ""})}
-                          >
-                            {Object.keys(categories).map(cat => (
-                              <option key={cat} value={cat}>{cat}</option>
-                            ))}
-                          </select>
-                          <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                        </div>
+                        <select 
+                          className={`w-full px-4 py-3 border rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                            validationErrors.category ? 'border-red-500' : 'border-[#E7E1DE]'
+                          }`}
+                          value={formData.category}
+                          onChange={(e) => {
+                            setFormData(prev => ({...prev, category: e.target.value, subcategory: ''}));
+                            clearError("category");
+                          }}
+                        >
+                          <option value="">Select a category</option>
+                          {Object.entries(categories).map(([key, cat]) => (
+                            <option key={key} value={key}>{cat.name}</option>
+                          ))}
+                        </select>
+                        <InputError error={validationErrors.category} />
                       </div>
 
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      <div data-error="subcategory">
+                        <label className="block text-sm font-semibold text-[#2E2322] mb-2">
                           Subcategory <span className="text-red-500">*</span>
                         </label>
                         <select 
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
+                          className={`w-full px-4 py-3 border rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                            validationErrors.subcategory ? 'border-red-500' : 'border-[#E7E1DE]'
+                          }`}
                           value={formData.subcategory}
-                          onChange={(e) => setFormData({...formData, subcategory: e.target.value})}
+                          onChange={(e) => {
+                            setFormData(prev => ({...prev, subcategory: e.target.value}));
+                            clearError("subcategory");
+                          }}
+                          disabled={!formData.category}
                         >
                           <option value="">Select a subcategory</option>
-                          {categories[formData.category]?.map(sub => (
-                            <option key={sub} value={sub}>{sub}</option>
+                          {formData.category && categories[formData.category]?.subcategories.map(sub => (
+                            <option key={sub.id} value={sub.id}>{sub.name}</option>
                           ))}
                         </select>
+                        <InputError error={validationErrors.subcategory} />
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Search Tags <span className="text-gray-500 font-normal">(up to 5 tags)</span>
+                    <div data-error="tags">
+                      <label className="block text-sm font-semibold text-[#2E2322] mb-2">
+                        Search Tags <span className="text-[#7A5A4C] text-sm font-normal">(up to 5 tags)</span>
                       </label>
                       <div className="space-y-3">
-                        <div className="border border-gray-300 rounded-lg p-3 focus-within:ring-2 focus-within:ring-[#1DBF73] focus-within:border-transparent">
+                        <div className={`border rounded-lg p-3 focus-within:ring-2 focus-within:ring-green-500 ${
+                          validationErrors.tags ? 'border-red-500' : 'border-[#E7E1DE]'
+                        }`}>
                           <div className="flex flex-wrap gap-2 mb-2">
                             {formData.tags.map(tag => (
-                              <span key={tag} className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-50 to-purple-50 text-gray-700 px-3 py-1.5 rounded-full text-sm font-medium border border-blue-100">
+                              <span key={tag} className="inline-flex items-center gap-1.5 bg-[#F3E9E5] text-[#4A312F] px-3 py-1.5 rounded-full text-sm font-medium">
                                 #{tag}
-                                <button onClick={() => removeTag(tag)} className="hover:text-red-600">
+                                <button 
+                                  onClick={() => removeTag(tag)}
+                                  className="hover:text-red-600 transition-colors"
+                                >
                                   <X size={14} />
                                 </button>
                               </span>
@@ -406,7 +875,7 @@ export default function CreateGig() {
                           <input
                             type="text"
                             className="w-full outline-none text-base"
-                            placeholder={formData.tags.length < 5 ? "Add a tag (press Enter)" : "Maximum 5 tags reached"}
+                            placeholder={formData.tags.length < 5 ? "Type a tag and press Enter" : "Maximum 5 tags reached"}
                             disabled={formData.tags.length >= 5}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter' && e.target.value.trim()) {
@@ -417,289 +886,305 @@ export default function CreateGig() {
                             }}
                           />
                         </div>
-                        <div className="flex flex-wrap gap-2">
-                          <span className="text-xs text-gray-500">Suggestions:</span>
-                          {["web", "design", "fast", "professional", "responsive"].map(suggestion => (
-                            <button
-                              key={suggestion}
-                              onClick={() => addTag(suggestion)}
-                              className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded"
-                            >
-                              {suggestion}
-                            </button>
-                          ))}
-                        </div>
+                        <InputError error={validationErrors.tags} />
+                        {formData.subcategory && tagSuggestions[formData.subcategory] && (
+                          <div className="flex flex-wrap gap-2">
+                            <span className="text-sm text-[#7A5A4C]">Suggestions:</span>
+                            {tagSuggestions[formData.subcategory].map(suggestion => (
+                              <button
+                                key={suggestion}
+                                onClick={() => addTag(suggestion)}
+                                className="text-sm px-3 py-1 bg-[#F3E9E5] hover:bg-[#EFE7E2] rounded-lg transition-colors"
+                                disabled={formData.tags.length >= 5}
+                              >
+                                {suggestion}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* STEP 2: PRICING */}
                 {currentStep === 2 && (
-                  <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-                    <div className="flex items-center justify-between">
-                      <h2 className="text-xl font-bold text-gray-900">Pricing Packages</h2>
-                      <button className="text-sm text-[#1DBF73] font-semibold hover:text-[#19A463]">
-                        Compare with competitors →
-                      </button>
+                  <div className="space-y-8">
+                    <div>
+                      <h2 className="text-xl font-bold text-[#2E2322] mb-2">Pricing Packages</h2>
+                      <p className="text-[#6B5B50]">Create packages that suit different buyer needs</p>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                      {['basic', 'standard', 'premium'].map((tier) => (
+                    <div className="space-y-6">
+                      {formData.packages.map((pkg, index) => (
                         <div 
-                          key={tier} 
-                          className={`border rounded-xl p-6 relative transition-all hover:shadow-lg ${
-                            formData.packages[tier].popular 
-                              ? 'border-[#1DBF73] ring-1 ring-[#1DBF73]' 
-                              : 'border-gray-200'
+                          key={pkg.id} 
+                          className={`border rounded-xl p-6 relative transition-all ${
+                            pkg.popular ? 'border-green-500 ring-1 ring-green-500' : 'border-[#E7E1DE]'
                           }`}
                         >
-                          {formData.packages[tier].popular && (
+                          {pkg.popular && (
                             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                              <span className="bg-[#1DBF73] text-white text-xs font-bold px-3 py-1 rounded-full">
+                              <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                                 MOST POPULAR
                               </span>
                             </div>
                           )}
                           
-                          <div className="text-center mb-6">
-                            <div className={`w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3 ${
-                              tier === 'basic' ? 'bg-blue-100 text-blue-600' :
-                              tier === 'standard' ? 'bg-purple-100 text-purple-600' :
-                              'bg-orange-100 text-orange-600'
-                            }`}>
-                              {tier === 'basic' ? <Zap size={24} /> :
-                               tier === 'standard' ? <Star size={24} /> :
-                               <Rocket size={24} />}
+                          <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-3">
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={pkg.enabled}
+                                  onChange={(e) => updatePackage(index, 'enabled', e.target.checked)}
+                                  className="w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                                />
+                                <span className="font-bold text-[#2E2322]">{pkg.name}</span>
+                              </label>
                             </div>
-                            <h3 className="font-bold text-gray-900 capitalize">{tier}</h3>
-                            <p className="text-sm text-gray-500 mt-1">Perfect for small projects</p>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={pkg.popular}
+                                onChange={(e) => {
+                                  // Only one package can be popular
+                                  const newPackages = formData.packages.map((p, i) => ({
+                                    ...p,
+                                    popular: i === index ? e.target.checked : false
+                                  }));
+                                  setFormData(prev => ({ ...prev, packages: newPackages }));
+                                }}
+                                className="w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                              />
+                              <span className="text-sm text-[#6B5B50]">Mark as Popular</span>
+                            </label>
                           </div>
 
-                          <div className="space-y-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Description
-                              </label>
-                              <input
-                                type="text"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
-                                placeholder="What's included..."
-                                value={formData.packages[tier].desc}
-                                onChange={(e) => {
-                                  const p = {...formData.packages};
-                                  p[tier].desc = e.target.value;
-                                  setFormData({...formData, packages: p});
-                                }}
-                              />
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                              <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Delivery
+                          {pkg.enabled && (
+                            <div className="space-y-4">
+                              <div data-error={`package_${index}_desc`}>
+                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                  Package Description
                                 </label>
-                                <div className="flex gap-2">
+                                <input
+                                  type="text"
+                                  className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                                    validationErrors[`package_${index}_desc`] ? 'border-red-500' : 'border-[#E7E1DE]'
+                                  }`}
+                                  value={pkg.description}
+                                  onChange={(e) => updatePackage(index, 'description', e.target.value)}
+                                  placeholder="What's included in this package?"
+                                />
+                                <InputError error={validationErrors[`package_${index}_desc`]} />
+                              </div>
+
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div data-error={`package_${index}_delivery`}>
+                                  <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                    Delivery Time
+                                  </label>
+                                  <div className="flex gap-2">
+                                    <input
+                                      type="number"
+                                      className={`flex-1 px-3 py-2 border rounded-lg text-sm ${
+                                        validationErrors[`package_${index}_delivery`] ? 'border-red-500' : 'border-[#E7E1DE]'
+                                      }`}
+                                      value={pkg.deliveryTime}
+                                      onChange={(e) => updatePackage(index, 'deliveryTime', parseInt(e.target.value) || 0)}
+                                      min="1"
+                                    />
+                                    <select 
+                                      className="px-3 py-2 border border-[#E7E1DE] rounded-lg text-sm"
+                                      value={pkg.deliveryUnit}
+                                      onChange={(e) => updatePackage(index, 'deliveryUnit', e.target.value)}
+                                    >
+                                      <option value="days">Days</option>
+                                      <option value="hours">Hours</option>
+                                    </select>
+                                  </div>
+                                  <InputError error={validationErrors[`package_${index}_delivery`]} />
+                                </div>
+
+                                <div>
+                                  <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                    Revisions
+                                  </label>
                                   <input
                                     type="number"
-                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                                    value={formData.packages[tier].delivery}
-                                    onChange={(e) => {
-                                      const p = {...formData.packages};
-                                      p[tier].delivery = e.target.value;
-                                      setFormData({...formData, packages: p});
-                                    }}
+                                    className="w-full px-3 py-2 border border-[#E7E1DE] rounded-lg text-sm"
+                                    value={pkg.revisions === 999 ? "Unlimited" : pkg.revisions}
+                                    onChange={(e) => updatePackage(index, 'revisions', e.target.value === "Unlimited" ? 999 : parseInt(e.target.value) || 0)}
+                                    min="0"
                                   />
-                                  <select 
-                                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                                    value={formData.packages[tier].deliveryType}
-                                    onChange={(e) => {
-                                      const p = {...formData.packages};
-                                      p[tier].deliveryType = e.target.value;
-                                      setFormData({...formData, packages: p});
-                                    }}
-                                  >
-                                    <option value="days">Days</option>
-                                    <option value="hours">Hours</option>
-                                  </select>
                                 </div>
                               </div>
 
-                              <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Revisions
+                              <div data-error={`package_${index}_price`}>
+                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                  Price <span className="text-red-500">*</span>
                                 </label>
-                                <input
-                                  type="text"
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                                  placeholder="1"
-                                  value={formData.packages[tier].revisions}
-                                  onChange={(e) => {
-                                    const p = {...formData.packages};
-                                    p[tier].revisions = e.target.value;
-                                    setFormData({...formData, packages: p});
-                                  }}
-                                />
+                                <div className="relative">
+                                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7A5A4C]">$</span>
+                                  <input
+                                    type="number"
+                                    className={`w-full pl-7 pr-3 py-2 border rounded-lg text-lg font-bold focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                                      validationErrors[`package_${index}_price`] ? 'border-red-500' : 'border-[#E7E1DE]'
+                                    }`}
+                                    value={pkg.price}
+                                    onChange={(e) => updatePackage(index, 'price', parseFloat(e.target.value) || 0)}
+                                    min="5"
+                                    max="10000"
+                                    step="5"
+                                  />
+                                </div>
+                                <InputError error={validationErrors[`package_${index}_price`]} />
                               </div>
-                            </div>
 
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Price
-                              </label>
-                              <div className="relative">
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
-                                <input
-                                  type="number"
-                                  className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg text-lg font-bold focus:outline-none focus:ring-2 focus:ring-[#1DBF73] focus:border-transparent"
-                                  placeholder="50"
-                                  value={formData.packages[tier].price}
-                                  onChange={(e) => {
-                                    const p = {...formData.packages};
-                                    p[tier].price = e.target.value;
-                                    setFormData({...formData, packages: p});
-                                  }}
-                                />
+                              <div>
+                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                  Features
+                                </label>
+                                <div className="space-y-2">
+                                  {pkg.features.map((feature, idx) => (
+                                    <div key={idx} className="flex items-center justify-between bg-[#F8F4F1] px-3 py-2 rounded">
+                                      <div className="flex items-center gap-2">
+                                        <Check size={12} className="text-green-500" />
+                                        <span className="text-sm">{feature}</span>
+                                      </div>
+                                      <button 
+                                        onClick={() => {
+                                          const newFeatures = [...pkg.features];
+                                          newFeatures.splice(idx, 1);
+                                          updatePackage(index, 'features', newFeatures);
+                                        }}
+                                        className="text-red-500 hover:text-red-700"
+                                      >
+                                        <X size={14} />
+                                      </button>
+                                    </div>
+                                  ))}
+                                  <input
+                                    type="text"
+                                    className="w-full px-3 py-2 border border-[#E7E1DE] rounded-lg text-sm"
+                                    placeholder="Add a feature (press Enter)"
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter' && e.target.value.trim()) {
+                                        updatePackage(index, 'features', [...pkg.features, e.target.value.trim()]);
+                                        e.target.value = '';
+                                      }
+                                    }}
+                                  />
+                                </div>
                               </div>
                             </div>
-
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Features
-                              </label>
-                              <div className="space-y-2">
-                                {formData.packages[tier].features.map((feature, idx) => (
-                                  <div key={idx} className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded">
-                                    <span className="text-sm">✓ {feature}</span>
-                                    <button 
-                                      onClick={() => removePackageFeature(tier, idx)}
-                                      className="text-red-500 hover:text-red-700"
-                                    >
-                                      <X size={14} />
-                                    </button>
-                                  </div>
-                                ))}
-                                <input
-                                  type="text"
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                                  placeholder="Add a feature..."
-                                  onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                      addPackageFeature(tier, e.target.value);
-                                      e.target.value = '';
-                                    }
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          </div>
+                          )}
                         </div>
                       ))}
-                    </div>
-
-                    {/* Gig Extras */}
-                    <div className="border-t pt-8">
-                      <h3 className="text-lg font-bold text-gray-900 mb-4">Gig Extras</h3>
-                      <div className="space-y-3">
-                        {formData.gigExtras.map(extra => (
-                          <div key={extra.id} className="flex items-center justify-between border border-gray-200 rounded-lg p-4 hover:border-[#1DBF73] transition-colors">
-                            <div>
-                              <h4 className="font-semibold text-gray-900">{extra.title}</h4>
-                              <p className="text-sm text-gray-500">{extra.desc}</p>
-                            </div>
-                            <div className="flex items-center gap-4">
-                              <div className="text-right">
-                                <div className="font-bold text-gray-900">+${extra.price}</div>
-                                <div className="text-xs text-gray-500">Extra</div>
-                              </div>
-                              <button className="text-red-500 hover:text-red-700">
-                                <Trash2 size={16} />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                        <button className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm font-semibold text-gray-600 hover:border-[#1DBF73] hover:text-[#1DBF73] transition-colors flex items-center justify-center gap-2">
-                          <Plus size={16} /> Add Extra Service
-                        </button>
-                      </div>
                     </div>
                   </div>
                 )}
 
-                {/* STEP 3: DESCRIPTION & FAQ */}
                 {currentStep === 3 && (
-                  <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                  <div className="space-y-8">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      <h2 className="text-xl font-bold text-[#2E2322] mb-2">Description & FAQs</h2>
+                      <p className="text-[#6B5B50]">Describe your service and answer common questions</p>
+                    </div>
+
+                    <div data-error="description">
+                      <label className="block text-sm font-semibold text-[#2E2322] mb-2">
                         Gig Description <span className="text-red-500">*</span>
                       </label>
-                      <div className="border border-gray-300 rounded-lg overflow-hidden">
-                        <div className="border-b border-gray-300 bg-gray-50 p-3 flex gap-2">
-                          <button className="px-3 py-1 text-sm font-medium hover:bg-gray-200 rounded">B</button>
-                          <button className="px-3 py-1 text-sm font-medium hover:bg-gray-200 rounded">I</button>
-                          <button className="px-3 py-1 text-sm font-medium hover:bg-gray-200 rounded">U</button>
-                          <div className="w-px h-6 bg-gray-300 mx-2"></div>
-                          <button className="px-3 py-1 text-sm font-medium hover:bg-gray-200 rounded">📋</button>
-                          <button className="px-3 py-1 text-sm font-medium hover:bg-gray-200 rounded">🔗</button>
+                      <div className="border border-[#E7E1DE] rounded-lg overflow-hidden">
+                        <div className="border-b border-[#E7E1DE] bg-[#F8F4F1] p-3 flex gap-2">
+                          <button className="px-3 py-1 text-sm font-medium hover:bg-[#EFE7E2] rounded">B</button>
+                          <button className="px-3 py-1 text-sm font-medium hover:bg-[#EFE7E2] rounded">I</button>
+                          <button className="px-3 py-1 text-sm font-medium hover:bg-[#EFE7E2] rounded">U</button>
+                          <div className="w-px h-6 bg-[#C1B1A8] mx-2"></div>
+                          <button className="px-3 py-1 text-sm font-medium hover:bg-[#EFE7E2] rounded">📋</button>
+                          <button className="px-3 py-1 text-sm font-medium hover:bg-[#EFE7E2] rounded">🔗</button>
                         </div>
                         <textarea
-                          className="w-full px-4 py-3 border-none text-base focus:outline-none resize-none"
-                          rows="12"
-                          placeholder="Briefly describe your gig..."
+                          className={`w-full px-4 py-3 border-none text-base focus:outline-none resize-none min-h-[200px] ${
+                            validationErrors.description ? 'border-red-500' : ''
+                          }`}
+                          placeholder="Describe your service in detail. Include what makes you unique, your process, and what buyers can expect."
                           value={formData.description}
-                          onChange={(e) => setFormData({...formData, description: e.target.value})}
+                          onChange={(e) => {
+                            setFormData(prev => ({...prev, description: e.target.value}));
+                            clearError("description");
+                          }}
                           maxLength={1200}
                         />
                       </div>
                       <div className="flex justify-between items-center mt-2">
-                        <div className="text-sm text-gray-500">
-                          <span className="font-medium">Pro tip:</span> Use bullet points and bold text to highlight key benefits
+                        <InputError error={validationErrors.description} />
+                        <div className="text-xs text-[#7A5A4C]">
+                          {formData.description.length}/1200 characters
                         </div>
-                        <div className="text-xs text-gray-500">
-                          {formData.description.length}/1200
-                        </div>
+                      </div>
+                      <div className="text-sm text-[#7A5A4C] mt-2">
+                        💡 Use bullet points (•), bold text, and line breaks to make your description easy to read.
                       </div>
                     </div>
 
-                    {/* FAQ Section */}
                     <div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-4">Frequently Asked Questions</h3>
+                      <h3 className="text-lg font-bold text-[#2E2322] mb-4">Frequently Asked Questions</h3>
                       <div className="space-y-4">
-                        {formData.faqs.map((faq, idx) => (
-                          <div key={faq.id} className="border border-gray-200 rounded-lg p-6">
+                        {formData.faqs.map((faq, index) => (
+                          <div key={faq.id} className="border border-[#E7E1DE] rounded-lg p-6">
                             <div className="flex items-center justify-between mb-4">
-                              <h4 className="text-sm font-semibold text-gray-900">FAQ {idx + 1}</h4>
+                              <h4 className="text-sm font-semibold text-[#2E2322]">FAQ {index + 1}</h4>
                               {formData.faqs.length > 1 && (
-                                <button className="text-red-600 hover:text-red-700 text-sm font-semibold">
+                                <button 
+                                  onClick={() => removeFAQ(faq.id)}
+                                  className="text-red-600 hover:text-red-700 text-sm font-semibold"
+                                >
                                   Remove
                                 </button>
                               )}
                             </div>
+                            
                             <div className="space-y-4">
-                              <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Question
+                              <div data-error={`faq_${index}_question`}>
+                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                  Question <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                   type="text"
-                                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm"
+                                  className={`w-full px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                                    validationErrors[`faq_${index}_question`] ? 'border-red-500' : 'border-[#E7E1DE]'
+                                  }`}
                                   placeholder="What do you need to get started?"
+                                  value={faq.question}
+                                  onChange={(e) => updateFAQ(index, 'question', e.target.value)}
                                 />
+                                <InputError error={validationErrors[`faq_${index}_question`]} />
                               </div>
-                              <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Answer
+                              
+                              <div data-error={`faq_${index}_answer`}>
+                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                  Answer <span className="text-red-500">*</span>
                                 </label>
                                 <textarea
-                                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm"
+                                  className={`w-full px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                                    validationErrors[`faq_${index}_answer`] ? 'border-red-500' : 'border-[#E7E1DE]'
+                                  }`}
                                   rows="3"
-                                  placeholder="Provide a clear answer..."
+                                  placeholder="Provide a clear and helpful answer..."
+                                  value={faq.answer}
+                                  onChange={(e) => updateFAQ(index, 'answer', e.target.value)}
                                 />
+                                <InputError error={validationErrors[`faq_${index}_answer`]} />
                               </div>
                             </div>
                           </div>
                         ))}
-                        <button className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm font-semibold text-gray-600 hover:border-[#1DBF73] hover:text-[#1DBF73] transition-colors flex items-center justify-center gap-2">
+                        
+                        <button 
+                          onClick={addFAQ}
+                          className="w-full py-3 border-2 border-dashed border-[#E7E1DE] rounded-lg text-sm font-semibold text-[#6B5B50] hover:border-green-500 hover:text-green-600 transition-colors flex items-center justify-center gap-2"
+                        >
                           <Plus size={16} /> Add FAQ
                         </button>
                       </div>
@@ -707,256 +1192,489 @@ export default function CreateGig() {
                   </div>
                 )}
 
-                {/* STEP 4: REQUIREMENTS */}
                 {currentStep === 4 && (
-                  <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                  <div className="space-y-8">
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900 mb-2">Requirements Form</h2>
-                      <p className="text-gray-600">Create a custom form to gather all necessary information from buyers</p>
+                      <h2 className="text-xl font-bold text-[#2E2322] mb-2">Requirements Form</h2>
+                      <p className="text-[#6B5B50]">Ask buyers for information you need to start working</p>
                     </div>
 
                     <div className="space-y-6">
-                      {formData.requirements.map((req, idx) => (
-                        <div key={req.id} className="border border-gray-200 rounded-xl p-6 bg-white">
+                      {formData.requirements.map((req, index) => (
+                        <div key={req.id} className="border border-[#E7E1DE] rounded-xl p-6">
                           <div className="flex items-center justify-between mb-6">
                             <div>
-                              <h4 className="text-sm font-semibold text-gray-900">Question {idx + 1}</h4>
-                              <p className="text-xs text-gray-500">Buyers will see this when placing an order</p>
+                              <h4 className="text-sm font-semibold text-[#2E2322]">Question {index + 1}</h4>
+                              <p className="text-xs text-[#7A5A4C]">Buyers will see this when placing an order</p>
                             </div>
                             {formData.requirements.length > 1 && (
-                              <button className="text-red-600 hover:text-red-700 text-sm font-semibold">
+                              <button 
+                                onClick={() => removeRequirement(req.id)}
+                                className="text-red-600 hover:text-red-700 text-sm font-semibold"
+                              >
                                 Remove
                               </button>
                             )}
                           </div>
                           
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Question Text
+                          <div className="space-y-4">
+                            <div data-error={`req_${index}_question`}>
+                              <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                Question Text <span className="text-red-500">*</span>
                               </label>
                               <input
                                 type="text"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm"
+                                className={`w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                                  validationErrors[`req_${index}_question`] ? 'border-red-500' : 'border-[#E7E1DE]'
+                                }`}
                                 placeholder="e.g., What is your brand name?"
+                                value={req.question}
+                                onChange={(e) => updateRequirement(index, 'question', e.target.value)}
                               />
+                              <InputError error={validationErrors[`req_${index}_question`]} />
                             </div>
                             
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Answer Type
-                              </label>
-                              <select className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
-                                <option>Free Text</option>
-                                <option>Multiple Choice</option>
-                                <option>Attachment</option>
-                                <option>Yes/No</option>
-                              </select>
-                            </div>
-                          </div>
-
-                          <div className="mt-6">
-                            <label className="flex items-center gap-3 cursor-pointer">
-                              <div className="relative">
-                                <input type="checkbox" className="sr-only" />
-                                <div className="w-10 h-6 bg-gray-300 rounded-full shadow-inner"></div>
-                                <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div>
+                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                  Answer Type
+                                </label>
+                                <select 
+                                  className="w-full px-4 py-3 border border-[#E7E1DE] rounded-lg text-sm"
+                                  value={req.type}
+                                  onChange={(e) => updateRequirement(index, 'type', e.target.value)}
+                                >
+                                  <option value="text">Text</option>
+                                  <option value="multiple">Multiple Choice</option>
+                                  <option value="file">File Attachment</option>
+                                  <option value="yesno">Yes/No</option>
+                                </select>
                               </div>
-                              <span className="text-sm font-medium text-gray-700">Required field</span>
-                            </label>
+                              
+                              <div>
+                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                  Placeholder Text
+                                </label>
+                                <input
+                                  type="text"
+                                  className="w-full px-4 py-3 border border-[#E7E1DE] rounded-lg text-sm"
+                                  placeholder="Optional placeholder text"
+                                  value={req.placeholder}
+                                  onChange={(e) => updateRequirement(index, 'placeholder', e.target.value)}
+                                />
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-center justify-between pt-4 border-t border-[#E7E1DE]">
+                              <label className="flex items-center gap-3 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={req.required}
+                                  onChange={(e) => updateRequirement(index, 'required', e.target.checked)}
+                                  className="w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                                />
+                                <span className="text-sm font-medium text-[#4A312F]">Required field</span>
+                              </label>
+                              
+                              {req.required && (
+                                <span className="text-xs px-2 py-1 bg-red-50 text-red-700 rounded">
+                                  Buyer must answer this
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       ))}
+                      
+                      <button 
+                        onClick={addRequirement}
+                        className="w-full py-4 border-2 border-dashed border-[#E7E1DE] rounded-xl text-sm font-semibold text-[#6B5B50] hover:border-green-500 hover:text-green-600 transition-colors flex items-center justify-center gap-2"
+                      >
+                        <Plus size={20} /> Add Another Question
+                      </button>
                     </div>
-
-                    <button className="w-full py-4 border-2 border-dashed border-gray-300 rounded-xl text-sm font-semibold text-gray-600 hover:border-[#1DBF73] hover:text-[#1DBF73] transition-colors flex items-center justify-center gap-2">
-                      <Plus size={20} /> Add Another Question
-                    </button>
                   </div>
                 )}
 
-                {/* STEP 5: GALLERY */}
                 {currentStep === 5 && (
-                  <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                  <div className="space-y-8">
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900 mb-2">Media Gallery</h2>
-                      <p className="text-gray-600">Upload images and videos to showcase your work</p>
+                      <h2 className="text-xl font-bold text-[#2E2322] mb-2">Media Gallery</h2>
+                      <p className="text-[#6B5B50]">Showcase your work with images and videos</p>
                     </div>
 
-                    {/* Upload Area */}
-                    <div className="border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center hover:border-[#1DBF73] transition-colors group cursor-pointer">
-                      <input
-                        type="file"
-                        multiple
-                        accept="image/*,video/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                        id="media-upload"
-                      />
-                      <label htmlFor="media-upload" className="cursor-pointer">
-                        <div className="w-20 h-20 bg-gradient-to-br from-blue-50 to-purple-50 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:from-blue-100 group-hover:to-purple-100 transition-colors">
-                          <Upload size={32} className="text-gray-400 group-hover:text-[#1DBF73]" />
-                        </div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">Drag & drop files here</h3>
-                        <p className="text-gray-500 mb-6">or click to browse (max 10 files, 5MB each)</p>
-                        <button className="px-8 py-3 bg-[#1DBF73] text-white rounded-lg font-semibold hover:bg-[#19A463] transition-colors shadow-sm">
-                          Browse Files
-                        </button>
-                      </label>
-                    </div>
+                    <div data-error="images">
+                      {/* Upload Area */}
+                      <div className="border-2 border-dashed border-[#E7E1DE] rounded-2xl p-12 text-center hover:border-green-500 transition-colors group cursor-pointer">
+                        <input
+                          type="file"
+                          multiple
+                          accept="image/*,video/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                          id="media-upload"
+                        />
+                        <label htmlFor="media-upload" className="cursor-pointer">
+                          <div className="w-20 h-20 bg-gradient-to-br from-green-50 to-[#F8F4F1] rounded-full flex items-center justify-center mx-auto mb-6 group-hover:from-green-100 group-hover:to-[#F4C7A1] transition-colors">
+                            <Upload size={32} className="text-[#A38F85] group-hover:text-green-500" />
+                          </div>
+                          <h3 className="text-xl font-bold text-[#2E2322] mb-2">Drag & drop files here</h3>
+                          <p className="text-[#7A5A4C] mb-6">or click to browse (max 10 files, 5MB each)</p>
+                          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                            <button className="px-8 py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition-colors shadow-sm">
+                              Browse Files
+                            </button>
+                            <button className="px-8 py-3 border border-[#E7E1DE] text-[#4A312F] rounded-lg font-semibold hover:bg-[#F8F4F1] transition-colors">
+                              Sample Images
+                            </button>
+                          </div>
+                        </label>
+                      </div>
+                      <InputError error={validationErrors.images} />
+                      
+                      {/* Requirements */}
+                      <div className="mt-4 p-4 bg-[#FDECE7] border border-[#F4C7A1] rounded-lg">
+                        <h4 className="font-medium text-[#2E2322] mb-2 flex items-center gap-2">
+                          <Info size={16} className="text-[#C9452F]" />
+                          Media Requirements
+                        </h4>
+                        <ul className="text-sm text-[#6B5B50] space-y-1">
+                          <li>• Minimum 3 images required (recommended: 5-7)</li>
+                          <li>• First image will be the gig thumbnail</li>
+                          <li>• Supported formats: JPG, PNG, GIF, MP4</li>
+                          <li>• Maximum file size: 5MB each</li>
+                          <li>• Recommended dimensions: 1280×769 pixels</li>
+                        </ul>
+                      </div>
 
-                    {/* Media Preview Grid */}
-                    {formData.images.length > 0 && (
-                      <div>
-                        <h3 className="text-lg font-bold text-gray-900 mb-4">Uploaded Media</h3>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                          {formData.images.map((media) => (
-                            <div key={media.id} className="relative group">
-                              <div className="aspect-square rounded-lg overflow-hidden bg-gray-100">
-                                {media.type === 'image' ? (
-                                  <img 
-                                    src={media.preview} 
-                                    alt="Preview" 
-                                    className="w-full h-full object-cover"
-                                  />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center bg-gray-900">
-                                    <FileVideo size={32} className="text-white" />
+                      {/* Media Preview Grid */}
+                      {formData.images.length > 0 && (
+                        <div className="mt-8">
+                          <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-bold text-[#2E2322]">Uploaded Media ({formData.images.length}/10)</h3>
+                            <button 
+                              onClick={() => {
+                                const newImages = [...formData.images];
+                                newImages.sort((a, b) => a.name.localeCompare(b.name));
+                                setFormData(prev => ({ ...prev, images: newImages }));
+                              }}
+                              className="text-sm text-[#6B5B50] hover:text-[#2E2322]"
+                            >
+                              Sort by name
+                            </button>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {formData.images.map((media, index) => (
+                              <div key={media.id} className="relative group">
+                                <div className="aspect-square rounded-lg overflow-hidden bg-[#F3E9E5] border border-[#E7E1DE]">
+                                  {media.type === 'image' ? (
+                                    <img 
+                                      src={media.preview} 
+                                      alt="Preview" 
+                                      className="w-full h-full object-cover"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-[#2E2322]">
+                                      <FileVideo size={32} className="text-white" />
+                                    </div>
+                                  )}
+                                </div>
+                                
+                                {index === 0 && (
+                                  <div className="absolute top-2 left-2">
+                                    <span className="text-xs font-medium bg-green-500 text-white px-2 py-1 rounded">
+                                      Thumbnail
+                                    </span>
                                   </div>
                                 )}
+                                
+                                <button
+                                  onClick={() => removeMedia(media.id)}
+                                  className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <X size={16} />
+                                </button>
+                                
+                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                                  <div className="text-xs text-white truncate">{media.name}</div>
+                                  <div className="text-xs text-white/80">
+                                    {(media.size / 1024 / 1024).toFixed(2)} MB
+                                  </div>
+                                </div>
+                                
+                                <button
+                                  onClick={() => {
+                                    // Move to first position
+                                    const newImages = [...formData.images];
+                                    const [moved] = newImages.splice(index, 1);
+                                    newImages.unshift(moved);
+                                    setFormData(prev => ({ ...prev, images: newImages }));
+                                  }}
+                                  className="absolute bottom-2 right-2 text-xs text-white bg-black/50 hover:bg-black/70 px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  Set as thumbnail
+                                </button>
                               </div>
-                              <button
-                                onClick={() => removeMedia(media.id)}
-                                className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <X size={16} />
-                              </button>
-                              <div className="absolute bottom-2 left-2">
-                                <span className="text-xs text-white bg-black/50 px-2 py-1 rounded">
-                                  {media.type}
-                                </span>
-                              </div>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    {/* Video Embed */}
-                    <div className="border border-gray-200 rounded-xl p-6">
-                      <h3 className="text-lg font-bold text-gray-900 mb-4">Embed Video</h3>
-                      <div className="flex gap-4">
-                        <input
-                          type="url"
-                          placeholder="YouTube, Vimeo, or TikTok URL"
-                          className="flex-1 px-4 py-3 border border-gray-300 rounded-lg"
-                        />
-                        <button className="px-6 py-3 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800">
-                          Embed
-                        </button>
+                      {/* Video Embed */}
+                      <div className="mt-8 border border-[#E7E1DE] rounded-xl p-6">
+                        <h3 className="text-lg font-bold text-[#2E2322] mb-4 flex items-center gap-2">
+                          <Video size={20} />
+                          Embed Video (Optional)
+                        </h3>
+                        <div className="space-y-3">
+                          <p className="text-sm text-[#6B5B50]">
+                            Add a video from YouTube, Vimeo, or upload directly
+                          </p>
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <input
+                              type="url"
+                              placeholder="YouTube or Vimeo URL"
+                              className="flex-1 px-4 py-3 border border-[#E7E1DE] rounded-lg"
+                            />
+                            <button className="px-6 py-3 bg-[#2E2322] text-white rounded-lg font-semibold hover:bg-[#3A2C2B] whitespace-nowrap">
+                              Embed Video
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* STEP 6: SETTINGS */}
                 {currentStep === 6 && (
-                  <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                  <div className="space-y-8">
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900 mb-2">SEO & Visibility Settings</h2>
-                      <p className="text-gray-600">Optimize your gig for search and control visibility</p>
+                      <h2 className="text-xl font-bold text-[#2E2322] mb-2">Publish Settings</h2>
+                      <p className="text-[#6B5B50]">Review your gig and configure visibility settings</p>
+                    </div>
+
+                    {/* Gig Summary */}
+                    <div className="border border-[#E7E1DE] rounded-xl p-6">
+                      <h3 className="text-lg font-bold text-[#2E2322] mb-4">Gig Summary</h3>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <div className="text-sm text-[#7A5A4C] mb-1">Title</div>
+                            <div className="font-medium">{formData.title || "Not set"}</div>
+                          </div>
+                          <div>
+                            <div className="text-sm text-[#7A5A4C] mb-1">Category</div>
+                            <div className="font-medium">
+                              {formData.category ? categories[formData.category]?.name : "Not set"}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-sm text-[#7A5A4C] mb-1">Tags</div>
+                            <div className="font-medium">
+                              {formData.tags.length > 0 ? formData.tags.join(", ") : "Not set"}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-sm text-[#7A5A4C] mb-1">Images</div>
+                            <div className="font-medium">{formData.images.length} uploaded</div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
                     {/* SEO Settings */}
-                    <div className="space-y-6">
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
-                          SEO Title
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base"
-                          placeholder="Optimize for search engines..."
-                          maxLength={60}
-                        />
-                        <div className="text-xs text-gray-500 mt-1">
-                          Recommended: 50-60 characters
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
-                          SEO Description
-                        </label>
-                        <textarea
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base"
-                          rows="3"
-                          placeholder="Meta description for search engines..."
-                          maxLength={160}
-                        />
-                        <div className="text-xs text-gray-500 mt-1">
-                          Recommended: 150-160 characters
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
-                          Custom URL Slug
-                        </label>
-                        <div className="flex gap-2">
-                          <span className="px-4 py-3 bg-gray-100 border border-gray-300 rounded-l-lg text-gray-600">
-                            fiverr.com/
-                          </span>
+                    <div className="border border-[#E7E1DE] rounded-xl p-6">
+                      <h3 className="text-lg font-bold text-[#2E2322] mb-4">SEO Settings (Optional)</h3>
+                      <div className="space-y-4">
+                        <div data-error="metaTitle">
+                          <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                            SEO Title
+                          </label>
                           <input
                             type="text"
-                            className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg"
-                            placeholder="your-gig-url"
+                            className={`w-full px-4 py-3 border rounded-lg text-base ${
+                              validationErrors.metaTitle ? 'border-red-500' : 'border-[#E7E1DE]'
+                            }`}
+                            placeholder="Optimized title for search engines"
+                            value={formData.seo.metaTitle}
+                            onChange={(e) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                seo: { ...prev.seo, metaTitle: e.target.value }
+                              }));
+                              clearError("metaTitle");
+                            }}
+                            maxLength={60}
                           />
+                          <div className="flex justify-between mt-1">
+                            <InputError error={validationErrors.metaTitle} />
+                            <div className="text-xs text-[#7A5A4C]">
+                              {formData.seo.metaTitle.length}/60 characters
+                            </div>
+                          </div>
+                        </div>
+
+                        <div data-error="metaDescription">
+                          <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                            SEO Description
+                          </label>
+                          <textarea
+                            className={`w-full px-4 py-3 border rounded-lg text-base ${
+                              validationErrors.metaDescription ? 'border-red-500' : 'border-[#E7E1DE]'
+                            }`}
+                            rows="3"
+                            placeholder="Meta description for search engines"
+                            value={formData.seo.metaDescription}
+                            onChange={(e) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                seo: { ...prev.seo, metaDescription: e.target.value }
+                              }));
+                              clearError("metaDescription");
+                            }}
+                            maxLength={160}
+                          />
+                          <div className="flex justify-between mt-1">
+                            <InputError error={validationErrors.metaDescription} />
+                            <div className="text-xs text-[#7A5A4C]">
+                              {formData.seo.metaDescription.length}/160 characters
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
 
                     {/* Visibility Settings */}
-                    <div className="border border-gray-200 rounded-xl p-6">
-                      <h3 className="text-lg font-bold text-gray-900 mb-4">Visibility Settings</h3>
+                    <div className="border border-[#E7E1DE] rounded-xl p-6">
+                      <h3 className="text-lg font-bold text-[#2E2322] mb-4">Visibility Settings</h3>
                       <div className="space-y-4">
-                        <label className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#1DBF73] cursor-pointer">
+                        <label className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-all ${
+                          formData.visibility === "public" ? "border-green-500 ring-2 ring-green-500/20" : "border-[#E7E1DE] hover:border-[#E7E1DE]"
+                        }`}>
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                              <Globe size={20} className="text-blue-600" />
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                              formData.visibility === "public" ? "bg-green-100" : "bg-[#F3E9E5]"
+                            }`}>
+                              <Globe size={20} className={formData.visibility === "public" ? "text-green-600" : "text-[#A38F85]"} />
                             </div>
                             <div>
-                              <div className="font-semibold text-gray-900">Public</div>
-                              <div className="text-sm text-gray-500">Visible to everyone</div>
+                              <div className="font-semibold text-[#2E2322]">Public</div>
+                              <div className="text-sm text-[#7A5A4C]">Visible to everyone on Fiverr</div>
                             </div>
                           </div>
-                          <input type="radio" name="visibility" className="w-5 h-5" defaultChecked />
+                          <input
+                            type="radio"
+                            name="visibility"
+                            className="w-5 h-5 text-green-600"
+                            checked={formData.visibility === "public"}
+                            onChange={() => setFormData(prev => ({ ...prev, visibility: "public" }))}
+                          />
                         </label>
 
-                        <label className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#1DBF73] cursor-pointer">
+                        <label className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-all ${
+                          formData.visibility === "private" ? "border-green-500 ring-2 ring-green-500/20" : "border-[#E7E1DE] hover:border-[#E7E1DE]"
+                        }`}>
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                              <Shield size={20} className="text-green-600" />
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                              formData.visibility === "private" ? "bg-green-100" : "bg-[#F3E9E5]"
+                            }`}>
+                              <Lock size={20} className={formData.visibility === "private" ? "text-green-600" : "text-[#A38F85]"} />
                             </div>
                             <div>
-                              <div className="font-semibold text-gray-900">Private</div>
-                              <div className="text-sm text-gray-500">Only visible via direct link</div>
+                              <div className="font-semibold text-[#2E2322]">Private</div>
+                              <div className="text-sm text-[#7A5A4C]">Only visible via direct link</div>
                             </div>
                           </div>
-                          <input type="radio" name="visibility" className="w-5 h-5" />
+                          <input
+                            type="radio"
+                            name="visibility"
+                            className="w-5 h-5 text-green-600"
+                            checked={formData.visibility === "private"}
+                            onChange={() => setFormData(prev => ({ ...prev, visibility: "private" }))}
+                          />
                         </label>
 
-                        <label className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#1DBF73] cursor-pointer">
+                        <label className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-all ${
+                          formData.visibility === "scheduled" ? "border-green-500 ring-2 ring-green-500/20" : "border-[#E7E1DE] hover:border-[#E7E1DE]"
+                        }`}>
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-                              <Clock size={20} className="text-purple-600" />
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                              formData.visibility === "scheduled" ? "bg-green-100" : "bg-[#F3E9E5]"
+                            }`}>
+                              <Calendar size={20} className={formData.visibility === "scheduled" ? "text-green-600" : "text-[#A38F85]"} />
                             </div>
                             <div>
-                              <div className="font-semibold text-gray-900">Scheduled</div>
-                              <div className="text-sm text-gray-500">Publish at specific date/time</div>
+                              <div className="font-semibold text-[#2E2322]">Scheduled</div>
+                              <div className="text-sm text-[#7A5A4C]">Publish at specific date/time</div>
                             </div>
                           </div>
-                          <input type="radio" name="visibility" className="w-5 h-5" />
+                          <input
+                            type="radio"
+                            name="visibility"
+                            className="w-5 h-5 text-green-600"
+                            checked={formData.visibility === "scheduled"}
+                            onChange={() => setFormData(prev => ({ ...prev, visibility: "scheduled" }))}
+                          />
+                        </label>
+
+                        {formData.visibility === "scheduled" && (
+                          <div data-error="publishDate" className="pl-14">
+                            <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                              Publish Date & Time
+                            </label>
+                            <input
+                              type="datetime-local"
+                              className={`w-full px-4 py-3 border rounded-lg text-base ${
+                                validationErrors.publishDate ? 'border-red-500' : 'border-[#E7E1DE]'
+                              }`}
+                              value={formData.publishDate}
+                              onChange={(e) => {
+                                setFormData(prev => ({ ...prev, publishDate: e.target.value }));
+                                clearError("publishDate");
+                              }}
+                              min={new Date().toISOString().slice(0, 16)}
+                            />
+                            <InputError error={validationErrors.publishDate} />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Terms & Conditions */}
+                    <div className="border border-[#E7E1DE] rounded-xl p-6">
+                      <h3 className="text-lg font-bold text-[#2E2322] mb-4">Terms & Conditions</h3>
+                      <div className="space-y-4">
+                        <label className="flex items-start gap-3 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="w-5 h-5 text-green-600 rounded focus:ring-green-500 mt-0.5"
+                            required
+                          />
+                          <div>
+                            <div className="font-medium text-[#2E2322]">
+                              I agree to Fiverr's Terms of Service
+                            </div>
+                            <div className="text-sm text-[#6B5B50] mt-1">
+                              By publishing this gig, you agree to comply with Fiverr's community standards and terms of service.
+                            </div>
+                          </div>
+                        </label>
+                        
+                        <label className="flex items-start gap-3 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="w-5 h-5 text-green-600 rounded focus:ring-green-500 mt-0.5"
+                            required
+                          />
+                          <div>
+                            <div className="font-medium text-[#2E2322]">
+                              I confirm that this service complies with Fiverr's policies
+                            </div>
+                            <div className="text-sm text-[#6B5B50] mt-1">
+                              Your gig must not violate any of Fiverr's policies including intellectual property rights.
+                            </div>
+                          </div>
                         </label>
                       </div>
                     </div>
@@ -964,43 +1682,46 @@ export default function CreateGig() {
                 )}
               </div>
 
-              {/* Enhanced Navigation Footer */}
-              <div className="border-t border-gray-200 px-6 sm:px-8 lg:px-12 py-6 bg-gradient-to-r from-gray-50 to-white">
+              {/* Navigation Footer */}
+              <div className="border-t border-[#E7E1DE] px-6 sm:px-8 py-6 bg-[#F8F4F1]">
                 <div className="flex items-center justify-between">
                   <button
                     onClick={prevStep}
                     disabled={currentStep === 1}
-                    className={`px-8 py-3 rounded-xl font-semibold text-sm transition-all flex items-center gap-3 ${
+                    className={`px-6 py-3 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${
                       currentStep === 1
                         ? 'opacity-0 pointer-events-none'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        : 'text-[#4A312F] hover:bg-[#EFE7E2] hover:text-[#2E2322]'
                     }`}
                   >
                     <ChevronLeft size={18} /> Previous
                   </button>
 
                   <div className="flex items-center gap-4">
-                    <div className="hidden sm:block">
-                      <div className="text-xs text-gray-500 mb-1">Step {currentStep} of {steps.length}</div>
-                      <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-[#1DBF73] rounded-full transition-all duration-300"
-                          style={{ width: `${(currentStep / steps.length) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                    
-                    <button className="px-6 py-3 text-gray-700 hover:bg-gray-200 rounded-xl font-semibold text-sm transition-colors hidden sm:block">
-                      Save Draft
+                    <button 
+                      onClick={() => {
+                        localStorage.setItem('gigDraft', JSON.stringify(formData));
+                        alert('Draft saved successfully!');
+                      }}
+                      className="px-6 py-3 text-[#4A312F] hover:bg-[#EFE7E2] rounded-lg font-semibold text-sm transition-colors hidden sm:block"
+                    >
+                      Save as Draft
                     </button>
+                    
                     <button
                       onClick={nextStep}
-                      className="px-10 py-3 bg-gradient-to-r from-[#1DBF73] to-[#19A463] text-white rounded-xl font-semibold text-sm hover:shadow-lg transition-all flex items-center gap-3 group"
+                      disabled={submitting}
+                      className="px-8 py-3 bg-green-500 text-white rounded-lg font-semibold text-sm hover:bg-green-600 transition-all flex items-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {currentStep === steps.length ? (
+                      {submitting ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Publishing...
+                        </>
+                      ) : currentStep === steps.length ? (
                         <>
                           <Rocket size={18} />
-                          Publish Gig Now
+                          Publish Gig
                         </>
                       ) : (
                         <>
@@ -1011,19 +1732,11 @@ export default function CreateGig() {
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Progress Indicator - Mobile */}
-            <div className="mt-6 flex items-center justify-between sm:hidden">
-              <div className="text-sm text-gray-500">
-                Step {currentStep} of {steps.length}
-              </div>
-              <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-[#1DBF73] rounded-full"
-                  style={{ width: `${(currentStep / steps.length) * 100}%` }}
-                />
+                
+                <div className="mt-4 flex items-center justify-center gap-2 text-sm text-[#7A5A4C]">
+                  <Shield size={14} />
+                  Your information is secure and encrypted
+                </div>
               </div>
             </div>
           </div>
@@ -1033,89 +1746,114 @@ export default function CreateGig() {
       {/* Preview Modal */}
       {showPreview && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
-            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-900">Gig Preview</h2>
+          <div className="bg-white rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-[#E7E1DE] p-6 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-[#2E2322]">Gig Preview</h2>
               <button 
                 onClick={() => setShowPreview(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg"
+                className="p-2 hover:bg-[#F3E9E5] rounded-lg"
               >
                 <X size={20} />
               </button>
             </div>
-            <div className="p-6 overflow-y-auto max-h-[70vh]">
-              <div className="space-y-6">
+            
+            <div className="p-6">
+              <div className="space-y-8">
+                {/* Gig Header */}
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">{formData.title || "Your Gig Title"}</h3>
-                  <div className="flex flex-wrap gap-2 mt-3">
+                  <h1 className="text-3xl font-bold text-[#2E2322] mb-4">
+                    {formData.title || "Your Gig Title"}
+                  </h1>
+                  <div className="flex flex-wrap gap-2 mb-6">
                     {formData.tags.map(tag => (
-                      <span key={tag} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                      <span key={tag} className="px-3 py-1 bg-[#F3E9E5] text-[#4A312F] rounded-full text-sm">
                         #{tag}
                       </span>
                     ))}
                   </div>
+                  
+                  {formData.images.length > 0 && (
+                    <div className="aspect-video rounded-xl overflow-hidden bg-[#F3E9E5] mb-6">
+                      <img 
+                        src={formData.images[0]?.preview} 
+                        alt="Gig thumbnail" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
                 </div>
                 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {['basic', 'standard', 'premium'].map(tier => (
-                    <div key={tier} className="border border-gray-200 rounded-xl p-6">
-                      <h4 className="font-bold text-gray-900 capitalize mb-4">{tier} Package</h4>
-                      <div className="text-3xl font-bold text-gray-900 mb-4">
-                        ${formData.packages[tier].price || "0"}
+                {/* Packages */}
+                <div>
+                  <h2 className="text-2xl font-bold text-[#2E2322] mb-6">Packages</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {formData.packages.filter(p => p.enabled).map(pkg => (
+                      <div 
+                        key={pkg.id} 
+                        className={`border rounded-xl p-6 relative ${
+                          pkg.popular ? 'border-green-500 ring-1 ring-green-500' : 'border-[#E7E1DE]'
+                        }`}
+                      >
+                        {pkg.popular && (
+                          <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                            <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                              MOST POPULAR
+                            </span>
+                          </div>
+                        )}
+                        
+                        <h3 className="font-bold text-[#2E2322] text-lg mb-2">{pkg.name}</h3>
+                        <p className="text-[#6B5B50] text-sm mb-4">{pkg.description}</p>
+                        
+                        <div className="text-3xl font-bold text-[#2E2322] mb-6">
+                          ${pkg.price}
+                        </div>
+                        
+                        <ul className="space-y-2 mb-6">
+                          <li className="text-[#6B5B50]">✓ {pkg.deliveryTime} {pkg.deliveryUnit} delivery</li>
+                          <li className="text-[#6B5B50]">✓ {pkg.revisions === 999 ? "Unlimited" : pkg.revisions} revisions</li>
+                          {pkg.features.map((feature, idx) => (
+                            <li key={idx} className="text-[#6B5B50]">✓ {feature}</li>
+                          ))}
+                        </ul>
+                        
+                        <button className="w-full py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600">
+                          Continue (${pkg.price})
+                        </button>
                       </div>
-                      <ul className="space-y-2">
-                        <li className="text-gray-600">✓ {formData.packages[tier].delivery} days delivery</li>
-                        <li className="text-gray-600">✓ {formData.packages[tier].revisions} revisions</li>
-                      </ul>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
+                
+                {/* Description */}
+                <div>
+                  <h2 className="text-2xl font-bold text-[#2E2322] mb-4">About This Gig</h2>
+                  <div className="prose max-w-none">
+                    {formData.description.split('\n').map((para, idx) => (
+                      <p key={idx} className="text-[#4A312F] mb-4">{para}</p>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* FAQs */}
+                {formData.faqs.length > 0 && (
+                  <div>
+                    <h2 className="text-2xl font-bold text-[#2E2322] mb-4">Frequently Asked Questions</h2>
+                    <div className="space-y-4">
+                      {formData.faqs.map(faq => (
+                        <div key={faq.id} className="border border-[#E7E1DE] rounded-lg p-6">
+                          <h3 className="font-semibold text-[#2E2322] mb-2">{faq.question}</h3>
+                          <p className="text-[#6B5B50]">{faq.answer}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
       )}
     </div>
-  );
-}
-
-// Helper component for ChevronDown
-function ChevronDown(props) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  );
-}
-
-// Settings Icon
-function Settings(props) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
   );
 }

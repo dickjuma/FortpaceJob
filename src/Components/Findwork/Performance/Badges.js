@@ -164,9 +164,9 @@ function BadgeCard({ badge, isSelected, onClick }) {
       onClick={() => onClick(badge)}
       className={`relative p-4 rounded-lg border transition-all duration-200 text-left w-full ${
         badge.isActive
-          ? 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-sm'
-          : 'bg-gray-50 border-gray-100 hover:border-gray-200'
-      } ${isSelected ? 'border-blue-500 ring-2 ring-blue-100 bg-blue-50' : ''}`}
+          ? 'bg-white border-[#E7E1DE] hover:border-[#E7E1DE] hover:shadow-sm'
+          : 'bg-[#F8F4F1] border-[#E7E1DE] hover:border-[#E7E1DE]'
+      } ${isSelected ? 'border-[#C9452F] ring-2 ring-[#F4C7A1] bg-[#FDECE7]' : ''}`}
     >
       {/* Status Indicator */}
       <div className="absolute top-3 right-3">
@@ -176,8 +176,8 @@ function BadgeCard({ badge, isSelected, onClick }) {
             <span className="text-xs font-medium text-green-700">Earned</span>
           </div>
         ) : (
-          <div className="p-1 bg-gray-100 rounded-md">
-            <Lock size={14} className="text-gray-400" />
+          <div className="p-1 bg-[#F3E9E5] rounded-md">
+            <Lock size={14} className="text-[#A38F85]" />
           </div>
         )}
       </div>
@@ -198,10 +198,10 @@ function BadgeCard({ badge, isSelected, onClick }) {
 
         {/* Badge Info */}
         <div className="space-y-1">
-          <h3 className={`font-semibold text-sm ${badge.isActive ? 'text-gray-900' : 'text-gray-600'}`}>
+          <h3 className={`font-semibold text-sm ${badge.isActive ? 'text-[#2E2322]' : 'text-[#6B5B50]'}`}>
             {badge.name}
           </h3>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-[#7A5A4C]">
             {badge.description}
           </p>
         </div>
@@ -210,10 +210,10 @@ function BadgeCard({ badge, isSelected, onClick }) {
         {!badge.isActive && (
           <div className="w-full space-y-1">
             <div className="flex justify-between items-center text-xs">
-              <span className="text-gray-500">Progress</span>
+              <span className="text-[#7A5A4C]">Progress</span>
               <span className="font-medium" style={{ color: badge.color }}>{badge.progress}%</span>
             </div>
-            <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-[#F3E9E5] rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full"
                 style={{ 
@@ -227,7 +227,7 @@ function BadgeCard({ badge, isSelected, onClick }) {
 
         {/* Earned Date */}
         {badge.isActive && badge.earnedDate && (
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-[#A38F85]">
             {new Date(badge.earnedDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
           </p>
         )}
@@ -246,7 +246,7 @@ function RequirementsPanel({ badge }) {
   const completionPercentage = Math.round((completedCount / totalCount) * 100);
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+    <div className="bg-white rounded-lg border border-[#E7E1DE] p-6">
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-center gap-4">
           <div
@@ -256,8 +256,8 @@ function RequirementsPanel({ badge }) {
             <Icon size={24} />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">{badge.name}</h3>
-            <p className="text-sm text-gray-600">{badge.requirements.description}</p>
+            <h3 className="text-lg font-semibold text-[#2E2322] mb-1">{badge.name}</h3>
+            <p className="text-sm text-[#6B5B50]">{badge.requirements.description}</p>
           </div>
         </div>
         
@@ -267,7 +267,7 @@ function RequirementsPanel({ badge }) {
             <span className="text-sm font-medium">Unlocked</span>
           </div>
         ) : (
-          <div className="flex items-center gap-2 px-3 py-1 bg-gray-50 text-gray-600 rounded-md border border-gray-200">
+          <div className="flex items-center gap-2 px-3 py-1 bg-[#F8F4F1] text-[#6B5B50] rounded-md border border-[#E7E1DE]">
             <Lock size={14} />
             <span className="text-sm font-medium">Locked</span>
           </div>
@@ -276,14 +276,14 @@ function RequirementsPanel({ badge }) {
 
       {/* Progress Overview */}
       {!badge.isActive && (
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-100">
+        <div className="mb-6 p-4 bg-[#F8F4F1] rounded-lg border border-[#E7E1DE]">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">Progress to unlock</span>
+            <span className="text-sm font-medium text-[#4A312F]">Progress to unlock</span>
             <span className="text-sm font-semibold" style={{ color: badge.color }}>
               {completedCount}/{totalCount} complete
             </span>
           </div>
-          <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-gray-200">
+          <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-[#E7E1DE]">
             <div
               className="h-full transition-all duration-300"
               style={{ 
@@ -297,40 +297,40 @@ function RequirementsPanel({ badge }) {
 
       {/* Requirements List */}
       <div className="space-y-3">
-        <h4 className="text-sm font-medium text-gray-900 mb-4">Requirements</h4>
+        <h4 className="text-sm font-medium text-[#2E2322] mb-4">Requirements</h4>
         {badge.requirements.criteria.map((criterion, idx) => (
           <div
             key={idx}
             className={`flex items-start gap-3 p-3 rounded-lg border ${
               criterion.completed
                 ? 'bg-green-50 border-green-100'
-                : 'bg-gray-50 border-gray-100'
+                : 'bg-[#F8F4F1] border-[#E7E1DE]'
             }`}
           >
-            <div className={`mt-0.5 ${criterion.completed ? 'text-green-600' : 'text-gray-400'}`}>
+            <div className={`mt-0.5 ${criterion.completed ? 'text-green-600' : 'text-[#A38F85]'}`}>
               {criterion.completed ? (
                 <CheckCircle size={16} />
               ) : (
-                <div className="w-4 h-4 rounded-full border border-gray-300" />
+                <div className="w-4 h-4 rounded-full border border-[#E7E1DE]" />
               )}
             </div>
             
             <div className="flex-1 min-w-0">
-              <p className={`text-sm ${criterion.completed ? 'text-gray-900 font-medium' : 'text-gray-700'}`}>
+              <p className={`text-sm ${criterion.completed ? 'text-[#2E2322] font-medium' : 'text-[#4A312F]'}`}>
                 {criterion.label}
               </p>
               
               {criterion.current !== undefined && criterion.target !== undefined && (
                 <div className="mt-2 space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-600">
+                    <span className="text-[#6B5B50]">
                       {criterion.current.toLocaleString()} / {criterion.target.toLocaleString()}
                     </span>
                     <span className="font-medium">
                       {Math.round((criterion.current / criterion.target) * 100)}%
                     </span>
                   </div>
-                  <div className="w-full h-1.5 bg-white rounded-full overflow-hidden border border-gray-200">
+                  <div className="w-full h-1.5 bg-white rounded-full overflow-hidden border border-[#E7E1DE]">
                     <div
                       className="h-full rounded-full"
                       style={{ 
@@ -348,12 +348,12 @@ function RequirementsPanel({ badge }) {
 
       {/* Next Steps */}
       {!badge.isActive && (
-        <div className="mt-6 p-3 bg-blue-50 rounded-lg border border-blue-100">
+        <div className="mt-6 p-3 bg-[#FDECE7] rounded-lg border border-[#F4C7A1]">
           <div className="flex items-start gap-3">
-            <Info size={16} className="text-blue-600 flex-shrink-0 mt-0.5" />
+            <Info size={16} className="text-[#C9452F] flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-gray-900 mb-1">Keep Going!</p>
-              <p className="text-xs text-gray-600">
+              <p className="text-sm font-medium text-[#2E2322] mb-1">Keep Going!</p>
+              <p className="text-xs text-[#6B5B50]">
                 Complete {totalCount - completedCount} more requirement{totalCount - completedCount !== 1 ? 's' : ''} to unlock this badge.
               </p>
             </div>
@@ -367,14 +367,14 @@ function RequirementsPanel({ badge }) {
 // Stats Card Component
 function StatsCard({ icon: Icon, label, value, suffix = "" }) {
   return (
-    <div className="bg-white p-4 rounded-lg border border-gray-200">
+    <div className="bg-white p-4 rounded-lg border border-[#E7E1DE]">
       <div className="flex items-center gap-3 mb-2">
-        <div className="p-2 bg-gray-50 rounded-md">
-          <Icon size={16} className="text-gray-600" />
+        <div className="p-2 bg-[#F8F4F1] rounded-md">
+          <Icon size={16} className="text-[#6B5B50]" />
         </div>
-        <span className="text-sm text-gray-600">{label}</span>
+        <span className="text-sm text-[#6B5B50]">{label}</span>
       </div>
-      <p className="text-xl font-semibold text-gray-900">{value}{suffix}</p>
+      <p className="text-xl font-semibold text-[#2E2322]">{value}{suffix}</p>
     </div>
   );
 }
@@ -405,10 +405,10 @@ export default function Badges() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex items-center justify-center min-h-screen bg-[#F8F4F1]">
         <div className="text-center p-12">
-          <Award size={32} className="animate-spin text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600 font-medium">Loading badges...</p>
+          <Award size={32} className="animate-spin text-[#A38F85] mx-auto mb-4" />
+          <p className="text-[#6B5B50] font-medium">Loading badges...</p>
         </div>
       </div>
     );
@@ -427,30 +427,30 @@ export default function Badges() {
   const totalCount = badges.length;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen bg-[#F8F4F1] p-4 md:p-6">
+      <div className="max-w-6xl mx-auto space-y-6">
         
         {/* Header */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-lg border border-[#E7E1DE] p-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <Trophy size={20} className="text-blue-600" />
-                <span className="text-sm font-medium text-blue-600">Achievements</span>
+                <Trophy size={20} className="text-[#C9452F]" />
+                <span className="text-sm font-medium text-[#C9452F]">Achievements</span>
               </div>
-              <h1 className="text-2xl font-semibold text-gray-900 mb-2">Seller Badges</h1>
-              <p className="text-gray-600">Track your progress and unlock achievements</p>
+              <h1 className="text-2xl font-semibold text-[#2E2322] mb-2">Seller Badges</h1>
+              <p className="text-[#6B5B50]">Track your progress and unlock achievements</p>
             </div>
             
             <div className="flex items-center gap-6">
               <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-1">{earnedCount}</div>
-                <div className="text-sm text-gray-600">Earned</div>
+                <div className="text-3xl font-bold text-[#2E2322] mb-1">{earnedCount}</div>
+                <div className="text-sm text-[#6B5B50]">Earned</div>
               </div>
-              <div className="h-12 w-px bg-gray-200" />
+              <div className="h-12 w-px bg-[#EFE7E2]" />
               <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-1">{totalCount}</div>
-                <div className="text-sm text-gray-600">Total</div>
+                <div className="text-3xl font-bold text-[#2E2322] mb-1">{totalCount}</div>
+                <div className="text-sm text-[#6B5B50]">Total</div>
               </div>
             </div>
           </div>
@@ -483,7 +483,7 @@ export default function Badges() {
         </div>
 
         {/* Filter Tabs */}
-        <div className="bg-white rounded-lg border border-gray-200 p-1 flex flex-wrap gap-1">
+        <div className="bg-white rounded-lg border border-[#E7E1DE] p-1 flex flex-wrap gap-1">
           {[
             { key: "all", label: "All Badges", count: badges.length },
             { key: "earned", label: "Earned", count: earnedCount },
@@ -495,8 +495,8 @@ export default function Badges() {
               onClick={() => setFilter(tab.key)}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 filter === tab.key
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-600 hover:bg-gray-50"
+                  ? "bg-[#C9452F] text-white"
+                  : "text-[#6B5B50] hover:bg-[#F8F4F1]"
               }`}
             >
               {tab.label} ({tab.count})
@@ -509,7 +509,7 @@ export default function Badges() {
           
           {/* Badges Grid */}
           <div className="lg:col-span-1 space-y-4">
-            <h2 className="text-lg font-semibold text-gray-900">Available Badges</h2>
+            <h2 className="text-lg font-semibold text-[#2E2322]">Available Badges</h2>
             <div className="grid grid-cols-1 gap-3">
               {filteredBadges.map(badge => (
                 <BadgeCard
@@ -522,9 +522,9 @@ export default function Badges() {
             </div>
             
             {filteredBadges.length === 0 && (
-              <div className="text-center py-8 px-4 bg-white rounded-lg border border-gray-200">
-                <Lock size={32} className="mx-auto text-gray-300 mb-3" />
-                <p className="text-gray-600">No badges in this category</p>
+              <div className="text-center py-8 px-4 bg-white rounded-lg border border-[#E7E1DE]">
+                <Lock size={32} className="mx-auto text-[#C1B1A8] mb-3" />
+                <p className="text-[#6B5B50]">No badges in this category</p>
               </div>
             )}
           </div>
@@ -534,27 +534,27 @@ export default function Badges() {
             {selectedBadge ? (
               <RequirementsPanel badge={selectedBadge} />
             ) : (
-              <div className="bg-white rounded-lg border border-dashed border-gray-300 p-8 text-center">
-                <Eye size={32} className="mx-auto text-gray-300 mb-3" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Select a Badge</h3>
-                <p className="text-gray-600">Click on any badge to view requirements and progress</p>
+              <div className="bg-white rounded-lg border border-dashed border-[#E7E1DE] p-8 text-center">
+                <Eye size={32} className="mx-auto text-[#C1B1A8] mb-3" />
+                <h3 className="text-lg font-medium text-[#2E2322] mb-2">Select a Badge</h3>
+                <p className="text-[#6B5B50]">Click on any badge to view requirements and progress</p>
               </div>
             )}
           </div>
         </div>
 
         {/* Benefits Section */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Badge Benefits</h3>
+        <div className="bg-white rounded-lg border border-[#E7E1DE] p-6">
+          <h3 className="text-lg font-semibold text-[#2E2322] mb-4">Badge Benefits</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+            <div className="p-4 bg-[#FDECE7] rounded-lg border border-[#F4C7A1]">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-blue-100 rounded-md">
-                  <TrendingUp size={16} className="text-blue-600" />
+                <div className="p-2 bg-[#FDECE7] rounded-md">
+                  <TrendingUp size={16} className="text-[#C9452F]" />
                 </div>
-                <span className="font-medium text-gray-900">Increased Visibility</span>
+                <span className="font-medium text-[#2E2322]">Increased Visibility</span>
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[#6B5B50]">
                 Higher-level badges appear more prominently in search results
               </p>
             </div>
@@ -564,9 +564,9 @@ export default function Badges() {
                 <div className="p-2 bg-green-100 rounded-md">
                   <DollarSign size={16} className="text-green-600" />
                 </div>
-                <span className="font-medium text-gray-900">Higher Earnings</span>
+                <span className="font-medium text-[#2E2322]">Higher Earnings</span>
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[#6B5B50]">
                 Premium badges allow you to charge higher rates for your services
               </p>
             </div>
@@ -576,9 +576,9 @@ export default function Badges() {
                 <div className="p-2 bg-purple-100 rounded-md">
                   <Users size={16} className="text-purple-600" />
                 </div>
-                <span className="font-medium text-gray-900">Trust & Credibility</span>
+                <span className="font-medium text-[#2E2322]">Trust & Credibility</span>
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[#6B5B50]">
                 Badges help build trust with potential clients and establish credibility
               </p>
             </div>

@@ -51,6 +51,7 @@ import SkillLevels from "./Performance/SkillLevels";
 import Badges from "./Performance/Badges";
 import ViewRequests from "./BuyerRequests/ViewRequests";
 import ProposalManager from "./BuyerRequests/ProposalManager";
+import Messages from "./Messages";
 
 export default function FindWork() {
   const location = useLocation();
@@ -58,6 +59,18 @@ export default function FindWork() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isActive = (path) => location.pathname.includes(path);
+  const brand = {
+    ink: "text-[#2E2322]",
+    muted: "text-[#6B5B50]",
+    border: "border-[#E7E1DE]",
+    softBg: "bg-[#F8F4F1]",
+    card: "bg-white",
+    accentBg: "bg-[#FDECE7]",
+    accentText: "text-[#B53A27]",
+    accent: "bg-[#C9452F]",
+    accentHover: "hover:bg-[#B53A27]",
+    shadow: "shadow-[0_12px_30px_rgba(28,20,18,0.08)]"
+  };
 
   // Navigation structure
   const navigation = {
@@ -90,15 +103,15 @@ export default function FindWork() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className={`min-h-screen ${brand.softBg} flex`}>
       {/* Desktop Sidebar */}
-      <div className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col">
-        <div className="p-6 border-b border-gray-200">
+      <div className={`w-64 ${brand.card} border-r ${brand.border} hidden md:flex flex-col`}>
+        <div className={`p-6 border-b ${brand.border}`}>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className={`w-8 h-8 ${brand.accent} rounded-lg flex items-center justify-center`}>
               <Briefcase size={18} className="text-white" />
             </div>
-            <span className="font-semibold text-gray-900">Marketplace</span>
+            <span className={`font-semibold ${brand.ink}`}>Marketplace</span>
           </div>
         </div>
 
@@ -114,7 +127,7 @@ export default function FindWork() {
           />
 
           <div className="mt-8">
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+            <div className="text-xs font-semibold text-[#7A5A4C] uppercase tracking-wider mb-3">
               Tools
             </div>
             <nav className="space-y-1">
@@ -132,7 +145,7 @@ export default function FindWork() {
           </div>
         </div>
 
-        <div className="p-4 border-t border-gray-200">
+        <div className={`p-4 border-t ${brand.border}`}>
           <UserProfile />
         </div>
       </div>
@@ -144,17 +157,17 @@ export default function FindWork() {
             className="absolute inset-0 bg-black/50" 
             onClick={() => setMobileMenuOpen(false)}
           />
-          <div className="absolute left-0 top-0 bottom-0 w-64 bg-white shadow-xl">
-            <div className="p-4 border-b border-gray-200">
+          <div className={`absolute left-0 top-0 bottom-0 w-64 ${brand.card} shadow-xl`}>
+            <div className={`p-4 border-b ${brand.border}`}>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <div className={`w-8 h-8 ${brand.accent} rounded-lg flex items-center justify-center`}>
                     <Briefcase size={18} className="text-white" />
                   </div>
-                  <span className="font-semibold text-gray-900">Menu</span>
+                  <span className={`font-semibold ${brand.ink}`}>Menu</span>
                 </div>
                 <button onClick={() => setMobileMenuOpen(false)}>
-                  <MoreVertical size={20} className="text-gray-500" />
+                  <MoreVertical size={20} className={brand.muted} />
                 </button>
               </div>
             </div>
@@ -168,28 +181,28 @@ export default function FindWork() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Top Bar */}
-        <header className="bg-white border-b border-gray-200 px-4 md:px-6 py-3">
+        <header className={`${brand.card} border-b ${brand.border} px-4 md:px-6 py-3`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button 
                 onClick={() => setMobileMenuOpen(true)}
                 className="md:hidden p-2"
               >
-                <MoreVertical size={20} className="text-gray-600" />
+                <MoreVertical size={20} className={brand.muted} />
               </button>
               
               <div className="md:hidden">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
+                  <div className={`w-6 h-6 ${brand.accent} rounded flex items-center justify-center`}>
                     <Briefcase size={12} className="text-white" />
                   </div>
-                  <span className="font-semibold text-sm">Marketplace</span>
+                  <span className={`font-semibold text-sm ${brand.ink}`}>Marketplace</span>
                 </div>
               </div>
 
               {/* Breadcrumb */}
-              <div className="hidden md:flex items-center gap-2 text-sm text-gray-600">
-                <span className="text-gray-400">Marketplace</span>
+              <div className={`hidden md:flex items-center gap-2 text-sm ${brand.muted}`}>
+                <span className="text-[#A38F85]">Marketplace</span>
                 <ChevronRight size={14} />
                 <Breadcrumb path={location.pathname} />
               </div>
@@ -198,19 +211,19 @@ export default function FindWork() {
             <div className="flex items-center gap-3">
               <div className="hidden md:block flex-1 max-w-md">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A38F85]" size={16} />
                   <input
                     type="text"
                     placeholder="Search..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    className={`w-full pl-9 pr-4 py-2 border ${brand.border} rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#C9452F] focus:border-[#C9452F]`}
                   />
                 </div>
               </div>
 
-              <button className="relative p-2 hover:bg-gray-100 rounded-lg">
-                <Bell size={18} className="text-gray-600" />
+              <button className="relative p-2 hover:bg-[#F3E9E5] rounded-lg">
+                <Bell size={18} className={brand.muted} />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
             </div>
@@ -219,26 +232,26 @@ export default function FindWork() {
           {/* Mobile Search */}
           <div className="md:hidden mt-3">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A38F85]" size={16} />
               <input
                 type="text"
                 placeholder="Search gigs, requests..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm"
+                className={`w-full pl-9 pr-4 py-2 border ${brand.border} rounded-lg text-sm`}
               />
             </div>
           </div>
         </header>
 
         {/* Sub-navigation for current section */}
-        <div className="bg-white border-b border-gray-200 px-4 md:px-6 py-3">
+        <div className={`${brand.card} border-b ${brand.border} px-4 md:px-6 py-3`}>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-lg md:text-xl font-semibold text-gray-900">
+              <h1 className={`text-lg md:text-xl font-semibold ${brand.ink}`}>
                 {getPageTitle(location.pathname)}
               </h1>
-              <p className="text-xs md:text-sm text-gray-500 mt-1">
+              <p className={`text-xs md:text-sm ${brand.muted} mt-1`}>
                 {getPageDescription(location.pathname)}
               </p>
             </div>
@@ -256,7 +269,7 @@ export default function FindWork() {
 
         {/* Main Content Area */}
         <main className="flex-1 p-4 md:p-6">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <Routes>
               <Route index element={<Navigate to="" replace />} />
 
@@ -278,6 +291,9 @@ export default function FindWork() {
                 <Route index element={<Navigate to="view" replace />} />
               </Route>
 
+              {/* Messages */}
+              <Route path="messages" element={<Messages />} />
+
               {/* Performance Section */}
               <Route path="performance">
                 <Route path="analytics" element={<Analytics />} />
@@ -296,7 +312,7 @@ export default function FindWork() {
 function NavSection({ title, items }) {
   return (
     <div className="mb-6">
-      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+      <div className="text-xs font-semibold text-[#7A5A4C] uppercase tracking-wider mb-3">
         {title}
       </div>
       <nav className="space-y-1">
@@ -334,8 +350,8 @@ function CollapsibleNavItem({ item }) {
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors ${
           hasActiveChild 
-            ? "bg-blue-50 text-blue-700" 
-            : "text-gray-700 hover:bg-gray-100"
+            ? "bg-[#FDECE7] text-[#B53A27]" 
+            : "text-[#4A312F] hover:bg-[#F3E9E5]"
         }`}
       >
         <div className="flex items-center gap-3">
@@ -376,14 +392,14 @@ function NavLink({ to, icon: Icon, label, badge, indent = false }) {
         indent ? 'pl-9' : ''
       } ${
         isActive
-          ? "bg-blue-50 text-blue-700 border-l-4 border-blue-600"
-          : "text-gray-700 hover:bg-gray-100"
+          ? "bg-[#FDECE7] text-[#B53A27] border-l-4 border-[#C9452F]"
+          : "text-[#4A312F] hover:bg-[#F3E9E5]"
       }`}
     >
       <Icon size={16} />
       <span className="flex-1">{label}</span>
       {badge && (
-        <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+        <span className="bg-[#FDECE7] text-[#B53A27] text-xs px-2 py-1 rounded-full">
           {badge}
         </span>
       )}
@@ -405,8 +421,8 @@ function MobileNavSection({ navigation }) {
         to=""
         className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg ${
           location.pathname === "/find-work" 
-            ? "bg-blue-50 text-blue-700" 
-            : "text-gray-700 hover:bg-gray-100"
+            ? "bg-[#FDECE7] text-[#B53A27]" 
+            : "text-[#4A312F] hover:bg-[#F3E9E5]"
         }`}
       >
         <Home size={16} />
@@ -426,8 +442,8 @@ function MobileNavSection({ navigation }) {
               onClick={() => toggleSection(key)}
               className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg ${
                 hasActiveChild 
-                  ? "bg-blue-50 text-blue-700" 
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-[#FDECE7] text-[#B53A27]" 
+                  : "text-[#4A312F] hover:bg-[#F3E9E5]"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -448,8 +464,8 @@ function MobileNavSection({ navigation }) {
                     to={item.to}
                     className={`flex items-center gap-3 px-3 py-2 text-sm rounded ${
                       location.pathname.includes(item.to)
-                        ? "text-blue-600"
-                        : "text-gray-600 hover:text-gray-900"
+                        ? "text-[#B53A27]"
+                        : "text-[#6B5B50] hover:text-[#2E2322]"
                     }`}
                   >
                     <item.icon size={14} />
@@ -468,12 +484,12 @@ function MobileNavSection({ navigation }) {
 function UserProfile() {
   return (
     <div className="flex items-center gap-3">
-      <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-        <User size={16} className="text-gray-600" />
+      <div className="w-8 h-8 bg-[#F3E9E5] rounded-full flex items-center justify-center">
+        <User size={16} className="text-[#7A5A4C]" />
       </div>
       <div className="flex-1">
-        <div className="text-sm font-medium text-gray-900">John Doe</div>
-        <div className="text-xs text-gray-500">Seller Level 2</div>
+        <div className="text-sm font-medium text-[#2E2322]">John Doe</div>
+        <div className="text-xs text-[#6B5B50]">Seller Level 2</div>
       </div>
     </div>
   );
@@ -488,8 +504,8 @@ function Breadcrumb({ path }) {
 
   return segments.map((segment, index) => (
     <React.Fragment key={segment}>
-      {index > 0 && <ChevronRight size={14} className="mx-2 text-gray-400" />}
-      <span className={`${index === segments.length - 1 ? 'font-medium text-gray-900' : 'text-gray-600'}`}>
+      {index > 0 && <ChevronRight size={14} className="mx-2 text-[#A38F85]" />}
+      <span className={`${index === segments.length - 1 ? 'font-medium text-[#2E2322]' : 'text-[#6B5B50]'}`}>
         {formatBreadcrumb(segment)}
       </span>
     </React.Fragment>
@@ -520,6 +536,7 @@ function getPageTitle(path) {
   if (path.includes('gigs/categories')) return 'Browse Categories';
   if (path.includes('requests/view')) return 'Buyer Requests';
   if (path.includes('requests/manager')) return 'My Proposals';
+  if (path.includes('messages')) return 'Messages';
   if (path.includes('performance/analytics')) return 'Analytics Dashboard';
   if (path.includes('performance/skills')) return 'Skill Levels';
   if (path.includes('performance/badges')) return 'Badges & Awards';
@@ -532,6 +549,7 @@ function getPageDescription(path) {
   if (path.includes('gigs/categories')) return 'Browse available service categories';
   if (path.includes('requests/view')) return 'Find work opportunities from buyers';
   if (path.includes('requests/manager')) return 'Track your sent proposals';
+  if (path.includes('messages')) return 'Chat with clients and manage conversations';
   if (path.includes('performance/analytics')) return 'View your performance metrics';
   if (path.includes('performance/skills')) return 'Manage your skill levels';
   if (path.includes('performance/badges')) return 'View your achievements and badges';
@@ -543,7 +561,7 @@ function getPageActions(path) {
     return (
       <Link
         to="gigs/create"
-        className="px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 flex items-center gap-2"
+        className="px-3 py-2 bg-[#C9452F] text-white text-sm font-medium rounded-lg hover:bg-[#B53A27] flex items-center gap-2"
       >
         <Plus size={14} />
         Create Gig
@@ -552,7 +570,7 @@ function getPageActions(path) {
   }
   if (path.includes('requests/view')) {
     return (
-      <button className="px-3 py-2 border border-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 flex items-center gap-2">
+      <button className="px-3 py-2 border border-[#E7E1DE] text-sm font-medium rounded-lg hover:bg-[#F3E9E5] flex items-center gap-2">
         <Filter size={14} />
         Filter
       </button>
@@ -569,8 +587,8 @@ function getSectionTabs(path) {
           to="gigs/manage"
           className={`px-4 py-2 text-sm font-medium rounded-lg ${
             path.includes('gigs/manage')
-              ? 'bg-blue-100 text-blue-700'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#FDECE7] text-[#B53A27]'
+              : 'text-[#6B5B50] hover:bg-[#F3E9E5]'
           }`}
         >
           Manage
@@ -579,8 +597,8 @@ function getSectionTabs(path) {
           to="gigs/create"
           className={`px-4 py-2 text-sm font-medium rounded-lg ${
             path.includes('gigs/create')
-              ? 'bg-blue-100 text-blue-700'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#FDECE7] text-[#B53A27]'
+              : 'text-[#6B5B50] hover:bg-[#F3E9E5]'
           }`}
         >
           Create
@@ -589,8 +607,8 @@ function getSectionTabs(path) {
           to="gigs/categories"
           className={`px-4 py-2 text-sm font-medium rounded-lg ${
             path.includes('gigs/categories')
-              ? 'bg-blue-100 text-blue-700'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#FDECE7] text-[#B53A27]'
+              : 'text-[#6B5B50] hover:bg-[#F3E9E5]'
           }`}
         >
           Categories
@@ -606,8 +624,8 @@ function getSectionTabs(path) {
           to="requests/view"
           className={`px-4 py-2 text-sm font-medium rounded-lg ${
             path.includes('requests/view')
-              ? 'bg-blue-100 text-blue-700'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#FDECE7] text-[#B53A27]'
+              : 'text-[#6B5B50] hover:bg-[#F3E9E5]'
           }`}
         >
           View Requests
@@ -616,8 +634,8 @@ function getSectionTabs(path) {
           to="requests/manager"
           className={`px-4 py-2 text-sm font-medium rounded-lg ${
             path.includes('requests/manager')
-              ? 'bg-blue-100 text-blue-700'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#FDECE7] text-[#B53A27]'
+              : 'text-[#6B5B50] hover:bg-[#F3E9E5]'
           }`}
         >
           My Proposals
@@ -633,8 +651,8 @@ function getSectionTabs(path) {
           to="performance/analytics"
           className={`px-4 py-2 text-sm font-medium rounded-lg ${
             path.includes('performance/analytics')
-              ? 'bg-blue-100 text-blue-700'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#FDECE7] text-[#B53A27]'
+              : 'text-[#6B5B50] hover:bg-[#F3E9E5]'
           }`}
         >
           Analytics
@@ -643,8 +661,8 @@ function getSectionTabs(path) {
           to="performance/skills"
           className={`px-4 py-2 text-sm font-medium rounded-lg ${
             path.includes('performance/skills')
-              ? 'bg-blue-100 text-blue-700'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#FDECE7] text-[#B53A27]'
+              : 'text-[#6B5B50] hover:bg-[#F3E9E5]'
           }`}
         >
           Skills
@@ -653,8 +671,8 @@ function getSectionTabs(path) {
           to="performance/badges"
           className={`px-4 py-2 text-sm font-medium rounded-lg ${
             path.includes('performance/badges')
-              ? 'bg-blue-100 text-blue-700'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-[#FDECE7] text-[#B53A27]'
+              : 'text-[#6B5B50] hover:bg-[#F3E9E5]'
           }`}
         >
           Badges
@@ -686,10 +704,10 @@ function Dashboard() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
-          <div key={index} className="bg-white border border-gray-200 rounded-lg p-4">
+          <div key={index} className="bg-white border border-[#E7E1DE] rounded-xl p-4 shadow-[0_12px_30px_rgba(28,20,18,0.08)]">
             <div className="flex items-center justify-between mb-3">
-              <div className="p-2 bg-gray-100 rounded-lg">
-                <stat.icon size={16} className="text-gray-600" />
+              <div className="p-2 bg-[#F3E9E5] rounded-lg">
+                <stat.icon size={16} className="text-[#7A5A4C]" />
               </div>
               <span className={`text-xs font-medium ${
                 stat.change.startsWith('+') ? 'text-green-600' : 'text-red-600'
@@ -697,29 +715,29 @@ function Dashboard() {
                 {stat.change}
               </span>
             </div>
-            <div className="text-xl font-semibold text-gray-900 mb-1">{stat.value}</div>
-            <div className="text-sm text-gray-500">{stat.label}</div>
+            <div className="text-xl font-semibold text-[#2E2322] mb-1">{stat.value}</div>
+            <div className="text-sm text-[#6B5B50]">{stat.label}</div>
           </div>
         ))}
       </div>
 
       {/* Quick Links */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6">
-        <h3 className="font-semibold text-gray-900 mb-4">Quick Actions</h3>
+      <div className="bg-white border border-[#E7E1DE] rounded-xl p-6 shadow-[0_12px_30px_rgba(28,20,18,0.08)]">
+        <h3 className="font-semibold text-[#2E2322] mb-4">Quick Actions</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickLinks.map((link, index) => (
             <Link
               key={index}
               to={link.to}
-              className="group border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-sm transition-all"
+              className="group border border-[#E7E1DE] rounded-lg p-4 hover:border-[#C9452F] hover:shadow-sm transition-all"
             >
               <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-gray-100 rounded-lg group-hover:bg-blue-50">
-                  <link.icon size={16} className="text-gray-600 group-hover:text-blue-600" />
+                <div className="p-2 bg-[#F3E9E5] rounded-lg group-hover:bg-[#FDECE7]">
+                  <link.icon size={16} className="text-[#7A5A4C] group-hover:text-[#C9452F]" />
                 </div>
-                <span className="font-medium text-gray-900">{link.label}</span>
+                <span className="font-medium text-[#2E2322]">{link.label}</span>
               </div>
-              <p className="text-sm text-gray-500">{link.description}</p>
+              <p className="text-sm text-[#6B5B50]">{link.description}</p>
             </Link>
           ))}
         </div>

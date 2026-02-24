@@ -9,6 +9,7 @@ import Signin from "./Components/Loginsignup/Signin";
 import ForgotPassword from "./Components/Loginsignup/Forgotpassword";
 import HomePage from "./Components/Homepage/Homepage";
 import FindWork from "./Components/Findwork/Findwork";
+import TalentPage from "./pages/hire-talent";
 function App() {
   return (
     <div>
@@ -19,6 +20,7 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/signin" element={<Signin />} />
       <Route path="/forgot" element={<ForgotPassword />} />
+      <Route path="/talent/*" element={<TalentPage />} />
        <Route path="/" element={<Navigate to="/find-work" />} />
 
     
