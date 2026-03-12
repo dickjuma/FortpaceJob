@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Routes,
   Route,
@@ -52,6 +52,7 @@ import Badges from "./Performance/Badges";
 import ViewRequests from "./BuyerRequests/ViewRequests";
 import ProposalManager from "./BuyerRequests/ProposalManager";
 import Messages from "./Messages";
+import { authAPI, getUser } from "../../Services/api";
 
 export default function FindWork() {
   const location = useLocation();
@@ -482,14 +483,33 @@ function MobileNavSection({ navigation }) {
 }
 
 function UserProfile() {
+  const [user, setUserState] = useState(() => getUser());
+
+  useEffect(() => {
+    let mounted = true;
+    authAPI
+      .getMe()
+      .then((res) => {
+        if (mounted && res?.user) setUserState(res.user);
+      })
+      .catch(() => {});
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const displayName = user?.role === "client" ? user?.companyName : user?.name;
+  const subtitle =
+    user?.serviceMode || user?.industry || user?.country || (user?.isVerified ? "Verified Account" : "Unverified");
+
   return (
     <div className="flex items-center gap-3">
       <div className="w-8 h-8 bg-[#F3E9E5] rounded-full flex items-center justify-center">
         <User size={16} className="text-[#7A5A4C]" />
       </div>
       <div className="flex-1">
-        <div className="text-sm font-medium text-[#2E2322]">John Doe</div>
-        <div className="text-xs text-[#6B5B50]">Seller Level 2</div>
+        <div className="text-sm font-medium text-[#2E2322]">{displayName || user?.email || "User"}</div>
+        <div className="text-xs text-[#6B5B50]">{subtitle || "Complete your profile"}</div>
       </div>
     </div>
   );

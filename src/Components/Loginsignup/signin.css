@@ -60,7 +60,7 @@ body {
 }
 
 .login-points li::before {
-  content: "•";
+  content: "ï¿½";
   position: absolute;
   left: 0;
   color: var(--cta);
@@ -325,3 +325,79 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+.auth-notice {
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 8px 0 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.auth-notice.success {
+  background: #ecfdf3;
+  border: 1px solid #98e2b4;
+  color: #166534;
+}
+
+.auth-notice.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b42318;
+}
+
+.btn-login:disabled,
+.btn-ghost:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Required field indicator */
+.required {
+  color: #d34079;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+/* Resend section for unverified accounts */
+.resend-section {
+  margin: 16px 0;
+  padding: 12px;
+  background: #fef3f3;
+  border: 1px solid #f4a9b8;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.resend-section .small {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.resend-btn {
+  padding: 8px 16px;
+  margin: 0 6px;
+  border: 1px solid #d34079;
+  background: #fff;
+  color: #d34079;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.resend-btn:hover:not(:disabled) {
+  background: #d34079;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(211, 64, 121, 0.2);
+}
+
+.resend-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+

@@ -1,15 +1,27 @@
 import React, { useState } from 'react';
 import './forgotpassword.css';
+import { authAPI } from '../../Services/api';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleReset = (e) => {
+  const handleReset = async (e) => {
     e.preventDefault();
-    // Placeholder logic for sending reset link
-    setMessage(`If an account exists for ${email}, a reset link has been sent.`);
-    setEmail('');
+    setLoading(true);
+    setError('');
+    setMessage('');
+    try {
+      const response = await authAPI.forgotPassword(email);
+      setMessage(response?.message || `If an account exists for ${email}, a reset link has been sent.`);
+      setEmail('');
+    } catch (err) {
+      setError(err.message || 'Could not send reset link.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -32,9 +44,12 @@ const ForgotPassword = () => {
             <label htmlFor="forgot-email">Email Address</label>
           </div>
 
-          <button type="submit" className="btn-reset">Send Reset Link</button>
+          <button type="submit" className="btn-reset" disabled={loading}>
+            {loading ? 'Sending...' : 'Send Reset Link'}
+          </button>
 
           {message && <p className="reset-message">{message}</p>}
+          {error && <p className="reset-message">{error}</p>}
         </form>
 
         <p className="back-login">

@@ -7,9 +7,12 @@ import Footer from "./Components/Footer/Footer";
 import Signup from "./Components/Loginsignup/signup";
 import Signin from "./Components/Loginsignup/Signin";
 import ForgotPassword from "./Components/Loginsignup/Forgotpassword";
+import ResetPassword from "./Components/Loginsignup/ResetPassword";
+import OAuthCallback from "./Components/Loginsignup/OAuthCallback";
 import HomePage from "./Components/Homepage/Homepage";
 import FindWork from "./Components/Findwork/Findwork";
 import TalentPage from "./pages/hire-talent";
+import MyProfile from "./pages/MyProfile";
 function App() {
   return (
     <div>
@@ -20,6 +23,9 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/signin" element={<Signin />} />
       <Route path="/forgot" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/oauth/callback" element={<OAuthCallback />} />
+      <Route path="/my-profile" element={<MyProfile />} />
       <Route path="/talent/*" element={<TalentPage />} />
        <Route path="/" element={<Navigate to="/find-work" />} />
 
