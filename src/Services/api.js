@@ -170,10 +170,10 @@ export const authAPI = {
   },
 
   // Resend OTP: either email or phone (or both)
-  resendOTP: async (email, phoneNumber, channel = "phone") => {
+  resendOTP: async (email, phoneNumber, channel = "phone", purpose) => {
     return apiClient("/auth/resend-otp", {
       method: "POST",
-      body: JSON.stringify({ email, phoneNumber, channel }),
+      body: JSON.stringify({ email, phoneNumber, channel, ...(purpose ? { purpose } : {}) }),
     });
   },
 
@@ -246,11 +246,15 @@ export const authAPI = {
     });
   },
 
-  // Reset password
-  resetPassword: async (token, password) => {
+  // Reset password (token flow or email+otp flow)
+  resetPassword: async (payloadOrToken, password) => {
+    const payload =
+      typeof payloadOrToken === "string"
+        ? { token: payloadOrToken, password }
+        : payloadOrToken;
     return apiClient("/auth/reset-password", {
       method: "POST",
-      body: JSON.stringify({ token, password }),
+      body: JSON.stringify(payload),
     });
   },
 
@@ -356,28 +360,24 @@ export const userAPI = {
 // PROFILE API (Prisma-backed)
 export const profileAPI = {
   getMyProfile: async () => {
-    const data = await graphqlClient({
-      operationName: "Me",
-      query:
-        "query Me { me { id _id email role name phoneNumber companyName bio skills hourlyRate currency serviceMode physicalCategory serviceArea companyDescription industry budget hiringCapacity country languages avatar companyLogo portfolio portfolioFileNames portfolioVideos introVideo emailVerified phoneVerified isVerified createdAt } }",
+    const data = await apiClient("/profile/me", {
+      method: "GET",
     });
-    if (data?.me) {
-      setUser(data.me);
-      return { success: true, user: data.me };
+    if (data?.user) {
+      setUser(data.user);
+      return { success: true, user: data.user };
     }
     throw new Error("No profile data returned");
   },
 
   updateMyProfile: async (input) => {
-    const data = await graphqlClient({
-      operationName: "UpdateMyProfile",
-      query:
-        "mutation UpdateMyProfile($input: JSON) { updateMyProfile(input: $input) { id _id email role name phoneNumber companyName bio skills hourlyRate currency serviceMode physicalCategory serviceArea companyDescription industry budget hiringCapacity country languages avatar companyLogo portfolio portfolioFileNames portfolioVideos introVideo emailVerified phoneVerified isVerified createdAt } }",
-      variables: { input },
+    const data = await apiClient("/profile/me", {
+      method: "PATCH",
+      body: JSON.stringify(input),
     });
-    if (data?.updateMyProfile) {
-      setUser(data.updateMyProfile);
-      return { success: true, user: data.updateMyProfile };
+    if (data?.user) {
+      setUser(data.user);
+      return { success: true, user: data.user, missingFields: data.missingFields || [] };
     }
     throw new Error("Profile update failed");
   },
@@ -397,6 +397,21 @@ export const profileAPI = {
     return result;
   },
 
+  uploadCoverPhoto: async (file) => {
+    const data = new FormData();
+    data.append("coverPhoto", file);
+    const token = getToken();
+    const response = await fetch(`${API_BASE_URL}/profile/me/cover-photo`, {
+      method: "POST",
+      headers: { ...(token && { Authorization: `Bearer ${token}` }) },
+      body: data,
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message || "Cover photo upload failed");
+    if (result.user) setUser(result.user);
+    return result;
+  },
+
   uploadCompanyLogo: async (file) => {
     const data = new FormData();
     data.append("companyLogo", file);
@@ -410,6 +425,10 @@ export const profileAPI = {
     if (!response.ok) throw new Error(result.message || "Company logo upload failed");
     if (result.user) setUser(result.user);
     return result;
+  },
+
+  getMissingFields: async () => {
+    return apiClient("/profile/missing-fields", { method: "GET" });
   },
 
   uploadIntroVideo: async (file) => {

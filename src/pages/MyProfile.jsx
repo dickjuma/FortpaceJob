@@ -1,383 +1,460 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import {
+  Briefcase,
+  Building2,
+  Camera,
+  ChevronRight,
+  FileText,
+  Globe,
+  MapPin,
+  Image as ImageIcon,
+  Save,
+  Sparkles,
+  Star,
+  Upload,
+  Video,
+  Wrench,
+  ShieldCheck,
+} from "lucide-react";
 import { getToken, profileAPI } from "../Services/api";
 import "./MyProfile.css";
 
-const toCsv = (arr) => (Array.isArray(arr) ? arr.join(", ") : "");
-const fromCsv = (text) =>
-  (text || "")
+const SERVICE_GROUPS = [
+  { label: "Online Services", options: ["Web Development", "UI/UX Design", "Graphic Design", "Video Editing", "Content Writing", "SEO", "Digital Marketing", "Business Consulting", "Data Entry"] },
+  { label: "Onsite Trades", options: ["Plumbing", "Electrical", "HVAC", "Carpentry", "Painting", "Cleaning", "Landscaping", "Roofing", "Handyman", "Appliance Repair"] },
+];
+
+const CLIENT_INDUSTRIES = ["Technology", "Construction", "Real Estate", "Healthcare", "Education", "Finance", "Retail", "Hospitality", "Marketing", "Other"];
+const COMPANY_SIZES = ["1-10", "11-50", "51-200", "201-500", "500+"];
+const HIRING_TYPES = ["One-off project", "Long-term support", "Ongoing retainer", "Full-time hire"];
+const SERVICE_MODES = ["Remote", "Onsite", "Hybrid"];
+const RESPONSE_TIMES = ["Within 1 hour", "Within 1 day", "Within 2 days", "Within a week"];
+const AVAILABILITY_TYPES = ["Full-time", "Part-time", "Weekdays", "Weekends", "Anytime"];
+const SKILL_LEVELS = ["Beginner", "Intermediate", "Expert"];
+const PROJECT_TYPES = ["Short-term", "Long-term", "Both"];
+const CURRENCIES = ["USD", "EUR", "GBP", "KES", "NGN", "ZAR"];
+const SOCIAL_FIELDS = [
+  ["website", "Website"],
+  ["linkedin", "LinkedIn"],
+  ["github", "GitHub"],
+  ["twitter", "X / Twitter"],
+  ["facebook", "Facebook"],
+  ["instagram", "Instagram"],
+  ["dribbble", "Dribbble"],
+  ["behance", "Behance"],
+  ["medium", "Medium"],
+];
+
+const splitList = (value) =>
+  String(value || "")
     .split(",")
-    .map((v) => v.trim())
+    .map((item) => item.trim())
     .filter(Boolean);
 
-const MyProfile = () => {
-  const navigate = useNavigate();
+const joinList = (value) => (Array.isArray(value) ? value.join(", ") : String(value || ""));
+
+const emptySocialLinks = () => SOCIAL_FIELDS.reduce((acc, [key]) => ({ ...acc, [key]: "" }), {});
+
+const emptyDraft = (role = "freelancer") => ({
+  role,
+  name: "",
+  username: "",
+  professionalTitle: "",
+  phoneNumber: "",
+  country: "",
+  city: "",
+  timezone: "",
+  companyName: "",
+  companySize: "",
+  companyDescription: "",
+  industry: "",
+  hiringType: "",
+  hiringCapacity: "",
+  preferredFreelancerLevel: "",
+  preferredProjectType: "",
+  serviceCategory: "",
+  serviceMode: "Hybrid",
+  serviceArea: "",
+  bio: "",
+  skillsText: "",
+  primarySkillsText: "",
+  toolsTechnologiesText: "",
+  preferredSkillsText: "",
+  industriesOfInterestText: "",
+  languagesText: "",
+  hourlyRate: "",
+  currency: "USD",
+  budget: "",
+  yearsOfExperience: "",
+  skillLevel: "Intermediate",
+  availableHours: "",
+  availabilityType: "Anytime",
+  responseTime: "Within 1 day",
+  website: "",
+  linkedin: "",
+  github: "",
+  twitter: "",
+  facebook: "",
+  instagram: "",
+  dribbble: "",
+  behance: "",
+  medium: "",
+  socialLinks: emptySocialLinks(),
+});
+
+const toDraft = (profile) => {
+  const social = profile?.socialLinks || {};
+  return {
+    ...emptyDraft(profile?.role || "freelancer"),
+    ...profile,
+    skillsText: joinList(profile?.skills),
+    primarySkillsText: joinList(profile?.primarySkills),
+    toolsTechnologiesText: joinList(profile?.toolsTechnologies),
+    preferredSkillsText: joinList(profile?.preferredSkills),
+    industriesOfInterestText: joinList(profile?.industriesOfInterest),
+    languagesText: joinList(profile?.languages),
+    socialLinks: {
+      ...emptySocialLinks(),
+      ...social,
+      website: profile?.website || social.website || "",
+      linkedin: profile?.linkedin || social.linkedin || "",
+      github: profile?.github || social.github || "",
+      twitter: profile?.twitter || social.twitter || "",
+      facebook: profile?.facebook || social.facebook || "",
+      instagram: profile?.instagram || social.instagram || "",
+      dribbble: profile?.dribbble || social.dribbble || "",
+      behance: profile?.behance || social.behance || "",
+      medium: profile?.medium || social.medium || "",
+    },
+    website: profile?.website || social.website || "",
+    linkedin: profile?.linkedin || social.linkedin || "",
+    github: profile?.github || social.github || "",
+    twitter: profile?.twitter || social.twitter || "",
+    facebook: profile?.facebook || social.facebook || "",
+    instagram: profile?.instagram || social.instagram || "",
+    dribbble: profile?.dribbble || social.dribbble || "",
+    behance: profile?.behance || social.behance || "",
+    medium: profile?.medium || social.medium || "",
+  };
+};
+
+const Section = ({ icon: Icon, title, subtitle, children }) => (
+  <section className="profile-section">
+    <div className="profile-section__header">
+      <h2>{Icon ? <Icon size={18} /> : null}{title}</h2>
+      {subtitle ? <p>{subtitle}</p> : null}
+    </div>
+    <div className="profile-section__body">{children}</div>
+  </section>
+);
+
+const Field = ({ label, children, hint }) => (
+  <label className="profile-field">
+    <span>{label}</span>
+    {children}
+    {hint ? <small>{hint}</small> : null}
+  </label>
+);
+
+const UploadButton = ({ label, accept, multiple, onChange, icon: Icon = Upload, loading }) => (
+  <label className={`upload-button ${loading ? "is-loading" : ""}`}>
+    <Icon size={16} />
+    <span>{loading ? "Uploading..." : label}</span>
+    <input
+      type="file"
+      accept={accept}
+      multiple={multiple}
+      hidden
+      onChange={(e) => {
+        const value = multiple ? Array.from(e.target.files || []) : e.target.files?.[0];
+        if (value && (!Array.isArray(value) || value.length)) onChange(value);
+        e.target.value = "";
+      }}
+    />
+  </label>
+);
+
+export const MyProfile = () => {
+  const [profile, setProfile] = useState(null);
+  const [draft, setDraft] = useState(emptyDraft());
   const [loading, setLoading] = useState(true);
-  const [savingSection, setSavingSection] = useState("");
-  const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const [uploadingLogo, setUploadingLogo] = useState(false);
-  const [uploadingVideo, setUploadingVideo] = useState(false);
-  const [uploadingPortfolio, setUploadingPortfolio] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
-  const [openSection, setOpenSection] = useState("personal");
-  const [profile, setProfile] = useState(null);
-  const [form, setForm] = useState({
-    name: "",
-    phoneNumber: "",
-    companyName: "",
-    bio: "",
-    skills: "",
-    hourlyRate: 10,
-    currency: "USD",
-    serviceMode: "",
-    physicalCategory: "",
-    serviceArea: "",
-    companyDescription: "",
-    industry: "",
-    budget: 0,
-    hiringCapacity: 1,
-    country: "",
-    languages: "",
-  });
+  const [missingFields, setMissingFields] = useState([]);
+  const [uploading, setUploading] = useState({ avatar: false, coverPhoto: false, companyLogo: false, introVideo: false, portfolio: false });
+
+  const role = profile?.role || draft.role || "freelancer";
+  const isFreelancer = role === "freelancer";
+  const isClient = role === "client";
+  const completeness = useMemo(() => {
+    const total = isClient ? 7 : 9;
+    return Math.max(0, Math.round(((total - missingFields.length) / total) * 100));
+  }, [isClient, missingFields.length]);
 
   useEffect(() => {
     if (!getToken()) {
-      navigate("/signin");
+      window.location.href = "/signin";
       return;
     }
     let mounted = true;
-    profileAPI
-      .getMyProfile()
-      .then((res) => {
+    (async () => {
+      try {
+        const [profileRes, missingRes] = await Promise.all([
+          profileAPI.getMyProfile(),
+          profileAPI.getMissingFields().catch(() => ({ missing: [] })),
+        ]);
         if (!mounted) return;
-        setProfile(res.user);
-        setForm({
-          name: res.user.name || "",
-          phoneNumber: res.user.phoneNumber || "",
-          companyName: res.user.companyName || "",
-          bio: res.user.bio || "",
-          skills: toCsv(res.user.skills),
-          hourlyRate: res.user.hourlyRate || 10,
-          currency: res.user.currency || "USD",
-          serviceMode: res.user.serviceMode || "",
-          physicalCategory: res.user.physicalCategory || "",
-          serviceArea: res.user.serviceArea || "",
-          companyDescription: res.user.companyDescription || "",
-          industry: res.user.industry || "",
-          budget: res.user.budget || 0,
-          hiringCapacity: res.user.hiringCapacity || 1,
-          country: res.user.country || "",
-          languages: toCsv(res.user.languages),
-        });
-      })
-      .catch((e) => setError(e.message || "Failed to load profile"))
-      .finally(() => setLoading(false));
-    return () => {
-      mounted = false;
-    };
-  }, [navigate]);
-
-  const completeness = useMemo(() => {
-    if (!profile) return 0;
-    const checks = [
-      profile.name || profile.companyName,
-      profile.bio,
-      profile.skills?.length,
-      profile.country,
-      profile.languages?.length,
-      profile.introVideo,
-      profile.avatar,
-    ];
-    return Math.round((checks.filter(Boolean).length / checks.length) * 100);
-  }, [profile]);
-  const isClient = profile?.role === "client";
-  const isTalent = profile?.role === "freelancer";
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const saveSection = async (section) => {
-    setSavingSection(section);
-    setError("");
-    setNotice("");
-    try {
-      let payload = {};
-      if (section === "personal") {
-        payload = {
-          name: form.name,
-          companyName: form.companyName,
-          phoneNumber: form.phoneNumber,
-          country: form.country,
-          languages: fromCsv(form.languages),
-        };
-      } else if (section === "skills") {
-        payload = {
-          bio: form.bio,
-          skills: fromCsv(form.skills),
-          serviceMode: form.serviceMode,
-          physicalCategory: form.physicalCategory,
-          serviceArea: form.serviceArea,
-          hourlyRate: Number(form.hourlyRate || 0),
-          currency: form.currency,
-        };
-      } else if (section === "business") {
-        payload = {
-          companyDescription: form.companyDescription,
-          industry: form.industry,
-          budget: Number(form.budget || 0),
-          hiringCapacity: Number(form.hiringCapacity || 1),
-        };
+        setProfile(profileRes.user);
+        setDraft(toDraft(profileRes.user));
+        setMissingFields(missingRes.missing || []);
+      } catch (err) {
+        if (mounted) setError(err.message || "Failed to load profile");
+      } finally {
+        if (mounted) setLoading(false);
       }
+    })();
+    return () => { mounted = false; };
+  }, []);
 
+  useEffect(() => {
+    if (!notice) return undefined;
+    const timer = setTimeout(() => setNotice(""), 4500);
+    return () => clearTimeout(timer);
+  }, [notice]);
+
+  const updateField = (field, value) => setDraft((prev) => ({ ...prev, [field]: value }));
+  const updateSocialField = (field, value) => setDraft((prev) => ({ ...prev, [field]: value, socialLinks: { ...(prev.socialLinks || emptySocialLinks()), [field]: value } }));
+
+  const saveProfile = async (event) => {
+    event.preventDefault();
+    setSaving(true);
+    setError("");
+    try {
+      const payload = {
+        ...draft,
+        skills: splitList(draft.skillsText),
+        primarySkills: splitList(draft.primarySkillsText),
+        toolsTechnologies: splitList(draft.toolsTechnologiesText),
+        preferredSkills: splitList(draft.preferredSkillsText),
+        industriesOfInterest: splitList(draft.industriesOfInterestText),
+        languages: splitList(draft.languagesText),
+        hourlyRate: draft.hourlyRate === "" ? "" : Number(draft.hourlyRate),
+        budget: draft.budget === "" ? "" : Number(draft.budget),
+        yearsOfExperience: draft.yearsOfExperience === "" ? "" : Number(draft.yearsOfExperience),
+        availableHours: draft.availableHours === "" ? "" : Number(draft.availableHours),
+        hiringCapacity: draft.hiringCapacity === "" ? "" : Number(draft.hiringCapacity),
+        socialLinks: { ...emptySocialLinks(), ...(draft.socialLinks || {}) },
+      };
       const res = await profileAPI.updateMyProfile(payload);
       setProfile(res.user);
-      setNotice(`${section[0].toUpperCase() + section.slice(1)} section updated.`);
-    } catch (e) {
-      setError(e.message || "Could not update section");
+      setDraft(toDraft(res.user));
+      setMissingFields(res.missingFields || []);
+      setNotice("Profile saved successfully.");
+    } catch (err) {
+      setError(err.message || "Could not save profile");
     } finally {
-      setSavingSection("");
+      setSaving(false);
     }
   };
 
-  const uploadWithFeedback = async (task, doneMessage) => {
+  const handleUpload = async (kind, file) => {
+    if (!file) return;
+    setUploading((prev) => ({ ...prev, [kind]: true }));
     setError("");
-    setNotice("");
     try {
-      const res = await task();
-      setProfile(res.user);
-      setNotice(doneMessage);
+      let res = null;
+      if (kind === "avatar") res = await profileAPI.uploadAvatar(file);
+      if (kind === "coverPhoto") res = await profileAPI.uploadCoverPhoto(file);
+      if (kind === "companyLogo") res = await profileAPI.uploadCompanyLogo(file);
+      if (kind === "introVideo") res = await profileAPI.uploadIntroVideo(file);
+      if (kind === "portfolio") res = await profileAPI.uploadPortfolio(file);
+      if (res?.user) {
+        setProfile(res.user);
+        setDraft(toDraft(res.user));
+      }
+      const missingRes = await profileAPI.getMissingFields().catch(() => ({ missing: [] }));
+      setMissingFields(missingRes.missing || []);
+      setNotice(`${kind === "coverPhoto" ? "Cover photo" : kind} uploaded successfully.`);
     } catch (err) {
       setError(err.message || "Upload failed");
+    } finally {
+      setUploading((prev) => ({ ...prev, [kind]: false }));
     }
   };
 
-  if (loading) return <div className="profile-page"><p>Loading profile...</p></div>;
+  if (loading) {
+    return <div className="profile-page"><div className="profile-loading"><div className="skeleton hero" /><div className="skeleton card" /><div className="skeleton card" /></div></div>;
+  }
 
   return (
     <div className="profile-page">
       <div className="profile-shell">
-        <aside className="profile-aside">
-          <h2>My Profile</h2>
-          <div className="meter">
-            <div className="meter-fill" style={{ width: `${completeness}%` }} />
-          </div>
-          <p className="meter-label">{completeness}% complete</p>
-
-          <div className="media-box">
-            <p className="box-title">{isClient ? "Client Contact Photo" : "Talent Profile Photo"}</p>
-            {profile?.avatar ? <img src={profile.avatar} alt="avatar" className="avatar-preview" /> : <p>No avatar yet</p>}
-            <label className="upload-btn">
-              {uploadingAvatar ? "Uploading..." : "Upload Avatar"}
-              <input
-                type="file"
-                accept="image/*"
-                hidden
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  if (!file) return;
-                  setUploadingAvatar(true);
-                  await uploadWithFeedback(() => profileAPI.uploadAvatar(file), "Avatar uploaded.");
-                  setUploadingAvatar(false);
-                }}
-              />
-            </label>
-          </div>
-
-          {isClient && (
-            <div className="media-box">
-              <p className="box-title">Company Logo</p>
-              {profile?.companyLogo ? <img src={profile.companyLogo} alt="company logo" className="avatar-preview" /> : <p>No company logo yet</p>}
-              <label className="upload-btn">
-                {uploadingLogo ? "Uploading..." : "Upload Company Logo"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    setUploadingLogo(true);
-                    await uploadWithFeedback(() => profileAPI.uploadCompanyLogo(file), "Company logo uploaded.");
-                    setUploadingLogo(false);
-                  }}
-                />
-              </label>
+        <div className="profile-hero">
+          <div className="profile-hero__cover" style={profile?.coverPhoto ? { backgroundImage: `url(${profile.coverPhoto})` } : undefined}>
+            {!profile?.coverPhoto ? <div className="profile-hero__placeholder"><Sparkles size={28} /><p>Upload a cover photo that makes the profile feel premium.</p></div> : null}
+            <div className="profile-hero__actions">
+              <UploadButton label="Change cover" accept="image/*" onChange={(file) => handleUpload("coverPhoto", file)} icon={Camera} loading={uploading.coverPhoto} />
             </div>
-          )}
-        </aside>
-
-        <section className="profile-main">
-          {notice && <div className="notice success">{notice}</div>}
-          {error && <div className="notice error">{error}</div>}
-
-          <div className="accordion">
-            <button className="acc-head" onClick={() => setOpenSection(openSection === "personal" ? "" : "personal")}>
-              <span>Personal Details</span>
-              <ChevronDown className={openSection === "personal" ? "rotate" : ""} size={18} />
-            </button>
-            {openSection === "personal" && (
-              <div className="acc-body">
-                <p className="section-note">Keep your public identity complete and consistent. These details appear in your profile and conversations.</p>
-                <div className="account-strip">
-                  <div className="account-card">
-                    <span className="label">Role</span>
-                    <strong>{profile?.role || "-"}</strong>
-                  </div>
-                  <div className="account-card">
-                    <span className="label">Email</span>
-                    <strong>{profile?.email || "-"}</strong>
-                  </div>
-                  <div className="account-card">
-                    <span className="label">Joined</span>
-                    <strong>{profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : "-"}</strong>
-                  </div>
-                </div>
-
-                <div className="grid personal-layout">
-                  <label className="profile-field">
-                    <span>Full Name</span>
-                    <input name="name" value={form.name} onChange={handleChange} />
-                  </label>
-                  <label className="profile-field">
-                    <span>Company Name</span>
-                    <input name="companyName" value={form.companyName} onChange={handleChange} />
-                  </label>
-                  <label className="profile-field">
-                    <span>Phone Number</span>
-                    <input name="phoneNumber" value={form.phoneNumber} onChange={handleChange} />
-                  </label>
-                  <label className="profile-field">
-                    <span>Country</span>
-                    <input name="country" value={form.country} onChange={handleChange} />
-                  </label>
-                  <label className="profile-field full">
-                    <span>Languages (comma separated)</span>
-                    <input name="languages" value={form.languages} onChange={handleChange} />
-                  </label>
-                </div>
-                <div className="save-row">
-                  <button className="save-btn" onClick={() => saveSection("personal")} disabled={savingSection === "personal"}>
-                    {savingSection === "personal" ? "Saving..." : "Update Personal Details"}
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
 
-          <div className="accordion">
-            <button className="acc-head" onClick={() => setOpenSection(openSection === "skills" ? "" : "skills")}>
-              <span>{isClient ? "Hiring Requirements" : "Skills & Service"}</span>
-              <ChevronDown className={openSection === "skills" ? "rotate" : ""} size={18} />
-            </button>
-            {openSection === "skills" && (
-              <div className="acc-body">
-                <div className="grid">
-                  <label>Skills (comma separated)<input name="skills" value={form.skills} onChange={handleChange} /></label>
-                  <label>Service Mode<input name="serviceMode" value={form.serviceMode} onChange={handleChange} /></label>
-                  <label>Physical Category<input name="physicalCategory" value={form.physicalCategory} onChange={handleChange} /></label>
-                  <label>Service Area<input name="serviceArea" value={form.serviceArea} onChange={handleChange} /></label>
-                  <label>Hourly Rate<input type="number" name="hourlyRate" value={form.hourlyRate} onChange={handleChange} /></label>
-                  <label>Currency<input name="currency" value={form.currency} onChange={handleChange} /></label>
-                </div>
-                <label>Bio<textarea name="bio" value={form.bio} onChange={handleChange} rows={4} /></label>
-                <button className="save-btn" onClick={() => saveSection("skills")} disabled={savingSection === "skills"}>
-                  {savingSection === "skills" ? "Saving..." : "Update Skills & Service"}
-                </button>
+          <div className="profile-hero__body">
+            <div className="profile-avatar">
+              {profile?.avatar ? <img src={profile.avatar} alt="Profile avatar" /> : <span><ImageIcon size={26} /></span>}
+              <div className="profile-avatar__upload">
+                <UploadButton label="Update" accept="image/*" onChange={(file) => handleUpload("avatar", file)} icon={Camera} loading={uploading.avatar} />
               </div>
-            )}
+            </div>
+
+            <div className="profile-hero__text">
+              <p className="profile-kicker">{isFreelancer ? "Freelancer profile" : "Client profile"}</p>
+              <h1>{profile?.name || profile?.companyName || "Complete your profile"}</h1>
+              <p className="profile-subtitle">{profile?.professionalTitle || (isFreelancer ? "Showcase your services, skills, pricing, and proof of work." : "Tell freelancers what your company does and how you hire.")}</p>
+              <div className="profile-meta-row">
+                <span className="profile-meta-item"><MapPin size={14} /> {profile?.city || profile?.country || "Location not set"}</span>
+                <span className="profile-meta-item">{profile?.serviceMode || "Hybrid"}</span>
+                <span className="profile-meta-item">{profile?.serviceCategory || profile?.industry || "General services"}</span>
+              </div>
+              <div className="profile-badges">
+                <div className="status-chip"><ShieldCheck size={14} /><span>{profile?.emailVerified ? "Email verified" : "Email pending"}</span></div>
+                <div className="status-chip"><ShieldCheck size={14} /><span>{profile?.phoneVerified ? "Phone verified" : "Phone pending"}</span></div>
+                <div className="status-chip"><Star size={14} /><span>{profile?.isVerified ? "Identity verified" : "Verification pending"}</span></div>
+              </div>
+            </div>
           </div>
 
-          <div className="accordion">
-            <button className="acc-head" onClick={() => setOpenSection(openSection === "business" ? "" : "business")}>
-              <span>Business Details</span>
-              <ChevronDown className={openSection === "business" ? "rotate" : ""} size={18} />
+          <div className="profile-tabs">
+            <button type="button" className="profile-tab is-active">Overview</button>
+            <button type="button" className="profile-tab">Services</button>
+            <button type="button" className="profile-tab">Portfolio</button>
+            <button type="button" className="profile-tab">Reviews</button>
+            <button type="button" className="profile-tab profile-tab--ghost">
+              Public preview <ChevronRight size={16} />
             </button>
-            {openSection === "business" && (
-              <div className="acc-body">
-                <div className="grid">
-                  <label>Industry<input name="industry" value={form.industry} onChange={handleChange} /></label>
-                  <label>Budget<input type="number" name="budget" value={form.budget} onChange={handleChange} /></label>
-                  <label>Hiring Capacity<input type="number" name="hiringCapacity" value={form.hiringCapacity} onChange={handleChange} /></label>
-                  <label>Email Verified<input value={profile?.emailVerified ? "Yes" : "No"} disabled /></label>
-                  <label>Phone Verified<input value={profile?.phoneVerified ? "Yes" : "No"} disabled /></label>
-                  <label>Account Verified<input value={profile?.isVerified ? "Yes" : "No"} disabled /></label>
-                </div>
-                <label>Company Description<textarea name="companyDescription" value={form.companyDescription} onChange={handleChange} rows={4} /></label>
-                <button className="save-btn" onClick={() => saveSection("business")} disabled={savingSection === "business"}>
-                  {savingSection === "business" ? "Saving..." : "Update Business"}
-                </button>
-              </div>
-            )}
           </div>
+        </div>
 
-          <div className="accordion">
-            <button className="acc-head" onClick={() => setOpenSection(openSection === "media" ? "" : "media")}>
-              <span>{isTalent ? "Media & Portfolio" : "Branding Media"}</span>
-              <ChevronDown className={openSection === "media" ? "rotate" : ""} size={18} />
-            </button>
-            {openSection === "media" && (
-              <div className="acc-body">
-                {isTalent && (
-                  <>
-                    <div className="portfolio-row">
-                      <p className="box-title">Intro Video</p>
-                      {profile?.introVideo ? <video src={profile.introVideo} controls className="video-preview" /> : <p>No intro video yet</p>}
-                      <label className="upload-btn">
-                        {uploadingVideo ? "Uploading..." : "Upload Intro Video"}
-                        <input
-                          type="file"
-                          accept="video/*"
-                          hidden
-                          onChange={async (e) => {
-                            const file = e.target.files?.[0];
-                            if (!file) return;
-                            setUploadingVideo(true);
-                            await uploadWithFeedback(() => profileAPI.uploadIntroVideo(file), "Intro video uploaded.");
-                            setUploadingVideo(false);
-                          }}
-                        />
-                      </label>
-                    </div>
+        {notice ? <div className="profile-alert success">{notice}</div> : null}
+        {error ? <div className="profile-alert error">{error}</div> : null}
 
-                    <div className="portfolio-row">
-                      <p className="box-title">Portfolio Files</p>
-                      <label className="upload-btn">
-                        {uploadingPortfolio ? "Uploading..." : "Upload Portfolio Files"}
-                        <input
-                          type="file"
-                          accept="image/*,.pdf"
-                          multiple
-                          hidden
-                          onChange={async (e) => {
-                            const files = Array.from(e.target.files || []);
-                            if (!files.length) return;
-                            setUploadingPortfolio(true);
-                            await uploadWithFeedback(() => profileAPI.uploadPortfolio(files), "Portfolio files uploaded.");
-                            setUploadingPortfolio(false);
-                          }}
-                        />
-                      </label>
-                    </div>
-                  </>
-                )}
+        <div className="profile-layout">
+          <aside className="profile-sidebar">
+            <div className="sidebar-card">
+              <p className="sidebar-card__label">Completion</p>
+              <div className="progress"><div style={{ width: `${completeness}%` }} /></div>
+              <p className="sidebar-card__text">Fill the missing fields to improve your profile and search visibility.</p>
+            </div>
+            <div className="sidebar-card">
+              <p className="sidebar-card__label">Missing fields</p>
+              <ul className="missing-list">
+                {missingFields.length ? missingFields.map((field) => <li key={field}>{field}</li>) : <li>Nothing missing right now.</li>}
+              </ul>
+            </div>
+            <div className="sidebar-card">
+              <p className="sidebar-card__label">Quick uploads</p>
+              <div className="upload-stack">
+                <UploadButton label="Company logo" accept="image/*" onChange={(file) => handleUpload("companyLogo", file)} loading={uploading.companyLogo} />
+                <UploadButton label="Intro video" accept="video/*" onChange={(file) => handleUpload("introVideo", file)} icon={Video} loading={uploading.introVideo} />
+                <UploadButton label="Portfolio files" accept="image/*,application/pdf" multiple onChange={(files) => handleUpload("portfolio", files)} loading={uploading.portfolio} />
+              </div>
+            </div>
+          </aside>
 
-                {profile?.portfolio?.length > 0 && (
-                  <div className="portfolio-grid">
-                    {profile.portfolio.map((url, idx) => (
-                      <a key={idx} href={url} target="_blank" rel="noreferrer">
-                        {profile?.portfolioFileNames?.[idx] || `Portfolio #${idx + 1}`}
-                      </a>
-                    ))}
+          <main className="profile-main">
+            <form className="profile-form" onSubmit={saveProfile}>
+              <Section icon={Briefcase} title="Basics" subtitle="These fields are shared by freelancers and clients.">
+                <div className="profile-grid">
+                  <Field label="Full name"><input value={draft.name} onChange={(e) => updateField("name", e.target.value)} /></Field>
+                  <Field label="Username"><input value={draft.username} onChange={(e) => updateField("username", e.target.value)} /></Field>
+                  <Field label="Professional title"><input value={draft.professionalTitle} onChange={(e) => updateField("professionalTitle", e.target.value)} /></Field>
+                  <Field label="Phone number"><input value={draft.phoneNumber} onChange={(e) => updateField("phoneNumber", e.target.value)} /></Field>
+                  <Field label="Country"><input value={draft.country} onChange={(e) => updateField("country", e.target.value)} /></Field>
+                  <Field label="City"><input value={draft.city} onChange={(e) => updateField("city", e.target.value)} /></Field>
+                  <Field label="Timezone"><input value={draft.timezone} onChange={(e) => updateField("timezone", e.target.value)} /></Field>
+                  <Field label="Service mode"><select value={draft.serviceMode} onChange={(e) => updateField("serviceMode", e.target.value)}>{SERVICE_MODES.map((item) => <option key={item} value={item}>{item}</option>)}</select></Field>
+                </div>
+              </Section>
+
+              {isFreelancer ? (
+                <Section icon={Wrench} title="Services and skills" subtitle="This is the part that should feel like Fiverr and Upwork, but tailored to your service.">
+                  <div className="profile-grid">
+                    <Field label="Service category"><select value={draft.serviceCategory || ""} onChange={(e) => updateField("serviceCategory", e.target.value)}><option value="">Select a category</option>{SERVICE_GROUPS.map((group) => <optgroup key={group.label} label={group.label}>{group.options.map((item) => <option key={item} value={item}>{item}</option>)}</optgroup>)}</select></Field>
+                    <Field label="Service area"><input value={draft.serviceArea} onChange={(e) => updateField("serviceArea", e.target.value)} /></Field>
+                    <Field label="Years of experience"><input type="number" min="0" value={draft.yearsOfExperience} onChange={(e) => updateField("yearsOfExperience", e.target.value)} /></Field>
+                    <Field label="Skill level"><select value={draft.skillLevel} onChange={(e) => updateField("skillLevel", e.target.value)}>{SKILL_LEVELS.map((item) => <option key={item} value={item}>{item}</option>)}</select></Field>
+                    <Field label="Hourly rate"><input type="number" min="0" value={draft.hourlyRate} onChange={(e) => updateField("hourlyRate", e.target.value)} /></Field>
+                    <Field label="Currency"><select value={draft.currency} onChange={(e) => updateField("currency", e.target.value)}>{CURRENCIES.map((item) => <option key={item} value={item}>{item}</option>)}</select></Field>
+                    <Field label="Availability"><select value={draft.availabilityType} onChange={(e) => updateField("availabilityType", e.target.value)}>{AVAILABILITY_TYPES.map((item) => <option key={item} value={item}>{item}</option>)}</select></Field>
+                    <Field label="Response time"><select value={draft.responseTime} onChange={(e) => updateField("responseTime", e.target.value)}>{RESPONSE_TIMES.map((item) => <option key={item} value={item}>{item}</option>)}</select></Field>
                   </div>
-                )}
+                  <Field label="Bio" hint="A short, sharp summary works best."><textarea rows="5" value={draft.bio} onChange={(e) => updateField("bio", e.target.value)} /></Field>
+                  <div className="profile-grid">
+                    <Field label="Skills"><textarea rows="4" value={draft.skillsText} onChange={(e) => updateField("skillsText", e.target.value)} /></Field>
+                    <Field label="Tools / technologies"><textarea rows="4" value={draft.toolsTechnologiesText} onChange={(e) => updateField("toolsTechnologiesText", e.target.value)} /></Field>
+                    <Field label="Primary skills"><textarea rows="4" value={draft.primarySkillsText} onChange={(e) => updateField("primarySkillsText", e.target.value)} /></Field>
+                    <Field label="Languages"><textarea rows="4" value={draft.languagesText} onChange={(e) => updateField("languagesText", e.target.value)} /></Field>
+                  </div>
+                </Section>
+              ) : (
+                <Section icon={Building2} title="Company profile" subtitle="Tell freelancers what your business does and how you hire.">
+                  <div className="profile-grid">
+                    <Field label="Company name"><input value={draft.companyName} onChange={(e) => updateField("companyName", e.target.value)} /></Field>
+                    <Field label="Industry"><select value={draft.industry} onChange={(e) => updateField("industry", e.target.value)}><option value="">Select industry</option>{CLIENT_INDUSTRIES.map((item) => <option key={item} value={item}>{item}</option>)}</select></Field>
+                    <Field label="Company size"><select value={draft.companySize} onChange={(e) => updateField("companySize", e.target.value)}><option value="">Select size</option>{COMPANY_SIZES.map((item) => <option key={item} value={item}>{item}</option>)}</select></Field>
+                    <Field label="Hiring type"><select value={draft.hiringType} onChange={(e) => updateField("hiringType", e.target.value)}><option value="">Select hiring type</option>{HIRING_TYPES.map((item) => <option key={item} value={item}>{item}</option>)}</select></Field>
+                    <Field label="Budget"><input type="number" min="0" value={draft.budget} onChange={(e) => updateField("budget", e.target.value)} /></Field>
+                    <Field label="Hiring capacity"><input type="number" min="1" value={draft.hiringCapacity} onChange={(e) => updateField("hiringCapacity", e.target.value)} /></Field>
+                    <Field label="Preferred freelancer level"><select value={draft.preferredFreelancerLevel} onChange={(e) => updateField("preferredFreelancerLevel", e.target.value)}><option value="">Select level</option>{SKILL_LEVELS.map((item) => <option key={item} value={item}>{item}</option>)}</select></Field>
+                    <Field label="Response time"><select value={draft.responseTime} onChange={(e) => updateField("responseTime", e.target.value)}><option value="">Select response time</option>{RESPONSE_TIMES.map((item) => <option key={item} value={item}>{item}</option>)}</select></Field>
+                    <Field label="Preferred project type"><select value={draft.preferredProjectType} onChange={(e) => updateField("preferredProjectType", e.target.value)}><option value="">Select project type</option>{PROJECT_TYPES.map((item) => <option key={item} value={item}>{item}</option>)}</select></Field>
+                  </div>
+                  <Field label="Company description"><textarea rows="5" value={draft.companyDescription} onChange={(e) => updateField("companyDescription", e.target.value)} /></Field>
+                  <div className="profile-grid">
+                    <Field label="Preferred skills"><textarea rows="4" value={draft.preferredSkillsText} onChange={(e) => updateField("preferredSkillsText", e.target.value)} /></Field>
+                    <Field label="Industries of interest"><textarea rows="4" value={draft.industriesOfInterestText} onChange={(e) => updateField("industriesOfInterestText", e.target.value)} /></Field>
+                  </div>
+                </Section>
+              )}
+
+              <Section icon={Globe} title="Media and links" subtitle="Add trust signals and outside links.">
+                <div className="profile-grid">
+                  {SOCIAL_FIELDS.map(([key, label]) => (
+                    <Field key={key} label={label}>
+                      <input value={draft[key] || ""} onChange={(e) => updateSocialField(key, e.target.value)} />
+                    </Field>
+                  ))}
+                </div>
+              </Section>
+
+              <Section icon={Sparkles} title="Uploads" subtitle="Cover photo, avatar, company logo, intro video, and portfolio files.">
+                <div className="profile-upload-grid">
+                  <UploadButton label="Avatar" accept="image/*" onChange={(file) => handleUpload("avatar", file)} icon={Camera} loading={uploading.avatar} />
+                  <UploadButton label="Cover photo" accept="image/*" onChange={(file) => handleUpload("coverPhoto", file)} icon={Camera} loading={uploading.coverPhoto} />
+                  <UploadButton label={isClient ? "Company logo" : "Brand logo"} accept="image/*" onChange={(file) => handleUpload("companyLogo", file)} icon={Camera} loading={uploading.companyLogo} />
+                  <UploadButton label="Intro video" accept="video/*" onChange={(file) => handleUpload("introVideo", file)} icon={Video} loading={uploading.introVideo} />
+                  {isFreelancer ? <UploadButton label="Portfolio files" accept="image/*,application/pdf" multiple onChange={(files) => handleUpload("portfolio", files)} icon={Upload} loading={uploading.portfolio} /> : null}
+                </div>
+                {isFreelancer ? (
+                  <div className="portfolio-list">
+                    {Array.isArray(profile?.portfolio) && profile.portfolio.length ? profile.portfolio.map((item, index) => (
+                      <div className="portfolio-item" key={`${item}-${index}`}>
+                        <div className="portfolio-item__icon"><FileText size={18} /></div>
+                        <div className="portfolio-item__meta">
+                          <strong>{profile?.portfolioFileNames?.[index] || `Portfolio item ${index + 1}`}</strong>
+                          <span>{item}</span>
+                        </div>
+                      </div>
+                    )) : <p className="empty-note">No portfolio files uploaded yet.</p>}
+                  </div>
+                ) : null}
+              </Section>
+
+              <div className="profile-footer">
+                <button type="submit" className="save-button" disabled={saving}><Save size={16} /><span>{saving ? "Saving profile..." : "Save profile"}</span></button>
               </div>
-            )}
-          </div>
-        </section>
+            </form>
+          </main>
+        </div>
       </div>
     </div>
   );

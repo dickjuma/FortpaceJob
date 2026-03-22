@@ -1,66 +1,160 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { authAPI, profileAPI } from "../../Services/api";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { authAPI } from "../../Services/api";
+import debounce from "lodash/debounce"; // optional, or implement your own
 
-// ---------- Data constants (unchanged) ----------
-const allSkills = ["React","Node.js","UI/UX","Python","Django","JavaScript","TailwindCSS","Figma","Next.js","Vue.js","Angular","PHP"];
-const countries = ["Kenya","USA","UK","Canada","India","Germany"];
-const languages = ["English","French","Spanish","Swahili","German","Hindi"];
-const currencies = ["KES","USD","EUR","GBP","INR","CAD"];
-const industries = ["Technology","Finance","Healthcare","Education","E-commerce","Marketing","Manufacturing"];
-const serviceModes = ["Fully online","Physical on-site","Hybrid (online + on-site)"];
-const physicalCategories = ["Mechanical","Electrical","Auto repair","Home services","Beauty/Wellness","Other"];
-const physicalMicroSectors = {
-  Mechanical: ["Engine diagnostics","Machine maintenance","Welding","CNC operation","HVAC systems","Pumps and valves"],
-  Electrical: ["Residential wiring","Commercial wiring","Panel upgrades","Solar installation","Generator setup","Troubleshooting"],
-  "Auto repair": ["Oil change","Brake service","Diagnostics","Suspension","AC service","Battery and starter"],
-  "Home services": ["Plumbing","Carpentry","Painting","Appliance repair","Pest control","Roofing"],
-  "Beauty/Wellness": ["Hair styling","Nails","Makeup","Massage","Barbering","Skincare"],
-  "Other": ["General repairs","Handyman","Installation","Inspection","Other"]
+// Friendly error messages
+const getFriendlyAuthError = (message) => {
+  const text = String(message || "").toLowerCase();
+  if (text.includes("recipient email domain cannot receive mail"))
+    return "That email domain cannot receive messages. Use a valid inbox email (e.g., Gmail or Outlook).";
+  if (text.includes("email already registered"))
+    return "This email is already registered. Sign in instead, or use Forgot Password.";
+  return message || "Something went wrong. Please try again.";
 };
 
-const stepGuidance = {
-  freelancer: {
-    1: "Choose your role",
-    2: "Create your account",
-    3: "Services you offer (online or on-site)",
-    4: "Add your skills & bio",
-    5: "Set your hourly rate & currency",
-    6: "Upload portfolio files & intro video",
-    7: "Select country, languages & agree to terms"
-  },
-  client: {
-    1: "Choose your role",
-    2: "Create your company account",
-    3: "Type of services you need",
-    4: "Company industry & niche",
-    5: "Budget, location & hiring capacity"
-  }
+// Simple spinner component
+const Spinner = () => (
+  <svg
+    className="animate-spin h-5 w-5 text-white"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <circle
+      className="opacity-25"
+      cx="12"
+      cy="12"
+      r="10"
+      stroke="currentColor"
+      strokeWidth="4"
+    />
+    <path
+      className="opacity-75"
+      fill="currentColor"
+      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+    />
+  </svg>
+);
+
+// OTP input group (6 separate boxes) with paste support
+const OtpInputGroup = ({ value, onChange, disabled }) => {
+  const inputsRef = useRef([]);
+
+  const handleChange = (e, index) => {
+    const val = e.target.value.replace(/\D/g, "");
+    if (!val) return;
+    const newOtp = value.split("");
+    newOtp[index] = val.slice(-1);
+    const newValue = newOtp.join("");
+    onChange(newValue);
+    if (val && index < 5) {
+      inputsRef.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace" && !value[index] && index > 0) {
+      inputsRef.current[index - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const paste = e.clipboardData.getData("text").replace(/\D/g, "");
+    if (!paste) return;
+    const newOtp = (paste.slice(0, 6) + "000000").slice(0, 6).split("");
+    onChange(newOtp.join(""));
+    // Focus the last filled input
+    const lastFilled = Math.min(paste.length, 6) - 1;
+    if (lastFilled >= 0) inputsRef.current[lastFilled]?.focus();
+  };
+
+  useEffect(() => {
+    inputsRef.current[0]?.focus();
+  }, []);
+
+  return (
+    <div className="flex gap-2 justify-center" onPaste={handlePaste}>
+      {[...Array(6)].map((_, i) => (
+        <input
+          key={i}
+          ref={(el) => (inputsRef.current[i] = el)}
+          type="text"
+          inputMode="numeric"
+          maxLength={1}
+          value={value[i] || ""}
+          onChange={(e) => handleChange(e, i)}
+          onKeyDown={(e) => handleKeyDown(e, i)}
+          disabled={disabled}
+          className="w-12 h-12 text-center text-xl font-semibold border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D34079] focus:border-[#D34079] disabled:bg-gray-100"
+        />
+      ))}
+    </div>
+  );
+};
+
+// Password strength indicator
+const PasswordStrength = ({ password }) => {
+  const strength = () => {
+    if (!password) return 0;
+    let score = 0;
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[a-z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+    return score;
+  };
+
+  const score = strength();
+  const width = `${(score / 5) * 100}%`;
+  const color =
+    score <= 2 ? "bg-red-500" : score <= 4 ? "bg-yellow-500" : "bg-green-500";
+
+  return (
+    <div className="mt-1">
+      <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+        <div className={`h-full ${color} transition-all duration-300`} style={{ width }} />
+      </div>
+      <p className="text-xs text-gray-500 mt-1">
+        {score <= 2 && "Weak"}
+        {score === 3 && "Fair"}
+        {score === 4 && "Good"}
+        {score === 5 && "Strong"}
+      </p>
+    </div>
+  );
 };
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
-  const [role, setRole] = useState("");
-  const [direction, setDirection] = useState(0);
-  const [formData, setFormData] = useState({
-    name:"", email:"", phoneNumber:"", password:"", avatar:null, skills:[], bio:"", hourlyRate:10, currency:"KES",
-    portfolio:[], portfolioVideos:[],
-    companyName:"", companyDescription:"", industry:"", budget:"", hiringCapacity:"", companyLogo:null,
-    serviceMode:"", physicalCategory:"", serviceArea:"",
-    country:"", languages:[], terms:false
-  });
-  const [uploadPayload, setUploadPayload] = useState({
-    avatarFile: null,
-    companyLogoFile: null,
-    portfolioFiles: [],
-    introVideoFile: null,
-  });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  // Steps: 1 = role, 2 = details, 3 = OTP
+  const [step, setStep] = useState(1);
+  const [role, setRole] = useState(""); // "freelancer" or "client"
+
+  // Form fields
+  const [name, setName] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [terms, setTerms] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  // Validation errors
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  // Email existence check
+  const [emailExists, setEmailExists] = useState(false);
+  const [checkingEmail, setCheckingEmail] = useState(false);
+
+  // OTP state
   const [otpPhase, setOtpPhase] = useState(false);
   const [phoneOtp, setPhoneOtp] = useState("");
   const [emailOtp, setEmailOtp] = useState("");
@@ -68,170 +162,151 @@ const Signup = () => {
   const [pendingPhone, setPendingPhone] = useState("");
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
-  const [customSkill, setCustomSkill] = useState("");
 
-  const totalSteps = role === "client" ? 5 : 7;
-  const progress = (step / totalSteps) * 100;
+  // Resend timer
+  const [resendTimer, setResendTimer] = useState(0);
+  const [resendChannel, setResendChannel] = useState(null);
 
-  // Navigation
-  const nextStep = () => {
-    if (step === 1 && role === "") {
-      setError("Select a role to continue.");
-      return;
+  // UI state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+
+  // Refs for focus
+  const firstFieldRef = useRef(null);
+  const otpContainerRef = useRef(null);
+
+  // Debounced email check
+  const debouncedCheckEmail = useCallback(
+    debounce(async (email) => {
+      if (!email || !validateEmail(email)) {
+        setEmailExists(false);
+        return;
+      }
+      setCheckingEmail(true);
+      try {
+        const res = await authAPI.checkEmail(email); // assume returns { exists: boolean }
+        setEmailExists(res.exists);
+      } catch (err) {
+        // ignore
+      } finally {
+        setCheckingEmail(false);
+      }
+    }, 500),
+    []
+  );
+
+  useEffect(() => {
+    debouncedCheckEmail(email);
+    return () => debouncedCheckEmail.cancel();
+  }, [email, debouncedCheckEmail]);
+
+  // Focus first field when step changes
+  useEffect(() => {
+    if (step === 2) firstFieldRef.current?.focus();
+    if (otpPhase) otpContainerRef.current?.focus();
+  }, [step, otpPhase]);
+
+  // Resend timer countdown
+  useEffect(() => {
+    if (resendTimer <= 0) return;
+    const timer = setTimeout(() => setResendTimer((t) => t - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [resendTimer]);
+
+  // Validation helpers
+  const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
+  const validatePhone = (phone) => phone && phone.length >= 10;
+  const validatePassword = (pwd) => pwd.length >= 8;
+
+  const validateField = (name, value) => {
+    if (name === "email") {
+      if (!validateEmail(value)) return "Enter a valid email address.";
+      if (emailExists) return "This email is already registered.";
     }
+    if (name === "phone" && !validatePhone(value))
+      return "Enter a valid phone number.";
+    if (name === "password" && !validatePassword(value))
+      return "Password must be at least 8 characters.";
+    if (name === "confirmPassword" && value !== password)
+      return "Passwords do not match.";
+    return null;
+  };
+
+  const handleBlur = (field) => {
+    const value =
+      field === "email"
+        ? email
+        : field === "phone"
+        ? phone
+        : field === "password"
+        ? password
+        : confirmPassword;
+    const errorMsg = validateField(field, value);
+    setFieldErrors((prev) => ({ ...prev, [field]: errorMsg }));
+  };
+
+  // ----- Role step -----
+  const selectRole = (selectedRole) => {
+    setRole(selectedRole);
     setError("");
-    setDirection(1);
-    setStep(s => s + 1);
   };
 
-  const prevStep = () => {
-    setDirection(-1);
-    setStep(s => s - 1);
-  };
-
-  // Form change handlers
-  const handleChange = e => {
-    const { name, value } = e.target;
-    if (name === "serviceMode") {
-      setFormData(prev => ({
-        ...prev,
-        serviceMode: value,
-        physicalCategory: "",
-        serviceArea: "",
-        skills: []
-      }));
+  const continueToDetails = () => {
+    if (!role) {
+      setError("Please select a role to continue.");
       return;
     }
-    if (name === "physicalCategory") {
-      setFormData(prev => ({
-        ...prev,
-        physicalCategory: value,
-        skills: []
-      }));
-      return;
-    }
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setStep(2);
   };
 
-  const handleFileChange = (e, type) => {
-    const files = Array.from(e.target.files);
-    if (!files.length) return;
-    if (type === "avatar") {
-      setFormData(prev => ({ ...prev, avatar: URL.createObjectURL(files[0]) }));
-      setUploadPayload(prev => ({ ...prev, avatarFile: files[0] }));
-    }
-    if (type === "logo") {
-      setFormData(prev => ({ ...prev, companyLogo: URL.createObjectURL(files[0]) }));
-      setUploadPayload(prev => ({ ...prev, companyLogoFile: files[0] }));
-    }
-    if (type === "portfolio") {
-      setFormData(prev => ({
-        ...prev,
-        portfolio: [...prev.portfolio, ...files.map(f => URL.createObjectURL(f))]
-      }));
-      setUploadPayload(prev => ({
-        ...prev,
-        portfolioFiles: [...prev.portfolioFiles, ...files]
-      }));
-    }
-    if (type === "video") {
-      setFormData(prev => ({ ...prev, portfolioVideos: [URL.createObjectURL(files[0])] }));
-      setUploadPayload(prev => ({ ...prev, introVideoFile: files[0] }));
-    }
-  };
-
-  const toggleSkill = skill => {
-    setFormData(prev => ({
-      ...prev,
-      skills: prev.skills.includes(skill)
-        ? prev.skills.filter(s => s !== skill)
-        : [...prev.skills, skill]
-    }));
-  };
-
-  const addCustomSkill = () => {
-    const value = customSkill.trim();
-    if (!value) return;
-    if (formData.skills.some(s => s.toLowerCase() === value.toLowerCase())) {
-      setCustomSkill("");
-      return;
-    }
-    setFormData(prev => ({ ...prev, skills: [...prev.skills, value] }));
-    setCustomSkill("");
-  };
-
-  const toggleLanguage = lang => {
-    setFormData(prev => ({
-      ...prev,
-      languages: prev.languages.includes(lang)
-        ? prev.languages.filter(l => l !== lang)
-        : [...prev.languages, lang]
-    }));
-  };
-
-  // Password strength indicator
-  const passwordStrength = pwd => {
-    if (pwd.length > 8 && /[A-Z]/.test(pwd) && /[0-9]/.test(pwd)) return "strong";
-    if (pwd.length >= 6) return "medium";
-    return "weak";
-  };
-
-  // API helpers
-  const getFriendlyAuthError = (message) => {
-    const text = String(message || "").toLowerCase();
-    if (text.includes("recipient email domain cannot receive mail"))
-      return "That email domain cannot receive messages. Use a valid inbox email (e.g., Gmail or Outlook).";
-    if (text.includes("could not send email otp"))
-      return "We could not send the phone OTP right now. Confirm your phone number and try again.";
-    if (text.includes("email already registered"))
-      return "This email is already registered. Sign in instead, or use Forgot Password.";
-    if (text.includes("verification pending"))
-      return "Verification pending. New codes were sent to your email and phone.";
-    return message || "Something went wrong. Please try again.";
-  };
-
-  // Step 1: Register & send OTPs
-  const handleSubmit = async e => {
+  // ----- Account details step -----
+  const handleDetailsSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.terms) {
-      setError("You must agree to Terms and Privacy to continue.");
+
+    // Validate all fields
+    const emailError = validateField("email", email);
+    const phoneError = validateField("phone", phone);
+    const passwordError = validateField("password", password);
+    const confirmError = validateField("confirmPassword", confirmPassword);
+    setFieldErrors({
+      email: emailError,
+      phone: phoneError,
+      password: passwordError,
+      confirmPassword: confirmError,
+    });
+
+    if (emailError || phoneError || passwordError || confirmError) {
+      setError("Please fix the errors above.");
+      return;
+    }
+
+    if (!terms) {
+      setError("You must agree to the Terms and Privacy Policy.");
       return;
     }
 
     setLoading(true);
     setError("");
     setNotice("");
+    setPhoneOtp("");
+    setEmailOtp("");
 
     try {
       const userData = {
         role,
-        fullName: formData.name || formData.companyName,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        otpChannel: "phone",
-        password: formData.password,
-        name: formData.name,
-        companyName: formData.companyName,
-        bio: formData.bio,
-        skills: formData.skills,
-        hourlyRate: formData.hourlyRate,
-        currency: formData.currency,
-        serviceMode: formData.serviceMode,
-        physicalCategory: formData.physicalCategory,
-        serviceArea: formData.serviceArea,
-        country: formData.country,
-        languages: formData.languages,
-        companyDescription: formData.companyDescription,
-        industry: formData.industry,
-        budget: formData.budget,
-        hiringCapacity: formData.hiringCapacity,
+        ...(role === "freelancer" ? { name } : { companyName }),
+        email,
+        phoneNumber: phone,
+        password,
+        skills: [],
+        languages: [],
+        serviceMode: "",
       };
 
       const result = await authAPI.registerWithOTP(userData, true);
-      setPendingEmail(result.pendingEmail || formData.email);
-      setPendingPhone(result.pendingPhoneNumber || formData.phoneNumber);
-      setPhoneVerified(false);
-      setEmailVerified(false);
+      setPendingEmail(result.pendingEmail || email);
+      setPendingPhone(result.pendingPhoneNumber || phone);
       setOtpPhase(true);
       setNotice(result.message || "Verification codes sent to your email and phone.");
     } catch (err) {
@@ -241,10 +316,10 @@ const Signup = () => {
     }
   };
 
-  // Verify phone OTP separately
+  // ----- OTP verification -----
   const verifyPhone = async () => {
-    if (!phoneOtp.trim()) {
-      setError("Please enter the phone OTP.");
+    if (phoneOtp.length !== 6) {
+      setError("Please enter the 6‑digit phone OTP.");
       return;
     }
     setLoading(true);
@@ -262,10 +337,9 @@ const Signup = () => {
     }
   };
 
-  // Verify email OTP separately
   const verifyEmail = async () => {
-    if (!emailOtp.trim()) {
-      setError("Please enter the email OTP.");
+    if (emailOtp.length !== 6) {
+      setError("Please enter the 6‑digit email OTP.");
       return;
     }
     setLoading(true);
@@ -283,63 +357,20 @@ const Signup = () => {
     }
   };
 
-  // Final step: after both verified, create account and upload files
-  const completeSignup = async () => {
-    setLoading(true);
-    setError("");
-    setNotice("Account created. Uploading signup media...");
-
-    try {
-      // Upload optional files (non-blocking)
-      const uploadJobs = [];
-      if (role === "freelancer" && uploadPayload.avatarFile) {
-        uploadJobs.push(profileAPI.uploadAvatar(uploadPayload.avatarFile));
-      }
-      if (role === "client" && uploadPayload.companyLogoFile) {
-        uploadJobs.push(profileAPI.uploadCompanyLogo(uploadPayload.companyLogoFile));
-      }
-      if (uploadPayload.portfolioFiles.length) {
-        uploadJobs.push(profileAPI.uploadPortfolio(uploadPayload.portfolioFiles));
-      }
-      if (role === "freelancer" && uploadPayload.introVideoFile) {
-        uploadJobs.push(profileAPI.uploadIntroVideo(uploadPayload.introVideoFile));
-      }
-
-      let uploadFailures = 0;
-      if (uploadJobs.length) {
-        const results = await Promise.allSettled(uploadJobs);
-        uploadFailures = results.filter(r => r.status === "rejected").length;
-      }
-
-      if (uploadFailures > 0) {
-        setNotice("Account created. Some files failed to upload; you can update them later in My Profile.");
-      } else {
-        setNotice("Account created successfully.");
-      }
-
-      // Redirect based on role
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (user?.role === "freelancer") navigate("/find-work");
-      else if (user?.role === "client") navigate("/talent");
-      else navigate("/");
-    } catch (err) {
-      setError(getFriendlyAuthError(err.message) || "Failed to complete signup. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResendOtp = async (channel = "both") => {
+  const resendOtp = async (channel) => {
+    if (resendTimer > 0) return;
     setLoading(true);
     setError("");
     setNotice("");
     try {
-      if (channel === 'phone') {
-        await authAPI.resendOTP('', pendingPhone || formData.phoneNumber, channel);
+      if (channel === "phone") {
+        await authAPI.resendOTP("", pendingPhone, channel);
       } else {
-        await authAPI.resendOTP(pendingEmail || formData.email, '', channel);
+        await authAPI.resendOTP(pendingEmail, "", channel);
       }
       setNotice(`OTP resent via ${channel}.`);
+      setResendTimer(60);
+      setResendChannel(channel);
     } catch (err) {
       setError(getFriendlyAuthError(err.message));
     } finally {
@@ -347,957 +378,534 @@ const Signup = () => {
     }
   };
 
-  // UI helpers
-  const isPhysical = formData.serviceMode === "Physical on-site" || formData.serviceMode === "Hybrid (online + on-site)";
-  const skillOptions = isPhysical && formData.physicalCategory
-    ? (physicalMicroSectors[formData.physicalCategory] || [])
-    : allSkills;
-
-  const variants = {
-    initial: dir => ({ x: dir > 0 ? "100%" : "-100%", opacity: 0 }),
-    animate: { x: 0, opacity: 1 },
-    exit: dir => ({ x: dir < 0 ? "100%" : "-100%", opacity: 0 })
+  const completeSignup = () => {
+    navigate("/profile");
   };
 
-  // ---------- Render ----------
-  return (
-    <div className="min-h-screen bg-[#F7F9FB] flex items-center justify-center p-4 font-sans antialiased">
-      <div className="max-w-6xl w-full bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-        <div className="flex flex-col md:flex-row">
-          {/* Left panel - guidance (simplified) */}
-          <div className="md:w-2/5 bg-gradient-to-br from-[#F7F9FB] to-[#F7F9FB] p-8 md:p-10">
-            <h2 className="text-4xl font-bold text-[#4A312F] mb-3">Join Forte</h2>
-            <p className="text-lg text-[#4A312F]/80 mb-6">
-              Create your account and start offering or hiring trusted services.
-            </p>
-            <ul className="space-y-3 text-[#4A312F]/70 mb-8">
-              <li className="flex items-start gap-2">
-                <span className="text-[#D34079] text-xl">•</span>
-                <span>Verified profiles and secure payments</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[#D34079] text-xl">•</span>
-                <span>Online and physical service categories</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[#D34079] text-xl">•</span>
-                <span>Showcase your portfolio or post your needs</span>
-              </li>
-            </ul>
-            <p className="text-[#4A312F] font-medium text-lg">
-              {role ? stepGuidance[role][step] : stepGuidance.freelancer[step]}
-            </p>
+  // Step indicator component
+  const StepIndicator = () => (
+    <div className="flex items-center justify-center space-x-4 mb-6">
+      {[1, 2, 3].map((s) => (
+        <div key={s} className="flex items-center">
+          <div
+            className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors ${
+              (s === 1 && step >= 1) ||
+              (s === 2 && step >= 2) ||
+              (s === 3 && otpPhase)
+                ? "bg-[#D34079] text-white"
+                : "bg-gray-200 text-gray-600"
+            }`}
+          >
+            {s}
           </div>
+          {s < 3 && (
+            <div
+              className={`w-12 h-1 ${
+                step > s || (s === 2 && otpPhase) ? "bg-[#D34079]" : "bg-gray-200"
+              }`}
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  );
 
-          {/* Right panel - form */}
-          <div className="md:w-3/5 p-8 md:p-10">
-            {/* Progress bar at top */}
-            <div className="w-full h-1 bg-gray-100 rounded-full mb-6">
-              <div
-                className="h-full bg-[#D34079] rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#F7F9FB] via-white to-[#F7F9FB] flex items-center justify-center p-4 font-sans antialiased">
+      <div className="max-w-md w-full bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-gray-100 transform transition-all hover:scale-[1.01] duration-300">
+        <div className="text-center mb-4">
+          <h2 className="text-4xl font-extrabold text-[#4A312F]">Join Forte</h2>
+          <p className="text-gray-500 mt-1">
+            {step === 1 && "Choose your path"}
+            {step === 2 && "Create your account"}
+            {otpPhase && "Verify your identity"}
+          </p>
+        </div>
 
-            {otpPhase ? (
-              // ---------- OTP Verification Phase (Fiverr-like) ----------
+        {/* Step indicator */}
+        {!otpPhase && <StepIndicator />}
+
+        {/* Accessible live region */}
+        <div aria-live="polite" className="sr-only">
+          {notice || error}
+        </div>
+
+        {/* Notice / Error messages */}
+        {notice && (
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-4 flex items-center justify-between animate-fadeIn">
+            <span>{notice}</span>
+            <button
+              type="button"
+              onClick={() => setNotice("")}
+              className="text-green-800 font-medium hover:underline"
+            >
+              OK
+            </button>
+          </div>
+        )}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 flex items-center justify-between animate-fadeIn">
+            <span>{error}</span>
+            <button
+              type="button"
+              onClick={() => setError("")}
+              className="text-red-800 font-medium hover:underline"
+            >
+              OK
+            </button>
+          </div>
+        )}
+
+        {!otpPhase ? (
+          <>
+            {/* Step 1: Role selection */}
+            {step === 1 && (
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-[#4A312F]">Verify your accounts</h3>
-                <p className="text-gray-500">We’ve sent 6‑digit codes to your email and phone.</p>
-
-                {notice && (
-                  <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center justify-between">
-                    <span>{notice}</span>
-                    <button
-                      type="button"
-                      onClick={() => setNotice("")}
-                      className="text-green-800 font-medium hover:underline"
-                    >
-                      OK
-                    </button>
-                  </div>
-                )}
-
-                {error && (
-                  <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl flex items-center justify-between">
-                    <span>{error}</span>
-                    <button
-                      type="button"
-                      onClick={() => setError("")}
-                      className="text-red-800 font-medium hover:underline"
-                    >
-                      OK
-                    </button>
-                  </div>
-                )}
-
-                {/* Phone verification */}
-                <div className={`p-5 rounded-xl border ${phoneVerified ? 'border-green-200 bg-green-50/30' : 'border-gray-200 bg-white'}`}>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-medium text-[#4A312F]">Phone: {pendingPhone}</span>
-                    {phoneVerified && <span className="text-green-600 text-sm font-medium">✓ Verified</span>}
-                  </div>
-                  {!phoneVerified && (
-                    <>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={phoneOtp}
-                          onChange={e => setPhoneOtp(e.target.value)}
-                          placeholder="6-digit code"
-                          maxLength="6"
-                          className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] transition"
-                        />
-                        <button
-                          type="button"
-                          onClick={verifyPhone}
-                          disabled={loading || !phoneOtp.trim()}
-                          className="px-5 py-3 bg-[#D34079] text-white font-medium rounded-lg hover:bg-[#b12f65] disabled:opacity-50 transition"
-                        >
-                          Verify
-                        </button>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleResendOtp("phone")}
-                        disabled={loading}
-                        className="mt-2 text-sm text-[#D34079] hover:underline disabled:opacity-50"
-                      >
-                        Resend code
-                      </button>
-                    </>
-                  )}
-                </div>
-
-                {/* Email verification */}
-                <div className={`p-5 rounded-xl border ${emailVerified ? 'border-green-200 bg-green-50/30' : 'border-gray-200 bg-white'}`}>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-medium text-[#4A312F]">Email: {pendingEmail}</span>
-                    {emailVerified && <span className="text-green-600 text-sm font-medium">✓ Verified</span>}
-                  </div>
-                  {!emailVerified && (
-                    <>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={emailOtp}
-                          onChange={e => setEmailOtp(e.target.value)}
-                          placeholder="6-digit code"
-                          maxLength="6"
-                          className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] transition"
-                        />
-                        <button
-                          type="button"
-                          onClick={verifyEmail}
-                          disabled={loading || !emailOtp.trim()}
-                          className="px-5 py-3 bg-[#D34079] text-white font-medium rounded-lg hover:bg-[#b12f65] disabled:opacity-50 transition"
-                        >
-                          Verify
-                        </button>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleResendOtp("email")}
-                        disabled={loading}
-                        className="mt-2 text-sm text-[#D34079] hover:underline disabled:opacity-50"
-                      >
-                        Resend code
-                      </button>
-                    </>
-                  )}
-                </div>
-
-                {/* Final action */}
-                {phoneVerified && emailVerified ? (
+                <div className="grid grid-cols-2 gap-4">
                   <button
                     type="button"
-                    onClick={completeSignup}
-                    disabled={loading}
-                    className="w-full py-4 bg-[#D34079] text-white font-semibold rounded-xl shadow-sm hover:bg-[#b12f65] transition disabled:opacity-50"
+                    onClick={() => selectRole("freelancer")}
+                    className={`text-left p-5 rounded-xl border-2 transition-all ${
+                      role === "freelancer"
+                        ? "border-[#D34079] bg-[#FBB9C2]/10"
+                        : "border-gray-200 hover:border-[#D34079]/30"
+                    }`}
                   >
-                    {loading ? "Completing..." : "Complete Signup"}
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-lg font-bold text-[#4A312F]">Talent</h3>
+                        <p className="text-sm text-[#4A312F]/70">Offer services</p>
+                      </div>
+                      {role === "freelancer" && (
+                        <span className="text-[#D34079] text-xl">✓</span>
+                      )}
+                    </div>
                   </button>
-                ) : (
                   <button
                     type="button"
-                    onClick={() => setOtpPhase(false)}
-                    disabled={loading}
-                    className="w-full py-4 border-2 border-gray-200 text-[#4A312F] font-semibold rounded-xl hover:bg-gray-50 transition disabled:opacity-50"
+                    onClick={() => selectRole("client")}
+                    className={`text-left p-5 rounded-xl border-2 transition-all ${
+                      role === "client"
+                        ? "border-[#D34079] bg-[#FBB9C2]/10"
+                        : "border-gray-200 hover:border-[#D34079]/30"
+                    }`}
                   >
-                    Back to edit info
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-lg font-bold text-[#4A312F]">Client</h3>
+                        <p className="text-sm text-[#4A312F]/70">Hire talent</p>
+                      </div>
+                      {role === "client" && (
+                        <span className="text-[#D34079] text-xl">✓</span>
+                      )}
+                    </div>
+                  </button>
+                </div>
+
+                {/* Divider + Google */}
+                <div className="relative flex items-center py-2">
+                  <div className="flex-grow border-t border-[#B7E2BF]"></div>
+                  <span className="flex-shrink mx-4 text-[#4A312F]/50">OR</span>
+                  <div className="flex-grow border-t border-[#B7E2BF]"></div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    (window.location.href = `${process.env.REACT_APP_API_URL || "http://localhost:5000/api"}/auth/google`)
+                  }
+                  className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-[#B7E2BF] rounded-xl bg-white hover:bg-[#F7F9FB] transition"
+                >
+                  <img
+                    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                    alt="Google"
+                    className="w-5 h-5"
+                  />
+                  <span className="font-medium text-[#4A312F]">Continue with Google</span>
+                </button>
+
+                {role && (
+                  <button
+                    type="button"
+                    onClick={continueToDetails}
+                    className="w-full bg-[#D34079] text-white font-semibold py-3 rounded-xl shadow-md hover:bg-[#b12f65] transition"
+                  >
+                    Continue
                   </button>
                 )}
               </div>
-            ) : (
-              // ---------- Main Multi-step Form ----------
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {notice && (
-                  <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center justify-between">
-                    <span>{notice}</span>
-                    <button
-                      type="button"
-                      onClick={() => setNotice("")}
-                      className="text-green-800 font-medium hover:underline"
-                    >
-                      OK
-                    </button>
+            )}
+
+            {/* Step 2: Account details */}
+            {step === 2 && (
+              <form onSubmit={handleDetailsSubmit} className="space-y-4">
+                {/* Role‑specific fields */}
+                {role === "freelancer" ? (
+                  <div>
+                    <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
+                      Full Name <span className="text-[#D34079]">*</span>
+                    </label>
+                    <input
+                      ref={firstFieldRef}
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="John Doe"
+                      required
+                      className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
+                      Company Name <span className="text-[#D34079]">*</span>
+                    </label>
+                    <input
+                      ref={firstFieldRef}
+                      type="text"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      placeholder="Acme Inc."
+                      required
+                      className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
+                    />
                   </div>
                 )}
-                {error && (
-                  <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl flex items-center justify-between">
-                    <span>{error}</span>
-                    <button
-                      type="button"
-                      onClick={() => setError("")}
-                      className="text-red-800 font-medium hover:underline"
-                    >
-                      OK
-                    </button>
-                  </div>
-                )}
 
-                <AnimatePresence custom={direction} mode="wait">
-                  {/* Step 1: Role Selection (with checkmark indicator) */}
-                  {step === 1 && (
-                    <motion.div
-                      key="step1"
-                      custom={direction}
-                      variants={variants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      transition={{ duration: 0.5 }}
-                      className="space-y-6"
-                    >
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <button
-                          type="button"
-                          onClick={() => setRole("freelancer")}
-                          className={`text-left p-6 rounded-xl border-2 transition ${
-                            role === "freelancer"
-                              ? "border-[#D34079] bg-[#FBB9C2]/10"
-                              : "border-gray-200 hover:border-[#D34079]/30"
-                          }`}
-                        >
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h3 className="text-xl font-bold text-[#4A312F] mb-2">Join as Talent</h3>
-                              <p className="text-[#4A312F]/70">Offer services and grow your business.</p>
-                            </div>
-                            {role === "freelancer" && (
-                              <span className="text-[#D34079] text-2xl">✓</span>
-                            )}
-                          </div>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setRole("client")}
-                          className={`text-left p-6 rounded-xl border-2 transition ${
-                            role === "client"
-                              ? "border-[#D34079] bg-[#FBB9C2]/10"
-                              : "border-gray-200 hover:border-[#D34079]/30"
-                          }`}
-                        >
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h3 className="text-xl font-bold text-[#4A312F] mb-2">Join as Client</h3>
-                              <p className="text-[#4A312F]/70">Hire verified talent.</p>
-                            </div>
-                            {role === "client" && (
-                              <span className="text-[#D34079] text-2xl">✓</span>
-                            )}
-                          </div>
-                        </button>
+                {/* Email */}
+                <div>
+                  <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
+                    Email <span className="text-[#D34079]">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      onBlur={() => handleBlur("email")}
+                      placeholder="you@email.com"
+                      required
+                      className={`w-full px-5 py-4 border rounded-xl transition ${
+                        fieldErrors.email
+                          ? "border-red-300 focus:ring-red-200"
+                          : emailExists
+                          ? "border-yellow-300 focus:ring-yellow-200"
+                          : "border-gray-200 focus:ring-[#D34079]/20 focus:border-[#D34079]"
+                      } focus:ring-2 focus:shadow-sm pr-12`}
+                    />
+                    {checkingEmail && (
+                      <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                        <Spinner />
                       </div>
-
-                      <div className="relative flex items-center py-2">
-                        <div className="flex-grow border-t border-[#B7E2BF]"></div>
-                        <span className="flex-shrink mx-4 text-[#4A312F]/50">OR</span>
-                        <div className="flex-grow border-t border-[#B7E2BF]"></div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => (window.location.href = `${process.env.REACT_APP_API_URL || "http://localhost:5000/api"}/auth/google`)}
-                        className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-[#B7E2BF] rounded-xl bg-white hover:bg-[#F7F9FB] transition"
-                      >
-                        <img
-                          src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-                          alt="Google"
-                          className="w-5 h-5"
-                        />
-                        <span className="font-medium text-[#4A312F]">Continue with Google</span>
-                      </button>
-
-                      {role && (
-                        <button
-                          type="button"
-                          onClick={nextStep}
-                          className="w-full bg-[#D34079] text-white font-semibold py-3 px-6 rounded-xl shadow-sm hover:bg-[#b12f65] transition"
-                        >
-                          Continue
-                        </button>
-                      )}
-                    </motion.div>
-                  )}
-
-                  {/* Step 2: Freelancer - Account Details */}
-                  {step === 2 && role === "freelancer" && (
-                    <motion.div
-                      key="freelancer2"
-                      custom={direction}
-                      variants={variants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      transition={{ duration: 0.5 }}
-                      className="space-y-4"
-                    >
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
-                          Name <span className="text-[#D34079]">*</span>
-                        </label>
-                        <input
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          placeholder="Full Name"
-                          required
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
-                          Email <span className="text-[#D34079]">*</span>
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          placeholder="Email"
-                          required
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
-                          Phone Number <span className="text-[#D34079]">*</span>
-                        </label>
-                        <input
-                          type="tel"
-                          name="phoneNumber"
-                          value={formData.phoneNumber}
-                          onChange={handleChange}
-                          placeholder="+254700000000"
-                          required
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
-                          Password <span className="text-[#D34079]">*</span>
-                        </label>
-                        <input
-                          type="password"
-                          name="password"
-                          value={formData.password}
-                          onChange={handleChange}
-                          placeholder="Password"
-                          required
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        />
-                        <p
-                          className={`mt-1 text-sm font-medium ${
-                            passwordStrength(formData.password) === "strong"
-                              ? "text-green-600"
-                              : passwordStrength(formData.password) === "medium"
-                              ? "text-yellow-600"
-                              : "text-red-600"
-                          }`}
-                        >
-                          Strength: {passwordStrength(formData.password)}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Profile Picture</label>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={e => handleFileChange(e, "avatar")}
-                          className="w-full px-4 py-2 border border-gray-200 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#FBB9C2] file:text-[#4A312F] hover:file:bg-[#FBB9C2]/80"
-                        />
-                        {formData.avatar && (
-                          <img
-                            src={formData.avatar}
-                            alt="avatar preview"
-                            className="mt-3 w-24 h-24 rounded-full object-cover border-4 border-[#D34079]"
-                          />
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Step 2: Client - Account Details */}
-                  {step === 2 && role === "client" && (
-                    <motion.div
-                      key="client2"
-                      custom={direction}
-                      variants={variants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      transition={{ duration: 0.5 }}
-                      className="space-y-4"
-                    >
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
-                          Company Name <span className="text-[#D34079]">*</span>
-                        </label>
-                        <input
-                          name="companyName"
-                          value={formData.companyName}
-                          onChange={handleChange}
-                          placeholder="Company Name"
-                          required
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
-                          Email <span className="text-[#D34079]">*</span>
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          placeholder="Company Email"
-                          required
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
-                          Phone Number <span className="text-[#D34079]">*</span>
-                        </label>
-                        <input
-                          type="tel"
-                          name="phoneNumber"
-                          value={formData.phoneNumber}
-                          onChange={handleChange}
-                          placeholder="+254700000000"
-                          required
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
-                          Password <span className="text-[#D34079]">*</span>
-                        </label>
-                        <input
-                          type="password"
-                          name="password"
-                          value={formData.password}
-                          onChange={handleChange}
-                          placeholder="Password"
-                          required
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Company Logo</label>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={e => handleFileChange(e, "logo")}
-                          className="w-full px-4 py-2 border border-gray-200 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#FBB9C2] file:text-[#4A312F] hover:file:bg-[#FBB9C2]/80"
-                        />
-                        {formData.companyLogo && (
-                          <img
-                            src={formData.companyLogo}
-                            alt="logo preview"
-                            className="mt-3 w-24 h-24 rounded-lg object-cover border-4 border-[#D34079]"
-                          />
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Step 3: Freelancer - Service Type */}
-                  {step === 3 && role === "freelancer" && (
-                    <motion.div
-                      key="freelancer3"
-                      custom={direction}
-                      variants={variants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      transition={{ duration: 0.5 }}
-                      className="space-y-4"
-                    >
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Service Type</label>
-                        <select
-                          name="serviceMode"
-                          value={formData.serviceMode}
-                          onChange={handleChange}
-                          required
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        >
-                          <option value="">Select service type</option>
-                          {serviceModes.map(mode => <option key={mode}>{mode}</option>)}
-                        </select>
-                      </div>
-                      {(formData.serviceMode === "Physical on-site" || formData.serviceMode === "Hybrid (online + on-site)") && (
-                        <>
-                          <div>
-                            <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Physical Service Category</label>
-                            <select
-                              name="physicalCategory"
-                              value={formData.physicalCategory}
-                              onChange={handleChange}
-                              required
-                              className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                            >
-                              <option value="">Select category</option>
-                              {physicalCategories.map(cat => <option key={cat}>{cat}</option>)}
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Service Area</label>
-                            <input
-                              name="serviceArea"
-                              value={formData.serviceArea}
-                              onChange={handleChange}
-                              placeholder="City or service radius"
-                              className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                            />
-                          </div>
-                        </>
-                      )}
-                    </motion.div>
-                  )}
-
-                  {/* Step 3: Client - Service Type Needed */}
-                  {step === 3 && role === "client" && (
-                    <motion.div
-                      key="client3"
-                      custom={direction}
-                      variants={variants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      transition={{ duration: 0.5 }}
-                      className="space-y-4"
-                    >
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Service Type Needed</label>
-                        <select
-                          name="serviceMode"
-                          value={formData.serviceMode}
-                          onChange={handleChange}
-                          required
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        >
-                          <option value="">Select service type</option>
-                          {serviceModes.map(mode => <option key={mode}>{mode}</option>)}
-                        </select>
-                      </div>
-                      {(formData.serviceMode === "Physical on-site" || formData.serviceMode === "Hybrid (online + on-site)") && (
-                        <>
-                          <div>
-                            <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Physical Service Category</label>
-                            <select
-                              name="physicalCategory"
-                              value={formData.physicalCategory}
-                              onChange={handleChange}
-                              required
-                              className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                            >
-                              <option value="">Select category</option>
-                              {physicalCategories.map(cat => <option key={cat}>{cat}</option>)}
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Service Location</label>
-                            <input
-                              name="serviceArea"
-                              value={formData.serviceArea}
-                              onChange={handleChange}
-                              placeholder="City or address"
-                              className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                            />
-                          </div>
-                        </>
-                      )}
-                    </motion.div>
-                  )}
-
-                  {/* Step 4: Freelancer - Skills & Bio */}
-                  {step === 4 && role === "freelancer" && (
-                    <motion.div
-                      key="freelancer4"
-                      custom={direction}
-                      variants={variants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      transition={{ duration: 0.5 }}
-                      className="space-y-4"
-                    >
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-2">
-                          {isPhysical ? "Micro Sectors / Specialties" : "Skills"}
-                        </label>
-                        <div className="flex flex-wrap gap-2 mb-3">
-                          {skillOptions.map(skill => (
-                            <button
-                              key={skill}
-                              type="button"
-                              onClick={() => toggleSkill(skill)}
-                              className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
-                                formData.skills.includes(skill)
-                                  ? "bg-[#D34079] text-white"
-                                  : "bg-[#FBB9C2] text-[#4A312F] hover:bg-[#FBB9C2]/80"
-                              }`}
-                            >
-                              {skill}
-                            </button>
-                          ))}
-                        </div>
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={customSkill}
-                            onChange={e => setCustomSkill(e.target.value)}
-                            placeholder="Add custom skill"
-                            onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addCustomSkill())}
-                            className="flex-1 px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                          />
-                          <button
-                            type="button"
-                            onClick={addCustomSkill}
-                            className="px-6 py-4 bg-[#D34079] text-white rounded-xl hover:bg-[#b12f65] transition"
-                          >
-                            Add
-                          </button>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Short Bio</label>
-                        <textarea
-                          name="bio"
-                          value={formData.bio}
-                          onChange={handleChange}
-                          placeholder="Introduce yourself"
-                          required
-                          rows="3"
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        />
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Step 4: Client - Company Description & Industry */}
-                  {step === 4 && role === "client" && (
-                    <motion.div
-                      key="client4"
-                      custom={direction}
-                      variants={variants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      transition={{ duration: 0.5 }}
-                      className="space-y-4"
-                    >
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Company Description / Niche</label>
-                        <textarea
-                          name="companyDescription"
-                          value={formData.companyDescription}
-                          onChange={handleChange}
-                          placeholder="Describe your company & niche"
-                          required
-                          rows="3"
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Industry</label>
-                        <select
-                          name="industry"
-                          value={formData.industry}
-                          onChange={handleChange}
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        >
-                          <option value="">Select Industry</option>
-                          {industries.map(ind => <option key={ind}>{ind}</option>)}
-                        </select>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Step 5: Freelancer - Hourly Rate */}
-                  {step === 5 && role === "freelancer" && (
-                    <motion.div
-                      key="freelancer5"
-                      custom={direction}
-                      variants={variants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      transition={{ duration: 0.5 }}
-                      className="space-y-4"
-                    >
-                      <label className="block text-sm font-medium text-[#4A312F]">
-                        Hourly Rate
-                        <span className="ml-1 text-sm text-gray-500 cursor-help" title="Set your expected hourly rate">ⓘ</span>
-                      </label>
-                      <div className="flex items-center gap-4">
-                        <input
-                          type="range"
-                          name="hourlyRate"
-                          min="1"
-                          max="1000"
-                          value={formData.hourlyRate}
-                          onChange={handleChange}
-                          className="flex-1 accent-[#D34079]"
-                        />
-                        <span className="text-lg font-semibold text-[#4A312F] w-16 text-center">
-                          {formData.hourlyRate}
-                        </span>
-                        <select
-                          name="currency"
-                          value={formData.currency}
-                          onChange={handleChange}
-                          className="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D34079]/20"
-                        >
-                          {currencies.map(cur => <option key={cur}>{cur}</option>)}
-                        </select>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Step 5: Client - Budget, Location, Terms */}
-                  {step === 5 && role === "client" && (
-                    <motion.div
-                      key="client5"
-                      custom={direction}
-                      variants={variants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      transition={{ duration: 0.5 }}
-                      className="space-y-4"
-                    >
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Budget (per project / month)</label>
-                        <input
-                          type="number"
-                          name="budget"
-                          value={formData.budget}
-                          onChange={handleChange}
-                          placeholder="Budget in USD"
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Hiring Capacity (Number of freelancers)</label>
-                        <input
-                          type="number"
-                          name="hiringCapacity"
-                          value={formData.hiringCapacity}
-                          onChange={handleChange}
-                          placeholder="No. of hires"
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Country</label>
-                        <select
-                          name="country"
-                          value={formData.country}
-                          onChange={handleChange}
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        >
-                          <option value="">Select Country</option>
-                          {countries.map(c => <option key={c}>{c}</option>)}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-2">Languages</label>
-                        <div className="flex flex-wrap gap-2">
-                          {languages.map(lang => (
-                            <button
-                              key={lang}
-                              type="button"
-                              onClick={() => toggleLanguage(lang)}
-                              className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
-                                formData.languages.includes(lang)
-                                  ? "bg-[#D34079] text-white"
-                                  : "bg-[#FBB9C2] text-[#4A312F] hover:bg-[#FBB9C2]/80"
-                              }`}
-                            >
-                              {lang}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          id="terms-client"
-                          checked={formData.terms}
-                          onChange={e => setFormData(prev => ({ ...prev, terms: e.target.checked }))}
-                          className="w-4 h-4 text-[#D34079] border-[#B7E2BF] rounded focus:ring-[#D34079]"
-                        />
-                        <label htmlFor="terms-client" className="text-sm text-[#4A312F]">
-                          I agree to Terms & Privacy
-                        </label>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Step 6: Freelancer - Portfolio & Video */}
-                  {step === 6 && role === "freelancer" && (
-                    <motion.div
-                      key="freelancer6"
-                      custom={direction}
-                      variants={variants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      transition={{ duration: 0.5 }}
-                      className="space-y-4"
-                    >
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Portfolio Upload (Images, PDFs)</label>
-                        <input
-                          type="file"
-                          multiple
-                          accept="image/*,.pdf"
-                          onChange={e => handleFileChange(e, "portfolio")}
-                          className="w-full px-4 py-2 border border-gray-200 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#FBB9C2] file:text-[#4A312F] hover:file:bg-[#FBB9C2]/80"
-                        />
-                        <div className="flex flex-wrap gap-3 mt-3">
-                          {formData.portfolio.map((p, i) => (
-                            <img key={i} src={p} alt="portfolio" className="w-20 h-20 object-cover rounded-lg border border-[#B7E2BF]" />
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
-                          Intro Video (Max 5 min)
-                          <span className="ml-1 text-sm text-gray-500 cursor-help" title="Upload a short introduction video">ⓘ</span>
-                        </label>
-                        <input
-                          type="file"
-                          accept="video/*"
-                          onChange={e => handleFileChange(e, "video")}
-                          className="w-full px-4 py-2 border border-gray-200 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#FBB9C2] file:text-[#4A312F] hover:file:bg-[#FBB9C2]/80"
-                        />
-                        {formData.portfolioVideos.map((v, i) => (
-                          <video key={i} src={v} controls className="mt-3 w-40 rounded-lg border border-[#B7E2BF]" />
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Step 7: Freelancer - Country, Languages, Terms */}
-                  {step === 7 && role === "freelancer" && (
-                    <motion.div
-                      key="freelancer7"
-                      custom={direction}
-                      variants={variants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      transition={{ duration: 0.5 }}
-                      className="space-y-4"
-                    >
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-1.5">Country</label>
-                        <select
-                          name="country"
-                          value={formData.country}
-                          onChange={handleChange}
-                          className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
-                        >
-                          <option value="">Select Country</option>
-                          {countries.map(c => <option key={c}>{c}</option>)}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#4A312F] mb-2">Languages</label>
-                        <div className="flex flex-wrap gap-2">
-                          {languages.map(lang => (
-                            <button
-                              key={lang}
-                              type="button"
-                              onClick={() => toggleLanguage(lang)}
-                              className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
-                                formData.languages.includes(lang)
-                                  ? "bg-[#D34079] text-white"
-                                  : "bg-[#FBB9C2] text-[#4A312F] hover:bg-[#FBB9C2]/80"
-                              }`}
-                            >
-                              {lang}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          id="terms-freelancer"
-                          checked={formData.terms}
-                          onChange={e => setFormData(prev => ({ ...prev, terms: e.target.checked }))}
-                          className="w-4 h-4 text-[#D34079] border-[#B7E2BF] rounded focus:ring-[#D34079]"
-                        />
-                        <label htmlFor="terms-freelancer" className="text-sm text-[#4A312F]">
-                          I agree to Terms & Privacy
-                        </label>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* Navigation buttons */}
-                {step > 1 && step <= totalSteps && (
-                  <div className="flex justify-end gap-3 pt-4">
-                    <button
-                      type="button"
-                      onClick={prevStep}
-                      className="px-6 py-3 border-2 border-[#4A312F] text-[#4A312F] font-semibold rounded-xl hover:bg-[#F7F9FB] transition"
-                    >
-                      Back
-                    </button>
-                    {step < totalSteps && (
-                      <button
-                        type="button"
-                        onClick={nextStep}
-                        className="px-6 py-3 bg-[#D34079] text-white font-semibold rounded-xl shadow-sm hover:bg-[#b12f65] transition"
-                      >
-                        Continue
-                      </button>
-                    )}
-                    {step === totalSteps && (
-                      <button
-                        type="submit"
-                        disabled={loading}
-                        className="px-6 py-3 bg-[#D34079] text-white font-semibold rounded-xl shadow-sm hover:bg-[#b12f65] transition disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {loading ? "Sending OTPs..." : "Create Account"}
-                      </button>
                     )}
                   </div>
-                )}
+                  {fieldErrors.email && (
+                    <p className="mt-1 text-sm text-red-600">{fieldErrors.email}</p>
+                  )}
+                  {!fieldErrors.email && emailExists && (
+                    <p className="mt-1 text-sm text-yellow-600">
+                      This email is already registered.{" "}
+                      <a href="/signin" className="underline font-medium">
+                        Sign in
+                      </a>
+                    </p>
+                  )}
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
+                    Phone Number <span className="text-[#D34079]">*</span>
+                  </label>
+                  <PhoneInput
+                    international
+                    defaultCountry="KE"
+                    value={phone}
+                    onChange={setPhone}
+                    onBlur={() => handleBlur("phone")}
+                    className={`w-full px-3 py-3 border rounded-xl ${
+                      fieldErrors.phone ? "border-red-300" : "border-gray-200"
+                    } focus-within:ring-2 focus-within:ring-[#D34079]/20 focus-within:border-[#D34079]`}
+                  />
+                  {fieldErrors.phone && (
+                    <p className="mt-1 text-sm text-red-600">{fieldErrors.phone}</p>
+                  )}
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
+                    Password <span className="text-[#D34079]">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onBlur={() => handleBlur("password")}
+                      placeholder="At least 8 characters"
+                      required
+                      minLength={8}
+                      className={`w-full px-5 py-4 border rounded-xl transition ${
+                        fieldErrors.password
+                          ? "border-red-300 focus:ring-red-200"
+                          : "border-gray-200 focus:ring-[#D34079]/20 focus:border-[#D34079]"
+                      } focus:ring-2 focus:shadow-sm pr-12`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#D34079]"
+                    >
+                      {showPassword ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                  {fieldErrors.password ? (
+                    <p className="mt-1 text-sm text-red-600">{fieldErrors.password}</p>
+                  ) : (
+                    <PasswordStrength password={password} />
+                  )}
+                </div>
+
+                {/* Confirm Password */}
+                <div>
+                  <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
+                    Confirm Password <span className="text-[#D34079]">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirm ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      onBlur={() => handleBlur("confirmPassword")}
+                      placeholder="Re‑enter password"
+                      required
+                      className={`w-full px-5 py-4 border rounded-xl transition ${
+                        fieldErrors.confirmPassword
+                          ? "border-red-300 focus:ring-red-200"
+                          : "border-gray-200 focus:ring-[#D34079]/20 focus:border-[#D34079]"
+                      } focus:ring-2 focus:shadow-sm pr-12`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirm(!showConfirm)}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#D34079]"
+                    >
+                      {showConfirm ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                  {fieldErrors.confirmPassword && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {fieldErrors.confirmPassword}
+                    </p>
+                  )}
+                </div>
+
+                {/* Terms */}
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="terms"
+                    checked={terms}
+                    onChange={(e) => setTerms(e.target.checked)}
+                    className="w-4 h-4 text-[#D34079] border-[#B7E2BF] rounded focus:ring-[#D34079]"
+                  />
+                  <label htmlFor="terms" className="text-sm text-[#4A312F]">
+                    I agree to{" "}
+                    <a href="/terms" className="text-[#D34079] hover:underline">
+                      Terms
+                    </a>{" "}
+                    &{" "}
+                    <a href="/privacy" className="text-[#D34079] hover:underline">
+                      Privacy
+                    </a>
+                  </label>
+                </div>
+
+                {/* Navigation */}
+                <div className="flex justify-end gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="px-6 py-3 border-2 border-[#4A312F] text-[#4A312F] font-semibold rounded-xl hover:bg-[#F7F9FB] transition"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading || emailExists}
+                    className="px-6 py-3 bg-[#D34079] text-white font-semibold rounded-xl shadow-md hover:bg-[#b12f65] transition disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {loading && <Spinner />}
+                    {loading ? "Sending OTPs..." : "Create Account"}
+                  </button>
+                </div>
               </form>
             )}
+          </>
+        ) : (
+          // OTP Verification Phase
+          <div ref={otpContainerRef} tabIndex={-1} className="space-y-6 outline-none">
+            <p className="text-gray-500 text-sm">
+              Enter the 6‑digit codes sent to your email and phone.
+            </p>
+
+            {/* Phone verification */}
+            <div
+              className={`p-5 rounded-xl border transition-colors ${
+                phoneVerified
+                  ? "border-green-200 bg-green-50/30"
+                  : "border-gray-200 bg-white"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-[#4A312F]">Phone: {pendingPhone}</span>
+                  {!phoneVerified && (
+                    <button
+                      type="button"
+                      onClick={() => setOtpPhase(false)}
+                      className="text-xs text-[#D34079] hover:underline"
+                    >
+                      (Edit)
+                    </button>
+                  )}
+                </div>
+                {phoneVerified && (
+                  <span className="text-green-600 text-sm font-medium">✓ Verified</span>
+                )}
+              </div>
+              {!phoneVerified && (
+                <>
+                  <OtpInputGroup
+                    value={phoneOtp}
+                    onChange={setPhoneOtp}
+                    disabled={loading}
+                  />
+                  <div className="flex justify-between items-center mt-3">
+                    <button
+                      type="button"
+                      onClick={() => resendOtp("phone")}
+                      disabled={loading || resendTimer > 0}
+                      className="text-sm text-[#D34079] hover:underline disabled:opacity-50"
+                    >
+                      {resendTimer > 0 && resendChannel === "phone"
+                        ? `Resend in ${resendTimer}s`
+                        : "Resend code"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={verifyPhone}
+                      disabled={loading || phoneOtp.length !== 6}
+                      className="px-5 py-2 bg-[#D34079] text-white font-medium rounded-lg hover:bg-[#b12f65] disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {loading && <Spinner />}
+                      Verify
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Email verification */}
+            <div
+              className={`p-5 rounded-xl border transition-colors ${
+                emailVerified
+                  ? "border-green-200 bg-green-50/30"
+                  : "border-gray-200 bg-white"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-[#4A312F]">Email: {pendingEmail}</span>
+                  {!emailVerified && (
+                    <button
+                      type="button"
+                      onClick={() => setOtpPhase(false)}
+                      className="text-xs text-[#D34079] hover:underline"
+                    >
+                      (Edit)
+                    </button>
+                  )}
+                </div>
+                {emailVerified && (
+                  <span className="text-green-600 text-sm font-medium">✓ Verified</span>
+                )}
+              </div>
+              {!emailVerified && (
+                <>
+                  <OtpInputGroup
+                    value={emailOtp}
+                    onChange={setEmailOtp}
+                    disabled={loading}
+                  />
+                  <div className="flex justify-between items-center mt-3">
+                    <button
+                      type="button"
+                      onClick={() => resendOtp("email")}
+                      disabled={loading || resendTimer > 0}
+                      className="text-sm text-[#D34079] hover:underline disabled:opacity-50"
+                    >
+                      {resendTimer > 0 && resendChannel === "email"
+                        ? `Resend in ${resendTimer}s`
+                        : "Resend code"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={verifyEmail}
+                      disabled={loading || emailOtp.length !== 6}
+                      className="px-5 py-2 bg-[#D34079] text-white font-medium rounded-lg hover:bg-[#b12f65] disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {loading && <Spinner />}
+                      Verify
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Final action */}
+            {phoneVerified && emailVerified ? (
+              <button
+                type="button"
+                onClick={completeSignup}
+                disabled={loading}
+                className="w-full py-4 bg-[#D34079] text-white font-semibold rounded-xl shadow-md hover:bg-[#b12f65] transition disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {loading && <Spinner />}
+                {loading ? "Completing..." : "Go to Profile"}
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setOtpPhase(false)}
+                disabled={loading}
+                className="w-full py-4 border-2 border-gray-200 text-[#4A312F] font-semibold rounded-xl hover:bg-gray-50 transition disabled:opacity-50"
+              >
+                Back to edit info
+              </button>
+            )}
           </div>
-        </div>
+        )}
+
+        {/* Sign in link */}
+        <p className="text-center text-[#4A312F] text-sm mt-6">
+          Already have an account?{" "}
+          <a href="/signin" className="text-[#D34079] font-semibold hover:underline">
+            Sign In
+          </a>
+        </p>
       </div>
+
+      {/* Animation keyframes */}
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-5px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 };
