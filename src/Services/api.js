@@ -277,9 +277,9 @@ export const authAPI = {
 
 // ─── USER API ──────────────────────────────────────────────────────────────────
 export const userAPI = {
-  // Get user profile
+  // Get public freelancer profile
   getProfile: async (userId) => {
-    return apiClient(`/users/${userId}`);
+    return apiClient(`/talents/${userId}`);
   },
 
   // Update profile
@@ -326,7 +326,7 @@ export const userAPI = {
   // Search talent
   searchTalent: async (params) => {
     const queryString = new URLSearchParams(params).toString();
-    return apiClient(`/users/search?${queryString}`);
+    return apiClient(`/talents?${queryString}`);
   },
 
   // Upload portfolio

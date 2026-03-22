@@ -31,7 +31,9 @@ const TalentCard = ({ talent }) => {
   const displayRating = avgRating || rating;
   const displayReviews = totalReviews || reviews;
   const displayLocation = country || location || "Remote";
-  const displayPrice = hourlyRate ? `${currency}${hourlyRate}/hr` : price || "$0/hr";
+  const displayCurrency =
+    currency && currency.length === 3 ? `${currency} ` : currency || "$";
+  const displayPrice = hourlyRate ? `${displayCurrency}${hourlyRate}/hr` : price || "$0/hr";
   const displayBadge = level || badge || "New";
   const displayTags = (talent.skills || tags).slice(0, 4);
 

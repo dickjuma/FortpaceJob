@@ -1,123 +1,257 @@
-﻿import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { talents, reviewsList } from "./data";
+import { ArrowRight, ShieldCheck, Clock3, BadgeCheck, Star, MapPin } from "lucide-react";
+import { talentAPI } from "../../Services/talentAPI";
 
 const TalentProfile = () => {
   const { id } = useParams();
-  const talent = talents.find((item) => item.id === id);
+  const [talent, setTalent] = useState(null);
+  const [loading, setLoading] = useState(Boolean(id));
+  const [error, setError] = useState("");
 
-  if (!talent) {
+  useEffect(() => {
+    let active = true;
+
+    const loadTalent = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const result = String(id || "").match(/^\d+$/)
+          ? await talentAPI.getTalentProfile(id)
+          : await talentAPI.searchTalents({ q: id, limit: 1, sort: "relevance" });
+        if (!active) return;
+        setTalent(result?.user || result?.data?.[0] || null);
+      } catch (err) {
+        if (!active) return;
+        setError(err.message || "Failed to load freelancer profile.");
+        setTalent(null);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    loadTalent();
+
+    return () => {
+      active = false;
+    };
+  }, [id]);
+
+  if (loading) {
     return (
       <div className="talent-page">
-        <section className="talent-section">
-          <div className="section-header">
-            <h2>Talent not found</h2>
-            <p>We could not locate that profile. Browse categories to find the right expert.</p>
-          </div>
-          <Link className="ghost" to="/talent">Back to Hire Talent</Link>
+        <section className="talent-section empty-state">
+          <span className="eyebrow">Loading profile</span>
+          <h2>Fetching freelancer details...</h2>
+          <p>Please wait while we load the public profile and trust signals.</p>
         </section>
       </div>
     );
   }
 
+  if (!talent) {
+    return (
+      <div className="talent-page">
+        <section className="talent-section empty-state">
+          <span className="eyebrow">Talent not found</span>
+          <h2>We could not locate that profile.</h2>
+          <p>Browse categories to find the right expert, or post a request and let matches come to you.</p>
+          <div className="empty-state__actions">
+            <Link className="cta-btn" to="/talent/request">
+              Post a request
+              <ArrowRight size={16} />
+            </Link>
+            <Link className="ghost" to="/talent">Back to Hire Talent</Link>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  const skills = talent.primarySkills?.length
+    ? talent.primarySkills
+    : talent.skills?.length
+      ? talent.skills
+      : [];
+  const packages = Array.isArray(talent.packages) ? talent.packages : [];
+  const reviewItems = Array.isArray(talent.reviews) ? talent.reviews : [];
+  const avgRating = talent.avgRating || talent.rating || 0;
+  const totalReviews = Number.isFinite(talent.totalReviews)
+    ? talent.totalReviews
+    : typeof talent.reviews === "number"
+      ? talent.reviews
+      : Array.isArray(talent.reviews)
+      ? talent.reviews.length
+      : reviewItems.length || 0;
+  const completedJobs = talent.completedJobs || talent.completedOrders || 0;
+  const serviceSummary = talent.serviceSummary || talent.professionalTitle || talent.title || "Freelancer";
+  const portfolioItems = Array.isArray(talent.portfolio) ? talent.portfolio : [];
+
   return (
-    <div className="talent-page">
+    <div className="talent-page talent-page--profile">
       <section className="profile-hero">
         <div className="profile-summary">
-          <p className="eyebrow">Verified talent</p>
-          <h1>{talent.name}</h1>
-          <p className="profile-title">{talent.title}</p>
+          <span className="eyebrow">Verified talent</span>
+          <h1>{talent.name || "Anonymous"}</h1>
+          <p className="profile-title">{serviceSummary}</p>
           <div className="profile-meta">
-            <span>Rating {talent.rating}/5</span>
-            <span>{talent.reviews} reviews</span>
-            <span>{talent.location}</span>
+            <span><Star size={14} /> {avgRating}/5</span>
+            <span><BadgeCheck size={14} /> {totalReviews} reviews</span>
+            <span><MapPin size={14} /> {talent.location || [talent.city, talent.country].filter(Boolean).join(", ") || "Remote"}</span>
           </div>
-          <p className="profile-about">{talent.about}</p>
+          <p className="profile-about">
+            {talent.bio || talent.about || "This freelancer has not added a public bio yet."}
+          </p>
           <div className="talent-tags">
-            {talent.tags.map((tag) => (
+            {skills.slice(0, 8).map((tag) => (
               <span key={tag}>{tag}</span>
             ))}
           </div>
           <div className="profile-actions">
-            <Link className="hire-btn" to={`/talent/request?talent=${talent.id}`}>Hire now</Link>
+            <Link className="cta-btn" to={`/talent/request?talent=${talent.id}`}>
+              Hire now
+              <ArrowRight size={16} />
+            </Link>
             <Link className="ghost" to="/talent/request">Post a request</Link>
           </div>
+          {error && <p className="text-link">{error}</p>}
         </div>
-        <div className="profile-card">
+
+        <aside className="profile-card">
           <div className="profile-badge">
-            <span className="badge badge-cta">{talent.badge}</span>
+            <span className="badge badge-cta">{talent.level || talent.badge || "New"}</span>
             <h3>Trusted, job-ready professional</h3>
+            <p>Screened for skills, communication, and delivery reliability.</p>
           </div>
           <div className="profile-rate">
-            <strong>{talent.price}</strong>
+            <strong>
+              {talent.currency || "$"}
+              {talent.hourlyRate || talent.price || 0}
+            </strong>
             <span>Average hourly rate</span>
           </div>
           <ul className="profile-highlights">
-            <li>Background checks and credential verification</li>
-            <li>Milestone payments and secure escrow</li>
-            <li>Matched within 24 hours for urgent work</li>
+            <li><ShieldCheck size={16} /> Background checks and credential verification</li>
+            <li><Clock3 size={16} /> Milestone payments and secure escrow</li>
+            <li><BadgeCheck size={16} /> {completedJobs || "0"} completed jobs</li>
           </ul>
-          <Link className="cta-btn" to={`/talent/request?talent=${talent.id}`}>Start a project</Link>
-        </div>
+          <Link className="cta-link cta-link--dark" to={`/talent/request?talent=${talent.id}`}>
+            Start a project
+            <ArrowRight size={16} />
+          </Link>
+        </aside>
       </section>
 
       <section className="talent-section">
         <div className="section-header">
-          <h2>Skills and specialties</h2>
-          <p>Focused experience that delivers measurable outcomes.</p>
+          <div>
+            <span className="eyebrow">Skills and specialties</span>
+            <h2>Focused experience that delivers measurable outcomes.</h2>
+          </div>
         </div>
         <div className="skill-grid">
-          {talent.skills.map((skill) => (
-            <div key={skill} className="skill-card">
+          {skills.length > 0 ? skills.map((skill) => (
+            <article key={skill} className="skill-card">
               <h4>{skill}</h4>
               <p>Proven track record in {skill.toLowerCase()} engagements.</p>
-            </div>
-          ))}
+            </article>
+          )) : (
+            <article className="skill-card">
+              <h4>No public skills yet</h4>
+              <p>This freelancer has not published public specialties.</p>
+            </article>
+          )}
         </div>
       </section>
 
       <section className="talent-section">
         <div className="section-header">
-          <h2>Packages</h2>
-          <p>Choose a plan based on scope, speed, and support.</p>
+          <div>
+            <span className="eyebrow">Packages</span>
+            <h2>Choose a plan based on scope, speed, and support.</h2>
+          </div>
         </div>
         <div className="package-grid">
-          {talent.packages.map((pack) => (
-            <div key={pack.name} className="package-card">
+          {packages.length > 0 ? packages.map((pack) => (
+            <article key={pack.name} className="package-card">
               <div className="package-header">
-                <h3>{pack.name}</h3>
-                <strong>{pack.price}</strong>
+                <div>
+                  <h3>{pack.name}</h3>
+                  <p>{pack.deliveryTime || pack.delivery || "Flexible"} delivery</p>
+                </div>
+                <strong>
+                  {pack.price
+                    ? `${typeof pack.price === "number" ? `${talent.currency || "$"}${pack.price}` : pack.price}`
+                    : "Custom"}
+                </strong>
               </div>
               <div className="package-meta">
-                <span>{pack.delivery} delivery</span>
-                <span>{pack.revisions} revision(s)</span>
+                <span>{pack.revisions || 0} revision(s)</span>
               </div>
               <ul>
-                {pack.features.map((feat) => (
+                {(pack.features || []).map((feat) => (
                   <li key={feat}>{feat}</li>
                 ))}
               </ul>
-              <Link className="hire-btn" to={`/talent/request?talent=${talent.id}&package=${pack.name}`}>Select {pack.name}</Link>
-            </div>
-          ))}
+              <Link className="hire-btn" to={`/talent/request?talent=${talent.id}&package=${pack.name}`}>
+                Select {pack.name}
+              </Link>
+            </article>
+          )) : (
+            <article className="package-card">
+              <h3>Custom quote</h3>
+              <p>This freelancer prefers to scope the work after the request is submitted.</p>
+            </article>
+          )}
         </div>
       </section>
 
+      {portfolioItems.length > 0 && (
+        <section className="talent-section">
+          <div className="section-header">
+            <div>
+              <span className="eyebrow">Portfolio</span>
+              <h2>Recent work samples.</h2>
+            </div>
+          </div>
+          <div className="category-grid">
+            {portfolioItems.slice(0, 3).map((item) => (
+              <article key={item} className="category-card">
+                <span className="badge badge-online">Sample</span>
+                <h3>Portfolio asset</h3>
+                <p>{item}</p>
+                <a className="category-cta" href={item} target="_blank" rel="noreferrer">
+                  View asset <ArrowRight size={14} />
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="talent-section testimonials">
         <div className="section-header">
-          <h2>Recent client feedback</h2>
-          <p>What teams say after hiring through Forte.</p>
+          <div>
+            <span className="eyebrow">Recent client feedback</span>
+            <h2>What teams say after hiring through Forte.</h2>
+          </div>
         </div>
         <div className="review-grid">
-          {reviewsList.map((review) => (
-            <div key={review.name} className="review-card">
-              <p>"{review.text}"</p>
+          {reviewItems.length > 0 ? reviewItems.map((review, index) => (
+            <article key={review.id || index} className="review-card">
+              <p>{review.comment || review.text || review.quote || "Positive engagement."}</p>
               <div>
-                <strong>{review.name}</strong>
-                <span>{review.date} - {review.rating}/5</span>
+                <strong>{review.reviewer?.name || review.name || "Client"}</strong>
+                <span>
+                  {review.createdAt ? new Date(review.createdAt).toLocaleDateString() : review.date || "Recently"} - {review.rating || 5}/5
+                </span>
               </div>
-            </div>
-          ))}
+            </article>
+          )) : (
+            <article className="review-card">
+              <p>No public reviews yet.</p>
+            </article>
+          )}
         </div>
       </section>
     </div>

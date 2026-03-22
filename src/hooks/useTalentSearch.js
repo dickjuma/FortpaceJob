@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { userAPI } from "../Services/api";
+import { talentAPI } from "../Services/talentAPI";
 
 export const useTalentSearch = (initialParams = {}) => {
   const [talents, setTalents] = useState([]);
@@ -19,7 +19,7 @@ export const useTalentSearch = (initialParams = {}) => {
     
     try {
       const searchParams = { ...filters, ...params };
-      const result = await userAPI.searchTalent(searchParams);
+      const result = await talentAPI.searchTalents(searchParams);
       
       if (result.data) {
         setTalents(result.data);

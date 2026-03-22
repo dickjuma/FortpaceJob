@@ -13,7 +13,9 @@ export const getTalentProfile = async (userId) => {
   return userAPI.getProfile(userId);
 };
 
-export default {
+export const talentAPI = {
   searchTalents,
   getTalentProfile,
 };
+
+export default talentAPI;

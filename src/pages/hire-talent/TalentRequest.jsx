@@ -1,19 +1,51 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { talents, faqs, categories } from "./data";
+import { faqs, categories } from "./data";
+import { talentAPI } from "../../Services/talentAPI";
 
 const TalentRequest = () => {
   const [searchParams] = useSearchParams();
   const presetQuery = searchParams.get("q") || "";
-  const presetType = searchParams.get("type") || "All services";
+  const presetType = searchParams.get("serviceMode") || searchParams.get("type") || "All services";
   const presetTalent = searchParams.get("talent") || "";
   const presetCategory = searchParams.get("category") || "";
   const presetPackage = searchParams.get("package") || "";
 
-  const selectedTalent = useMemo(
-    () => talents.find((item) => item.id === presetTalent),
-    [presetTalent]
-  );
+  const [selectedTalent, setSelectedTalent] = useState(null);
+  const [talentLoading, setTalentLoading] = useState(Boolean(presetTalent));
+
+  useEffect(() => {
+    let active = true;
+
+    const loadSelectedTalent = async () => {
+      if (!presetTalent) {
+        setSelectedTalent(null);
+        setTalentLoading(false);
+        return;
+      }
+
+      try {
+        setTalentLoading(true);
+        const isNumeric = /^\d+$/.test(presetTalent);
+        const result = isNumeric
+          ? await talentAPI.getTalentProfile(presetTalent)
+          : await talentAPI.searchTalents({ q: presetTalent, limit: 1, sort: "relevance" });
+        if (!active) return;
+        setSelectedTalent(result?.user || result?.data?.[0] || null);
+      } catch (error) {
+        if (!active) return;
+        setSelectedTalent(null);
+      } finally {
+        if (active) setTalentLoading(false);
+      }
+    };
+
+    loadSelectedTalent();
+
+    return () => {
+      active = false;
+    };
+  }, [presetTalent]);
 
   const [formData, setFormData] = useState({
     service: presetQuery,
@@ -166,7 +198,7 @@ const TalentRequest = () => {
         <aside className="request-summary">
           <h3>Request summary</h3>
           <div className="summary-box">
-            <p><strong>Selected talent:</strong> {selectedTalent ? selectedTalent.name : "Not selected"}</p>
+            <p><strong>Selected talent:</strong> {talentLoading ? "Loading..." : selectedTalent ? selectedTalent.name : "Not selected"}</p>
             <p><strong>Category:</strong> {categoryLabel || "Any"}</p>
             <p><strong>Package:</strong> {presetPackage || "Flexible"}</p>
             <p><strong>Service type:</strong> {formData.serviceType}</p>
@@ -176,11 +208,11 @@ const TalentRequest = () => {
             <div className="summary-card">
               <div>
                 <h4>{selectedTalent.name}</h4>
-                <p>{selectedTalent.title}</p>
+                <p>{selectedTalent.title || selectedTalent.professionalTitle || selectedTalent.serviceSummary || "Freelancer"}</p>
                 <span>{selectedTalent.location}</span>
               </div>
               <div className="talent-tags">
-                {selectedTalent.tags.map((tag) => (
+                {(selectedTalent.skills || selectedTalent.primarySkills || selectedTalent.tags || []).slice(0, 4).map((tag) => (
                   <span key={tag}>{tag}</span>
                 ))}
               </div>

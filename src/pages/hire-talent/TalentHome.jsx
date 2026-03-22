@@ -1,12 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { userAPI } from "../../Services/api";
-import { categories, talents, testimonials } from "./data";
+import { Search, ShieldCheck, Sparkles, Briefcase, Star, ArrowRight } from "lucide-react";
+import { talentAPI } from "../../Services/talentAPI";
+import TalentCard from "../../Components/Hiretalent/TalentCard";
+import { categories, testimonials, faqs } from "./data";
+
+const statCards = [
+  { value: "50k+", label: "Verified experts", icon: ShieldCheck },
+  { value: "120+", label: "Service categories", icon: Briefcase },
+  { value: "4.9/5", label: "Average rating", icon: Star },
+];
+
+const quickPicks = ["Electricians", "Designers", "Developers", "Plumbers", "Auto repair", "HVAC"];
 
 const TalentHome = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
-  const [serviceType, setServiceType] = useState("All services");
+  const [serviceType, setServiceType] = useState("All");
   const [featuredTalents, setFeaturedTalents] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -14,20 +24,16 @@ const TalentHome = () => {
     const fetchFeaturedTalent = async () => {
       try {
         setLoading(true);
-        const result = await userAPI.searchTalent({ limit: 8, sort: "rating" });
-        if (result.data && result.data.length > 0) {
-          setFeaturedTalents(result.data);
-        } else {
-          setFeaturedTalents(talents);
-        }
+        const result = await talentAPI.searchTalents({ limit: 8, sort: "rating" });
+        setFeaturedTalents(result?.data || []);
       } catch (error) {
         console.error("Failed to fetch talent:", error);
-        setFeaturedTalents(talents);
+        setFeaturedTalents([]);
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchFeaturedTalent();
   }, []);
 
@@ -35,195 +41,220 @@ const TalentHome = () => {
     e.preventDefault();
     const params = new URLSearchParams();
     if (query) params.set("q", query);
-    if (serviceType && serviceType !== "All services") params.set("serviceMode", serviceType);
+    if (serviceType && serviceType !== "All") params.set("serviceMode", serviceType);
     navigate(`/talent/request?${params.toString()}`);
   };
 
   return (
-    <div className="talent-page">
+    <div className="talent-page talent-page--home">
       <section className="talent-hero">
-        <div className="talent-hero-content">
-          <p className="eyebrow">Hire talent you can trust</p>
-          <h1>Find verified pros for physical and online services</h1>
+        <div className="talent-hero-copy">
+          <span className="eyebrow">Hire talent with confidence</span>
+          <h1>Find the right expert for on-site work, remote projects, and everything between.</h1>
           <p className="subhead">
-            Book electricians, mechanics, designers, developers, and more. All in one marketplace.
+            Forte brings verified professionals, transparent pricing, and a smoother way to move from search to shortlist.
           </p>
+
           <form className="talent-search" onSubmit={handleSearch}>
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="What service do you need?"
-            />
+            <div className="search-field">
+              <Search size={18} />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="What service do you need?"
+              />
+            </div>
             <select value={serviceType} onChange={(e) => setServiceType(e.target.value)}>
-              <option>All services</option>
-              <option>Physical on-site</option>
+              <option>All</option>
               <option>Fully online</option>
+              <option>Onsite</option>
               <option>Hybrid</option>
             </select>
-            <button type="submit">Search</button>
+            <button type="submit">Search talent</button>
           </form>
+
+          <div className="hero-chips">
+            {quickPicks.map((item) => (
+              <button
+                key={item}
+                type="button"
+                className="chip"
+                onClick={() => navigate(`/talent/request?q=${encodeURIComponent(item)}`)}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+
           <div className="hero-stats">
-            <div>
-              <h3>50k+</h3>
-              <p>Verified experts</p>
-            </div>
-            <div>
-              <h3>120+</h3>
-              <p>Service categories</p>
-            </div>
-            <div>
-              <h3>4.9/5</h3>
-              <p>Average rating</p>
-            </div>
+            {statCards.map(({ value, label, icon: Icon }) => (
+              <div key={label} className="stat-card">
+                <Icon size={18} />
+                <strong>{value}</strong>
+                <span>{label}</span>
+              </div>
+            ))}
           </div>
         </div>
-        <div className="talent-hero-card">
-          <h4>Popular right now</h4>
+
+        <aside className="talent-hero-panel">
+          <div className="panel-eyebrow">
+            <Sparkles size={16} />
+            <span>Popular right now</span>
+          </div>
+          <h3>High-demand categories are ready to hire today.</h3>
           <div className="pill-grid">
             <span>Panel upgrades</span>
-            <span>Auto diagnostics</span>
+            <span>Brand systems</span>
             <span>HVAC repair</span>
-            <span>Brand design</span>
             <span>Web build</span>
             <span>Solar install</span>
+            <span>Auto diagnostics</span>
           </div>
-          <div className="hero-card-footer">
-            <p>Get matched in minutes.</p>
-            <Link className="ghost" to="/talent/request">Post a request</Link>
+          <div className="panel-footer">
+            <p>Post a request and get matched in minutes.</p>
+            <Link className="cta-link" to="/talent/request">
+              Start a request
+              <ArrowRight size={16} />
+            </Link>
           </div>
-        </div>
+          <div className="mini-metrics">
+            <div>
+              <strong>24h</strong>
+              <span>average match time</span>
+            </div>
+            <div>
+              <strong>Escrow</strong>
+              <span>protected payments</span>
+            </div>
+          </div>
+        </aside>
       </section>
 
       <section className="talent-section">
         <div className="section-header">
-          <h2>Browse by category</h2>
-          <p>Start with a category and filter down to the right expert.</p>
+          <div>
+            <span className="eyebrow">Browse by category</span>
+            <h2>Start broad, then drill into the right specialty.</h2>
+          </div>
+          <Link className="text-link" to="/talent/request">
+            Post a request <ArrowRight size={16} />
+          </Link>
         </div>
         <div className="category-grid">
           {categories.map((cat) => (
-            <div key={cat.slug} className="category-card">
-              <span className={`badge ${cat.badge === "Physical" ? "badge-physical" : "badge-online"}`}>{cat.badge}</span>
+            <Link key={cat.slug} className="category-card" to={`/talent/categories/${cat.slug}`}>
+              <div className="category-card__top">
+                <span className={`badge ${cat.badge === "Physical" ? "badge-physical" : "badge-online"}`}>
+                  {cat.badge}
+                </span>
+                <span className="category-count">{cat.count} pros</span>
+              </div>
               <h3>{cat.title}</h3>
               <p>{cat.desc}</p>
-              <div className="category-meta">
-                <span>{cat.count} pros</span>
-                <Link className="link-btn" to={`/talent/categories/${cat.slug}`}>View talent</Link>
-              </div>
-            </div>
+              <span className="category-cta">
+                View talent <ArrowRight size={14} />
+              </span>
+            </Link>
           ))}
         </div>
       </section>
 
-      <section className="talent-section split">
+      <section className="talent-section talent-section--split">
         <div className="section-header">
-          <h2>Filter and hire with confidence</h2>
-          <p>Use detailed filters inspired by Fiverr, while keeping Forte's trust layer.</p>
+          <div>
+            <span className="eyebrow">Curated shortlist</span>
+            <h2>Featured talent worth your attention.</h2>
+          </div>
+          <p>These profiles are surfaced by rating, verification, and marketplace activity.</p>
         </div>
-        <div className="filter-grid">
-          <div className="filter-box">
-            <h4>Service Type</h4>
-            <div className="tag-row">
-              <span>Physical on-site</span>
-              <span>Hybrid</span>
-              <span>Fully online</span>
+        <div className="talent-grid talent-grid--tight">
+          {loading ? (
+            <div className="loading-message">Loading talent...</div>
+          ) : featuredTalents.length === 0 ? (
+            <div className="empty-state">
+              <h3>No featured freelancers yet</h3>
+              <p>Once freelancers publish active profiles, they will appear here from the backend.</p>
             </div>
-          </div>
-          <div className="filter-box">
-            <h4>Micro Sectors</h4>
-            <div className="tag-row">
-              <span>Wiring</span>
-              <span>Engine diagnostics</span>
-              <span>HVAC</span>
-              <span>Solar install</span>
-            </div>
-          </div>
-          <div className="filter-box">
-            <h4>Location</h4>
-            <div className="tag-row">
-              <span>Nairobi</span>
-              <span>London</span>
-              <span>Remote</span>
-              <span>New York</span>
-            </div>
-          </div>
-          <div className="filter-box">
-            <h4>Budget</h4>
-            <div className="tag-row">
-              <span>Under $25/hr</span>
-              <span>$25-50/hr</span>
-              <span>Project-based</span>
-            </div>
-          </div>
+          ) : (
+            featuredTalents.slice(0, 6).map((talent) => <TalentCard key={talent._id || talent.id} talent={talent} />)
+          )}
         </div>
       </section>
 
       <section className="talent-section">
         <div className="section-header">
-          <h2>Top talent near you</h2>
-          <p>Curated profiles with ratings, verified badges, and specialties.</p>
+          <div>
+            <span className="eyebrow">How it works</span>
+            <h2>A cleaner path from request to hire.</h2>
+          </div>
         </div>
-        <div className="talent-grid">
-          {loading ? (
-            <div className="loading-message">Loading talent...</div>
-          ) : featuredTalents.length > 0 ? (
-            featuredTalents.map((talent) => (
-              <div key={talent._id || talent.id} className="talent-card">
-                <div className="talent-header">
-                  <div>
-                    <h3>{talent.name}</h3>
-                    <p>{talent.bio?.substring(0, 50) || talent.title}</p>
-                  </div>
-                  <span className="badge badge-cta">{talent.level}</span>
-                </div>
-                <div className="talent-meta">
-                  <span>Rating {talent.avgRating || 0}/5</span>
-                  <span>({talent.totalReviews || 0} reviews)</span>
-                  <span>{talent.country || talent.location}</span>
-                </div>
-                <div className="talent-tags">
-                  {(talent.skills || []).slice(0, 4).map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
-                </div>
-                <div className="talent-footer">
-                  <strong>{talent.currency || '$'}{talent.hourlyRate || 0}/hr</strong>
-                  <div className="talent-actions">
-                    <Link to={`/talent/${talent._id || talent.id}`} className="ghost">View profile</Link>
-                    <Link to={`/talent/request?talent=${talent._id || talent.id}`} className="hire-btn">Hire now</Link>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="no-results">No talent found. Try a different search.</div>
-          )}
+        <div className="steps-grid">
+          <article className="step-card">
+            <span>01</span>
+            <h3>Describe the work</h3>
+            <p>Share the scope, budget, location, and timeline in a single request.</p>
+          </article>
+          <article className="step-card">
+            <span>02</span>
+            <h3>Review matches</h3>
+            <p>Compare verified talent by skills, ratings, and service type.</p>
+          </article>
+          <article className="step-card">
+            <span>03</span>
+            <h3>Hire securely</h3>
+            <p>Keep conversations, milestones, and payment protection in one place.</p>
+          </article>
         </div>
       </section>
 
       <section className="talent-section testimonials">
         <div className="section-header">
-          <h2>Clients love Forte</h2>
-          <p>Real stories from teams hiring across online and physical services.</p>
+          <div>
+            <span className="eyebrow">Client stories</span>
+            <h2>What people say after hiring through Forte.</h2>
+          </div>
         </div>
         <div className="review-grid">
           {testimonials.map((review) => (
-            <div key={review.name} className="review-card">
-              <p>"{review.quote}"</p>
+            <article key={review.name} className="review-card">
+              <p>{review.quote}</p>
               <div>
                 <strong>{review.name}</strong>
                 <span>{review.role}</span>
               </div>
-            </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="talent-section">
+        <div className="section-header">
+          <div>
+            <span className="eyebrow">FAQ</span>
+            <h2>Common questions, answered fast.</h2>
+          </div>
+        </div>
+        <div className="faq-grid">
+          {faqs.map((item) => (
+            <article key={item.q} className="faq-card">
+              <h3>{item.q}</h3>
+              <p>{item.a}</p>
+            </article>
           ))}
         </div>
       </section>
 
       <section className="talent-cta">
         <div>
-          <h2>Post your request and get matched today</h2>
-          <p>Describe the work, set your budget, and receive offers from verified talent.</p>
+          <span className="eyebrow eyebrow--light">Ready when you are</span>
+          <h2>Post your request and let qualified talent come to you.</h2>
+          <p>Describe the work once, then compare the best-fit experts without the back and forth.</p>
         </div>
-        <Link to="/talent/request" className="cta-btn">Post a job</Link>
+        <Link to="/talent/request" className="cta-btn">
+          Post a job
+          <ArrowRight size={16} />
+        </Link>
       </section>
     </div>
   );
