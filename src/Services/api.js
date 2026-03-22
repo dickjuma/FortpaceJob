@@ -349,11 +349,22 @@ export const userAPI = {
   },
 
   // Delete portfolio item
-  deletePortfolioItem: async (url) => {
-    return apiClient("/users/me/portfolio", {
+  deletePortfolioItem: async (index) => {
+    const data = await apiClient(`/profile/me/portfolio/${index}`, {
       method: "DELETE",
-      body: JSON.stringify({ url }),
     });
+    if (data?.user) setUser(data.user);
+    return data;
+  },
+
+  // Update portfolio item metadata
+  updatePortfolioItem: async (index, updates) => {
+    const data = await apiClient(`/profile/me/portfolio/${index}`, {
+      method: "PATCH",
+      body: JSON.stringify(updates),
+    });
+    if (data?.user) setUser(data.user);
+    return data;
   },
 };
 

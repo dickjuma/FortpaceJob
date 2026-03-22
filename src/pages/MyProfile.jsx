@@ -164,6 +164,24 @@ const getFileType = (url) => {
   return "other";
 };
 
+const buildPortfolioItems = (user) => {
+  if (!user?.portfolio || !Array.isArray(user.portfolio)) return [];
+
+  return user.portfolio.map((url, idx) => ({
+    id: idx,
+    url,
+    name: user.portfolioFileNames?.[idx] || `Portfolio #${idx + 1}`,
+    size: null,
+    uploadedAt: null,
+    type: getFileType(url),
+    title: user.portfolioTitles?.[idx] || '',
+    description: user.portfolioDescriptions?.[idx] || '',
+    liveLink: user.portfolioLinks?.[idx] || '',
+    role: user.portfolioRoles?.[idx] || '',
+    technologies: user.portfolioTechnologies?.[idx] || [],
+  }));
+};
+
 const getFileIcon = (url) => {
   const ext = url.split(".").pop().toLowerCase();
   if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) return FileImage;
@@ -301,24 +319,7 @@ const useProfileData = () => {
         setSocialLinks(res.user.socialLinks || { website: '', linkedin: '', github: '', dribbble: '', behance: '', medium: '', facebook: '', twitter: '' });
         setLanguages(res.user.languages || []);
         setPastProjects(res.user.pastProjects || []);
-        if (res.user.portfolio && res.user.portfolioFileNames) {
-          const items = res.user.portfolio.map((url, idx) => ({
-            id: idx,
-            url,
-            name: res.user.portfolioFileNames[idx] || `Portfolio #${idx + 1}`,
-            size: null,
-            uploadedAt: null,
-            type: getFileType(url),
-            title: res.user.portfolioTitles?.[idx] || '',
-            description: res.user.portfolioDescriptions?.[idx] || '',
-            liveLink: res.user.portfolioLinks?.[idx] || '',
-            role: res.user.portfolioRoles?.[idx] || '',
-            technologies: res.user.portfolioTechnologies?.[idx] || [],
-          }));
-          setPortfolioItems(items);
-        } else {
-          setPortfolioItems([]);
-        }
+        setPortfolioItems(buildPortfolioItems(res.user));
       })
       .catch(e => setError(e.message || 'Failed to load profile'))
       .finally(() => setLoading(false));
@@ -348,22 +349,7 @@ const useProfileData = () => {
     try {
       const res = await uploadFn(files);
       setProfile(res.user);
-      if (res.user.portfolio && res.user.portfolioFileNames) {
-        const items = res.user.portfolio.map((url, idx) => ({
-          id: idx,
-          url,
-          name: res.user.portfolioFileNames[idx] || `Portfolio #${idx + 1}`,
-          size: null,
-          uploadedAt: null,
-          type: getFileType(url),
-          title: res.user.portfolioTitles?.[idx] || '',
-          description: res.user.portfolioDescriptions?.[idx] || '',
-          liveLink: res.user.portfolioLinks?.[idx] || '',
-          role: res.user.portfolioRoles?.[idx] || '',
-          technologies: res.user.portfolioTechnologies?.[idx] || [],
-        }));
-        setPortfolioItems(items);
-      }
+      setPortfolioItems(buildPortfolioItems(res.user));
       setNotice(successMessage);
       setLastSaved(new Date());
     } catch (err) {
@@ -376,9 +362,9 @@ const useProfileData = () => {
   const deletePortfolioItem = async (itemId) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     try {
-      // Uncomment when backend endpoint is available
-      // await profileAPI.deletePortfolioItem(itemId);
-      setPortfolioItems(prev => prev.filter(item => item.id !== itemId));
+      const res = await profileAPI.deletePortfolioItem(itemId);
+      setProfile(res.user);
+      setPortfolioItems(buildPortfolioItems(res.user));
       setNotice('Portfolio item deleted.');
       setLastSaved(new Date());
     } catch (err) {
@@ -388,9 +374,9 @@ const useProfileData = () => {
 
   const updatePortfolioItem = async (itemId, updatedFields) => {
     try {
-      // Uncomment when backend endpoint is available
-      // await profileAPI.updatePortfolioItem(itemId, updatedFields);
-      setPortfolioItems(prev => prev.map(item => item.id === itemId ? { ...item, ...updatedFields } : item));
+      const res = await profileAPI.updatePortfolioItem(itemId, updatedFields);
+      setProfile(res.user);
+      setPortfolioItems(buildPortfolioItems(res.user));
       setNotice('Portfolio item updated.');
       setLastSaved(new Date());
     } catch (err) {
