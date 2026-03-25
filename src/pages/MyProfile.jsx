@@ -42,7 +42,7 @@ import {
   Settings,
   HelpCircle,
 } from 'lucide-react';
-import { getToken, profileAPI } from '../Services/api';
+import { authAPI, getToken, profileAPI } from '../Services/api';
 import debounce from 'lodash/debounce';
 
 // ----------------------------------------------------------------------
@@ -302,6 +302,24 @@ const useProfileData = () => {
   const [languages, setLanguages] = useState([]);
   const [pastProjects, setPastProjects] = useState([]);
 
+  const hydrateProfile = useCallback((user) => {
+    setProfile(user);
+    setExperiences(user.experiences || []);
+    setEducation(user.education || []);
+    setCertifications(user.certifications || []);
+    setPackages(user.packages || []);
+    setSocialLinks(user.socialLinks || { website: '', linkedin: '', github: '', dribbble: '', behance: '', medium: '', facebook: '', twitter: '' });
+    setLanguages(user.languages || []);
+    setPastProjects(user.pastProjects || []);
+    setPortfolioItems(buildPortfolioItems(user));
+  }, []);
+
+  const refreshProfile = useCallback(async () => {
+    const res = await profileAPI.getMyProfile();
+    hydrateProfile(res.user);
+    return res.user;
+  }, [hydrateProfile]);
+
   useEffect(() => {
     if (!getToken()) {
       navigate('/signin');
@@ -311,21 +329,13 @@ const useProfileData = () => {
     profileAPI.getMyProfile()
       .then(res => {
         if (!mounted) return;
-        setProfile(res.user);
-        setExperiences(res.user.experiences || []);
-        setEducation(res.user.education || []);
-        setCertifications(res.user.certifications || []);
-        setPackages(res.user.packages || []);
-        setSocialLinks(res.user.socialLinks || { website: '', linkedin: '', github: '', dribbble: '', behance: '', medium: '', facebook: '', twitter: '' });
-        setLanguages(res.user.languages || []);
-        setPastProjects(res.user.pastProjects || []);
-        setPortfolioItems(buildPortfolioItems(res.user));
+        hydrateProfile(res.user);
       })
       .catch(e => setError(e.message || 'Failed to load profile'))
       .finally(() => setLoading(false));
 
     return () => { mounted = false; };
-  }, [navigate]);
+  }, [hydrateProfile, navigate]);
 
   const updateSection = async (payload, sectionName) => {
     setError('');
@@ -404,6 +414,7 @@ const useProfileData = () => {
     uploadFile,
     deletePortfolioItem,
     updatePortfolioItem,
+    refreshProfile,
   };
 };
 
@@ -761,6 +772,63 @@ const SaveButton = ({ onClick, loading, children }) => (
   </button>
 );
 
+const PhoneVerificationCard = ({
+  profile,
+  phoneVerificationOtp,
+  setPhoneVerificationOtp,
+  phoneVerificationLoading,
+  phoneVerificationTimer,
+  onRequestPhoneCode,
+  onVerifyPhoneCode,
+}) => {
+  if (!profile) return null;
+
+  return (
+    <div className="p-4 bg-white border border-dashed border-gray-300 rounded-lg md:col-span-2">
+      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+        <div>
+          <p className="font-semibold text-gray-900">Phone verification</p>
+          <p className="text-sm text-gray-600 mt-1">
+            {profile.phoneNumber
+              ? `We will send a code to ${profile.phoneNumber}.`
+              : 'Add and save a phone number first, then request a verification code here.'}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onRequestPhoneCode}
+          disabled={phoneVerificationLoading || phoneVerificationTimer > 0 || !profile.phoneNumber || profile.phoneVerified}
+          className="px-4 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 disabled:opacity-50"
+        >
+          {phoneVerificationTimer > 0 ? `Resend in ${phoneVerificationTimer}s` : 'Request code'}
+        </button>
+      </div>
+
+      {!profile.phoneVerified && profile.phoneNumber && (
+        <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center">
+          <input
+            type="text"
+            inputMode="numeric"
+            maxLength={6}
+            value={phoneVerificationOtp}
+            onChange={(e) => setPhoneVerificationOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+            placeholder="Enter 6-digit code"
+            className="w-full md:max-w-xs border rounded-lg px-3 py-2"
+          />
+          <button
+            type="button"
+            onClick={onVerifyPhoneCode}
+            disabled={phoneVerificationLoading || phoneVerificationOtp.length !== 6}
+            className="px-4 py-2 rounded-lg border border-gray-300 text-gray-900 font-medium hover:bg-gray-50 disabled:opacity-50"
+          >
+            {phoneVerificationLoading ? 'Verifying...' : 'Verify phone'}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ----------------------------------------------------------------------
 //  Main Component
 // ----------------------------------------------------------------------
@@ -785,6 +853,7 @@ export const MyProfile = () => {
     uploadFile,
     deletePortfolioItem,
     updatePortfolioItem,
+    refreshProfile,
   } = useProfileData();
 
   const [openSection, setOpenSection] = useState('personal');
@@ -795,6 +864,9 @@ export const MyProfile = () => {
     video: false,
     portfolio: false,
   });
+  const [phoneVerificationOtp, setPhoneVerificationOtp] = useState('');
+  const [phoneVerificationLoading, setPhoneVerificationLoading] = useState(false);
+  const [phoneVerificationTimer, setPhoneVerificationTimer] = useState(0);
 
   const isClient = profile?.role === 'client';
   const isTalent = profile?.role === 'freelancer';
@@ -846,6 +918,47 @@ export const MyProfile = () => {
     [profile, completeness, portfolioItems.length]
   );
 
+  const requestPhoneVerificationCode = async () => {
+    if (!profile?.phoneNumber) {
+      setError('Add and save a phone number first.');
+      return;
+    }
+
+    setPhoneVerificationLoading(true);
+    setError('');
+    setNotice('');
+    try {
+      const response = await authAPI.resendOTP(profile.email || '', profile.phoneNumber, 'phone', 'verify_phone');
+      setNotice(response.message || 'Verification code sent.');
+      setPhoneVerificationTimer(60);
+    } catch (err) {
+      setError(err.message || 'Could not send phone verification code.');
+    } finally {
+      setPhoneVerificationLoading(false);
+    }
+  };
+
+  const verifyPhoneCode = async () => {
+    if (phoneVerificationOtp.length !== 6) {
+      setError('Enter the 6-digit phone code.');
+      return;
+    }
+
+    setPhoneVerificationLoading(true);
+    setError('');
+    setNotice('');
+    try {
+      const response = await authAPI.verifyPhoneOTP(profile?.email || '', profile?.phoneNumber || '', phoneVerificationOtp);
+      await refreshProfile();
+      setPhoneVerificationOtp('');
+      setNotice(response.message || 'Phone verified successfully.');
+    } catch (err) {
+      setError(err.message || 'Could not verify phone.');
+    } finally {
+      setPhoneVerificationLoading(false);
+    }
+  };
+
   // Auto-dismiss notice after 5 seconds
   useEffect(() => {
     if (notice) {
@@ -853,6 +966,12 @@ export const MyProfile = () => {
       return () => clearTimeout(timer);
     }
   }, [notice, setNotice]);
+
+  useEffect(() => {
+    if (phoneVerificationTimer <= 0) return;
+    const timer = setTimeout(() => setPhoneVerificationTimer((value) => value - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [phoneVerificationTimer]);
 
   // Keyboard shortcut: Cmd/Ctrl + S to save current section
   useEffect(() => {
@@ -2001,6 +2120,15 @@ export const MyProfile = () => {
                     {profile?.phoneVerified ? 'Yes' : 'No'}
                   </p>
                 </div>
+                <PhoneVerificationCard
+                  profile={profile}
+                  phoneVerificationOtp={phoneVerificationOtp}
+                  setPhoneVerificationOtp={setPhoneVerificationOtp}
+                  phoneVerificationLoading={phoneVerificationLoading}
+                  phoneVerificationTimer={phoneVerificationTimer}
+                  onRequestPhoneCode={requestPhoneVerificationCode}
+                  onVerifyPhoneCode={verifyPhoneCode}
+                />
                 <div className="p-3 bg-gray-50 rounded-lg">
                   <p className="font-semibold">Identity Verified</p>
                   <p className={profile?.isVerified ? 'text-green-600' : 'text-red-600'}>
@@ -2260,6 +2388,15 @@ export const MyProfile = () => {
                     {profile?.phoneVerified ? 'Yes' : 'No'}
                   </p>
                 </div>
+                <PhoneVerificationCard
+                  profile={profile}
+                  phoneVerificationOtp={phoneVerificationOtp}
+                  setPhoneVerificationOtp={setPhoneVerificationOtp}
+                  phoneVerificationLoading={phoneVerificationLoading}
+                  phoneVerificationTimer={phoneVerificationTimer}
+                  onRequestPhoneCode={requestPhoneVerificationCode}
+                  onVerifyPhoneCode={verifyPhoneCode}
+                />
                 <div className="p-3 bg-gray-50 rounded-lg">
                   <p className="font-semibold">Payment Verified</p>
                   <p className={profile?.paymentVerified ? 'text-green-600' : 'text-red-600'}>

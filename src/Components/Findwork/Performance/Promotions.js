@@ -1,6 +1,6 @@
 // src/components/findWork/performance/Promotion.jsx
 import React, { useState } from "react";
-import { Megaphone, Target, BarChart3, Rocket, ChevronRight, DollarSign, TrendingUp, Eye, Users } from "lucide-react";
+import { Megaphone, Target, BarChart3, Rocket, ChevronRight, DollarSign, TrendingUp, Eye, Users, Star } from "lucide-react";
 
 const Benefit = ({ icon: Icon, title, desc }) => (
   <div className="flex gap-4 p-4 rounded-lg bg-white border border-[#E7E1DE] hover:border-[#C9452F] hover:shadow-sm transition-all duration-200">

@@ -1,6 +1,19 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  ChevronDown,
+  CreditCard,
+  LayoutDashboard,
+  MessageSquare,
+  Search,
+  ShieldCheck,
+  UserCircle2,
+  Wallet,
+  FileText,
+  Building2,
+  Sparkles,
+} from "lucide-react";
 import "./Navbar.css";
 import Logo from "../../Assets/logo.png";
 import { authAPI, getToken, getUser } from "../../Services/api";
@@ -17,16 +30,38 @@ const Navbar = () => {
 
   const isAuthenticated = Boolean(getToken() && user);
 
-  const dashboardPath = useMemo(() => {
-    if (user?.role === "freelancer") return "/find-work";
-    if (user?.role === "client") return "/talent";
-    return "/";
-  }, [user]);
-
   const displayName = useMemo(() => {
     if (!user) return "";
     if (user.role === "client") return user.companyName || user.name || user.email || "Account";
     return user.name || user.email || "Account";
+  }, [user]);
+
+  const roleMenuItems = useMemo(() => {
+    if (!user) return [];
+
+    if (user.role === "client") {
+      return [
+        { label: "Client Dashboard", icon: LayoutDashboard, to: "/client-services/overview" },
+        { label: "Client Profile", icon: Building2, to: "/client-services/profile" },
+        { label: "Create Job", icon: BriefcaseBusiness, to: "/client-services/create-job" },
+        { label: "My Jobs", icon: FileText, to: "/client-services/my-jobs" },
+        { label: "Messages", icon: MessageSquare, to: "/messages" },
+        { label: "Wallet", icon: Wallet, to: "/wallet" },
+        { label: "Payments", icon: CreditCard, to: "/payments" },
+        { label: "Client Pricing", icon: Sparkles, to: "/pricing" },
+      ];
+    }
+
+    return [
+      { label: "My Dashboard", icon: LayoutDashboard, to: "/my-profile/overview" },
+      { label: "My Profile", icon: UserCircle2, to: "/my-profile/overview" },
+      { label: "Find Work", icon: Search, to: "/find-work/overview" },
+      { label: "Messages", icon: MessageSquare, to: "/messages" },
+      { label: "Buyer Requests", icon: ShieldCheck, to: "/buyer-requests" },
+      { label: "Wallet", icon: Wallet, to: "/wallet" },
+      { label: "Payments", icon: CreditCard, to: "/payments" },
+      { label: "Proposals", icon: FileText, to: "/my-profile/proposals" },
+    ];
   }, [user]);
 
   useEffect(() => {
@@ -89,7 +124,9 @@ const Navbar = () => {
             </ul>
           )}
         </li>
-        <li><NavLink to="/pricing" className="nav-item">Pricing</NavLink></li>
+        {(!isAuthenticated || user?.role === "client") && (
+          <li><NavLink to="/pricing" className="nav-item">Pricing</NavLink></li>
+        )}
       </ul>
 
       <div className="nav-right">
@@ -104,12 +141,6 @@ const Navbar = () => {
           </>
         ) : (
           <>
-            <button className="app-link-btn" onClick={() => navigate(dashboardPath)}>
-              Dashboard
-            </button>
-            <button className="app-link-btn" onClick={() => navigate("/find-work/messages")}>
-              Messages
-            </button>
             <div
               className="user-menu"
               onMouseEnter={() => setShowUserMenu(true)}
@@ -122,10 +153,17 @@ const Navbar = () => {
               </button>
               {showUserMenu && (
                 <div className="user-dropdown">
-                  <button type="button" onClick={() => navigate(dashboardPath)}>My Dashboard</button>
-                  <button type="button" onClick={() => navigate("/my-profile")}>My Profile</button>
+                  <div className="user-dropdown-role">
+                    {user?.role === "client" ? "Client Tools" : "Freelancer Tools"}
+                  </div>
+                  {roleMenuItems.map((item) => (
+                    <button key={item.label} type="button" onClick={() => navigate(item.to)}>
+                      <item.icon size={16} />
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
                   <button type="button" onClick={handleLogout} disabled={isLoggingOut}>
-                    {isLoggingOut ? "Signing out..." : "Sign Out"}
+                    <span>{isLoggingOut ? "Signing out..." : "Sign Out"}</span>
                   </button>
                 </div>
               )}
@@ -171,15 +209,18 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <button
-                className="join-btn"
-                onClick={() => {
-                  navigate(dashboardPath);
-                  setMenuOpen(false);
-                }}
-              >
-                My Dashboard
-              </button>
+              {roleMenuItems.map((item) => (
+                <button
+                  key={item.label}
+                  className="join-btn"
+                  onClick={() => {
+                    navigate(item.to);
+                    setMenuOpen(false);
+                  }}
+                >
+                  {item.label}
+                </button>
+              ))}
               <button className="mobile-signout" onClick={handleLogout} disabled={isLoggingOut}>
                 {isLoggingOut ? "Signing out..." : "Sign Out"}
               </button>

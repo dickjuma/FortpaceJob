@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authAPI } from '../../Services/api';
+import { LockKeyhole, ShieldCheck } from 'lucide-react';
 
 // Map backend messages to friendlier text
 const getFriendlyLoginError = (message) => {
@@ -10,6 +11,12 @@ const getFriendlyLoginError = (message) => {
   }
   return message;
 };
+
+const LOGIN_STAGES = [
+  "Verifying your details",
+  "Securing your session",
+  "Preparing your workspace",
+];
 
 // OTP input group (6 separate boxes) with paste support
 const OtpInputGroup = ({ value, onChange, disabled }) => {
@@ -83,17 +90,31 @@ const Signin = () => {
   const [phoneOtp, setPhoneOtp] = useState("");
   const [emailOtp, setEmailOtp] = useState("");
   const [otpTimer, setOtpTimer] = useState(0);
+  const [loginStageIndex, setLoginStageIndex] = useState(0);
 
   useEffect(() => {
     if (otpTimer > 0) setTimeout(() => setOtpTimer(t => t - 1), 1000);
   }, [otpTimer]);
 
+  useEffect(() => {
+    if (!loading) {
+      setLoginStageIndex(0);
+      return undefined;
+    }
+
+    const interval = setInterval(() => {
+      setLoginStageIndex((current) => (current + 1) % LOGIN_STAGES.length);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [loading]);
+
   const redirectByRole = () => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user?.role === 'freelancer') {
-      navigate('/find-work');
+      navigate('/my-profile/overview');
     } else if (user?.role === 'client') {
-      navigate('/talent');
+      navigate('/client-services/overview');
     } else {
       navigate('/');
     }
@@ -191,7 +212,7 @@ const Signin = () => {
         localStorage.setItem("accessToken", res.accessToken);
         localStorage.setItem("refreshToken", res.refreshToken);
         if (res.user) localStorage.setItem("user", JSON.stringify(res.user));
-        navigate(res.user?.role === 'client' ? '/talent' : '/find-work');
+        navigate(res.user?.role === 'client' ? '/client-services/overview' : '/my-profile/overview');
       } else {
         setNotice(`${channel === "email" ? "Email" : "Phone"} verified successfully.`);
       }
@@ -220,29 +241,15 @@ const Signin = () => {
     }
   };
 
-  // Simple spinner component
-  const Spinner = () => (
-    <svg
-      className="animate-spin h-5 w-5 text-white"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-      />
-    </svg>
+  const LoadingPulse = () => (
+    <div className="flex items-center gap-1.5" aria-hidden="true">
+      <span className="h-2.5 w-2.5 rounded-full bg-white/95 animate-bounce" />
+      <span className="h-2.5 w-2.5 rounded-full bg-white/80 animate-pulse" />
+      <span className="h-2.5 w-2.5 rounded-full bg-white/65 animate-ping" />
+    </div>
   );
+
+  const activeLoginStage = LOGIN_STAGES[loginStageIndex];
 
   return (
     <>
@@ -330,21 +337,79 @@ const Signin = () => {
               </div>
             )}
 
-            {/* Sign in button with loading spinner */}
+            {/* Sign in button with production-ready loading state */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-[#D34079] text-white font-semibold rounded-xl shadow-md hover:bg-[#b12f65] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className={`relative w-full overflow-hidden rounded-xl py-4 text-white shadow-md transition focus:outline-none focus:ring-4 focus:ring-[#D34079]/20 ${
+                loading
+                  ? "cursor-wait bg-gradient-to-r from-[#D34079] via-[#C33770] to-[#B12F65]"
+                  : "bg-[#D34079] hover:bg-[#b12f65]"
+              }`}
+              aria-busy={loading}
             >
               {loading ? (
-                <>
-                  <Spinner />
-                  <span>Signing in...</span>
-                </>
+                <span className="relative z-10 flex items-center justify-center gap-3 px-4 font-semibold">
+                  <span className="relative flex h-11 w-11 shrink-0 items-center justify-center">
+                    <span className="absolute inset-0 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm" />
+                    <span className="absolute inset-0 rounded-full border border-white/25 animate-spin" />
+                    <span className="absolute inset-[5px] rounded-full border border-white/20 animate-pulse" />
+                    <LockKeyhole size={17} className="relative text-white" />
+                  </span>
+                  <span className="flex items-center gap-3 text-left">
+                    <LoadingPulse />
+                    <span>
+                      <span className="block leading-none">Signing you in</span>
+                      <span className="mt-1 block text-[11px] font-medium tracking-[0.16em] text-white/78 uppercase">
+                        {activeLoginStage}
+                      </span>
+                    </span>
+                  </span>
+                  <ShieldCheck size={16} className="hidden text-white/85 sm:block animate-pulse" />
+                </span>
               ) : (
-                'Sign In'
+                <span className="relative z-10 font-semibold">Sign In</span>
+              )}
+              {loading && (
+                <>
+                  <span className="absolute inset-y-0 left-0 w-1/2 -translate-x-full bg-white/10 blur-2xl animate-pulse" />
+                  <span className="absolute inset-x-0 top-0 h-px bg-white/30" />
+                  <span className="absolute inset-x-0 bottom-0 grid h-1 grid-cols-3 gap-1 bg-white/10 px-1">
+                    <span className="h-full rounded-full bg-white/85 animate-pulse" />
+                    <span className="h-full rounded-full bg-white/65 animate-pulse" />
+                    <span className="h-full rounded-full bg-white/45 animate-pulse" />
+                  </span>
+                  <span className="absolute right-4 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-white/85 animate-ping" />
+                  <span className="absolute left-4 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-white/65 animate-pulse" />
+                </>
               )}
             </button>
+
+            {loading && (
+              <div className="rounded-2xl border border-[#EBC1D4] bg-[#FFF6FA] px-4 py-3">
+                <div className="flex items-center justify-between gap-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#A23967]">
+                  <span>Login Progress</span>
+                  <span>{loginStageIndex + 1}/3</span>
+                </div>
+                <div className="mt-3 grid grid-cols-3 gap-2">
+                  {LOGIN_STAGES.map((stage, index) => {
+                    const isActive = index === loginStageIndex;
+                    const isCompleted = index < loginStageIndex;
+                    return (
+                      <div key={stage} className={`rounded-xl px-3 py-2 text-[11px] font-medium transition ${
+                        isActive
+                          ? "bg-[#D34079] text-white shadow-sm"
+                          : isCompleted
+                            ? "bg-[#F9DDE9] text-[#A23967]"
+                            : "bg-white text-[#9E7A88]"
+                      }`}>
+                        {stage}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Divider */}
             <div className="relative flex items-center py-2">
@@ -482,7 +547,7 @@ const Signin = () => {
       {/* Verification Modal */}
       {showVerificationModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform transition-all animate-fadeIn">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transition-all duration-200 ease-out">
             <h3 className="text-2xl font-bold text-[#4A312F] mb-2">Verify Your Account</h3>
             <p className="text-gray-600 mb-6">
               Your account is not yet verified. Please check your email or phone for the verification code.
@@ -507,7 +572,7 @@ const Signin = () => {
               >
                 {resendLoading ? (
                   <>
-                    <Spinner />
+                    <LoadingPulse />
                     <span>Sending...</span>
                   </>
                 ) : (
@@ -524,17 +589,6 @@ const Signin = () => {
           </div>
         </div>
       )}
-
-      {/* Add animation keyframes for modal fadeIn */}
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.2s ease-out;
-        }
-      `}</style>
     </>
   );
 };

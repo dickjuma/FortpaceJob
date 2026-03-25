@@ -42,7 +42,7 @@ const TalentHome = () => {
     const params = new URLSearchParams();
     if (query) params.set("q", query);
     if (serviceType && serviceType !== "All") params.set("serviceMode", serviceType);
-    navigate(`/talent/request?${params.toString()}`);
+    navigate(`/client-services/create-job?${params.toString()}`);
   };
 
   return (
@@ -79,7 +79,7 @@ const TalentHome = () => {
                 key={item}
                 type="button"
                 className="chip"
-                onClick={() => navigate(`/talent/request?q=${encodeURIComponent(item)}`)}
+                onClick={() => navigate(`/client-services/create-job?q=${encodeURIComponent(item)}`)}
               >
                 {item}
               </button>
@@ -113,7 +113,7 @@ const TalentHome = () => {
           </div>
           <div className="panel-footer">
             <p>Post a request and get matched in minutes.</p>
-            <Link className="cta-link" to="/talent/request">
+            <Link className="cta-link" to="/client-services/create-job">
               Start a request
               <ArrowRight size={16} />
             </Link>
@@ -137,7 +137,7 @@ const TalentHome = () => {
             <span className="eyebrow">Browse by category</span>
             <h2>Start broad, then drill into the right specialty.</h2>
           </div>
-          <Link className="text-link" to="/talent/request">
+          <Link className="text-link" to="/client-services/create-job">
             Post a request <ArrowRight size={16} />
           </Link>
         </div>
@@ -251,7 +251,7 @@ const TalentHome = () => {
           <h2>Post your request and let qualified talent come to you.</h2>
           <p>Describe the work once, then compare the best-fit experts without the back and forth.</p>
         </div>
-        <Link to="/talent/request" className="cta-btn">
+        <Link to="/client-services/create-job" className="cta-btn">
           Post a job
           <ArrowRight size={16} />
         </Link>

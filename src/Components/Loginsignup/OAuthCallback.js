@@ -38,9 +38,9 @@ const OAuthCallback = () => {
 
       const user = JSON.parse(localStorage.getItem("user"));
       if (user?.role === "freelancer") {
-        navigate("/find-work");
+        navigate("/my-profile/overview");
       } else if (user?.role === "client") {
-        navigate("/talent");
+        navigate("/client-services/overview");
       } else {
         navigate("/");
       }

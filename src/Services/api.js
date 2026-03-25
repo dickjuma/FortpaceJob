@@ -23,24 +23,6 @@ const getUser = () => {
   return userStr ? JSON.parse(userStr) : null;
 };
 
-const graphqlClient = async ({ query, variables = {}, operationName }) => {
-  const token = getToken();
-  const response = await fetch(`${API_BASE_URL}/graphql`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-    },
-    body: JSON.stringify({ query, variables, operationName }),
-  });
-
-  const result = await response.json();
-  if (!response.ok || result.errors?.length) {
-    throw new Error(result.errors?.[0]?.message || "GraphQL request failed");
-  }
-  return result.data;
-};
-
 // API Client with auth handling
 const apiClient = async (endpoint, options = {}) => {
   const token = getToken();
@@ -221,21 +203,9 @@ export const authAPI = {
 
   // Get current user
   getMe: async () => {
-    try {
-      const data = await graphqlClient({
-        operationName: "Me",
-        query: "query Me { me { _id id role name companyName email phoneNumber bio skills hourlyRate currency serviceMode physicalCategory serviceArea country languages companyDescription industry budget hiringCapacity avatar companyLogo isVerified emailVerified phoneVerified createdAt } }",
-      });
-      if (data?.me) {
-        setUser(data.me);
-        return { success: true, user: data.me, source: "graphql" };
-      }
-      throw new Error("GraphQL me query returned no data");
-    } catch (_) {
-      const data = await apiClient("/auth/me");
-      setUser(data.user);
-      return { ...data, source: "rest" };
-    }
+    const data = await apiClient("/auth/me");
+    setUser(data.user);
+    return { ...data, source: "rest" };
   },
 
   // Forgot password
@@ -730,6 +700,11 @@ export const buyerRequestAPI = {
     return apiClient(`/buyer-requests?${queryString}`);
   },
 
+  getMyRequests: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    return apiClient(`/buyer-requests/mine?${queryString}`);
+  },
+
   // Get single request
   getRequest: async (requestId) => {
     return apiClient(`/buyer-requests/${requestId}`);
@@ -742,6 +717,19 @@ export const buyerRequestAPI = {
       body: JSON.stringify(requestData),
     });
   },
+
+  updateRequest: async (requestId, requestData) => {
+    return apiClient(`/buyer-requests/${requestId}`, {
+      method: "PATCH",
+      body: JSON.stringify(requestData),
+    });
+  },
+
+  closeRequest: async (requestId) => {
+    return apiClient(`/buyer-requests/${requestId}/close`, {
+      method: "PATCH",
+    });
+  },
 };
 
 // ─── PROPOSALS API ─────────────────────────────────────────────────────────────
@@ -750,6 +738,17 @@ export const proposalAPI = {
   getMyProposals: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
     return apiClient(`/proposals?${queryString}`);
+  },
+
+  getProposalsForRequest: async (requestId) => {
+    return apiClient(`/proposals/request/${requestId}`);
+  },
+
+  updateProposalStatus: async (proposalId, status) => {
+    return apiClient(`/proposals/${proposalId}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    });
   },
 
   // Submit proposal

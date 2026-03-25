@@ -110,14 +110,19 @@ const PasswordStrength = ({ password }) => {
   };
 
   const score = strength();
-  const width = `${(score / 5) * 100}%`;
   const color =
     score <= 2 ? "bg-red-500" : score <= 4 ? "bg-yellow-500" : "bg-green-500";
+  const widthClass =
+    score === 0 ? "w-0" :
+    score === 1 ? "w-1/5" :
+    score === 2 ? "w-2/5" :
+    score === 3 ? "w-3/5" :
+    score === 4 ? "w-4/5" : "w-full";
 
   return (
     <div className="mt-1">
       <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
-        <div className={`h-full ${color} transition-all duration-300`} style={{ width }} />
+        <div className={`h-full ${color} ${widthClass} transition-all duration-300`} />
       </div>
       <p className="text-xs text-gray-500 mt-1">
         {score <= 2 && "Weak"}
@@ -156,11 +161,8 @@ const Signup = () => {
 
   // OTP state
   const [otpPhase, setOtpPhase] = useState(false);
-  const [phoneOtp, setPhoneOtp] = useState("");
   const [emailOtp, setEmailOtp] = useState("");
   const [pendingEmail, setPendingEmail] = useState("");
-  const [pendingPhone, setPendingPhone] = useState("");
-  const [phoneVerified, setPhoneVerified] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
 
   // Resend timer
@@ -289,7 +291,6 @@ const Signup = () => {
     setLoading(true);
     setError("");
     setNotice("");
-    setPhoneOtp("");
     setEmailOtp("");
 
     try {
@@ -306,9 +307,8 @@ const Signup = () => {
 
       const result = await authAPI.registerWithOTP(userData, true);
       setPendingEmail(result.pendingEmail || email);
-      setPendingPhone(result.pendingPhoneNumber || phone);
       setOtpPhase(true);
-      setNotice(result.message || "Verification codes sent to your email and phone.");
+      setNotice(result.message || "A verification code has been sent to your email.");
     } catch (err) {
       setError(getFriendlyAuthError(err.message));
     } finally {
@@ -317,29 +317,9 @@ const Signup = () => {
   };
 
   // ----- OTP verification -----
-  const verifyPhone = async () => {
-    if (phoneOtp.length !== 6) {
-      setError("Please enter the 6‑digit phone OTP.");
-      return;
-    }
-    setLoading(true);
-    setError("");
-    setNotice("");
-    try {
-      await authAPI.verifyPhoneOTP(pendingEmail, pendingPhone, phoneOtp);
-      setPhoneVerified(true);
-      setPhoneOtp("");
-      setNotice("✓ Phone verified successfully!");
-    } catch (err) {
-      setError(getFriendlyAuthError(err.message));
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const verifyEmail = async () => {
     if (emailOtp.length !== 6) {
-      setError("Please enter the 6‑digit email OTP.");
+      setError("Please enter the 6-digit email OTP.");
       return;
     }
     setLoading(true);
@@ -349,7 +329,7 @@ const Signup = () => {
       await authAPI.verifyEmailOTP(pendingEmail, emailOtp);
       setEmailVerified(true);
       setEmailOtp("");
-      setNotice("✓ Email verified successfully!");
+      setNotice("Email verified successfully.");
     } catch (err) {
       setError(getFriendlyAuthError(err.message));
     } finally {
@@ -363,11 +343,7 @@ const Signup = () => {
     setError("");
     setNotice("");
     try {
-      if (channel === "phone") {
-        await authAPI.resendOTP("", pendingPhone, channel);
-      } else {
-        await authAPI.resendOTP(pendingEmail, "", channel);
-      }
+      await authAPI.resendOTP(pendingEmail, "", channel);
       setNotice(`OTP resent via ${channel}.`);
       setResendTimer(60);
       setResendChannel(channel);
@@ -379,7 +355,7 @@ const Signup = () => {
   };
 
   const completeSignup = () => {
-    navigate("/profile");
+    navigate("/my-profile/overview");
   };
 
   // Step indicator component
@@ -736,7 +712,7 @@ const Signup = () => {
                     className="px-6 py-3 bg-[#D34079] text-white font-semibold rounded-xl shadow-md hover:bg-[#b12f65] transition disabled:opacity-50 flex items-center gap-2"
                   >
                     {loading && <Spinner />}
-                    {loading ? "Sending OTPs..." : "Create Account"}
+                    {loading ? "Sending email code..." : "Create Account"}
                   </button>
                 </div>
               </form>
@@ -746,65 +722,8 @@ const Signup = () => {
           // OTP Verification Phase
           <div ref={otpContainerRef} tabIndex={-1} className="space-y-6 outline-none">
             <p className="text-gray-500 text-sm">
-              Enter the 6‑digit codes sent to your email and phone.
+              Enter the 6-digit code sent to your email to finish creating your account.
             </p>
-
-            {/* Phone verification */}
-            <div
-              className={`p-5 rounded-xl border transition-colors ${
-                phoneVerified
-                  ? "border-green-200 bg-green-50/30"
-                  : "border-gray-200 bg-white"
-              }`}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-[#4A312F]">Phone: {pendingPhone}</span>
-                  {!phoneVerified && (
-                    <button
-                      type="button"
-                      onClick={() => setOtpPhase(false)}
-                      className="text-xs text-[#D34079] hover:underline"
-                    >
-                      (Edit)
-                    </button>
-                  )}
-                </div>
-                {phoneVerified && (
-                  <span className="text-green-600 text-sm font-medium">✓ Verified</span>
-                )}
-              </div>
-              {!phoneVerified && (
-                <>
-                  <OtpInputGroup
-                    value={phoneOtp}
-                    onChange={setPhoneOtp}
-                    disabled={loading}
-                  />
-                  <div className="flex justify-between items-center mt-3">
-                    <button
-                      type="button"
-                      onClick={() => resendOtp("phone")}
-                      disabled={loading || resendTimer > 0}
-                      className="text-sm text-[#D34079] hover:underline disabled:opacity-50"
-                    >
-                      {resendTimer > 0 && resendChannel === "phone"
-                        ? `Resend in ${resendTimer}s`
-                        : "Resend code"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={verifyPhone}
-                      disabled={loading || phoneOtp.length !== 6}
-                      className="px-5 py-2 bg-[#D34079] text-white font-medium rounded-lg hover:bg-[#b12f65] disabled:opacity-50 flex items-center gap-2"
-                    >
-                      {loading && <Spinner />}
-                      Verify
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
 
             {/* Email verification */}
             <div
@@ -828,7 +747,7 @@ const Signup = () => {
                   )}
                 </div>
                 {emailVerified && (
-                  <span className="text-green-600 text-sm font-medium">✓ Verified</span>
+                  <span className="text-green-600 text-sm font-medium">Verified</span>
                 )}
               </div>
               {!emailVerified && (
@@ -864,7 +783,7 @@ const Signup = () => {
             </div>
 
             {/* Final action */}
-            {phoneVerified && emailVerified ? (
+            {emailVerified ? (
               <button
                 type="button"
                 onClick={completeSignup}
