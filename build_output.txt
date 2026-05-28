@@ -1,0 +1,289 @@
+﻿node.exe : (node:10264) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\USER\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:10264) [D...ts.F_OK instead:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Creating an optimized production build...
+Compiled with warnings.
+
+[eslint] 
+src\admin\AdminRoutes.jsx
+  Line 1:17:  'Suspense' is defined but never used  no-unused-vars
+  Line 1:27:  'lazy' is defined but never used      no-unused-vars
+
+src\admin\api\marketplace\marketplace.api.js
+  Line 1:10:  'subDays' is defined but never used   no-unused-vars
+  Line 1:19:  'subHours' is defined but never used  no-unused-vars
+
+src\admin\api\users\users.api.js
+  Line 1:29:  'format' is defined but never used  no-unused-vars
+
+src\admin\components\marketplace\UserRiskTable.jsx
+  Line 15:3:   'Ban' is defined but never used                                                                            no-unused-vars
+  Line 16:3:   'RotateCcw' is defined but never used                                                                      no-unused-vars
+  Line 17:3:   'ArrowUpRight' is defined but never used                                                                   no-unused-vars
+  Line 33:38:  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images  jsx-a11y/alt-text
+
+src\admin\components\sidebar\Sidebar.jsx
+  Line 2:10:  'NavLink' is defined but never used  no-unused-vars
+
+src\admin\components\sidebar\SidebarGroup.jsx
+  Line 22:6:  React Hook useEffect has missing dependencies: 'isOpen' and 'onToggle'. Either include them or remove the dependency array. If 'onToggle' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+
+src\admin\components\users\analytics\UserGrowthMiniChart.jsx
+  Line 2:57:  'XAxis' is defined but never used  no-unused-vars
+
+src\admin\components\users\modals\SuspendUserModal.jsx
+  Line 2:25:  'Clock' is defined but never used  no-unused-vars
+
+src\admin\components\users\profile\AdminProfilePanel.jsx
+  Line 6:3:  'Clock' is defined but never used     no-unused-vars
+  Line 9:3:  'Settings' is defined but never used  no-unused-vars
+
+src\admin\components\users\profile\ClientProfilePanel.jsx
+  Line 4:3:  'Wallet' is defined but never used        no-unused-vars
+  Line 8:3:  'ExternalLink' is defined but never used  no-unused-vars
+
+src\admin\components\users\profile\FreelancerProfilePanel.jsx
+  Line 6:3:    'MapPin' is defined but never used     no-unused-vars
+  Line 7:3:    'UserCheck' is defined but never used  no-unused-vars
+  Line 15:10:  'cn' is defined but never used         no-unused-vars
+
+src\admin\components\users\profile\ProfileAuditTab.jsx
+  Line 4:3:   'History' is defined but never used   no-unused-vars
+  Line 8:3:   'Shield' is defined but never used    no-unused-vars
+  Line 9:3:   'Activity' is defined but never used  no-unused-vars
+  Line 14:8:  'Card' is defined but never used      no-unused-vars
+  Line 16:8:  'Skeleton' is defined but never used  no-unused-vars
+
+src\admin\components\users\profile\UserProfileHeader.jsx
+  Line 13:3:   'Shield' is defined but never used  no-unused-vars
+  Line 16:10:  'cn' is defined but never used      no-unused-vars
+
+src\admin\components\users\shared\KycStatusBadge.jsx
+  Line 2:23:  'ShieldAlert' is defined but never used  no-unused-vars
+
+src\admin\components\users\table\BulkActionsBar.jsx
+  Line 3:10:  'cn' is defined but never used  no-unused-vars
+
+src\admin\components\users\table\UserTable.jsx
+  Line 2:42:  'Download' is defined but never used  no-unused-vars
+
+src\admin\components\users\table\UserTableFilters.jsx
+  Line 3:10:  'cn' is defined but never used                                                                                                no-unused-vars
+  Line 43:6:  React Hook useEffect has missing dependencies: 'section' and 'setFilter'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+src\admin\config\roleConfig.js
+  Line 2:38:  'DollarSign' is defined but never used  no-unused-vars
+
+src\admin\config\users\userRoleConfig.js
+  Line 1:31:   'ShieldCheck' is defined but never used  no-unused-vars
+  Line 1:44:   'Settings' is defined but never used     no-unused-vars
+  Line 1:54:   'Users' is defined but never used        no-unused-vars
+  Line 1:61:   'Briefcase' is defined but never used    no-unused-vars
+  Line 1:99:   'Scale' is defined but never used        no-unused-vars
+  Line 1:106:  'Clock' is defined but never used        no-unused-vars
+  Line 1:113:  'Ban' is defined but never used          no-unused-vars
+
+src\admin\layouts\AdminLayout.jsx
+  Line 7:3:  'HelpCircle' is defined but never used  no-unused-vars
+
+src\admin\pages\Dashboard.jsx
+  Line 151:21:  No duplicate props allowed  react/jsx-no-duplicate-props
+
+src\admin\pages\DisputeResolution.jsx
+  Line 4:3:  'MessageSquare' is defined but never used  no-unused-vars
+
+src\admin\pages\FinancialControl.jsx
+  Line 4:3:  'ArrowDownRight' is defined but never used  no-unused-vars
+  Line 5:3:  'Wallet' is defined but never used          no-unused-vars
+  Line 6:3:  'ShieldCheck' is defined but never used     no-unused-vars
+
+src\admin\pages\marketplace\ModerationDashboard.jsx
+  Line 1:27:   'useEffect' is defined but never used                 no-unused-vars
+  Line 10:3:   'Search' is defined but never used                    no-unused-vars
+  Line 11:3:   'Bell' is defined but never used                      no-unused-vars
+  Line 12:3:   'Calendar' is defined but never used                  no-unused-vars
+  Line 14:3:   'ChevronRight' is defined but never used              no-unused-vars
+  Line 15:3:   'Filter' is defined but never used                    no-unused-vars
+  Line 24:3:   'YAxis' is defined but never used                     no-unused-vars
+  Line 33:3:   'Legend' is defined but never used                    no-unused-vars
+  Line 69:10:  'activeAlerts' is assigned a value but never used     no-unused-vars
+  Line 69:24:  'setActiveAlerts' is assigned a value but never used  no-unused-vars
+  Line 70:10:  'systemStatus' is assigned a value but never used     no-unused-vars
+  Line 70:24:  'setSystemStatus' is assigned a value but never used  no-unused-vars
+
+src\admin\pages\marketplace\UserRiskPage.jsx
+  Line 4:3:  'Search' is defined but never used        no-unused-vars
+  Line 5:3:  'Filter' is defined but never used        no-unused-vars
+  Line 6:3:  'Download' is defined but never used      no-unused-vars
+  Line 7:3:  'MoreVertical' is defined but never used  no-unused-vars
+
+src\admin\pages\users\UserProfilePage.jsx
+  Line 1:27:  'useEffect' is defined but never used  no-unused-vars
+  Line 4:40:  'Building2' is defined but never used  no-unused-vars
+  Line 4:51:  'Shield' is defined but never used     no-unused-vars
+  Line 4:59:  'Settings' is defined but never used   no-unused-vars
+
+src\common\components\Homepage\Homepage.js
+  Line 11:10:  'showCTA' is assigned a value but never used                                                                        no-unused-vars
+  Line 44:6:   React Hook useEffect has a missing dependency: 'taglines.length'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\common\components\Loginsignup\signup.js
+  Line 182:31:  React Hook useCallback received a function whose dependencies are unknown. Pass an inline function instead  react-hooks/exhaustive-deps
+
+src\common\pages\MyProfile.jsx
+  Line 33:3:    'Linkedin' is defined but never used                                                                                                                                                                                                                                                   no-unused-vars
+  Line 34:3:    'Github' is defined but never used                                                                                                                                                                                                                                                     no-unused-vars
+  Line 35:3:    'Twitter' is defined but never used                                                                                                                                                                                                                                                    no-unused-vars
+  Line 36:3:    'Facebook' is defined but never used                                                                                                                                                                                                                                                   no-unused-vars
+  Line 38:3:    'MapPin' is defined but never used                                                                                                                                                                                                                                                     no-unused-vars
+  Line 39:3:    'Calendar' is defined but never used                                                                                                                                                                                                                                                   no-unused-vars
+  Line 40:3:    'Mail' is defined but never used                                                                                                                                                                                                                                                       no-unused-vars
+  Line 41:3:    'Phone' is defined but never used                                                                                                                                                                                                                                                      no-unused-vars
+  Line 43:3:    'HelpCircle' is defined but never used                                                                                                                                                                                                                                                 no-unused-vars
+  Line 46:8:    'debounce' is defined but never used                                                                                                                                                                                                                                                   no-unused-vars
+  Line 119:7:   'INDUSTRIES' is assigned a value but never used                                                                                                                                                                                                                                        no-unused-vars
+  Line 185:7:   'getFileIcon' is assigned a value but never used                                                                                                                                                                                                                                       no-unused-vars
+  Line 847:21:  'setPortfolioItems' is assigned a value but never used                                                                                                                                                                                                                                 no-unused-vars
+  Line 884:6:   React Hook useEffect has a missing dependency: 'expList'. Either include it or remove the dependency array                                                                                                                                                                             react-hooks/exhaustive-deps
+  Line 887:6:   React Hook useEffect has a missing dependency: 'eduList'. Either include it or remove the dependency array                                                                                                                                                                             react-hooks/exhaustive-deps
+  Line 890:6:   React Hook useEffect has a missing dependency: 'certList'. Either include it or remove the dependency array                                                                                                                                                                            react-hooks/exhaustive-deps
+  Line 893:6:   React Hook useEffect has a missing dependency: 'packageList'. Either include it or remove the dependency array                                                                                                                                                                         react-hooks/exhaustive-deps
+  Line 896:6:   React Hook useEffect has a missing dependency: 'languageList'. Either include it or remove the dependency array                                                                                                                                                                        react-hooks/exhaustive-deps
+  Line 899:6:   React Hook useEffect has a missing dependency: 'pastProjectsList'. Either include it or remove the dependency array                                                                                                                                                                    react-hooks/exhaustive-deps
+  Line 1257:6:  React Hook useEffect has missing dependencies: 'businessForm', 'clientAdvancedForm', 'clientBasicForm', 'clientCompanyForm', 'clientPreferencesForm', 'personalForm', 'skillsForm', 'socialForm', 'tradeForm', and 'workPrefForm'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 1313:9:  'onSaveBusiness' is assigned a value but never used                                                                                                                                                                                                                                    no-unused-vars
+
+src\common\services\api.js
+  Line 808:1:  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+src\freelancer\components\Findwork\BuyerRequests\ProposalManager.js
+  Line 15:3:   'Calendar' is defined but never used                   no-unused-vars
+  Line 16:3:   'TrendingUp' is defined but never used                 no-unused-vars
+  Line 17:3:   'AlertCircle' is defined but never used                no-unused-vars
+  Line 18:3:   'ChevronDown' is defined but never used                no-unused-vars
+  Line 22:3:   'BarChart' is defined but never used                   no-unused-vars
+  Line 24:3:   'RefreshCw' is defined but never used                  no-unused-vars
+  Line 26:3:   'Printer' is defined but never used                    no-unused-vars
+  Line 27:3:   'Share2' is defined but never used                     no-unused-vars
+  Line 28:3:   'Bell' is defined but never used                       no-unused-vars
+  Line 29:3:   'Briefcase' is defined but never used                  no-unused-vars
+  Line 30:3:   'Layers' is defined but never used                     no-unused-vars
+  Line 362:9:  'handleBulkAction' is assigned a value but never used  no-unused-vars
+
+src\freelancer\components\Findwork\Gigs\Categories.js
+  Line 8:26:    'Calendar' is defined but never used            no-unused-vars
+  Line 9:11:    'Globe' is defined but never used               no-unused-vars
+  Line 9:18:    'Lock' is defined but never used                no-unused-vars
+  Line 9:24:    'Heart' is defined but never used               no-unused-vars
+  Line 10:3:    'TrendingUp' is defined but never used          no-unused-vars
+  Line 10:15:   'CheckCircle' is defined but never used         no-unused-vars
+  Line 10:37:   'Trophy' is defined but never used              no-unused-vars
+  Line 270:10:  'isHovered' is assigned a value but never used  no-unused-vars
+
+src\freelancer\components\Findwork\Gigs\CreateGig.js
+  Line 3:49:    'Clock' is defined but never used                                                                                            no-unused-vars
+  Line 4:23:    'MessageSquare' is defined but never used                                                                                    no-unused-vars
+  Line 5:22:    'Star' is defined but never used                                                                                             no-unused-vars
+  Line 5:28:    'Zap' is defined but never used                                                                                              no-unused-vars
+  Line 6:11:    'Trash2' is defined but never used                                                                                           no-unused-vars
+  Line 6:24:    'Palette' is defined but never used                                                                                          no-unused-vars
+  Line 6:40:    'TrendingUp' is defined but never used                                                                                       no-unused-vars
+  Line 7:26:    'FileCode' is defined but never used                                                                                         no-unused-vars
+  Line 7:36:    'Package' is defined but never used                                                                                          no-unused-vars
+  Line 8:27:    'Dollar' is defined but never used                                                                                           no-unused-vars
+  Line 8:46:    'Paint' is defined but never used                                                                                            no-unused-vars
+  Line 9:3:     'Volume2' is defined but never used                                                                                          no-unused-vars
+  Line 9:12:    'Camera' is defined but never used                                                                                           no-unused-vars
+  Line 9:31:    'Link' is defined but never used                                                                                             no-unused-vars
+  Line 10:3:    'Percent' is defined but never used                                                                                          no-unused-vars
+  Line 10:12:   'Award' is defined but never used                                                                                            no-unused-vars
+  Line 10:38:   'UserIcon' is defined but never used                                                                                         no-unused-vars
+  Line 11:3:    'Mail' is defined but never used                                                                                             no-unused-vars
+  Line 11:9:    'Phone' is defined but never used                                                                                            no-unused-vars
+  Line 11:16:   'MapPin' is defined but never used                                                                                           no-unused-vars
+  Line 11:24:   'CreditCard' is defined but never used                                                                                       no-unused-vars
+  Line 12:3:    'CheckCircle' is defined but never used                                                                                      no-unused-vars
+  Line 12:16:   'AlertTriangle' is defined but never used                                                                                    no-unused-vars
+  Line 12:31:   'Key' is defined but never used                                                                                              no-unused-vars
+  Line 12:36:   'Bell' is defined but never used                                                                                             no-unused-vars
+  Line 16:7:    'validators' is assigned a value but never used                                                                              no-unused-vars
+  Line 343:13:  'gigData' is assigned a value but never used                                                                                 no-unused-vars
+  Line 571:9:   'StatsCard' is assigned a value but never used                                                                               no-unused-vars
+  Line 607:6:   React Hook useEffect has a missing dependency: 'calculateCompletionScore'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\freelancer\components\Findwork\Gigs\ManageGigs.js
+  Line 1:27:    'useEffect' is defined but never used               no-unused-vars
+  Line 3:62:    'Eye' is defined but never used                     no-unused-vars
+  Line 3:67:    'Trash2' is defined but never used                  no-unused-vars
+  Line 4:3:     'ChevronDown' is defined but never used             no-unused-vars
+  Line 4:16:    'ArrowUpRight' is defined but never used            no-unused-vars
+  Line 5:22:    'ExternalLink' is defined but never used            no-unused-vars
+  Line 6:34:    'Share2' is defined but never used                  no-unused-vars
+  Line 8:27:    'Users' is defined but never used                   no-unused-vars
+  Line 8:34:    'Target' is defined but never used                  no-unused-vars
+  Line 9:3:     'Calendar' is defined but never used                no-unused-vars
+  Line 9:13:    'Tag' is defined but never used                     no-unused-vars
+  Line 9:24:    'Globe' is defined but never used                   no-unused-vars
+  Line 9:31:    'MessageSquare' is defined but never used           no-unused-vars
+  Line 10:16:   'CheckCircle' is defined but never used             no-unused-vars
+  Line 11:15:   'TrendingDown' is defined but never used            no-unused-vars
+  Line 11:29:   'Shield' is defined but never used                  no-unused-vars
+  Line 11:37:   'Award' is defined but never used                   no-unused-vars
+  Line 12:30:   'Settings' is defined but never used                no-unused-vars
+  Line 14:17:   'Percent' is defined but never used                 no-unused-vars
+  Line 16:20:   'ArrowUpDown' is defined but never used             no-unused-vars
+  Line 16:33:   'Check' is defined but never used                   no-unused-vars
+  Line 17:3:    'PieChart' is defined but never used                no-unused-vars
+  Line 17:13:   'LineChart' is defined but never used               no-unused-vars
+  Line 454:7:   'ANALYTICS' is assigned a value but never used      no-unused-vars
+  Line 468:10:  'action' is assigned a value but never used         no-unused-vars
+  Line 468:18:  'setAction' is assigned a value but never used      no-unused-vars
+  Line 623:10:  'showAnalytics' is assigned a value but never used  no-unused-vars
+  Line 912:17:  'setStats' is assigned a value but never used       no-unused-vars
+  Line 924:21:  'setAnalytics' is assigned a value but never used   no-unused-vars
+
+src\freelancer\components\Findwork\Messages.js
+  Line 91:7:  React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+
+src\freelancer\components\Findwork\Performance\Analytics.js
+  Line 5:33:  'Filter' is defined but never used      no-unused-vars
+  Line 7:3:   'ArrowRight' is defined but never used  no-unused-vars
+
+src\freelancer\components\Findwork\Performance\Badges.js
+  Line 4:3:   'ChevronRight' is defined but never used  no-unused-vars
+  Line 5:22:  'Clock' is defined but never used         no-unused-vars
+  Line 5:39:  'Flag' is defined but never used          no-unused-vars
+  Line 6:3:   'ArrowRight' is defined but never used    no-unused-vars
+  Line 6:15:  'Settings' is defined but never used      no-unused-vars
+
+src\freelancer\components\Findwork\Performance\SkillLevels.js
+  Line 4:3:   'ChevronRight' is defined but never used  no-unused-vars
+  Line 7:13:  'Calendar' is defined but never used      no-unused-vars
+  Line 7:23:  'HelpCircle' is defined but never used    no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  519.26 kB  build\static\js\main.a13afcf3.js
+  24.83 kB   build\static\css\main.d242ed65.css
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+
