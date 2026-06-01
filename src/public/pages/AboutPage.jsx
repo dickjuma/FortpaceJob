@@ -5,22 +5,10 @@ import { useSiteSettings } from '../../common/hooks/useSiteSettings';
 
 const FALLBACK_TEAM = [
   {
-    name: 'Trevor Asun',
-    role: 'Founder & CEO',
-    bio: 'Product and marketplace strategy. Leading Fortespace vision for trusted work in Africa.',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80',
-  },
-  {
-    name: 'Operations Lead',
-    role: 'Head of Operations',
-    bio: 'Escrow, payouts, and partner operations.',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
-  },
-  {
-    name: 'Engineering Lead',
-    role: 'CTO (placeholder)',
-    bio: 'Platform architecture, security, and integrations.',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
+    id: 1,
+    name: 'Dickson Juma',
+    role: 'Lead Software Engineer',
+    bio: 'Leads platform architecture, engineering standards, and delivery across the Fortespace ecosystem.',
   },
 ];
 
@@ -49,7 +37,7 @@ export default function AboutPage() {
 
         <section className="mb-16 grid md:grid-cols-3 gap-6">
           {[
-            { title: 'Verified talent', text: 'Browse by Fiverr-style categories with role-level matching.' },
+            { title: 'Verified talent', text: 'Browse by Fortespace categories with role-level matching.' },
             { title: 'Protected payments', text: 'Escrow, subscriptions, and master wallet compliance.' },
             { title: 'Admin oversight', text: 'Platform settings, forms, and reviews under one console.' },
           ].map((item) => (
@@ -58,6 +46,50 @@ export default function AboutPage() {
               <p className="text-sm text-zinc-600">{item.text}</p>
             </div>
           ))}
+        </section>
+
+        <section className="mb-16">
+          <h2 className="text-2xl font-black text-zinc-900 mb-4">Our Mission</h2>
+          <p className="text-zinc-700 leading-relaxed">
+            Bring Opportunity to All Talent. We empower the African youth and everyday entrepreneurs to build personal brands and businesses and make a living doing what they love best.
+          </p>
+        </section>
+
+        <section className="mb-16">
+          <h2 className="text-2xl font-black text-zinc-900 mb-4">Our Vision</h2>
+          <p className="text-zinc-700 leading-relaxed">
+            To create a world where people can make a living doing what they love to do and what they know how to do best.
+          </p>
+        </section>
+
+        <section className="mb-16">
+          <h2 className="text-2xl font-black text-zinc-900 mb-4">What Makes Us Different</h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
+              <h3 className="font-black text-zinc-900 mb-2">Service breadth</h3>
+              <p className="text-sm text-zinc-600">
+                Fortespace focuses exclusively on services and talent labor. We offer a vast marketplace covering all skill categories — digital, professional, and practical.
+              </p>
+            </div>
+            <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
+              <h3 className="font-black text-zinc-900 mb-2">KYC Vetted</h3>
+              <p className="text-sm text-zinc-600">
+                Every professional and SME is verified with National ID, ensuring you hire a human.
+              </p>
+            </div>
+            <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
+              <h3 className="font-black text-zinc-900 mb-2">Escrow Protected</h3>
+              <p className="text-sm text-zinc-600">
+                All funds are secured in an intermediary account before a job or gig starts. No more non-payment anxiety.
+              </p>
+            </div>
+            <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
+              <h3 className="font-black text-zinc-900 mb-2">Fortescore</h3>
+              <p className="text-sm text-zinc-600">
+                Our proprietary, data-backed rating system that gives Clients the precision to hire based on proven, verified performance and contract success.
+              </p>
+            </div>
+          </div>
         </section>
 
         <section>
@@ -70,17 +102,10 @@ export default function AboutPage() {
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {team.map((member) => (
-                <article key={member.id || member.name} className="bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-48 object-cover bg-zinc-100"
-                  />
-                  <div className="p-5">
-                    <h3 className="font-black text-zinc-900">{member.name}</h3>
-                    <p className="text-sm font-bold text-[#14a800] mt-1">{member.role}</p>
-                    <p className="text-sm text-zinc-600 mt-3 leading-relaxed">{member.bio}</p>
-                  </div>
+                <article key={member.id || member.name} className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
+                  <h3 className="font-black text-zinc-900">{member.name}</h3>
+                  <p className="text-sm font-bold text-[#14a800] mt-1">{member.role}</p>
+                  <p className="text-sm text-zinc-600 mt-3 leading-relaxed">{member.bio}</p>
                 </article>
               ))}
             </div>

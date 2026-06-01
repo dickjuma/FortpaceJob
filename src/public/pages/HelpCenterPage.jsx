@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Search, Book, PlayCircle, MessageCircle, 
   HelpCircle, Shield, CreditCard, User, 
-  Briefcase, ArrowRight, Sparkles, PhoneCall, FileText
+  Briefcase, ArrowRight, Sparkles, PhoneCall, FileText, ChevronDown
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
 
@@ -16,16 +16,104 @@ const CATEGORIES = [
 ];
 
 const ARTICLES = [
-  { title: 'How to create a successful Gig', views: '124k' },
-  { title: 'Understanding the success score', views: '98k' },
-  { title: 'Escrow payment protection explained', views: '85k' },
-  { title: 'How to submit a proposal that wins', views: '210k' },
-  { title: 'Setting up two-factor authentication', views: '45k' },
-  { title: 'Dispute resolution guidelines', views: '32k' },
+  { title: 'Getting started with Fortespace', views: '12.4k', category: 'Getting Started' },
+  { title: 'How the Fortescore rating works', views: '9.8k', category: 'Trust & Safety' },
+  { title: 'Escrow payment protection explained', views: '8.5k', category: 'Payments & Billing' },
+  { title: 'How to submit a bid that wins', views: '21k', category: 'Finding Work' },
+  { title: 'Setting up two-factor authentication', views: '4.5k', category: 'Account Settings' },
+  { title: 'Dispute resolution guidelines', views: '3.2k', category: 'Trust & Safety' },
+];
+
+function FAQItem({ item }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-zinc-200 dark:border-zinc-800 rounded-2xl">
+      <button
+        type="button"
+        className="w-full flex items-center justify-between p-4 text-left"
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span className="font-bold text-zinc-900 dark:text-white text-sm">{item.question}</span>
+        <ChevronDown className={`w-4 h-4 text-zinc-400 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <p className="px-4 pb-4 text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">{item.answer}</p>
+      )}
+    </div>
+  );
+}
+
+const FAQS = [
+  {
+    question: 'What is Fortespace?',
+    answer: 'Fortespace is an online work marketplace designed to be the safest and most comprehensive platform in Africa. We connect Clients/Job Posters with a wide array of verified talent — from software developers and graphic designers to handymen and event planners — all secured by our proprietary Trust Guarantee (KYC, Escrow, and Fortescore).',
+  },
+  {
+    question: 'How is Fortespace safer than other platforms?',
+    answer: 'Because of our Trust Guarantee. We focus on Quality & Trust — every provider is KYC Verified and every transaction uses our secure Escrow system. This elevates our quality far above casual listings.',
+  },
+  {
+    question: 'What is the Fortescore?',
+    answer: 'It is our proprietary, custom algorithm for verifying and rating talent. It goes beyond simple stars by factoring in verified job success, verified job completion rate, on-time delivery, and peer reviews. For Clients, it ensures you hire with precision. For Providers, a high Fortescore is the fastest way to get priority visibility and secure high-value jobs.',
+  },
+  {
+    question: 'How fast is the Mobile Money payout?',
+    answer: 'Instant. Once the Client approves the job, the funds leave the Escrow account and are immediately processed to your linked Mobile Money wallet. We are optimized for African markets and currencies.',
+  },
+  {
+    question: 'I\'m an SME. Why should I pay $5/month?',
+    answer: 'That small fee buys you the Verified Business Badge and Priority Placement. You stop blending in with individual freelancers and get immediately seen by high-value Clients who need reliable, scalable teams. Your paid subscription drives a significantly higher Lifetime Value (LTV) for your business.',
+  },
+  {
+    question: 'How do you prevent fraud and ensure security?',
+    answer: 'We combat fraud with a multi-layered approach: KYC Verification: All Providers must complete mandatory verification using their National ID before offering services. Escrow Protection: Funds are held securely in an intermediary account until the work is formally approved by the Client. Secure Technology: Our platform uses advanced encryption and adheres to strict data security regulations to keep all user data protected.',
+  },
+  {
+    question: 'Is Fortespace only for digital services like coding and design?',
+    answer: 'Absolutely not. We are a "Name It All" marketplace. While we host top-tier digital talent, our platform is equally strong in physical and logistical services like plumbing, house cleaning, event planning, and moving services. Our goal is to be a one-stop shop for all service needs.',
+  },
+  {
+    question: 'How much does it cost to post a job or hire talent?',
+    answer: 'Posting a job and searching for talent are completely free for Clients/Job Posters. You only pay the agreed-upon price for the service itself, which is paid into the secure Escrow account.',
+  },
+  {
+    question: 'What is the process for posting a job?',
+    answer: 'You simply define the project scope and budget, use the Fortescore and location filters to select the desired Provider type, and publish the job to receive secured bids.',
+  },
+  {
+    question: 'What if I am unhappy with the service provided?',
+    answer: 'Since your funds are held in Escrow, they are protected. If a dispute arises, Fortespace provides a clear, documented dispute resolution process. We review the evidence and communication logs to make a final, binding decision regarding the release or return of funds.',
+  },
+  {
+    question: 'Can I hire an SME Provider instead of an individual freelancer (P-IP)?',
+    answer: 'Yes. When posting a job or searching, you can use the Provider Type filter to specifically search for SME Providers (Small-to-Medium Enterprises). These businesses have the Verified Business Badge, indicating they often have teams, processes, and higher capacity for larger or ongoing projects.',
+  },
+  {
+    question: 'How do I become "KYC Verified"?',
+    answer: 'After creating your profile, you will be prompted to complete the mandatory Know Your Customer (KYC) process, which requires submitting a copy of your National ID or equivalent government-issued document. This verification is essential to receive the KYC Verified Badge and access paid opportunities.',
+  },
+  {
+    question: 'How long does it take to get paid?',
+    answer: 'Payouts are instant upon client approval. Once the Client clicks "Approve Job," the funds are immediately processed from the Escrow account and sent to your linked Mobile Money wallet (e.g., M-Pesa, etc.). No more waiting for bank transfers.',
+  },
+  {
+    question: 'What are the fees and subscription options for Providers?',
+    answer: 'We offer a tiered model to match your ambitions: Individuals & Independent Professionals: Basic/Free — Basic profile visibility, 3 bids monthly on posted jobs. Pro/Premium — $2/month, Priority Placement in search results, enhanced portfolio features. SME/Verified Businesses — $5/month, Verified Business Badge, access to higher-value bulk jobs, higher visibility. Enterprise/Large Agencies/Corporates — $100/month, bulk hiring features. Note: Fortespace also takes a small service fee (10%-15%) from the Provider\'s final payment, depending on the job value.',
+  },
+  {
+    question: 'Why should I pay a subscription if I can bid for free?',
+    answer: 'The subscription is an investment in your visibility and credibility. Paying for a Pro or SME plan gives you Priority Placement in client searches, putting you at the top of the list when Clients are using the Fortescore filter.',
+  },
+  {
+    question: 'How does the Escrow system work?',
+    answer: 'When a Client agrees to hire you, they send the full payment to a holding account managed by Fortespace. This money is secure. The funds are only released to the Provider when the Client digitally signs off on the completed work. If the work is not approved, the funds stay secure until the dispute is resolved.',
+  },
 ];
 
 export default function HelpCenterPage() {
   const [searchQuery, setSearchQuery] = useState('');
+
+  const faqs = FAQS;
 
   return (
     <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans pb-24">
@@ -181,9 +269,19 @@ export default function HelpCenterPage() {
             </div>
           </div>
 
-        </div>
+          </div>
 
-      </div>
+          {/* FAQ */}
+          <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
+            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Frequently Asked Questions</h2>
+            <div className="space-y-4">
+              {faqs.map((item) => (
+                <FAQItem key={item.question} item={item} />
+              ))}
+            </div>
+          </div>
+
+        </div>
     </div>
   );
 }
