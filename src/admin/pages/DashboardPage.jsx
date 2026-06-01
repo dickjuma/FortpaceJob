@@ -37,7 +37,8 @@ const DashboardPage = () => {
   if (!user) return null;
 
   const renderDashboard = () => {
-    switch (user.role) {
+    switch (user.role?.toLowerCase()) {
+      case 'admin':
       case 'super_admin': return <SuperAdminDashboard />;
       case 'finance_admin': return <FinanceAdminDashboard />;
       case 'customer_care': return <CustomerCareDashboard />;

@@ -32,14 +32,14 @@ export default function FreelancerReferralPage() {
     <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans pb-24">
       
       {/* Header */}
-      <div className="bg-brand-600 dark:bg-brand-900 pt-16 pb-32 text-center px-4 relative overflow-hidden">
+      <div className="bg-[#14a800] dark:bg-[#14a800] pt-16 pb-32 text-center px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
         <div className="relative z-10 max-w-3xl mx-auto">
           <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-6 text-white shadow-xl">
             <Gift className="w-8 h-8" />
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">Invite Friends, Earn $100</h1>
-          <p className="text-brand-100 text-lg md:text-xl font-medium max-w-2xl mx-auto">
+          <p className="text-[#14a800] text-lg md:text-xl font-medium max-w-2xl mx-auto">
             Get $100 for every freelancer or client who signs up with your link and completes their first $500 in transactions.
           </p>
         </div>
@@ -60,7 +60,7 @@ export default function FreelancerReferralPage() {
                   <span className="text-sm font-bold text-zinc-600 dark:text-zinc-300 font-mono truncate mr-4">{referralLink}</span>
                   <button 
                     onClick={handleCopy}
-                    className="shrink-0 flex items-center gap-2 text-brand-600 hover:text-brand-700 font-bold text-sm bg-brand-50 dark:bg-brand-500/10 px-4 py-2 rounded-lg transition-colors"
+                    className="shrink-0 flex items-center gap-2 text-[#14a800] hover:text-[#14a800] font-bold text-sm bg-[#14a800]/5 dark:bg-[#14a800]/10 px-4 py-2 rounded-lg transition-colors"
                   >
                     {copied ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                     {copied ? 'Copied!' : 'Copy'}

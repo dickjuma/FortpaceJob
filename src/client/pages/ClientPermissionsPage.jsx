@@ -44,7 +44,7 @@ export default function ClientPermissionsPage() {
           <p className="text-xs font-semibold text-light-gray/50 mt-1">Manage corporate team roles, define granular RBAC security privilege matrices, and invite department managers.</p>
         </div>
 
-        <Button onClick={() => toast.success('New custom role configured.')} className="bg-accent-purple border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-accent-purple/20">
+        <Button onClick={() => toast.success('New custom role configured.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20">
           <Plus className="w-4 h-4" /> Add Custom Role
         </Button>
       </div>
@@ -54,7 +54,7 @@ export default function ClientPermissionsPage() {
         {/* Left Side: Team Members & Invite */}
         <div className="lg:col-span-1 space-y-6">
           <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4">
-            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Users className="w-4 h-4 text-accent-purple" /> Active Administrators</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Users className="w-4 h-4 text-success" /> Active Administrators</h3>
             
             <div className="space-y-3">
               {teamMembers.map(member => (
@@ -73,7 +73,7 @@ export default function ClientPermissionsPage() {
         {/* Right Side: Permission Matrix Grid */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="border border-white/10 bg-white/5 p-6 rounded-3xl">
-            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><Lock className="w-4 h-4 text-accent-purple" /> RBAC Permissions Matrix</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><Lock className="w-4 h-4 text-success" /> RBAC Permissions Matrix</h3>
             
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-medium">
@@ -98,7 +98,7 @@ export default function ClientPermissionsPage() {
                             type="checkbox" 
                             checked={p[roleField]}
                             onChange={() => togglePermission(p.key, roleField)}
-                            className="w-4 h-4 accent-accent-purple bg-zinc-900 border border-white/10 rounded cursor-pointer"
+                            className="w-4 h-4 accent-success bg-zinc-900 border border-white/10 rounded cursor-pointer"
                           />
                         </td>
                       ))}

@@ -51,14 +51,14 @@ export default function ClientContractBuilderPage() {
         {/* Left Side: Setup fields */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="p-6 border border-white/10 bg-white/5 rounded-3xl space-y-4">
-            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Edit2 className="w-4 h-4 text-accent-purple" /> Agreement Drafting Desk</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Edit2 className="w-4 h-4 text-success" /> Agreement Drafting Desk</h3>
             
             <form onSubmit={handleGenerate} className="space-y-4 pt-2">
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
                   <label>Document Agreement Template</label>
                   <select 
-                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-accent-purple text-white/95"
+                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success text-white/95"
                     value={template}
                     onChange={e => setTemplate(e.target.value)}
                   >
@@ -72,7 +72,7 @@ export default function ClientContractBuilderPage() {
                   <label>Vendor Legal Name</label>
                   <input 
                     type="text" 
-                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-accent-purple text-white/95"
+                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success text-white/95"
                     value={vendorName}
                     onChange={e => setVendorName(e.target.value)}
                   />
@@ -83,7 +83,7 @@ export default function ClientContractBuilderPage() {
                 <label>Scope of Work (SOW) & Deliverables Details</label>
                 <textarea 
                   rows="4"
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-accent-purple text-white/95 placeholder-light-gray/40 resize-none text-xs"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success text-white/95 placeholder-light-gray/40 resize-none text-xs"
                   value={scopeOfWork}
                   onChange={e => setScopeOfWork(e.target.value)}
                 />
@@ -92,7 +92,7 @@ export default function ClientContractBuilderPage() {
               <Button 
                 type="submit"
                 disabled={isGenerating}
-                className="w-full bg-accent-purple border-none rounded-xl text-xs font-bold py-2.5 flex items-center justify-center gap-2"
+                className="w-full bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center justify-center gap-2"
               >
                 {isGenerating ? 'Drafting Agreement...' : 'Generate Legal Agreement'}
               </Button>

@@ -42,13 +42,13 @@ export default function PopoverConfirm({
   const colors = {
     danger: "text-red-500 bg-red-50 dark:bg-red-900/20",
     warning: "text-amber-500 bg-amber-50 dark:bg-amber-900/20",
-    info: "text-brand-500 bg-brand-50 dark:bg-brand-900/20"
+    info: "text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/20"
   };
 
   const btnColors = {
     danger: "bg-red-600 hover:bg-red-700 shadow-red-500/20",
     warning: "bg-amber-600 hover:bg-amber-700 shadow-amber-500/20",
-    info: "bg-brand-600 hover:bg-brand-700 shadow-blue-500/20"
+    info: "bg-[#14a800] hover:bg-[#118a00] shadow-#14a800]/20"
   };
 
   return (

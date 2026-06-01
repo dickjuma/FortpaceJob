@@ -1,223 +1,200 @@
 import React, { useState } from 'react';
-import { 
-  DollarSign, ArrowUpRight, ArrowDownLeft, ShieldCheck, 
-  TrendingUp, Download, CheckCircle, RefreshCw, Eye, FileText, CreditCard
+import { useNavigate } from 'react-router-dom';
+import {
+  DollarSign, TrendingUp, Lock, ArrowUpRight, ArrowDownLeft,
+  FileText, Download, AlertCircle, RefreshCw, BarChart2, Clock,
+  CheckCircle, XCircle
 } from 'lucide-react';
+import { useWallet, useTransactions, useInvoices, useMyContracts } from '../services/clientHooks';
 import toast, { Toaster } from 'react-hot-toast';
 
+function timeAgo(d) {
+  const diff = Date.now() - new Date(d).getTime();
+  const days = Math.floor(diff / 86400000);
+  return days === 0 ? 'Today' : days === 1 ? 'Yesterday' : `${days}d ago`;
+}
+
 export default function ClientFinancialDashboard() {
-  const [walletBalance, setWalletBalance] = useState(250000);
-  const [escrowBalance, setEscrowBalance] = useState(85000);
-  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const [txPage, setTxPage] = useState(1);
 
-  const initialLedger = [
-    { id: 'INV-2026-001', project: 'Website Redesign', provider: 'Sarah Jenkins', date: 'Oct 15, 2026', amount: 5000, status: 'Pending', type: 'Milestone 2' },
-    { id: 'INV-2026-002', project: 'Mobile App Dev', provider: 'David Chen', date: 'Oct 10, 2026', amount: 12500, status: 'Paid', type: 'Final Delivery' },
-    { id: 'INV-2026-003', project: 'SEO Audit', provider: 'Kiprotich Arap', date: 'Oct 05, 2026', amount: 1500, status: 'Pending', type: 'Consultation' },
-    { id: 'INV-2026-004', project: 'Figma Design System', provider: 'Elena Rostova', date: 'Sep 28, 2026', amount: 8500, status: 'Paid', type: 'Milestone 1' }
-  ];
+  const { data: wallet, isLoading: walletLoading, refetch: refetchWallet } = useWallet();
+  const { data: txData, isLoading: txLoading } = useTransactions({ page: txPage, limit: 10 });
+  const { data: invoicesData, isLoading: invLoading } = useInvoices({ limit: 5 });
+  const { data: contractsData } = useMyContracts({ status: 'ACTIVE', limit: 5 });
 
-  const [ledger, setLedger] = useState(initialLedger);
+  const availableBalance = Number(wallet?.availableBalance ?? wallet?.balance ?? 0);
+  const lockedBalance    = Number(wallet?.lockedBalance ?? wallet?.escrowBalance ?? 0);
+  const totalBalance     = availableBalance + lockedBalance;
 
-  const handlePay = (txnId, amount, name) => {
-    setIsLoading(true);
-    toast.promise(
-      new Promise(resolve => setTimeout(resolve, 1500)),
-      {
-        loading: `Processing payment of $${amount.toLocaleString()} to ${name}...`,
-        success: () => {
-          setLedger(prev => prev.map(t => t.id === txnId ? { ...t, status: 'Paid' } : t));
-          setWalletBalance(prev => prev - amount);
-          setIsLoading(false);
-          return `Payment successfully sent to ${name}!`;
-        },
-        error: 'Payment processing failed.'
-      }
-    );
+  const transactions = txData?.items || [];
+  const totalTx = txData?.total || 0;
+  const totalTxPages = txData?.totalPages || 1;
+  const invoices = invoicesData?.items || [];
+  const contracts = contractsData?.items || [];
+
+  const totalSpent = transactions
+    .filter(t => t.type === 'DEBIT' || t.type === 'ESCROW')
+    .reduce((s, t) => s + Number(t.amount || 0), 0);
+
+  const handleExportCSV = () => {
+    if (!transactions.length) { toast.error('No transactions to export'); return; }
+    const rows = [
+      ['ID', 'Date', 'Type', 'Amount', 'Description', 'Status'],
+      ...transactions.map(t => [
+        t.id,
+        new Date(t.createdAt).toLocaleDateString(),
+        t.type,
+        t.amount,
+        t.description || '',
+        t.status || 'COMPLETED',
+      ]),
+    ];
+    const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `forte-transactions-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('CSV downloaded!');
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans text-white bg-zinc-950 min-h-screen">
-      <Toaster 
-        position="top-right" 
-        toastOptions={{
-          style: { background: '#18181b', color: '#fff', border: '1px solid #27272a' }
-        }} 
-      />
+    <div className="min-h-screen bg-zinc-950 text-zinc-200 p-6 overflow-y-auto custom-scrollbar">
+      <Toaster position="top-right" />
+      <div className="max-w-7xl mx-auto space-y-6">
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight text-white">Billing & Invoices</h1>
-          <p className="text-sm font-semibold text-zinc-400 mt-1">Manage your payments, escrow balances, and download statements.</p>
-        </div>
-
-        <div className="flex gap-3">
-          <button className="bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-2">
-            <CreditCard className="w-4 h-4" /> Add Payment Method
-          </button>
-          <button 
-            onClick={() => toast.success('Statement downloaded successfully.')} 
-            className="bg-vivid-lavender hover:bg-dark-purple text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-lg shadow-vivid-lavender/20 flex items-center gap-2"
-          >
-            <Download className="w-4 h-4" /> Download CSV
-          </button>
-        </div>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 relative overflow-hidden group hover:border-vivid-lavender/50 transition-colors">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-vivid-lavender/10 blur-[50px] rounded-full group-hover:bg-vivid-lavender/20 transition-colors"></div>
-          <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-2 mb-2">
-            <DollarSign className="w-4 h-4 text-vivid-lavender" /> Total Spent
-          </p>
-          <h2 className="text-4xl font-black text-white">$145,000</h2>
-          <div className="mt-4 flex items-center gap-2 text-xs font-bold text-zinc-500">
-            <span className="flex items-center gap-1 text-vivid-green bg-vivid-green/10 px-2 py-0.5 rounded border border-vivid-green/20">
-              <TrendingUp className="w-3 h-3" /> +12.5%
-            </span>
-            vs last year
+        {/* Header */}
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white">Financial Dashboard</h1>
+            <p className="text-sm text-zinc-400 mt-1">Overview of your spending, escrow, and payments</p>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={refetchWallet} className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-xl">
+              <RefreshCw className="w-3.5 h-3.5" /> Refresh
+            </button>
+            <button onClick={handleExportCSV} className="flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white transition-colors px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-xl">
+              <Download className="w-3.5 h-3.5" /> Export CSV
+            </button>
           </div>
         </div>
 
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 relative overflow-hidden group hover:border-zinc-700 transition-colors">
-          <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-2 mb-2">
-            <ShieldCheck className="w-4 h-4 text-zinc-300" /> Escrow Balance
-          </p>
-          <h2 className="text-4xl font-black text-white">${escrowBalance.toLocaleString()}</h2>
-          <div className="mt-4 flex items-center gap-2 text-xs font-bold text-zinc-500">
-            <span className="flex items-center gap-1">
-              Secured across 4 active projects
-            </span>
-          </div>
-        </div>
-
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 relative overflow-hidden group hover:border-zinc-700 transition-colors">
-          <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-2 mb-2">
-            <FileText className="w-4 h-4 text-zinc-300" /> Outstanding Invoices
-          </p>
-          <h2 className="text-4xl font-black text-white">$6,500</h2>
-          <div className="mt-4 flex items-center gap-2 text-xs font-bold text-zinc-500">
-            <span className="flex items-center gap-1 text-orange-400 bg-orange-400/10 px-2 py-0.5 rounded border border-orange-400/20">
-              2 pending
-            </span>
-            payments required
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        
-        {/* Invoice Table */}
-        <div className="xl:col-span-2 space-y-6">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
-            <div className="p-6 border-b border-zinc-800 flex items-center justify-between">
-              <div>
-                <h3 className="font-black text-lg text-white">Recent Invoices</h3>
-                <p className="text-sm font-medium text-zinc-400 mt-1">Review and pay your outstanding balances.</p>
+        {/* Balance Cards */}
+        {walletLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">{[1,2,3].map(i => <div key={i} className="h-32 bg-zinc-900/40 rounded-2xl animate-pulse" />)}</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-gradient-to-br from-success/20 to-success/20 border border-success/20 rounded-2xl p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <BarChart2 className="w-4 h-4 text-success" />
+                <p className="text-xs text-zinc-400">Total Balance</p>
               </div>
+              <p className="text-3xl font-bold text-white">KES {totalBalance.toLocaleString()}</p>
+              <p className="text-xs text-zinc-500 mt-2">Available + Escrow</p>
             </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-zinc-950/50">
-                  <tr className="border-b border-zinc-800 text-zinc-400 text-xs uppercase tracking-wider font-bold">
-                    <th className="px-6 py-4">Invoice ID</th>
-                    <th className="px-6 py-4">Project & Provider</th>
-                    <th className="px-6 py-4">Date</th>
-                    <th className="px-6 py-4">Amount</th>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-800">
-                  {ledger.map(txn => (
-                    <tr key={txn.id} className="hover:bg-zinc-800/30 transition-colors">
-                      <td className="px-6 py-4 font-mono font-bold text-zinc-300">{txn.id}</td>
-                      <td className="px-6 py-4">
-                        <div className="font-bold text-white">{txn.project}</div>
-                        <div className="text-xs text-zinc-500">{txn.provider}</div>
-                      </td>
-                      <td className="px-6 py-4 text-zinc-400">{txn.date}</td>
-                      <td className="px-6 py-4 font-black text-white">${txn.amount.toLocaleString()}</td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border ${
-                          txn.status === 'Paid' 
-                            ? 'bg-zinc-800 text-zinc-400 border-zinc-700' 
-                            : 'bg-vivid-lavender/10 text-vivid-lavender border-vivid-lavender/30'
-                        }`}>
-                          {txn.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right flex justify-end gap-2">
-                        <button className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors" title="View PDF">
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        {txn.status === 'Pending' ? (
-                          <button 
-                            disabled={isLoading}
-                            onClick={() => handlePay(txn.id, txn.amount, txn.provider)}
-                            className="bg-vivid-lavender hover:bg-dark-purple text-white font-bold text-xs py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
-                          >
-                            Pay Now
-                          </button>
-                        ) : (
-                          <button className="bg-zinc-800 text-zinc-500 font-bold text-xs py-2 px-4 rounded-lg cursor-not-allowed">
-                            Settled
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        {/* Analytics Sidebar */}
-        <div className="xl:col-span-1 space-y-6">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-            <h3 className="font-black text-sm uppercase tracking-wider text-zinc-400 border-b border-zinc-800 pb-4 mb-5">
-              Spend by Category
-            </h3>
-            <div className="space-y-5">
-              {[
-                { name: 'Software Development', val: 65, color: 'bg-vivid-lavender' },
-                { name: 'Design & Creative', val: 20, color: 'bg-zinc-400' },
-                { name: 'Marketing', val: 10, color: 'bg-zinc-600' },
-                { name: 'Consulting', val: 5, color: 'bg-zinc-700' }
-              ].map(cat => (
-                <div key={cat.name} className="space-y-2">
-                  <div className="flex justify-between text-xs font-bold text-zinc-300">
-                    <span>{cat.name}</span>
-                    <span>{cat.val}%</span>
-                  </div>
-                  <div className="h-2 bg-zinc-950 border border-zinc-800 rounded-full overflow-hidden">
-                    <div className={`h-full ${cat.color} shadow-lg`} style={{ width: `${cat.val}%` }}></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-dark-purple border border-vivid-lavender/30 text-white rounded-2xl p-6 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-vivid-lavender/20 blur-[50px] rounded-full"></div>
-            <div className="relative z-10">
-              <h4 className="font-black text-sm tracking-wider flex items-center gap-2 mb-3">
-                <RefreshCw className="w-4 h-4 text-vivid-lavender" /> Auto-Billing Enabled
-              </h4>
-              <p className="text-xs font-medium text-white/70 leading-relaxed mb-4">
-                Your primary credit card ending in **4242** will be automatically charged on the 1st of every month for outstanding balances.
-              </p>
-              <button className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold py-2 px-4 rounded-lg transition-colors border border-white/10">
-                Manage Billing Settings
+            <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <DollarSign className="w-4 h-4 text-success" />
+                <p className="text-xs text-zinc-400">Available</p>
+              </div>
+              <p className="text-3xl font-bold text-success">KES {availableBalance.toLocaleString()}</p>
+              <button onClick={() => navigate('/client/wallet')} className="text-xs text-zinc-400 hover:text-success mt-2 transition-colors flex items-center gap-1">
+                Manage wallet <ArrowUpRight className="w-3 h-3" />
               </button>
             </div>
+            <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <Lock className="w-4 h-4 text-yellow-400" />
+                <p className="text-xs text-zinc-400">In Escrow</p>
+              </div>
+              <p className="text-3xl font-bold text-yellow-400">KES {lockedBalance.toLocaleString()}</p>
+              <p className="text-xs text-zinc-500 mt-2">Locked for active contracts</p>
+            </div>
           </div>
+        )}
+
+        {/* Action Strip */}
+        <div className="flex flex-wrap gap-3">
+          <button onClick={() => navigate('/client/wallet')} className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#14a800]/20">
+            <ArrowDownLeft className="w-4 h-4" /> Deposit Funds
+          </button>
+          <button onClick={() => navigate('/client/contracts')} className="flex items-center gap-2 px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700 rounded-full text-sm font-bold transition-colors">
+            <FileText className="w-4 h-4" /> View Contracts
+          </button>
         </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          {/* Transaction History */}
+          <div className="lg:col-span-2 bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden">
+            <div className="p-5 border-b border-zinc-800 flex items-center justify-between bg-zinc-900/80">
+              <h2 className="font-bold text-white">Recent Transactions</h2>
+              <span className="text-xs text-zinc-500">{totalTx} total</span>
+            </div>
+            {txLoading ? (
+              <div className="p-4 space-y-2">{[1,2,3,4].map(i => <div key={i} className="h-14 bg-zinc-900/40 rounded-xl animate-pulse" />)}</div>
+            ) : transactions.length === 0 ? (
+              <div className="p-8 text-center text-zinc-500 text-sm">No transactions yet.</div>
+            ) : (
+              <div className="divide-y divide-zinc-800/50">
+                {transactions.map(tx => {
+                  const isPositive = ['CREDIT', 'RELEASE', 'REFUND'].includes(tx.type);
+                  const Icon = isPositive ? ArrowDownLeft : ArrowUpRight;
+                  return (
+                    <div key={tx.id} className="flex items-center gap-4 px-5 py-3.5 hover:bg-zinc-800/30 transition-colors">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${isPositive ? 'bg-success/10' : 'bg-red-400/10'}`}>
+                        <Icon className={`w-4 h-4 ${isPositive ? 'text-success' : 'text-red-400'}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-white truncate">{tx.description || tx.type}</p>
+                        <p className="text-xs text-zinc-500">{timeAgo(tx.createdAt)}</p>
+                      </div>
+                      <p className={`text-sm font-bold shrink-0 ${isPositive ? 'text-success' : 'text-red-400'}`}>
+                        {isPositive ? '+' : '-'}KES {Number(tx.amount || 0).toLocaleString()}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {totalTxPages > 1 && (
+              <div className="p-4 border-t border-zinc-800 flex items-center justify-center gap-2">
+                <button onClick={() => setTxPage(p => Math.max(1, p - 1))} disabled={txPage === 1} className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-xs text-zinc-300 disabled:opacity-40 hover:bg-zinc-700">Prev</button>
+                <span className="text-xs text-zinc-400">{txPage} / {totalTxPages}</span>
+                <button onClick={() => setTxPage(p => Math.min(totalTxPages, p + 1))} disabled={txPage === totalTxPages} className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-xs text-zinc-300 disabled:opacity-40 hover:bg-zinc-700">Next</button>
+              </div>
+            )}
+          </div>
+
+          {/* Active Contracts sidebar */}
+          <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden">
+            <div className="p-5 border-b border-zinc-800 bg-zinc-900/80">
+              <h2 className="font-bold text-white">Active Contracts</h2>
+            </div>
+            {contracts.length === 0 ? (
+              <div className="p-6 text-center text-zinc-500 text-sm">No active contracts.</div>
+            ) : (
+              <div className="divide-y divide-zinc-800/50">
+                {contracts.map(c => (
+                  <div key={c.id} className="px-5 py-4 hover:bg-zinc-800/30 transition-colors cursor-pointer" onClick={() => navigate(`/client/contracts/${c.id}`)}>
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-sm font-bold text-white">Contract #{c.id}</p>
+                      <span className="text-xs text-success font-bold">{c.status}</span>
+                    </div>
+                    <p className="text-xs text-zinc-400">{c.freelancer?.name || 'Freelancer'}</p>
+                    <p className="text-xs font-bold text-success mt-1">KES {Number(c.totalAmount || 0).toLocaleString()}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="p-4 border-t border-zinc-800">
+              <button onClick={() => navigate('/client/contracts')} className="w-full text-center text-xs text-success hover:text-white transition-colors font-bold">View All Contracts →</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

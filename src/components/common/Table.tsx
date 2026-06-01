@@ -79,7 +79,7 @@ export function Table<T extends { id: string | number }>({
                 <th className="px-6 py-4 w-12">
                   <input
                     type="checkbox"
-                    className="rounded border-gray-300 text-accent-red focus:ring-accent-red"
+                    className="rounded border-gray-300 text-[#e63946] focus:ring-[#e63946]"
                     checked={data.length > 0 && selectedRows.length === data.length}
                     onChange={handleSelectAll}
                   />
@@ -100,7 +100,7 @@ export function Table<T extends { id: string | number }>({
                   <div className="flex items-center space-x-1">
                     <span>{col.label}</span>
                     {col.sortable && sortConfig?.key === col.key && (
-                      <span className="text-navy">
+                      <span className="text-[#222222]">
                         {sortConfig.direction === 'asc' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                       </span>
                     )}
@@ -114,7 +114,7 @@ export function Table<T extends { id: string | number }>({
               <tr>
                 <td colSpan={columns.length + (selectable ? 1 : 0)} className="px-6 py-8 text-center text-text-secondary">
                   <div className="flex justify-center items-center space-x-2">
-                    <svg className="animate-spin h-5 w-5 text-accent-red" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg className="animate-spin h-5 w-5 text-[#e63946]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
@@ -141,7 +141,7 @@ export function Table<T extends { id: string | number }>({
                     <td className="px-6 py-4">
                       <input
                         type="checkbox"
-                        className="rounded border-gray-300 text-accent-red focus:ring-accent-red"
+                        className="rounded border-gray-300 text-[#e63946] focus:ring-[#e63946]"
                         checked={selectedRows.some((r) => r.id === row.id)}
                         onChange={() => handleSelectRow(row)}
                       />
@@ -164,7 +164,7 @@ export function Table<T extends { id: string | number }>({
       {pagination && (
         <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-white">
           <div className="text-sm text-text-secondary">
-            Showing <span className="font-medium text-navy">{(pagination.page - 1) * pagination.pageSize + 1}</span> to <span className="font-medium text-navy">{Math.min(pagination.page * pagination.pageSize, pagination.total)}</span> of <span className="font-medium text-navy">{pagination.total}</span> results
+            Showing <span className="font-medium text-[#222222]">{(pagination.page - 1) * pagination.pageSize + 1}</span> to <span className="font-medium text-[#222222]">{Math.min(pagination.page * pagination.pageSize, pagination.total)}</span> of <span className="font-medium text-[#222222]">{pagination.total}</span> results
           </div>
           <div className="flex items-center space-x-2">
             <button

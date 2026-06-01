@@ -1,281 +1,332 @@
 import React, { useState } from 'react';
-import { 
-  Search, Grid, List, ChevronDown, Filter, 
-  MapPin, Star, Clock, CheckCircle, Heart,
-  SlidersHorizontal, X, ArrowUpRight
+import { useNavigate } from 'react-router-dom';
+import {
+  Search, Star, Heart, MessageSquare, Building2,
+  Grid, List, SlidersHorizontal, X, ShieldCheck
 } from 'lucide-react';
+import { useFreelancers, useAddToShortlist } from '../services/clientHooks';
+import { useStartConversation } from '../services/clientHooks';
+import toast, { Toaster } from 'react-hot-toast';
+
+const CATEGORIES = ['All', 'Software & Tech', 'Design & Creative', 'Writing & Content', 'Marketing', 'Finance', 'Engineering', 'Other'];
+const EXPERIENCE = ['', 'BEGINNER', 'INTERMEDIATE', 'EXPERT'];
+const TALENT_TYPES = [
+  { value: '', label: 'All Talent' },
+  { value: 'INDIVIDUAL', label: 'Individuals' },
+  { value: 'SME', label: 'SMEs / Studios' },
+  { value: 'CORPORATE', label: 'Corporate Teams' },
+];
+const SORT_OPTIONS = [
+  { value: 'rating', label: 'Top Rated' },
+  { value: 'rate_low', label: 'Rate: Low to High' },
+  { value: 'rate_high', label: 'Rate: High to Low' },
+  { value: 'newest', label: 'Newest First' },
+];
 
 export default function ClientTalentSearchPage() {
+  const navigate = useNavigate();
   const [viewMode, setViewMode] = useState('grid');
-  
-  // Dummy data based on the PRD
-  const freelancers = [
-    { id: 1, name: 'John Developer', title: 'React Expert Dev', rating: 5.0, reviews: 42, rate: '$85/hr', location: 'Philippines', available: true, success: 98, response: '2 hours', skills: ['React', 'Node.js', 'TypeScript'] },
-    { id: 2, name: 'Sarah Designer', title: 'UI/UX Specialist', rating: 4.9, reviews: 38, rate: '$65/hr', location: 'United Kingdom', available: false, success: 100, response: '1 hour', skills: ['Figma', 'UI Design', 'Wireframing'] },
-    { id: 3, name: 'Mike Engineer', title: 'Full Stack Python', rating: 4.7, reviews: 15, rate: '$50/hr', location: 'India', available: true, success: 92, response: '4 hours', skills: ['Python', 'Django', 'AWS'] },
-    { id: 4, name: 'Elena Copywriter', title: 'B2B Tech Writer', rating: 5.0, reviews: 89, rate: '$45/hr', location: 'United States', available: true, success: 99, response: '30 mins', skills: ['Copywriting', 'SEO', 'B2B'] },
-    { id: 5, name: 'David Marketer', title: 'Growth Hacker', rating: 4.6, reviews: 22, rate: '$75/hr', location: 'Canada', available: false, success: 88, response: '5 hours', skills: ['Growth', 'Ads', 'Analytics'] },
-    { id: 6, name: 'Chen Mobile', title: 'iOS Native Dev', rating: 4.8, reviews: 54, rate: '$95/hr', location: 'Singapore', available: true, success: 95, response: '2 hours', skills: ['Swift', 'iOS', 'Objective-C'] }
-  ];
+  const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [category, setCategory] = useState('All');
+  const [experience, setExperience] = useState('');
+  const [sortBy, setSortBy] = useState('rating');
+  const [rateMin, setRateMin] = useState('');
+  const [rateMax, setRateMax] = useState('');
+  const [sellerType, setSellerType] = useState('');
+  const [page, setPage] = useState(1);
+  const [showFilters, setShowFilters] = useState(false);
+  const [savedIds, setSavedIds] = useState(new Set());
+
+  const filters = {
+    page, limit: 12,
+    ...(search && { q: search }),
+    ...(category !== 'All' && { category }),
+    ...(experience && { experience }),
+    ...(sortBy && { sort: sortBy }),
+    ...(rateMin && { rateMin }),
+    ...(rateMax && { rateMax }),
+    ...(sellerType && { accountType: sellerType }),
+  };
+
+  const { data, isLoading, error, refetch } = useFreelancers(filters);
+  const addToShortlist = useAddToShortlist();
+  const startConversation = useStartConversation();
+
+  const freelancers = data?.items || [];
+  const total = data?.total || 0;
+  const totalPages = data?.totalPages || 1;
+
+  const handleSearch = (e) => { e.preventDefault(); setSearch(searchInput); setPage(1); };
+
+  const handleSave = async (e, freelancerId) => {
+    e.stopPropagation();
+    const isSaved = savedIds.has(freelancerId);
+    if (isSaved) {
+      setSavedIds(prev => { const n = new Set(prev); n.delete(freelancerId); return n; });
+      toast.success('Removed from shortlist');
+      return;
+    }
+    try {
+      await addToShortlist.mutateAsync(freelancerId);
+      setSavedIds(prev => new Set(prev).add(freelancerId));
+      toast.success('Saved to shortlist!');
+    } catch (_) {}
+  };
+
+  const handleMessage = async (e, freelancerId) => {
+    e.stopPropagation();
+    try {
+      await startConversation.mutateAsync({ participantId: freelancerId });
+      navigate(`/client/messages`);
+    } catch (_) { navigate('/client/messages'); }
+  };
+
+  // Generate a random gradient pattern for the cover image placeholder based on user ID string
+  const getGradient = (str = '') => {
+    const gradients = [
+      'from-success/40 to-success/40',
+      'from-#14a800]/40 to-[#118a00]/40',
+      'from-success/40 to-emerald-600/40',
+      'from-orange-400/40 to-red-500/40',
+      'from-pink-500/40 to-rose-600/40'
+    ];
+    let sum = 0;
+    for (let i = 0; i < str.length; i++) sum += str.charCodeAt(i);
+    return gradients[sum % gradients.length];
+  };
+
+  const renderFreelancerCard = (f) => {
+    const fId = f.id || f.userId;
+    const isSaved = savedIds.has(fId);
+    const name = f.name || (f.actor?.user ? `${f.actor.user.firstName || ''} ${f.actor.user.lastName || ''}`.trim() : null) || `${f.firstName || ''} ${f.lastName || ''}`.trim() || 'Freelancer';
+    const initial = name[0]?.toUpperCase();
+    const avatar = f.avatar || f.profilePicture;
+    const rating = Number(f.rating || f.ratingAverage || f.averageRating || 0);
+    const rate = Number(f.hourlyRate || f.rate || 0);
+    const talentType = (f.accountType || f.businessStructure || 'INDIVIDUAL').toUpperCase();
+
+    return (
+      <div 
+        key={fId} 
+        onClick={() => navigate(`/client/freelancers/${fId}`)}
+        className={`group bg-white border border-zinc-200 hover:border-zinc-300 transition-all cursor-pointer overflow-hidden ${viewMode === 'list' ? 'flex items-start rounded-xl h-48' : 'flex flex-col rounded-xl h-[420px] hover:shadow-xl hover:-translate-y-1'}`}
+      >
+        {/* Cover / Banner */}
+        <div className={`${viewMode === 'list' ? 'w-64 h-full shrink-0' : 'w-full h-44'} relative bg-zinc-100 overflow-hidden`}>
+          {f.portfolioBanner || f.coverImage ? (
+            <img src={f.portfolioBanner || f.coverImage} alt="Portfolio" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          ) : (
+            <div className={`w-full h-full bg-gradient-to-br ${getGradient(name)} group-hover:scale-105 transition-transform duration-500 flex items-center justify-center`}>
+            </div>
+          )}
+          {f.isPro && (
+             <div className="absolute top-3 left-3 bg-white text-[#14a800] px-2 py-1 rounded-sm text-[10px] font-black uppercase tracking-wider shadow-sm border border-zinc-100 flex items-center gap-1">
+               <ShieldCheck className="w-3 h-3" /> Pro
+             </div>
+          )}
+        </div>
+
+        {/* Content Body */}
+        <div className={`flex flex-col flex-1 ${viewMode === 'list' ? 'p-6' : 'p-4'}`}>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-8 h-8 rounded-full bg-zinc-200 border border-zinc-300 flex items-center justify-center text-sm font-bold text-zinc-700 overflow-hidden shrink-0 relative">
+              {avatar ? <img src={avatar} alt={name} className="w-full h-full object-cover" /> : initial}
+              {f.isOnline && <span className="absolute bottom-0 right-0 w-2 h-2 bg-[#14a800] border border-white rounded-full"></span>}
+            </div>
+            <div className="flex-1 min-w-0 flex items-center gap-2">
+              <h3 className="font-bold text-zinc-900 text-sm truncate group-hover:underline">{name}</h3>
+              <p className="text-[10px] text-[#14a800] font-bold bg-[#14a800]/10 px-1.5 py-0.5 rounded">{f.level || 'Level 1'}</p>
+            </div>
+          </div>
+
+          <p className="text-zinc-700 font-medium text-sm leading-snug line-clamp-2 hover:text-[#14a800] transition-colors mb-2 flex-1">
+            {f.title || f.headline || `I will provide professional ${f.category || 'freelance'} services for your project`}
+          </p>
+
+          <div className="flex items-center gap-1 mb-4">
+            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+            <span className="font-bold text-zinc-900 text-sm">{rating > 0 ? rating.toFixed(1) : 'New'}</span>
+            {f.reviewsCount > 0 && <span className="text-zinc-500 text-xs ml-1">({f.reviewsCount})</span>}
+          </div>
+
+          {/* Footer */}
+          <div className="mt-auto pt-3 border-t border-zinc-100 flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <button onClick={(e) => handleSave(e, fId)} className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors">
+                <Heart className={`w-4 h-4 ${isSaved ? 'fill-red-500 text-red-500' : ''}`} />
+              </button>
+              <button onClick={(e) => handleMessage(e, fId)} className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-[#14a800] transition-colors">
+                <MessageSquare className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="text-right">
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-0.5">Starting at</p>
+              <p className="font-black text-zinc-900 text-base">KES {rate.toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-200 font-sans flex flex-col md:flex-row overflow-hidden h-screen custom-scrollbar">
-      
-      {/* LEFT SIDEBAR: FILTERS */}
-      <aside className="w-full md:w-72 bg-zinc-900 border-r border-zinc-800 flex flex-col shrink-0 overflow-y-auto custom-scrollbar h-full hidden md:flex">
-        <div className="p-6 border-b border-zinc-800 sticky top-0 bg-zinc-900 z-10 flex justify-between items-center">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2"><Filter className="w-5 h-5 text-vivid-lavender" /> Filters</h2>
-          <button className="text-xs font-bold text-vivid-lavender hover:text-white transition-colors">Clear All</button>
-        </div>
-        
-        <div className="p-6 space-y-8">
-          
-          {/* Experience Level */}
-          <div>
-            <h3 className="text-sm font-bold text-white mb-3">Experience Level</h3>
-            <div className="space-y-2.5">
-              <label className="flex items-center gap-3 group cursor-pointer">
-                <div className="w-4 h-4 rounded border border-zinc-600 group-hover:border-vivid-lavender flex items-center justify-center bg-zinc-800"></div>
-                <span className="text-sm text-zinc-400 group-hover:text-zinc-200">Beginner <span className="text-xs text-zinc-600">(12)</span></span>
-              </label>
-              <label className="flex items-center gap-3 group cursor-pointer">
-                <div className="w-4 h-4 rounded border border-zinc-600 group-hover:border-vivid-lavender flex items-center justify-center bg-zinc-800"></div>
-                <span className="text-sm text-zinc-400 group-hover:text-zinc-200">Intermediate <span className="text-xs text-zinc-600">(45)</span></span>
-              </label>
-              <label className="flex items-center gap-3 group cursor-pointer">
-                <div className="w-4 h-4 rounded border border-vivid-lavender bg-vivid-lavender flex items-center justify-center"><CheckCircle className="w-3 h-3 text-white" /></div>
-                <span className="text-sm text-white font-medium">Expert <span className="text-xs text-zinc-600">(89)</span></span>
-              </label>
-              <label className="flex items-center gap-3 group cursor-pointer">
-                <div className="w-4 h-4 rounded border border-zinc-600 group-hover:border-vivid-lavender flex items-center justify-center bg-zinc-800"></div>
-                <span className="text-sm text-zinc-400 group-hover:text-zinc-200">Top Rated <span className="text-xs text-zinc-600">(24)</span></span>
-              </label>
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#f9f9f9] text-zinc-900 p-6 overflow-y-auto custom-scrollbar">
+      <Toaster position="top-right" />
+      <div className="max-w-[1400px] mx-auto space-y-6">
 
-          {/* Skills */}
-          <div>
-            <h3 className="text-sm font-bold text-white mb-3">Skills</h3>
-            <div className="relative mb-3">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
-              <input type="text" placeholder="Search skills..." className="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-3 py-2 text-sm focus:border-vivid-lavender focus:outline-none text-white" />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1.5 rounded-lg bg-vivid-lavender/10 border border-vivid-lavender/30 text-vivid-lavender text-xs font-bold flex items-center gap-1 cursor-pointer hover:bg-vivid-lavender/20">React <X className="w-3 h-3" /></span>
-              <span className="px-3 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-medium cursor-pointer hover:bg-zinc-700">Node.js</span>
-              <span className="px-3 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-medium cursor-pointer hover:bg-zinc-700">Vue.js</span>
-              <span className="px-3 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-medium cursor-pointer hover:bg-zinc-700">Python</span>
-            </div>
-            <button className="text-xs text-vivid-lavender font-bold mt-3 hover:text-white transition-colors">View more</button>
-          </div>
-
-          {/* Hourly Rate */}
-          <div>
-            <h3 className="text-sm font-bold text-white mb-3">Hourly Rate</h3>
-            <div className="h-1.5 w-full bg-zinc-800 rounded-full mb-4 relative">
-              <div className="absolute left-[20%] right-[40%] top-0 bottom-0 bg-vivid-lavender rounded-full"></div>
-              <div className="absolute left-[20%] top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full border-2 border-vivid-lavender cursor-pointer shadow-lg"></div>
-              <div className="absolute right-[40%] top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full border-2 border-vivid-lavender cursor-pointer shadow-lg"></div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 flex items-center">
-                <span className="text-zinc-500 text-sm mr-1">$</span>
-                <input type="text" value="15" className="w-full bg-transparent outline-none text-sm text-white" readOnly />
+        {/* Hero Section */}
+        <div className="bg-[#14a800] rounded-xl p-10 flex flex-col items-center justify-center text-center relative overflow-hidden shadow-lg">
+          <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2850)' }}></div>
+          <div className="relative z-10 max-w-2xl">
+            <h1 className="text-4xl font-black text-white mb-6">Find the perfect freelance services</h1>
+            
+            <form onSubmit={handleSearch} className="flex bg-white rounded-md overflow-hidden shadow-2xl max-w-xl mx-auto p-1">
+              <div className="flex items-center pl-4">
+                <Search className="w-5 h-5 text-zinc-400" />
               </div>
-              <span className="text-zinc-500">-</span>
-              <div className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 flex items-center">
-                <span className="text-zinc-500 text-sm mr-1">$</span>
-                <input type="text" value="150" className="w-full bg-transparent outline-none text-sm text-white" readOnly />
-              </div>
-            </div>
-          </div>
-
-          {/* Availability */}
-          <div>
-            <h3 className="text-sm font-bold text-white mb-3">Availability</h3>
-            <div className="space-y-2.5">
-              <label className="flex items-center gap-3 group cursor-pointer">
-                <div className="w-4 h-4 rounded-full border border-vivid-lavender flex items-center justify-center"><div className="w-2 h-2 rounded-full bg-vivid-lavender"></div></div>
-                <span className="text-sm text-white font-medium">Available Now</span>
-              </label>
-              <label className="flex items-center gap-3 group cursor-pointer">
-                <div className="w-4 h-4 rounded-full border border-zinc-600 group-hover:border-vivid-lavender flex items-center justify-center bg-zinc-800"></div>
-                <span className="text-sm text-zinc-400 group-hover:text-zinc-200">1-2 weeks</span>
-              </label>
-              <label className="flex items-center gap-3 group cursor-pointer">
-                <div className="w-4 h-4 rounded-full border border-zinc-600 group-hover:border-vivid-lavender flex items-center justify-center bg-zinc-800"></div>
-                <span className="text-sm text-zinc-400 group-hover:text-zinc-200">Not available</span>
-              </label>
-            </div>
-          </div>
-
-        </div>
-      </aside>
-
-      {/* RIGHT SIDE: CONTENT AREA */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden">
-        
-        {/* Search Header (Sticky) */}
-        <div className="bg-zinc-900 border-b border-zinc-800 p-4 md:p-6 sticky top-0 z-20 shrink-0">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="relative w-full md:w-[60%]">
-              <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
-              <input 
-                type="text" 
-                placeholder="Search by name, skill, or specialty..." 
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:border-vivid-lavender text-white shadow-inner"
+              <input
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="What service are you looking for today?"
+                className="w-full bg-transparent px-4 py-3 text-sm font-semibold text-zinc-900 placeholder-zinc-500 focus:outline-none"
               />
-            </div>
+              <button type="submit" className="px-8 bg-[#14a800] hover:bg-[#118a00] rounded text-white text-sm font-black transition-colors">
+                Search
+              </button>
+            </form>
             
-            <div className="flex items-center gap-4 w-full md:w-auto">
-              {/* Sort */}
-              <div className="flex items-center gap-2 text-sm bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 cursor-pointer hover:border-zinc-700 flex-1 md:flex-none justify-between">
-                <span className="text-zinc-400">Sort by:</span>
-                <span className="text-white font-bold ml-1">Recommended</span>
-                <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
-              </div>
-
-              {/* View Toggles */}
-              <div className="flex items-center bg-zinc-950 border border-zinc-800 rounded-lg p-1 shrink-0">
-                <button 
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-md transition-colors ${viewMode === 'grid' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white'}`}
-                >
-                  <Grid className="w-4 h-4" />
+            <div className="flex flex-wrap items-center justify-center gap-3 mt-6 text-sm font-semibold text-white/90">
+              <span className="text-white/70">Popular:</span>
+              {['Website Design', 'React Native', 'SEO', 'Logo Design'].map(term => (
+                <button key={term} onClick={() => { setSearchInput(term); setSearch(term); }} className="px-4 py-1.5 rounded-full border border-white/40 hover:bg-white hover:text-[#14a800] transition-colors">
+                  {term}
                 </button>
-                <button 
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-md transition-colors ${viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white'}`}
-                >
-                  <List className="w-4 h-4" />
-                </button>
-              </div>
+              ))}
             </div>
-          </div>
-          
-          {/* Results Summary */}
-          <div className="mt-4 flex items-center justify-between text-sm">
-            <div className="font-bold text-white flex items-center gap-3">
-              Showing 24 freelancers
-              <div className="hidden md:flex items-center gap-2">
-                <span className="bg-zinc-800 text-zinc-300 px-2 py-1 rounded text-xs border border-zinc-700 flex items-center gap-1">React <X className="w-3 h-3 cursor-pointer" /></span>
-                <span className="bg-zinc-800 text-zinc-300 px-2 py-1 rounded text-xs border border-zinc-700 flex items-center gap-1">Expert <X className="w-3 h-3 cursor-pointer" /></span>
-              </div>
-            </div>
-            <div className="text-zinc-500 font-medium">Page 1 of 5</div>
           </div>
         </div>
 
-        {/* Results Grid/List (Scrollable) */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar bg-zinc-950/50">
-          
-          <div className={viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" : "flex flex-col gap-4"}>
+        {/* Controls Row */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-4 bg-white px-6 rounded-xl border border-zinc-200 shadow-sm">
+          <div className="flex items-center gap-4 w-full md:w-auto">
+            <button 
+              onClick={() => setShowFilters(!showFilters)} 
+              className={`flex items-center gap-2 px-4 py-2 rounded-md border text-sm font-bold transition-colors ${showFilters ? 'bg-[#14a800]/10 text-[#14a800] border-[#14a800]/20' : 'bg-transparent text-zinc-700 border-zinc-300 hover:border-zinc-400'}`}
+            >
+              <SlidersHorizontal className="w-4 h-4" /> Filters
+            </button>
+            <span className="text-sm font-bold text-zinc-500">{total.toLocaleString()} services available</span>
+          </div>
+
+          <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto">
+            <div className="flex items-center gap-1 bg-zinc-100 rounded-md p-1 border border-zinc-200">
+               <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded transition-colors ${viewMode === 'grid' ? 'text-zinc-900 bg-white shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}><Grid className="w-4 h-4" /></button>
+               <button onClick={() => setViewMode('list')} className={`p-1.5 rounded transition-colors ${viewMode === 'list' ? 'text-zinc-900 bg-white shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}><List className="w-4 h-4" /></button>
+            </div>
+          </div>
+        </div>
+
+        {/* Dynamic Filters Panel */}
+        {showFilters && (
+          <div className="bg-white border border-zinc-200 rounded-xl p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 shadow-sm">
+            <div>
+              <label className="text-xs font-bold text-zinc-700 mb-2 block">Category</label>
+              <select value={category} onChange={(e) => { setCategory(e.target.value); setPage(1); }} className="w-full bg-white border border-zinc-300 rounded-md px-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#14a800] transition-colors">
+                {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-bold text-zinc-700 mb-2 block">Talent Type</label>
+              <select value={sellerType} onChange={(e) => { setSellerType(e.target.value); setPage(1); }} className="w-full bg-white border border-zinc-300 rounded-md px-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#14a800] transition-colors">
+                {TALENT_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-bold text-zinc-700 mb-2 block">Seller Level</label>
+              <select value={experience} onChange={(e) => { setExperience(e.target.value); setPage(1); }} className="w-full bg-white border border-zinc-300 rounded-md px-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#14a800] transition-colors">
+                <option value="">Any Level</option>
+                {EXPERIENCE.filter(Boolean).map(e => <option key={e} value={e}>{e.charAt(0) + e.slice(1).toLowerCase()}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-bold text-zinc-700 mb-2 block">Budget Min</label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500 font-bold">KES</span>
+                <input type="number" value={rateMin} onChange={(e) => { setRateMin(e.target.value); setPage(1); }} placeholder="Min" className="w-full bg-white border border-zinc-300 rounded-md pl-10 pr-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#14a800] transition-colors" />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs font-bold text-zinc-700 mb-2 block">Budget Max</label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500 font-bold">KES</span>
+                <input type="number" value={rateMax} onChange={(e) => { setRateMax(e.target.value); setPage(1); }} placeholder="Max" className="w-full bg-white border border-zinc-300 rounded-md pl-10 pr-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#14a800] transition-colors" />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs font-bold text-zinc-700 mb-2 block">Sort By</label>
+              <select value={sortBy} onChange={(e) => { setSortBy(e.target.value); setPage(1); }} className="w-full bg-white border border-zinc-300 rounded-md px-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#14a800] transition-colors">
+                {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+              </select>
+            </div>
             
-            {freelancers.map(f => (
-              <div 
-                key={f.id} 
-                className={`bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden hover:border-vivid-lavender/50 hover:shadow-lg hover:shadow-vivid-lavender/5 transition-all duration-300 group ${viewMode === 'list' ? 'flex items-center p-4 gap-6' : 'p-5'}`}
-              >
-                
-                {/* Header Section */}
-                <div className={`${viewMode === 'list' ? 'w-64 shrink-0 flex items-center gap-4' : 'text-center mb-5 relative'}`}>
-                  {viewMode === 'grid' && (
-                    <button className="absolute top-0 right-0 p-2 text-zinc-500 hover:text-red-500 transition-colors">
-                      <Heart className="w-5 h-5" />
-                    </button>
-                  )}
-                  <div className={`rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0 overflow-hidden ${viewMode === 'list' ? 'w-16 h-16' : 'w-20 h-20 mx-auto mb-3'}`}>
-                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${f.name}`} alt={f.name} className="w-full h-full object-cover" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-white group-hover:text-vivid-lavender transition-colors">{f.name}</h3>
-                    <p className="text-sm text-zinc-400 italic mt-0.5">{f.title}</p>
-                    
-                    {viewMode === 'list' && (
-                      <div className="flex items-center gap-1.5 mt-2">
-                        <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
-                        <span className="text-sm font-bold text-white">{f.rating}</span>
-                        <span className="text-xs text-zinc-500">({f.reviews})</span>
-                      </div>
-                    )}
-                  </div>
+            <div className="col-span-full flex justify-end mt-2 pt-4 border-t border-zinc-100">
+              <button onClick={() => { setCategory('All'); setExperience(''); setSellerType(''); setRateMin(''); setRateMax(''); setSortBy('rating'); setSearch(''); setSearchInput(''); setPage(1); }} className="flex items-center gap-1.5 text-sm font-bold text-zinc-500 hover:text-zinc-800 transition-colors">
+                <X className="w-4 h-4" /> Clear All Filters
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Results Grid */}
+        {isLoading ? (
+          <div className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6' : 'space-y-4'}>
+            {[1,2,3,4,5,6,7,8,9,10].map(i => (
+              <div key={i} className={`bg-white border border-zinc-200 rounded-xl overflow-hidden ${viewMode === 'list' ? 'flex h-48' : 'h-[420px]'}`}>
+                <div className={`${viewMode === 'list' ? 'w-64 h-full' : 'w-full h-44'} bg-zinc-200 animate-pulse`} />
+                <div className="flex-1 p-4 space-y-4">
+                  <div className="flex gap-3"><div className="w-8 h-8 rounded-full bg-zinc-200 animate-pulse" /><div className="flex-1"><div className="w-24 h-3 bg-zinc-200 animate-pulse mb-2 rounded" /><div className="w-16 h-2 bg-zinc-200 animate-pulse rounded" /></div></div>
+                  <div className="space-y-2"><div className="w-full h-4 bg-zinc-200 animate-pulse rounded" /><div className="w-3/4 h-4 bg-zinc-200 animate-pulse rounded" /></div>
+                  <div className="w-16 h-4 bg-zinc-200 animate-pulse rounded mt-auto" />
                 </div>
-
-                {viewMode === 'grid' && (
-                  <div className="flex items-center justify-center gap-2 mb-5">
-                    <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
-                    <span className="text-lg font-bold text-white">{f.rating}</span>
-                    <span className="text-sm text-zinc-500">({f.reviews} reviews)</span>
-                  </div>
-                )}
-
-                {/* Skills Section */}
-                <div className={`${viewMode === 'list' ? 'flex-1' : 'mb-5'}`}>
-                  {viewMode === 'grid' && <p className="text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">Top Skills:</p>}
-                  <div className="flex flex-wrap gap-2">
-                    {f.skills.map(s => (
-                      <span key={s} className="px-2.5 py-1 bg-zinc-800 text-vivid-lavender text-xs font-bold rounded-md border border-zinc-700">{s}</span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Key Info */}
-                <div className={`${viewMode === 'list' ? 'w-48 shrink-0 border-l border-zinc-800 pl-6' : 'mb-5 space-y-2'}`}>
-                  <div className="text-xl font-bold text-vivid-lavender mb-1">{f.rate}</div>
-                  <div className="flex items-center gap-2 text-sm text-zinc-400">
-                    <MapPin className="w-3.5 h-3.5" /> {f.location}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm mt-1">
-                    <div className={`w-2 h-2 rounded-full ${f.available ? 'bg-vivid-green' : 'bg-zinc-600'}`}></div>
-                    <span className={f.available ? 'text-vivid-green font-medium' : 'text-zinc-500'}>
-                      {f.available ? 'Available Now' : 'Available in 2 wks'}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Stats */}
-                {viewMode === 'grid' && (
-                  <div className="grid grid-cols-2 gap-4 mb-6 pt-4 border-t border-zinc-800/50">
-                    <div>
-                      <div className="text-xs text-zinc-500 flex items-center gap-1.5 mb-1"><CheckCircle className="w-3 h-3" /> Success Rate</div>
-                      <div className="text-sm font-bold text-white">{f.success}%</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-zinc-500 flex items-center gap-1.5 mb-1"><Clock className="w-3 h-3" /> Response Time</div>
-                      <div className="text-sm font-bold text-white">~{f.response}</div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Actions */}
-                <div className={`${viewMode === 'list' ? 'w-40 shrink-0 flex flex-col gap-2' : 'space-y-3 mt-auto'}`}>
-                  {viewMode === 'grid' && (
-                    <div className="flex gap-3">
-                      <button className="flex-1 py-2 rounded-xl border border-zinc-700 text-white text-sm font-bold hover:bg-zinc-800 transition-colors">View Profile</button>
-                    </div>
-                  )}
-                  <button className="w-full py-2.5 rounded-xl bg-vivid-lavender hover:bg-dark-purple text-white text-sm font-bold transition-colors shadow-lg shadow-vivid-lavender/20 flex items-center justify-center gap-2">
-                    Invite to Project <ArrowUpRight className="w-4 h-4" />
-                  </button>
-                  {viewMode === 'list' && (
-                    <button className="w-full py-2 rounded-xl border border-zinc-700 text-white text-sm font-bold hover:bg-zinc-800 transition-colors">View Profile</button>
-                  )}
-                </div>
-
               </div>
             ))}
-            
           </div>
-
-          {/* Load More */}
-          <div className="mt-8 flex justify-center pb-8">
-            <button className="px-8 py-3 bg-zinc-900 border border-zinc-800 hover:border-vivid-lavender text-white rounded-full text-sm font-bold transition-all hover:bg-zinc-800 shadow-lg">
-              Load More Freelancers
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center h-64 space-y-3 bg-red-50 border border-red-100 rounded-xl">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center"><X className="w-8 h-8 text-red-500" /></div>
+            <p className="text-zinc-800 font-bold">Oops! Something went wrong.</p>
+            <button onClick={refetch} className="px-5 py-2 bg-white border border-zinc-300 rounded-md hover:bg-zinc-50 transition-colors text-sm font-bold text-zinc-900">Try Again</button>
+          </div>
+        ) : freelancers.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-80 space-y-4 bg-white rounded-xl border border-zinc-200 shadow-sm">
+            <div className="w-20 h-20 bg-zinc-50 border border-zinc-200 rounded-full flex items-center justify-center">
+              <Search className="w-8 h-8 text-zinc-400" />
+            </div>
+            <div className="text-center">
+              <h3 className="text-xl font-black text-zinc-900">No services found</h3>
+              <p className="text-zinc-500 mt-1 text-sm font-medium">Try adjusting your filters or searching for something else.</p>
+            </div>
+            <button onClick={() => { setCategory('All'); setExperience(''); setRateMin(''); setRateMax(''); setSortBy('rating'); setSearch(''); setSearchInput(''); setPage(1); }} className="px-6 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white rounded-md text-sm font-bold transition-colors">
+              Clear Filters
             </button>
           </div>
+        ) : (
+          <div className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6' : 'space-y-4'}>
+            {freelancers.map(renderFreelancerCard)}
+          </div>
+        )}
 
-        </div>
-      </main>
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 pt-8 pb-12">
+            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-5 py-2 border border-zinc-300 rounded-md text-sm font-bold text-zinc-700 disabled:opacity-40 hover:bg-zinc-50 transition-colors bg-white">Previous</button>
+            <div className="px-4 py-2 text-sm font-bold text-zinc-500">Page <span className="text-zinc-900">{page}</span> of {totalPages}</div>
+            <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="px-5 py-2 border border-zinc-300 rounded-md text-sm font-bold text-zinc-700 disabled:opacity-40 hover:bg-zinc-50 transition-colors bg-white">Next</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

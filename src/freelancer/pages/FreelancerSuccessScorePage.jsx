@@ -120,11 +120,11 @@ export default function FreelancerSuccessScorePage() {
         {/* Right Column: AI Recommendations */}
         <div className="w-full lg:w-96 shrink-0 space-y-6">
 
-          <div className="bg-gradient-to-br from-brand-600 to-indigo-600 rounded-3xl p-6 shadow-md text-white">
+          <div className="bg-gradient-to-br from-[#14a800] to-[#118a00] rounded-3xl p-6 shadow-md text-white">
             <h3 className="font-bold mb-4 flex items-center gap-2">
-              <Target className="w-5 h-5 text-brand-200" /> Improve Your Score
+              <Target className="w-5 h-5 text-[#14a800]" /> Improve Your Score
             </h3>
-            <p className="text-sm font-medium text-brand-100 mb-6 leading-relaxed">
+            <p className="text-sm font-medium text-[#14a800] mb-6 leading-relaxed">
               Forte AI has analyzed your profile and recent contracts to provide actionable insights for reaching a 99% score.
             </p>
 
@@ -136,7 +136,7 @@ export default function FreelancerSuccessScorePage() {
                   </div>
                   <div>
                     <h4 className="text-sm font-bold">Improve Response Time</h4>
-                    <p className="text-xs font-medium text-brand-100 mt-1">Your average response time dropped to 4 hours this week. Keeping it under 2 hours boosts your communication score.</p>
+                    <p className="text-xs font-medium text-[#14a800] mt-1">Your average response time dropped to 4 hours this week. Keeping it under 2 hours boosts your communication score.</p>
                   </div>
                 </div>
               </div>
@@ -148,7 +148,7 @@ export default function FreelancerSuccessScorePage() {
                   </div>
                   <div>
                     <h4 className="text-sm font-bold">Ask for Reviews</h4>
-                    <p className="text-xs font-medium text-brand-100 mt-1">You have 2 recently completed contracts without feedback. Requesting reviews will solidify your 98% satisfaction rate.</p>
+                    <p className="text-xs font-medium text-[#14a800] mt-1">You have 2 recently completed contracts without feedback. Requesting reviews will solidify your 98% satisfaction rate.</p>
                   </div>
                 </div>
               </div>
@@ -171,10 +171,10 @@ export default function FreelancerSuccessScorePage() {
               <div>
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-xs font-bold text-zinc-500">Expert Vetted Eligibility</span>
-                  <span className="text-xs font-bold text-brand-600">Invited to Apply</span>
+                  <span className="text-xs font-bold text-[#14a800]">Invited to Apply</span>
                 </div>
                 <div className="w-full h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full">
-                  <div className="h-full w-[80%] bg-brand-500 rounded-full"></div>
+                  <div className="h-full w-[80%] bg-[#14a800] rounded-full"></div>
                 </div>
               </div>
             </div>

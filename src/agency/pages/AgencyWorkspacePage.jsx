@@ -35,8 +35,8 @@ export default function AgencyWorkspacePage() {
 
   const agencyStats = [
     { label: 'Agency Growth', value: '+24% QoQ', icon: ArrowUpRight, color: 'text-success', bg: 'bg-success/15' },
-    { label: 'Billing Efficiency', value: '92.4%', icon: Zap, color: 'text-brand-500', bg: 'bg-brand-50' },
-    { label: 'Active Roster Count', value: '12 Developers', icon: Users, color: 'text-accent-purple', bg: 'bg-accent-purple/10' },
+    { label: 'Billing Efficiency', value: '92.4%', icon: Zap, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5' },
+    { label: 'Active Roster Count', value: '12 Developers', icon: Users, color: 'text-success', bg: 'bg-success/10' },
   ];
 
   const activities = [
@@ -50,12 +50,12 @@ export default function AgencyWorkspacePage() {
       <Toaster position="top-right" />
       
       {/* Header / Brand Title */}
-      <div className="bg-navy border border-border rounded-[24px] p-8 shadow-sm relative overflow-hidden mb-8">
-        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-accent-purple/10 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="bg-[#222222] border border-border rounded-[24px] p-8 shadow-sm relative overflow-hidden mb-8">
+        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-success/10 blur-[100px] rounded-full pointer-events-none"></div>
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <span className="px-3 py-1 bg-accent-purple/20 text-accent-purple text-xs font-black rounded-full uppercase tracking-widest border border-accent-purple/30">Enterprise Workspace</span>
+              <span className="px-3 py-1 bg-success/20 text-success text-xs font-black rounded-full uppercase tracking-widest border border-success/30">Enterprise Workspace</span>
               <span className="flex items-center gap-1 text-xs text-white/70"><ShieldCheck className="w-3.5 h-3.5 text-success" /> Verified Agency</span>
             </div>
             <h1 className="text-3xl font-black text-white tracking-tight">Acme Digital Workspace</h1>
@@ -90,7 +90,7 @@ export default function AgencyWorkspacePage() {
           {/* Post Broadcast Card */}
           <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
             <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-              <Bell className="w-5 h-5 text-accent-purple animate-swing" />
+              <Bell className="w-5 h-5 text-success animate-swing" />
               Broadcast Announcement
             </h3>
             
@@ -100,7 +100,7 @@ export default function AgencyWorkspacePage() {
                 value={newPostText}
                 onChange={(e) => setNewPostText(e.target.value)}
                 placeholder="Post a message or instruction to the agency feed..."
-                className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary resize-none font-medium"
+                className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary resize-none font-medium"
                 required
               />
               <div className="flex justify-end">
@@ -116,9 +116,9 @@ export default function AgencyWorkspacePage() {
             <h3 className="text-sm font-black tracking-widest uppercase text-text-secondary">Workspace Feed</h3>
             
             {announcements.map((post) => (
-              <Card key={post.id} className="bg-white border border-border p-6 rounded-2xl shadow-sm hover:border-accent-purple/30 transition-all">
+              <Card key={post.id} className="bg-white border border-border p-6 rounded-2xl shadow-sm hover:border-success/30 transition-all">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-accent-purple/10 text-accent-purple flex items-center justify-center font-black text-sm shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-success/10 text-success flex items-center justify-center font-black text-sm shrink-0">
                     {post.author[0]}
                   </div>
                   <div className="flex-1 space-y-2">
@@ -142,7 +142,7 @@ export default function AgencyWorkspacePage() {
         <div className="lg:col-span-1 space-y-6">
           <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
             <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-              <Activity className="w-5 h-5 text-accent-purple" />
+              <Activity className="w-5 h-5 text-success" />
               Activity Monitor
             </h3>
             
@@ -154,7 +154,7 @@ export default function AgencyWorkspacePage() {
                   </div>
                   <div className="text-xs space-y-1 py-1">
                     <p className="font-bold text-text-primary">
-                      {act.user} <span className="text-text-secondary font-medium">{act.action}</span> <span className="text-accent-purple font-black">{act.target}</span>
+                      {act.user} <span className="text-text-secondary font-medium">{act.action}</span> <span className="text-success font-black">{act.target}</span>
                     </p>
                     <p className="text-[10px] text-text-secondary font-bold flex items-center gap-1"><Clock size={10} /> {act.time}</p>
                   </div>

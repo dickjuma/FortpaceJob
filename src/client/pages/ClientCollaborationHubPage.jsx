@@ -1,23 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   MessageSquare, Hash, Search, Bell, Users, Video, Phone,
   Paperclip, Smile, Send, CheckCircle2, MoreVertical, FileText,
   Clock, Info, ChevronRight, X
 } from 'lucide-react';
+import { useConversations, useMessages, useSendMessage } from '../services/clientHooks';
+import { useAuthStore } from '../../common/authStore';
 
 export default function ClientCollaborationHubPage() {
-  const [activeChannel, setActiveChannel] = useState('project-alpha');
+  const { user } = useAuthStore();
+  const { data: convData } = useConversations();
+  const conversations = convData?.items || [];
+  
+  const [activeChannel, setActiveChannel] = useState(null);
   const [showRightPane, setShowRightPane] = useState(true);
+  const [newMessage, setNewMessage] = useState('');
 
-  const threads = [
-    { id: 'project-alpha', name: 'Website Redesign', type: 'project', unread: 2 },
-    { id: 'project-beta', name: 'Mobile App Dev', type: 'project', unread: 0 },
-  ];
+  useEffect(() => {
+    if (conversations.length > 0 && !activeChannel) {
+      setActiveChannel(conversations[0].id);
+    }
+  }, [conversations, activeChannel]);
 
-  const dms = [
-    { id: 'u1', name: 'Sarah Jenkins', role: 'Frontend Dev', status: 'online' },
-    { id: 'u2', name: 'Michael Chen', role: 'UX Designer', status: 'away' },
-  ];
+  const { data: msgData, isLoading: loadingMsgs } = useMessages(activeChannel, { enabled: !!activeChannel });
+  const messages = msgData?.items || [];
+  const sendMessageMutation = useSendMessage(activeChannel);
+
+  const handleSend = () => {
+    if (!newMessage.trim() || !activeChannel) return;
+    sendMessageMutation.mutate({ content: newMessage, type: 'TEXT' });
+    setNewMessage('');
+  };
+
+  const getOtherParticipant = (conv) => {
+    return conv.participants?.find(p => p.userId !== user?.id)?.user || { name: 'Unknown' };
+  };
+
+  const activeConv = conversations.find(c => c.id === activeChannel);
+  const otherUser = activeConv ? getOtherParticipant(activeConv) : null;
 
   return (
     <div className="h-[calc(100vh-80px)] bg-gray-50 text-gray-900 font-sans flex overflow-hidden rounded-2xl border border-gray-200 m-4">
@@ -31,65 +51,41 @@ export default function ClientCollaborationHubPage() {
             <input 
               type="text" 
               placeholder="Search conversations..." 
-              className="w-full bg-gray-50 border border-gray-200 rounded-lg pl-9 pr-4 py-2 text-sm text-gray-900 focus:outline-none focus:border-vivid-lavender transition-all"
+              className="w-full bg-gray-50 border border-gray-200 rounded-lg pl-9 pr-4 py-2 text-sm text-gray-900 focus:outline-none focus:border-success transition-all"
             />
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto py-4 custom-scrollbar">
-          {/* Projects */}
-          <div className="mb-6">
-            <div className="px-5 flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Active Projects</span>
-            </div>
-            <div className="space-y-1 px-2">
-              {threads.map(thread => (
-                <button 
-                  key={thread.id}
-                  onClick={() => setActiveChannel(thread.id)}
-                  className={`w-full px-3 py-2.5 rounded-xl flex items-center justify-between group transition-colors ${
-                    activeChannel === thread.id ? 'bg-vivid-lavender/10 text-vivid-lavender' : 'text-gray-500 hover:bg-gray-100/50 hover:text-gray-700'
-                  }`}
-                >
-                  <div className="flex items-center gap-3 overflow-hidden">
-                    <Hash className="w-4 h-4 shrink-0" />
-                    <span className="truncate text-sm font-bold">{thread.name}</span>
-                  </div>
-                  {thread.unread > 0 && (
-                    <span className="bg-vivid-lavender text-white text-[10px] font-black px-2 py-0.5 rounded-full shrink-0">
-                      {thread.unread}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* Direct Messages */}
           <div>
             <div className="px-5 flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Direct Messages</span>
             </div>
             <div className="space-y-1 px-2">
-              {dms.map(dm => (
-                <button 
-                  key={dm.id}
-                  className="w-full px-3 py-2.5 rounded-xl flex items-center gap-3 text-gray-500 hover:bg-gray-100/50 hover:text-gray-700 transition-colors"
-                >
-                  <div className="relative shrink-0">
-                    <div className="w-8 h-8 rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-xs font-bold text-gray-900">
-                      {dm.name.charAt(0)}
+              {conversations.length === 0 && <p className="text-xs text-gray-500 px-3 py-2">No conversations yet.</p>}
+              {conversations.map(conv => {
+                const partner = getOtherParticipant(conv);
+                return (
+                  <button 
+                    key={conv.id}
+                    onClick={() => setActiveChannel(conv.id)}
+                    className={`w-full px-3 py-2.5 rounded-xl flex items-center gap-3 transition-colors ${
+                      activeChannel === conv.id ? 'bg-success/10 text-success' : 'text-gray-500 hover:bg-gray-100/50 hover:text-gray-700'
+                    }`}
+                  >
+                    <div className="relative shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-xs font-bold text-gray-900">
+                        {partner.name?.charAt(0) || '?'}
+                      </div>
+                      <div className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white bg-success`}></div>
                     </div>
-                    <div className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white ${
-                      dm.status === 'online' ? 'bg-vivid-green' : 'bg-zinc-500'
-                    }`}></div>
-                  </div>
-                  <div className="text-left overflow-hidden">
-                    <div className="truncate text-sm font-bold text-gray-700">{dm.name}</div>
-                    <div className="truncate text-[10px] text-gray-400">{dm.role}</div>
-                  </div>
-                </button>
-              ))}
+                    <div className="text-left overflow-hidden">
+                      <div className="truncate text-sm font-bold text-gray-700">{partner.name || 'User'}</div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -102,18 +98,17 @@ export default function ClientCollaborationHubPage() {
         <div className="h-[72px] border-b border-gray-200 flex items-center justify-between px-6 shrink-0 bg-white/50">
           <div>
             <h3 className="font-black text-lg text-gray-900 flex items-center gap-2">
-              <Hash className="w-5 h-5 text-vivid-lavender" />
-              Website Redesign
+              <MessageSquare className="w-5 h-5 text-success" />
+              {otherUser?.name || 'Select a Conversation'}
             </h3>
             <div className="text-xs text-gray-500 mt-0.5 flex items-center gap-4 font-medium">
-              <span>Project Discussion</span>
-              <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" /> 3 Participants</span>
+              <span>Direct Message</span>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
-            <button className="p-2 text-gray-500 hover:text-vivid-lavender hover:bg-vivid-lavender/10 rounded-lg transition-colors"><Phone className="w-5 h-5" /></button>
-            <button className="p-2 text-gray-500 hover:text-vivid-lavender hover:bg-vivid-lavender/10 rounded-lg transition-colors"><Video className="w-5 h-5" /></button>
+            <button className="p-2 text-gray-500 hover:text-success hover:bg-success/10 rounded-lg transition-colors"><Phone className="w-5 h-5" /></button>
+            <button className="p-2 text-gray-500 hover:text-success hover:bg-success/10 rounded-lg transition-colors"><Video className="w-5 h-5" /></button>
             <div className="w-px h-6 bg-gray-100 mx-2"></div>
             <button 
               onClick={() => setShowRightPane(!showRightPane)}
@@ -125,72 +120,55 @@ export default function ClientCollaborationHubPage() {
         </div>
 
         {/* Message Feed */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
-          
-          <div className="text-center text-xs font-bold text-gray-500 my-4 uppercase tracking-wider">
-            Today, 10:42 AM
-          </div>
-
-          <div className="flex gap-4">
-            <div className="w-10 h-10 rounded-full bg-vivid-lavender flex items-center justify-center font-bold text-white shrink-0 shadow-lg shadow-vivid-lavender/20">
-              SJ
-            </div>
-            <div className="max-w-[80%]">
-              <div className="flex items-baseline gap-2 mb-1">
-                <span className="font-bold text-gray-900 text-sm">Sarah Jenkins</span>
-                <span className="text-[10px] text-gray-400 font-medium">10:42 AM</span>
-              </div>
-              <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-gray-600 leading-relaxed">
-                Hi team, I've pushed the latest UI components to the repository. The new dark mode toggles should be fully functional now. Can you please review?
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-4 flex-row-reverse">
-            <div className="w-10 h-10 rounded-full bg-dark-purple border border-vivid-lavender/30 flex items-center justify-center font-bold text-white shrink-0">
-              JD
-            </div>
-            <div className="max-w-[80%] flex flex-col items-end">
-              <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-[10px] text-gray-400 font-medium">10:45 AM</span>
-                <span className="font-bold text-gray-900 text-sm">You</span>
-              </div>
-              <div className="bg-vivid-lavender text-white rounded-2xl rounded-tr-sm px-4 py-3 text-sm leading-relaxed shadow-lg shadow-vivid-lavender/20">
-                Looks great Sarah! I'll review the PR this afternoon. Were there any changes needed to the Tailwind config for the new accent colors?
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <div className="w-10 h-10 rounded-full bg-vivid-lavender flex items-center justify-center font-bold text-white shrink-0 shadow-lg shadow-vivid-lavender/20">
-              SJ
-            </div>
-            <div className="max-w-[80%]">
-              <div className="flex items-baseline gap-2 mb-1">
-                <span className="font-bold text-gray-900 text-sm">Sarah Jenkins</span>
-                <span className="text-[10px] text-gray-400 font-medium">10:48 AM</span>
-              </div>
-              <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-gray-600 leading-relaxed">
-                Just a few minor additions to the color palette. I've attached the updated config file here.
-              </div>
-              <div className="mt-2 bg-white border border-gray-200 rounded-xl p-3 flex items-center gap-3 w-64 hover:border-vivid-lavender/50 cursor-pointer transition-colors">
-                <div className="p-2 bg-gray-100 rounded-lg">
-                  <FileText className="w-5 h-5 text-vivid-lavender" />
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar flex flex-col-reverse">
+          {loadingMsgs ? (
+            <div className="text-center text-zinc-500 text-sm">Loading messages...</div>
+          ) : messages.length === 0 ? (
+            <div className="text-center text-zinc-500 text-sm py-10">No messages yet. Say hello!</div>
+          ) : (
+            [...messages].map(msg => {
+              const isMe = msg.senderId === user?.id;
+              return (
+                <div key={msg.id} className={`flex gap-4 ${isMe ? 'flex-row-reverse' : ''}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shrink-0 ${isMe ? 'bg-success' : 'bg-success'} shadow-lg shadow-[#14a800]/20`}>
+                    {isMe ? 'Me' : (msg.sender?.name?.charAt(0) || '?')}
+                  </div>
+                  <div className={`max-w-[80%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      {isMe ? (
+                        <>
+                          <span className="text-[10px] text-gray-400 font-medium">{new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                          <span className="font-bold text-gray-900 text-sm">You</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="font-bold text-gray-900 text-sm">{msg.sender?.name || 'User'}</span>
+                          <span className="text-[10px] text-gray-400 font-medium">{new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                        </>
+                      )}
+                    </div>
+                    <div className={`${isMe ? 'bg-success text-white rounded-tr-sm' : 'bg-white border border-gray-200 text-gray-600 rounded-tl-sm'} rounded-2xl px-4 py-3 text-sm leading-relaxed ${isMe ? 'shadow-lg shadow-[#14a800]/20' : ''}`}>
+                      {msg.content}
+                    </div>
+                  </div>
                 </div>
-                <div className="overflow-hidden">
-                  <p className="text-sm font-bold text-gray-900 truncate">tailwind.config.js</p>
-                  <p className="text-[10px] text-gray-400">2.4 KB</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
+              );
+            })
+          )}
         </div>
 
         {/* Input Area */}
         <div className="p-4 bg-gray-50 shrink-0 border-t border-gray-200">
-          <div className="bg-white border border-gray-200 rounded-2xl flex flex-col focus-within:border-vivid-lavender focus-within:ring-1 focus-within:ring-vivid-lavender transition-all shadow-lg">
+          <div className="bg-white border border-gray-200 rounded-2xl flex flex-col focus-within:border-success focus-within:ring-1 focus-within:ring-success transition-all shadow-lg">
             <textarea 
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
               placeholder="Type your message..."
               className="w-full bg-transparent px-4 pt-4 pb-2 text-sm text-gray-900 placeholder-zinc-500 focus:outline-none resize-none min-h-[80px]"
             ></textarea>
@@ -199,8 +177,12 @@ export default function ClientCollaborationHubPage() {
                 <button className="p-2 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"><Paperclip className="w-4 h-4" /></button>
                 <button className="p-2 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"><Smile className="w-4 h-4" /></button>
               </div>
-              <button className="bg-vivid-lavender hover:bg-dark-purple text-white px-4 py-2 rounded-xl flex items-center gap-2 text-sm font-bold transition-colors shadow-lg shadow-vivid-lavender/20">
-                Send <Send className="w-4 h-4" />
+              <button 
+                onClick={handleSend}
+                disabled={!newMessage.trim() || sendMessageMutation.isPending}
+                className="bg-success hover:bg-success text-white px-4 py-2 rounded-xl flex items-center gap-2 text-sm font-bold transition-colors shadow-lg shadow-[#14a800]/20 disabled:opacity-50"
+              >
+                {sendMessageMutation.isPending ? 'Sending...' : 'Send'} <Send className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -221,10 +203,10 @@ export default function ClientCollaborationHubPage() {
             {/* Status Card */}
             <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5">
               <div className="flex justify-between items-start mb-4">
-                <div className="w-12 h-12 bg-vivid-green/10 border border-vivid-green/20 rounded-xl flex items-center justify-center">
-                  <CheckCircle2 className="w-6 h-6 text-vivid-green" />
+                <div className="w-12 h-12 bg-success/10 border border-success/20 rounded-xl flex items-center justify-center">
+                  <CheckCircle2 className="w-6 h-6 text-success" />
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-wider px-2 py-1 bg-vivid-green/20 text-vivid-green rounded border border-vivid-green/30">Active</span>
+                <span className="text-[10px] font-black uppercase tracking-wider px-2 py-1 bg-success/20 text-success rounded border border-success/30">Active</span>
               </div>
               <h4 className="font-black text-gray-900 mb-1">Website Redesign</h4>
               <p className="text-xs text-gray-500 font-medium">Milestone 2 in progress</p>
@@ -240,7 +222,7 @@ export default function ClientCollaborationHubPage() {
               <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Project Team</h4>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-vivid-lavender flex items-center justify-center text-xs font-bold text-gray-900">SJ</div>
+                  <div className="w-8 h-8 rounded-full bg-success flex items-center justify-center text-xs font-bold text-gray-900">SJ</div>
                   <div>
                     <p className="text-sm font-bold text-gray-900">Sarah Jenkins</p>
                     <p className="text-[10px] text-gray-400">Freelancer</p>
@@ -260,12 +242,12 @@ export default function ClientCollaborationHubPage() {
             <div>
               <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center justify-between">
                 Recent Files
-                <button className="text-vivid-lavender hover:text-gray-900 capitalize text-[10px]">View All</button>
+                <button className="text-success hover:text-gray-900 capitalize text-[10px]">View All</button>
               </h4>
               <div className="space-y-2">
                 <div className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors group">
                   <div className="p-2 bg-gray-50 rounded-lg group-hover:bg-gray-200">
-                    <FileText className="w-4 h-4 text-gray-500 group-hover:text-vivid-lavender" />
+                    <FileText className="w-4 h-4 text-gray-500 group-hover:text-success" />
                   </div>
                   <div className="overflow-hidden flex-1">
                     <p className="text-xs font-bold text-gray-900 truncate">tailwind.config.js</p>
@@ -274,7 +256,7 @@ export default function ClientCollaborationHubPage() {
                 </div>
                 <div className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors group">
                   <div className="p-2 bg-gray-50 rounded-lg group-hover:bg-gray-200">
-                    <FileText className="w-4 h-4 text-gray-500 group-hover:text-vivid-lavender" />
+                    <FileText className="w-4 h-4 text-gray-500 group-hover:text-success" />
                   </div>
                   <div className="overflow-hidden flex-1">
                     <p className="text-xs font-bold text-gray-900 truncate">mockup_v2.fig</p>

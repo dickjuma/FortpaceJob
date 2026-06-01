@@ -3,7 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { ArrowLeft, BadgeCheck, Building2, Mail, ShieldCheck, UserRound } from 'lucide-react';
-import SocialLoginButtons from '../SocialLoginButtons';
+import toast from 'react-hot-toast';
+import TurnstileWidget from '../TurnstileWidget';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import PasswordInput from '../ui/PasswordInput';
@@ -30,6 +31,8 @@ export default function RegisterDetailsStep({
   onAutosave,
   onSubmit,
   accountTypeLabel,
+  turnstileEnabled = false,
+  onTurnstileVerify,
 }) {
   const schema = React.useMemo(() => buildRegisterSchema(role, accountType), [role, accountType]);
 
@@ -46,7 +49,6 @@ export default function RegisterDetailsStep({
   });
 
   const [submitError, setSubmitError] = React.useState(null);
-  const watchedFullName = watch('fullName');
   const watchedCountry = watch('country');
   const watchedBusinessName = watch('businessName');
 
@@ -66,15 +68,22 @@ export default function RegisterDetailsStep({
   const isFreelancer = role === 'FREELANCER';
   const countryMeta = getCountryOption(watchedCountry);
 
-  const submitForm = handleSubmit(async (values) => {
-    setSubmitError(null);
+  const submitForm = handleSubmit(
+    async (values) => {
+      setSubmitError(null);
 
-    try {
-      await onSubmit(values);
-    } catch (error) {
-      setSubmitError(error.message || 'We could not create your account. Please try again.');
+      try {
+        await onSubmit(values);
+      } catch (error) {
+        const msg = error.message || 'We could not create your account. Please try again.';
+        setSubmitError(msg);
+        toast.error(msg);
+      }
+    },
+    (errors) => {
+      toast.error('Please fix the errors in the form before submitting.');
     }
-  });
+  );
 
   return (
     <form onSubmit={submitForm} className="space-y-6">
@@ -85,7 +94,7 @@ export default function RegisterDetailsStep({
           className="rounded-[1.75rem] border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-950 sm:p-6"
         >
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center rounded-full bg-brand-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-600 dark:text-brand-300">
+            <span className="inline-flex items-center rounded-full bg-[#14a800]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#14a800] dark:text-[#14a800]">
               {role === 'CLIENT' ? 'Client journey' : 'Freelancer journey'}
             </span>
             <span className="inline-flex items-center rounded-full bg-zinc-900 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white dark:bg-white dark:text-zinc-950">
@@ -127,10 +136,6 @@ export default function RegisterDetailsStep({
         </motion.div>
       </div>
 
-      <div className="rounded-[1.75rem] border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-6">
-        <SocialLoginButtons isLoading={isSubmitting} />
-      </div>
-
       {submitError && (
         <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400">
           {submitError}
@@ -141,7 +146,7 @@ export default function RegisterDetailsStep({
         <div className="space-y-6">
           <section className="rounded-[1.75rem] border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-6">
             <div className="mb-5 flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-500/10 text-brand-600 dark:text-brand-300">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800]">
                 <UserRound className="h-5 w-5" />
               </div>
               <div>
@@ -391,6 +396,12 @@ export default function RegisterDetailsStep({
                 )}
               />
             </div>
+
+            {turnstileEnabled && (
+              <div className="mt-5">
+                <TurnstileWidget onVerify={onTurnstileVerify} />
+              </div>
+            )}
 
             <Controller
               name="antiSpamWebsite"

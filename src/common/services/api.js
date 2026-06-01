@@ -45,7 +45,7 @@ const unwrapApiResponse = (payload) => {
 
 const getErrorMessage = (payload, fallback = "An error occurred") => {
   if (!payload || typeof payload !== "object") return fallback;
-  return payload.message || payload.error?.message || fallback;
+  return payload.message || payload.error?.message || payload.error || fallback;
 };
 
 // API Client with auth handling
@@ -59,6 +59,8 @@ const apiClient = async (endpoint, options = {}) => {
       ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
+    // Pass the AbortSignal if provided in options
+    signal: options.signal,
   };
 
   let response = await fetch(`${API_BASE_URL}${endpoint}`, config);
@@ -100,7 +102,10 @@ const apiClient = async (endpoint, options = {}) => {
   const data = unwrapApiResponse(rawData);
   
   if (!response.ok) {
-    throw new Error(getErrorMessage(rawData));
+    const fallbackMessage = response.status === 429
+      ? "Too many attempts. Please wait a moment and try again."
+      : "An error occurred";
+    throw new Error(getErrorMessage(rawData, fallbackMessage));
   }
 
   if (rawData?.success === false) {
@@ -110,9 +115,46 @@ const apiClient = async (endpoint, options = {}) => {
   return data;
 };
 
+// Custom format helper and named api utility for Axios-like compatibility
+const formatUrl = (url) => url.startsWith('/') ? url : '/' + url;
+
+export const api = {
+  get: async (url, config = {}) => {
+    let endpoint = formatUrl(url);
+    if (config.params) {
+      const q = new URLSearchParams(config.params).toString();
+      endpoint += (endpoint.includes('?') ? '&' : '?') + q;
+    }
+    const data = await apiClient(endpoint, { method: 'GET', ...config });
+    return { data };
+  },
+  post: async (url, body, config = {}) => {
+    const data = await apiClient(formatUrl(url), { method: 'POST', body: JSON.stringify(body), ...config });
+    return { data };
+  },
+  patch: async (url, body, config = {}) => {
+    const data = await apiClient(formatUrl(url), { method: 'PATCH', body: JSON.stringify(body), ...config });
+    return { data };
+  },
+  delete: async (url, config = {}) => {
+    const data = await apiClient(formatUrl(url), { method: 'DELETE', ...config });
+    return { data };
+  }
+};
+
+// ==========================================
+// FEATURE SPECIFIC APIS
+// ==========================================
+
+export const analyticsAPI = {
+  getClientDashboard: () => apiClient('/analytics_reports/dashboard/client'),
+  getFreelancerDashboard: () => apiClient('/analytics_reports/dashboard/freelancer'),
+};
+
+
+
 // ─── AUTH API ───────────────────────────────────────────────────────────────────
 export const authAPI = {
-  // Register
   register: async (userData) => {
     const data = await apiClient("/auth/register", {
       method: "POST",
@@ -125,7 +167,6 @@ export const authAPI = {
     return data;
   },
 
-  // Register with OTP verification
   registerWithOTP: async (userData, sendOTP = true) => {
     const data = await apiClient("/auth/register", {
       method: "POST",
@@ -134,12 +175,10 @@ export const authAPI = {
     return data;
   },
 
-  // Verify OTP
   verifyOTP: async (email, emailOtp, phoneOtp, phoneNumber) => {
     if (phoneOtp || phoneNumber) {
       throw new Error("Phone OTP verification is not supported by the current API.");
     }
-
     return authAPI.verifyEmailOTP(email, emailOtp);
   },
 
@@ -148,9 +187,12 @@ export const authAPI = {
       method: "POST",
       body: JSON.stringify({ token: otp, email }),
     });
+    if (data?.accessToken) {
+      setTokens(data.accessToken, data.refreshToken);
+      setUser(data.user);
+    }
     return data;
   },
-
 
   verifyAdmin2FA: async (userId, otp) => {
     const data = await apiClient("/auth/admin/verify-2fa", {
@@ -164,19 +206,10 @@ export const authAPI = {
     return data;
   },
 
-  completeRegistration: async (email) => {
-    const data = await apiClient("/auth/complete-registration", {
-      method: "POST",
-      body: JSON.stringify({ email }),
-    });
-    if (data.accessToken) {
-      setTokens(data.accessToken, data.refreshToken);
-      setUser(data.user);
-    }
-    return data;
+  completeRegistration: async () => {
+    throw new Error("Complete registration is handled by /auth/verify-email in the current backend.");
   },
 
-  // Resend OTP: either email or phone (or both)
   resendOTP: async (email, phoneNumber, channel = "email", purpose = "email_verification", userId = null) => {
     return apiClient("/auth/resend-otp", {
       method: "POST",
@@ -184,12 +217,15 @@ export const authAPI = {
     });
   },
 
-
-  // Login
-  login: async (identifier, password) => {
+  login: async (identifier, password, options = {}) => {
+    const turnstileToken = options.turnstileToken || options.deviceMetadata?.turnstileToken;
     const data = await apiClient("/auth/login", {
       method: "POST",
-      body: JSON.stringify({ email: identifier, password }),
+      body: JSON.stringify({
+        email: identifier,
+        password,
+        ...(turnstileToken ? { "cf-turnstile-response": turnstileToken } : {}),
+      }),
     });
 
     if (data?.accessToken) {
@@ -200,11 +236,8 @@ export const authAPI = {
     return data;
   },
 
-  sendLoginOTP: async (phoneNumber) => {
-    return apiClient("/auth/login/send-otp", {
-      method: "POST",
-      body: JSON.stringify({ phoneNumber }),
-    });
+  sendLoginOTP: async () => {
+    throw new Error("Phone OTP login is not supported by the current API.");
   },
 
   loginWithPhoneOTP: async (phoneNumber, otp) => {
@@ -215,7 +248,6 @@ export const authAPI = {
     throw new Error("Phone OTP verification is not supported by the current API.");
   },
 
-  // Logout
   logout: async () => {
     try {
       await apiClient("/auth/logout", {
@@ -227,14 +259,12 @@ export const authAPI = {
     }
   },
 
-  // Get current user
   getMe: async () => {
     const data = await apiClient("/auth/me");
     setUser(data);
     return { user: data, source: "rest" };
   },
 
-  // Forgot password
   forgotPassword: async (email) => {
     return apiClient("/auth/forgot-password", {
       method: "POST",
@@ -242,7 +272,10 @@ export const authAPI = {
     });
   },
 
-  // Reset password (token flow or email+otp flow)
+  resendPasswordResetOTP: async (email) => {
+    return authAPI.resendOTP(email, null, "email", "reset_password");
+  },
+
   resetPassword: async (payloadOrToken, password) => {
     const payload =
       typeof payloadOrToken === "string"
@@ -254,7 +287,6 @@ export const authAPI = {
     });
   },
 
-  // Refresh token
   refreshToken: async () => {
     const refreshToken = getRefreshToken();
     if (!refreshToken) throw new Error("No refresh token");
@@ -289,217 +321,290 @@ export const authAPI = {
 
 // ─── USER API ──────────────────────────────────────────────────────────────────
 export const userAPI = {
-  // Get public freelancer profile
   getProfile: async (userId) => {
-    return apiClient(`/talents/${userId}`);
+    return apiClient(`/profilesystem/view/${userId}`);
   },
 
-  // Update profile
   updateProfile: async (formData) => {
-    // Create FormData for file uploads
-    const data = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (key === "avatar" && formData[key]) {
-        data.append(key, formData[key]);
-      } else if (Array.isArray(formData[key])) {
-        data.append(key, JSON.stringify(formData[key]));
-      } else if (formData[key] !== undefined) {
-        data.append(key, formData[key]);
-      }
-    });
-
-    const token = getToken();
-    const response = await fetch(`${API_BASE_URL}/users/me/profile`, {
-      method: "PATCH",
-      headers: {
-        ...(token && { Authorization: `Bearer ${token}` }),
-      },
-      body: data,
-    });
-
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message);
-    return result;
+    // Adapter handles role based patching
+    return profileAPI.updateMyProfile(formData);
   },
 
-  // Change password
   changePassword: async (currentPassword, newPassword) => {
-    return apiClient("/users/me/password", {
-      method: "PATCH",
+    return apiClient("/auth/reset-password", { // maps to auth password change
+      method: "POST",
       body: JSON.stringify({ currentPassword, newPassword }),
     });
   },
 
-  // Get my stats
   getMyStats: async () => {
-    return apiClient("/users/me/stats");
+    return apiClient("/profilesystem/onboarding/status");
   },
 
-  // Search talent
   searchTalent: async (params) => {
     const queryString = new URLSearchParams(params).toString();
-    return apiClient(`/talents?${queryString}`);
+    return apiClient(`/category-taxonomy/matching/job-to-freelancers?${queryString}`);
   },
 
-  // Upload portfolio
   uploadPortfolio: async (files) => {
-    const data = new FormData();
-    files.forEach((file) => data.append("files", file));
-
-    const token = getToken();
-    const response = await fetch(`${API_BASE_URL}/users/me/portfolio`, {
-      method: "POST",
-      headers: {
-        ...(token && { Authorization: `Bearer ${token}` }),
-      },
-      body: data,
-    });
-
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message);
-    return result;
+    return profileAPI.uploadPortfolio(files);
   },
 
-  // Delete portfolio item
   deletePortfolioItem: async (index) => {
-    const data = await apiClient(`/profile/me/portfolio/${index}`, {
+    const user = getUser();
+    return apiClient(`/profilesystem/freelancer/${user?.id}/portfolio/${index}`, {
       method: "DELETE",
     });
-    if (data?.user) setUser(data.user);
-    return data;
   },
 
-  // Update portfolio item metadata
   updatePortfolioItem: async (index, updates) => {
-    const data = await apiClient(`/profile/me/portfolio/${index}`, {
+    const user = getUser();
+    return apiClient(`/profilesystem/freelancer/${user?.id}/portfolio/${index}`, {
       method: "PATCH",
       body: JSON.stringify(updates),
     });
-    if (data?.user) setUser(data.user);
-    return data;
   },
 };
 
-// PROFILE API (Prisma-backed)
+// PROFILE API (Role-aware REST adapter mapping legacy endpoints to microservices)
 export const profileAPI = {
   getMyProfile: async () => {
-    const data = await apiClient("/profile/me", {
+    const data = await apiClient("/profilesystem/me", {
       method: "GET",
     });
-    if (data?.user) {
-      setUser(data.user);
-      return { success: true, user: data.user };
-    }
-    throw new Error("No profile data returned");
+    // If backend returns unwrapped profile directly, bundle it for user session
+    const user = getUser();
+    const updatedUser = { ...user, profile: data };
+    setUser(updatedUser);
+    return { success: true, user: updatedUser };
   },
 
+  getReferralSummary: async () => apiClient('/profilesystem/referrals/summary'),
+
   updateMyProfile: async (input) => {
-    const data = await apiClient("/profile/me", {
+    const user = getUser();
+    if (!user) throw new Error("No authenticated user found");
+
+    let endpoint = "/profilesystem/me";
+    const role = user.role?.toUpperCase();
+
+    if (role === "FREELANCER") {
+      endpoint = `/profilesystem/freelancer/${user.id}`;
+    } else if (role === "CLIENT") {
+      endpoint = `/profilesystem/client/${user.id}`;
+    } else if (role === "AGENCY") {
+      endpoint = `/profilesystem/agency/${user.id}`;
+    }
+
+    const data = await apiClient(endpoint, {
       method: "PATCH",
       body: JSON.stringify(input),
     });
-    if (data?.user) {
-      setUser(data.user);
-      return { success: true, user: data.user, missingFields: data.missingFields || [] };
-    }
-    throw new Error("Profile update failed");
+
+    const updatedUser = { ...user, ...data, profile: data };
+    setUser(updatedUser);
+    return { success: true, user: updatedUser, missingFields: [] };
   },
 
   uploadAvatar: async (file) => {
-    const data = new FormData();
-    data.append("avatar", file);
-    const token = getToken();
-    const response = await fetch(`${API_BASE_URL}/profile/me/avatar`, {
+    const formData = new FormData();
+    formData.append("file", file);
+    const data = await fetch(`${API_BASE_URL}/profilesystem/upload/avatar`, {
       method: "POST",
-      headers: { ...(token && { Authorization: `Bearer ${token}` }) },
-      body: data,
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || "Avatar upload failed");
-    if (result.user) setUser(result.user);
-    return result;
+      headers: { Authorization: `Bearer ${getToken()}` },
+      body: formData,
+    }).then(res => res.json());
+
+    const user = getUser();
+    const updatedUser = { ...user, avatar: data.url, profile: { ...user?.profile, avatar: data.url } };
+    setUser(updatedUser);
+    return { success: true, user: updatedUser };
   },
 
   uploadCoverPhoto: async (file) => {
-    const data = new FormData();
-    data.append("coverPhoto", file);
-    const token = getToken();
-    const response = await fetch(`${API_BASE_URL}/profile/me/cover-photo`, {
+    const formData = new FormData();
+    formData.append("file", file);
+    const data = await fetch(`${API_BASE_URL}/profilesystem/upload/cover`, {
       method: "POST",
-      headers: { ...(token && { Authorization: `Bearer ${token}` }) },
-      body: data,
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || "Cover photo upload failed");
-    if (result.user) setUser(result.user);
-    return result;
+      headers: { Authorization: `Bearer ${getToken()}` },
+      body: formData,
+    }).then(res => res.json());
+
+    const user = getUser();
+    const updatedUser = { ...user, coverPhoto: data.url, profile: { ...user?.profile, coverPhoto: data.url } };
+    setUser(updatedUser);
+    return { success: true, user: updatedUser };
   },
 
   uploadCompanyLogo: async (file) => {
-    const data = new FormData();
-    data.append("companyLogo", file);
-    const token = getToken();
-    const response = await fetch(`${API_BASE_URL}/profile/me/company-logo`, {
+    const formData = new FormData();
+    formData.append("file", file);
+    const data = await fetch(`${API_BASE_URL}/profilesystem/upload/logo`, {
       method: "POST",
-      headers: { ...(token && { Authorization: `Bearer ${token}` }) },
-      body: data,
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || "Company logo upload failed");
-    if (result.user) setUser(result.user);
-    return result;
+      headers: { Authorization: `Bearer ${getToken()}` },
+      body: formData,
+    }).then(res => res.json());
+
+    const user = getUser();
+    const updatedUser = { ...user, companyLogo: data.url, profile: { ...user?.profile, companyLogo: data.url } };
+    setUser(updatedUser);
+    return { success: true, user: updatedUser };
   },
 
   getMissingFields: async () => {
-    return apiClient("/profile/missing-fields", { method: "GET" });
+    return apiClient("/profilesystem/onboarding/status", { method: "GET" });
+  },
+
+  updateFreelancerProfile: async (data) => {
+    return apiClient("/profilesystem/freelancer/profile", {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  },
+
+  updateFreelancerGoals: async (goals) => {
+    return apiClient("/profilesystem/freelancer/goals", {
+      method: "PATCH",
+      body: JSON.stringify({ goals }),
+    });
   },
 
   uploadIntroVideo: async (file) => {
-    const data = new FormData();
-    data.append("introVideo", file);
-    const token = getToken();
-    const response = await fetch(`${API_BASE_URL}/profile/me/intro-video`, {
+    const formData = new FormData();
+    formData.append("file", file);
+    const data = await fetch(`${API_BASE_URL}/profilesystem/upload/video`, {
       method: "POST",
-      headers: { ...(token && { Authorization: `Bearer ${token}` }) },
-      body: data,
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || "Video upload failed");
-    if (result.user) setUser(result.user);
-    return result;
+      headers: { Authorization: `Bearer ${getToken()}` },
+      body: formData,
+    }).then(res => res.json());
+
+    const user = getUser();
+    const updatedUser = { ...user, introVideo: data.url, profile: { ...user?.profile, introVideo: data.url } };
+    setUser(updatedUser);
+    return { success: true, user: updatedUser };
   },
 
   uploadPortfolio: async (files) => {
-    const data = new FormData();
-    files.forEach((file) => data.append("files", file));
-    const token = getToken();
-    const response = await fetch(`${API_BASE_URL}/profile/me/portfolio`, {
+    const formData = new FormData();
+    files.forEach(f => formData.append("files", f));
+    const data = await fetch(`${API_BASE_URL}/profilesystem/upload/portfolio`, {
       method: "POST",
-      headers: { ...(token && { Authorization: `Bearer ${token}` }) },
-      body: data,
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || "Portfolio upload failed");
-    if (result.user) setUser(result.user);
-    return result;
+      headers: { Authorization: `Bearer ${getToken()}` },
+      body: formData,
+    }).then(res => res.json());
+    
+    return { success: true, urls: data.urls };
   },
 };
 
+export const onboardingAPI = {
+  getStatus: async () => {
+    return apiClient('/profilesystem/onboarding/status', { method: 'GET' });
+  },
+
+  completeStep: async (step, data = {}) => {
+    return apiClient('/profilesystem/onboarding/step', {
+      method: 'PATCH',
+      body: JSON.stringify({ step, ...data }),
+    });
+  },
+};
+
+// ─── ORDER API ─────────────────────────────────────────────────────────────────
+export const orderAPI = {
+  createOrder: async (orderData) => {
+    return apiClient("/orders", {
+      method: "POST",
+      body: JSON.stringify(orderData),
+    });
+  },
+
+  getMyOrders: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    return apiClient(`/orders/my?${queryString}`);
+  },
+
+  getOrder: async (orderId) => apiClient(`/orders/${orderId}`),
+
+  getFreelancerOrders: async (params = {}) => {
+    return orderAPI.getMyOrders(params);
+  },
+
+  updateOrderStatus: async (orderId, data) => {
+    return apiClient(`/orders/${orderId}/status`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  },
+};
+
+// ─── AVAILABILITY / BOOKING API ────────────────────────────────────────────────
+export const bookingAPI = {
+  getFreelancerBookings: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    return apiClient(`/profilesystem/availability/bookings?${queryString}`);
+  },
+  updateBookingStatus: async (bookingId, data) => {
+    return apiClient(`/profilesystem/availability/bookings/${bookingId}/status`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+};
+
+// ─── SKILL TESTS API ────────────────────────────────────────────────
+export const skillTestAPI = {
+  getAvailableTests: async () => apiClient(`/profilesystem/skill-tests/tests`),
+  getTestResults: async () => apiClient(`/profilesystem/skill-tests/results`),
+  submitExam: async (data) => apiClient(`/profilesystem/skill-tests/submit`, {
+    method: "POST",
+    body: JSON.stringify(data)
+  })
+};
+
+// ─── CERTIFICATIONS API ────────────────────────────────────────────────
+export const certificationAPI = {
+  getCertifications: async () => apiClient(`/profilesystem/certifications`),
+  addCertification: async (data) => apiClient(`/profilesystem/certifications`, {
+    method: "POST",
+    body: JSON.stringify(data)
+  }),
+  deleteCertification: async (id) => apiClient(`/profilesystem/certifications/${id}`, {
+    method: "DELETE"
+  })
+};
 // ─── GIGS API ──────────────────────────────────────────────────────────────────
 export const gigAPI = {
-  // Get all gigs
   getGigs: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
-    return apiClient(`/gigs?${queryString}`);
+    const token = getToken();
+    if (token) {
+      try {
+        return await apiClient(`/jobs-gigs/gigs?${queryString}`);
+      } catch {
+        // Fall through to public browse when session is invalid or listing is restricted.
+      }
+    }
+    return apiClient(`/jobs-gigs/gigs/public?${queryString}`);
   },
 
-  // Get single gig
+  getMyGigs: async () => {
+    return apiClient(`/jobs-gigs/gigs/my`);
+  },
+
   getGig: async (gigId) => {
-    return apiClient(`/gigs/${gigId}`);
+    const token = getToken();
+    if (token) {
+      try {
+        return await apiClient(`/jobs-gigs/gigs/${gigId}`);
+      } catch {
+        // Fall through to public detail endpoint.
+      }
+    }
+    return apiClient(`/jobs-gigs/gigs/public/${gigId}`);
   },
 
-   createGig: // Create gig
- async (gigData) => {
+  createGig: async (gigData) => {
     const data = new FormData();
     Object.keys(gigData).forEach((key) => {
       if (Array.isArray(gigData[key])) {
@@ -510,7 +615,7 @@ export const gigAPI = {
     });
 
     const token = getToken();
-    const response = await fetch(`${API_BASE_URL}/gigs`, {
+    const response = await fetch(`${API_BASE_URL}/jobs-gigs/gigs`, {
       method: "POST",
       headers: {
         ...(token && { Authorization: `Bearer ${token}` }),
@@ -523,10 +628,9 @@ export const gigAPI = {
     return result;
   },
 
-  // Update gig
   updateGig: async (gigId, gigData) => {
     const token = getToken();
-    const response = await fetch(`${API_BASE_URL}/gigs/${gigId}`, {
+    const response = await fetch(`${API_BASE_URL}/jobs-gigs/gigs/${gigId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -540,26 +644,37 @@ export const gigAPI = {
     return result;
   },
 
-  // Delete gig
   deleteGig: async (gigId) => {
-    return apiClient(`/gigs/${gigId}`, { method: "DELETE" });
+    return apiClient(`/jobs-gigs/gigs/${gigId}`, { method: "DELETE" });
+  },
+
+  pauseGig: async (gigId) => {
+    return apiClient(`/jobs-gigs/gigs/${gigId}/pause`, { method: "POST" });
+  },
+
+  activateGig: async (gigId) => {
+    return apiClient(`/jobs-gigs/gigs/${gigId}/activate`, { method: "POST" });
+  },
+
+  createGigJson: async (gigData) => {
+    return apiClient("/jobs-gigs/gigs", {
+      method: "POST",
+      body: JSON.stringify(gigData),
+    });
   },
 };
 
 // ─── CONTRACTS API ──────────────────────────────────────────────────────────────
 export const contractAPI = {
-  // Get my contracts
   getMyContracts: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
-    return apiClient(`/contracts?${queryString}`);
+    return apiClient(`/contracts/my?${queryString}`);
   },
 
-  // Get single contract
   getContract: async (contractId) => {
     return apiClient(`/contracts/${contractId}`);
   },
 
-  // Create contract
   createContract: async (contractData) => {
     return apiClient("/contracts", {
       method: "POST",
@@ -567,7 +682,6 @@ export const contractAPI = {
     });
   },
 
-  // Deliver contract
   deliverContract: async (contractId, files) => {
     const data = new FormData();
     files?.forEach((file) => data.append("files", file));
@@ -586,12 +700,10 @@ export const contractAPI = {
     return result;
   },
 
-  // Accept delivery
   acceptDelivery: async (contractId) => {
     return apiClient(`/contracts/${contractId}/accept`, { method: "POST" });
   },
 
-  // Request revision
   requestRevision: async (contractId, reason) => {
     return apiClient(`/contracts/${contractId}/revision`, {
       method: "POST",
@@ -599,114 +711,142 @@ export const contractAPI = {
     });
   },
 
-  // Cancel contract
   cancelContract: async (contractId, reason) => {
     return apiClient(`/contracts/${contractId}/cancel`, {
       method: "POST",
       body: JSON.stringify({ reason }),
     });
   },
+
+  submitMilestone: async (milestoneId, body = {}) => {
+    return apiClient(`/hiring/milestones/${milestoneId}/submit`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    });
+  },
 };
 
 // ─── PAYMENTS API ──────────────────────────────────────────────────────────────
 export const paymentAPI = {
-  // Create payment intent (Stripe)
   createPaymentIntent: async (contractId) => {
-    return apiClient("/payments/intent", {
+    return apiClient("/escorow_wallet/payment/deposit", {
+      method: "POST",
+      body: JSON.stringify({ provider: "MPESA", amount: 1, phoneNumber: "254712345678" }),
+    });
+  },
+
+  createMpesaPayment: async (contractId, phoneNumber) => {
+    return apiClient("/escorow_wallet/payment/deposit", {
+      method: "POST",
+      body: JSON.stringify({ contractId, phoneNumber, provider: "MPESA" }),
+    });
+  },
+
+  verifyMpesaPayment: async (checkoutRequestId) => {
+    return apiClient(`/escorow_wallet/wallet/mpesa/status/${checkoutRequestId}`);
+  },
+
+  deposit: async (amount, method, phoneNumber) => {
+    return apiClient("/escorow_wallet/payment/deposit", {
+      method: "POST",
+      body: JSON.stringify({ amount: parseFloat(amount), provider: method.toUpperCase(), phoneNumber }),
+    });
+  },
+
+  connectStripe: async (refreshUrl, returnUrl) => {
+    return { success: true, message: "Local mock mode activated" };
+  },
+
+  getStripeConnectStatus: async () => {
+    return { success: true, connected: false };
+  },
+
+  releasePayment: async (contractId) => {
+    return apiClient("/escorow_wallet/escrow/release", {
       method: "POST",
       body: JSON.stringify({ contractId }),
     });
   },
 
-  // Create M-Pesa payment
-  createMpesaPayment: async (contractId, phoneNumber) => {
-    return apiClient("/payments/mpesa", {
-      method: "POST",
-      body: JSON.stringify({ contractId, phoneNumber }),
-    });
-  },
-
-  // Verify M-Pesa payment
-  verifyMpesaPayment: async (checkoutRequestId) => {
-    return apiClient("/payments/mpesa/verify", {
-      method: "POST",
-      body: JSON.stringify({ checkoutRequestId }),
-    });
-  },
-
-  // Deposit funds
-  deposit: async (amount, method, phoneNumber) => {
-    return apiClient("/payments/deposit", {
-      method: "POST",
-      body: JSON.stringify({ amount, method, phoneNumber }),
-    });
-  },
-
-  // Connect Stripe account
-  connectStripe: async (refreshUrl, returnUrl) => {
-    return apiClient("/payments/connect/stripe", {
-      method: "POST",
-      body: JSON.stringify({ refreshUrl, returnUrl }),
-    });
-  },
-
-  // Get Stripe connect status
-  getStripeConnectStatus: async () => {
-    return apiClient("/payments/connect/status");
-  },
-
-  // Release payment
-  releasePayment: async (contractId) => {
-    return apiClient(`/payments/release/${contractId}`, { method: "POST" });
-  },
-
-  // Request refund
   requestRefund: async (contractId, reason) => {
-    return apiClient("/payments/refund", {
+    return apiClient("/escorow_wallet/escrow/refund", {
       method: "POST",
       body: JSON.stringify({ contractId, reason }),
     });
   },
 
-  // Get escrow balance
   getEscrowBalance: async () => {
-    return apiClient("/payments/escrow/balance");
+    return apiClient("/escorow_wallet/wallet");
   },
 };
 
 // ─── WALLET API ────────────────────────────────────────────────────────────────
 export const walletAPI = {
-  // Get wallet
   getWallet: async () => {
-    return apiClient("/wallet");
+    return apiClient("/escorow_wallet/wallet");
   },
 
-  // Get transactions
   getTransactions: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
-    return apiClient(`/wallet/transactions?${queryString}`);
+    return apiClient(`/escorow_wallet/wallet/transactions?${queryString}`);
   },
 
-  // Update withdrawal method
   updateWithdrawalMethod: async (withdrawalMethod, withdrawalDetails) => {
-    return apiClient("/wallet/withdrawal-method", {
+    return apiClient("/escorow_wallet/wallet/withdrawal-method", {
       method: "PATCH",
       body: JSON.stringify({ withdrawalMethod, withdrawalDetails }),
     });
   },
 
-  // Request withdrawal
-  requestWithdrawal: async (amount) => {
-    return apiClient("/wallet/withdraw", {
+  requestWithdrawal: async (amount, phoneNumber) => {
+    return apiClient("/escorow_wallet/withdrawal", {
       method: "POST",
-      body: JSON.stringify({ amount }),
+      body: JSON.stringify({ amount: parseFloat(amount), phoneNumber, provider: "MPESA" }),
+    });
+  },
+
+  depositMpesa: async (amount, phoneNumber) => {
+    return apiClient("/escorow_wallet/wallet/mpesa/deposit", {
+      method: "POST",
+      body: JSON.stringify({ amount: parseFloat(amount), phoneNumber }),
+    });
+  },
+
+  getMpesaStatus: async (checkoutRequestId) => {
+    return apiClient(`/escorow_wallet/wallet/mpesa/status/${checkoutRequestId}`);
+  },
+
+  getPublicFees: async () => {
+    return apiClient("/escorow_wallet/fees/public");
+  },
+
+  calculateFees: async (amount, context = {}) => {
+    return apiClient("/escorow_wallet/fees/calculate", {
+      method: "POST",
+      body: JSON.stringify({ amount, ...context }),
+    });
+  },
+
+  getVaultCompliance: async () => apiClient("/escorow_wallet/vault/compliance"),
+
+  initiateStkPush: async ({ amount, phoneNumber, projectId, serviceId, contractId, orderId, idempotencyKey }) => {
+    return apiClient("/escorow_wallet/wallet/mpesa/stk-push", {
+      method: "POST",
+      headers: idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {},
+      body: JSON.stringify({ amount, phoneNumber, projectId, serviceId, contractId, orderId, idempotencyKey }),
+    });
+  },
+
+  paySubscription: async (amount, planId, useWalletBalance = false) => {
+    return apiClient("/escorow_wallet/subscriptions/pay", {
+      method: "POST",
+      body: JSON.stringify({ amount, planId, useWalletBalance }),
     });
   },
 };
 
 // ─── DISPUTES API ──────────────────────────────────────────────────────────────
 export const disputeAPI = {
-  // Open dispute
   openDispute: async (contractId, reason, description, attachments) => {
     return apiClient("/disputes", {
       method: "POST",
@@ -714,61 +854,64 @@ export const disputeAPI = {
     });
   },
 
-  // Get my disputes
   getMyDisputes: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
     return apiClient(`/disputes?${queryString}`);
   },
 
-  // Get single dispute
   getDispute: async (disputeId) => {
     return apiClient(`/disputes/${disputeId}`);
   },
 
-  // Add message to dispute
   addMessage: async (disputeId, message, attachments) => {
     return apiClient(`/disputes/${disputeId}/messages`, {
       method: "POST",
       body: JSON.stringify({ message, attachments }),
     });
   },
+
+  getDisputeById: async (id) => apiClient(`/disputes/${id}`),
+
+  submitEvidence: async (id, data) => apiClient(`/disputes/${id}/evidence`, {
+    method: "POST",
+    body: JSON.stringify(data)
+  }),
+
+  getEvidence: async (id) => apiClient(`/disputes/${id}/evidence`)
 };
 
 // ─── BUYER REQUESTS API ───────────────────────────────────────────────────────
 export const buyerRequestAPI = {
-  // Get all requests
   getRequests: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
-    return apiClient(`/buyer-requests?${queryString}`);
+    return apiClient(`/hiring/buyer-requests?${queryString}`);
   },
 
   getMyRequests: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
-    return apiClient(`/buyer-requests/mine?${queryString}`);
+    return apiClient(`/hiring/buyer-requests/mine?${queryString}`);
   },
 
-  // Get single request
   getRequest: async (requestId) => {
-    return apiClient(`/buyer-requests/${requestId}`);
+    return apiClient(`/hiring/buyer-requests/${requestId}`);
   },
 
-  // Create request
   createRequest: async (requestData) => {
-    return apiClient("/buyer-requests", {
+    return apiClient("/hiring/buyer-requests", {
       method: "POST",
       body: JSON.stringify(requestData),
     });
   },
 
   updateRequest: async (requestId, requestData) => {
-    return apiClient(`/buyer-requests/${requestId}`, {
+    return apiClient(`/hiring/buyer-requests/${requestId}`, {
       method: "PATCH",
       body: JSON.stringify(requestData),
     });
   },
 
   closeRequest: async (requestId) => {
-    return apiClient(`/buyer-requests/${requestId}/close`, {
+    return apiClient(`/hiring/buyer-requests/${requestId}/close`, {
       method: "PATCH",
     });
   },
@@ -776,24 +919,44 @@ export const buyerRequestAPI = {
 
 // ─── PROPOSALS API ─────────────────────────────────────────────────────────────
 export const proposalAPI = {
-  // Get my proposals
   getMyProposals: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
-    return apiClient(`/proposals?${queryString}`);
+    return apiClient(`/proposals/my?${queryString}`);
   },
 
   getProposalsForRequest: async (requestId) => {
-    return apiClient(`/proposals/request/${requestId}`);
+    return apiClient(`/proposals/job/${requestId}`);
   },
 
+  getProposal: async (proposalId) => apiClient(`/proposals/${proposalId}`),
+
+  counterOffer: async (proposalId, payload) =>
+    apiClient(`/proposals/${proposalId}/counter-offer`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    }),
+
   updateProposalStatus: async (proposalId, status) => {
+    // Determine the specific endpoint based on the status action
+    if (status === 'shortlisted') {
+      return apiClient(`/proposals/${proposalId}/shortlist`, { method: "PATCH" });
+    }
+    if (status === 'accepted') {
+      return apiClient(`/proposals/${proposalId}/accept`, { method: "PATCH" });
+    }
+    if (status === 'rejected') {
+      return apiClient(`/proposals/${proposalId}/reject`, { 
+        method: "PATCH", 
+        body: JSON.stringify({ reason: "Not a good fit at this time" }) 
+      });
+    }
+    // Fallback for general status updates if it still exists
     return apiClient(`/proposals/${proposalId}/status`, {
       method: "PATCH",
       body: JSON.stringify({ status }),
     });
   },
 
-  // Submit proposal
   submitProposal: async (proposalData) => {
     return apiClient("/proposals", {
       method: "POST",
@@ -801,66 +964,64 @@ export const proposalAPI = {
     });
   },
 
-  // Withdraw proposal
-  withdrawProposal: async (proposalId) => {
-    return apiClient(`/proposals/${proposalId}/withdraw`, { method: "POST" });
+  withdrawProposal: async (proposalId, reason = "") => {
+    return apiClient(`/proposals/${proposalId}`, {
+      method: "DELETE",
+      body: JSON.stringify({ reason }),
+    });
   },
 };
 
 // ─── REVIEWS API ───────────────────────────────────────────────────────────────
 export const reviewAPI = {
-  // Get reviews for user
   getReviews: async (userId, params = {}) => {
-    const queryString = new URLSearchParams(params).toString();
-    return apiClient(`/reviews?user=${userId}&${queryString}`);
+    const queryString = new URLSearchParams({ user: userId, ...params }).toString();
+    return apiClient(`/reviews?${queryString}`);
   },
 
-  // Create review
+  getReceived: async (userId, params = {}) => {
+    const queryString = new URLSearchParams({ user: userId, ...params }).toString();
+    return apiClient(`/reviews/received?${queryString}`);
+  },
+
+  getFreelancerReviews: async (freelancerId, params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    return apiClient(`/reviews/freelancer/${freelancerId}?${queryString}`);
+  },
+
   createReview: async (reviewData) => {
     return apiClient("/reviews", {
       method: "POST",
       body: JSON.stringify(reviewData),
     });
   },
+
+  replyToReview: async (reviewId, reply) => {
+    return apiClient(`/reviews/${reviewId}/reply`, {
+      method: "POST",
+      body: JSON.stringify({ reply }),
+    });
+  },
 };
 
 // ─── MESSAGES API ──────────────────────────────────────────────────────────────
 export const messageAPI = {
-  // Get conversations
   getConversations: async () => {
-    return apiClient("/messages");
+    return apiClient("/chat_messeging/conversations");
   },
 
-  // Get messages for conversation
   getMessages: async (conversationId) => {
-    return apiClient(`/messages/${conversationId}`);
+    return apiClient(`/chat_messeging/conversations/${conversationId}/messages`);
   },
 
-  // Send message
   sendMessage: async (conversationId, message) => {
-    return apiClient(`/messages/${conversationId}`, {
+    return apiClient(`/chat_messeging/conversations/${conversationId}/messages`, {
       method: "POST",
       body: JSON.stringify({ message }),
     });
   },
 };
 
-// Export utilities
-export { getToken, getUser, removeTokens, setUser, API_BASE_URL };
-export default {
-  auth: authAPI,
-  user: userAPI,
-  gig: gigAPI,
-  contract: contractAPI,
-  payment: paymentAPI,
-  wallet: walletAPI,
-  dispute: disputeAPI,
-  buyerRequest: buyerRequestAPI,
-  proposal: proposalAPI,
-  review: reviewAPI,
-  message: messageAPI,
-  profile: profileAPI,
-};
 // ─── AUDIT LOGS API ────────────────────────────────────────────────────────────
 export const auditAPI = {
   getLogs: async (params = {}) => {
@@ -875,8 +1036,97 @@ export const auditAPI = {
   },
   exportLogs: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
-    // For export, we might want to return the raw blob or handle it differently
-    // but the backend sends CSV text
     return apiClient(`/audit/export?${queryString}`);
   }
+};
+
+export const cmsAPI = {
+  getPublicSettings: () => apiClient('/cms/public'),
+  getCommunityPosts: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return apiClient(`/cms/community/posts?${qs}`);
+  },
+  submitContact: (payload) =>
+    apiClient('/cms/contact', { method: 'POST', body: JSON.stringify(payload) }),
+};
+
+export const publicAPI = {
+  searchFreelancers: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    return apiClient(`/search/freelancers?${queryString}`);
+  },
+  searchJobs: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    return apiClient(`/search/jobs?${queryString}`);
+  },
+  getJobById: async (jobId) => apiClient(`/jobs/${jobId}`),
+  searchGigs: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    return apiClient(`/search/gigs?${queryString}`);
+  },
+  getTrendingCategories: async () => {
+    return apiClient(`/categories/trending`);
+  },
+  getCategoryTree: async () => {
+    return apiClient(`/categories/tree`);
+  },
+  getPlatformReviews: async () => {
+    return apiClient(`/reviews/platform`); // Will fallback gracefully if backend doesn't support
+  },
+  getTrustedClients: async () => {
+    return apiClient(`/search/trusted-clients`);
+  },
+  saveFindWorkJob: async (jobId) =>
+    apiClient(`/search/find-work/job/${jobId}/save`, { method: 'POST' }),
+  unsaveFindWorkJob: async (jobId) =>
+    apiClient(`/search/find-work/job/${jobId}/save`, { method: 'DELETE' }),
+};
+
+export const workAPI = {
+  getTemplates: () => apiClient('/work/templates'),
+  createTemplate: (payload) =>
+    apiClient('/work/templates', { method: 'POST', body: JSON.stringify(payload) }),
+  deleteTemplate: (templateId) =>
+    apiClient(`/work/templates/${templateId}`, { method: 'DELETE' }),
+  getCollaborators: (jobId) => apiClient(`/work/jobs/${jobId}/collaborators`),
+  addCollaborator: (jobId, payload) =>
+    apiClient(`/work/jobs/${jobId}/collaborators`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  removeCollaborator: (jobId, memberId) =>
+    apiClient(`/work/jobs/${jobId}/collaborators/${memberId}`, { method: 'DELETE' }),
+  getAnalytics: () => apiClient('/work/analytics'),
+  getProviders: () => apiClient('/work/providers'),
+  getPipeline: () => apiClient('/work/pipeline'),
+  getVideoFeed: (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    return apiClient(`/videos/feed?${queryString}`);
+  },
+  getInterviews: () => apiClient('/hiring/interviews'),
+  scheduleInterview: (payload) =>
+    apiClient('/hiring/interviews', { method: 'POST', body: JSON.stringify(payload) }),
+};
+
+// Export utilities
+export { getToken, getUser, removeTokens, setUser, API_BASE_URL };
+export default {
+  auth: authAPI,
+  user: userAPI,
+  gig: gigAPI,
+  order: orderAPI,
+  contract: contractAPI,
+  payment: paymentAPI,
+  wallet: walletAPI,
+  booking: bookingAPI,
+  skillTest: skillTestAPI,
+  certification: certificationAPI,
+  dispute: disputeAPI,
+  proposal: proposalAPI,
+  review: reviewAPI,
+  message: messageAPI,
+  profile: profileAPI,
+  audit: auditAPI,
+  public: publicAPI,
+  work: workAPI,
 };

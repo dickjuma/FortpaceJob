@@ -39,9 +39,9 @@ export default function AuditSecurityMonitoringPage() {
         <div className="bg-surface-dark p-6 rounded-xl border border-zinc-700 shadow-sm text-white">
           <div className="flex justify-between items-center mb-4">
             <span className="text-sm font-semibold text-zinc-400">Active Sessions</span>
-            <Globe className="w-5 h-5 text-brand-400" />
+            <Globe className="w-5 h-5 text-[#14a800]" />
           </div>
-          <div className="text-2xl font-bold text-brand-400">42,891</div>
+          <div className="text-2xl font-bold text-[#14a800]">42,891</div>
           <p className="text-xs text-zinc-500 mt-2">Across 12 regions.</p>
         </div>
       </div>

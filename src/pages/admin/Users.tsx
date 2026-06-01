@@ -31,7 +31,7 @@ export const UsersPage = () => {
         <div className="flex items-center space-x-3">
           <Avatar name={row.name} size="sm" />
           <div className="flex flex-col">
-            <span className="font-medium text-navy">{row.name}</span>
+            <span className="font-medium text-[#222222]">{row.name}</span>
             <span className="text-xs text-text-secondary">{row.email}</span>
           </div>
         </div>
@@ -54,7 +54,7 @@ export const UsersPage = () => {
       label: 'Actions',
       render: () => (
         <div className="flex items-center space-x-2">
-          <button className="p-1.5 text-text-secondary hover:text-navy hover:bg-light-gray rounded-md transition-colors">
+          <button className="p-1.5 text-text-secondary hover:text-[#222222] hover:bg-light-gray rounded-md transition-colors">
             <Edit size={16} />
           </button>
           <button className="p-1.5 text-text-secondary hover:text-error hover:bg-red-50 rounded-md transition-colors">
@@ -74,7 +74,7 @@ export const UsersPage = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-navy">Users Management</h1>
+          <h1 className="text-2xl font-bold text-[#222222]">Users Management</h1>
           <p className="text-text-secondary mt-1">Manage user accounts and permissions.</p>
         </div>
         <div className="flex items-center space-x-3">
@@ -99,7 +99,7 @@ export const UsersPage = () => {
         </div>
         {selectedUsers.length > 0 && (
           <div className="flex items-center space-x-3">
-            <span className="text-sm font-medium text-navy">
+            <span className="text-sm font-medium text-[#222222]">
               {selectedUsers.length} selected
             </span>
             <Button variant="outline" size="sm" className="text-error border-error hover:bg-error hover:text-white">

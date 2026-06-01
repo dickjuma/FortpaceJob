@@ -25,7 +25,7 @@ const AlertsPanel = () => {
     switch (severity) {
       case 'critical': return 'border-rose-500 bg-rose-50/50 dark:bg-rose-950/10 text-rose-700 dark:text-rose-400';
       case 'warning': return 'border-amber-500 bg-amber-50/50 dark:bg-amber-950/10 text-amber-700 dark:text-amber-400';
-      default: return 'border-brand-500 bg-brand-50/50 dark:bg-brand-950/10 text-brand-700 dark:text-brand-400';
+      default: return 'border-[#14a800]/20 bg-[#14a800]/5/50 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800]';
     }
   };
 

@@ -36,13 +36,13 @@ export default function ClientGpsTrackingPage() {
         <div className="flex bg-white/5 border border-white/10 p-1.5 rounded-xl text-xs font-bold">
           <button 
             onClick={() => setActiveTab('live')}
-            className={`px-4 py-2 rounded-lg transition-colors ${activeTab === 'live' ? 'bg-accent-purple text-white shadow' : 'text-light-gray/60 hover:text-white'}`}
+            className={`px-4 py-2 rounded-lg transition-colors ${activeTab === 'live' ? 'bg-success text-white shadow' : 'text-light-gray/60 hover:text-white'}`}
           >
             Live Tracking
           </button>
           <button 
             onClick={() => setActiveTab('routes')}
-            className={`px-4 py-2 rounded-lg transition-colors ${activeTab === 'routes' ? 'bg-accent-purple text-white shadow' : 'text-light-gray/60 hover:text-white'}`}
+            className={`px-4 py-2 rounded-lg transition-colors ${activeTab === 'routes' ? 'bg-success text-white shadow' : 'text-light-gray/60 hover:text-white'}`}
           >
             Route Replays
           </button>
@@ -73,7 +73,7 @@ export default function ClientGpsTrackingPage() {
                     {activeTracking.map(w => (
                       <tr key={w.id} className="hover:bg-white/[0.02] transition-colors">
                         <td className="py-4 font-bold text-white flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-full bg-accent-purple/20 text-accent-purple flex items-center justify-center font-bold text-xs"><User size={14} /></div>
+                          <div className="w-8 h-8 rounded-full bg-success/20 text-success flex items-center justify-center font-bold text-xs"><User size={14} /></div>
                           <span>{w.name}</span>
                         </td>
                         <td className="py-4 text-light-gray">{w.site}</td>
@@ -84,7 +84,7 @@ export default function ClientGpsTrackingPage() {
                           <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${
                             w.status === 'Inside Geofence' 
                               ? 'bg-success/20 text-success' 
-                              : 'bg-accent-red/20 text-accent-red animate-pulse'
+                              : 'bg-[#e63946]/20 text-[#e63946] animate-pulse'
                           }`}>
                             {w.status}
                           </span>
@@ -102,8 +102,8 @@ export default function ClientGpsTrackingPage() {
                 {routeReplays.map((r, idx) => (
                   <div key={idx} className="flex justify-between items-center p-3.5 bg-white/5 border border-white/5 rounded-2xl">
                     <div className="flex items-center gap-3">
-                      {r.status === 'alert' ? <ShieldAlert className="w-4 h-4 text-accent-red shrink-0" /> : <Compass className="w-4 h-4 text-accent-purple shrink-0" />}
-                      <span className={r.status === 'alert' ? 'text-accent-red font-bold' : 'text-light-gray'}>{r.event}</span>
+                      {r.status === 'alert' ? <ShieldAlert className="w-4 h-4 text-[#e63946] shrink-0" /> : <Compass className="w-4 h-4 text-success shrink-0" />}
+                      <span className={r.status === 'alert' ? 'text-[#e63946] font-bold' : 'text-light-gray'}>{r.event}</span>
                     </div>
                     <span className="text-[10px] text-light-gray/40 font-bold">{r.time}</span>
                   </div>
@@ -133,20 +133,20 @@ export default function ClientGpsTrackingPage() {
               </div>
             </div>
 
-            <Button onClick={() => toast.success('Boundary coordinates locked.')} className="w-full bg-accent-purple border-none rounded-xl text-xs font-bold py-2.5">
+            <Button onClick={() => toast.success('Boundary coordinates locked.')} className="w-full bg-success border-none rounded-xl text-xs font-bold py-2.5">
               Edit Boundaries Matrix
             </Button>
           </Card>
 
-          <Card className="p-6 bg-gradient-to-br from-navy to-zinc-900 border border-white/10 text-white rounded-3xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-accent-red/20 blur-[50px] rounded-full"></div>
-            <h4 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5 mb-3 text-accent-red">
+          <Card className="p-6 bg-gradient-to-br from-[#222222] to-zinc-900 border border-white/10 text-white rounded-3xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#e63946]/20 blur-[50px] rounded-full"></div>
+            <h4 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5 mb-3 text-[#e63946]">
               <AlertTriangle className="w-4 h-4" /> 1 active Geofence Breach
             </h4>
             <p className="text-[10px] font-semibold text-white/70 leading-relaxed mb-4">
               Grace Mutua has traveled beyond the structured coordinate limits of Nairobi Substation B radius (exceeded by 1.4 KM).
             </p>
-            <Button onClick={() => toast.success('Dispatched coordinator alert.')} className="w-full bg-accent-red hover:bg-accent-red/90 border-none rounded-xl text-xs font-bold py-2">
+            <Button onClick={() => toast.success('Dispatched coordinator alert.')} className="w-full bg-[#e63946] hover:bg-[#e63946]/90 border-none rounded-xl text-xs font-bold py-2">
               Dispatch Warning Alert
             </Button>
           </Card>

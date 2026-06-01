@@ -34,7 +34,7 @@ export const MyJobs = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-navy">My Jobs</h1>
+          <h1 className="text-2xl font-bold text-[#222222]">My Jobs</h1>
           <p className="text-text-secondary mt-1">Manage the jobs you have posted.</p>
         </div>
         <Button variant="primary">Post New Job</Button>
@@ -47,7 +47,7 @@ export const MyJobs = () => {
               key={f}
               onClick={() => setFilter(f as any)}
               className={`px-4 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors ${
-                filter === f ? 'bg-accent-purple/20 text-accent-red' : 'text-text-secondary hover:bg-light-gray'
+                filter === f ? 'bg-success/20 text-[#e63946]' : 'text-text-secondary hover:bg-light-gray'
               }`}
             >
               {f}
@@ -74,7 +74,7 @@ export const MyJobs = () => {
             <Card key={job.id} hover className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6">
               <div className="mb-4 sm:mb-0">
                 <div className="flex items-center space-x-3 mb-2">
-                  <h3 className="text-lg font-bold text-navy">{job.title}</h3>
+                  <h3 className="text-lg font-bold text-[#222222]">{job.title}</h3>
                   {getStatusBadge(job.status)}
                 </div>
                 <div className="flex flex-wrap text-sm text-text-secondary gap-y-2">

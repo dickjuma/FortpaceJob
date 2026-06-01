@@ -75,14 +75,14 @@ export default function ClientMpesaSetupPage() {
         {/* Left Hand: Setup credentials fields */}
         <div className="lg:col-span-1 space-y-6">
           <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4">
-            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Key className="w-4 h-4 text-accent-purple" /> Daraja Key Credentials</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Key className="w-4 h-4 text-success" /> Daraja Key Credentials</h3>
             
             <div className="space-y-4 pt-2">
               <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
                 <label>Consumer Key API</label>
                 <input 
                   type="text" 
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-accent-purple text-white/95"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success text-white/95"
                   value={credentials.consumerKey}
                   onChange={e => setCredentials({ ...credentials, consumerKey: e.target.value })}
                 />
@@ -92,7 +92,7 @@ export default function ClientMpesaSetupPage() {
                 <label>Consumer Secret Key</label>
                 <input 
                   type="password" 
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-accent-purple text-white/95"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success text-white/95"
                   value={credentials.consumerSecret}
                   onChange={e => setCredentials({ ...credentials, consumerSecret: e.target.value })}
                 />
@@ -102,13 +102,13 @@ export default function ClientMpesaSetupPage() {
                 <label>Callback Endpoint URL</label>
                 <input 
                   type="text" 
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-accent-purple text-white/95"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success text-white/95"
                   value={callbackUrl}
                   onChange={e => setCallbackUrl(e.target.value)}
                 />
               </div>
 
-              <Button onClick={handleSaveCreds} className="w-full bg-accent-purple border-none rounded-xl text-xs font-bold py-2.5">
+              <Button onClick={handleSaveCreds} className="w-full bg-success border-none rounded-xl text-xs font-bold py-2.5">
                 Save & Encrypt Credentials
               </Button>
             </div>
@@ -132,7 +132,7 @@ export default function ClientMpesaSetupPage() {
             
             {/* Simulation trigger console */}
             <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4">
-              <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Smartphone className="w-4 h-4 text-accent-purple" /> STK Push Tester Tool</h3>
+              <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Smartphone className="w-4 h-4 text-success" /> STK Push Tester Tool</h3>
               
               <form onSubmit={triggerStkSim} className="space-y-4 pt-2">
                 <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
@@ -140,7 +140,7 @@ export default function ClientMpesaSetupPage() {
                   <input 
                     type="text" 
                     placeholder="254711002233"
-                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-accent-purple"
+                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success"
                     value={simPhone}
                     onChange={e => setSimPhone(e.target.value)}
                   />
@@ -150,7 +150,7 @@ export default function ClientMpesaSetupPage() {
                   <label>Test Transaction Amount (KES)</label>
                   <input 
                     type="text" 
-                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-accent-purple"
+                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success"
                     value={simAmount}
                     onChange={e => setSimAmount(e.target.value)}
                   />
@@ -169,7 +169,7 @@ export default function ClientMpesaSetupPage() {
             {/* Terminal Live logs output */}
             <Card className="p-5 border border-white/10 bg-black/40 rounded-3xl flex flex-col justify-between min-h-[280px]">
               <div className="flex justify-between items-center border-b border-white/5 pb-2 mb-3">
-                <h4 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5 text-accent-purple"><Terminal className="w-4 h-4" /> Live Webhook Log Feed</h4>
+                <h4 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5 text-success"><Terminal className="w-4 h-4" /> Live Webhook Log Feed</h4>
                 <button onClick={() => setLogs([])} className="text-[10px] font-bold text-light-gray/40 hover:text-white transition-colors">Clear</button>
               </div>
 
@@ -182,7 +182,7 @@ export default function ClientMpesaSetupPage() {
                       <span className="text-light-gray/40 shrink-0">{log.time}</span>
                       <span className={
                         log.type === 'callback' ? 'text-success font-bold' : 
-                        log.type === 'request' ? 'text-accent-purple' : 
+                        log.type === 'request' ? 'text-success' : 
                         log.type === 'auth' ? 'text-orange-400' : 'text-light-gray/60'
                       }>{log.event}</span>
                     </div>

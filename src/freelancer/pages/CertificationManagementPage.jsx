@@ -5,83 +5,68 @@ import {
   Trash2, Shield, Search, Filter, AlertCircle, BadgeCheck 
 } from 'lucide-react';
 
-const MOCK_CERTIFICATIONS = [
-  {
-    id: '1',
-    title: 'AWS Certified Solutions Architect',
-    issuer: 'Amazon Web Services',
-    issueDate: '2025-01-15',
-    expirationDate: '2028-01-15',
-    status: 'verified',
-    visibility: true,
-    credentialId: 'AWS-12345-ABCDE',
-  },
-  {
-    id: '2',
-    title: 'Google Cloud Professional Cloud Architect',
-    issuer: 'Google Cloud',
-    issueDate: '2024-11-20',
-    expirationDate: '2026-11-20',
-    status: 'pending',
-    visibility: false,
-    credentialId: 'GCP-98765-ZYXWV',
-  },
-  {
-    id: '3',
-    title: 'Certified Kubernetes Administrator (CKA)',
-    issuer: 'Cloud Native Computing Foundation',
-    issueDate: '2023-05-10',
-    expirationDate: '2026-05-10',
-    status: 'verified',
-    visibility: true,
-    credentialId: 'CKA-55555-KLMNO',
-  }
-];
+import { useFreelancerCertifications, useAddCertification, useDeleteCertification } from '../services/freelancerHooks';
+import { useConfirm } from '../../common/context/ConfirmContext';
+import toast from 'react-hot-toast';
 
 export default function CertificationManagementPage() {
-  const [certifications, setCertifications] = useState(MOCK_CERTIFICATIONS);
+  const { confirm } = useConfirm();
+  const { data: certificationsData, isLoading } = useFreelancerCertifications();
+  const addCertification = useAddCertification();
+  const deleteCertification = useDeleteCertification();
+
+  const certifications = certificationsData?.data || [];
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
 
-  const toggleVisibility = (id) => {
-    setCertifications(certs => 
-      certs.map(c => c.id === id ? { ...c, visibility: !c.visibility } : c)
-    );
+  const toggleVisibility = async (id) => {
+    // Visibility toggle not yet in backend, simulating it or ignoring for now.
+    console.log("Toggle visibility", id);
   };
 
-  const handleDelete = (id) => {
-    setCertifications(certs => certs.filter(c => c.id !== id));
+  const handleDelete = async (id) => {
+    const ok = await confirm({
+      title: 'Delete certification',
+      message: 'Remove this certification from your profile? This cannot be undone.',
+      confirmLabel: 'Delete',
+      critical: true,
+    });
+    if (!ok) return;
+    try {
+      await deleteCertification.mutateAsync(id);
+      toast.success('Certification removed.');
+    } catch (err) {
+      toast.error(err?.message || 'Could not delete certification.');
+    }
   };
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (file) {
       setIsUploading(true);
-      // Simulate upload delay
-      setTimeout(() => {
-        setIsUploading(false);
-        const newCert = {
-          id: Date.now().toString(),
-          title: file.name.replace(/\.[^/.]+$/, ""),
-          issuer: 'Pending Issuer',
+      try {
+        await addCertification.mutateAsync({
+          name: file.name.replace(/\.[^/.]+$/, ""),
+          issuer: 'Uploaded Document',
           issueDate: new Date().toISOString().split('T')[0],
-          expirationDate: 'N/A',
-          status: 'pending',
-          visibility: false,
-          credentialId: 'Pending Verification',
-        };
-        setCertifications([newCert, ...certifications]);
-      }, 1500);
+          credentialId: 'Pending Verification'
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
   const filteredCerts = certifications.filter(cert => 
-    cert.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    cert.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
     cert.issuer.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -90,7 +75,7 @@ export default function CertificationManagementPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <BadgeCheck className="w-8 h-8 text-brand-600" />
+            <BadgeCheck className="w-8 h-8 text-[#14a800]" />
             Certifications
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
@@ -99,7 +84,7 @@ export default function CertificationManagementPage() {
         </div>
         <button 
           onClick={handleUploadClick}
-          className="flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl font-medium transition-colors shadow-sm"
+          className="flex items-center justify-center gap-2 bg-[#14a800] hover:bg-[#118a00] text-white px-5 py-2.5 rounded-xl font-medium transition-colors shadow-sm"
         >
           {isUploading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -120,7 +105,7 @@ export default function CertificationManagementPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {[
-          { label: 'Active Certifications', value: certifications.length, icon: FileText, color: 'text-brand-600', bg: 'bg-brand-50 dark:bg-brand-900/20' },
+          { label: 'Active Certifications', value: certifications.length, icon: FileText, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/20' },
           { label: 'Verified Credentials', value: certifications.filter(c => c.status === 'verified').length, icon: Shield, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-900/20' },
           { label: 'Pending Verification', value: certifications.filter(c => c.status === 'pending').length, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-900/20' },
         ].map((stat, idx) => (
@@ -153,7 +138,7 @@ export default function CertificationManagementPage() {
                 placeholder="Search certificates..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-surface dark:bg-gray-800 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-gray-900 dark:text-white w-full sm:w-64 transition-all"
+                className="pl-9 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-surface dark:bg-gray-800 text-sm focus:ring-2 focus:ring-[#14a800] focus:border-[#14a800]/20 outline-none text-gray-900 dark:text-white w-full sm:w-64 transition-all"
               />
             </div>
             <button className="p-2 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-surface dark:hover:bg-gray-800 transition-colors">
@@ -186,11 +171,11 @@ export default function CertificationManagementPage() {
                     >
                       <td className="px-6 py-5">
                         <div className="flex items-start gap-3">
-                          <div className="p-2 bg-brand-50 dark:bg-brand-900/20 text-brand-600 rounded-lg shrink-0 mt-0.5">
+                          <div className="p-2 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] rounded-lg shrink-0 mt-0.5">
                             <FileText className="w-5 h-5" />
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900 dark:text-white">{cert.title}</p>
+                            <p className="font-medium text-gray-900 dark:text-white">{cert.name}</p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">{cert.issuer}</p>
                             <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 font-mono">{cert.credentialId}</p>
                           </div>
@@ -209,10 +194,10 @@ export default function CertificationManagementPage() {
                       </td>
                       <td className="px-6 py-5">
                         <div className="text-sm text-gray-900 dark:text-gray-300">
-                          <span className="text-gray-500 dark:text-gray-500">Issued:</span> {cert.issueDate}
+                          <span className="text-gray-500 dark:text-gray-500">Issued:</span> {new Date(cert.issueDate).toLocaleDateString()}
                         </div>
                         <div className="text-sm text-gray-900 dark:text-gray-300 mt-1">
-                          <span className="text-gray-500 dark:text-gray-500">Expires:</span> {cert.expirationDate}
+                          <span className="text-gray-500 dark:text-gray-500">Expires:</span> {cert.expiryDate ? new Date(cert.expiryDate).toLocaleDateString() : 'N/A'}
                         </div>
                       </td>
                       <td className="px-6 py-5">

@@ -5,18 +5,18 @@ import { ShieldCheck } from 'lucide-react';
 
 const AuthLayout = ({ children }) => {
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 font-sans selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 font-sans selection:bg-[#14a800]/30">
       
       {/* Background Decorative Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-500/10 dark:bg-indigo-600/20 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 dark:bg-blue-600/20 blur-[120px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#14a800]/10 dark:bg-[#14a800]/20 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-#14a800]/10 dark:bg-[#14a800]/20 blur-[120px]" />
       </div>
 
       {/* Top Navigation */}
       <nav className="relative z-20 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30 group-hover:shadow-indigo-500/50 transition-shadow">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#14a800] to-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-[#14a800]/25 group-hover:shadow-[#14a800]/25 transition-shadow">
             F
           </div>
           <span className="text-2xl font-extrabold tracking-tight">Forte</span>
@@ -28,7 +28,7 @@ const AuthLayout = ({ children }) => {
           </span>
           <Link 
             to="/login"
-            className="px-5 py-2.5 text-sm font-semibold rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors shadow-sm"
+            className="px-5 py-2.5 text-sm font-semibold rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-[#14a800] hover:text-[#14a800] dark:hover:text-[#14a800] transition-colors shadow-sm"
           >
             Log In
           </Link>
@@ -48,8 +48,8 @@ const AuthLayout = ({ children }) => {
             Protected by enterprise-grade security
           </div>
           <div className="flex items-center gap-6 text-sm font-medium text-zinc-500 dark:text-zinc-400">
-            <Link to="/terms" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Terms</Link>
-            <Link to="/privacy" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Privacy</Link>
+            <Link to="/terms" className="hover:text-[#14a800] dark:hover:text-[#14a800] transition-colors">Terms</Link>
+            <Link to="/privacy" className="hover:text-[#14a800] dark:hover:text-[#14a800] transition-colors">Privacy</Link>
           </div>
         </div>
       </footer>

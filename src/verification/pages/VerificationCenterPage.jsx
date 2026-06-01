@@ -13,8 +13,8 @@ export default function VerificationCenterPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="flex items-center mb-8 pb-6 border-b border-gray-200 dark:border-gray-800">
-        <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mr-6 flex-shrink-0">
-          <Shield className="w-8 h-8 text-brand-600 dark:text-brand-400" />
+        <div className="w-16 h-16 bg-[#14a800]/10 dark:bg-[#14a800]/30 rounded-full flex items-center justify-center mr-6 flex-shrink-0">
+          <Shield className="w-8 h-8 text-[#14a800] dark:text-[#14a800]" />
         </div>
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Verification Center</h1>
@@ -27,10 +27,10 @@ export default function VerificationCenterPage() {
       <div className="mb-8">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Trust Level: Tier 2 (Standard)</span>
-          <span className="text-sm font-medium text-brand-600 dark:text-brand-400">50% Complete</span>
+          <span className="text-sm font-medium text-[#14a800] dark:text-[#14a800]">50% Complete</span>
         </div>
         <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-2.5">
-          <div className="bg-brand-600 h-2.5 rounded-full" style={{ width: '50%' }}></div>
+          <div className="bg-[#14a800] h-2.5 rounded-full" style={{ width: '50%' }}></div>
         </div>
       </div>
 
@@ -65,7 +65,7 @@ export default function VerificationCenterPage() {
                   In Review (24h)
                 </span>
               ) : (
-                <Link to="/verification/identity" className="flex items-center px-4 py-2 bg-brand-50 text-brand-700 dark:bg-brand-900/20 dark:text-brand-400 hover:bg-brand-100 rounded-lg text-sm font-medium transition-colors border border-brand-200 dark:border-brand-800/50">
+                <Link to="/verification/identity" className="flex items-center px-4 py-2 bg-[#14a800]/5 text-[#14a800] dark:bg-[#14a800]/20 dark:text-[#14a800] hover:bg-[#14a800]/10 rounded-lg text-sm font-medium transition-colors border border-[#14a800]/20 dark:border-[#14a800]/20/50">
                   Start Verification <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
               )}

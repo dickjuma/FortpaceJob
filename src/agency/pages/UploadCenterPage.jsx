@@ -81,7 +81,7 @@ export default function UploadCenterPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <Upload className="w-8 h-8 text-accent-purple" />
+            <Upload className="w-8 h-8 text-success" />
             Upload Center
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -108,15 +108,15 @@ export default function UploadCenterPage() {
             onDrop={handleDropSimulate}
             className={cn(
               "border-2 border-dashed rounded-3xl p-12 text-center flex flex-col items-center justify-center min-h-[300px] cursor-pointer transition-all bg-white",
-              dragOver ? "border-accent-purple bg-accent-purple/5 scale-[1.01]" : "border-border hover:border-accent-purple/60"
+              dragOver ? "border-success bg-success/5 scale-[1.01]" : "border-border hover:border-success/60"
             )}
           >
-            <Cloud className={cn("w-16 h-16 mb-4 animate-bounce", dragOver ? "text-accent-purple" : "text-text-secondary")} />
+            <Cloud className={cn("w-16 h-16 mb-4 animate-bounce", dragOver ? "text-success" : "text-text-secondary")} />
             <h3 className="font-black text-text-primary text-base">Drag & Drop Files Here</h3>
             <p className="text-xs text-text-secondary mt-2 max-w-[200px] leading-relaxed">
               Supports PDF, PNG, JPG, ZIP, and SQL scripts up to 500MB per file.
             </p>
-            <button className="mt-6 px-5 py-2.5 bg-accent-purple/10 text-accent-purple font-black rounded-xl text-xs hover:bg-accent-purple hover:text-white transition-all shadow-sm">
+            <button className="mt-6 px-5 py-2.5 bg-success/10 text-success font-black rounded-xl text-xs hover:bg-success hover:text-white transition-all shadow-sm">
               Browse Files
             </button>
           </Card>
@@ -133,7 +133,7 @@ export default function UploadCenterPage() {
               {queue.map((item) => (
                 <div key={item.id} className="p-4 border border-border/80 rounded-2xl bg-light-gray/25 hover:bg-white hover:shadow-sm transition-all group flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-accent-purple/10 text-accent-purple rounded-xl shrink-0">
+                    <div className="p-3 bg-success/10 text-success rounded-xl shrink-0">
                       <FileText size={20} />
                     </div>
                     <div className="space-y-1">
@@ -150,13 +150,13 @@ export default function UploadCenterPage() {
                         <span>{item.progress}%</span>
                       </div>
                       <div className="w-full bg-light-gray rounded-full h-1.5 overflow-hidden border border-border">
-                        <div className="h-full bg-accent-purple rounded-full transition-all" style={{ width: `${item.progress}%` }}></div>
+                        <div className="h-full bg-success rounded-full transition-all" style={{ width: `${item.progress}%` }}></div>
                       </div>
                     </div>
 
                     <button 
                       onClick={() => removeQueueItem(item.id, item.name)}
-                      className="p-2 text-text-secondary hover:text-accent-red hover:bg-light-gray rounded-xl transition-all"
+                      className="p-2 text-text-secondary hover:text-[#e63946] hover:bg-light-gray rounded-xl transition-all"
                       title="Remove Deliverable"
                     >
                       <Trash2 size={16} />

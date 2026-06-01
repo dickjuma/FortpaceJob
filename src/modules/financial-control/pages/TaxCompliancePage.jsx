@@ -22,7 +22,7 @@ export default function TaxCompliancePage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-accent-purple/20 text-accent-purple rounded-xl shadow-sm border border-accent-purple/20">
+            <div className="p-2.5 bg-success/20 text-success rounded-xl shadow-sm border border-success/20">
               <ShieldCheck size={24} />
             </div>
             <h1 className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight">KRA Tax Compliance</h1>
@@ -34,7 +34,7 @@ export default function TaxCompliancePage() {
         <div className="flex gap-2">
            <button 
              onClick={() => toast.success('Preparing annual tax report...')}
-             className="px-5 py-2.5 bg-navy dark:bg-white text-white dark:text-navy rounded-xl text-sm font-bold shadow-lg hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors flex items-center gap-2"
+             className="px-5 py-2.5 bg-[#222222] dark:bg-white text-white dark:text-[#222222] rounded-xl text-sm font-bold shadow-lg hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors flex items-center gap-2"
            >
              <Download size={18} /> Generate KRA Report
            </button>
@@ -42,7 +42,7 @@ export default function TaxCompliancePage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-navy p-8 rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm relative overflow-hidden transition-all hover:scale-[1.02]">
+        <div className="bg-white dark:bg-[#222222] p-8 rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm relative overflow-hidden transition-all hover:scale-[1.02]">
            <div className="p-3 bg-emerald-500/20 text-emerald-500 rounded-xl w-fit mb-6 border border-emerald-500/20">
               <Calculator size={24} />
            </div>
@@ -53,7 +53,7 @@ export default function TaxCompliancePage() {
            </div>
         </div>
 
-        <div className="bg-white dark:bg-navy p-8 rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm relative overflow-hidden transition-all hover:scale-[1.02]">
+        <div className="bg-white dark:bg-[#222222] p-8 rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm relative overflow-hidden transition-all hover:scale-[1.02]">
            <div className="p-3 bg-amber-500/20 text-amber-500 rounded-xl w-fit mb-6 border border-amber-500/20">
               <AlertTriangle size={24} />
            </div>
@@ -62,8 +62,8 @@ export default function TaxCompliancePage() {
            <p className="text-xs text-zinc-500 dark:text-zinc-400 font-bold mt-6 bg-zinc-50 dark:bg-white/5 w-fit px-3 py-1.5 rounded-lg">Pending 12 foreign jurisdiction filings.</p>
         </div>
 
-        <div className="bg-navy p-8 rounded-[24px] relative overflow-hidden shadow-sm">
-           <div className="absolute top-0 right-0 w-48 h-48 bg-accent-purple/20 blur-[80px] rounded-full tranzinc-y-1/2 tranzinc-x-1/2 pointer-events-none"></div>
+        <div className="bg-[#222222] p-8 rounded-[24px] relative overflow-hidden shadow-sm">
+           <div className="absolute top-0 right-0 w-48 h-48 bg-success/20 blur-[80px] rounded-full tranzinc-y-1/2 tranzinc-x-1/2 pointer-events-none"></div>
            <div className="relative z-10">
              <h4 className="text-xl font-black text-white tracking-tight mb-6">Tax Policy Status</h4>
              <div className="space-y-4">
@@ -82,7 +82,7 @@ export default function TaxCompliancePage() {
              </div>
              <button 
                onClick={() => toast.success('Tax rules engine opened.')}
-               className="mt-8 w-full py-3 bg-accent-purple/20 hover:bg-accent-purple/40 text-accent-purple rounded-xl text-xs font-bold uppercase tracking-widest transition-colors border border-accent-purple/20"
+               className="mt-8 w-full py-3 bg-success/20 hover:bg-success/40 text-success rounded-xl text-xs font-bold uppercase tracking-widest transition-colors border border-success/20"
              >
                 Manage Tax Rules
              </button>
@@ -91,8 +91,8 @@ export default function TaxCompliancePage() {
       </div>
 
       {/* Modern KRA Integration Table */}
-      <div className="bg-white dark:bg-navy rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm overflow-hidden relative mt-8">
-        <div className="absolute top-[-50%] left-[-10%] w-96 h-96 bg-accent-purple/5 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="bg-white dark:bg-[#222222] rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm overflow-hidden relative mt-8">
+        <div className="absolute top-[-50%] left-[-10%] w-96 h-96 bg-success/5 blur-[100px] rounded-full pointer-events-none"></div>
 
         <div className="p-6 md:p-8 border-b border-zinc-100 dark:border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div>
@@ -102,13 +102,13 @@ export default function TaxCompliancePage() {
           
           <div className="flex items-center gap-3">
             <div className="relative group flex-1 md:w-64">
-              <Search className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-zinc-400 group-focus-within:text-accent-purple transition-colors" size={16} />
+              <Search className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-zinc-400 group-focus-within:text-success transition-colors" size={16} />
               <input 
                 type="text" 
                 placeholder="Search by KRA PIN..." 
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-12 pr-4 py-2.5 bg-zinc-50 dark:bg-white/5 border border-transparent focus:border-accent-purple/50 focus:ring-1 focus:ring-accent-purple/50 rounded-xl text-sm outline-none transition-all dark:text-white"
+                className="w-full pl-12 pr-4 py-2.5 bg-zinc-50 dark:bg-white/5 border border-transparent focus:border-success/50 focus:ring-1 focus:ring-success/50 rounded-xl text-sm outline-none transition-all dark:text-white"
               />
             </div>
             <button className="p-2.5 border border-zinc-200 dark:border-white/10 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-white/10 transition-all">
@@ -133,13 +133,13 @@ export default function TaxCompliancePage() {
               {mockKRAData.map((row) => (
                 <tr key={row.id} className="hover:bg-zinc-50 dark:hover:bg-white/5 transition-colors cursor-pointer group">
                   <td className="px-8 py-6">
-                    <span className="font-mono text-xs font-bold text-zinc-900 dark:text-white group-hover:text-accent-purple transition-colors">{row.id}</span>
+                    <span className="font-mono text-xs font-bold text-zinc-900 dark:text-white group-hover:text-success transition-colors">{row.id}</span>
                   </td>
                   <td className="px-8 py-6">
                     <div className="flex flex-col">
-                      <span className="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-accent-purple transition-colors">{row.entity}</span>
+                      <span className="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-success transition-colors">{row.entity}</span>
                       <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-bold mt-0.5 font-mono uppercase tracking-widest flex items-center gap-1.5">
-                        <ShieldCheck size={10} className="text-accent-purple" /> {row.pin}
+                        <ShieldCheck size={10} className="text-success" /> {row.pin}
                       </span>
                     </div>
                   </td>
@@ -171,7 +171,7 @@ export default function TaxCompliancePage() {
                   </td>
                   <td className="px-8 py-6 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                       <button className="p-2 text-zinc-400 hover:text-accent-purple hover:bg-accent-purple/10 rounded-xl transition-colors" title="Sync with KRA">
+                       <button className="p-2 text-zinc-400 hover:text-success hover:bg-success/10 rounded-xl transition-colors" title="Sync with KRA">
                          <RefreshCcw size={18} className="lucide lucide-refresh-ccw" />
                        </button>
                        <button className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-xl transition-colors" title="More Options">
@@ -186,7 +186,7 @@ export default function TaxCompliancePage() {
         </div>
 
         <div className="p-6 bg-zinc-50/50 dark:bg-white/5 flex items-center justify-center relative z-10 border-t border-zinc-100 dark:border-white/10">
-          <button className="text-xs font-bold text-zinc-500 dark:text-zinc-400 hover:text-accent-purple dark:hover:text-accent-purple transition-colors uppercase tracking-widest">
+          <button className="text-xs font-bold text-zinc-500 dark:text-zinc-400 hover:text-success dark:hover:text-success transition-colors uppercase tracking-widest">
             Load Full KRA Integration History
           </button>
         </div>

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useTransactions } from '../../../admin/hooks/useFinancial';
+import { Loader2 } from 'lucide-react';
 import { 
   AlertTriangle, MoreVertical, FileText, Activity,
   RotateCcw, Search, XCircle, CheckCircle2
@@ -10,25 +12,21 @@ import { cn } from '../../../admin/utils/cn';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 
-const MOCK_REFUNDS = Array.from({ length: 8 }, (_, i) => ({
-  id: `REF-${3000 + i}`,
-  contractId: `CTR-${8800 + i}`,
-  client: `Client Name ${i}`,
-  freelancer: `Freelancer ${i}`,
-  amount: Math.floor(Math.random() * 20000) + 1500,
-  status: i % 3 === 0 ? 'pending' : i % 2 === 0 ? 'completed' : 'rejected',
-  date: new Date(Date.now() - Math.random() * 1000000000).toISOString(),
-}));
-
 export default function RefundsPage() {
+  const { data: trxResponse, isLoading } = useTransactions();
+  const refunds = (trxResponse?.data || [])
+    .filter((t) => (t.type || '').toLowerCase().includes('refund'))
+    .map((t, i) => ({
+      id: t.id || t._id || `REF-${i}`,
+      contractId: t.contractId || t.reference || '—',
+      client: t.clientName || t.payer || '—',
+      freelancer: t.freelancerName || t.payee || '—',
+      amount: t.amount || 0,
+      status: (t.status || 'pending').toLowerCase(),
+      date: t.createdAt || t.date || new Date().toISOString(),
+    }));
   const [activeTab, setActiveTab] = useState('management');
-  const [isLoading, setIsLoading] = useState(true);
   const [actionModal, setActionModal] = useState({ isOpen: false, type: '', data: null });
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1100);
-    return () => clearTimeout(timer);
-  }, []);
 
   const triggerAction = (type, data) => {
     setActionModal({ isOpen: true, type, data });
@@ -57,7 +55,7 @@ export default function RefundsPage() {
             onClick={() => setActiveTab(activeTab === 'management' ? 'audit' : 'management')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-brand-600" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#14a800]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={16} /> {activeTab === 'management' ? 'Audit Trail' : 'Back to Management'}
@@ -82,7 +80,7 @@ export default function RefundsPage() {
                 <input 
                   type="text" 
                   placeholder="Search Refund ID or Client..." 
-                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500 outline-none"
+                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#14a800] outline-none"
                 />
               </div>
             </div>
@@ -110,7 +108,11 @@ export default function RefundsPage() {
                       </tr>
                     ))
                   ) : (
-                    MOCK_REFUNDS.map(ref => (
+                    isLoading ? (
+                      <tr><td colSpan={6} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#14a800]" /></td></tr>
+                    ) : refunds.length === 0 ? (
+                      <tr><td colSpan={6} className="p-8 text-center text-zinc-500 font-medium">No refunds found.</td></tr>
+                    ) : refunds.map(ref => (
                       <tr key={ref.id} className="hover:bg-surface/50 dark:hover:bg-zinc-800/20 group transition-colors">
                         <td className="p-4">
                           <div className="flex flex-col">

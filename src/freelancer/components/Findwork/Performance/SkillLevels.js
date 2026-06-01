@@ -84,7 +84,7 @@ const Requirement = ({ icon: Icon, label, current, target, unit = "", color = "b
   const colorClasses = {
     blue: "bg-[#FDECE7]",
     green: "bg-green-500",
-    purple: "bg-brand-500",
+    purple: "bg-[#14a800]",
     orange: "bg-orange-500"
   };
 

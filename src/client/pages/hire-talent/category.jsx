@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, Filter, ShieldCheck, Star, MapPin } from "lucide-react";
-import { categories } from "./data";
 import TalentCard from "../../../client/components/Hiretalent/TalentCard";
+import CategoryNavBar from "../../../components/marketplace/CategoryNavBar";
 import { talentAPI } from "../../../common/services/talentAPI";
+import { useTalentCategories } from "../../../common/services/talentHooks";
 
 const CategoryPage = () => {
   const { slug } = useParams();
-  const category = categories.find((item) => item.slug === slug);
+  const { data: taxonomyCategories = [], isLoading: categoriesLoading } = useTalentCategories("all");
+  const category = taxonomyCategories.find(
+    (item) => item.slug === slug || item.id === slug
+  );
   const [talents, setTalents] = useState([]);
-  const [loading, setLoading] = useState(Boolean(category));
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -44,7 +48,7 @@ const CategoryPage = () => {
     };
   }, [category, slug]);
 
-  if (!category) {
+  if (!categoriesLoading && !category) {
     return (
       <div className="talent-page">
         <section className="talent-section empty-state">
@@ -63,21 +67,30 @@ const CategoryPage = () => {
     );
   }
 
+  const modeLabel =
+    category?.kind === "online" ? "Online" : category?.kind === "onsite" ? "On-site" : "Hybrid";
+
   return (
     <div className="talent-page talent-page--category">
+      <CategoryNavBar
+        categories={taxonomyCategories}
+        loading={categoriesLoading}
+        basePath="/talent"
+        activeSlug={slug}
+      />
       <section className="category-hero">
         <div className="category-hero__copy">
-          <span className="eyebrow">{category.badge} services</span>
-          <h1>{category.title}</h1>
-          <p className="subhead">{category.desc}</p>
+          <span className="eyebrow">{modeLabel} services</span>
+          <h1>{category?.name || slug}</h1>
+          <p className="subhead">{category?.description || "Browse talent in this marketplace category."}</p>
           <div className="category-meta-line">
-            <span><ShieldCheck size={14} /> {category.count} verified pros</span>
+            <span><ShieldCheck size={14} /> {category?.roleCount || 0} roles in taxonomy</span>
             <span><Star size={14} /> 4.8/5 average rating</span>
             <span><MapPin size={14} /> Fast local and remote matching</span>
           </div>
         </div>
         <div className="category-actions">
-          <Link className="cta-btn" to={`/talent/request?category=${category.slug}`}>
+          <Link className="cta-btn" to={`/talent/request?category=${category?.slug || slug}`}>
             Post a request
             <ArrowRight size={16} />
           </Link>
@@ -146,7 +159,7 @@ const CategoryPage = () => {
           <div className="empty-state">
             <h3>No profiles yet</h3>
             <p>No freelancers have published profiles in this category yet.</p>
-            <Link className="cta-btn" to={`/talent/request?category=${category.slug}`}>
+            <Link className="cta-btn" to={`/talent/request?category=${category?.slug || slug}`}>
               Post a job
               <ArrowRight size={16} />
             </Link>

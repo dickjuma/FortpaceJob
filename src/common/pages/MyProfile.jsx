@@ -1,5 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useConfirm } from '../context/ConfirmContext';
+import { loadServiceCategoryGroups } from '../utils/serviceCategoryOptions';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -156,6 +158,21 @@ const fromCsv = (text) =>
     .map((v) => v.trim())
     .filter(Boolean);
 
+function categoryIdsFromSelection(profile, selections, serviceGroups) {
+  const onlineGroup = serviceGroups.find((g) => /online/i.test(g.label));
+  const onsiteGroup = serviceGroups.find((g) => /on-?\s*site/i.test(g.label));
+  const online = new Set(profile?.onlineCategoryIds || []);
+  const onsite = new Set(profile?.onsiteCategoryIds || []);
+  for (const name of selections.filter(Boolean)) {
+    if (onlineGroup?.options?.includes(name)) online.add(name);
+    if (onsiteGroup?.options?.includes(name)) onsite.add(name);
+  }
+  return {
+    onlineCategoryIds: [...online],
+    onsiteCategoryIds: [...onsite],
+  };
+}
+
 const getFileType = (url) => {
   const ext = url.split(".").pop().toLowerCase();
   if (["jpg", "jpeg", "png", "gif", "webp", "svg"].includes(ext)) return "image";
@@ -269,16 +286,16 @@ const getBadges = (profile, completeness, portfolioCount, hasIntroVideo) => {
   const badges = [];
   if (profile?.emailVerified) badges.push({ name: "Email Verified", icon: CheckCircle, color: "text-green-600", description: "Your email address has been confirmed." });
   if (profile?.phoneVerified) badges.push({ name: "Phone Verified", icon: CheckCircle, color: "text-green-600", description: "Your phone number has been verified." });
-  if (profile?.isVerified) badges.push({ name: "Identity Verified", icon: Shield, color: "text-brand-600", description: "Your identity has been verified." });
-  if (profile?.paymentVerified) badges.push({ name: "Payment Verified", icon: Shield, color: "text-brand-600", description: "Your payment method is verified." });
+  if (profile?.isVerified) badges.push({ name: "Identity Verified", icon: Shield, color: "text-[#14a800]", description: "Your identity has been verified." });
+  if (profile?.paymentVerified) badges.push({ name: "Payment Verified", icon: Shield, color: "text-[#14a800]", description: "Your payment method is verified." });
   if (profile?.topRated) badges.push({ name: "Top Rated", icon: Award, color: "text-yellow-600", description: "You are among the highest-rated professionals." });
   if (profile?.risingTalent) badges.push({ name: "Rising Talent", icon: TrendingUp, color: "text-green-600", description: "You are quickly gaining recognition." });
   if (completeness >= 50) badges.push({ name: "50% Complete", icon: Award, color: "text-yellow-600", description: "Your profile is halfway there!" });
   if (completeness >= 80) badges.push({ name: "80% Complete", icon: Award, color: "text-yellow-600", description: "Almost done – keep going!" });
-  if (completeness === 100) badges.push({ name: "All-Star Profile", icon: Award, color: "text-brand-600", description: "Perfect! Your profile is complete." });
+  if (completeness === 100) badges.push({ name: "All-Star Profile", icon: Award, color: "text-[#14a800]", description: "Perfect! Your profile is complete." });
   if (profile?.role === 'freelancer') {
-    if (portfolioCount >= 3) badges.push({ name: "Portfolio Starter", icon: Award, color: "text-brand-600", description: "You have at least 3 portfolio items." });
-    if (hasIntroVideo) badges.push({ name: "Video Introduction", icon: Award, color: "text-brand-600", description: "You've uploaded an intro video." });
+    if (portfolioCount >= 3) badges.push({ name: "Portfolio Starter", icon: Award, color: "text-[#14a800]", description: "You have at least 3 portfolio items." });
+    if (hasIntroVideo) badges.push({ name: "Video Introduction", icon: Award, color: "text-[#14a800]", description: "You've uploaded an intro video." });
   }
   return badges;
 };
@@ -288,6 +305,7 @@ const getBadges = (profile, completeness, portfolioCount, hasIntroVideo) => {
 // ----------------------------------------------------------------------
 const useProfileData = () => {
   const navigate = useNavigate();
+  const { confirm } = useConfirm();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -341,7 +359,12 @@ const useProfileData = () => {
     setError('');
     setNotice('');
     try {
-      const res = await profileAPI.updateMyProfile(payload);
+      const withCategories = {
+        ...(profile?.onlineCategoryIds?.length ? { onlineCategoryIds: profile.onlineCategoryIds } : {}),
+        ...(profile?.onsiteCategoryIds?.length ? { onsiteCategoryIds: profile.onsiteCategoryIds } : {}),
+        ...payload,
+      };
+      const res = await profileAPI.updateMyProfile(withCategories);
       setProfile(res.user);
       setNotice(`${sectionName} section updated.`);
       setLastSaved(new Date());
@@ -370,7 +393,13 @@ const useProfileData = () => {
   };
 
   const deletePortfolioItem = async (itemId) => {
-    if (!window.confirm('Are you sure you want to delete this item?')) return;
+    const ok = await confirm({
+      title: 'Delete portfolio item',
+      message: 'Remove this item from your portfolio? This cannot be undone.',
+      confirmLabel: 'Delete',
+      critical: true,
+    });
+    if (!ok) return;
     try {
       const res = await profileAPI.deletePortfolioItem(itemId);
       setProfile(res.user);
@@ -584,7 +613,7 @@ const PreviewModal = ({ file, onClose, onPrev, onNext, hasMultiple }) => {
                   href={file.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-brand-600 underline inline-flex items-center gap-1"
+                  className="text-[#14a800] underline inline-flex items-center gap-1"
                 >
                   <Download size={16} /> Download
                 </a>
@@ -646,7 +675,7 @@ const ProfileHeader = ({
         {profile?.coverPhoto ? (
           <img src={profile.coverPhoto} alt="Cover" className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-white">
+          <div className="w-full h-full bg-gradient-to-r from-blue-400 to-[#118a00] flex items-center justify-center text-white">
             <Camera size={32} />
             <span className="text-lg ml-2">Upload a cover photo</span>
           </div>
@@ -860,6 +889,7 @@ export const MyProfile = () => {
     refreshProfile,
   } = useProfileData();
 
+  const [serviceGroups, setServiceGroups] = useState(SERVICE_GROUPS);
   const [openSection, setOpenSection] = useState('personal');
   const [previewFile, setPreviewFile] = useState(null);
   const [uploadingStates, setUploadingStates] = useState({
@@ -871,6 +901,12 @@ export const MyProfile = () => {
   const [phoneVerificationOtp, setPhoneVerificationOtp] = useState('');
   const [phoneVerificationLoading, setPhoneVerificationLoading] = useState(false);
   const [phoneVerificationTimer, setPhoneVerificationTimer] = useState(0);
+
+  useEffect(() => {
+    loadServiceCategoryGroups().then((groups) => {
+      if (groups?.length) setServiceGroups(groups);
+    });
+  }, []);
 
   const isClient = profile?.role === 'client';
   const isTalent = profile?.role === 'freelancer';
@@ -1252,6 +1288,7 @@ export const MyProfile = () => {
       bonded: data.bonded,
       serviceRadius: Number(data.serviceRadius),
       availability: data.availability,
+      ...categoryIdsFromSelection(profile, [data.tradeCategory], serviceGroups),
     };
     await updateSection(payload, 'Trade');
   });
@@ -1269,6 +1306,7 @@ export const MyProfile = () => {
       hourlyRate: Number(data.hourlyRate),
       currency: data.currency,
       bio: data.bio,
+      ...categoryIdsFromSelection(profile, [data.physicalCategory, profile?.tradeCategory], serviceGroups),
     };
     await updateSection(payload, 'Skills & Expertise');
   });
@@ -1558,7 +1596,7 @@ export const MyProfile = () => {
                   <Field label="Primary Trade">
                     <select {...tradeForm.register('tradeCategory')} className="w-full border rounded-lg p-2">
                       <option value="">Select trade / service</option>
-                      {SERVICE_GROUPS.map(group => (
+                      {serviceGroups.map(group => (
                         <optgroup key={group.label} label={group.label}>
                           {group.options.map(opt => (
                             <option key={opt} value={opt}>{opt}</option>
@@ -1647,7 +1685,7 @@ export const MyProfile = () => {
                   <Field label="Category">
                     <select {...skillsForm.register('physicalCategory')} className="w-full border rounded-lg p-2">
                       <option value="">Select category</option>
-                      {SERVICE_GROUPS.map(group => (
+                      {serviceGroups.map(group => (
                         <optgroup key={group.label} label={group.label}>
                           {group.options.map(opt => (
                             <option key={opt} value={opt}>{opt}</option>

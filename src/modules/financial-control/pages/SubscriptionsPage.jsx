@@ -6,18 +6,22 @@ import {
 import { cn } from '../../../admin/utils/cn';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
-
-const MOCK_SUBSCRIPTIONS = Array.from({ length: 12 }, (_, i) => ({
-  id: `SUB-${5500 + i}`,
-  user: `User ${i}`,
-  plan: i % 3 === 0 ? 'Pro Freelancer' : i % 2 === 0 ? 'Enterprise Client' : 'Basic Plus',
-  amount: i % 3 === 0 ? 2500 : i % 2 === 0 ? 15000 : 1000,
-  billingCycle: i % 4 === 0 ? 'yearly' : 'monthly',
-  status: i % 8 === 0 ? 'cancelled' : i % 5 === 0 ? 'past_due' : 'active',
-  nextBilling: new Date(Date.now() + Math.random() * 86400000 * 30).toISOString(),
-}));
+import { useTransactions } from '../../../admin/hooks/useFinancial';
+import { Loader2 } from 'lucide-react';
 
 export default function SubscriptionsPage() {
+  const { data: trxResponse, isLoading } = useTransactions();
+  const subscriptions = (trxResponse?.data || [])
+    .filter((t) => (t.type || '').toLowerCase().includes('subscription'))
+    .map((t, i) => ({
+      id: t.id || t._id || `SUB-${i}`,
+      user: t.userName || t.clientName || '—',
+      plan: t.plan || t.description || '—',
+      amount: t.amount || 0,
+      billingCycle: t.billingCycle || t.interval || 'monthly',
+      status: (t.status || 'active').toLowerCase(),
+      nextBilling: t.nextBillingAt || t.dueDate || new Date().toISOString(),
+    }));
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
 
@@ -26,7 +30,7 @@ export default function SubscriptionsPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-brand-500/10 text-brand-600 rounded-xl shadow-sm">
+            <div className="p-2.5 bg-[#14a800]/10 text-[#14a800] rounded-xl shadow-sm">
               <Repeat size={24} />
             </div>
             <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Recurring Subscriptions</h1>
@@ -38,7 +42,7 @@ export default function SubscriptionsPage() {
         <div className="flex gap-2">
            <button 
              onClick={() => toast.success('Exporting subscription data...')}
-             className="px-4 py-2 bg-surface-dark text-white dark:bg-brand-600 rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+             className="px-4 py-2 bg-surface-dark text-white dark:bg-[#14a800] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
            >
              <Download size={16} /> Export Data
            </button>
@@ -54,7 +58,7 @@ export default function SubscriptionsPage() {
               placeholder="Search Sub ID or User..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500 outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#14a800] outline-none"
             />
           </div>
           <select 
@@ -83,7 +87,11 @@ export default function SubscriptionsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/50">
-              {MOCK_SUBSCRIPTIONS.filter(s => !status || s.status === status).map(sub => (
+              {isLoading ? (
+                <tr><td colSpan={6} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#14a800]" /></td></tr>
+              ) : subscriptions.filter(s => !status || s.status === status).length === 0 ? (
+                <tr><td colSpan={6} className="p-8 text-center text-zinc-500 font-medium">No subscriptions found.</td></tr>
+              ) : subscriptions.filter(s => !status || s.status === status).map(sub => (
                 <tr key={sub.id} className="hover:bg-surface/50 dark:hover:bg-zinc-800/20 group transition-colors">
                   <td className="p-4 font-mono text-sm font-bold text-zinc-900 dark:text-white">
                     {sub.id}

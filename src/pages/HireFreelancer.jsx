@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { Calendar, ChevronRight, Clock, Lock, MapPin, Plus, ShieldCheck, Trash2 } from 'lucide-react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getClientOpenings, getFeaturedTalent, getTalentById } from './find-talent/talentMarketplaceData';
+import { useAuthRedirect } from '../common/utils/authRedirect';
+import CheckoutFeeBreakdown from '../components/payments/CheckoutFeeBreakdown';
+import { useCheckoutFees } from '../common/hooks/useCheckoutFees';
 
 const HireFreelancer = () => {
   const { talentId } = useParams();
+  const navigate = useNavigate();
+  const { requireAuth } = useAuthRedirect();
   const talent = getTalentById(talentId) || getFeaturedTalent()[0];
   const openings = getClientOpenings();
   const [contractType, setContractType] = useState('fixed');
@@ -23,7 +28,8 @@ const HireFreelancer = () => {
   };
 
   const totalAmount = milestones.reduce((sum, milestone) => sum + Number(milestone.amount || 0), 0);
-  const platformFee = Math.round(totalAmount * 0.05);
+  const { breakdown } = useCheckoutFees(totalAmount, 'HIRE_COMMITMENT');
+  const platformFee = Math.round(breakdown.platformFee);
   const estimatedTax = Math.round(totalAmount * 0.02);
   const selectedJob = openings.find((job) => job.id === selectedJobId) || openings[0];
 
@@ -32,7 +38,7 @@ const HireFreelancer = () => {
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
           <div className="mb-8">
-            <Link className="text-sm font-medium text-brand-600 hover:text-brand-700 flex items-center gap-1 mb-4" to={`/talent/${talent.id}`}>
+            <Link className="text-sm font-medium text-[#14a800] hover:text-[#14a800] flex items-center gap-1 mb-4" to={`/talent/${talent.id}`}>
               <ChevronRight className="w-4 h-4 rotate-180" /> Back to Profile
             </Link>
             <h1 className="text-3xl font-bold text-zinc-900 mb-2">Hire {talent.name}</h1>
@@ -49,7 +55,7 @@ const HireFreelancer = () => {
                 />
                 <div className="flex-1">
                   <h3 className="font-bold text-zinc-900 flex items-center gap-2">
-                    {talent.name} <ShieldCheck className="w-4 h-4 text-brand-500" />
+                    {talent.name} <ShieldCheck className="w-4 h-4 text-[#14a800]" />
                   </h3>
                   <p className="text-sm text-zinc-600">{talent.title}</p>
                   <div className="flex items-center gap-4 mt-2 text-sm text-zinc-500">
@@ -110,7 +116,7 @@ const HireFreelancer = () => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-semibold text-zinc-800">Project milestones</h4>
-                      <button className="text-sm font-medium text-brand-600 hover:text-brand-700 flex items-center gap-1" onClick={addMilestone} type="button">
+                      <button className="text-sm font-medium text-[#14a800] hover:text-[#14a800] flex items-center gap-1" onClick={addMilestone} type="button">
                         <Plus className="w-4 h-4" /> Add milestone
                       </button>
                     </div>
@@ -141,7 +147,7 @@ const HireFreelancer = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-4 border border-brand-100 bg-brand-50 rounded-xl space-y-4">
+                  <div className="p-4 border border-[#14a800]/20 bg-[#14a800]/5 rounded-xl space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="font-semibold text-zinc-900">Hourly contract</div>
@@ -177,7 +183,7 @@ const HireFreelancer = () => {
                       <span className="font-semibold text-zinc-900">${totalAmount}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-zinc-500">Platform fee</span>
+                      <span className="text-zinc-500">Platform fee ({breakdown.platformPercent}%)</span>
                       <span className="font-semibold text-zinc-900">${platformFee}</span>
                     </div>
                     <div className="flex justify-between">
@@ -189,7 +195,18 @@ const HireFreelancer = () => {
                     <span className="font-bold text-zinc-900">Due today</span>
                     <span className="text-2xl font-black text-zinc-900">${totalAmount + platformFee + estimatedTax}</span>
                   </div>
-                  <button className="w-full mt-6 bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-xl transition-colors">
+                  <button
+                    className="w-full mt-6 bg-[#14a800] hover:bg-[#118a00] text-white font-bold py-3 px-4 rounded-xl transition-colors"
+                    onClick={() =>
+                      requireAuth(() => {
+                        navigate(`/talent/${talent.id}/invite`);
+                      }, {
+                        returnTo: `/talent/${talent.id}/hire`,
+                        state: { intent: 'hire-talent', talentId: talent.id, jobId: selectedJob?.id || '' },
+                      })
+                    }
+                    type="button"
+                  >
                     Fund and send offer
                   </button>
                   <p className="text-xs text-center text-zinc-500 mt-4 flex items-center justify-center gap-2">
@@ -203,7 +220,7 @@ const HireFreelancer = () => {
                     <p>This screen now preserves the selected talent and selected job opening in one contract workflow.</p>
                     <p>It no longer drops the user into a generic hire page with hardcoded profile data.</p>
                   </div>
-                  <Link className="inline-flex items-center gap-2 text-brand-600 font-bold mt-4" to={`/talent/${talent.id}/invite`}>
+                  <Link className="inline-flex items-center gap-2 text-[#14a800] font-bold mt-4" to={`/talent/${talent.id}/invite`}>
                     Invite instead <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>

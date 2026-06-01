@@ -27,7 +27,7 @@ const HeroSection = () => {
             
             <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight leading-tight mb-6">
               Hire Trusted Talent For <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#14a800] to-[#7bc67e]">
                 Online & Onsite Work
               </span>
             </h1>
@@ -64,7 +64,7 @@ const HeroSection = () => {
               />
             </div>
             
-            <button className="bg-brand-600 hover:bg-brand-700 text-white px-8 py-4 rounded-xl font-medium transition-colors shadow-lg shadow-blue-600/20 whitespace-nowrap">
+            <button className="bg-[#14a800] hover:bg-[#118a00] text-white px-8 py-4 rounded-xl font-medium transition-colors shadow-lg shadow-blue-600/20 whitespace-nowrap">
               Search Talent
             </button>
           </motion.div>
@@ -101,7 +101,7 @@ const HeroSection = () => {
             </div>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center">
-                <Briefcase className="w-5 h-5 text-brand-400" />
+                <Briefcase className="w-5 h-5 text-[#14a800]" />
               </div>
               <div>
                 <div className="text-white font-medium">Vetted Talent</div>

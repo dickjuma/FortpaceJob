@@ -18,7 +18,7 @@ const StepIndicator = () => {
         {/* Connecting Lines */}
         <div className="absolute left-0 top-1/2 -tranzinc-y-1/2 w-full h-1 bg-zinc-200 dark:bg-zinc-800 rounded-full z-0" />
         <motion.div 
-          className="absolute left-0 top-1/2 -tranzinc-y-1/2 h-1 bg-indigo-600 rounded-full z-0"
+          className="absolute left-0 top-1/2 -tranzinc-y-1/2 h-1 bg-[#14a800] rounded-full z-0"
           initial={{ width: '0%' }}
           animate={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
@@ -34,9 +34,9 @@ const StepIndicator = () => {
               <motion.div
                 className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-colors duration-300 ${
                   isActive 
-                    ? 'bg-indigo-600 text-white ring-4 ring-indigo-600/20 shadow-lg shadow-indigo-500/40' 
+                    ? 'bg-[#14a800] text-white ring-4 ring-[#14a800]/20 shadow-lg shadow-[#14a800]/25' 
                     : isCompleted
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-[#14a800] text-white'
                     : 'bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-700 text-zinc-400'
                 }`}
                 initial={false}
@@ -45,7 +45,7 @@ const StepIndicator = () => {
                 {isCompleted ? <Check className="w-5 h-5" /> : step.id}
               </motion.div>
               <span className={`text-xs sm:text-sm font-semibold absolute top-14 whitespace-nowrap transition-colors duration-300 ${
-                isActive ? 'text-indigo-600 dark:text-indigo-400' : isCompleted ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-400 dark:text-zinc-500'
+                isActive ? 'text-[#14a800] dark:text-[#14a800]' : isCompleted ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-400 dark:text-zinc-500'
               }`}>
                 {step.label}
               </span>

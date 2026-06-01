@@ -1,26 +1,62 @@
 import React, { useState } from 'react';
-import { Star, CheckCircle2, MessageSquare, Heart } from 'lucide-react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Star, CheckCircle2, MessageSquare, Heart, Loader2 } from 'lucide-react';
+import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useCreateReview } from '../../common/hooks/useReviews';
+import { useAuthStore } from '../../common/authStore';
+import { validateMinLength, validateRating } from '../../common/utils/validation';
 
 const RatingReview = () => {
   const { orderId } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { user } = useAuthStore();
+  const createReview = useCreateReview();
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [review, setReview] = useState('');
-  
-  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e) => {
+  const revieweeId = searchParams.get('revieweeId') || searchParams.get('freelancerId');
+  const contractId = searchParams.get('contractId') || orderId;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(rating === 0) return;
-    
-    setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      setSuccess(true);
-    }, 1500);
+    setFormError('');
+    const ratingError = validateRating(rating);
+    if (ratingError) {
+      setFormError(ratingError);
+      return;
+    }
+    const reviewError = validateMinLength(review, 10, 'Review');
+    if (reviewError) {
+      setFormError(reviewError);
+      return;
+    }
+    if (!revieweeId) {
+      createReview.mutate(
+        {
+          contractId,
+          orderId,
+          overallRating: rating,
+          comment: review,
+          reviewerRole: 'CLIENT',
+        },
+        { onSuccess: () => setSuccess(true) }
+      );
+      return;
+    }
+    createReview.mutate(
+      {
+        revieweeId,
+        contractId,
+        orderId,
+        overallRating: rating,
+        comment: review,
+        reviewerRole: user?.role || 'CLIENT',
+      },
+      { onSuccess: () => setSuccess(true) }
+    );
   };
 
   if (success) {
@@ -96,13 +132,14 @@ const RatingReview = () => {
                 value={review}
                 onChange={e => setReview(e.target.value)}
                 placeholder="What was it like working with this freelancer? (e.g., quality of work, communication, meeting deadlines)"
-                className="w-full p-4 bg-surface border border-zinc-200 rounded-xl focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 font-medium text-zinc-900 resize-none"
+                className="w-full p-4 bg-surface border border-zinc-200 rounded-xl focus:border-[#14a800]/20 focus:outline-none focus:ring-4 focus:ring-[#14a800]/10 font-medium text-zinc-900 resize-none"
               ></textarea>
+              {formError && <p className="mt-2 text-sm font-semibold text-red-600">{formError}</p>}
             </div>
 
-            <div className="flex items-center gap-3 p-4 bg-brand-50 border border-brand-200 rounded-xl mb-8">
-              <Heart className="w-5 h-5 text-brand-600 shrink-0" />
-              <div className="text-sm font-medium text-brand-800">
+            <div className="flex items-center gap-3 p-4 bg-[#14a800]/5 border border-[#14a800]/20 rounded-xl mb-8">
+              <Heart className="w-5 h-5 text-[#14a800] shrink-0" />
+              <div className="text-sm font-medium text-[#14a800]">
                 You can add this freelancer to your favorites list after submitting the review, making it easy to re-hire them in the future.
               </div>
             </div>
@@ -117,10 +154,16 @@ const RatingReview = () => {
               </button>
               <button 
                 type="submit" 
-                disabled={rating === 0 || submitting}
-                className={`px-8 py-3 font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 ${rating > 0 ? 'bg-brand-600 hover:bg-brand-700 text-white' : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'}`}
+                disabled={rating === 0 || createReview.isPending}
+                className={`px-8 py-3 font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 ${rating > 0 ? 'bg-[#14a800] hover:bg-[#118a00] text-white' : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'}`}
               >
-                {submitting ? 'Submitting...' : 'Submit Review'}
+                {createReview.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" /> Submitting...
+                  </>
+                ) : (
+                  'Submit Review'
+                )}
               </button>
             </div>
 

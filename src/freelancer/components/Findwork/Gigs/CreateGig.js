@@ -756,7 +756,7 @@ export default function CreateGig() {
                   <span>View Analytics</span>
                 </button>
                 <button className="w-full text-left p-3 bg-white rounded-lg border border-[#E7E1DE] hover:border-[#C9452F] transition-colors flex items-center gap-3">
-                  <Users size={16} className="text-brand-500" />
+                  <Users size={16} className="text-[#14a800]" />
                   <span>Target Audience</span>
                 </button>
               </div>

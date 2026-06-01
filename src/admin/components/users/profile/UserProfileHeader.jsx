@@ -1,11 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { getPublicProfileUrl } from '../../../utils/publicProfileLinks';
 import { 
   ShieldCheck, 
   MapPin, 
   Calendar, 
   Eye, 
   ExternalLink, 
-  MoreHorizontal,
   Star,
   DollarSign,
   Briefcase,
@@ -18,7 +19,6 @@ import UserAvatar from '../shared/UserAvatar';
 import StatusBadge from '../shared/StatusBadge';
 import KycStatusBadge from '../shared/KycStatusBadge';
 import VerificationBadge from '../shared/VerificationBadge';
-import Button from '../../../components/ui/Button';
 import { formatCurrency } from '../../../utils/formatters';
 import { format, parseISO } from 'date-fns';
 
@@ -39,12 +39,13 @@ const HeaderStat = ({ icon: Icon, label, value, color }) => (
  */
 const UserProfileHeader = ({ user }) => {
   const joinedDate = format(parseISO(user.joinedAt), 'MMM dd, yyyy');
+  const publicUrl = getPublicProfileUrl(user);
 
   return (
     <div className="bg-white dark:bg-surface-dark border border-zinc-100 dark:border-zinc-800 rounded-[40px] p-8 lg:p-10 shadow-sm relative overflow-hidden group">
       {/* Decorative Background Elements */}
-      <div className="absolute top-0 right-0 h-64 w-64 bg-brand-500/5 rounded-full -mr-32 -mt-32 blur-3xl" />
-      <div className="absolute bottom-0 left-0 h-48 w-48 bg-brand-500/5 rounded-full -ml-24 -mb-24 blur-2xl" />
+      <div className="absolute top-0 right-0 h-64 w-64 bg-[#14a800]/5 rounded-full -mr-32 -mt-32 blur-3xl" />
+      <div className="absolute bottom-0 left-0 h-48 w-48 bg-[#14a800]/5 rounded-full -ml-24 -mb-24 blur-2xl" />
 
       <div className="flex flex-col xl:flex-row items-center xl:items-start gap-10 relative z-10">
         {/* Identity Section */}
@@ -54,7 +55,7 @@ const UserProfileHeader = ({ user }) => {
             name={user.fullName} 
             isOnline={user.isOnline} 
             size="2xl" 
-            className="shadow-2xl shadow-brand-500/10"
+            className="shadow-2xl shadow-[#14a800]/25/10"
           />
           <div className="space-y-1">
             <h2 className="text-4xl font-black text-zinc-900 dark:text-white tracking-tight leading-none">
@@ -82,21 +83,21 @@ const UserProfileHeader = ({ user }) => {
                 <>
                   <HeaderStat icon={Star} label="Rating" value={user.rating} color="text-amber-500" />
                   <HeaderStat icon={DollarSign} label="Total Earnings" value={formatCurrency(user.totalEarnings)} color="text-success" />
-                  <HeaderStat icon={Briefcase} label="Contracts" value={user.completedContracts} color="text-brand-500" />
-                  <HeaderStat icon={UserCheck} label="Success" value={`${user.successRate}%`} color="text-brand-500" />
+                  <HeaderStat icon={Briefcase} label="Contracts" value={user.completedContracts} color="text-[#14a800]" />
+                  <HeaderStat icon={UserCheck} label="Success" value={`${user.successRate}%`} color="text-[#14a800]" />
                 </>
               )}
               {user.userGroup === 'client' && (
                 <>
-                  <HeaderStat icon={DollarSign} label="Total Spend" value={formatCurrency(user.totalSpend)} color="text-brand-500" />
-                  <HeaderStat icon={Briefcase} label="Jobs Posted" value={user.totalJobsPosted} color="text-brand-500" />
+                  <HeaderStat icon={DollarSign} label="Total Spend" value={formatCurrency(user.totalSpend)} color="text-[#14a800]" />
+                  <HeaderStat icon={Briefcase} label="Jobs Posted" value={user.totalJobsPosted} color="text-[#14a800]" />
                   <HeaderStat icon={UserCheck} label="Hire Rate" value={`${user.hireRate}%`} color="text-success" />
                 </>
               )}
               {user.userGroup === 'admin' && (
                 <>
-                  <HeaderStat icon={ShieldCheck} label="Actions Today" value={user.actionsToday} color="text-brand-500" />
-                  <HeaderStat icon={Activity} label="Login Count" value={user.loginCount} color="text-brand-500" />
+                  <HeaderStat icon={ShieldCheck} label="Actions Today" value={user.actionsToday} color="text-[#14a800]" />
+                  <HeaderStat icon={Activity} label="Login Count" value={user.loginCount} color="text-[#14a800]" />
                 </>
               )}
             </div>
@@ -110,12 +111,25 @@ const UserProfileHeader = ({ user }) => {
           <div className="mt-auto pt-10 border-t border-zinc-50 dark:border-zinc-800/50 flex flex-col sm:flex-row items-center justify-between gap-6">
             <VerificationBadge user={user} className="scale-125 origin-left" />
             
-            <div className="flex items-center gap-3">
-              <Button variant="secondary" size="md" leftIcon={<Eye size={16} />}>Shadow User</Button>
-              <Button variant="primary" size="md" rightIcon={<ExternalLink size={16} />}>Take Action</Button>
-              <button className="p-2.5 rounded-xl border border-zinc-100 dark:border-zinc-800 hover:bg-surface dark:hover:bg-zinc-800 text-zinc-400 transition-all">
-                <MoreHorizontal size={20} />
-              </button>
+            <div className="flex items-center gap-3 flex-wrap justify-center xl:justify-end">
+              {publicUrl && (
+                <Link
+                  to={publicUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 text-xs font-black uppercase tracking-widest text-[#14a800] hover:bg-[#14a800]/5 transition-colors"
+                >
+                  <ExternalLink size={14} />
+                  Public profile
+                </Link>
+              )}
+              <Link
+                to={`/admin/users/${user.id}?tab=audit`}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-xs font-black uppercase tracking-widest hover:opacity-90 transition-opacity"
+              >
+                <Eye size={14} />
+                Audit trail
+              </Link>
             </div>
           </div>
         </div>

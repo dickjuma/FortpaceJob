@@ -29,7 +29,7 @@ export default function FinanceNavigation() {
           className={({ isActive }) => cn(
             "px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest whitespace-nowrap transition-all",
             isActive 
-              ? "bg-surface-dark text-white dark:bg-brand-600 shadow-lg shadow-brand-500/20" 
+              ? "bg-surface-dark text-white dark:bg-[#14a800] shadow-lg shadow-[#14a800]/25/20" 
               : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800"
           )}
         >

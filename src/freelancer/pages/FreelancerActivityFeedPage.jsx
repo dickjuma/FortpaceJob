@@ -4,78 +4,26 @@ import {
   CheckCircle2, Star, Award, TrendingUp, MessageCircle, 
   Heart, Share2, MoreHorizontal, Briefcase, Send
 } from 'lucide-react';
-
-const MOCK_ACTIVITIES = [
-  {
-    id: "act_1",
-    type: "rank_up",
-    timestamp: "2 hours ago",
-    likes: 24,
-    comments: 5,
-    user: {
-      name: "Alex Rivera",
-      avatar: "https://i.pravatar.cc/150?u=alex",
-      handle: "@arivera_dev"
-    },
-    details: {
-      newRank: "Top Rated Plus",
-      message: "Just hit a major milestone! Feeling incredibly grateful for all the amazing clients I've worked with this year on Forte. Here's to more exciting projects! 🚀"
-    }
-  },
-  {
-    id: "act_2",
-    type: "job_completed",
-    timestamp: "1 day ago",
-    likes: 12,
-    comments: 2,
-    user: {
-      name: "Sarah Chen",
-      avatar: "https://i.pravatar.cc/150?u=sarah",
-      handle: "@schen_design"
-    },
-    details: {
-      projectTitle: "E-commerce Platform Redesign",
-      client: "Nova Retail",
-      message: "Successfully launched the new Nova Retail experience. Loved working with this team to bring their vision to life."
-    }
-  },
-  {
-    id: "act_3",
-    type: "review_received",
-    timestamp: "3 days ago",
-    likes: 18,
-    comments: 1,
-    user: {
-      name: "David Kim",
-      avatar: "https://i.pravatar.cc/150?u=david",
-      handle: "@dkim_writes"
-    },
-    details: {
-      rating: 5,
-      client: "TechFlow Solutions",
-      reviewText: "David is an exceptional technical writer. Delivered exactly what we needed ahead of schedule and the quality was superb. Will definitely hire again.",
-      projectTitle: "API Documentation Overhaul"
-    }
-  },
-  {
-    id: "act_4",
-    type: "badge_earned",
-    timestamp: "1 week ago",
-    likes: 45,
-    comments: 8,
-    user: {
-      name: "Elena Rodriguez",
-      avatar: "https://i.pravatar.cc/150?u=elena",
-      handle: "@elena_data"
-    },
-    details: {
-      badgeName: "Data Science Expert",
-      message: "Just earned the Data Science Expert badge after passing the Forte skill assessment with a top 1% score!"
-    }
-  }
-];
+import { useFreelancerRecentActivity } from '../services/freelancerHooks';
+import { extractList } from '../../common/utils/apiHelpers';
+import { Loader2 } from 'lucide-react';
 
 export default function FreelancerActivityFeedPage() {
+  const { data: activityData, isLoading } = useFreelancerRecentActivity({ limit: 20 });
+  const activities = extractList(activityData?.activities || activityData).map((a, i) => ({
+    id: a.id || a._id || `act-${i}`,
+    type: a.type || 'update',
+    timestamp: a.timestamp || a.createdAt || '',
+    likes: a.likes || 0,
+    comments: a.comments || 0,
+    user: {
+      name: a.user?.name || a.actorName || 'User',
+      avatar: a.user?.avatar || a.actorAvatar || '',
+      handle: a.user?.handle || '',
+    },
+    details: a.details || a.payload || { message: a.message || a.description || '' },
+  }));
+
   const [likedItems, setLikedItems] = useState(new Set());
   const [expandedComments, setExpandedComments] = useState(new Set());
   const [commentTexts, setCommentTexts] = useState({});
@@ -104,10 +52,10 @@ export default function FreelancerActivityFeedPage() {
 
   const getActivityIcon = (type) => {
     switch(type) {
-      case 'rank_up': return <div className="p-2 bg-brand-50 dark:bg-brand-900/30 rounded-full"><TrendingUp className="w-5 h-5 text-brand-600 dark:text-brand-400" /></div>;
+      case 'rank_up': return <div className="p-2 bg-[#14a800]/5 dark:bg-[#14a800]/30 rounded-full"><TrendingUp className="w-5 h-5 text-[#14a800] dark:text-[#14a800]" /></div>;
       case 'job_completed': return <div className="p-2 bg-green-50 dark:bg-green-900/30 rounded-full"><Briefcase className="w-5 h-5 text-green-600 dark:text-green-400" /></div>;
       case 'review_received': return <div className="p-2 bg-yellow-50 dark:bg-yellow-900/30 rounded-full"><Star className="w-5 h-5 text-yellow-600 dark:text-yellow-400" /></div>;
-      case 'badge_earned': return <div className="p-2 bg-brand-50 dark:bg-brand-900/30 rounded-full"><Award className="w-5 h-5 text-brand-600 dark:text-brand-400" /></div>;
+      case 'badge_earned': return <div className="p-2 bg-[#14a800]/5 dark:bg-[#14a800]/30 rounded-full"><Award className="w-5 h-5 text-[#14a800] dark:text-[#14a800]" /></div>;
       default: return <div className="p-2 bg-surface dark:bg-gray-800 rounded-full"><CheckCircle2 className="w-5 h-5 text-gray-600 dark:text-gray-400" /></div>;
     }
   };
@@ -137,7 +85,13 @@ export default function FreelancerActivityFeedPage() {
           animate={{ opacity: 1 }}
           transition={{ staggerChildren: 0.1 }}
         >
-          {MOCK_ACTIVITIES.map((activity, index) => {
+          {isLoading ? (
+            <div className="flex justify-center py-16">
+              <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+            </div>
+          ) : activities.length === 0 ? (
+            <p className="text-center text-gray-500 py-16">No recent activity yet.</p>
+          ) : activities.map((activity, index) => {
             const isLiked = likedItems.has(activity.id);
             const isExpanded = expandedComments.has(activity.id);
             const currentLikes = activity.likes + (isLiked ? 1 : 0);
@@ -155,11 +109,17 @@ export default function FreelancerActivityFeedPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-4">
                       <div className="relative">
-                        <img 
-                          src={activity.user.avatar} 
-                          alt={activity.user.name} 
-                          className="w-12 h-12 rounded-full object-cover border-2 border-white dark:border-gray-800"
-                        />
+                        {activity.user.avatar ? (
+                          <img
+                            src={activity.user.avatar}
+                            alt={activity.user.name}
+                            className="w-12 h-12 rounded-full object-cover border-2 border-white dark:border-gray-800"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center font-bold text-gray-600">
+                            {activity.user.name[0]}
+                          </div>
+                        )}
                         <div className="absolute -bottom-2 -right-2">
                           {getActivityIcon(activity.type)}
                         </div>
@@ -206,7 +166,7 @@ export default function FreelancerActivityFeedPage() {
                       <button 
                         onClick={() => toggleLike(activity.id)}
                         className={`flex items-center space-x-2 text-sm font-medium transition-colors ${
-                          isLiked ? 'text-brand-600 dark:text-brand-500' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                          isLiked ? 'text-[#14a800] dark:text-[#14a800]' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                         }`}
                       >
                         <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
@@ -238,20 +198,18 @@ export default function FreelancerActivityFeedPage() {
                     >
                       <div className="p-4 sm:p-6">
                         <div className="flex items-start space-x-3 mb-4">
-                          <img 
-                            src="https://i.pravatar.cc/150?u=me" 
-                            alt="You" 
-                            className="w-8 h-8 rounded-full"
-                          />
+                          <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-gray-700 flex items-center justify-center text-xs font-bold text-zinc-600">
+                            You
+                          </div>
                           <div className="flex-1 relative">
                             <input 
                               type="text"
                               placeholder="Write a comment..."
                               value={commentTexts[activity.id] || ''}
                               onChange={(e) => handleCommentChange(activity.id, e.target.value)}
-                              className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full py-2 pl-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white"
+                              className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full py-2 pl-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-[#14a800] dark:text-white"
                             />
-                            <button className="absolute right-2 top-1/2 -tranzinc-y-1/2 text-brand-600 dark:text-brand-400 p-1 rounded-full hover:bg-brand-50 dark:hover:bg-gray-800">
+                            <button className="absolute right-2 top-1/2 -tranzinc-y-1/2 text-[#14a800] dark:text-[#14a800] p-1 rounded-full hover:bg-[#14a800]/5 dark:hover:bg-gray-800">
                               <Send className="w-4 h-4" />
                             </button>
                           </div>

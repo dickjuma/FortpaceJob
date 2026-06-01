@@ -22,7 +22,7 @@ export default function GigPublishSuccessPage() {
     <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans flex items-center justify-center py-12 px-4 sm:px-6 relative overflow-hidden">
       
       {/* Celebration Background Effects */}
-      <div className="absolute top-1/2 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 w-[800px] h-[800px] bg-brand-500/10 dark:bg-brand-500/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 w-[800px] h-[800px] bg-[#14a800]/10 dark:bg-[#14a800]/20 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 w-[400px] h-[400px] bg-success/10 dark:bg-success/20 rounded-full blur-[80px] pointer-events-none" />
 
       <div className="max-w-4xl w-full z-10 flex flex-col md:flex-row gap-8 items-stretch">
@@ -33,7 +33,7 @@ export default function GigPublishSuccessPage() {
           className="flex-1 bg-white dark:bg-surface-dark rounded-[2.5rem] p-10 shadow-2xl border border-zinc-200 dark:border-zinc-800 text-center relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-20">
-            <Sparkles className="w-24 h-24 text-brand-500" />
+            <Sparkles className="w-24 h-24 text-[#14a800]" />
           </div>
 
           <motion.div 
@@ -54,9 +54,9 @@ export default function GigPublishSuccessPage() {
             <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-4">Share your Gig to get your first order</h3>
             
             <div className="flex justify-center gap-3 mb-6">
-              <button className="w-12 h-12 rounded-full bg-brand-600 text-white flex items-center justify-center hover:bg-brand-700 transition-colors shadow-sm"><Facebook className="w-5 h-5" /></button>
+              <button className="w-12 h-12 rounded-full bg-[#14a800] text-white flex items-center justify-center hover:bg-[#118a00] transition-colors shadow-sm"><Facebook className="w-5 h-5" /></button>
               <button className="w-12 h-12 rounded-full bg-sky-500 text-white flex items-center justify-center hover:bg-sky-600 transition-colors shadow-sm"><Twitter className="w-5 h-5" /></button>
-              <button className="w-12 h-12 rounded-full bg-brand-700 text-white flex items-center justify-center hover:bg-brand-800 transition-colors shadow-sm"><Linkedin className="w-5 h-5" /></button>
+              <button className="w-12 h-12 rounded-full bg-[#118a00] text-white flex items-center justify-center hover:bg-[#118a00] transition-colors shadow-sm"><Linkedin className="w-5 h-5" /></button>
             </div>
 
             <div className="flex items-center gap-2 bg-white dark:bg-surface-dark p-2 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm">
@@ -76,7 +76,7 @@ export default function GigPublishSuccessPage() {
           <div className="flex flex-col sm:flex-row items-center gap-4 justify-center">
             <button 
               onClick={() => navigate('/freelancer/gigs')}
-              className="px-8 py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-500/25 transition-all w-full sm:w-auto flex items-center justify-center gap-2"
+              className="px-8 py-3.5 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg shadow-[#14a800]/25/25 transition-all w-full sm:w-auto flex items-center justify-center gap-2"
             >
               View My Gigs <ArrowRight className="w-4 h-4" />
             </button>
@@ -97,7 +97,7 @@ export default function GigPublishSuccessPage() {
           {/* Visibility Card */}
           <div className="bg-white dark:bg-surface-dark rounded-3xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm">
             <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
-              <Eye className="w-4 h-4 text-brand-500" /> Marketplace Visibility
+              <Eye className="w-4 h-4 text-[#14a800]" /> Marketplace Visibility
             </h3>
             
             <div className="flex items-end gap-2 mb-2">
@@ -121,15 +121,15 @@ export default function GigPublishSuccessPage() {
             
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5"><span className="text-xs font-bold text-brand-300">1</span></div>
+                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5"><span className="text-xs font-bold text-[#14a800]">1</span></div>
                 <p className="text-xs text-zinc-300 leading-relaxed font-medium">Share your gig link on LinkedIn and professional networks.</p>
               </li>
               <li className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5"><span className="text-xs font-bold text-brand-300">2</span></div>
+                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5"><span className="text-xs font-bold text-[#14a800]">2</span></div>
                 <p className="text-xs text-zinc-300 leading-relaxed font-medium">Stay online. Buyers filter search results by "Online Sellers".</p>
               </li>
               <li className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5"><span className="text-xs font-bold text-brand-300">3</span></div>
+                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5"><span className="text-xs font-bold text-[#14a800]">3</span></div>
                 <p className="text-xs text-zinc-300 leading-relaxed font-medium">Respond to messages within 1 hour to boost your response rate.</p>
               </li>
             </ul>

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useTransactions } from '../../../admin/hooks/useFinancial';
+import { Loader2 } from 'lucide-react';
 import { 
   ShieldCheck, Search, Lock, Unlock,
   AlertTriangle, MoreVertical, FileText, Activity
@@ -11,27 +13,22 @@ import { cn } from '../../../admin/utils/cn';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 
-const MOCK_ESCROW = Array.from({ length: 15 }, (_, i) => ({
-  id: `ESC-${4500 + i}`,
-  contractId: `CTR-${8800 + i}`,
-  client: `Client Name ${i}`,
-  freelancer: `Freelancer ${i}`,
-  amount: 15000 + (i * 2500),
-  status: i % 5 === 0 ? 'disputed' : i % 3 === 0 ? 'released' : 'funded',
-  dateFunded: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
-}));
-
 export default function EscrowManagementPage() {
+  const { data: trxResponse, isLoading } = useTransactions();
+  const escrowItems = (trxResponse?.data || [])
+    .filter((t) => (t.type || '').toLowerCase().includes('escrow'))
+    .map((t, i) => ({
+      id: t.id || t._id || `ESC-${i}`,
+      contractId: t.contractId || t.reference || '—',
+      client: t.clientName || '—',
+      freelancer: t.freelancerName || '—',
+      amount: t.amount || 0,
+      status: (t.status || 'funded').toLowerCase(),
+      dateFunded: t.createdAt || t.date || new Date().toISOString(),
+    }));
   const [activeTab, setActiveTab] = useState('management');
-  const [isLoading, setIsLoading] = useState(true);
   const [actionModal, setActionModal] = useState({ isOpen: false, type: '', data: null });
   const { filters, setFilter } = useFinancialStore();
-
-  useEffect(() => {
-    // Simulate live data fetch
-    const timer = setTimeout(() => setIsLoading(false), 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   const triggerAction = (type, data) => {
     setActionModal({ isOpen: true, type, data });
@@ -46,7 +43,7 @@ export default function EscrowManagementPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-brand-500/10 text-brand-600 rounded-xl shadow-sm">
+            <div className="p-2.5 bg-[#14a800]/10 text-[#14a800] rounded-xl shadow-sm">
               <ShieldCheck size={24} />
             </div>
             <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Escrow Management</h1>
@@ -60,7 +57,7 @@ export default function EscrowManagementPage() {
             onClick={() => setActiveTab(activeTab === 'management' ? 'audit' : 'management')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-brand-600" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#14a800]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={16} /> {activeTab === 'management' ? 'Audit Trail' : 'Back to Management'}
@@ -73,7 +70,7 @@ export default function EscrowManagementPage() {
             confirmLabel="Generate"
             onConfirm={() => toast.success('Escrow Report generated successfully')}
           >
-            <button className="px-4 py-2 bg-surface-dark text-white dark:bg-brand-600 rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2 h-full">
+            <button className="px-4 py-2 bg-surface-dark text-white dark:bg-[#14a800] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2 h-full">
                Generate Escrow Report
             </button>
           </PopoverConfirm>
@@ -99,7 +96,7 @@ export default function EscrowManagementPage() {
                   placeholder="Search Escrow ID or Contract..." 
                   value={filters.escrow.search}
                   onChange={(e) => setFilter('escrow', 'search', e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500 outline-none"
+                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#14a800] outline-none"
                 />
               </div>
               <select 
@@ -139,7 +136,9 @@ export default function EscrowManagementPage() {
                       </tr>
                     ))
                   ) : (
-                    MOCK_ESCROW.filter(e => !filters.escrow.status || e.status === filters.escrow.status).map(escrow => (
+                    escrowItems.filter(e => !filters.escrow.status || e.status === filters.escrow.status).length === 0 && !isLoading ? (
+                      <tr><td colSpan={6} className="p-8 text-center text-zinc-500 font-medium">No escrow records found.</td></tr>
+                    ) : escrowItems.filter(e => !filters.escrow.status || e.status === filters.escrow.status).map(escrow => (
                       <tr key={escrow.id} className="hover:bg-surface/50 dark:hover:bg-zinc-800/20 group transition-colors">
                         <td className="p-4">
                           <div className="flex flex-col">
@@ -166,7 +165,7 @@ export default function EscrowManagementPage() {
                         <td className="p-4">
                           <span className={cn(
                             "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-widest",
-                            escrow.status === 'funded' ? 'bg-brand-50 text-brand-600 dark:bg-brand-900/20' :
+                            escrow.status === 'funded' ? 'bg-[#14a800]/5 text-[#14a800] dark:bg-[#14a800]/20' :
                             escrow.status === 'disputed' ? 'bg-red-50 text-red-600 dark:bg-red-900/20' :
                             'bg-emerald-50 text-success dark:bg-emerald-900/20'
                           )}>

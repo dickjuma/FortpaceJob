@@ -15,7 +15,7 @@ export const ProfileSkeleton = () => (
           </div>
           <div className="pb-2 flex space-x-3">
             <div className="h-10 w-24 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
-            <div className="h-10 w-32 bg-brand-200 dark:bg-brand-900/50 rounded-xl"></div>
+            <div className="h-10 w-32 bg-[#14a800] dark:bg-[#14a800]/50 rounded-xl"></div>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-gray-100 dark:border-gray-800">

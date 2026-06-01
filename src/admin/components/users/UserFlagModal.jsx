@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { 
-  X, AlertTriangle, ShieldAlert, 
-  Ban, ShieldX, Info, MessageSquare 
+  X, AlertTriangle, Ban, ShieldX, Info, MessageSquare, ShieldAlert 
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { cn } from '../../utils/cn';
+import { useUserActions } from '../../hooks/users/useUserActions';
 
 export default function UserFlagModal({ isOpen, onClose, user }) {
+  const { flagUser, banUser } = useUserActions();
   const [severity, setSeverity] = useState('warning');
   const [reason, setReason] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -19,12 +20,19 @@ export default function UserFlagModal({ isOpen, onClose, user }) {
       return;
     }
     setIsProcessing(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsProcessing(false);
-    toast.success(`Action applied: ${severity.toUpperCase()} for ${user.name}`, {
-      style: { background: '#ef4444', color: '#fff', borderRadius: '12px', fontWeight: 'bold' }
-    });
-    onClose();
+    
+    try {
+      const mutation = severity === 'suspension' ? banUser : flagUser;
+      await mutation.mutateAsync({ userId: user.id, reason });
+      toast.success(`Action applied: ${severity.toUpperCase()} for ${user.name || user.fullName}`, {
+        style: { background: '#ef4444', color: '#fff', borderRadius: '12px', fontWeight: 'bold' }
+      });
+      onClose();
+    } catch (error) {
+      toast.error(error.message || 'Failed to apply action');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (

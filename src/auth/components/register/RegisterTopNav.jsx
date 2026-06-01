@@ -31,7 +31,7 @@ export default function RegisterTopNav() {
     <header className="sticky top-0 z-40 border-b border-zinc-200 bg-white/95 dark:border-zinc-800 dark:bg-zinc-950/95">
       <div className="mx-auto flex w-full max-w-[88rem] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-600 text-base font-black text-white dark:bg-brand-500">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#14a800] text-base font-black text-white dark:bg-[#14a800]">
             F
           </div>
           <div>

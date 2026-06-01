@@ -66,7 +66,7 @@ const UserQuickActions = ({ user }) => {
           <ActionItem 
             icon={Eye} 
             label="View Full Profile" 
-            onClick={() => handleAction(() => openModal('VIEW_PROFILE', user))} 
+            onClick={() => handleAction(() => navigate(`/admin/users/${user.id}`))} 
           />
           <ActionItem 
             icon={Edit3} 
@@ -97,7 +97,7 @@ const UserQuickActions = ({ user }) => {
           <ActionItem 
             icon={History} 
             label="Audit History" 
-            onClick={() => handleAction(() => navigate(`/admin/users/${user.id}/audit`))} 
+            onClick={() => handleAction(() => navigate(`/admin/users/${user.id}?tab=audit`))} 
           />
           
           <div className="my-1 border-t border-zinc-50 dark:border-zinc-800/50" />

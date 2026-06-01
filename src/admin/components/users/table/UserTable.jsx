@@ -21,8 +21,8 @@ const TableHeader = ({ label, sortKey, currentSort, onSort, className }) => {
         {label}
         {sortKey && (
           <div className="flex flex-col -space-y-1">
-            <ChevronUp size={10} className={cn(isActive && currentSort.order === 'asc' ? "text-brand-600" : "opacity-20")} />
-            <ChevronDown size={10} className={cn(isActive && currentSort.order === 'desc' ? "text-brand-600" : "opacity-20")} />
+            <ChevronUp size={10} className={cn(isActive && currentSort.order === 'asc' ? "text-[#14a800]" : "opacity-20")} />
+            <ChevronDown size={10} className={cn(isActive && currentSort.order === 'desc' ? "text-[#14a800]" : "opacity-20")} />
           </div>
         )}
       </div>
@@ -156,7 +156,7 @@ const UserTable = ({
                     checked={isAllSelected}
                     ref={el => el && (el.indeterminate = isSomeSelected)}
                     onChange={handleToggleAll}
-                    className="w-4 h-4 rounded border-zinc-300 text-brand-600 focus:ring-brand-500 cursor-pointer"
+                    className="w-4 h-4 rounded border-zinc-300 text-[#14a800] focus:ring-[#14a800] cursor-pointer"
                   />
                 </div>
               </th>

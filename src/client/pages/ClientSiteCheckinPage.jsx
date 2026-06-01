@@ -81,7 +81,7 @@ export default function ClientSiteCheckinPage() {
         }`}>
           <div className="space-y-4">
             <div className={`w-14 h-14 rounded-2xl mx-auto flex items-center justify-center ${
-              scanned ? 'bg-success/20 text-success' : 'bg-accent-purple/20 text-accent-purple'
+              scanned ? 'bg-success/20 text-success' : 'bg-success/20 text-success'
             }`}>
               <QrCode className="w-8 h-8" />
             </div>
@@ -95,7 +95,7 @@ export default function ClientSiteCheckinPage() {
             onClick={triggerQrSim}
             disabled={scanned}
             className={`w-full mt-6 border-none font-bold text-xs py-2 rounded-xl ${
-              scanned ? 'bg-success/20 text-success' : 'bg-accent-purple hover:bg-accent-purple/90'
+              scanned ? 'bg-success/20 text-success' : 'bg-success hover:bg-success/90'
             }`}
           >
             {scanned ? 'QR Code Authenticated' : 'Simulate Badge Scan'}
@@ -108,7 +108,7 @@ export default function ClientSiteCheckinPage() {
         }`}>
           <div className="space-y-4">
             <div className={`w-14 h-14 rounded-2xl mx-auto flex items-center justify-center ${
-              gpsVerified ? 'bg-success/20 text-success' : 'bg-accent-purple/20 text-accent-purple'
+              gpsVerified ? 'bg-success/20 text-success' : 'bg-success/20 text-success'
             }`}>
               <MapPin className="w-8 h-8" />
             </div>
@@ -122,7 +122,7 @@ export default function ClientSiteCheckinPage() {
             onClick={verifyGps}
             disabled={gpsVerified}
             className={`w-full mt-6 border-none font-bold text-xs py-2 rounded-xl ${
-              gpsVerified ? 'bg-success/20 text-success' : 'bg-accent-purple hover:bg-accent-purple/90'
+              gpsVerified ? 'bg-success/20 text-success' : 'bg-success hover:bg-success/90'
             }`}
           >
             {gpsVerified ? 'GPS Location Valid' : 'Verify GPS Coordinates'}
@@ -135,7 +135,7 @@ export default function ClientSiteCheckinPage() {
         }`}>
           <div className="space-y-4">
             <div className={`w-14 h-14 rounded-2xl mx-auto flex items-center justify-center ${
-              photoUploaded ? 'bg-success/20 text-success' : 'bg-accent-purple/20 text-accent-purple'
+              photoUploaded ? 'bg-success/20 text-success' : 'bg-success/20 text-success'
             }`}>
               <Camera className="w-8 h-8" />
             </div>
@@ -149,7 +149,7 @@ export default function ClientSiteCheckinPage() {
             onClick={uploadPhoto}
             disabled={photoUploaded}
             className={`w-full mt-6 border-none font-bold text-xs py-2 rounded-xl ${
-              photoUploaded ? 'bg-success/20 text-success' : 'bg-accent-purple hover:bg-accent-purple/90'
+              photoUploaded ? 'bg-success/20 text-success' : 'bg-success hover:bg-success/90'
             }`}
           >
             {photoUploaded ? 'EXIF Tag Valid' : 'Simulate Photo Upload'}
@@ -161,7 +161,7 @@ export default function ClientSiteCheckinPage() {
       <div className="mt-8 flex justify-center">
         <Button 
           onClick={handleSubmit}
-          className="bg-success hover:bg-success/90 border-none font-bold text-sm py-3.5 px-12 rounded-2xl flex items-center gap-2 shadow-lg shadow-success/15"
+          className="bg-success hover:bg-success/90 border-none font-bold text-sm py-3.5 px-12 rounded-2xl flex items-center gap-2 shadow-lg shadow-[#14a800]/15"
         >
           <CheckCircle className="w-5 h-5" /> Authenticate Site Entry
         </Button>

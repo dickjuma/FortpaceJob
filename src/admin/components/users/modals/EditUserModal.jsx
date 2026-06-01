@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { X, User, Mail, Shield, Smartphone, Globe, Save, AlertCircle } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 import useUserManagementStore from '../../../store/userManagementStore';
+import { useUserActions } from '../../../hooks/users/useUserActions';
+import { updateUserApi } from '../../../api/users/users.api';
 import Button from '../../../components/ui/Button';
 import toast from 'react-hot-toast';
 
 export default function EditUserModal() {
   const { activeModal, closeModal, modalTargetUser: user } = useUserManagementStore();
+  const { suspendUser } = useUserActions();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -15,6 +18,7 @@ export default function EditUserModal() {
     phoneNumber: '',
     country: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -31,16 +35,18 @@ export default function EditUserModal() {
 
   if (activeModal !== 'EDIT_USER' || !user) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.promise(
-      new Promise(resolve => setTimeout(resolve, 1200)),
-      {
-        loading: 'Updating user profile...',
-        success: 'User profile updated successfully!',
-        error: 'Failed to update user profile'
-      }
-    ).then(() => closeModal());
+    setIsSubmitting(true);
+    try {
+      await updateUserApi(user.id, formData);
+      toast.success('User profile updated successfully!');
+      closeModal();
+    } catch (error) {
+      toast.error(error.message || 'Failed to update user profile');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -52,7 +58,7 @@ export default function EditUserModal() {
         {/* Header */}
         <div className="p-8 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-surface/50 dark:bg-zinc-800/30">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-brand-500 text-white rounded-2xl shadow-lg shadow-blue-500/20">
+            <div className="p-3 bg-[#14a800] text-white rounded-2xl shadow-lg shadow-#14a800]/20">
               <User size={24} />
             </div>
             <div>
@@ -73,24 +79,24 @@ export default function EditUserModal() {
             <div className="space-y-1.5">
               <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Full Name</label>
               <div className="relative group">
-                <User className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-zinc-400 group-focus-within:text-brand-500 transition-colors" size={16} />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#14a800] transition-colors" size={16} />
                 <input 
                   type="text" 
                   value={formData.fullName}
                   onChange={e => setFormData({...formData, fullName: e.target.value})}
-                  className="w-full pl-12 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-bold outline-none focus:border-brand-500 transition-all"
+                  className="w-full pl-12 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-bold outline-none focus:border-[#14a800]/20 transition-all"
                 />
               </div>
             </div>
             <div className="space-y-1.5">
               <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Email Address</label>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-zinc-400 group-focus-within:text-brand-500 transition-colors" size={16} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#14a800] transition-colors" size={16} />
                 <input 
                   type="email" 
                   value={formData.email}
                   onChange={e => setFormData({...formData, email: e.target.value})}
-                  className="w-full pl-12 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-bold outline-none focus:border-brand-500 transition-all"
+                  className="w-full pl-12 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-bold outline-none focus:border-[#14a800]/20 transition-all"
                 />
               </div>
             </div>
@@ -102,7 +108,7 @@ export default function EditUserModal() {
               <select 
                 value={formData.userGroup}
                 onChange={e => setFormData({...formData, userGroup: e.target.value})}
-                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-bold outline-none focus:border-brand-500 transition-all appearance-none cursor-pointer"
+                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-bold outline-none focus:border-[#14a800]/20 transition-all appearance-none cursor-pointer"
               >
                 <option value="freelancer">Freelancer</option>
                 <option value="client">Client</option>
@@ -114,7 +120,7 @@ export default function EditUserModal() {
               <select 
                 value={formData.status}
                 onChange={e => setFormData({...formData, status: e.target.value})}
-                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-bold outline-none focus:border-brand-500 transition-all appearance-none cursor-pointer"
+                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-bold outline-none focus:border-[#14a800]/20 transition-all appearance-none cursor-pointer"
               >
                 <option value="active">Active</option>
                 <option value="pending">Pending</option>
@@ -128,24 +134,24 @@ export default function EditUserModal() {
             <div className="space-y-1.5">
               <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Phone Number</label>
               <div className="relative group">
-                <Smartphone className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-zinc-400 group-focus-within:text-brand-500 transition-colors" size={16} />
+                <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#14a800] transition-colors" size={16} />
                 <input 
                   type="tel" 
                   value={formData.phoneNumber}
                   onChange={e => setFormData({...formData, phoneNumber: e.target.value})}
-                  className="w-full pl-12 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-bold outline-none focus:border-brand-500 transition-all"
+                  className="w-full pl-12 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-bold outline-none focus:border-[#14a800]/20 transition-all"
                 />
               </div>
             </div>
             <div className="space-y-1.5">
               <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Country</label>
               <div className="relative group">
-                <Globe className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-zinc-400 group-focus-within:text-brand-500 transition-colors" size={16} />
+                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#14a800] transition-colors" size={16} />
                 <input 
                   type="text" 
                   value={formData.country}
                   onChange={e => setFormData({...formData, country: e.target.value})}
-                  className="w-full pl-12 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-bold outline-none focus:border-brand-500 transition-all"
+                  className="w-full pl-12 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-bold outline-none focus:border-[#14a800]/20 transition-all"
                 />
               </div>
             </div>
@@ -158,22 +164,23 @@ export default function EditUserModal() {
              </p>
           </div>
 
-          <div className="pt-4 flex gap-4">
-            <button 
-              type="button"
-              onClick={closeModal}
-              className="flex-1 py-4 text-sm font-black text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors"
-            >
-              Discard Changes
-            </button>
-            <button 
-              type="submit"
-              className="flex-2 px-12 py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-2xl text-sm font-black shadow-xl shadow-blue-500/20 flex items-center justify-center gap-2 transition-all active:scale-95"
-            >
-              <Save size={18} />
-              Save Updates
-            </button>
-          </div>
+<div className="pt-4 flex gap-4">
+             <button 
+               type="button"
+               onClick={closeModal}
+               className="flex-1 py-4 text-sm font-black text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors"
+             >
+               Discard Changes
+             </button>
+             <button 
+               type="submit"
+               disabled={isSubmitting}
+               className="flex-2 px-12 py-4 bg-[#14a800] hover:bg-[#118a00] text-white rounded-2xl text-sm font-black shadow-xl shadow-#14a800]/20 flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+             >
+               <Save size={18} />
+               Save Updates
+             </button>
+           </div>
         </form>
       </div>
     </div>

@@ -14,16 +14,16 @@ export const TopNav = () => {
           </div>
           <input
             type="text"
-            className="block w-full pl-10 pr-3 py-2 border border-border rounded-lg leading-5 bg-light-gray placeholder-text-secondary focus:outline-none focus:bg-white focus:border-accent-red focus:ring-1 focus:ring-accent-red sm:text-sm transition-colors"
+            className="block w-full pl-10 pr-3 py-2 border border-border rounded-lg leading-5 bg-light-gray placeholder-text-secondary focus:outline-none focus:bg-white focus:border-[#14a800] focus:ring-1 focus:ring-[#14a800] sm:text-sm transition-colors"
             placeholder="Search users, jobs, messages..."
           />
         </div>
       </div>
       
       <div className="ml-4 flex items-center space-x-4">
-        <button className="relative p-2 text-text-secondary hover:bg-light-gray rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red">
+        <button className="relative p-2 text-text-secondary hover:bg-light-gray rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#14a800]">
           <Bell size={20} />
-          <span className="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-accent-red ring-2 ring-white" />
+          <span className="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-[#14a800] ring-2 ring-white" />
         </button>
         
         <div className="flex items-center space-x-3 pl-4 border-l border-border cursor-pointer hover:bg-light-gray p-1 pr-3 rounded-full transition-colors">
@@ -31,10 +31,10 @@ export const TopNav = () => {
             name="Admin User" 
             size="sm" 
             status="online"
-            src="https://ui-avatars.com/api/?name=Admin+User&background=1a1d2e&color=fff"
+            src="https://ui-avatars.com/api/?name=Admin+User&background=14a800&color=fff"
           />
           <div className="hidden sm:block text-sm">
-            <p className="font-semibold text-navy leading-none">Admin User</p>
+            <p className="font-semibold text-[#222222] leading-none">Admin User</p>
             <p className="text-text-secondary text-xs mt-1">Superadmin</p>
           </div>
         </div>

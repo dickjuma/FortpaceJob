@@ -61,14 +61,14 @@ export default function ClientAnnouncementsPage() {
         {/* Left Side: Create a Broadcast */}
         <div className="lg:col-span-1 space-y-6">
           <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4">
-            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Megaphone className="w-4 h-4 text-accent-purple" /> Dispatch Bulletin</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Megaphone className="w-4 h-4 text-success" /> Dispatch Bulletin</h3>
             
             <form onSubmit={dispatchBroadcast} className="space-y-4 pt-2">
               <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
                 <label>Announcement Text / Alert Message</label>
                 <textarea 
                   rows="3"
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-accent-purple text-white/95 placeholder-light-gray/40 resize-none text-xs"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success text-white/95 placeholder-light-gray/40 resize-none text-xs"
                   placeholder="Type important bulletins here..."
                   value={simText}
                   onChange={e => setSimText(e.target.value)}
@@ -78,7 +78,7 @@ export default function ClientAnnouncementsPage() {
               <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
                 <label>Target Crew Urgency</label>
                 <select 
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-accent-purple text-white/95"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success text-white/95"
                   value={urgency}
                   onChange={e => setUrgency(e.target.value)}
                 >
@@ -89,7 +89,7 @@ export default function ClientAnnouncementsPage() {
 
               <Button 
                 type="submit"
-                className="w-full bg-accent-purple border-none rounded-xl text-xs font-bold py-2.5 flex items-center justify-center gap-2"
+                className="w-full bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center justify-center gap-2"
               >
                 <Send size={14} /> Dispatch Broadcast
               </Button>
@@ -100,16 +100,16 @@ export default function ClientAnnouncementsPage() {
         {/* Right Side: Active Bulletins List */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="border border-white/10 bg-white/5 p-6 rounded-3xl">
-            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><Bell className="w-4 h-4 text-accent-purple" /> Dispatched Live Bulletins ({broadcasts.length})</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><Bell className="w-4 h-4 text-success" /> Dispatched Live Bulletins ({broadcasts.length})</h3>
             
             <div className="space-y-4">
               {broadcasts.map(bc => (
                 <div key={bc.id} className="p-4 bg-white/5 border border-white/5 rounded-2xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono font-bold text-accent-purple">{bc.id}</span>
+                      <span className="text-[10px] font-mono font-bold text-success">{bc.id}</span>
                       <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
-                        bc.urgency === 'High' ? 'bg-accent-red/20 text-accent-red animate-pulse' : 'bg-white/10 text-light-gray/60'
+                        bc.urgency === 'High' ? 'bg-[#e63946]/20 text-[#e63946] animate-pulse' : 'bg-white/10 text-light-gray/60'
                       }`}>{bc.urgency} Priority</span>
                     </div>
                     <h4 className="text-sm font-bold text-white mt-1">{bc.title}</h4>

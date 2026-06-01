@@ -44,7 +44,7 @@ const PortfolioGallery = () => {
                   )}
                 </div>
               </div>
-              <h3 className="font-bold text-zinc-900 group-hover:text-brand-600 transition-colors">{item.title}</h3>
+              <h3 className="font-bold text-zinc-900 group-hover:text-[#14a800] transition-colors">{item.title}</h3>
               <p className="text-sm text-zinc-500">{item.category}</p>
             </div>
           ))}

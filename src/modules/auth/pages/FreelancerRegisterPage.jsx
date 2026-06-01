@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle2, ArrowRight, ArrowLeft, UploadCloud, User, Star } from 'lucide-react';
+import { validateMinLength, validateRequired } from '../../../common/utils/validation';
 
 const FreelancerRegisterPage = () => {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ const FreelancerRegisterPage = () => {
   const [formData, setFormData] = useState({
     title: '', bio: '', skills: [], hourlyRate: '', experienceLevel: 'Intermediate'
   });
+  const [formError, setFormError] = useState('');
 
   const steps = [
     { num: 1, title: 'Identity' },
@@ -87,10 +89,21 @@ const FreelancerRegisterPage = () => {
 
                 <div className="flex justify-between items-center">
                   <button onClick={() => navigate('/auth/register')} className="text-sm font-medium text-zinc-500 hover:text-zinc-800 dark:hover:text-white transition-colors">Cancel</button>
-                  <button onClick={() => setStep(2)} disabled={!formData.title} className="flex items-center gap-2 py-2.5 px-6 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold transition-all disabled:opacity-50">
+                  <button onClick={() => {
+                    const titleErr = validateRequired(formData.title, 'Professional title');
+                    const bioErr = validateMinLength(formData.bio, 20, 'Professional overview');
+                    const err = titleErr || bioErr;
+                    if (err) {
+                      setFormError(err);
+                      return;
+                    }
+                    setFormError('');
+                    setStep(2);
+                  }} disabled={!formData.title} className="flex items-center gap-2 py-2.5 px-6 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold transition-all disabled:opacity-50">
                     Next Step <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
+                {formError ? <p className="mt-4 text-sm font-semibold text-red-600">{formError}</p> : null}
               </motion.div>
             )}
 

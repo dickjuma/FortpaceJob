@@ -14,7 +14,7 @@ const ClientHiringDashboard = () => {
               <p className="text-zinc-600 font-medium">Welcome back, AcmeCorp. You have 3 active projects.</p>
             </div>
             <div className="flex items-center gap-3">
-              <Link to="/post-job" className="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition-colors shadow-sm">
+              <Link to="/post-job" className="px-6 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl transition-colors shadow-sm">
                 Post New Job
               </Link>
               <Link to="/search" className="px-6 py-2.5 bg-surface-dark hover:bg-zinc-800 text-white font-bold rounded-xl transition-colors shadow-sm">
@@ -25,8 +25,8 @@ const ClientHiringDashboard = () => {
 
           {/* Top Metrics Row */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm flex items-center gap-4 hover:border-brand-300 transition-colors cursor-pointer">
-              <div className="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0"><Briefcase className="w-6 h-6" /></div>
+            <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm flex items-center gap-4 hover:border-[#14a800]/50 transition-colors cursor-pointer">
+              <div className="w-12 h-12 rounded-xl bg-[#14a800]/5 text-[#14a800] flex items-center justify-center shrink-0"><Briefcase className="w-6 h-6" /></div>
               <div>
                 <div className="text-sm font-bold text-zinc-500 mb-1">Active Contracts</div>
                 <div className="text-2xl font-black text-zinc-900">12</div>
@@ -39,8 +39,8 @@ const ClientHiringDashboard = () => {
                 <div className="text-2xl font-black text-zinc-900">$14,500</div>
               </div>
             </div>
-            <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm flex items-center gap-4 hover:border-purple-300 transition-colors cursor-pointer">
-              <div className="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0"><Users className="w-6 h-6" /></div>
+            <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm flex items-center gap-4 hover:border-[#14a800]/50 transition-colors cursor-pointer">
+              <div className="w-12 h-12 rounded-xl bg-[#14a800]/5 text-[#14a800] flex items-center justify-center shrink-0"><Users className="w-6 h-6" /></div>
               <div>
                 <div className="text-sm font-bold text-zinc-500 mb-1">Shortlisted</div>
                 <div className="text-2xl font-black text-zinc-900">24</div>
@@ -64,7 +64,7 @@ const ClientHiringDashboard = () => {
               <div className="bg-white border border-zinc-200 rounded-3xl p-6 md:p-8 shadow-sm">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-bold text-zinc-900">Active Contracts</h2>
-                  <Link to="/contracts" className="text-brand-600 text-sm font-bold hover:underline">View All</Link>
+                  <Link to="/contracts" className="text-[#14a800] text-sm font-bold hover:underline">View All</Link>
                 </div>
                 
                 <div className="space-y-4">
@@ -72,7 +72,7 @@ const ClientHiringDashboard = () => {
                     { name: 'Sarah W.', role: 'Senior React Dev', project: 'Frontend Dashboard Rewrite', status: 'Milestone 2 Pending', progress: 40 },
                     { name: 'TechFlow Agency', role: 'DevOps Team', project: 'AWS Infrastructure Setup', status: 'In Progress', progress: 85 },
                   ].map((contract, i) => (
-                    <div key={i} className="border border-zinc-100 rounded-2xl p-5 hover:border-brand-200 transition-colors">
+                    <div key={i} className="border border-zinc-100 rounded-2xl p-5 hover:border-[#14a800]/20 transition-colors">
                       <div className="flex justify-between items-start mb-4">
                         <div className="flex gap-4">
                           <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(contract.name)}&background=random`} className="w-12 h-12 rounded-xl border border-zinc-200" alt="avatar" />
@@ -85,7 +85,7 @@ const ClientHiringDashboard = () => {
                       </div>
                       <div className="flex items-center gap-4">
                         <div className="flex-1 h-2 bg-zinc-100 rounded-full overflow-hidden">
-                          <div className={`h-full ${contract.progress > 80 ? 'bg-success' : 'bg-brand-500'}`} style={{ width: `${contract.progress}%` }}></div>
+                          <div className={`h-full ${contract.progress > 80 ? 'bg-success' : 'bg-[#14a800]'}`} style={{ width: `${contract.progress}%` }}></div>
                         </div>
                         <div className="text-sm font-bold text-zinc-700 w-32 text-right">{contract.status}</div>
                       </div>
@@ -128,12 +128,12 @@ const ClientHiringDashboard = () => {
               <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-lg font-bold text-zinc-900">My Job Posts</h2>
-                  <Link to="/jobs" className="text-brand-600 text-sm font-bold hover:underline">Manage</Link>
+                  <Link to="/jobs" className="text-[#14a800] text-sm font-bold hover:underline">Manage</Link>
                 </div>
                 
                 <div className="space-y-4">
                   <div className="group cursor-pointer">
-                    <div className="font-bold text-zinc-900 group-hover:text-brand-600 transition-colors">Senior Mobile App Developer</div>
+                    <div className="font-bold text-zinc-900 group-hover:text-[#14a800] transition-colors">Senior Mobile App Developer</div>
                     <div className="text-sm text-zinc-500 mb-2">Posted 2 days ago • Public</div>
                     <div className="flex items-center gap-2">
                       <span className="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded">12 Proposals</span>
@@ -142,18 +142,18 @@ const ClientHiringDashboard = () => {
                   </div>
                   <hr className="border-zinc-100" />
                   <div className="group cursor-pointer">
-                    <div className="font-bold text-zinc-900 group-hover:text-brand-600 transition-colors">UI/UX Audit</div>
+                    <div className="font-bold text-zinc-900 group-hover:text-[#14a800] transition-colors">UI/UX Audit</div>
                     <div className="text-sm text-zinc-500 mb-2">Draft • Last saved 1 hr ago</div>
-                    <button className="text-brand-600 text-xs font-bold hover:underline">Finish posting</button>
+                    <button className="text-[#14a800] text-xs font-bold hover:underline">Finish posting</button>
                   </div>
                 </div>
               </div>
 
               {/* AI Hiring Insights */}
               <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-3xl p-6 shadow-xl text-white relative overflow-hidden">
-                <div className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-brand-500 rounded-full blur-2xl opacity-40"></div>
+                <div className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-[#14a800] rounded-full blur-2xl opacity-40"></div>
                 <h3 className="font-bold text-lg mb-2 relative z-10 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span> AI Insights
+                  <span className="w-2 h-2 rounded-full bg-[#14a800] animate-pulse"></span> AI Insights
                 </h3>
                 <p className="text-sm text-zinc-300 mb-4 relative z-10 leading-relaxed">
                   Based on your saved collections, we found 3 highly-rated React developers available to start immediately within your budget.

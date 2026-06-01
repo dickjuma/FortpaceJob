@@ -1,260 +1,271 @@
 import React, { useState } from 'react';
-import { 
-  AlertCircle, Clock, CheckCircle2, MessageSquare, 
-  Search, Plus, ChevronDown, MessageCircle, FileText, X
+import { useNavigate } from 'react-router-dom';
+import {
+  Ticket, Plus, MessageSquare, X, Clock, CheckCircle,
+  AlertCircle, ChevronRight, RefreshCw, Headphones, Book,
+  ChevronDown, ChevronUp, Send
 } from 'lucide-react';
+import { useSupportTickets, useCreateTicket, useSupportTicket, useReplyTicket, useCloseTicket } from '../services/clientHooks';
 import toast, { Toaster } from 'react-hot-toast';
 
+const STATUS_STYLES = {
+  OPEN:       'bg-success/10 text-success border-success/20',
+  IN_PROGRESS:'bg-#14a800]/10 text-blue-400 border-#14a800]/20',
+  RESOLVED:   'bg-zinc-500/10 text-zinc-400 border-zinc-600/20',
+  CLOSED:     'bg-zinc-500/10 text-zinc-500 border-zinc-700/20',
+};
+
+const PRIORITY = {
+  LOW:      'text-zinc-400',
+  MEDIUM:   'text-yellow-400',
+  HIGH:     'text-orange-400',
+  CRITICAL: 'text-red-400',
+};
+
+const CATEGORIES = ['Billing Issue', 'Contract Problem', 'Freelancer Dispute', 'Payment Not Received', 'Account Issue', 'Technical Bug', 'Other'];
+const PRIORITIES = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
+const TABS = ['All', 'OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'];
+const FAQS = [
+  { q: 'How do I fund escrow?', a: 'Go to your active contract, click on a milestone, and use the "Fund Escrow" button. Funds are held securely until you approve the work.' },
+  { q: 'When does a freelancer get paid?', a: 'Freelancers are paid when you approve a submitted milestone. Funds are released from escrow immediately upon your approval.' },
+  { q: 'How do I cancel a contract?', a: 'Open the contract from your Contracts page, click "Cancel Contract", and provide a reason. Both parties will be notified.' },
+  { q: 'How long do disputes take to resolve?', a: 'Our team reviews disputes within 48 hours. Complex cases may take up to 7 business days. You can track progress in the Disputes section.' },
+];
+
 export default function ClientSupportHelpdeskPage() {
-  const [tickets, setTickets] = useState([
-    { id: 'TCK-2026-089', subject: 'Billing issue with last invoice', status: 'In Progress', priority: 'High', date: 'Oct 26, 2026' },
-    { id: 'TCK-2026-088', subject: 'How to update company tax ID?', status: 'Resolved', priority: 'Low', date: 'Oct 24, 2026' },
-    { id: 'TCK-2026-082', subject: 'Freelancer milestone dispute', status: 'Pending Info', priority: 'Medium', date: 'Oct 15, 2026' }
-  ]);
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('All');
+  const [page, setPage] = useState(1);
+  const [showForm, setShowForm] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [expandedFaq, setExpandedFaq] = useState(null);
+  const [reply, setReply] = useState('');
+  const [form, setForm] = useState({ subject: '', category: '', priority: 'MEDIUM', description: '' });
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newSubject, setNewSubject] = useState('');
-  const [priority, setPriority] = useState('Medium');
-  const [category, setCategory] = useState('Billing');
-  const [description, setDescription] = useState('');
+  const filters = { page, limit: 10, ...(activeTab !== 'All' && { status: activeTab }) };
+  const { data, isLoading, error, refetch } = useSupportTickets(filters);
+  const { data: ticketDetail } = useSupportTicket(selectedTicket?.id);
+  const createTicket = useCreateTicket();
+  const replyTicket = useReplyTicket(selectedTicket?.id);
+  const closeTicket = useCloseTicket();
 
-  const faqs = [
-    { q: 'How does the escrow system work?', a: 'When you fund a milestone, the money is held in a secure escrow account. It is only released to the freelancer when you approve their work.' },
-    { q: 'How do I dispute a milestone?', a: 'If you are unsatisfied with the work, you can click "Request Revisions" or open a dispute from the project dashboard. Our mediation team will step in if needed.' },
-    { q: 'What payment methods are supported?', a: 'We support all major credit cards, bank transfers (ACH/Wire), and local mobile money solutions depending on your region.' }
-  ];
+  const tickets = data?.items || [];
+  const total = data?.total || 0;
+  const totalPages = data?.totalPages || 1;
 
-  const handleSubmitTicket = (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
-    if (!newSubject.trim()) return;
+    if (!form.subject || !form.description) return toast.error('Subject and description are required.');
+    try {
+      await createTicket.mutateAsync({
+        subject: form.subject,
+        priority: form.priority,
+        category: form.category,
+        body: form.description
+      });
+      toast.success('Ticket created successfully!');
+      setShowForm(false);
+      setForm({ subject: '', category: '', priority: 'MEDIUM', description: '' });
+      refetch();
+    } catch (err) {
+      toast.error(err.message || 'Failed to create ticket');
+    }
+  };
 
-    toast.promise(
-      new Promise(resolve => setTimeout(resolve, 1500)),
-      {
-        loading: 'Submitting your support request...',
-        success: () => {
-          setTickets(prev => [
-            {
-              id: 'TCK-2026-' + Math.floor(100 + Math.random() * 900),
-              subject: newSubject,
-              status: 'New',
-              priority: priority,
-              date: 'Today'
-            },
-            ...prev
-          ]);
-          setIsModalOpen(false);
-          setNewSubject('');
-          setDescription('');
-          return 'Ticket submitted successfully! We will be in touch shortly.';
-        },
-        error: 'Failed to submit ticket. Please try again.'
-      }
-    );
+  const handleReply = async (e) => {
+    e.preventDefault();
+    if (!reply.trim()) return;
+    try {
+      await replyTicket.mutateAsync(reply);
+      setReply('');
+    } catch (_) {}
+  };
+
+  const handleClose = async (ticketId) => {
+    try {
+      await closeTicket.mutateAsync(ticketId);
+      setSelectedTicket(null);
+    } catch (_) {}
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans text-white bg-zinc-950 min-h-screen relative">
-      <Toaster 
-        position="top-right" 
-        toastOptions={{
-          style: { background: '#18181b', color: '#fff', border: '1px solid #27272a' }
-        }} 
-      />
+    <div className="min-h-screen bg-zinc-950 text-zinc-200 p-6 overflow-y-auto custom-scrollbar">
+      <Toaster position="top-right" />
+      <div className="max-w-5xl mx-auto space-y-6">
 
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-zinc-800 pb-6 mb-8">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight text-white">Support & Helpdesk</h1>
-          <p className="text-sm font-semibold text-zinc-400 mt-1">Get help with your account, projects, or billing inquiries.</p>
-        </div>
-        
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="bg-vivid-lavender hover:bg-dark-purple text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-lg shadow-vivid-lavender/20 flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" /> Open New Ticket
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left Side: Ticket Queue */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
-            <div className="p-6 border-b border-zinc-800 flex items-center justify-between">
-              <h3 className="font-black text-lg text-white flex items-center gap-2">
-                <FileText className="w-5 h-5 text-vivid-lavender" /> Your Support Tickets
-              </h3>
-              
-              <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
-                <input 
-                  type="text" 
-                  placeholder="Search tickets..." 
-                  className="bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-vivid-lavender transition-all w-48 focus:w-64"
-                />
-              </div>
-            </div>
-
-            <div className="divide-y divide-zinc-800">
-              {tickets.map(t => (
-                <div key={t.id} className="p-6 hover:bg-zinc-800/30 transition-colors cursor-pointer group">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm font-black text-white group-hover:text-vivid-lavender transition-colors">{t.subject}</span>
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border ${
-                          t.priority === 'High' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 
-                          t.priority === 'Medium' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
-                          'bg-zinc-800 text-zinc-400 border-zinc-700'
-                        }`}>{t.priority}</span>
-                      </div>
-                      <div className="flex items-center gap-3 text-xs text-zinc-500 font-bold">
-                        <span className="text-vivid-lavender">#{t.id}</span>
-                        <span>•</span>
-                        <span>{t.date}</span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4 shrink-0">
-                      <span className={`text-xs font-bold px-3 py-1.5 rounded-lg border ${
-                        t.status === 'Resolved' ? 'bg-zinc-950 border-zinc-800 text-zinc-500' :
-                        t.status === 'In Progress' ? 'bg-vivid-lavender/10 border-vivid-lavender/30 text-vivid-lavender' :
-                        'bg-orange-500/10 border-orange-500/30 text-orange-400'
-                      }`}>
-                        {t.status}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2"><Headphones className="w-6 h-6 text-success" />Help & Support</h1>
+            <p className="text-sm text-zinc-400 mt-1">We typically respond within 24 hours</p>
           </div>
+          <button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#14a800]/20">
+            <Plus className="w-4 h-4" /> New Ticket
+          </button>
         </div>
 
-        {/* Right Side: FAQs & Knowledge Base */}
-        <div className="lg:col-span-1 space-y-6">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-            <h3 className="font-black text-sm uppercase tracking-wider text-zinc-400 mb-5 flex items-center gap-2">
-              <Search className="w-4 h-4" /> Knowledge Base
-            </h3>
-            
-            <div className="space-y-4">
-              {faqs.map((faq, idx) => (
-                <div key={idx} className="group">
-                  <h4 className="text-sm font-bold text-white mb-2 group-hover:text-vivid-lavender transition-colors cursor-pointer flex justify-between items-start">
-                    {faq.q}
-                    <ChevronDown className="w-4 h-4 text-zinc-500 shrink-0 mt-0.5" />
-                  </h4>
-                  <p className="text-xs text-zinc-400 leading-relaxed hidden group-hover:block pb-2">
-                    {faq.a}
-                  </p>
-                  <div className="w-full h-px bg-zinc-800 mt-2"></div>
+        {/* Create Ticket Form */}
+        {showForm && (
+          <div className="bg-zinc-900/60 border border-success/20 rounded-2xl p-6 space-y-4">
+            <h2 className="font-bold text-white flex items-center gap-2"><Ticket className="w-4 h-4 text-success" />Submit a Support Ticket</h2>
+            <form onSubmit={handleCreate} className="space-y-4">
+              <div>
+                <label className="text-xs text-zinc-400 mb-1.5 block">Subject *</label>
+                <input value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} placeholder="Brief summary of your issue" required className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-success" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs text-zinc-400 mb-1.5 block">Category *</label>
+                  <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-success">
+                    <option value="">Select category...</option>
+                    {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+                  </select>
                 </div>
-              ))}
-            </div>
-
-            <button className="w-full mt-6 bg-zinc-950 border border-zinc-800 hover:border-vivid-lavender text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-colors">
-              Browse All Articles
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-      {/* Floating Live Chat Button */}
-      <button className="fixed bottom-8 right-8 w-14 h-14 bg-vivid-lavender hover:bg-dark-purple text-white rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-110 z-40 group">
-        <MessageCircle className="w-6 h-6" />
-        <span className="absolute right-16 bg-zinc-900 text-white text-xs font-bold py-1.5 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-zinc-800">
-          Live Chat Support
-        </span>
-      </button>
-
-      {/* Create Ticket Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/80 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden">
-            <div className="p-6 border-b border-zinc-800 flex items-center justify-between bg-zinc-950/50">
-              <h2 className="text-xl font-black text-white">Create Support Ticket</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-zinc-500 hover:text-white transition-colors p-2 bg-zinc-900 rounded-lg">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <form onSubmit={handleSubmitTicket} className="p-6 space-y-5">
-              
-              <div>
-                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Issue Category</label>
-                <select 
-                  value={category}
-                  onChange={e => setCategory(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-vivid-lavender transition-colors appearance-none"
-                >
-                  <option>Billing & Payments</option>
-                  <option>Project Dispute</option>
-                  <option>Technical Issue</option>
-                  <option>Account Management</option>
-                </select>
+                <div>
+                  <label className="text-xs text-zinc-400 mb-1.5 block">Priority</label>
+                  <select value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value })} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-success">
+                    {PRIORITIES.map(p => <option key={p} value={p}>{p}</option>)}
+                  </select>
+                </div>
               </div>
-
               <div>
-                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Subject</label>
-                <input 
-                  type="text" 
-                  value={newSubject}
-                  onChange={e => setNewSubject(e.target.value)}
-                  placeholder="Brief description of the issue"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-vivid-lavender transition-colors"
-                  required
-                />
+                <label className="text-xs text-zinc-400 mb-1.5 block">Description *</label>
+                <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Please describe your issue in detail..." rows={4} required className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-success resize-none" />
               </div>
-
-              <div>
-                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Priority Level</label>
-                <select 
-                  value={priority}
-                  onChange={e => setPriority(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-vivid-lavender transition-colors appearance-none"
-                >
-                  <option value="Low">Low - General inquiry</option>
-                  <option value="Medium">Medium - Non-critical issue</option>
-                  <option value="High">High - Blocking my work</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Description</label>
-                <textarea 
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
-                  rows="4" 
-                  placeholder="Provide as much detail as possible..."
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-vivid-lavender transition-colors resize-none"
-                  required
-                ></textarea>
-              </div>
-
-              <div className="pt-4 border-t border-zinc-800 flex justify-end gap-3">
-                <button 
-                  type="button" 
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2.5 rounded-xl font-bold text-sm text-white hover:bg-zinc-800 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  className="bg-vivid-lavender hover:bg-dark-purple text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-lg shadow-vivid-lavender/20"
-                >
-                  Submit Ticket
+              <div className="flex gap-3 justify-end">
+                <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-xl text-sm font-bold hover:bg-zinc-700 transition-colors">Cancel</button>
+                <button type="submit" disabled={createTicket.isPending} className="px-5 py-2 bg-success text-white rounded-xl text-sm font-bold hover:bg-success transition-colors disabled:opacity-50">
+                  {createTicket.isPending ? 'Submitting...' : 'Submit Ticket'}
                 </button>
               </div>
             </form>
           </div>
+        )}
+
+        {/* FAQs */}
+        <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden">
+          <div className="p-5 border-b border-zinc-800 bg-zinc-900/80">
+            <h2 className="font-bold text-white flex items-center gap-2"><Book className="w-4 h-4 text-success" />Frequently Asked Questions</h2>
+          </div>
+          <div className="divide-y divide-zinc-800/50">
+            {FAQS.map((faq, i) => (
+              <div key={i}>
+                <button onClick={() => setExpandedFaq(expandedFaq === i ? null : i)} className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left hover:bg-zinc-800/30 transition-colors">
+                  <span className="text-sm font-bold text-white">{faq.q}</span>
+                  {expandedFaq === i ? <ChevronUp className="w-4 h-4 text-zinc-400 shrink-0" /> : <ChevronDown className="w-4 h-4 text-zinc-400 shrink-0" />}
+                </button>
+                {expandedFaq === i && (
+                  <div className="px-5 pb-4 text-sm text-zinc-400 leading-relaxed">{faq.a}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* My Tickets */}
+        <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden">
+          <div className="p-5 border-b border-zinc-800 flex items-center justify-between bg-zinc-900/80">
+            <h2 className="font-bold text-white">My Tickets ({total})</h2>
+            <div className="flex gap-2 items-center">
+              {TABS.map(t => (
+                <button key={t} onClick={() => { setActiveTab(t); setPage(1); }}
+                  className={`px-3 py-1 rounded-full text-xs font-bold border transition-colors ${activeTab === t ? 'bg-success text-white border-success' : 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:border-zinc-500'}`}>{t}</button>
+              ))}
+              <button onClick={refetch} className="p-1.5 text-zinc-400 hover:text-white transition-colors"><RefreshCw className="w-3.5 h-3.5" /></button>
+            </div>
+          </div>
+
+          {isLoading ? (
+            <div className="p-4 space-y-2">{[1,2,3].map(i => <div key={i} className="h-16 bg-zinc-900/40 rounded-xl animate-pulse" />)}</div>
+          ) : tickets.length === 0 ? (
+            <div className="p-8 text-center">
+              <Ticket className="w-10 h-10 text-zinc-600 mx-auto mb-2" />
+              <p className="text-zinc-400 text-sm">No tickets found.</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-zinc-800/50">
+              {tickets.map(ticket => (
+                <div key={ticket.id} className="flex items-center gap-4 px-5 py-4 hover:bg-zinc-800/30 transition-colors">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-0.5">
+                      <p className="text-sm font-bold text-white truncate">{ticket.subject}</p>
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border ${STATUS_STYLES[ticket.status] || STATUS_STYLES.OPEN}`}>
+                        {ticket.status?.replace('_', ' ')}
+                      </span>
+                      {ticket.priority && (
+                        <span className={`text-[10px] font-bold ${PRIORITY[ticket.priority] || 'text-zinc-400'}`}>• {ticket.priority}</span>
+                      )}
+                    </div>
+                    <p className="text-xs text-zinc-500">{ticket.category} • #{ticket.id} • {new Date(ticket.createdAt).toLocaleDateString()}</p>
+                  </div>
+                  <button onClick={() => setSelectedTicket(ticket)} className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 rounded-xl text-xs font-bold transition-colors shrink-0">
+                    View <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {totalPages > 1 && (
+            <div className="p-4 border-t border-zinc-800 flex items-center justify-center gap-2">
+              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-xs text-zinc-300 disabled:opacity-40 hover:bg-zinc-700">Previous</button>
+              <span className="text-xs text-zinc-400">Page {page} of {totalPages}</span>
+              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-xs text-zinc-300 disabled:opacity-40 hover:bg-zinc-700">Next</button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Ticket Detail Slide-over */}
+      {selectedTicket && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex justify-end">
+          <div className="w-full max-w-lg bg-zinc-950 border-l border-zinc-800 h-full flex flex-col shadow-2xl">
+            <div className="p-5 border-b border-zinc-800 flex items-center justify-between bg-zinc-900/80">
+              <div>
+                <h3 className="font-bold text-white">{ticketDetail?.subject || selectedTicket.subject}</h3>
+                <p className="text-xs text-zinc-500 mt-0.5">Ticket #{selectedTicket.id}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                {['OPEN', 'IN_PROGRESS'].includes(selectedTicket.status) && (
+                  <button onClick={() => handleClose(selectedTicket.id)} disabled={closeTicket.isPending} className="px-3 py-1.5 bg-red-500/10 text-red-400 border border-red-500/20 rounded-xl text-xs font-bold hover:bg-red-500/20 transition-colors disabled:opacity-50">
+                    Close Ticket
+                  </button>
+                )}
+                <button onClick={() => setSelectedTicket(null)} className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"><X className="w-4 h-4" /></button>
+              </div>
+            </div>
+
+            {/* Messages Thread */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar">
+              {/* Original ticket */}
+              <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-4">
+                <p className="text-xs text-zinc-500 mb-2">You • {new Date(selectedTicket.createdAt).toLocaleDateString()}</p>
+                <p className="text-sm text-zinc-200">{ticketDetail?.description || selectedTicket.description}</p>
+              </div>
+
+              {/* Support messages */}
+              {(ticketDetail?.messages || []).map((msg, i) => (
+                <div key={i} className={`rounded-2xl p-4 ${msg.senderType === 'SUPPORT' ? 'bg-success/5 border border-success/20' : 'bg-zinc-900/60 border border-zinc-800'}`}>
+                  <p className="text-xs text-zinc-500 mb-2">{msg.senderType === 'SUPPORT' ? '🎧 Support Team' : 'You'} • {new Date(msg.createdAt).toLocaleDateString()}</p>
+                  <p className="text-sm text-zinc-200">{msg.body || msg.content}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Reply Box */}
+            {['OPEN', 'IN_PROGRESS'].includes(selectedTicket.status) && (
+              <form onSubmit={handleReply} className="p-4 border-t border-zinc-800 space-y-3">
+                <textarea value={reply} onChange={(e) => setReply(e.target.value)} placeholder="Add a reply to your ticket..." rows={3} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-success resize-none" />
+                <div className="flex justify-end">
+                  <button type="submit" disabled={replyTicket.isPending || !reply.trim()} className="flex items-center gap-1.5 px-4 py-2 bg-success text-white rounded-xl text-sm font-bold hover:bg-success transition-colors disabled:opacity-50">
+                    <Send className="w-3.5 h-3.5" /> {replyTicket.isPending ? 'Sending...' : 'Send Reply'}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
         </div>
       )}
-
     </div>
   );
 }

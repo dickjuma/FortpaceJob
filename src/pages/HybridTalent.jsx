@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Globe, Layers, MapPin, Search, Sparkles } from 'lucide-react';
+import { Globe, Layers, MapPin, Search, Sparkles, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import FreelancerCard from '../components/marketplace/FreelancerCard';
 import OnsiteWorkerCard from '../components/marketplace/OnsiteWorkerCard';
-import { getMarketplaceTalent } from './find-talent/talentMarketplaceData';
+import { useMarketplaceTalent } from '../common/services/talentHooks';
 
 const HybridTalent = () => {
   const navigate = useNavigate();
@@ -11,12 +11,14 @@ const HybridTalent = () => {
   const [query, setQuery] = useState('');
   const [location, setLocation] = useState('');
 
-  const talent = getMarketplaceTalent({
+  const { data: talent = [], isLoading } = useMarketplaceTalent({
     query,
     mode: activeTab === 'all' ? 'all' : activeTab,
     location,
     sortBy: 'recommended',
-  }).filter((entry) => entry.modes.includes('hybrid') || activeTab !== 'hybrid');
+  });
+
+  const filtered = talent.filter((entry) => entry.modes.includes('hybrid') || activeTab !== 'hybrid');
 
   const renderCard = (entry) =>
     entry.modes.includes('onsite') ? <OnsiteWorkerCard key={entry.id} worker={entry} /> : <FreelancerCard freelancer={entry} key={entry.id} />;
@@ -39,7 +41,7 @@ const HybridTalent = () => {
       <div className="bg-surface-dark pt-8 pb-12 border-b border-zinc-800">
         <div className="container mx-auto px-4 md:px-8">
           <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-purple-500/20 text-brand-400 text-sm font-medium mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#14a800]/10 border border-[#14a800]/50/20 text-[#14a800] text-sm font-medium mb-4">
               <Sparkles className="w-4 h-4 fill-current" />
               <span>Hybrid Talent Engine</span>
             </div>
@@ -67,7 +69,7 @@ const HybridTalent = () => {
                   value={location}
                 />
               </div>
-              <button className="bg-brand-600 hover:bg-brand-700 text-white px-8 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap shadow-sm shadow-purple-600/20" type="submit">
+              <button className="bg-[#14a800] hover:bg-[#118a00] text-white px-8 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap shadow-sm shadow-#14a800]/20" type="submit">
                 Match Talent
               </button>
             </form>
@@ -86,7 +88,7 @@ const HybridTalent = () => {
               <Layers className="w-4 h-4" /> All Talent
             </button>
             <button
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm transition-all ${activeTab === 'online' ? 'bg-white text-brand-600 shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm transition-all ${activeTab === 'online' ? 'bg-white text-[#14a800] shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
               onClick={() => setActiveTab('online')}
               type="button"
             >
@@ -100,7 +102,7 @@ const HybridTalent = () => {
               <MapPin className="w-4 h-4" /> Onsite Only
             </button>
             <button
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm transition-all ${activeTab === 'hybrid' ? 'bg-white text-brand-600 shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm transition-all ${activeTab === 'hybrid' ? 'bg-white text-[#14a800] shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
               onClick={() => setActiveTab('hybrid')}
               type="button"
             >
@@ -115,14 +117,17 @@ const HybridTalent = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-          {talent.map((entry) => renderCard(entry))}
+          {isLoading
+            ? Array.from({ length: 8 }).map((_, index) => (
+                <div key={`skeleton-${index}`} className="bg-white border border-zinc-200 rounded-2xl p-6 animate-pulse h-72" />
+              ))
+            : filtered.length === 0 ? (
+                <div className="col-span-full bg-white border border-dashed border-zinc-300 rounded-2xl p-10 text-center text-zinc-600">
+                  No hybrid professionals match your search yet. Try broadening the role query or switching tabs.
+                </div>
+              )
+            : filtered.map((entry) => renderCard(entry))}
         </div>
-
-        {talent.length === 0 ? (
-          <div className="bg-white border border-dashed border-zinc-300 rounded-2xl p-10 text-center text-zinc-600">
-            No hybrid matches yet. Try broadening the role query or switching to all talent.
-          </div>
-        ) : null}
       </div>
     </>
   );

@@ -19,7 +19,7 @@ export default function ClientErpSystemsPage() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-zinc-800 pb-6 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-              <Database className="w-8 h-8 text-blue-500" />
+              <Database className="w-8 h-8 text-[#14a800]" />
               ERP & Business Systems Hub
             </h1>
             <p className="text-zinc-400 mt-2 text-sm">
@@ -31,7 +31,7 @@ export default function ClientErpSystemsPage() {
               <RefreshCcw className="w-4 h-4" />
               Sync SAP/Oracle
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-colors">
+            <button className="flex items-center gap-2 px-4 py-2 bg-[#14a800] hover:bg-#14a800] text-white rounded-lg text-sm font-medium transition-colors">
               <BarChart4 className="w-4 h-4" />
               Generate ERP Report
             </button>
@@ -42,9 +42,9 @@ export default function ClientErpSystemsPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
             { label: 'Total Capital Allocated', val: '$2.4M', icon: TrendingUp, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-            { label: 'Field Assets Deployed', val: '1,204', icon: Box, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+            { label: 'Field Assets Deployed', val: '1,204', icon: Box, color: 'text-blue-400', bg: 'bg-#14a800]/10' },
             { label: 'Supply Chain Syncs', val: 'Daily', icon: Truck, color: 'text-orange-400', bg: 'bg-orange-500/10' },
-            { label: 'AI Prediction Confidence', val: '94.2%', icon: Cpu, color: 'text-purple-400', bg: 'bg-purple-500/10' },
+            { label: 'AI Prediction Confidence', val: '94.2%', icon: Cpu, color: 'text-#14a800]', bg: 'bg-[#14a800]/10' },
           ].map((item, i) => (
             <div key={i} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 backdrop-blur-sm flex flex-col justify-between">
               <div className="flex items-center justify-between mb-2">
@@ -62,7 +62,7 @@ export default function ClientErpSystemsPage() {
         <div className="bg-zinc-900/40 border border-zinc-800 rounded-xl backdrop-blur-md p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <Layers className="w-6 h-6 text-indigo-400" />
+              <Layers className="w-6 h-6 text-[#14a800]" />
               Field Asset & Equipment Ledger
             </h2>
             <span className="text-sm text-zinc-400">Last synced: 2 mins ago</span>
@@ -108,7 +108,7 @@ export default function ClientErpSystemsPage() {
                 <p className="text-xs text-zinc-400 mb-3">
                   AI detects when consumable field assets drop below threshold and triggers automated procurement requests.
                 </p>
-                <button className="w-full py-2 bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/30 rounded text-sm font-medium transition-colors">
+                <button className="w-full py-2 bg-[#14a800]/20 text-[#14a800] hover:bg-[#14a800]/30 rounded text-sm font-medium transition-colors">
                   View Active Requisitions
                 </button>
               </div>
@@ -119,7 +119,7 @@ export default function ClientErpSystemsPage() {
                   Link asset lifespan to specific ongoing gig contracts for granular project margin calculations.
                 </p>
                 <div className="h-2 w-full bg-zinc-800 rounded-full mt-2">
-                  <div className="h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full w-[65%]"></div>
+                  <div className="h-2 bg-gradient-to-r from-#14a800] to-[#118a00] rounded-full w-[65%]"></div>
                 </div>
               </div>
             </div>

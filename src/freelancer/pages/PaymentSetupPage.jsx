@@ -6,6 +6,7 @@ import { cn } from '../../admin/utils/cn';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import toast, { Toaster } from 'react-hot-toast';
+import { walletAPI } from '../../common/services/api';
 
 export default function PaymentSetupPage() {
   const [mpesaStatus, setMpesaStatus] = useState('Not setup'); // 'Not setup' | 'Pending verification' | 'Active'
@@ -32,7 +33,7 @@ export default function PaymentSetupPage() {
     toast.success('Safaricom OTP verification token dispatched successfully! 📲');
   };
 
-  const handleVerifyOTP = (e) => {
+  const handleVerifyOTP = async (e) => {
     e.preventDefault();
     if (otp !== '4832') {
       toast.error('Incorrect OTP code. Use "4832" for verified simulation.');
@@ -44,6 +45,11 @@ export default function PaymentSetupPage() {
     }
 
     setMpesaStatus('Active');
+    try {
+      await walletAPI.updateWithdrawalMethod('mpesa', { mpesaPhone: phone, fullName, nationalId });
+    } catch (err) {
+      console.warn('[PaymentSetup] wallet method', err);
+    }
     toast.success('M-Pesa Connected & Verified successfully! 💳');
   };
 
@@ -64,7 +70,7 @@ export default function PaymentSetupPage() {
 
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-border pb-6 mb-8">
-        <div className="p-2.5 bg-accent-purple/20 text-accent-purple rounded-xl shadow-sm border border-accent-purple/20">
+        <div className="p-2.5 bg-success/20 text-success rounded-xl shadow-sm border border-success/20">
           <CreditCard className="w-6 h-6" />
         </div>
         <div>
@@ -81,7 +87,7 @@ export default function PaymentSetupPage() {
         <div className="lg:col-span-2 space-y-6">
           <Card className="p-6 border border-border bg-white shadow-sm space-y-6">
             <h3 className="font-black text-text-primary text-sm uppercase tracking-wider flex items-center gap-1.5 border-b border-border pb-3">
-              <Phone className="w-5 h-5 text-accent-purple animate-pulse" /> Connect Safaricom M-Pesa
+              <Phone className="w-5 h-5 text-success animate-pulse" /> Connect Safaricom M-Pesa
             </h3>
 
             {mpesaStatus === 'Active' ? (
@@ -98,7 +104,7 @@ export default function PaymentSetupPage() {
                 </div>
 
                 <div className="pt-2 border-t border-border flex gap-3">
-                  <Button variant="outline" size="sm" onClick={handleDisconnect} className="text-accent-red hover:text-accent-red/90 rounded-xl font-bold">
+                  <Button variant="outline" size="sm" onClick={handleDisconnect} className="text-[#e63946] hover:text-[#e63946]/90 rounded-xl font-bold">
                     Disconnect Account
                   </Button>
                 </div>
@@ -113,7 +119,7 @@ export default function PaymentSetupPage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     disabled={otpSent}
-                    className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-all"
+                    className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-all"
                   />
                 </div>
 
@@ -125,7 +131,7 @@ export default function PaymentSetupPage() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     disabled={otpSent}
-                    className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-all"
+                    className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-all"
                   />
                 </div>
 
@@ -137,7 +143,7 @@ export default function PaymentSetupPage() {
                     value={nationalId}
                     onChange={(e) => setNationalId(e.target.value)}
                     disabled={otpSent}
-                    className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-all"
+                    className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-all"
                   />
                 </div>
 
@@ -150,7 +156,7 @@ export default function PaymentSetupPage() {
                         placeholder="OTP Verification Token" 
                         value={otp}
                         onChange={(e) => setOtp(e.target.value)}
-                        className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-all animate-pulse"
+                        className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-all animate-pulse"
                       />
                     </div>
 
@@ -162,16 +168,16 @@ export default function PaymentSetupPage() {
                         placeholder="Security PIN" 
                         value={pin}
                         onChange={(e) => setPin(e.target.value)}
-                        className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-all"
+                        className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-all"
                       />
                     </div>
 
-                    <Button type="submit" variant="primary" className="w-full py-3 bg-accent-purple hover:bg-accent-purple/95 font-bold rounded-xl text-xs">
+                    <Button type="submit" variant="primary" className="w-full py-3 bg-success hover:bg-success/95 font-bold rounded-xl text-xs">
                       Verify & Activate connected M-Pesa
                     </Button>
                   </div>
                 ) : (
-                  <Button type="submit" variant="primary" className="w-full py-3 bg-accent-purple hover:bg-accent-purple/95 font-bold rounded-xl text-xs">
+                  <Button type="submit" variant="primary" className="w-full py-3 bg-success hover:bg-success/95 font-bold rounded-xl text-xs">
                     Dispatch Verification OTP Handshake
                   </Button>
                 )}
@@ -184,7 +190,7 @@ export default function PaymentSetupPage() {
         <div className="lg:col-span-1 space-y-6">
           <Card className="p-6 border border-border bg-light-gray rounded-3xl space-y-4">
             <h4 className="font-black text-text-primary text-xs uppercase tracking-wider flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-accent-purple" /> Payout Settings
+              <ShieldCheck className="w-4 h-4 text-success" /> Payout Settings
             </h4>
             <p className="text-[10px] font-semibold text-text-secondary leading-relaxed">
               Configure preferred frequency timings to route cleared ledger balances directly to M-Pesa.
@@ -198,7 +204,7 @@ export default function PaymentSetupPage() {
                     name="schedule" 
                     checked={payoutSchedule === sch}
                     onChange={() => setPayoutSchedule(sch)}
-                    className="w-3.5 h-3.5 text-accent-purple" 
+                    className="w-3.5 h-3.5 text-success" 
                   />
                   <span>{sch}</span>
                 </label>

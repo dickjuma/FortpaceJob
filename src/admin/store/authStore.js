@@ -55,6 +55,12 @@ export const useAuthStore = create()(
             }
 
             persistAdminToken(data.accessToken);
+            if (data.accessToken) {
+              localStorage.setItem('accessToken', data.accessToken);
+            }
+            if (data.refreshToken) {
+              localStorage.setItem('refreshToken', data.refreshToken);
+            }
             set({ 
               user: data.user, 
               token: data.accessToken,
@@ -108,16 +114,25 @@ export const useAuthStore = create()(
       
       checkAuth: async () => {
         try {
-          const data = await authAPI.getMe();
-          if (!isAdminUser(data.user)) {
+          const existingToken =
+            localStorage.getItem('admin-token') ||
+            localStorage.getItem('accessToken');
+          if (existingToken) {
+            persistAdminToken(existingToken);
+          }
+
+          const me = await authAPI.getMe();
+          const user = me?.user || me;
+          if (!isAdminUser(user)) {
             persistAdminToken(null);
             set({ user: null, token: null, isAuthenticated: false });
             return false;
           }
 
-          set({ 
-            user: data.user, 
-            isAuthenticated: true 
+          set({
+            user,
+            token: existingToken || localStorage.getItem('accessToken'),
+            isAuthenticated: true,
           });
           return true;
         } catch (e) {

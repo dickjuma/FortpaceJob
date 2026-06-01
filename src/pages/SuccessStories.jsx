@@ -56,7 +56,7 @@ const SuccessStories = () => {
                     <CheckCircle2 className="w-4 h-4" /> {story.metric}
                   </div>
                   
-                  <h2 className="text-3xl font-black text-zinc-900 mb-6 leading-tight hover:text-brand-600 transition-colors cursor-pointer">
+                  <h2 className="text-3xl font-black text-zinc-900 mb-6 leading-tight hover:text-[#14a800] transition-colors cursor-pointer">
                     {story.title}
                   </h2>
                   
@@ -69,7 +69,7 @@ const SuccessStories = () => {
 
                   <div className="flex items-center justify-between">
                     <div className="font-bold text-zinc-900">{story.client}</div>
-                    <Link to={`/case-study/${story.id}`} className="flex items-center gap-1 text-brand-600 font-bold hover:text-brand-700 transition-colors">
+                    <Link to={`/case-study/${story.id}`} className="flex items-center gap-1 text-[#14a800] font-bold hover:text-[#14a800] transition-colors">
                       Read full story <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
@@ -80,13 +80,13 @@ const SuccessStories = () => {
           </div>
 
           {/* CTA */}
-          <div className="bg-brand-600 rounded-3xl p-12 text-center text-white shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-brand-500 rounded-full blur-3xl opacity-50"></div>
+          <div className="bg-[#14a800] rounded-3xl p-12 text-center text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-[#14a800] rounded-full blur-3xl opacity-50"></div>
             <h2 className="text-3xl md:text-4xl font-black mb-6 relative z-10">Ready to write your success story?</h2>
-            <p className="text-brand-100 text-lg mb-8 max-w-2xl mx-auto relative z-10">
+            <p className="text-[#14a800] text-lg mb-8 max-w-2xl mx-auto relative z-10">
               Join thousands of forward-thinking companies building their dream teams on Fortspace.
             </p>
-            <button className="px-8 py-4 bg-white text-brand-600 font-bold rounded-xl shadow-lg hover:bg-surface transition-colors relative z-10">
+            <button className="px-8 py-4 bg-white text-[#14a800] font-bold rounded-xl shadow-lg hover:bg-surface transition-colors relative z-10">
               Start Hiring Today
             </button>
           </div>

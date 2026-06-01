@@ -58,9 +58,9 @@ export default function ClientOfflineMapPage() {
               max="25" 
               value={radius} 
               onChange={e => setRadius(parseInt(e.target.value))}
-              className="w-24 accent-accent-purple" 
+              className="w-24 accent-success" 
             />
-            <span className="text-xs font-mono font-bold text-accent-purple">{radius} KM</span>
+            <span className="text-xs font-mono font-bold text-success">{radius} KM</span>
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@ export default function ClientOfflineMapPage() {
               <input 
                 type="text" 
                 placeholder="Search skills, role, or name..."
-                className="w-full bg-zinc-900 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-light-gray/40 outline-none focus:border-accent-purple"
+                className="w-full bg-zinc-900 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-light-gray/40 outline-none focus:border-success"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
               />
@@ -90,7 +90,7 @@ export default function ClientOfflineMapPage() {
                   onClick={() => setSelectedWorker(w)}
                   className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                     selectedWorker?.id === w.id 
-                      ? 'border-accent-purple bg-accent-purple/10' 
+                      ? 'border-success bg-success/10' 
                       : 'border-white/5 bg-white/5 hover:border-white/10'
                   }`}
                 >
@@ -99,7 +99,7 @@ export default function ClientOfflineMapPage() {
                       <h4 className="text-sm font-bold text-white">{w.name}</h4>
                       <p className="text-[10px] text-light-gray/60 font-semibold mt-0.5">{w.role}</p>
                     </div>
-                    <span className="text-xs font-mono font-bold text-accent-purple">{w.distance} KM</span>
+                    <span className="text-xs font-mono font-bold text-success">{w.distance} KM</span>
                   </div>
 
                   <div className="flex justify-between items-center mt-4 pt-2 border-t border-white/5 text-[10px] font-bold text-light-gray/50">
@@ -124,7 +124,7 @@ export default function ClientOfflineMapPage() {
             
             {/* Compass and Coordinates Grid overlay UI */}
             <div className="absolute top-4 left-4 z-20 bg-zinc-900/80 border border-white/10 rounded-xl p-3 flex items-center gap-2 text-[10px] font-mono text-light-gray/60">
-              <Compass className="w-4 h-4 text-accent-purple animate-pulse" />
+              <Compass className="w-4 h-4 text-success animate-pulse" />
               <span>Nairobi Site Command Index • GPS ACTIVE</span>
             </div>
 
@@ -149,8 +149,8 @@ export default function ClientOfflineMapPage() {
                 <div className="relative group">
                   <MapPin className={`w-8 h-8 ${
                     selectedWorker?.id === w.id 
-                      ? 'text-accent-red filter drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]' 
-                      : 'text-accent-purple'
+                      ? 'text-[#e63946] filter drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]' 
+                      : 'text-success'
                   }`} />
                   <div className="absolute -top-1.5 -right-1 w-3 h-3 bg-success rounded-full border border-zinc-950"></div>
                 </div>
@@ -165,7 +165,7 @@ export default function ClientOfflineMapPage() {
                     <h3 className="text-sm font-black text-white">{selectedWorker.name}</h3>
                     <p className="text-[10px] text-light-gray/60 font-semibold">{selectedWorker.role}</p>
                   </div>
-                  <span className="text-[10px] font-mono font-bold text-accent-purple bg-accent-purple/10 px-2 py-0.5 rounded">
+                  <span className="text-[10px] font-mono font-bold text-success bg-success/10 px-2 py-0.5 rounded">
                     {selectedWorker.distance} km away
                   </span>
                 </div>
@@ -173,13 +173,13 @@ export default function ClientOfflineMapPage() {
                 <div className="space-y-2 text-xs font-bold text-light-gray/60 mb-4">
                   <div className="flex justify-between"><span>Base Rate:</span> <span className="text-white">{selectedWorker.rate}</span></div>
                   <div className="flex justify-between"><span>Transport Allowance:</span> <span className="text-white">KES {selectedWorker.transportCost}</span></div>
-                  <div className="flex justify-between"><span>Contact Direct:</span> <span className="text-accent-purple flex items-center gap-1"><PhoneCall size={10} /> {selectedWorker.phone}</span></div>
+                  <div className="flex justify-between"><span>Contact Direct:</span> <span className="text-success flex items-center gap-1"><PhoneCall size={10} /> {selectedWorker.phone}</span></div>
                 </div>
 
                 <div className="flex gap-2">
                   <Button 
                     onClick={() => handleAssign(selectedWorker)}
-                    className="flex-1 bg-accent-purple border-none rounded-xl text-[10px] font-black py-2 shadow-lg"
+                    className="flex-1 bg-success border-none rounded-xl text-[10px] font-black py-2 shadow-lg"
                   >
                     Deploy to Coordinates
                   </Button>

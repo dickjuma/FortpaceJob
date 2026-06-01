@@ -34,8 +34,8 @@ const SuperAdminDashboard: React.FC = () => {
       />
 
       {/* Real-time Counters Strip */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-surface-dark dark:bg-brand-950 p-8 rounded-[32px] text-white shadow-2xl shadow-brand-500/10 overflow-hidden relative group">
-         <div className="absolute inset-0 bg-gradient-to-br from-brand-600/20 via-transparent to-emerald-500/10 opacity-50"></div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-surface-dark dark:bg-[#14a800] p-8 rounded-[32px] text-white shadow-2xl shadow-[#14a800]/25/10 overflow-hidden relative group">
+         <div className="absolute inset-0 bg-gradient-to-br from-[#14a800]/20 via-transparent to-emerald-500/10 opacity-50"></div>
          
          <div className="relative z-10 flex items-center gap-4">
             <div className="h-12 w-12 bg-success/20 rounded-2xl flex items-center justify-center text-success">
@@ -48,7 +48,7 @@ const SuperAdminDashboard: React.FC = () => {
          </div>
 
          <div className="relative z-10 flex items-center gap-4 border-l border-white/10 pl-6">
-            <div className="h-12 w-12 bg-brand-500/20 rounded-2xl flex items-center justify-center text-brand-400">
+            <div className="h-12 w-12 bg-[#14a800]/20 rounded-2xl flex items-center justify-center text-[#14a800]">
                <UsersIcon size={24} />
             </div>
             <div>
@@ -58,7 +58,7 @@ const SuperAdminDashboard: React.FC = () => {
          </div>
 
          <div className="relative z-10 flex items-center gap-4 border-l border-white/10 pl-6">
-            <div className="h-12 w-12 bg-violet-500/20 rounded-2xl flex items-center justify-center text-violet-400">
+            <div className="h-12 w-12 bg-[#14a800]/20 rounded-2xl flex items-center justify-center text-emerald-300">
                <Zap size={24} className="animate-bounce" />
             </div>
             <div>

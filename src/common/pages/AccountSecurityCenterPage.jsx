@@ -32,7 +32,7 @@ export default function AccountSecurityCenterPage() {
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans bg-surface dark:bg-gray-900 min-h-screen">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <ShieldAlert className="h-8 w-8 text-brand-600" />
+          <ShieldAlert className="h-8 w-8 text-[#14a800]" />
           Account Security
         </h1>
         <p className="text-gray-500 dark:text-gray-400 mt-2 text-lg">Manage your security preferences and review active sessions.</p>
@@ -58,7 +58,7 @@ export default function AccountSecurityCenterPage() {
                     <input 
                       type={showPassword ? "text" : "password"} 
                       {...register("currentPassword", { required: true })}
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2 pr-10 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none" 
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2 pr-10 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#14a800] outline-none" 
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600">
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -70,7 +70,7 @@ export default function AccountSecurityCenterPage() {
                   <input 
                     type="password" 
                     {...register("newPassword", { required: true, minLength: 8 })}
-                    className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none" 
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#14a800] outline-none" 
                   />
                   {/* Password Strength Meter Mock */}
                   <div className="mt-2 flex items-center gap-2">
@@ -87,11 +87,11 @@ export default function AccountSecurityCenterPage() {
                   <input 
                     type="password" 
                     {...register("confirmPassword", { required: true })}
-                    className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none" 
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#14a800] outline-none" 
                   />
                 </div>
                 <div className="pt-2">
-                  <button type="submit" className="px-6 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-medium transition-colors">
+                  <button type="submit" className="px-6 py-2 bg-[#14a800] hover:bg-[#118a00] text-white rounded-lg text-sm font-medium transition-colors">
                     Update Password
                   </button>
                 </div>
@@ -111,8 +111,8 @@ export default function AccountSecurityCenterPage() {
               
               <div className="flex items-center justify-between">
                 <div className="flex items-start gap-4">
-                  <div className="p-2 bg-brand-50 dark:bg-brand-900/30 rounded-lg">
-                    <Smartphone className="w-6 h-6 text-brand-600" />
+                  <div className="p-2 bg-[#14a800]/5 dark:bg-[#14a800]/30 rounded-lg">
+                    <Smartphone className="w-6 h-6 text-[#14a800]" />
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-900 dark:text-white">Authenticator App</h3>
@@ -121,7 +121,7 @@ export default function AccountSecurityCenterPage() {
                 </div>
                 <button 
                   onClick={() => setTwoFaAppEnabled(!twoFaAppEnabled)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${twoFaAppEnabled ? 'bg-brand-600' : 'bg-gray-300 dark:bg-gray-700'}`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${twoFaAppEnabled ? 'bg-[#14a800]' : 'bg-gray-300 dark:bg-gray-700'}`}
                 >
                   <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${twoFaAppEnabled ? 'tranzinc-x-6' : 'tranzinc-x-1'}`} />
                 </button>
@@ -139,7 +139,7 @@ export default function AccountSecurityCenterPage() {
                 </div>
                 <button 
                   onClick={() => setTwoFaSmsEnabled(!twoFaSmsEnabled)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${twoFaSmsEnabled ? 'bg-brand-600' : 'bg-gray-300 dark:bg-gray-700'}`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${twoFaSmsEnabled ? 'bg-[#14a800]' : 'bg-gray-300 dark:bg-gray-700'}`}
                 >
                   <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${twoFaSmsEnabled ? 'tranzinc-x-6' : 'tranzinc-x-1'}`} />
                 </button>
@@ -203,7 +203,7 @@ export default function AccountSecurityCenterPage() {
             <div className="relative inline-flex items-center justify-center w-32 h-32 mb-4">
               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                 <path className="text-gray-200 dark:text-gray-800" strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <path className="text-brand-600" strokeWidth="3" strokeDasharray="80, 100" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path className="text-[#14a800]" strokeWidth="3" strokeDasharray="80, 100" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
               </svg>
               <div className="absolute flex flex-col items-center">
                 <span className="text-3xl font-bold text-gray-900 dark:text-white">80</span>
@@ -234,7 +234,7 @@ export default function AccountSecurityCenterPage() {
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                 <Clock className="w-4 h-4 text-gray-500" /> Recent Logins
               </h3>
-              <button className="text-xs text-brand-600 hover:text-brand-700 font-medium">View all</button>
+              <button className="text-xs text-[#14a800] hover:text-[#14a800] font-medium">View all</button>
             </div>
             <div className="divide-y divide-gray-100 dark:divide-gray-800">
               {loginHistory.map((log) => (
@@ -262,14 +262,14 @@ export default function AccountSecurityCenterPage() {
                   <p className="text-sm font-medium text-gray-900 dark:text-white">Recovery Email</p>
                   <p className="text-xs text-gray-500">al**@example.com</p>
                 </div>
-                <button className="text-sm text-brand-600 font-medium">Edit</button>
+                <button className="text-sm text-[#14a800] font-medium">Edit</button>
               </div>
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-sm font-medium text-gray-900 dark:text-white">Recovery Phone</p>
                   <p className="text-xs text-gray-500">Not set</p>
                 </div>
-                <button className="text-sm text-brand-600 font-medium">Add</button>
+                <button className="text-sm text-[#14a800] font-medium">Add</button>
               </div>
             </div>
           </div>

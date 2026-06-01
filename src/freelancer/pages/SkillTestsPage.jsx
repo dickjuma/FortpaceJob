@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Code, PenTool, TrendingUp, Clock, AlertCircle, 
@@ -7,29 +7,13 @@ import {
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
 
-const MOCK_CATEGORIES = [
-  { id: 'all', name: 'All Tests' },
-  { id: 'dev', name: 'Development', icon: Code },
-  { id: 'design', name: 'Design', icon: PenTool },
-  { id: 'marketing', name: 'Marketing', icon: TrendingUp }
-];
+import { useAvailableSkillTests, useSubmitSkillTest } from '../services/freelancerHooks';
+import { useConfirm } from '../../common/context/ConfirmContext';
 
-const MOCK_TESTS = [
-  { id: 1, category: 'dev', title: 'React Advanced Certification', duration: 45, difficulty: 'Hard', passScore: 80, questionsCount: 30, tags: ['React', 'JavaScript'], popular: true },
-  { id: 2, category: 'dev', title: 'Python Data Structures', duration: 30, difficulty: 'Medium', passScore: 70, questionsCount: 20, tags: ['Python', 'Algorithms'] },
-  { id: 3, category: 'design', title: 'UI/UX Principles', duration: 40, difficulty: 'Medium', passScore: 75, questionsCount: 25, tags: ['Figma', 'UX'], popular: true },
-  { id: 4, category: 'marketing', title: 'SEO Fundamentals', duration: 20, difficulty: 'Easy', passScore: 65, questionsCount: 15, tags: ['SEO', 'Content'] },
-  { id: 5, category: 'dev', title: 'Node.js Backend Architecture', duration: 60, difficulty: 'Hard', passScore: 85, questionsCount: 40, tags: ['Node.js', 'Express', 'System Design'] },
-];
-
-const MOCK_QUESTIONS = [
-  { id: 1, text: 'Which hook is used to perform side effects in functional components?', options: ['useState', 'useEffect', 'useReducer', 'useContext'], correctAnswer: 1 },
-  { id: 2, text: 'What is the purpose of the Virtual DOM in React?', options: ['Directly manipulating HTML', 'Improving performance by minimizing DOM updates', 'Replacing the actual DOM permanently', 'Styling components faster'], correctAnswer: 1 },
-  { id: 3, text: 'Which of the following is a way to pass data from a parent to a child component?', options: ['State', 'Context', 'Props', 'Redux'], correctAnswer: 2 },
-  { id: 4, text: 'What does calling setState() do?', options: ['Mutates the state directly', 'Enqueues changes to the component state', 'Replaces the entire state object', 'Synchronously updates the DOM'], correctAnswer: 1 },
-];
+const CATEGORY_ICONS = { dev: Code, design: PenTool, marketing: TrendingUp, development: Code };
 
 export default function SkillTestsPage() {
+  const { confirm } = useConfirm();
   const [view, setView] = useState('marketplace'); // 'marketplace', 'exam', 'results'
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,7 +25,29 @@ export default function SkillTestsPage() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [examScore, setExamScore] = useState(null);
 
-  const filteredTests = MOCK_TESTS.filter(test => {
+  const { data: testData, isLoading } = useAvailableSkillTests();
+  const submitSkillTest = useSubmitSkillTest();
+  
+  const TESTS = testData?.data?.tests || [];
+  const QUESTIONS = testData?.data?.questions || [];
+
+  const testCategories = useMemo(() => {
+    const cats = [{ id: 'all', name: 'All Tests', icon: null }];
+    const seen = new Set();
+    for (const test of TESTS) {
+      const cat = test.category || 'general';
+      if (seen.has(cat)) continue;
+      seen.add(cat);
+      cats.push({
+        id: cat,
+        name: cat.charAt(0).toUpperCase() + cat.slice(1),
+        icon: CATEGORY_ICONS[cat.toLowerCase()] || Code,
+      });
+    }
+    return cats;
+  }, [TESTS]);
+
+  const filteredTests = TESTS.filter(test => {
     const matchesCategory = selectedCategory === 'all' || test.category === selectedCategory;
     const matchesSearch = test.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           test.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -56,14 +62,37 @@ export default function SkillTestsPage() {
     setView('exam');
   };
 
-  const submitExam = () => {
+  const handleExitExam = async () => {
+    const ok = await confirm({
+      title: 'Exit assessment',
+      message: 'Leave this test? Your progress will be lost and cannot be recovered.',
+      confirmLabel: 'Exit test',
+      critical: true,
+    });
+    if (ok) setView('marketplace');
+  };
+
+  const submitExam = async () => {
     let correct = 0;
-    MOCK_QUESTIONS.forEach((q, idx) => {
+    QUESTIONS.forEach((q, idx) => {
       if (answers[idx] === q.correctAnswer) correct++;
     });
-    const finalScore = Math.round((correct / MOCK_QUESTIONS.length) * 100);
+    const finalScore = Math.round((correct / QUESTIONS.length) * 100);
+    const passed = finalScore >= activeTest.passScore;
     setExamScore(finalScore);
     setView('results');
+    
+    // Save result to backend
+    try {
+      await submitSkillTest.mutateAsync({
+        testId: activeTest.id,
+        score: finalScore,
+        passed,
+        badgeEarned: passed
+      });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
@@ -85,8 +114,8 @@ export default function SkillTestsPage() {
   const renderMarketplace = () => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8 animate-in slide-in-from-bottom-4 duration-500 pb-12">
       {/* Hero Section */}
-      <div className="bg-navy rounded-[32px] p-8 md:p-12 text-white shadow-xl relative overflow-hidden border border-white/10 group">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent-purple/20 blur-[80px] rounded-full -tranzinc-y-1/2 tranzinc-x-1/3 pointer-events-none group-hover:bg-accent-purple/30 transition-colors" />
+      <div className="bg-[#222222] rounded-[32px] p-8 md:p-12 text-white shadow-xl relative overflow-hidden border border-white/10 group">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-success/20 blur-[80px] rounded-full -tranzinc-y-1/2 tranzinc-x-1/3 pointer-events-none group-hover:bg-success/30 transition-colors" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 blur-[60px] rounded-full tranzinc-y-1/3 -tranzinc-x-1/4 pointer-events-none" />
         
         <div className="relative z-10 max-w-3xl">
@@ -94,16 +123,16 @@ export default function SkillTestsPage() {
           <p className="text-zinc-400 text-lg mb-8 font-medium max-w-2xl">Take Forte skill tests to earn badges, boost your trust score, and rank higher in client searches. Top performers see a 40% increase in profile views.</p>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1 max-w-md group/input">
-              <Search className="absolute left-5 top-1/2 -tranzinc-y-1/2 w-5 h-5 text-zinc-400 group-focus-within/input:text-accent-purple transition-colors" />
+              <Search className="absolute left-5 top-1/2 -tranzinc-y-1/2 w-5 h-5 text-zinc-400 group-focus-within/input:text-success transition-colors" />
               <input 
                 type="text" 
                 placeholder="Search for skills (e.g., React, Python)" 
-                className="w-full pl-14 pr-4 py-4 rounded-2xl text-white bg-white/5 border border-white/10 focus:outline-none focus:border-accent-purple focus:ring-1 focus:ring-accent-purple font-medium placeholder:text-zinc-500 transition-all shadow-sm"
+                className="w-full pl-14 pr-4 py-4 rounded-2xl text-white bg-white/5 border border-white/10 focus:outline-none focus:border-success focus:ring-1 focus:ring-success font-medium placeholder:text-zinc-500 transition-all shadow-sm"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <button className="bg-accent-purple hover:bg-accent-purple/90 text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-accent-purple/20 whitespace-nowrap">
+            <button className="bg-success hover:bg-success/90 text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-[#14a800]/20 whitespace-nowrap">
               Explore Tests
             </button>
           </div>
@@ -113,14 +142,14 @@ export default function SkillTestsPage() {
       {/* Categories & Filters */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between pt-4">
         <div className="flex overflow-x-auto pb-2 w-full md:w-auto gap-3 scrollbar-hide">
-          {MOCK_CATEGORIES.map(cat => (
+          {testCategories.map(cat => (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
               className={cn(
                 "px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all flex items-center gap-2 border",
                 selectedCategory === cat.id 
-                  ? 'bg-accent-purple/20 text-accent-purple border-accent-purple/50 shadow-sm' 
+                  ? 'bg-success/20 text-success border-success/50 shadow-sm' 
                   : 'bg-white dark:bg-white/5 text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/10 dark:hover:text-white'
               )}
             >
@@ -142,9 +171,9 @@ export default function SkillTestsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.05 }}
-            className="bg-white dark:bg-navy rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all overflow-hidden flex flex-col relative group"
+            className="bg-white dark:bg-[#222222] rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all overflow-hidden flex flex-col relative group"
           >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-accent-purple/5 blur-[40px] rounded-full pointer-events-none group-hover:bg-accent-purple/10 transition-colors"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-success/5 blur-[40px] rounded-full pointer-events-none group-hover:bg-success/10 transition-colors"></div>
             
             <div className="p-8 flex-1 flex flex-col relative z-10">
               <div className="flex justify-between items-start mb-6">
@@ -192,7 +221,7 @@ export default function SkillTestsPage() {
             <div className="p-6 bg-zinc-50 dark:bg-white/5 border-t border-zinc-100 dark:border-white/10 relative z-10">
               <button 
                 onClick={() => startExam(test)}
-                className="w-full py-3.5 bg-white dark:bg-navy border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white font-bold rounded-xl hover:bg-accent-purple hover:text-white hover:border-accent-purple transition-all flex items-center justify-center gap-2 shadow-sm"
+                className="w-full py-3.5 bg-white dark:bg-[#222222] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white font-bold rounded-xl hover:bg-success hover:text-white hover:border-success transition-all flex items-center justify-center gap-2 shadow-sm"
               >
                 Start Test <Play className="w-4 h-4 fill-current" />
               </button>
@@ -204,13 +233,15 @@ export default function SkillTestsPage() {
   );
 
   const renderExam = () => {
-    const question = MOCK_QUESTIONS[currentQuestionIdx];
-    const isLast = currentQuestionIdx === MOCK_QUESTIONS.length - 1;
-    const progress = ((currentQuestionIdx + 1) / MOCK_QUESTIONS.length) * 100;
+    const question = QUESTIONS[currentQuestionIdx];
+    const isLast = currentQuestionIdx === QUESTIONS.length - 1;
+    const progress = ((currentQuestionIdx + 1) / QUESTIONS.length) * 100;
+
+    if (!question) return null;
 
     return (
       <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="max-w-4xl mx-auto pt-8">
-        <div className="bg-white dark:bg-navy rounded-t-[32px] border border-zinc-200 dark:border-white/10 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 sticky top-0 z-20 shadow-sm">
+        <div className="bg-white dark:bg-[#222222] rounded-t-[32px] border border-zinc-200 dark:border-white/10 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 sticky top-0 z-20 shadow-sm">
           <div>
             <h2 className="font-black text-zinc-900 dark:text-white text-2xl tracking-tight">{activeTest?.title}</h2>
             <div className="text-sm flex items-center gap-2 mt-3">
@@ -228,7 +259,7 @@ export default function SkillTestsPage() {
               </span>
             </div>
             <button 
-              onClick={() => { if(window.confirm('Are you sure you want to exit? Your progress will be lost.')) setView('marketplace') }}
+              onClick={handleExitExam}
               className="text-xs font-bold text-zinc-500 hover:text-rose-500 border border-zinc-200 dark:border-white/10 px-4 py-2 rounded-xl transition-colors uppercase tracking-widest"
             >
               Exit
@@ -237,16 +268,16 @@ export default function SkillTestsPage() {
         </div>
 
         <div className="w-full bg-zinc-100 dark:bg-white/5 h-2 relative z-10 overflow-hidden">
-          <motion.div className="h-full bg-accent-purple" initial={{ width: 0 }} animate={{ width: `${progress}%` }} />
+          <motion.div className="h-full bg-success" initial={{ width: 0 }} animate={{ width: `${progress}%` }} />
         </div>
 
-        <div className="bg-white dark:bg-navy border-x border-b border-zinc-200 dark:border-white/10 rounded-b-[32px] shadow-sm min-h-[500px] flex flex-col relative overflow-hidden">
-          <div className="absolute top-[-50%] left-[-10%] w-96 h-96 bg-accent-purple/5 blur-[100px] rounded-full pointer-events-none"></div>
+        <div className="bg-white dark:bg-[#222222] border-x border-b border-zinc-200 dark:border-white/10 rounded-b-[32px] shadow-sm min-h-[500px] flex flex-col relative overflow-hidden">
+          <div className="absolute top-[-50%] left-[-10%] w-96 h-96 bg-success/5 blur-[100px] rounded-full pointer-events-none"></div>
 
           <div className="p-8 md:p-12 flex-1 relative z-10">
             <div className="flex items-center justify-between mb-8">
-              <span className="text-[10px] font-black text-accent-purple uppercase tracking-widest bg-accent-purple/10 px-3 py-1.5 rounded-lg">
-                Question {currentQuestionIdx + 1} of {MOCK_QUESTIONS.length}
+              <span className="text-[10px] font-black text-success uppercase tracking-widest bg-success/10 px-3 py-1.5 rounded-lg">
+                Question {currentQuestionIdx + 1} of {QUESTIONS.length}
               </span>
             </div>
             
@@ -261,19 +292,19 @@ export default function SkillTestsPage() {
                   className={cn(
                     "flex items-center p-6 rounded-2xl border-2 cursor-pointer transition-all group",
                     answers[currentQuestionIdx] === idx 
-                      ? 'border-accent-purple bg-accent-purple/10' 
-                      : 'border-zinc-100 dark:border-white/5 hover:border-accent-purple/50 hover:bg-zinc-50 dark:hover:bg-white/5'
+                      ? 'border-success bg-success/10' 
+                      : 'border-zinc-100 dark:border-white/5 hover:border-success/50 hover:bg-zinc-50 dark:hover:bg-white/5'
                   )}
                 >
                   <div className={cn(
                     "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors shrink-0",
-                    answers[currentQuestionIdx] === idx ? "border-accent-purple bg-accent-purple" : "border-zinc-300 dark:border-zinc-600 group-hover:border-accent-purple/50"
+                    answers[currentQuestionIdx] === idx ? "border-success bg-success" : "border-zinc-300 dark:border-zinc-600 group-hover:border-success/50"
                   )}>
                     {answers[currentQuestionIdx] === idx && <div className="w-2 h-2 bg-white rounded-full"></div>}
                   </div>
                   <span className={cn(
                     "ml-4 text-lg font-bold transition-colors",
-                    answers[currentQuestionIdx] === idx ? "text-accent-purple" : "text-zinc-700 dark:text-zinc-200"
+                    answers[currentQuestionIdx] === idx ? "text-success" : "text-zinc-700 dark:text-zinc-200"
                   )}>{opt}</span>
                 </label>
               ))}
@@ -289,14 +320,14 @@ export default function SkillTestsPage() {
               <ChevronLeft size={18} /> Previous
             </button>
             
-            <div className="hidden md:flex gap-3 bg-white dark:bg-navy p-3 rounded-2xl border border-zinc-200 dark:border-white/10">
-              {MOCK_QUESTIONS.map((_, idx) => (
+            <div className="hidden md:flex gap-3 bg-white dark:bg-[#222222] p-3 rounded-2xl border border-zinc-200 dark:border-white/10">
+              {QUESTIONS.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentQuestionIdx(idx)}
                   className={cn(
                     "w-3 h-3 rounded-full transition-all",
-                    idx === currentQuestionIdx ? 'bg-accent-purple scale-150 shadow-md shadow-accent-purple/50' :
+                    idx === currentQuestionIdx ? 'bg-success scale-150 shadow-md shadow-[#14a800]/50' :
                     answers[idx] !== undefined ? 'bg-emerald-500' : 'bg-zinc-200 dark:bg-white/10 hover:bg-zinc-300 dark:hover:bg-white/20'
                   )}
                   title={`Question ${idx + 1}`}
@@ -313,8 +344,8 @@ export default function SkillTestsPage() {
               </button>
             ) : (
               <button 
-                onClick={() => setCurrentQuestionIdx(prev => Math.min(MOCK_QUESTIONS.length - 1, prev + 1))}
-                className="flex items-center gap-2 px-8 py-3 bg-accent-purple hover:bg-accent-purple/90 text-white font-bold rounded-xl transition-all shadow-lg shadow-accent-purple/20 text-sm uppercase tracking-widest"
+                onClick={() => setCurrentQuestionIdx(prev => Math.min(QUESTIONS.length - 1, prev + 1))}
+                className="flex items-center gap-2 px-8 py-3 bg-success hover:bg-success/90 text-white font-bold rounded-xl transition-all shadow-lg shadow-[#14a800]/20 text-sm uppercase tracking-widest"
               >
                 Next <ChevronRight size={18} />
               </button>
@@ -330,7 +361,7 @@ export default function SkillTestsPage() {
 
     return (
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto pt-8">
-        <div className="bg-white dark:bg-navy rounded-[32px] border border-zinc-200 dark:border-white/10 shadow-xl overflow-hidden relative">
+        <div className="bg-white dark:bg-[#222222] rounded-[32px] border border-zinc-200 dark:border-white/10 shadow-xl overflow-hidden relative">
           
           <div className={cn(
             "p-12 text-center text-white relative overflow-hidden",
@@ -350,7 +381,7 @@ export default function SkillTestsPage() {
             </p>
           </div>
 
-          <div className="p-12 relative z-10 bg-white dark:bg-navy">
+          <div className="p-12 relative z-10 bg-white dark:bg-[#222222]">
             <div className="flex justify-center mb-12 relative">
               <svg className="w-48 h-48 transform -rotate-90 drop-shadow-xl">
                 <circle cx="96" cy="96" r="84" stroke="currentColor" strokeWidth="16" fill="transparent" className="text-zinc-100 dark:text-white/5" />
@@ -381,7 +412,7 @@ export default function SkillTestsPage() {
                 <div className="w-full h-px bg-zinc-200 dark:bg-white/10"></div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-bold text-zinc-500 dark:text-zinc-400">Questions attempted</span>
-                  <span className="font-black text-lg text-zinc-900 dark:text-white">{Object.keys(answers).length} / {MOCK_QUESTIONS.length}</span>
+                  <span className="font-black text-lg text-zinc-900 dark:text-white">{Object.keys(answers).length} / {QUESTIONS.length}</span>
                 </div>
               </div>
             </div>
@@ -394,13 +425,13 @@ export default function SkillTestsPage() {
                 Back to Tests
               </button>
               {passed ? (
-                <button className="flex-1 py-4 px-4 bg-accent-purple text-white font-bold rounded-2xl hover:bg-accent-purple/90 transition-all shadow-lg shadow-accent-purple/20 text-sm uppercase tracking-widest">
+                <button className="flex-1 py-4 px-4 bg-success text-white font-bold rounded-2xl hover:bg-success/90 transition-all shadow-lg shadow-[#14a800]/20 text-sm uppercase tracking-widest">
                   View Certificate
                 </button>
               ) : (
                 <button 
                   onClick={() => startExam(activeTest)}
-                  className="flex-1 py-4 px-4 bg-accent-purple text-white font-bold rounded-2xl hover:bg-accent-purple/90 transition-all shadow-lg shadow-accent-purple/20 flex items-center justify-center gap-2 text-sm uppercase tracking-widest"
+                  className="flex-1 py-4 px-4 bg-success text-white font-bold rounded-2xl hover:bg-success/90 transition-all shadow-lg shadow-[#14a800]/20 flex items-center justify-center gap-2 text-sm uppercase tracking-widest"
                 >
                   <RefreshCcw size={18} /> Retake Test
                 </button>

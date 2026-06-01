@@ -1,8 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProBadge from "./ProBadge";
+import { useAuthRedirect } from "../../../common/utils/authRedirect";
 
 const TalentCard = ({ talent }) => {
+  const navigate = useNavigate();
+  const { requireAuth } = useAuthRedirect();
   if (!talent) return null;
 
   const {
@@ -60,7 +63,18 @@ const TalentCard = ({ talent }) => {
         <strong>{displayPrice}</strong>
         <div className="talent-actions">
           <Link to={`/talent/${talentId}`} className="ghost">View profile</Link>
-          <Link to={`/talent/request?talent=${talentId}`} className="hire-btn">Hire now</Link>
+          <button
+            type="button"
+            className="hire-btn"
+            onClick={() =>
+              requireAuth(() => navigate(`/talent/request?talent=${talentId}`), {
+                returnTo: `/talent/request?talent=${talentId}`,
+                state: { intent: 'hire-talent', talentId },
+              })
+            }
+          >
+            Hire now
+          </button>
         </div>
       </div>
     </div>

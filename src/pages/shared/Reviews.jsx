@@ -91,7 +91,7 @@ const ReviewsPage = () => {
           {/* Trust Score Hero Card */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-indigo-900 to-zinc-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden"
+            className="bg-gradient-to-br from-[#14a800] to-zinc-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/20 rounded-full blur-[60px] pointer-events-none" />
             <div className="relative z-10 flex flex-col items-center text-center">
@@ -168,7 +168,7 @@ const ReviewsPage = () => {
           {/* Rating Trends Line Chart */}
           <div className="bg-white dark:bg-zinc-800 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-700 shadow-sm">
             <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-brand-600" /> Rating Trends
+              <TrendingUp className="w-5 h-5 text-[#14a800]" /> Rating Trends
             </h3>
             <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
@@ -199,7 +199,7 @@ const ReviewsPage = () => {
                 <div key={review.id} className="p-6 hover:bg-surface dark:hover:bg-zinc-800/30 transition-colors">
                   <div className="flex flex-col sm:flex-row justify-between gap-4 mb-4">
                     <div className="flex gap-4">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-md shrink-0">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-#14a800] to-[#118a00] flex items-center justify-center text-white font-bold text-lg shadow-md shrink-0">
                         {review.avatar}
                       </div>
                       <div>
@@ -234,7 +234,7 @@ const ReviewsPage = () => {
 
                   <div className="flex flex-wrap gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-700/50">
                     {review.skills.map(skill => (
-                      <span key={skill} className="px-2 py-1 text-[10px] font-bold text-brand-600 bg-brand-50 dark:bg-brand-900/20 dark:text-brand-400 border border-brand-100 dark:border-brand-900/50 rounded">
+                      <span key={skill} className="px-2 py-1 text-[10px] font-bold text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/20 dark:text-[#14a800] border border-[#14a800]/20 dark:border-[#14a800]/20/50 rounded">
                         {skill}
                       </span>
                     ))}
@@ -244,7 +244,7 @@ const ReviewsPage = () => {
             </div>
             
             <div className="p-4 bg-surface dark:bg-surface-dark/50 border-t border-zinc-200 dark:border-zinc-700 text-center">
-              <button className="text-sm font-bold text-brand-600 hover:text-brand-700 transition-colors">
+              <button className="text-sm font-bold text-[#14a800] hover:text-[#14a800] transition-colors">
                 Load More Reviews
               </button>
             </div>

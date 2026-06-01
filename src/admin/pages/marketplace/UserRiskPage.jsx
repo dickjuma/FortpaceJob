@@ -86,7 +86,7 @@ const UserRiskPage = () => {
          {[
            { label: 'Red Level Users', value: '14', icon: AlertOctagon, color: 'text-red-500', bg: 'bg-red-500/10' },
            { label: 'Active Flags', value: '242', icon: History, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-           { label: 'Frozen Funds', value: '$8,240', icon: Lock, color: 'text-brand-500', bg: 'bg-brand-500/10' },
+           { label: 'Frozen Funds', value: '$8,240', icon: Lock, color: 'text-[#14a800]', bg: 'bg-[#14a800]/10' },
            { label: 'Detection Rate', value: '94.2%', icon: TrendingUp, color: 'text-success', bg: 'bg-success/10' },
          ].map((stat, i) => (
            <div key={i} className="bg-white dark:bg-surface-dark p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800 shadow-sm flex items-center gap-4 group hover:shadow-md transition-all">
@@ -106,8 +106,8 @@ const UserRiskPage = () => {
 
       {/* Case Discovery Mini-Panel (Bottom Row) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-         <div className="lg:col-span-2 bg-gradient-to-br from-indigo-900/20 to-zinc-900/20 p-8 rounded-3xl border border-brand-500/10 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-8 text-brand-500/5 -mr-8 -mt-8 rotate-12 transition-transform group-hover:scale-110">
+         <div className="lg:col-span-2 bg-gradient-to-br from-[#14a800]/20 to-zinc-900/20 p-8 rounded-3xl border border-[#14a800]/20/10 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-8 text-[#14a800]/5 -mr-8 -mt-8 rotate-12 transition-transform group-hover:scale-110">
                <ShieldAlert size={160} />
             </div>
             <div className="space-y-4 relative z-10">
@@ -115,14 +115,14 @@ const UserRiskPage = () => {
                <p className="text-zinc-400 text-sm font-medium leading-relaxed max-w-md">
                   Currently 14 rules are active. The AI engine is blocking 94% of identified fraud attempts before human intervention is required.
                </p>
-               <button className="flex items-center gap-2 text-brand-400 text-xs font-black uppercase tracking-widest hover:text-brand-300 transition-colors">
+               <button className="flex items-center gap-2 text-[#14a800] text-xs font-black uppercase tracking-widest hover:text-[#14a800] transition-colors">
                   View Rules Engine <ChevronRight size={14} />
                </button>
             </div>
             <div className="shrink-0 relative z-10">
-               <div className="h-32 w-32 rounded-full border-4 border-brand-500/20 flex items-center justify-center p-2">
-                  <div className="h-full w-full rounded-full border-4 border-brand-500/40 flex items-center justify-center p-2 animate-spin-slow">
-                     <div className="h-full w-full rounded-full bg-brand-500 flex items-center justify-center text-white font-black text-xl shadow-[0_0_20px_rgba(99,102,241,0.5)]">
+               <div className="h-32 w-32 rounded-full border-4 border-[#14a800]/20/20 flex items-center justify-center p-2">
+                  <div className="h-full w-full rounded-full border-4 border-[#14a800]/20/40 flex items-center justify-center p-2 animate-spin-slow">
+                     <div className="h-full w-full rounded-full bg-[#14a800] flex items-center justify-center text-white font-black text-xl shadow-[0_0_20px_rgba(99,102,241,0.5)]">
                         94%
                      </div>
                   </div>

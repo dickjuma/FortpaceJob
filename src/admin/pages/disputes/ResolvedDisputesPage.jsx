@@ -1,114 +1,142 @@
-import React, { useState } from 'react';
-import { 
-  Gavel, Search, CheckCircle2, ShieldCheck, 
-  FileText, Download
-} from 'lucide-react';
-import { cn } from '../../utils/cn';
-import toast from 'react-hot-toast';
+import React from 'react';
+import { Gavel, Shield, Calendar, CheckCircle2, Download } from 'lucide-react';
 import { format } from 'date-fns';
-
-const MOCK_RESOLVED = [
-  { id: 'DSP-395', contract: 'Logo Design', client: 'Alice M.', freelancer: 'Bob C.', amount: 500, outcome: 'full_refund_to_client', dateResolved: new Date().toISOString() },
-  { id: 'DSP-390', contract: 'SEO Optimization', client: 'RetailCo', freelancer: 'Sam L.', amount: 800, outcome: 'partial_split', split: '50/50', dateResolved: new Date(Date.now() - 86400000).toISOString() },
-  { id: 'DSP-388', contract: 'Backend API', client: 'Startup Inc', freelancer: 'Jane Doe', amount: 3500, outcome: 'full_release_to_freelancer', dateResolved: new Date(Date.now() - 86400000 * 2).toISOString() },
-];
+import { cn } from '../../utils/cn';
+import Card from '../../components/ui/Card';
+import Button from '../../components/ui/Button';
+import apiClient, { unwrapAdminResponse } from '../../api/apiClient';
+import { useQuery } from '@tanstack/react-query';
+import AuditLogViewer from '../../components/audit/AuditLogViewer';
 
 export default function ResolvedDisputesPage() {
-  const [search, setSearch] = useState('');
+  const [activeTab, setActiveTab] = React.useState('resolved');
+
+  const { data: resolvedData, isLoading, error, refetch } = useQuery({
+    queryKey: ['admin', 'disputes', 'resolved'],
+    queryFn: async () => {
+      const response = await apiClient.get('/disputes?status=RESOLVED&limit=50');
+      const { data, meta } = unwrapAdminResponse(response);
+      const list = Array.isArray(data) ? data : data?.disputes || [];
+      return { disputes: list, total: meta?.total ?? list.length };
+    },
+    staleTime: 60_000,
+  });
+
+  const resolvedDisputes = resolvedData?.disputes || [];
+
+  if (activeTab === 'audit') {
+    return (
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <AuditLogViewer
+          moduleFilter="DISPUTES"
+          title="Dispute Resolution Trail"
+          description="Historical record of all evidence submissions, arbitration rulings, and fund distributions."
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-success/10 text-success rounded-xl shadow-sm">
-              <ShieldCheck size={24} />
+            <div className="p-2.5 bg-success/10 text-success rounded-xl">
+              <Gavel size={24} />
             </div>
-            <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Resolved Cases & Archive</h1>
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Resolved Disputes</h1>
           </div>
-          <p className="text-sm text-zinc-500 font-medium">
-            Immutable log of all arbitration rulings, fund splits, and case histories.
+          <p className="text-zinc-500 font-medium">
+            Historical archive of completed dispute resolutions.
           </p>
         </div>
         <div className="flex gap-2">
-           <button 
-             onClick={() => toast.success('Exporting archive log...')}
-             className="px-4 py-2 bg-surface-dark text-white dark:bg-brand-600 rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
-           >
-             <Download size={16} /> Export Archive
-           </button>
+          <button
+            onClick={() => setActiveTab(activeTab === 'resolved' ? 'audit' : 'resolved')}
+            className="px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+          >
+            <Shield size={16} /> Resolution Audit
+          </button>
+          <Button variant="secondary" leftIcon={<Download size={16} />}>Export Archive</Button>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex flex-wrap gap-3 bg-surface dark:bg-zinc-800/50">
-          <div className="relative flex-1 min-w-[240px]">
-            <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 text-zinc-400" size={16} />
-            <input 
-              type="text" 
-              placeholder="Search Case ID..." 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500 outline-none"
-            />
-          </div>
+      {error && (
+        <div className="rounded-2xl border border-red-400/20 bg-red-500/10 p-4 text-sm text-red-200">
+          Failed to load resolved disputes: {error?.message || 'Backend error'}
         </div>
+      )}
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse whitespace-nowrap">
-            <thead>
-              <tr className="bg-surface dark:bg-zinc-800/50 text-zinc-400 text-[10px] uppercase tracking-widest font-black border-b border-zinc-200 dark:border-zinc-800">
-                <th className="p-4">Case ID</th>
-                <th className="p-4">Date Resolved</th>
-                <th className="p-4">Parties Involved</th>
-                <th className="p-4">Escrow Value</th>
-                <th className="p-4">Arbitration Outcome</th>
-                <th className="p-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/50">
-              {MOCK_RESOLVED.map(caseItem => (
-                <tr key={caseItem.id} className="hover:bg-surface/50 dark:hover:bg-zinc-800/20 transition-colors">
-                  <td className="p-4 font-mono text-sm font-bold text-zinc-900 dark:text-white">
-                    {caseItem.id}
-                  </td>
-                  <td className="p-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {format(new Date(caseItem.dateResolved), 'MMM dd, yyyy')}
-                  </td>
-                  <td className="p-4">
-                    <div className="flex flex-col text-sm">
-                      <span className="font-bold text-zinc-700 dark:text-zinc-300"><span className="text-zinc-400 text-xs">C:</span> {caseItem.client}</span>
-                      <span className="font-bold text-zinc-700 dark:text-zinc-300 mt-0.5"><span className="text-zinc-400 text-xs">F:</span> {caseItem.freelancer}</span>
-                    </div>
-                  </td>
-                  <td className="p-4 font-black text-zinc-900 dark:text-white">
-                    KES {caseItem.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                  </td>
-                  <td className="p-4">
-                    <span className={cn(
-                      "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-widest",
-                      caseItem.outcome === 'full_refund_to_client' ? 'bg-amber-50 text-amber-600 dark:bg-amber-900/20' :
-                      caseItem.outcome === 'full_release_to_freelancer' ? 'bg-emerald-50 text-success dark:bg-emerald-900/20' :
-                      'bg-brand-50 text-brand-600 dark:bg-brand-900/20'
-                    )}>
-                      <CheckCircle2 size={12} />
-                      {caseItem.outcome.replace(/_/g, ' ')} {caseItem.split ? `(${caseItem.split})` : ''}
-                    </span>
-                  </td>
-                  <td className="p-4 text-right">
-                    <button 
-                      onClick={() => toast.success(`Downloading PDF ruling for ${caseItem.id}`)}
-                      className="px-3 py-1.5 bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-lg text-xs font-bold transition-colors flex items-center gap-2 ml-auto"
-                    >
-                      <FileText size={14} /> Full Report
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {isLoading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="h-48 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-800" />
+          ))}
         </div>
+      )}
+
+      {!isLoading && resolvedDisputes.length === 0 && (
+        <div className="p-16 flex flex-col items-center justify-center bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800">
+          <CheckCircle2 size={48} className="text-success mb-4" />
+          <h3 className="text-xl font-bold text-zinc-900 dark:text-white">No Resolved Disputes</h3>
+          <p className="text-zinc-500 text-sm mt-1">All disputes are currently pending review.</p>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {resolvedDisputes.map((dispute) => (
+          <Card key={dispute.id || dispute._id} className="p-6 hover:shadow-lg transition-shadow">
+            <div className="flex items-start justify-between mb-4">
+              <div className="w-12 h-12 bg-success/10 text-success rounded-2xl flex items-center justify-center">
+                <CheckCircle2 size={24} />
+              </div>
+              <span className="text-xs font-bold text-success bg-success/10 px-2 py-0.5 rounded-full">
+                RESOLVED
+              </span>
+            </div>
+
+            <h3 className="font-bold text-zinc-900 dark:text-white mb-2 truncate">
+              {dispute.id || dispute._id}
+            </h3>
+
+            <p className="text-sm text-zinc-600 dark:text-zinc-300 mb-3 line-clamp-2">
+              {dispute.subject || dispute.contract || dispute.title || 'Dispute Case'}
+            </p>
+
+            <div className="flex items-center gap-2 text-xs text-zinc-500 mb-4">
+              <Calendar size={14} />
+              <span>
+                {dispute.resolvedAt
+                  ? format(new Date(dispute.resolvedAt), 'MMM dd, yyyy')
+                  : dispute.updatedAt
+                  ? format(new Date(dispute.updatedAt), 'MMM dd, yyyy')
+                  : '—'}
+              </span>
+            </div>
+
+            <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+              <span className="text-xs font-medium text-zinc-500">
+                Outcome: <span className="font-bold text-zinc-700 dark:text-zinc-300">
+                  {(dispute.resolution || dispute.outcome || 'SETTLED').replace(/_/g, ' ')}
+                </span>
+              </span>
+              {(dispute.amount || dispute.escrowAmount) && (
+                <span className="text-sm font-bold text-success">
+                  KES {(Number(dispute.amount || dispute.escrowAmount || 0) / 100).toLocaleString()}
+                </span>
+              )}
+            </div>
+          </Card>
+        ))}
       </div>
+
+      {resolvedDisputes.length > 0 && (
+        <div className="flex items-center justify-center gap-2 pt-6">
+          <Button variant="secondary" size="sm" onClick={() => refetch()}>
+            Refresh Archive
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

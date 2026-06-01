@@ -44,7 +44,7 @@ export default function ClientApprovalChainsPage() {
           <p className="text-xs font-semibold text-light-gray/50 mt-1">Configure automated budget limits, define tiered department hierarchy rules, and approve pending payroll runs.</p>
         </div>
 
-        <Button onClick={() => toast.success('New threshold rule initialized.')} className="bg-accent-purple border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-accent-purple/20">
+        <Button onClick={() => toast.success('New threshold rule initialized.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20">
           <Plus className="w-4 h-4" /> Add Custom Rule
         </Button>
       </div>
@@ -54,7 +54,7 @@ export default function ClientApprovalChainsPage() {
         {/* Left Side: Tiered Threshold Rules List */}
         <div className="lg:col-span-1 space-y-6">
           <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4">
-            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Settings className="w-4 h-4 text-accent-purple" /> Threshold Matrix</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Settings className="w-4 h-4 text-success" /> Threshold Matrix</h3>
             
             <div className="space-y-4">
               {thresholds.map(rule => (
@@ -62,7 +62,7 @@ export default function ClientApprovalChainsPage() {
                   <h4 className="text-xs font-black text-white">{rule.tier}</h4>
                   <div className="flex justify-between text-[10px] font-bold text-light-gray/60">
                     <span>Release Limit:</span>
-                    <span className="text-accent-purple font-mono">{rule.limit}</span>
+                    <span className="text-success font-mono">{rule.limit}</span>
                   </div>
                   <div className="flex justify-between text-[10px] font-bold text-light-gray/60">
                     <span>Authorized Approver:</span>
@@ -87,7 +87,7 @@ export default function ClientApprovalChainsPage() {
                   <div key={req.id} className="p-4 bg-white/5 border border-white/5 rounded-2xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono font-bold text-accent-purple uppercase tracking-wider">{req.id}</span>
+                        <span className="text-[10px] font-mono font-bold text-success uppercase tracking-wider">{req.id}</span>
                         <span className="text-[9px] font-black uppercase bg-white/10 px-2 py-0.5 rounded text-light-gray">{req.tier} Required</span>
                       </div>
                       <h4 className="text-sm font-bold text-white mt-1">{req.contract}</h4>

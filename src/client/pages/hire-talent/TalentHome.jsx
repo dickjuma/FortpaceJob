@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { Search, ShieldCheck, Sparkles, Briefcase, Star, ArrowRight } from "lucide-react";
 import { talentAPI } from "../../../common/services/talentAPI";
 import TalentCard from "../../../client/components/Hiretalent/TalentCard";
-import { categories, testimonials, faqs } from "./data";
+import CategoryNavBar from "../../../components/marketplace/CategoryNavBar";
+import { useTalentCategories } from "../../../common/services/talentHooks";
+import { testimonials, faqs } from "./data";
 
 const statCards = [
   { value: "50k+", label: "Verified experts", icon: ShieldCheck },
@@ -19,6 +21,8 @@ const TalentHome = () => {
   const [serviceType, setServiceType] = useState("All");
   const [featuredTalents, setFeaturedTalents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { data: taxonomyCategories = [], isLoading: categoriesLoading } = useTalentCategories("all");
+  const displayCategories = taxonomyCategories.slice(0, 12);
 
   useEffect(() => {
     const fetchFeaturedTalent = async () => {
@@ -42,11 +46,16 @@ const TalentHome = () => {
     const params = new URLSearchParams();
     if (query) params.set("q", query);
     if (serviceType && serviceType !== "All") params.set("serviceMode", serviceType);
-    navigate(`/client-services/create-job?${params.toString()}`);
+    navigate(`/talent/request?${params.toString()}`);
   };
 
   return (
     <div className="talent-page talent-page--home">
+      <CategoryNavBar
+        categories={taxonomyCategories}
+        loading={categoriesLoading}
+        basePath="/talent"
+      />
       <section className="talent-hero">
         <div className="talent-hero-copy">
           <span className="eyebrow">Hire talent with confidence</span>
@@ -79,7 +88,7 @@ const TalentHome = () => {
                 key={item}
                 type="button"
                 className="chip"
-                onClick={() => navigate(`/client-services/create-job?q=${encodeURIComponent(item)}`)}
+                onClick={() => navigate(`/talent/request?q=${encodeURIComponent(item)}`)}
               >
                 {item}
               </button>
@@ -113,7 +122,7 @@ const TalentHome = () => {
           </div>
           <div className="panel-footer">
             <p>Post a request and get matched in minutes.</p>
-            <Link className="cta-link" to="/client-services/create-job">
+            <Link className="cta-link" to="/talent/request">
               Start a request
               <ArrowRight size={16} />
             </Link>
@@ -137,26 +146,39 @@ const TalentHome = () => {
             <span className="eyebrow">Browse by category</span>
             <h2>Start broad, then drill into the right specialty.</h2>
           </div>
-          <Link className="text-link" to="/client-services/create-job">
+          <Link className="text-link" to="/talent/request">
             Post a request <ArrowRight size={16} />
           </Link>
         </div>
         <div className="category-grid">
-          {categories.map((cat) => (
-            <Link key={cat.slug} className="category-card" to={`/talent/categories/${cat.slug}`}>
-              <div className="category-card__top">
-                <span className={`badge ${cat.badge === "Physical" ? "badge-physical" : "badge-online"}`}>
-                  {cat.badge}
-                </span>
-                <span className="category-count">{cat.count} pros</span>
-              </div>
-              <h3>{cat.title}</h3>
-              <p>{cat.desc}</p>
-              <span className="category-cta">
-                View talent <ArrowRight size={14} />
-              </span>
-            </Link>
-          ))}
+          {categoriesLoading ? (
+            <p className="loading-message">Loading categories…</p>
+          ) : displayCategories.length === 0 ? (
+            <p className="loading-message">No categories available.</p>
+          ) : (
+            displayCategories.map((cat) => {
+              const slug = cat.slug || cat.id;
+              const modeLabel =
+                cat.kind === "online" ? "Online" : cat.kind === "onsite" ? "On-site" : "Hybrid";
+              return (
+                <Link key={slug} className="category-card" to={`/talent/categories/${slug}`}>
+                  <div className="category-card__top">
+                    <span className={`badge ${cat.kind === "online" ? "badge-online" : "badge-physical"}`}>
+                      {modeLabel}
+                    </span>
+                    {cat.roleCount > 0 && (
+                      <span className="category-count">{cat.roleCount} roles</span>
+                    )}
+                  </div>
+                  <h3>{cat.name}</h3>
+                  <p>{cat.description || "Browse verified professionals in this category."}</p>
+                  <span className="category-cta">
+                    View talent <ArrowRight size={14} />
+                  </span>
+                </Link>
+              );
+            })
+          )}
         </div>
       </section>
 
@@ -251,7 +273,7 @@ const TalentHome = () => {
           <h2>Post your request and let qualified talent come to you.</h2>
           <p>Describe the work once, then compare the best-fit experts without the back and forth.</p>
         </div>
-        <Link to="/client-services/create-job" className="cta-btn">
+        <Link to="/talent/request" className="cta-btn">
           Post a job
           <ArrowRight size={16} />
         </Link>

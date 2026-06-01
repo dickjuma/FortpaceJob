@@ -36,7 +36,7 @@ export default function ClientWorkspacePage() {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2 flex items-center gap-3">
-              <div className="w-10 h-10 bg-brand-600 rounded-xl flex items-center justify-center text-white shadow-sm">
+              <div className="w-10 h-10 bg-[#14a800] rounded-xl flex items-center justify-center text-white shadow-sm">
                 <Layout className="w-6 h-6" />
               </div>
               Acme Corp Workspace
@@ -71,7 +71,7 @@ export default function ClientWorkspacePage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
                   "py-3 text-sm font-bold transition-all flex items-center gap-2 whitespace-nowrap border-b-2",
-                  activeTab === tab.id ? "border-brand-600 text-brand-600 dark:text-brand-400" : "border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+                  activeTab === tab.id ? "border-[#14a800]/20 text-[#14a800] dark:text-[#14a800]" : "border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
                 )}
               >
                 <tab.icon className="w-4 h-4" /> {tab.label}
@@ -95,16 +95,16 @@ export default function ClientWorkspacePage() {
                 <div>
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-bold text-zinc-900 dark:text-white">Active Projects</h2>
-                    <button className="text-sm font-bold text-brand-600 flex items-center gap-1"><Plus className="w-4 h-4" /> New Project</button>
+                    <button className="text-sm font-bold text-[#14a800] flex items-center gap-1"><Plus className="w-4 h-4" /> New Project</button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {PROJECTS.map(project => (
-                      <div key={project.id} className="bg-white dark:bg-surface-dark p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm cursor-pointer hover:border-brand-300 transition-colors">
+                      <div key={project.id} className="bg-white dark:bg-surface-dark p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm cursor-pointer hover:border-[#14a800]/50 transition-colors">
                         <div className="flex justify-between items-start mb-4">
                           <h3 className="font-bold text-zinc-900 dark:text-white">{project.name}</h3>
                           <span className={cn(
                             "text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider",
-                            project.status === 'In Progress' ? "bg-brand-50 text-brand-700 dark:bg-brand-500/20 dark:text-brand-400" : "bg-emerald-50 text-emerald-700 dark:bg-success/20 dark:text-success"
+                            project.status === 'In Progress' ? "bg-[#14a800]/5 text-[#14a800] dark:bg-[#14a800]/20 dark:text-[#14a800]" : "bg-emerald-50 text-emerald-700 dark:bg-success/20 dark:text-success"
                           )}>{project.status}</span>
                         </div>
                         
@@ -114,7 +114,7 @@ export default function ClientWorkspacePage() {
                             <span>{project.progress}%</span>
                           </div>
                           <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
-                            <div className="h-full bg-brand-500 rounded-full" style={{ width: `${project.progress}%` }}></div>
+                            <div className="h-full bg-[#14a800] rounded-full" style={{ width: `${project.progress}%` }}></div>
                           </div>
                         </div>
 
@@ -135,7 +135,7 @@ export default function ClientWorkspacePage() {
                 <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
                   <div className="flex justify-between items-center mb-6">
                     <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                      <CheckSquare className="w-5 h-5 text-brand-500" /> My Tasks
+                      <CheckSquare className="w-5 h-5 text-[#14a800]" /> My Tasks
                     </h2>
                     <span className="text-xs font-bold text-zinc-500">{TASKS.filter(t=>t.completed).length}/{TASKS.length} completed</span>
                   </div>
@@ -146,7 +146,7 @@ export default function ClientWorkspacePage() {
                         <div className="flex items-center gap-3">
                           <button className={cn(
                             "w-5 h-5 rounded flex items-center justify-center border",
-                            task.completed ? "bg-brand-500 border-brand-500 text-white" : "border-zinc-300 dark:border-zinc-600 bg-transparent"
+                            task.completed ? "bg-[#14a800] border-[#14a800]/20 text-white" : "border-zinc-300 dark:border-zinc-600 bg-transparent"
                           )}>
                             {task.completed && <CheckSquare className="w-3.5 h-3.5" />}
                           </button>
@@ -182,12 +182,12 @@ export default function ClientWorkspacePage() {
                       <div>
                         <div className={cn("flex items-center gap-2 mb-1", msg.isYou ? "justify-end" : "")}>
                           <span className="text-xs font-bold text-zinc-900 dark:text-white">{msg.sender}</span>
-                          {!msg.isYou && <span className="text-[10px] font-bold text-brand-500 bg-brand-50 dark:bg-brand-500/10 px-1.5 rounded">{msg.role}</span>}
+                          {!msg.isYou && <span className="text-[10px] font-bold text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/10 px-1.5 rounded">{msg.role}</span>}
                           <span className="text-[10px] font-medium text-zinc-400">{msg.time}</span>
                         </div>
                         <div className={cn(
                           "p-3 rounded-2xl text-sm font-medium",
-                          msg.isYou ? "bg-brand-600 text-white rounded-tr-sm" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-tl-sm"
+                          msg.isYou ? "bg-[#14a800] text-white rounded-tr-sm" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-tl-sm"
                         )}>
                           {msg.text}
                         </div>
@@ -201,9 +201,9 @@ export default function ClientWorkspacePage() {
                     <input 
                       type="text"
                       placeholder="Message team..."
-                      className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl pl-4 pr-12 py-3 text-sm font-medium outline-none focus:border-brand-500"
+                      className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl pl-4 pr-12 py-3 text-sm font-medium outline-none focus:border-[#14a800]/20"
                     />
-                    <button className="absolute right-2 top-1/2 -tranzinc-y-1/2 p-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                    <button className="absolute right-2 top-1/2 -tranzinc-y-1/2 p-2 bg-[#14a800] hover:bg-[#118a00] text-white rounded-lg transition-colors">
                       <Send className="w-4 h-4" />
                     </button>
                   </div>
@@ -215,9 +215,9 @@ export default function ClientWorkspacePage() {
               <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm min-h-[60vh]">
                 <div className="flex justify-between items-center mb-8">
                   <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                    <Folder className="w-5 h-5 text-brand-500" /> Shared Files
+                    <Folder className="w-5 h-5 text-[#14a800]" /> Shared Files
                   </h2>
-                  <button className="px-4 py-2 bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 font-bold rounded-lg text-sm flex items-center gap-2">
+                  <button className="px-4 py-2 bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800] font-bold rounded-lg text-sm flex items-center gap-2">
                     <Plus className="w-4 h-4" /> Upload
                   </button>
                 </div>
@@ -226,9 +226,9 @@ export default function ClientWorkspacePage() {
                   {[
                     { name: 'Wireframes.pdf', type: 'pdf', icon: FileText, color: 'text-rose-500', bg: 'bg-rose-50 dark:bg-rose-500/10' },
                     { name: 'Logo_Final.png', type: 'image', icon: ImageIcon, color: 'text-success', bg: 'bg-emerald-50 dark:bg-success/10' },
-                    { name: 'Brand_Assets', type: 'folder', icon: Folder, color: 'text-brand-500', bg: 'bg-brand-50 dark:bg-brand-500/10' }
+                    { name: 'Brand_Assets', type: 'folder', icon: Folder, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/10' }
                   ].map(file => (
-                    <div key={file.name} className="border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-brand-300 transition-colors cursor-pointer group">
+                    <div key={file.name} className="border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-[#14a800]/50 transition-colors cursor-pointer group">
                       <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110", file.bg)}>
                         <file.icon className={cn("w-6 h-6", file.color)} />
                       </div>
@@ -264,7 +264,7 @@ export default function ClientWorkspacePage() {
                   </div>
                   
                   <div className="flex gap-3">
-                    <div className="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-[#14a800]/10 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] flex items-center justify-center shrink-0">
                       <Folder className="w-4 h-4" />
                     </div>
                     <div>
@@ -278,7 +278,7 @@ export default function ClientWorkspacePage() {
               </div>
 
               {/* Quick Links */}
-              <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl p-6 text-white shadow-md">
+              <div className="bg-gradient-to-br from-[#14a800] to-[#118a00] rounded-3xl p-6 text-white shadow-md">
                 <h3 className="font-bold mb-4">Workspace Resources</h3>
                 <ul className="space-y-2">
                   <li><a href="#" className="text-sm font-medium hover:underline flex items-center gap-2"><FileText className="w-4 h-4" /> Project Charter</a></li>

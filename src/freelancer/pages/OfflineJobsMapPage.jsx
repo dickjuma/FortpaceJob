@@ -50,7 +50,7 @@ export default function OfflineJobsMapPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <Navigation className="w-8 h-8 text-accent-purple animate-pulse" />
+            <Navigation className="w-8 h-8 text-success animate-pulse" />
             Offline Contracts Map
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -68,12 +68,12 @@ export default function OfflineJobsMapPage() {
             placeholder="Search keywords or client..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-2xl border border-border bg-white text-xs font-bold text-text-primary focus:border-accent-purple outline-none shadow-sm transition-all"
+            className="w-full pl-10 pr-4 py-3 rounded-2xl border border-border bg-white text-xs font-bold text-text-primary focus:border-success outline-none shadow-sm transition-all"
           />
         </div>
 
         <div className="md:col-span-2 flex items-center gap-4 bg-white border border-border p-3 rounded-2xl shadow-sm">
-          <SlidersHorizontal className="w-4 h-4 text-accent-purple shrink-0" />
+          <SlidersHorizontal className="w-4 h-4 text-success shrink-0" />
           <div className="flex-1 flex items-center gap-3">
             <span className="text-[10px] font-black uppercase text-text-secondary">Search Radius:</span>
             <input 
@@ -83,9 +83,9 @@ export default function OfflineJobsMapPage() {
               step="0.5"
               value={maxDistance}
               onChange={(e) => setMaxDistance(parseFloat(e.target.value))}
-              className="flex-1 accent-accent-purple h-1 bg-light-gray rounded-lg appearance-none cursor-pointer"
+              className="flex-1 accent-success h-1 bg-light-gray rounded-lg appearance-none cursor-pointer"
             />
-            <span className="text-xs font-black text-accent-purple shrink-0 min-w-[50px] text-right">
+            <span className="text-xs font-black text-success shrink-0 min-w-[50px] text-right">
               {maxDistance.toFixed(1)} miles
             </span>
           </div>
@@ -99,7 +99,7 @@ export default function OfflineJobsMapPage() {
           {/* Simulated geocoded map grid design */}
           <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1.5px,transparent_1.5px)] [background-size:24px_24px] pointer-events-none"></div>
           <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none"></div>
-          <div className="absolute w-[300px] h-[300px] bg-accent-purple/10 blur-[120px] rounded-full pointer-events-none"></div>
+          <div className="absolute w-[300px] h-[300px] bg-success/10 blur-[120px] rounded-full pointer-events-none"></div>
           
           {/* Pins mapping */}
           {filteredPins.map(pin => (
@@ -108,18 +108,18 @@ export default function OfflineJobsMapPage() {
               onClick={() => setSelectedPin(pin)}
               className={cn(
                 "absolute p-3 rounded-full shadow-xl hover:scale-115 border-2 border-white transition-all z-20 group",
-                selectedPin?.id === pin.id ? "bg-white text-accent-purple" : "bg-accent-purple text-white"
+                selectedPin?.id === pin.id ? "bg-white text-success" : "bg-success text-white"
               )}
               style={{ left: pin.x, top: pin.y }}
             >
               <MapPin size={18} className="group-hover:animate-bounce" />
-              <span className="absolute left-1/2 -tranzinc-x-1/2 -top-9 bg-navy text-white text-[10px] font-black px-2 py-0.5 rounded shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              <span className="absolute left-1/2 -tranzinc-x-1/2 -top-9 bg-[#222222] text-white text-[10px] font-black px-2 py-0.5 rounded shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                 ${pin.budget.toLocaleString()} ({pin.distance}m)
               </span>
             </button>
           ))}
 
-          <span className="absolute bottom-4 left-4 bg-navy/80 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-xl text-[10px] font-black text-white/80 flex items-center gap-1.5 shadow-lg">
+          <span className="absolute bottom-4 left-4 bg-[#222222]/80 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-xl text-[10px] font-black text-white/80 flex items-center gap-1.5 shadow-lg">
             <span className="w-2 h-2 rounded-full bg-success animate-ping"></span>
             Geocoding Engine Live ({filteredPins.length} targets found)
           </span>
@@ -132,7 +132,7 @@ export default function OfflineJobsMapPage() {
               <div className="space-y-6">
                 <div className="flex justify-between items-start border-b border-border pb-3">
                   <div>
-                    <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-accent-purple/10 text-accent-purple border-accent-purple/20">
+                    <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-success/10 text-success border-success/20">
                       {selectedPin.distance} miles away
                     </span>
                     <h3 className="font-black text-lg text-text-primary mt-2">{selectedPin.title}</h3>
@@ -143,7 +143,7 @@ export default function OfflineJobsMapPage() {
 
                 <div className="space-y-3 font-bold text-text-secondary text-xs">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-accent-purple" />
+                    <Clock className="w-4 h-4 text-success" />
                     <span>Duration: {selectedPin.duration}</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -156,7 +156,7 @@ export default function OfflineJobsMapPage() {
               <div className="pt-4 border-t border-border mt-6">
                 <button 
                   onClick={() => handleApplySimulate(selectedPin.title)}
-                  className="w-full py-3 bg-accent-purple hover:bg-accent-purple/95 text-white font-black rounded-xl text-sm transition-all shadow-lg shadow-accent-purple/20 flex items-center justify-center gap-1.5"
+                  className="w-full py-3 bg-success hover:bg-success/95 text-white font-black rounded-xl text-sm transition-all shadow-lg shadow-[#14a800]/20 flex items-center justify-center gap-1.5"
                 >
                   Apply On-site Contract
                 </button>

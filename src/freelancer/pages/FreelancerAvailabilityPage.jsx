@@ -58,7 +58,7 @@ export default function FreelancerAvailabilityPage() {
             <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2">Availability Settings</h1>
             <p className="text-zinc-500 font-medium">Manage when clients can hire or contact you.</p>
           </div>
-          <button className="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-sm transition-all flex items-center gap-2">
+          <button className="px-6 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-sm transition-all flex items-center gap-2">
             <Save className="w-4 h-4" /> Save Changes
           </button>
         </div>
@@ -72,7 +72,7 @@ export default function FreelancerAvailabilityPage() {
           {/* Status Card */}
           <section className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 sm:p-8 shadow-sm">
             <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
-              <Globe className="w-5 h-5 text-brand-500" /> Current Status
+              <Globe className="w-5 h-5 text-[#14a800]" /> Current Status
             </h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
@@ -82,14 +82,14 @@ export default function FreelancerAvailabilityPage() {
                   onClick={() => setStatus(opt)}
                   className={cn(
                     "p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3",
-                    status === opt ? "border-brand-500 bg-brand-50 dark:bg-brand-500/10" : "border-zinc-200 dark:border-zinc-700 hover:border-brand-200"
+                    status === opt ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10" : "border-zinc-200 dark:border-zinc-700 hover:border-[#14a800]/20"
                   )}
                 >
                   <div className={cn(
                     "w-4 h-4 rounded-full border-2",
-                    status === opt ? "border-brand-500 bg-brand-500" : "border-zinc-300 dark:border-zinc-600"
+                    status === opt ? "border-[#14a800]/20 bg-[#14a800]" : "border-zinc-300 dark:border-zinc-600"
                   )} />
-                  <span className={cn("font-bold text-sm", status === opt ? "text-brand-700 dark:text-brand-400" : "text-zinc-700 dark:text-zinc-300")}>{opt}</span>
+                  <span className={cn("font-bold text-sm", status === opt ? "text-[#14a800] dark:text-[#14a800]" : "text-zinc-700 dark:text-zinc-300")}>{opt}</span>
                 </div>
               ))}
             </div>
@@ -114,7 +114,7 @@ export default function FreelancerAvailabilityPage() {
           <section className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 sm:p-8 shadow-sm">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <CalendarIcon className="w-5 h-5 text-brand-500" /> Working Hours
+                <CalendarIcon className="w-5 h-5 text-[#14a800]" /> Working Hours
               </h2>
               <select 
                 value={timezone} 
@@ -131,7 +131,7 @@ export default function FreelancerAvailabilityPage() {
                   <div className="flex items-center gap-3 w-40">
                     <button onClick={() => toggleDay(day)}>
                       {schedule[day].active ? (
-                        <ToggleRight className="w-8 h-8 text-brand-500" />
+                        <ToggleRight className="w-8 h-8 text-[#14a800]" />
                       ) : (
                         <ToggleLeft className="w-8 h-8 text-zinc-300 dark:text-zinc-600" />
                       )}
@@ -145,16 +145,16 @@ export default function FreelancerAvailabilityPage() {
                         type="time" 
                         value={schedule[day].start}
                         onChange={(e) => updateTime(day, 'start', e.target.value)}
-                        className="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm font-bold text-zinc-700 dark:text-zinc-300 outline-none focus:border-brand-500"
+                        className="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm font-bold text-zinc-700 dark:text-zinc-300 outline-none focus:border-[#14a800]/20"
                       />
                       <span className="text-zinc-400 font-bold">-</span>
                       <input 
                         type="time" 
                         value={schedule[day].end}
                         onChange={(e) => updateTime(day, 'end', e.target.value)}
-                        className="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm font-bold text-zinc-700 dark:text-zinc-300 outline-none focus:border-brand-500"
+                        className="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm font-bold text-zinc-700 dark:text-zinc-300 outline-none focus:border-[#14a800]/20"
                       />
-                      <button className="ml-auto p-2 text-zinc-400 hover:text-brand-500 transition-colors">
+                      <button className="ml-auto p-2 text-zinc-400 hover:text-[#14a800] transition-colors">
                         <Plus className="w-4 h-4" />
                       </button>
                     </div>
@@ -203,29 +203,29 @@ export default function FreelancerAvailabilityPage() {
           {/* Workload Capacity */}
           <section className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
             <h3 className="font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-brand-500" /> Workload Limits
+              <Briefcase className="w-5 h-5 text-[#14a800]" /> Workload Limits
             </h3>
             
             <div className="space-y-6">
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <label className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Max Active Contracts</label>
-                  <span className="text-sm font-black text-brand-600">{maxContracts}</span>
+                  <span className="text-sm font-black text-[#14a800]">{maxContracts}</span>
                 </div>
                 <input 
                   type="range" min="1" max="20" value={maxContracts} onChange={(e) => setMaxContracts(e.target.value)}
-                  className="w-full accent-brand-500"
+                  className="w-full accent-#14a800]"
                 />
               </div>
 
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <label className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Weekly Hours Capacity</label>
-                  <span className="text-sm font-black text-brand-600">{weeklyHours}h</span>
+                  <span className="text-sm font-black text-[#14a800]">{weeklyHours}h</span>
                 </div>
                 <input 
                   type="range" min="10" max="80" step="5" value={weeklyHours} onChange={(e) => setWeeklyHours(e.target.value)}
-                  className="w-full accent-brand-500"
+                  className="w-full accent-#14a800]"
                 />
               </div>
             </div>
@@ -235,10 +235,10 @@ export default function FreelancerAvailabilityPage() {
           <section className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <Clock className="w-5 h-5 text-brand-500" /> Instant Booking
+                <Clock className="w-5 h-5 text-[#14a800]" /> Instant Booking
               </h3>
               <button onClick={() => setInstantBooking(!instantBooking)}>
-                {instantBooking ? <ToggleRight className="w-8 h-8 text-brand-500" /> : <ToggleLeft className="w-8 h-8 text-zinc-300 dark:text-zinc-600" />}
+                {instantBooking ? <ToggleRight className="w-8 h-8 text-[#14a800]" /> : <ToggleLeft className="w-8 h-8 text-zinc-300 dark:text-zinc-600" />}
               </button>
             </div>
             <p className="text-xs text-zinc-500 font-medium leading-relaxed">

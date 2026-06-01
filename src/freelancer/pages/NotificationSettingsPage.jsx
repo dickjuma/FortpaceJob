@@ -45,7 +45,7 @@ export default function NotificationSettingsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <Bell className="w-8 h-8 text-accent-purple animate-swing" />
+            <Bell className="w-8 h-8 text-success animate-swing" />
             Notification Preferences
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -66,7 +66,7 @@ export default function NotificationSettingsPage() {
         {/* Email Alerts Section */}
         <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
           <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-            <Mail className="w-5 h-5 text-accent-purple" />
+            <Mail className="w-5 h-5 text-success" />
             Email Communications
           </h3>
           
@@ -83,7 +83,7 @@ export default function NotificationSettingsPage() {
                 </div>
                 <button onClick={() => togglePreference(pref.key)} className="focus:outline-none">
                   {preferences[pref.key] ? (
-                    <ToggleRight className="w-8 h-8 text-accent-purple" />
+                    <ToggleRight className="w-8 h-8 text-success" />
                   ) : (
                     <ToggleLeft className="w-8 h-8 text-text-secondary" />
                   )}
@@ -96,7 +96,7 @@ export default function NotificationSettingsPage() {
         {/* Real-time Push Section */}
         <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
           <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-            <Bell className="w-5 h-5 text-accent-purple" />
+            <Bell className="w-5 h-5 text-success" />
             Push notifications
           </h3>
           
@@ -112,7 +112,7 @@ export default function NotificationSettingsPage() {
                 </div>
                 <button onClick={() => togglePreference(pref.key)} className="focus:outline-none">
                   {preferences[pref.key] ? (
-                    <ToggleRight className="w-8 h-8 text-accent-purple" />
+                    <ToggleRight className="w-8 h-8 text-success" />
                   ) : (
                     <ToggleLeft className="w-8 h-8 text-text-secondary" />
                   )}
@@ -125,7 +125,7 @@ export default function NotificationSettingsPage() {
         {/* Security & System Section */}
         <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
           <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-            <Shield className="w-5 h-5 text-accent-purple" />
+            <Shield className="w-5 h-5 text-success" />
             Security & Login Verification
           </h3>
           
@@ -141,7 +141,7 @@ export default function NotificationSettingsPage() {
                 </div>
                 <button onClick={() => togglePreference(pref.key)} className="focus:outline-none">
                   {preferences[pref.key] ? (
-                    <ToggleRight className="w-8 h-8 text-accent-purple" />
+                    <ToggleRight className="w-8 h-8 text-success" />
                   ) : (
                     <ToggleLeft className="w-8 h-8 text-text-secondary" />
                   )}

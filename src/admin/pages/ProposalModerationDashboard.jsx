@@ -28,14 +28,14 @@ export default function ProposalModerationDashboard() {
           <h3 className="text-sm font-medium text-gray-500 mb-1">Pending Review</h3>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">45</p>
         </div>
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm border-l-4 border-l-blue-500">
+        <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm border-l-4 border-l-#14a800]">
           <h3 className="text-sm font-medium text-gray-500 mb-1">Total Auto-Rejected</h3>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">892</p>
         </div>
         <Link to="/admin/fraud-center">
-          <div className="bg-brand-50 dark:bg-brand-900/20 p-6 rounded-2xl border border-brand-200 dark:border-brand-800 shadow-sm h-full flex flex-col justify-center items-center hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors cursor-pointer">
-            <ShieldAlert className="w-8 h-8 text-brand-600 mb-2" />
-            <h3 className="text-sm font-bold text-brand-800 dark:text-brand-400 text-center">Advanced Fraud Center</h3>
+          <div className="bg-[#14a800]/5 dark:bg-[#14a800]/20 p-6 rounded-2xl border border-[#14a800]/20 dark:border-[#14a800]/20 shadow-sm h-full flex flex-col justify-center items-center hover:bg-[#14a800]/10 dark:hover:bg-[#14a800]/40 transition-colors cursor-pointer">
+            <ShieldAlert className="w-8 h-8 text-[#14a800] mb-2" />
+            <h3 className="text-sm font-bold text-[#14a800] dark:text-[#14a800] text-center">Advanced Fraud Center</h3>
           </div>
         </Link>
       </div>
@@ -47,7 +47,7 @@ export default function ProposalModerationDashboard() {
             <input 
               type="text" 
               placeholder="Search by freelancer, client, or ID..." 
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 focus:ring-brand-500 focus:border-brand-500 text-sm"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 focus:ring-[#14a800] focus:border-[#14a800]/20 text-sm"
             />
           </div>
           <button className="flex items-center px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-surface transition-colors text-sm font-medium">
@@ -99,7 +99,7 @@ export default function ProposalModerationDashboard() {
                     <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{flag.status}</span>
                   </td>
                   <td className="p-4 text-right flex justify-end space-x-2">
-                    <button className="p-1.5 text-gray-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/20 rounded-md transition-colors" title="Review Proposal">
+                    <button className="p-1.5 text-gray-400 hover:text-[#14a800] hover:bg-[#14a800]/5 dark:hover:bg-[#14a800]/20 rounded-md transition-colors" title="Review Proposal">
                       <Eye className="w-4 h-4" />
                     </button>
                     <button className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-md transition-colors" title="Approve/Dismiss">

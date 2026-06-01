@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { useRegistrationStore } from '../../store/authStore';
 import PasswordStrength from './PasswordStrength';
+import { registerRules, confirmPasswordRule } from '../../common/utils/validationRules';
 
 // A simple floating label input component
 const FloatingInput = ({ label, type = "text", register, error, placeholder, ...rest }) => (
@@ -78,22 +79,21 @@ export default function RegisterForm() {
         {/* COMMON FIELDS */}
         {(clientType === 'sme' || clientType === 'corporate') ? (
           <>
-            <FloatingInput label={clientType === 'sme' ? "Business Name" : "Organization Name"} register={register('companyName', { required: "This field is required" })} error={errors.companyName} />
-            <FloatingInput label="Corporate Email" type="email" register={register('email', { required: "Email is required" })} error={errors.email} />
+            <FloatingInput label={clientType === 'sme' ? "Business Name" : "Organization Name"} register={register('companyName', registerRules.fullName)} error={errors.companyName} />
+            <FloatingInput label="Corporate Email" type="email" register={register('email', registerRules.email)} error={errors.email} />
           </>
         ) : (
           <>
-            <FloatingInput label="Legal Full Name" register={register('fullName', { required: "Full name is required" })} error={errors.fullName} />
-            <FloatingInput label="Email Address" type="email" register={register('email', { required: "Email is required" })} error={errors.email} />
+            <FloatingInput label="Legal Full Name" register={register('fullName', registerRules.fullName)} error={errors.fullName} />
+            <FloatingInput label="Email Address" type="email" register={register('email', registerRules.email)} error={errors.email} />
           </>
         )}
 
-        <FloatingInput label="Phone Number" type="tel" register={register('phone')} error={errors.phone} />
+        <FloatingInput label="Phone Number" type="tel" register={register('phone', registerRules.phone)} error={errors.phone} />
         
         {/* DYNAMIC FIELDS based on role/type */}
         {role === 'freelancer' && (
           <div className="grid md:grid-cols-2 gap-4">
-            <FloatingInput label="Username" register={register('username', { required: "Username required" })} error={errors.username} />
             <div className="relative mb-6">
               <select 
                 {...register('experienceLevel')} 
@@ -110,7 +110,7 @@ export default function RegisterForm() {
 
         {(clientType === 'sme' || clientType === 'corporate') && (
           <div className="grid md:grid-cols-2 gap-4">
-            <FloatingInput label="Industry Sector" register={register('industry', { required: "Industry required" })} error={errors.industry} />
+            <FloatingInput label="Industry Sector" register={register('industry', registerRules.fullName)} error={errors.industry} />
             <div className="relative mb-6">
               <select 
                 {...register('companySize')} 
@@ -131,7 +131,7 @@ export default function RegisterForm() {
           <FloatingInput 
             label="Create Secure Password" 
             type={showPassword ? "text" : "password"} 
-            register={register('password', { required: "Password is required" })} 
+            register={register('password', registerRules.password)} 
             error={errors.password} 
           />
           <button 
@@ -146,9 +146,9 @@ export default function RegisterForm() {
         <PasswordStrength password={passwordValue} />
 
         {clientType === 'corporate' && (
-          <div className="bg-brand-50 border border-brand-100 rounded-2xl p-6 mt-6 mb-8">
-            <h4 className="font-bold text-brand-900 mb-2">Enterprise Compliance</h4>
-            <p className="text-sm text-brand-700 leading-relaxed">
+          <div className="bg-[#14a800]/5 border border-[#14a800]/20 rounded-2xl p-6 mt-6 mb-8">
+            <h4 className="font-bold text-[#14a800] mb-2">Enterprise Compliance</h4>
+            <p className="text-sm text-[#14a800] leading-relaxed">
               By proceeding, you acknowledge that this account will be subject to Forte's Enterprise Vendor Master Agreement and automated worker classification compliance checks.
             </p>
           </div>
@@ -157,10 +157,10 @@ export default function RegisterForm() {
         <div className="mt-10 mb-8">
           <label className="flex items-start gap-4 cursor-pointer group">
             <div className="relative flex items-center justify-center mt-1">
-              <input type="checkbox" className={`w-6 h-6 rounded-md border-2 border-zinc-300 text-${themeColor}-600 focus:ring-${themeColor}-500 cursor-pointer transition-all peer`} {...register('terms', { required: "Must agree to terms" })} />
+              <input type="checkbox" className={`w-6 h-6 rounded-md border-2 border-zinc-300 text-${themeColor}-600 focus:ring-${themeColor}-500 cursor-pointer transition-all peer`} {...register('terms', registerRules.terms)} />
             </div>
             <span className="text-zinc-600 text-lg">
-              I agree to the <a href="#" className={`text-${themeColor}-600 font-bold hover:underline`}>Terms of Service</a> and <a href="#" className={`text-${themeColor}-600 font-bold hover:underline`}>Privacy Policy</a>.
+              I agree to the <a href="/terms" className={`text-${themeColor}-600 font-bold hover:underline`}>Terms of Service</a> and <a href="/privacy" className={`text-${themeColor}-600 font-bold hover:underline`}>Privacy Policy</a>.
             </span>
           </label>
           {errors.terms && <span className="text-sm text-red-500 ml-10 block mt-2 font-medium">{errors.terms.message}</span>}
@@ -170,7 +170,7 @@ export default function RegisterForm() {
           type="submit"
           disabled={isSubmitting}
           className={`w-full py-5 rounded-2xl font-bold text-xl text-white transition-all duration-300 transform hover:-tranzinc-y-1 hover:shadow-2xl disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none ${
-            role === 'client' ? 'bg-brand-600 hover:bg-brand-700 shadow-indigo-600/30' : 'bg-success hover:bg-emerald-700 shadow-emerald-600/30'
+            role === 'client' ? 'bg-[#14a800] hover:bg-[#118a00] shadow-[#14a800]/25' : 'bg-success hover:bg-emerald-700 shadow-emerald-600/30'
           }`}
         >
           {isSubmitting ? 'Provisioning Account...' : 'Complete Account Setup'}

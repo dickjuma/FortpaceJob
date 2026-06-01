@@ -5,6 +5,8 @@ import { Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { authAPI } from '../../common/services/api';
+import { getDashboardPathForRole } from '../../auth/utils/authRouting';
+import { loginRules } from '../../common/utils/validationRules';
 
 // A simple floating label input component
 const FloatingInput = ({ label, type = "text", register, error, placeholder, ...rest }) => (
@@ -12,11 +14,11 @@ const FloatingInput = ({ label, type = "text", register, error, placeholder, ...
     <input
       type={type}
       placeholder={placeholder || " "}
-      className={`peer w-full h-16 px-5 pt-5 pb-1 rounded-2xl border-2 ${error ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : 'border-zinc-200 focus:border-brand-500 focus:ring-indigo-500 bg-surface hover:bg-zinc-100 focus:bg-white'} text-zinc-900 shadow-sm focus:outline-none focus:ring-1 transition-all placeholder-transparent text-lg`}
+      className={`peer w-full h-16 px-5 pt-5 pb-1 rounded-2xl border-2 ${error ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : 'border-zinc-200 focus:border-[#14a800]/20 focus:ring-[#14a800] bg-surface hover:bg-zinc-100 focus:bg-white'} text-zinc-900 shadow-sm focus:outline-none focus:ring-1 transition-all placeholder-transparent text-lg`}
       {...register}
       {...rest}
     />
-    <label className={`absolute left-5 top-2 text-sm transition-all pointer-events-none ${error ? 'text-red-500' : 'text-zinc-500'} peer-placeholder-shown:text-base peer-placeholder-shown:top-5 peer-focus:top-2 peer-focus:text-sm peer-focus:text-brand-600 font-medium`}>
+    <label className={`absolute left-5 top-2 text-sm transition-all pointer-events-none ${error ? 'text-red-500' : 'text-zinc-500'} peer-placeholder-shown:text-base peer-placeholder-shown:top-5 peer-focus:top-2 peer-focus:text-sm peer-focus:text-[#14a800] font-medium`}>
       {label}
     </label>
     {error && (
@@ -42,18 +44,24 @@ export default function LoginForm() {
       setLoginError(null);
       // Real API Call to backend
       const response = await authAPI.login(data.email, data.password);
-      
+
+      if (response?.requiresTwoFactor && response?.userId) {
+        navigate('/auth/admin/verify', {
+          state: {
+            purpose: 'admin_2fa',
+            userId: response.userId,
+            email: data.email.trim().toLowerCase(),
+          },
+        });
+        return;
+      }
+
       const role = response.user?.role || 'FREELANCER';
 
       // Set global auth store
-      setAuth(response.user, response.accessToken);
+      setAuth(response.user, response.accessToken, response.refreshToken);
 
-      // Role-based redirection
-      if (role === 'CLIENT' || role === 'COMPANY') {
-        navigate('/client/dashboard');
-      } else {
-        navigate('/freelancer/dashboard');
-      }
+      navigate(getDashboardPathForRole(role));
     } catch (err) {
       setLoginError(err.message || 'Invalid credentials. Please try again.');
     }
@@ -95,9 +103,9 @@ export default function LoginForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
         <FloatingInput 
-          label="Email Address or Username" 
+          label="Email Address" 
           type="text" 
-          register={register('email', { required: "Email or username is required" })} 
+          register={register('email', loginRules.email)} 
           error={errors.email} 
         />
         
@@ -105,13 +113,13 @@ export default function LoginForm() {
           <FloatingInput 
             label="Password" 
             type={showPassword ? "text" : "password"} 
-            register={register('password', { required: "Password is required" })} 
+            register={register('password', loginRules.password)} 
             error={errors.password} 
             onKeyUp={handleKeyUp}
           />
           <button 
             type="button" 
-            className="absolute right-5 top-5 text-zinc-400 hover:text-brand-600 focus:outline-none transition-colors"
+            className="absolute right-5 top-5 text-zinc-400 hover:text-[#14a800] focus:outline-none transition-colors"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
@@ -131,21 +139,21 @@ export default function LoginForm() {
         <div className="flex items-center justify-between mt-6 mb-8">
           <label className="flex items-center gap-3 cursor-pointer group">
             <div className="relative flex items-center justify-center">
-              <input type="checkbox" className="w-5 h-5 rounded border-2 border-zinc-300 text-brand-600 focus:ring-indigo-500 cursor-pointer transition-all peer" {...register('rememberMe')} />
+              <input type="checkbox" className="w-5 h-5 rounded border-2 border-zinc-300 text-[#14a800] focus:ring-[#14a800] cursor-pointer transition-all peer" {...register('rememberMe')} />
             </div>
             <span className="text-zinc-600 font-medium group-hover:text-zinc-900 transition-colors">Remember me</span>
           </label>
 
-          <a href="/auth/forgot-password" className="text-sm font-bold text-brand-600 hover:text-brand-800 transition-colors relative group">
+          <a href="/auth/forgot-password" className="text-sm font-bold text-[#14a800] hover:text-[#14a800] transition-colors relative group">
             Forgot Password?
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-600 transition-all group-hover:w-full"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#14a800] transition-all group-hover:w-full"></span>
           </a>
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="relative w-full h-16 rounded-2xl font-bold text-xl text-white overflow-hidden transition-all duration-300 transform hover:-tranzinc-y-1 shadow-xl hover:shadow-2xl shadow-indigo-600/30 disabled:opacity-80 disabled:cursor-not-allowed disabled:transform-none bg-brand-600 hover:bg-brand-700"
+          className="relative w-full h-16 rounded-2xl font-bold text-xl text-white overflow-hidden transition-all duration-300 transform hover:-tranzinc-y-1 shadow-xl hover:shadow-2xl shadow-[#14a800]/25 disabled:opacity-80 disabled:cursor-not-allowed disabled:transform-none bg-[#14a800] hover:bg-[#118a00]"
         >
           {isSubmitting ? (
             <span className="flex items-center justify-center gap-2">

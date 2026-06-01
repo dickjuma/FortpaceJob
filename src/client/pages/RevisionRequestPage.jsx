@@ -5,6 +5,8 @@ import {
   MessageSquare, Check, X, Send, Eye, ShieldAlert, CheckCircle2
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
+import { validateRevisionFeedback } from '../../common/utils/validation';
+import notify from '../../common/utils/notify';
 
 // Mock Data
 const ORDER = {
@@ -30,7 +32,11 @@ export default function RevisionRequestPage() {
 
   const handleRequestRevision = (e) => {
     e.preventDefault();
-    if (!feedback.trim()) return;
+    const feedbackErr = validateRevisionFeedback(feedback);
+    if (feedbackErr) {
+      notify.error(feedbackErr);
+      return;
+    }
 
     setIsSubmitting(true);
     setTimeout(() => {
@@ -69,7 +75,7 @@ export default function RevisionRequestPage() {
         <div className="flex-1 space-y-8">
           
           <div className="mb-4">
-            <div className="flex items-center gap-2 mb-2 text-sm font-bold text-brand-600">
+            <div className="flex items-center gap-2 mb-2 text-sm font-bold text-[#14a800]">
               <span>Order {ORDER.id}</span>
             </div>
             <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">Review Delivery</h1>
@@ -93,9 +99,9 @@ export default function RevisionRequestPage() {
               <h4 className="text-sm font-bold text-zinc-900 dark:text-white mb-4 uppercase tracking-wider">Delivered Files</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {ORDER.delivery.files.map((file, i) => (
-                  <div key={i} className="flex items-center gap-3 p-4 bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl group hover:border-brand-500 transition-colors cursor-pointer">
+                  <div key={i} className="flex items-center gap-3 p-4 bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl group hover:border-[#14a800]/20 transition-colors cursor-pointer">
                     <div className="w-10 h-10 rounded-lg bg-white dark:bg-zinc-800 shadow-sm flex items-center justify-center shrink-0">
-                      {file.type === 'image' ? <ImageIcon className="w-5 h-5 text-brand-500" /> : 
+                      {file.type === 'image' ? <ImageIcon className="w-5 h-5 text-[#14a800]" /> : 
                        file.type === 'pdf' ? <FileText className="w-5 h-5 text-rose-500" /> : 
                        <FileText className="w-5 h-5 text-zinc-500" />}
                     </div>
@@ -106,7 +112,7 @@ export default function RevisionRequestPage() {
                     {file.type === 'image' && (
                       <button 
                         onClick={() => setActiveFilePreview(file)}
-                        className="p-2 text-zinc-400 hover:text-brand-500 opacity-0 group-hover:opacity-100 transition-all"
+                        className="p-2 text-zinc-400 hover:text-[#14a800] opacity-0 group-hover:opacity-100 transition-all"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
@@ -125,7 +131,7 @@ export default function RevisionRequestPage() {
                 className="bg-surface-dark rounded-3xl border border-zinc-800 overflow-hidden relative"
               >
                 <div className="p-4 bg-black/50 border-b border-white/10 flex justify-between items-center text-white">
-                  <span className="text-sm font-bold flex items-center gap-2"><ImageIcon className="w-4 h-4 text-brand-400" /> {activeFilePreview.name}</span>
+                  <span className="text-sm font-bold flex items-center gap-2"><ImageIcon className="w-4 h-4 text-[#14a800]" /> {activeFilePreview.name}</span>
                   <button onClick={() => setActiveFilePreview(null)} className="p-1 hover:bg-white/10 rounded-md transition-colors"><X className="w-4 h-4" /></button>
                 </div>
                 <div className="p-8 flex justify-center relative bg-zinc-800/50">

@@ -41,7 +41,7 @@ export default function ConnectedAccountsPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                  <LinkIcon className="w-4 h-4 text-brand-500" />
+                  <LinkIcon className="w-4 h-4 text-[#14a800]" />
                   {account.provider}
                 </h3>
                 <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{account.status}</p>

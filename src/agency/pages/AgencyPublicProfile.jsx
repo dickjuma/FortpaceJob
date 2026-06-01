@@ -22,7 +22,7 @@ export default function AgencyPublicProfile() {
   return (
     <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-8">
-        <div className="h-40 bg-gradient-to-r from-blue-700 to-indigo-900"></div>
+        <div className="h-40 bg-gradient-to-r from-blue-700 to-[#118a00]"></div>
         <div className="px-6 sm:px-10 pb-8">
           <div className="relative flex justify-between items-end -mt-16 mb-6">
             <div className="flex items-end space-x-5">
@@ -31,7 +31,7 @@ export default function AgencyPublicProfile() {
                   ED
                 </div>
                 <div className="absolute -bottom-2 -right-2 bg-white dark:bg-gray-900 rounded-full p-1">
-                  <ShieldCheck className="w-8 h-8 text-brand-500" />
+                  <ShieldCheck className="w-8 h-8 text-[#14a800]" />
                 </div>
               </div>
               <div className="pb-2">
@@ -44,7 +44,7 @@ export default function AgencyPublicProfile() {
               </div>
             </div>
             <div className="pb-2 flex space-x-3">
-              <button className="px-6 py-2.5 bg-brand-600 text-white font-bold text-sm rounded-lg shadow-sm shadow-brand-500/30 hover:bg-brand-700 transition-colors">
+              <button className="px-6 py-2.5 bg-[#14a800] text-white font-bold text-sm rounded-lg shadow-sm shadow-[#14a800]/25/30 hover:bg-[#118a00] transition-colors">
                 Hire Agency
               </button>
             </div>
@@ -74,7 +74,7 @@ export default function AgencyPublicProfile() {
 
             <div className="flex flex-wrap gap-2 items-start justify-end">
               {agencyData.badges.map(badge => (
-                <span key={badge} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400 border border-brand-200 dark:border-brand-800">
+                <span key={badge} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#14a800]/5 text-[#14a800] dark:bg-[#14a800]/30 dark:text-[#14a800] border border-[#14a800]/20 dark:border-[#14a800]/20">
                   <Award className="w-4 h-4 mr-1" /> {badge}
                 </span>
               ))}
@@ -96,13 +96,13 @@ export default function AgencyPublicProfile() {
         <div className="space-y-8">
           <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm">
             <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-              <Users className="w-5 h-5 mr-2 text-brand-500" /> Agency Roster
+              <Users className="w-5 h-5 mr-2 text-[#14a800]" /> Agency Roster
             </h2>
             <ul className="space-y-4">
               {agencyData.teamMembers.map((member, idx) => (
                 <li key={idx} className="flex items-center justify-between p-3 hover:bg-surface dark:hover:bg-gray-800 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-gray-700">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 bg-brand-100 dark:bg-brand-900/50 text-brand-600 rounded-full flex items-center justify-center font-bold mr-3">
+                    <div className="w-10 h-10 bg-[#14a800]/10 dark:bg-[#14a800]/50 text-[#14a800] rounded-full flex items-center justify-center font-bold mr-3">
                       {member.name[0]}
                     </div>
                     <div>
@@ -117,7 +117,7 @@ export default function AgencyPublicProfile() {
                 </li>
               ))}
             </ul>
-            <button className="w-full mt-4 py-2 text-sm font-bold text-brand-600 bg-brand-50 dark:bg-brand-900/20 rounded-lg hover:bg-brand-100 transition-colors">
+            <button className="w-full mt-4 py-2 text-sm font-bold text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/20 rounded-lg hover:bg-[#14a800]/10 transition-colors">
               View All 24 Members
             </button>
           </div>

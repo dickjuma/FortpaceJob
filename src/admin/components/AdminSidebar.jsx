@@ -7,6 +7,7 @@ import {
   Gavel, 
   ShieldAlert, 
   MessageSquare, 
+  Video,
   BarChart3, 
   History, 
   Settings,
@@ -195,6 +196,17 @@ const sidebarStructure = [
   },
   {
     type: "group",
+    id: "communications",
+    label: "Messages & Calls",
+    icon: Video,
+    items: [
+      { label: "Messages", path: "/admin/messages" },
+      { label: "Interview Queue", path: "/admin/interviews" },
+      { label: "Video Calls", path: "/admin/video-calls" }
+    ]
+  },
+  {
+    type: "group",
     id: "analytics",
     label: "Analytics",
     icon: BarChart3,
@@ -219,16 +231,19 @@ const sidebarStructure = [
     icon: Settings,
     items: [
       { label: "General", path: "/admin/config/general" },
+      { label: "Form submissions", path: "/admin/config/submissions" },
       { label: "Security", path: "/admin/config/security" },
       { label: "Gateways", path: "/admin/config/gateways" },
+      { label: "Subscriptions", path: "/admin/config/subscriptions" },
       { label: "Roles", path: "/admin/config/roles" },
-      { label: "Feature Flags", path: "/admin/config/flags" }
+      { label: "Feature Flags", path: "/admin/config/flags" },
+      { label: "Trusted Companies", path: "/admin/config/trusted-companies" }
     ]
   }
 ];
 
 const AdminSidebar = ({ isMobile, onClose }) => {
-  const [openGroup, setOpenGroup] = useState("finance");
+  const [openGroup, setOpenGroup] = useState("dashboard");
 
   const handleToggle = (id) => {
     setOpenGroup(openGroup === id ? null : id);

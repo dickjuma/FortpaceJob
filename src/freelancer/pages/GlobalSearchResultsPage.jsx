@@ -37,7 +37,7 @@ export default function GlobalSearchResultsPage() {
       {/* Search Header Input */}
       <div className="bg-white border border-border p-6 rounded-2xl shadow-sm mb-8">
         <h1 className="text-xl font-black text-text-primary mb-4 flex items-center gap-2">
-          <Search className="w-5 h-5 text-accent-purple" />
+          <Search className="w-5 h-5 text-success" />
           Global Search Results
         </h1>
         <div className="relative">
@@ -47,7 +47,7 @@ export default function GlobalSearchResultsPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search jobs, talents, services..."
-            className="pl-11 pr-4 py-3 w-full border border-border rounded-xl bg-light-gray focus:outline-none focus:border-accent-purple focus:bg-white text-sm text-text-primary font-bold"
+            className="pl-11 pr-4 py-3 w-full border border-border rounded-xl bg-light-gray focus:outline-none focus:border-success focus:bg-white text-sm text-text-primary font-bold"
           />
         </div>
       </div>
@@ -65,7 +65,7 @@ export default function GlobalSearchResultsPage() {
             className={cn(
               "pb-4 text-xs font-black uppercase tracking-widest transition-all border-b-2 flex items-center gap-1.5",
               activeTab === tab.key 
-                ? "border-accent-purple text-text-primary" 
+                ? "border-success text-text-primary" 
                 : "border-transparent text-text-secondary hover:text-text-primary"
             )}
           >
@@ -78,36 +78,36 @@ export default function GlobalSearchResultsPage() {
       {/* Tab Contents */}
       <div className="space-y-4">
         {activeTab === 'jobs' && results.jobs.map(job => (
-          <Card key={job.id} className="bg-white border border-border p-5 rounded-2xl shadow-sm hover:border-accent-purple/30 transition-all flex justify-between items-center group">
+          <Card key={job.id} className="bg-white border border-border p-5 rounded-2xl shadow-sm hover:border-success/30 transition-all flex justify-between items-center group">
             <div>
-              <h3 className="font-black text-sm text-text-primary group-hover:text-accent-purple transition-colors cursor-pointer">{job.title}</h3>
+              <h3 className="font-black text-sm text-text-primary group-hover:text-success transition-colors cursor-pointer">{job.title}</h3>
               <p className="text-xs text-text-secondary font-bold mt-1">Client: {job.client} • Budget: ${job.budget} ({job.type})</p>
             </div>
-            <button onClick={() => handleActionSimulate(job.title)} className="p-2 bg-light-gray/60 hover:bg-accent-purple hover:text-white rounded-xl transition-all text-text-secondary"><ArrowUpRight size={16} /></button>
+            <button onClick={() => handleActionSimulate(job.title)} className="p-2 bg-light-gray/60 hover:bg-success hover:text-white rounded-xl transition-all text-text-secondary"><ArrowUpRight size={16} /></button>
           </Card>
         ))}
 
         {activeTab === 'gigs' && results.gigs.map(gig => (
-          <Card key={gig.id} className="bg-white border border-border p-5 rounded-2xl shadow-sm hover:border-accent-purple/30 transition-all flex justify-between items-center group">
+          <Card key={gig.id} className="bg-white border border-border p-5 rounded-2xl shadow-sm hover:border-success/30 transition-all flex justify-between items-center group">
             <div>
-              <h3 className="font-black text-sm text-text-primary group-hover:text-accent-purple transition-colors cursor-pointer">{gig.title}</h3>
+              <h3 className="font-black text-sm text-text-primary group-hover:text-success transition-colors cursor-pointer">{gig.title}</h3>
               <p className="text-xs text-text-secondary font-bold mt-1">Starting At: ${gig.price} • Rating: {gig.rating} ({gig.reviews} reviews)</p>
             </div>
-            <button onClick={() => handleActionSimulate(gig.title)} className="p-2 bg-light-gray/60 hover:bg-accent-purple hover:text-white rounded-xl transition-all text-text-secondary"><ArrowUpRight size={16} /></button>
+            <button onClick={() => handleActionSimulate(gig.title)} className="p-2 bg-light-gray/60 hover:bg-success hover:text-white rounded-xl transition-all text-text-secondary"><ArrowUpRight size={16} /></button>
           </Card>
         ))}
 
         {activeTab === 'talent' && results.talent.map(tal => (
-          <Card key={tal.id} className="bg-white border border-border p-5 rounded-2xl shadow-sm hover:border-accent-purple/30 transition-all flex justify-between items-center group">
+          <Card key={tal.id} className="bg-white border border-border p-5 rounded-2xl shadow-sm hover:border-success/30 transition-all flex justify-between items-center group">
             <div>
               <div className="flex items-center gap-1.5">
-                <h3 className="font-black text-sm text-text-primary group-hover:text-accent-purple transition-colors cursor-pointer">{tal.name}</h3>
-                <ShieldCheck size={14} className="text-accent-purple" />
+                <h3 className="font-black text-sm text-text-primary group-hover:text-success transition-colors cursor-pointer">{tal.name}</h3>
+                <ShieldCheck size={14} className="text-success" />
               </div>
               <p className="text-xs text-text-secondary font-bold mt-0.5">{tal.title} • {tal.location}</p>
               <p className="text-[10px] text-success font-black uppercase tracking-wider mt-1">Job Success: {tal.success}</p>
             </div>
-            <button onClick={() => handleActionSimulate(tal.name)} className="p-2 bg-light-gray/60 hover:bg-accent-purple hover:text-white rounded-xl transition-all text-text-secondary"><ArrowUpRight size={16} /></button>
+            <button onClick={() => handleActionSimulate(tal.name)} className="p-2 bg-light-gray/60 hover:bg-success hover:text-white rounded-xl transition-all text-text-secondary"><ArrowUpRight size={16} /></button>
           </Card>
         ))}
       </div>

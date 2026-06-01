@@ -1,4 +1,4 @@
-import apiClient, { unwrapAdminResponse } from '../apiClient';
+import apiClient, { unwrapAdminResponse } from '../apiClient.js';
 
 const normalizeListResponse = (response) => {
   const { data, meta } = unwrapAdminResponse(response);
@@ -81,4 +81,9 @@ export async function freezeWalletApi(userId, data) {
     restrictions: ['WITHDRAWALS'],
     reason: data?.reason || 'Wallet withdrawals restricted by admin.',
   });
+}
+
+export async function updateUserApi(userId, data) {
+  const response = await apiClient.patch(`/users/${userId}`, data);
+  return unwrapAdminResponse(response).data;
 }

@@ -35,7 +35,7 @@ const MobileNav: React.FC = () => {
             className={({ isActive }) => cn(
               "flex flex-col items-center gap-1 transition-all",
               isActive 
-                ? "text-brand-600 dark:text-brand-400" 
+                ? "text-[#14a800] dark:text-[#14a800]" 
                 : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600"
             )}
           >

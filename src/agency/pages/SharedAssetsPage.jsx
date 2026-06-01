@@ -77,7 +77,7 @@ export default function SharedAssetsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <FolderOpen className="w-8 h-8 text-accent-purple" />
+            <FolderOpen className="w-8 h-8 text-success" />
             Brand Assets Directory
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -101,7 +101,7 @@ export default function SharedAssetsPage() {
             placeholder="Search assets..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 pr-4 py-2 w-full border border-border rounded-xl bg-light-gray/40 text-sm focus:outline-none focus:border-accent-purple text-text-primary"
+            className="pl-9 pr-4 py-2 w-full border border-border rounded-xl bg-light-gray/40 text-sm focus:outline-none focus:border-success text-text-primary"
           />
         </div>
       </div>
@@ -112,14 +112,14 @@ export default function SharedAssetsPage() {
           <Card key={asset.id} className="bg-white border border-border rounded-3xl p-6 shadow-md hover:shadow-lg transition-all relative flex flex-col justify-between min-h-[220px] group">
             <div>
               <div className="flex justify-between items-start mb-4">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest border bg-accent-purple/10 text-accent-purple border-accent-purple/20">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest border bg-success/10 text-success border-success/20">
                   {asset.category}
                 </span>
                 <div className="flex gap-1">
                   <button onClick={() => toggleFavorite(asset.id)} className="p-1 text-text-secondary hover:text-amber-500">
                     <Star size={16} className={cn(asset.favorite && "fill-amber-500 text-amber-500")} />
                   </button>
-                  <button onClick={() => deleteAsset(asset.id, asset.name)} className="p-1 text-text-secondary hover:text-accent-red">
+                  <button onClick={() => deleteAsset(asset.id, asset.name)} className="p-1 text-text-secondary hover:text-[#e63946]">
                     <X size={16} />
                   </button>
                 </div>
@@ -138,7 +138,7 @@ export default function SharedAssetsPage() {
             <div className="mt-6 pt-4 border-t border-border flex justify-end">
               <button 
                 onClick={() => handleDownloadSimulate(asset.name)}
-                className="flex items-center gap-1 px-4 py-2 bg-light-gray/60 hover:bg-accent-purple hover:text-white text-text-primary rounded-xl text-xs font-black transition-all shadow-sm"
+                className="flex items-center gap-1 px-4 py-2 bg-light-gray/60 hover:bg-success hover:text-white text-text-primary rounded-xl text-xs font-black transition-all shadow-sm"
               >
                 <Download size={14} /> Download Asset
               </button>
@@ -153,7 +153,7 @@ export default function SharedAssetsPage() {
           <Card className="w-full max-w-md shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-4 border-b border-border pb-3">
               <h3 className="text-lg font-black text-text-primary flex items-center gap-2">
-                <Plus className="w-5 h-5 text-accent-purple" />
+                <Plus className="w-5 h-5 text-success" />
                 Catalog Brand Asset
               </h3>
               <button onClick={() => setActiveModal(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
@@ -166,7 +166,7 @@ export default function SharedAssetsPage() {
                   type="text" 
                   value={assetForm.name} 
                   onChange={(e) => setAssetForm({ ...assetForm, name: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   placeholder="e.g. Acme Branding Kit"
                   required
                 />
@@ -178,7 +178,7 @@ export default function SharedAssetsPage() {
                   <select
                     value={assetForm.category}
                     onChange={(e) => setAssetForm({ ...assetForm, category: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-xs font-black text-text-primary appearance-none"
+                    className="w-full px-3 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-xs font-black text-text-primary appearance-none"
                   >
                     <option value="Logos">Logos</option>
                     <option value="Guidelines">Guidelines</option>
@@ -191,7 +191,7 @@ export default function SharedAssetsPage() {
                     type="text" 
                     value={assetForm.version} 
                     onChange={(e) => setAssetForm({ ...assetForm, version: e.target.value })} 
-                    className="w-full px-3 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-xs font-black text-text-primary"
+                    className="w-full px-3 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-xs font-black text-text-primary"
                     placeholder="e.g. v1.0"
                     required
                   />
@@ -202,7 +202,7 @@ export default function SharedAssetsPage() {
                     type="text" 
                     value={assetForm.size} 
                     onChange={(e) => setAssetForm({ ...assetForm, size: e.target.value })} 
-                    className="w-full px-3 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-xs font-black text-text-primary"
+                    className="w-full px-3 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-xs font-black text-text-primary"
                     placeholder="e.g. 4.8 MB"
                     required
                   />

@@ -85,17 +85,17 @@ const FreelancerDashboard = () => {
              <Award className="w-32 h-32" />
            </div>
            <h2 className="font-bold text-lg mb-6 relative z-10 flex items-center gap-2">
-             <ShieldCheck className="w-5 h-5 text-brand-600 dark:text-brand-400" /> Rank & Reputation
+             <ShieldCheck className="w-5 h-5 text-[#14a800] dark:text-[#14a800]" /> Rank & Reputation
            </h2>
            
            <div className="space-y-5 relative z-10">
              <div>
                <div className="flex justify-between text-sm mb-1 font-semibold">
                  <span>Marketplace Position</span>
-                 <span className="text-brand-600 dark:text-brand-400">Top 3%</span>
+                 <span className="text-[#14a800] dark:text-[#14a800]">Top 3%</span>
                </div>
                <div className="w-full h-1.5 bg-zinc-100 dark:bg-zinc-700 rounded-full overflow-hidden">
-                 <div className="h-full bg-brand-600 rounded-full w-[97%]" />
+                 <div className="h-full bg-[#14a800] rounded-full w-[97%]" />
                </div>
              </div>
              
@@ -160,19 +160,19 @@ const FreelancerDashboard = () => {
              <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-3xl shadow-sm p-6">
                <div className="flex justify-between items-center mb-4">
                  <h2 className="font-bold text-lg">Active Contracts</h2>
-                 <button className="text-sm text-brand-600 font-medium">View All</button>
+                 <button className="text-sm text-[#14a800] font-medium">View All</button>
                </div>
                <div className="space-y-4">
                  {[1, 2].map(i => (
-                   <div key={i} className="p-4 border border-zinc-100 dark:border-zinc-700 rounded-2xl bg-surface dark:bg-surface-dark/50 hover:border-brand-200 dark:hover:border-brand-800 transition-colors">
+                   <div key={i} className="p-4 border border-zinc-100 dark:border-zinc-700 rounded-2xl bg-surface dark:bg-surface-dark/50 hover:border-[#14a800]/20 dark:hover:border-[#14a800]/20 transition-colors">
                      <h4 className="font-semibold text-sm mb-1 text-zinc-900 dark:text-white line-clamp-1">Frontend Dashboard Build</h4>
                      <p className="text-xs text-zinc-500 mb-3">Client: Enterprise Corp</p>
                      <div className="w-full h-1.5 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden mb-2">
-                       <div className="h-full bg-brand-600 w-2/3" />
+                       <div className="h-full bg-[#14a800] w-2/3" />
                      </div>
                      <div className="flex justify-between text-xs font-semibold">
                        <span className="text-zinc-500">Milestone 2/3</span>
-                       <span className="text-brand-600">$1,500</span>
+                       <span className="text-[#14a800]">$1,500</span>
                      </div>
                    </div>
                  ))}
@@ -213,7 +213,7 @@ const FreelancerDashboard = () => {
         <div className="space-y-6">
           
           {/* 3. Recommended Jobs */}
-          <div className="bg-gradient-to-b from-blue-50 to-white dark:from-zinc-800 dark:to-zinc-900 border border-brand-100 dark:border-zinc-700 rounded-3xl shadow-sm p-6 flex flex-col h-full max-h-[500px]">
+          <div className="bg-gradient-to-b from-blue-50 to-white dark:from-zinc-800 dark:to-zinc-900 border border-[#14a800]/20 dark:border-zinc-700 rounded-3xl shadow-sm p-6 flex flex-col h-full max-h-[500px]">
             <div className="flex justify-between items-center mb-6">
               <h2 className="font-bold text-xl text-zinc-900 dark:text-white flex items-center gap-2">
                 <Zap className="w-5 h-5 text-amber-500" /> Matches For You
@@ -222,9 +222,9 @@ const FreelancerDashboard = () => {
             
             <div className="space-y-4 overflow-y-auto flex-1 pr-2">
               {recommendedJobs.map((job) => (
-                <div key={job.id} className="p-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-md transition-all group">
+                <div key={job.id} className="p-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl hover:border-[#14a800]/50 dark:hover:border-[#14a800]/50 hover:shadow-md transition-all group">
                   <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-bold text-sm text-zinc-900 dark:text-white group-hover:text-brand-600 transition-colors line-clamp-2 pr-2">{job.title}</h4>
+                    <h4 className="font-bold text-sm text-zinc-900 dark:text-white group-hover:text-[#14a800] transition-colors line-clamp-2 pr-2">{job.title}</h4>
                     <div className="text-xs font-extrabold text-green-600 bg-green-50 dark:bg-green-500/10 px-2 py-0.5 rounded shrink-0">{job.match}%</div>
                   </div>
                   
@@ -237,7 +237,7 @@ const FreelancerDashboard = () => {
                     {job.skills.map(s => <span key={s} className="px-2 py-1 bg-surface dark:bg-surface-dark text-[10px] font-semibold text-zinc-600 dark:text-zinc-300 rounded-md border border-zinc-200 dark:border-zinc-700">{s}</span>)}
                   </div>
                   
-                  <button className="w-full py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold rounded-xl transition-colors">
+                  <button className="w-full py-2 bg-[#14a800] hover:bg-[#118a00] text-white text-sm font-bold rounded-xl transition-colors">
                     Apply Now
                   </button>
                 </div>
@@ -265,7 +265,7 @@ const FreelancerDashboard = () => {
             <div className="space-y-3">
               {[
                 { title: 'Payment Released', time: '2 hours ago', icon: CheckCircle2, color: 'text-green-500' },
-                { title: 'New message from Enterprise Corp', time: '5 hours ago', icon: Bell, color: 'text-brand-500' }
+                { title: 'New message from Enterprise Corp', time: '5 hours ago', icon: Bell, color: 'text-[#14a800]' }
               ].map((n, i) => (
                 <div key={i} className="flex gap-3 items-center">
                   <div className={`w-8 h-8 rounded-full bg-surface dark:bg-surface-dark flex items-center justify-center shrink-0`}>

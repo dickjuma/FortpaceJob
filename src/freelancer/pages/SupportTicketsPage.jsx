@@ -63,7 +63,7 @@ export default function SupportTicketsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <MessageSquare className="w-8 h-8 text-accent-purple" />
+            <MessageSquare className="w-8 h-8 text-success" />
             Support Desk
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -87,7 +87,7 @@ export default function SupportTicketsPage() {
             placeholder="Search tickets by ID or title..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 pr-4 py-2 w-full border border-border rounded-xl bg-light-gray/40 text-sm focus:outline-none focus:border-accent-purple text-text-primary"
+            className="pl-9 pr-4 py-2 w-full border border-border rounded-xl bg-light-gray/40 text-sm focus:outline-none focus:border-success text-text-primary"
           />
         </div>
       </div>
@@ -98,13 +98,13 @@ export default function SupportTicketsPage() {
           <div key={ticket.id} className="bg-white border border-border rounded-3xl p-6 shadow-sm hover:shadow-md transition-all relative flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group">
             <div className="space-y-2 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-mono text-xs font-black text-accent-purple select-all">{ticket.id}</span>
+                <span className="font-mono text-xs font-black text-success select-all">{ticket.id}</span>
                 <span className="text-xs text-text-secondary">•</span>
                 <span className="text-xs text-text-secondary font-bold flex items-center gap-1"><Clock size={12} /> {ticket.date}</span>
                 <span className={cn(
                   "px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border shrink-0",
-                  ticket.priority === 'High' ? 'bg-accent-red/10 text-accent-red border-accent-red/20' :
-                  ticket.priority === 'Medium' ? 'bg-brand-50 border-brand-200 text-brand-600' :
+                  ticket.priority === 'High' ? 'bg-[#e63946]/10 text-[#e63946] border-[#e63946]/20' :
+                  ticket.priority === 'Medium' ? 'bg-[#14a800]/5 border-[#14a800]/20 text-[#14a800]' :
                   'bg-light-gray text-text-secondary border-border'
                 )}>
                   {ticket.priority} Priority
@@ -123,11 +123,11 @@ export default function SupportTicketsPage() {
             <div className="flex gap-2 self-end md:self-center shrink-0">
               <button 
                 onClick={() => { setSelectedTicket(ticket); setActiveModal('detail'); }}
-                className="px-3.5 py-1.5 bg-accent-purple/10 hover:bg-accent-purple text-accent-purple hover:text-white rounded-xl text-xs font-black transition-all"
+                className="px-3.5 py-1.5 bg-success/10 hover:bg-success text-success hover:text-white rounded-xl text-xs font-black transition-all"
               >
                 View Dialogue
               </button>
-              <button onClick={() => deleteTicket(ticket.id)} className="p-2 text-text-secondary hover:text-accent-red hover:bg-light-gray rounded-xl transition-all"><X size={16} /></button>
+              <button onClick={() => deleteTicket(ticket.id)} className="p-2 text-text-secondary hover:text-[#e63946] hover:bg-light-gray rounded-xl transition-all"><X size={16} /></button>
             </div>
           </div>
         ))}
@@ -147,7 +147,7 @@ export default function SupportTicketsPage() {
           <Card className="w-full max-w-lg shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-4 border-b border-border pb-3">
               <h3 className="text-lg font-black text-text-primary flex items-center gap-2">
-                <Plus className="w-5 h-5 text-accent-purple" />
+                <Plus className="w-5 h-5 text-success" />
                 Submit Support Ticket
               </h3>
               <button onClick={() => setActiveModal(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
@@ -160,7 +160,7 @@ export default function SupportTicketsPage() {
                   type="text" 
                   value={ticketForm.title} 
                   onChange={(e) => setTicketForm({ ...ticketForm, title: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   placeholder="e.g. Milestone Release Discrepancy"
                   required
                 />
@@ -172,7 +172,7 @@ export default function SupportTicketsPage() {
                   <select
                     value={ticketForm.category}
                     onChange={(e) => setTicketForm({ ...ticketForm, category: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary appearance-none"
+                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary appearance-none"
                   >
                     <option value="Billing & Escrow">Billing & Escrow</option>
                     <option value="Verification">Verification & Profile</option>
@@ -184,7 +184,7 @@ export default function SupportTicketsPage() {
                   <select
                     value={ticketForm.priority}
                     onChange={(e) => setTicketForm({ ...ticketForm, priority: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary appearance-none"
+                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary appearance-none"
                   >
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
@@ -199,7 +199,7 @@ export default function SupportTicketsPage() {
                   rows={4} 
                   value={ticketForm.desc} 
                   onChange={(e) => setTicketForm({ ...ticketForm, desc: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary resize-none font-medium"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary resize-none font-medium"
                   placeholder="Provide logs, contract IDs, and specifics..."
                   required
                 />

@@ -18,7 +18,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       <div className="w-full flex flex-col mb-4">
         {label && (
           <label htmlFor={selectId} className="mb-1 text-sm font-semibold text-text-primary">
-            {label} {required && <span className="text-accent-red">*</span>}
+            {label} {required && <span className="text-[#e63946]">*</span>}
           </label>
         )}
         <div className="relative">
@@ -28,7 +28,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             required={required}
             className={twMerge(
               clsx(
-                'w-full appearance-none rounded-md border border-border bg-white px-4 py-3 pr-10 text-sm transition-colors focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red disabled:bg-gray-100 disabled:cursor-not-allowed',
+                'w-full appearance-none rounded-md border border-border bg-white px-4 py-3 pr-10 text-sm transition-colors focus:border-[#e63946] focus:outline-none focus:ring-1 focus:ring-[#e63946] disabled:bg-gray-100 disabled:cursor-not-allowed',
                 error && 'border-error focus:border-error focus:ring-error',
                 className
               )

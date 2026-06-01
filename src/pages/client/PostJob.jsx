@@ -83,7 +83,7 @@ const PostJob = () => {
                   <div className="flex flex-col items-center gap-2 w-24">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 ${
                       step > s.num ? 'bg-green-500 text-white shadow-lg shadow-green-500/20' : 
-                      step === s.num ? 'bg-brand-600 text-white shadow-lg shadow-blue-500/20 ring-4 ring-brand-600/20' : 
+                      step === s.num ? 'bg-[#14a800] text-white shadow-lg shadow-#14a800]/20 ring-4 ring-brand-600/20' : 
                       'bg-zinc-100 dark:bg-zinc-700 text-zinc-400'
                     }`}>
                       {step > s.num ? <CheckCircle2 className="w-5 h-5" /> : <s.icon className="w-4 h-4" />}
@@ -111,12 +111,12 @@ const PostJob = () => {
                   
                   <div>
                     <label className="block text-sm font-medium mb-1.5">Job Title</label>
-                    <input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full px-4 py-3 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition-shadow" placeholder="e.g. Full Stack Developer for SaaS Platform" />
+                    <input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full px-4 py-3 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none transition-shadow" placeholder="e.g. Full Stack Developer for SaaS Platform" />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-1.5">Project Category</label>
-                    <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-4 py-3 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none">
+                    <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-4 py-3 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none">
                       <option value="">Select a category</option>
                       <option value="web">Web Development</option>
                       <option value="mobile">Mobile Development</option>
@@ -128,7 +128,7 @@ const PostJob = () => {
                   <div>
                     <label className="block text-sm font-medium mb-1.5">Job Description</label>
                     {/* Mock Rich Text Editor border */}
-                    <div className="border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-brand-500 transition-shadow">
+                    <div className="border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-#14a800] transition-shadow">
                       <div className="bg-surface dark:bg-surface-dark border-b border-zinc-200 dark:border-zinc-700 px-3 py-2 flex gap-2">
                         {['B', 'I', 'U', 'Link', 'List'].map(tool => (
                           <button key={tool} className="px-2 py-1 text-xs font-semibold text-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded">{tool}</button>
@@ -147,14 +147,14 @@ const PostJob = () => {
                   
                   <div>
                     <label className="block text-sm font-medium mb-1.5">Search Skills or Add Custom</label>
-                    <input type="text" onKeyDown={handleSkillAdd} className="w-full px-4 py-3 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none" placeholder="Type a skill and press Enter" />
+                    <input type="text" onKeyDown={handleSkillAdd} className="w-full px-4 py-3 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none" placeholder="Type a skill and press Enter" />
                   </div>
 
                   <div className="min-h-[120px] p-4 bg-surface dark:bg-surface-dark rounded-xl border border-zinc-200 dark:border-zinc-700 flex flex-wrap gap-2">
                     {formData.skills.map(skill => (
-                      <span key={skill} className="px-3 py-1.5 bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 rounded-lg text-sm font-semibold flex items-center gap-2 shadow-sm border border-brand-200 dark:border-brand-800/50">
+                      <span key={skill} className="px-3 py-1.5 bg-[#14a800]/10 dark:bg-[#14a800]/30 text-[#14a800] dark:text-[#14a800] rounded-lg text-sm font-semibold flex items-center gap-2 shadow-sm border border-[#14a800]/20 dark:border-[#14a800]/20/50">
                         {skill}
-                        <button onClick={() => setFormData({...formData, skills: formData.skills.filter(s => s !== skill)})} className="hover:text-brand-900 dark:hover:text-white transition-colors">&times;</button>
+                        <button onClick={() => setFormData({...formData, skills: formData.skills.filter(s => s !== skill)})} className="hover:text-[#14a800] dark:hover:text-white transition-colors">&times;</button>
                       </span>
                     ))}
                     {formData.skills.length === 0 && <span className="text-zinc-400 text-sm my-auto">No skills added yet.</span>}
@@ -179,11 +179,11 @@ const PostJob = () => {
                   <h2 className="text-2xl font-bold mb-6">Budget & Experience Setup</h2>
                   
                   <div className="grid grid-cols-2 gap-4 mb-6">
-                    <button onClick={() => setFormData({...formData, budgetType: 'hourly'})} className={`p-4 border-2 rounded-xl text-left transition-all ${formData.budgetType === 'hourly' ? 'border-brand-600 bg-brand-50 dark:bg-brand-900/10' : 'border-zinc-200 dark:border-zinc-700 hover:border-brand-300'}`}>
+                    <button onClick={() => setFormData({...formData, budgetType: 'hourly'})} className={`p-4 border-2 rounded-xl text-left transition-all ${formData.budgetType === 'hourly' ? 'border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10' : 'border-zinc-200 dark:border-zinc-700 hover:border-[#14a800]/50'}`}>
                       <h4 className="font-bold mb-1">Hourly Rate</h4>
                       <p className="text-xs text-zinc-500">Pay by the hour.</p>
                     </button>
-                    <button onClick={() => setFormData({...formData, budgetType: 'fixed'})} className={`p-4 border-2 rounded-xl text-left transition-all ${formData.budgetType === 'fixed' ? 'border-brand-600 bg-brand-50 dark:bg-brand-900/10' : 'border-zinc-200 dark:border-zinc-700 hover:border-brand-300'}`}>
+                    <button onClick={() => setFormData({...formData, budgetType: 'fixed'})} className={`p-4 border-2 rounded-xl text-left transition-all ${formData.budgetType === 'fixed' ? 'border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10' : 'border-zinc-200 dark:border-zinc-700 hover:border-[#14a800]/50'}`}>
                       <h4 className="font-bold mb-1">Fixed Price</h4>
                       <p className="text-xs text-zinc-500">Pay by project milestones.</p>
                     </button>
@@ -192,11 +192,11 @@ const PostJob = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1.5">Minimum ($)</label>
-                      <input type="number" value={formData.budgetMin} onChange={e => setFormData({...formData, budgetMin: e.target.value})} className="w-full px-4 py-3 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none" placeholder="10" />
+                      <input type="number" value={formData.budgetMin} onChange={e => setFormData({...formData, budgetMin: e.target.value})} className="w-full px-4 py-3 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none" placeholder="10" />
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1.5">Maximum ($)</label>
-                      <input type="number" value={formData.budgetMax} onChange={e => setFormData({...formData, budgetMax: e.target.value})} className="w-full px-4 py-3 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none" placeholder="50" />
+                      <input type="number" value={formData.budgetMax} onChange={e => setFormData({...formData, budgetMax: e.target.value})} className="w-full px-4 py-3 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none" placeholder="50" />
                     </div>
                   </div>
 
@@ -205,7 +205,7 @@ const PostJob = () => {
                     <div className="flex gap-4">
                       {['Entry', 'Intermediate', 'Expert'].map(lvl => (
                         <label key={lvl} className="flex items-center gap-2 cursor-pointer">
-                          <input type="radio" name="exp" checked={formData.experienceLevel === lvl} onChange={() => setFormData({...formData, experienceLevel: lvl})} className="w-4 h-4 text-brand-600 focus:ring-brand-500" />
+                          <input type="radio" name="exp" checked={formData.experienceLevel === lvl} onChange={() => setFormData({...formData, experienceLevel: lvl})} className="w-4 h-4 text-[#14a800] focus:ring-[#14a800]" />
                           <span className="text-sm font-medium">{lvl}</span>
                         </label>
                       ))}
@@ -219,7 +219,7 @@ const PostJob = () => {
                   <h2 className="text-2xl font-bold mb-6">Timeline & Duration</h2>
                   <div>
                     <label className="block text-sm font-medium mb-1.5">Estimated Duration</label>
-                    <select value={formData.duration} onChange={e => setFormData({...formData, duration: e.target.value})} className="w-full px-4 py-3 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none">
+                    <select value={formData.duration} onChange={e => setFormData({...formData, duration: e.target.value})} className="w-full px-4 py-3 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none">
                       <option value="">Select duration</option>
                       <option value="Less than 1 month">Less than 1 month</option>
                       <option value="1 to 3 months">1 to 3 months</option>
@@ -286,7 +286,7 @@ const PostJob = () => {
               {step < 6 ? (
                 <button 
                   onClick={() => setStep(step + 1)} 
-                  className="flex items-center gap-2 py-2.5 px-6 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all"
+                  className="flex items-center gap-2 py-2.5 px-6 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl font-bold shadow-lg shadow-#14a800]/20 transition-all"
                 >
                   Continue <ArrowRight className="w-4 h-4" />
                 </button>
@@ -303,13 +303,13 @@ const PostJob = () => {
 
         {/* Sidebar: AI Insights & Estimates */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl shadow-lg p-6 text-white relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#14a800] to-blue-700 rounded-2xl shadow-lg p-6 text-white relative overflow-hidden">
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
               <Users className="w-5 h-5" /> Estimated Matches
             </h3>
             <div className="text-4xl font-extrabold mb-1">{getEstimatedMatches()}</div>
-            <p className="text-sm text-brand-100 font-medium">Freelancers actively looking for work in your category.</p>
+            <p className="text-sm text-[#14a800] font-medium">Freelancers actively looking for work in your category.</p>
           </div>
 
           <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl shadow-sm p-6">

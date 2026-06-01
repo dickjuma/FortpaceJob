@@ -20,7 +20,7 @@ export default function NotificationCenter({ isOpen, onClose }) {
     switch (type) {
       case 'success': return 'text-success bg-success/10';
       case 'warning': return 'text-warning bg-warning/10';
-      case 'info': return 'text-brand-600 bg-brand-50 dark:bg-brand-900/20 dark:text-brand-400';
+      case 'info': return 'text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/20 dark:text-[#14a800]';
       default: return 'text-gray-500 bg-gray-100 dark:bg-gray-800';
     }
   };
@@ -39,7 +39,7 @@ export default function NotificationCenter({ isOpen, onClose }) {
               <Bell className="w-4 h-4 mr-2" /> Notifications
             </h3>
             <div className="flex gap-3">
-              <button onClick={markAllRead} className="text-xs font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700">Mark all read</button>
+              <button onClick={markAllRead} className="text-xs font-medium text-[#14a800] dark:text-[#14a800] hover:text-[#14a800]">Mark all read</button>
               <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X className="w-4 h-4" /></button>
             </div>
           </div>
@@ -50,7 +50,7 @@ export default function NotificationCenter({ isOpen, onClose }) {
                 {notifications.map((notif) => {
                   const Icon = notif.icon;
                   return (
-                    <div key={notif.id} className={`p-4 hover:bg-surface dark:hover:bg-surface-dark-secondary transition-colors cursor-pointer flex gap-4 ${notif.unread ? 'bg-brand-50/50 dark:bg-brand-900/10' : ''}`}>
+                    <div key={notif.id} className={`p-4 hover:bg-surface dark:hover:bg-surface-dark-secondary transition-colors cursor-pointer flex gap-4 ${notif.unread ? 'bg-[#14a800]/5/50 dark:bg-[#14a800]/10' : ''}`}>
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${getIconColor(notif.type)}`}>
                         <Icon className="w-5 h-5" />
                       </div>
@@ -64,7 +64,7 @@ export default function NotificationCenter({ isOpen, onClose }) {
                         <p className="text-sm text-gray-500 line-clamp-2">{notif.text}</p>
                       </div>
                       {notif.unread && (
-                        <div className="w-2 h-2 rounded-full bg-brand-500 mt-2 shrink-0"></div>
+                        <div className="w-2 h-2 rounded-full bg-[#14a800] mt-2 shrink-0"></div>
                       )}
                     </div>
                   );

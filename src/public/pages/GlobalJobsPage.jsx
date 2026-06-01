@@ -1,21 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Search, SlidersHorizontal, ChevronDown,
-  Clock, Heart, Building2, Globe
+  Clock, Heart, Building2, Globe, Loader2
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { cn } from '../../admin/utils/cn';
-
-
-const JOBS = [
-  { id: 1, title: 'Build a Next.js Enterprise Dashboard', company: 'TechNova', type: 'Hourly', budget: '$40 - $70/hr', locationType: 'online', location: 'Remote (Worldwide)', postedAt: '2 hours ago', description: 'We are looking for an experienced Next.js developer to build a high-performance enterprise dashboard. You must be highly proficient with Tailwind CSS, React Query, and modern UI/UX principles.', skills: ['Next.js', 'React', 'Tailwind CSS', 'TypeScript'], proposals: '10 to 15' },
-  { id: 2, title: 'Senior UI/UX Designer for FinTech Mobile App', company: 'PayFlow Inc.', type: 'Fixed-Price', budget: '$3,000', locationType: 'online', location: 'Remote (US Preferred)', postedAt: '5 hours ago', description: 'Need a senior product designer to redesign our core mobile banking flows. Experience in FinTech is a huge plus. We need wireframes, high-fidelity mockups, and a clickable prototype in Figma.', skills: ['Figma', 'UI/UX Design', 'Mobile Design', 'FinTech'], proposals: '20 to 50' },
-  { id: 3, title: 'Onsite React Native Developer', company: 'HealthSync', type: 'Hourly', budget: '$60 - $90/hr', locationType: 'onsite', location: 'San Francisco, CA', postedAt: '1 day ago', description: 'We need an onsite React Native developer in our SF office to work alongside our hardware team to integrate Bluetooth Medical devices with our cross-platform mobile application.', skills: ['React Native', 'Bluetooth (BLE)', 'Mobile App Development'], proposals: 'Less than 5' },
-];
+import { getFindWorkJobs, subscribeToFindWorkData, syncJobsWithBackend, loadFindWorkCategories } from '../../pages/find-work/findWorkData';
 
 export default function GlobalJobsPage() {
   const [showFilters, setShowFilters] = useState(true);
-  const [jobTypeFilter, setJobTypeFilter] = useState('online'); // 'online', 'onsite', 'all'
+  const [jobTypeFilter, setJobTypeFilter] = useState('online');
+  const [, setDataVersion] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsub = subscribeToFindWorkData(() => setDataVersion((v) => v + 1));
+    Promise.all([loadFindWorkCategories(), syncJobsWithBackend({})]).finally(() => setLoading(false));
+    return unsub;
+  }, []);
+
+  const jobs = getFindWorkJobs({
+    workMode: jobTypeFilter === 'onsite' ? 'local' : 'online',
+    sortBy: 'newest',
+  });
 
   return (
     <div className="min-h-screen bg-transparent font-sans flex flex-col">
@@ -30,9 +38,9 @@ export default function GlobalJobsPage() {
                 type="text" 
                 placeholder="Search for any service, skill, or professional..." 
                 defaultValue="React Developer"
-                className="w-full bg-zinc-100 dark:bg-zinc-800 border-none rounded-l-2xl pl-12 pr-4 py-3.5 text-sm font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-brand-500/50"
+                className="w-full bg-zinc-100 dark:bg-zinc-800 border-none rounded-l-2xl pl-12 pr-4 py-3.5 text-sm font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#14a800]/50"
               />
-              <button className="bg-brand-600 hover:bg-brand-700 text-white px-8 py-3.5 rounded-r-2xl font-bold transition-all shrink-0">
+              <button className="bg-[#14a800] hover:bg-[#118a00] text-white px-8 py-3.5 rounded-r-2xl font-bold transition-all shrink-0">
                 Search
               </button>
             </div>
@@ -56,7 +64,7 @@ export default function GlobalJobsPage() {
                 <h3 className="font-bold text-zinc-900 dark:text-white flex items-center gap-2">
                   <SlidersHorizontal className="w-5 h-5" /> Filters
                 </h3>
-                <button className="text-xs font-bold text-brand-600 hover:underline">Clear All</button>
+                <button className="text-xs font-bold text-[#14a800] hover:underline">Clear All</button>
               </div>
 
               {/* Sidebar Filters */}
@@ -70,7 +78,7 @@ export default function GlobalJobsPage() {
                       <label key={cat} className="flex items-center gap-3 cursor-pointer group">
                         <div className="relative flex items-center justify-center">
                           <input type="checkbox" defaultChecked={i===0} className="peer sr-only" />
-                          <div className="w-5 h-5 border-2 border-zinc-300 dark:border-zinc-600 rounded peer-checked:border-brand-500 peer-checked:bg-brand-500 transition-colors"></div>
+                          <div className="w-5 h-5 border-2 border-zinc-300 dark:border-zinc-600 rounded peer-checked:border-[#14a800]/20 peer-checked:bg-[#14a800] transition-colors"></div>
                           <CheckIcon className="w-3.5 h-3.5 text-white absolute opacity-0 peer-checked:opacity-100" />
                         </div>
                         <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">{cat}</span>
@@ -87,7 +95,7 @@ export default function GlobalJobsPage() {
                       <label key={type} className="flex items-center gap-3 cursor-pointer group">
                         <div className="relative flex items-center justify-center">
                           <input type="radio" name="jobtype" defaultChecked={i===0} className="peer sr-only" />
-                          <div className="w-5 h-5 border-2 border-zinc-300 dark:border-zinc-600 rounded-full peer-checked:border-brand-500 peer-checked:bg-brand-500 transition-colors"></div>
+                          <div className="w-5 h-5 border-2 border-zinc-300 dark:border-zinc-600 rounded-full peer-checked:border-[#14a800]/20 peer-checked:bg-[#14a800] transition-colors"></div>
                           <div className="w-2 h-2 bg-white rounded-full absolute opacity-0 peer-checked:opacity-100"></div>
                         </div>
                         <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">{type}</span>
@@ -104,7 +112,9 @@ export default function GlobalJobsPage() {
         <div className="flex-1 space-y-6">
           
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-surface-dark p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-            <p className="text-sm font-bold text-zinc-500">Showing <span className="text-zinc-900 dark:text-white">4,521</span> results for "React Developer"</p>
+            <p className="text-sm font-bold text-zinc-500">
+              Showing <span className="text-zinc-900 dark:text-white">{jobs.length}</span> {jobTypeFilter === 'onsite' ? 'on-site' : 'online'} jobs
+            </p>
             <div className="flex items-center gap-4">
               <span className="text-sm font-bold text-zinc-500">Sort by:</span>
               <select className="bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm font-bold outline-none cursor-pointer">
@@ -120,13 +130,13 @@ export default function GlobalJobsPage() {
             <div className="bg-white dark:bg-surface-dark rounded-2xl p-2 border border-zinc-200 dark:border-zinc-800 shadow-sm flex flex-col sm:flex-row gap-2">
               <button 
                 onClick={() => setJobTypeFilter('online')}
-                className={cn("flex-1 py-3 px-4 sm:px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all", jobTypeFilter === 'online' ? "bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 shadow-sm" : "text-zinc-500 hover:bg-surface dark:hover:bg-zinc-800")}
+                className={cn("flex-1 py-3 px-4 sm:px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all", jobTypeFilter === 'online' ? "bg-[#14a800]/5 dark:bg-[#14a800]/30 text-[#14a800] dark:text-[#14a800] shadow-sm" : "text-zinc-500 hover:bg-surface dark:hover:bg-zinc-800")}
               >
                 <Globe className="w-4 h-4 shrink-0" /> <span className="truncate">Online Jobs (Remote)</span>
               </button>
               <button 
                 onClick={() => setJobTypeFilter('onsite')}
-                className={cn("flex-1 py-3 px-4 sm:px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all", jobTypeFilter === 'onsite' ? "bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 shadow-sm" : "text-zinc-500 hover:bg-surface dark:hover:bg-zinc-800")}
+                className={cn("flex-1 py-3 px-4 sm:px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all", jobTypeFilter === 'onsite' ? "bg-[#14a800]/5 dark:bg-[#14a800]/30 text-[#14a800] dark:text-[#14a800] shadow-sm" : "text-zinc-500 hover:bg-surface dark:hover:bg-zinc-800")}
               >
                 <Building2 className="w-4 h-4 shrink-0" /> <span className="truncate">Onsite Jobs (Local)</span>
               </button>
@@ -134,63 +144,54 @@ export default function GlobalJobsPage() {
 
             {/* Jobs List */}
             <div className="space-y-4">
-              {JOBS.filter(j => jobTypeFilter === 'all' || j.locationType === jobTypeFilter).map((job, index) => (
+              {loading ? (
+                <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-[#14a800]" /></div>
+              ) : jobs.length === 0 ? (
+                <p className="text-center text-zinc-500 py-12">No jobs in this category yet.</p>
+              ) : (
+              jobs.map((job, index) => (
                 <motion.div
                   key={job.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.05 }}
                   className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-md transition-all group"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-brand-600 transition-colors cursor-pointer mb-1">
+                      <Link to={job.detailPath || `/find-work/work/${job.id}`} className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-[#14a800] transition-colors cursor-pointer mb-1 block">
                         {job.title}
-                      </h3>
+                      </Link>
                       <div className="flex items-center gap-3 text-sm font-medium text-zinc-500">
-                        <span>{job.company}</span>
-                        <div className="w-1 h-1 bg-zinc-300 rounded-full" />
-                        <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {job.postedAt}</span>
+                        <span>{job.client?.name || job.clientName || 'Client'}</span>
                         <div className="w-1 h-1 bg-zinc-300 rounded-full" />
                         <span className="flex items-center gap-1">
-                          {job.locationType === 'online' ? <Globe className="w-3.5 h-3.5 text-brand-500" /> : <Building2 className="w-3.5 h-3.5 text-amber-500" />}
-                          {job.location}
+                          {job.workMode === 'local' ? <Building2 className="w-3.5 h-3.5 text-amber-500" /> : <Globe className="w-3.5 h-3.5 text-[#14a800]" />}
+                          {job.locationLabel || job.location || 'Remote'}
                         </span>
                       </div>
                     </div>
-                    <button className="p-2 text-zinc-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-colors shrink-0">
+                    <button type="button" className="p-2 text-zinc-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-colors shrink-0">
                       <Heart className="w-5 h-5" />
                     </button>
                   </div>
 
                   <div className="flex items-center gap-4 mb-4 text-sm font-bold text-zinc-700 dark:text-zinc-300">
-                    <span>{job.type}</span>
+                    <span>{job.budgetType || job.type || 'Fixed'}</span>
                     <div className="w-px h-4 bg-zinc-200 dark:bg-zinc-700" />
-                    <span className="text-zinc-900 dark:text-white font-black">{job.budget}</span>
+                    <span className="text-zinc-900 dark:text-white font-black">{job.budgetLabel || job.budget}</span>
                   </div>
 
-                  <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-5 line-clamp-2">
-                    {job.description}
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4 line-clamp-2">{job.summary || job.description}</p>
 
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {job.skills.map(skill => (
-                      <span key={skill} className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 text-xs font-bold rounded-lg">
-                        {skill}
-                      </span>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {(job.skills || []).slice(0, 5).map((skill) => (
+                      <span key={skill} className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-full text-xs font-bold text-zinc-600 dark:text-zinc-300">{skill}</span>
                     ))}
                   </div>
-
-                  <div className="flex items-center justify-between pt-5 border-t border-zinc-100 dark:border-zinc-800">
-                    <div className="text-xs font-bold text-zinc-500">
-                      Proposals: <span className="text-zinc-900 dark:text-white">{job.proposals}</span>
-                    </div>
-                    <button className="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold text-sm shadow-sm transition-colors">
-                      Submit Proposal
-                    </button>
-                  </div>
                 </motion.div>
-              ))}
+              ))
+              )}
             </div>
           </>
 

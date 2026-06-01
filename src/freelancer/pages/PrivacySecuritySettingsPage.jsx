@@ -61,7 +61,7 @@ export default function PrivacySecuritySettingsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <ShieldCheck className="w-8 h-8 text-accent-purple" />
+            <ShieldCheck className="w-8 h-8 text-success" />
             Security Configurations
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -75,7 +75,7 @@ export default function PrivacySecuritySettingsPage() {
         {/* Change Password Card */}
         <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
           <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-            <Key className="w-5 h-5 text-accent-purple" />
+            <Key className="w-5 h-5 text-success" />
             Update Password
           </h3>
           
@@ -86,7 +86,7 @@ export default function PrivacySecuritySettingsPage() {
                 type="password" 
                 value={passwordForm.currentPassword}
                 onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
-                className="w-full max-w-md px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                className="w-full max-w-md px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                 required
               />
             </div>
@@ -97,7 +97,7 @@ export default function PrivacySecuritySettingsPage() {
                   type="password" 
                   value={passwordForm.newPassword}
                   onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   required
                 />
               </div>
@@ -107,7 +107,7 @@ export default function PrivacySecuritySettingsPage() {
                   type="password" 
                   value={passwordForm.confirmPassword}
                   onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   required
                 />
               </div>
@@ -120,7 +120,7 @@ export default function PrivacySecuritySettingsPage() {
         <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-1">
             <h3 className="text-base font-black text-text-primary flex items-center gap-2">
-              <ShieldAlert className="w-5 h-5 text-accent-purple animate-pulse" />
+              <ShieldAlert className="w-5 h-5 text-success animate-pulse" />
               Two-Factor Authentication (2FA)
             </h3>
             <p className="text-xs text-text-secondary leading-relaxed font-medium max-w-xl">
@@ -132,7 +132,7 @@ export default function PrivacySecuritySettingsPage() {
             className={cn(
               "px-6 py-2.5 font-bold rounded-xl text-xs shadow-sm transition-all border shrink-0",
               mfaEnabled 
-                ? "bg-accent-purple/15 border-accent-purple/30 text-accent-purple" 
+                ? "bg-success/15 border-success/30 text-success" 
                 : "bg-light-gray border-border text-text-secondary"
             )}
           >
@@ -143,7 +143,7 @@ export default function PrivacySecuritySettingsPage() {
         {/* Active Sessions */}
         <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
           <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-            <Globe className="w-5 h-5 text-accent-purple" />
+            <Globe className="w-5 h-5 text-success" />
             Active Online Sessions
           </h3>
 
@@ -162,7 +162,7 @@ export default function PrivacySecuritySettingsPage() {
                 {!sess.active && (
                   <button 
                     onClick={() => revokeSession(sess.id, sess.device)}
-                    className="p-2 text-text-secondary hover:text-accent-red hover:bg-light-gray rounded-xl transition-all"
+                    className="p-2 text-text-secondary hover:text-[#e63946] hover:bg-light-gray rounded-xl transition-all"
                     title="Terminate Session"
                   >
                     <LogOut size={16} />

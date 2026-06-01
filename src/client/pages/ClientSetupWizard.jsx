@@ -65,14 +65,14 @@ export default function ClientSetupWizard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-navy to-zinc-900 font-sans text-white py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-[#222222] to-zinc-900 font-sans text-white py-12 px-4 sm:px-6 lg:px-8">
       <Toaster position="top-right" />
       <div className="max-w-4xl mx-auto space-y-8">
         
         {/* Logo and Greeting Header */}
         <div className="flex items-center justify-between border-b border-white/5 pb-6">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-accent-purple flex items-center justify-center font-black text-sm">F</div>
+            <div className="w-8 h-8 rounded-lg bg-success flex items-center justify-center font-black text-sm">F</div>
             <span className="text-sm font-bold tracking-tight text-white/90">ForteSpace Operations</span>
           </div>
           <span className="text-xs font-bold text-light-gray/40 uppercase tracking-widest">Enterprise setup</span>
@@ -89,7 +89,7 @@ export default function ClientSetupWizard() {
                 key={s.num} 
                 className={`p-4 rounded-2xl border transition-all duration-300 ${
                   isActive 
-                    ? 'border-accent-purple bg-accent-purple/5' 
+                    ? 'border-success bg-success/5' 
                     : isCompleted 
                       ? 'border-success/30 bg-success/5' 
                       : 'border-white/5 bg-white/5'
@@ -98,7 +98,7 @@ export default function ClientSetupWizard() {
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
                     isActive 
-                      ? 'bg-accent-purple text-white shadow-lg shadow-accent-purple/20' 
+                      ? 'bg-success text-white shadow-lg shadow-[#14a800]/20' 
                       : isCompleted 
                         ? 'bg-success text-white' 
                         : 'bg-white/10 text-light-gray/40'
@@ -117,7 +117,7 @@ export default function ClientSetupWizard() {
 
         {/* Dynamic Card Container wrapper with transition animations */}
         <Card className="p-8 border border-white/10 bg-white/5 backdrop-blur-xl rounded-3xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-accent-purple/10 blur-[50px] rounded-full"></div>
+          <div className="absolute top-0 right-0 w-48 h-48 bg-success/10 blur-[50px] rounded-full"></div>
           
           <AnimatePresence mode="wait">
             <motion.div
@@ -135,8 +135,8 @@ export default function ClientSetupWizard() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="md:col-span-1 flex flex-col items-center justify-center p-6 border border-dashed border-white/15 rounded-2xl bg-white/5 relative group cursor-pointer hover:border-accent-purple transition-colors">
-                      <Upload className="w-8 h-8 text-light-gray/40 group-hover:text-accent-purple transition-colors" />
+                    <div className="md:col-span-1 flex flex-col items-center justify-center p-6 border border-dashed border-white/15 rounded-2xl bg-white/5 relative group cursor-pointer hover:border-success transition-colors">
+                      <Upload className="w-8 h-8 text-light-gray/40 group-hover:text-success transition-colors" />
                       <span className="text-[10px] font-bold text-light-gray/50 mt-2">Upload Brand Logo</span>
                       <span className="text-[8px] text-light-gray/30 mt-1">SVG, PNG up to 2MB</span>
                     </div>
@@ -147,7 +147,7 @@ export default function ClientSetupWizard() {
                         <input 
                           type="text" 
                           placeholder="e.g. Acme Tech Solutions Ltd"
-                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-accent-purple outline-none transition-all"
+                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-success outline-none transition-all"
                           value={companyInfo.name}
                           onChange={e => setCompanyInfo({ ...companyInfo, name: e.target.value })}
                         />
@@ -157,7 +157,7 @@ export default function ClientSetupWizard() {
                         <div className="flex flex-col gap-1.5">
                           <label className="text-[10px] font-black text-light-gray uppercase tracking-wider">Industry Sector</label>
                           <select 
-                            className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-accent-purple outline-none text-white/95"
+                            className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-success outline-none text-white/95"
                             value={companyInfo.industry}
                             onChange={e => setCompanyInfo({ ...companyInfo, industry: e.target.value })}
                           >
@@ -171,7 +171,7 @@ export default function ClientSetupWizard() {
                         <div className="flex flex-col gap-1.5">
                           <label className="text-[10px] font-black text-light-gray uppercase tracking-wider">Company Workforce Size</label>
                           <select 
-                            className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-accent-purple outline-none text-white/95"
+                            className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-success outline-none text-white/95"
                             value={companyInfo.size}
                             onChange={e => setCompanyInfo({ ...companyInfo, size: e.target.value })}
                           >
@@ -198,11 +198,11 @@ export default function ClientSetupWizard() {
                     <input 
                       type="text" 
                       placeholder="e.g. Quality Assurance / Security"
-                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-accent-purple outline-none"
+                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-success outline-none"
                       value={newDept}
                       onChange={e => setNewDept(e.target.value)}
                     />
-                    <Button onClick={addDepartment} className="bg-accent-purple border-none rounded-xl text-xs px-4 font-bold flex items-center gap-1.5">
+                    <Button onClick={addDepartment} className="bg-success border-none rounded-xl text-xs px-4 font-bold flex items-center gap-1.5">
                       <Plus className="w-4 h-4" /> Add Dept
                     </Button>
                   </div>
@@ -211,7 +211,7 @@ export default function ClientSetupWizard() {
                     {departments.map(dept => (
                       <div key={dept} className="flex justify-between items-center p-3 bg-white/5 border border-white/10 rounded-xl">
                         <span className="text-xs font-bold">{dept}</span>
-                        <button onClick={() => removeDepartment(dept)} className="text-light-gray/40 hover:text-accent-red transition-colors">
+                        <button onClick={() => removeDepartment(dept)} className="text-light-gray/40 hover:text-[#e63946] transition-colors">
                           <Trash className="w-3.5 h-3.5" />
                         </button>
                       </div>
@@ -232,13 +232,13 @@ export default function ClientSetupWizard() {
                       onClick={() => setPaymentOption('mpesa')}
                       className={`p-5 rounded-2xl border cursor-pointer transition-all ${
                         paymentOption === 'mpesa' 
-                          ? 'border-accent-purple bg-accent-purple/5 shadow-lg' 
+                          ? 'border-success bg-success/5 shadow-lg' 
                           : 'border-white/5 bg-white/5 hover:bg-white/10'
                       }`}
                     >
                       <div className="flex justify-between items-start">
                         <div className="w-10 h-10 bg-success/20 text-success rounded-xl flex items-center justify-center font-black">M</div>
-                        {paymentOption === 'mpesa' && <div className="w-4 h-4 rounded-full bg-accent-purple border border-white flex items-center justify-center"><Check className="w-2.5 h-2.5 text-white" /></div>}
+                        {paymentOption === 'mpesa' && <div className="w-4 h-4 rounded-full bg-success border border-white flex items-center justify-center"><Check className="w-2.5 h-2.5 text-white" /></div>}
                       </div>
                       <h4 className="text-sm font-black mt-4">M-Pesa STK Daraja Push</h4>
                       <p className="text-[10px] font-semibold text-light-gray/50 mt-1">Direct Safaricom wallet billing, ideal for instant offline payment runs in Africa.</p>
@@ -248,13 +248,13 @@ export default function ClientSetupWizard() {
                       onClick={() => setPaymentOption('card')}
                       className={`p-5 rounded-2xl border cursor-pointer transition-all ${
                         paymentOption === 'card' 
-                          ? 'border-accent-purple bg-accent-purple/5 shadow-lg' 
+                          ? 'border-success bg-success/5 shadow-lg' 
                           : 'border-white/5 bg-white/5 hover:bg-white/10'
                       }`}
                     >
                       <div className="flex justify-between items-start">
-                        <div className="w-10 h-10 bg-accent-purple/20 text-accent-purple rounded-xl flex items-center justify-center font-black"><CreditCard className="w-5 h-5" /></div>
-                        {paymentOption === 'card' && <div className="w-4 h-4 rounded-full bg-accent-purple border border-white flex items-center justify-center"><Check className="w-2.5 h-2.5 text-white" /></div>}
+                        <div className="w-10 h-10 bg-success/20 text-success rounded-xl flex items-center justify-center font-black"><CreditCard className="w-5 h-5" /></div>
+                        {paymentOption === 'card' && <div className="w-4 h-4 rounded-full bg-success border border-white flex items-center justify-center"><Check className="w-2.5 h-2.5 text-white" /></div>}
                       </div>
                       <h4 className="text-sm font-black mt-4">Corporate Debit/Credit Card</h4>
                       <p className="text-[10px] font-semibold text-light-gray/50 mt-1">Secure Stripe authorization for international contractors and milestones protection.</p>
@@ -265,13 +265,13 @@ export default function ClientSetupWizard() {
 
               {step === 4 && (
                 <div className="space-y-6 text-center py-6">
-                  <div className="w-20 h-20 bg-accent-purple/20 text-accent-purple rounded-full flex items-center justify-center mx-auto mb-4 border border-accent-purple/30 shadow-lg animate-pulse">
+                  <div className="w-20 h-20 bg-success/20 text-success rounded-full flex items-center justify-center mx-auto mb-4 border border-success/30 shadow-lg animate-pulse">
                     <Bot className="w-10 h-10" />
                   </div>
                   <div>
                     <h2 className="text-2xl font-black">Ready to Provision Workspace!</h2>
                     <p className="text-xs font-semibold text-light-gray/50 max-w-md mx-auto mt-2 leading-relaxed">
-                      Our custom Forte AI assistant will initialize your dashboards, create communication templates for your <strong className="text-accent-purple">{companyInfo.name || 'Enterprise'}</strong> workspace, and set up your billing rails.
+                      Our custom Forte AI assistant will initialize your dashboards, create communication templates for your <strong className="text-success">{companyInfo.name || 'Enterprise'}</strong> workspace, and set up your billing rails.
                     </p>
                   </div>
 
@@ -295,7 +295,7 @@ export default function ClientSetupWizard() {
               <ArrowLeft className="w-4 h-4" /> Previous Step
             </button>
 
-            <Button onClick={handleNext} className="bg-accent-purple border-none font-bold text-xs py-3 px-6 rounded-2xl flex items-center gap-1.5 shadow-lg shadow-accent-purple/20">
+            <Button onClick={handleNext} className="bg-success border-none font-bold text-xs py-3 px-6 rounded-2xl flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20">
               {step === 4 ? 'Provision Workspace' : 'Continue Step'}
               <ChevronRight className="w-4 h-4" />
             </Button>

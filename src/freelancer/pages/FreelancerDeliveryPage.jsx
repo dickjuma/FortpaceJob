@@ -23,14 +23,14 @@ export default function FreelancerDeliveryPage() {
       <div className="bg-white dark:bg-surface-dark border-b border-zinc-200 dark:border-zinc-800 pt-8 pb-6 sticky top-0 z-30 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="flex items-center gap-2 text-xs font-bold text-zinc-500 mb-2">
-            <a href="#" className="hover:text-brand-600 transition-colors">Contracts</a> <ChevronRight className="w-3 h-3" />
-            <a href="#" className="hover:text-brand-600 transition-colors">E-Commerce App</a>
+            <a href="#" className="hover:text-[#14a800] transition-colors">Contracts</a> <ChevronRight className="w-3 h-3" />
+            <a href="#" className="hover:text-[#14a800] transition-colors">E-Commerce App</a>
           </div>
           
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
               <h1 className="text-2xl font-black text-zinc-900 dark:text-white flex items-center gap-3">
-                <Package className="w-6 h-6 text-brand-500" /> Submit Final Delivery
+                <Package className="w-6 h-6 text-[#14a800]" /> Submit Final Delivery
               </h1>
               <p className="text-sm font-medium text-zinc-500 mt-1">Client: Sarah Mitchell • Contract: #CTR-2024-8821</p>
             </div>
@@ -63,7 +63,7 @@ export default function FreelancerDeliveryPage() {
                   value={deliveryMessage}
                   onChange={(e) => setDeliveryMessage(e.target.value)}
                   placeholder="Hi Sarah, I've attached the final zip file containing..."
-                  className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-brand-500 resize-y text-zinc-900 dark:text-white transition-colors"
+                  className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20 resize-y text-zinc-900 dark:text-white transition-colors"
                 ></textarea>
               </div>
 
@@ -71,9 +71,9 @@ export default function FreelancerDeliveryPage() {
                 <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-3">Attach Files</h3>
                 <div className="border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer hover:bg-surface dark:hover:bg-zinc-800/50 transition-colors group">
                   <div className="w-12 h-12 bg-white dark:bg-surface-dark shadow-sm rounded-full flex items-center justify-center mb-3 group-hover:-tranzinc-y-1 transition-transform">
-                    <UploadCloud className="w-6 h-6 text-brand-500" />
+                    <UploadCloud className="w-6 h-6 text-[#14a800]" />
                   </div>
-                  <p className="text-sm font-bold text-zinc-900 dark:text-white mb-1">Drag & drop files or <span className="text-brand-600">browse</span></p>
+                  <p className="text-sm font-bold text-zinc-900 dark:text-white mb-1">Drag & drop files or <span className="text-[#14a800]">browse</span></p>
                   <p className="text-xs font-medium text-zinc-500">ZIP, PDF, Source Files up to 5GB</p>
                 </div>
               </div>
@@ -85,7 +85,7 @@ export default function FreelancerDeliveryPage() {
                   <input 
                     type="url" 
                     placeholder="https://figma.com/file/..." 
-                    className="w-full pl-10 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-brand-500 transition-colors text-zinc-900 dark:text-white"
+                    className="w-full pl-10 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20 transition-colors text-zinc-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -97,24 +97,24 @@ export default function FreelancerDeliveryPage() {
             <p className="text-sm font-medium text-zinc-500 mb-6">Make sure you have included everything required by the contract.</p>
             
             <div className="space-y-4">
-              <label className={cn("flex items-start gap-4 p-4 border rounded-xl cursor-pointer transition-colors", checklist.source ? "border-brand-500 bg-brand-50 dark:bg-brand-500/10" : "border-zinc-200 dark:border-zinc-700 hover:bg-surface dark:hover:bg-zinc-800")}>
-                <input type="checkbox" className="w-5 h-5 mt-0.5 rounded border-zinc-300 text-brand-600 focus:ring-brand-500" checked={checklist.source} onChange={() => setChecklist(p => ({...p, source: !p.source}))} />
+              <label className={cn("flex items-start gap-4 p-4 border rounded-xl cursor-pointer transition-colors", checklist.source ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10" : "border-zinc-200 dark:border-zinc-700 hover:bg-surface dark:hover:bg-zinc-800")}>
+                <input type="checkbox" className="w-5 h-5 mt-0.5 rounded border-zinc-300 text-[#14a800] focus:ring-[#14a800]" checked={checklist.source} onChange={() => setChecklist(p => ({...p, source: !p.source}))} />
                 <div>
                   <h4 className="font-bold text-zinc-900 dark:text-white">Source Files Included</h4>
                   <p className="text-xs font-medium text-zinc-500">Original project files (Figma, PSD, Code)</p>
                 </div>
               </label>
               
-              <label className={cn("flex items-start gap-4 p-4 border rounded-xl cursor-pointer transition-colors", checklist.assets ? "border-brand-500 bg-brand-50 dark:bg-brand-500/10" : "border-zinc-200 dark:border-zinc-700 hover:bg-surface dark:hover:bg-zinc-800")}>
-                <input type="checkbox" className="w-5 h-5 mt-0.5 rounded border-zinc-300 text-brand-600 focus:ring-brand-500" checked={checklist.assets} onChange={() => setChecklist(p => ({...p, assets: !p.assets}))} />
+              <label className={cn("flex items-start gap-4 p-4 border rounded-xl cursor-pointer transition-colors", checklist.assets ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10" : "border-zinc-200 dark:border-zinc-700 hover:bg-surface dark:hover:bg-zinc-800")}>
+                <input type="checkbox" className="w-5 h-5 mt-0.5 rounded border-zinc-300 text-[#14a800] focus:ring-[#14a800]" checked={checklist.assets} onChange={() => setChecklist(p => ({...p, assets: !p.assets}))} />
                 <div>
                   <h4 className="font-bold text-zinc-900 dark:text-white">Final Assets Included</h4>
                   <p className="text-xs font-medium text-zinc-500">Exported deliverables ready for use</p>
                 </div>
               </label>
 
-              <label className={cn("flex items-start gap-4 p-4 border rounded-xl cursor-pointer transition-colors", checklist.instructions ? "border-brand-500 bg-brand-50 dark:bg-brand-500/10" : "border-zinc-200 dark:border-zinc-700 hover:bg-surface dark:hover:bg-zinc-800")}>
-                <input type="checkbox" className="w-5 h-5 mt-0.5 rounded border-zinc-300 text-brand-600 focus:ring-brand-500" checked={checklist.instructions} onChange={() => setChecklist(p => ({...p, instructions: !p.instructions}))} />
+              <label className={cn("flex items-start gap-4 p-4 border rounded-xl cursor-pointer transition-colors", checklist.instructions ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10" : "border-zinc-200 dark:border-zinc-700 hover:bg-surface dark:hover:bg-zinc-800")}>
+                <input type="checkbox" className="w-5 h-5 mt-0.5 rounded border-zinc-300 text-[#14a800] focus:ring-[#14a800]" checked={checklist.instructions} onChange={() => setChecklist(p => ({...p, instructions: !p.instructions}))} />
                 <div>
                   <h4 className="font-bold text-zinc-900 dark:text-white">Instructions Added</h4>
                   <p className="text-xs font-medium text-zinc-500">Clear steps on how to use or install the files</p>
@@ -125,7 +125,7 @@ export default function FreelancerDeliveryPage() {
 
           <div className="flex justify-between items-center">
             <button className="px-6 py-3 font-bold text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">Cancel</button>
-            <button className="px-8 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-600/20 transition-all flex items-center gap-2">
+            <button className="px-8 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg shadow-[#14a800]/25/20 transition-all flex items-center gap-2">
               <Package className="w-5 h-5" /> Submit Delivery
             </button>
           </div>
@@ -136,7 +136,7 @@ export default function FreelancerDeliveryPage() {
         <div className="w-full lg:w-80 shrink-0 space-y-6">
           
           <div className="bg-surface-dark dark:bg-surface-dark text-white rounded-3xl p-6 border border-zinc-800 shadow-xl">
-            <h3 className="font-bold flex items-center gap-2 mb-4"><Info className="w-5 h-5 text-brand-400" /> Delivery Process</h3>
+            <h3 className="font-bold flex items-center gap-2 mb-4"><Info className="w-5 h-5 text-[#14a800]" /> Delivery Process</h3>
             <ul className="space-y-4 text-sm font-medium text-zinc-400">
               <li className="flex items-start gap-3">
                 <div className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 font-bold text-xs text-white">1</div>
@@ -162,8 +162,8 @@ export default function FreelancerDeliveryPage() {
               
               {HISTORY.map((item, i) => (
                 <div key={item.id} className="relative flex items-start gap-4">
-                  <div className="w-6 h-6 rounded-full bg-white dark:bg-surface-dark border-2 border-brand-500 flex items-center justify-center shrink-0 z-10 mt-1">
-                    <CheckCircle2 className="w-3 h-3 text-brand-500" />
+                  <div className="w-6 h-6 rounded-full bg-white dark:bg-surface-dark border-2 border-[#14a800]/20 flex items-center justify-center shrink-0 z-10 mt-1">
+                    <CheckCircle2 className="w-3 h-3 text-[#14a800]" />
                   </div>
                   <div>
                     <h4 className="font-bold text-zinc-900 dark:text-white text-sm">{item.title}</h4>

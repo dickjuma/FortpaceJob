@@ -44,12 +44,12 @@ const RankingIntelligence = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-1 flex items-center gap-3 text-zinc-900 dark:text-white">
-            <Zap className="w-8 h-8 text-brand-500 fill-indigo-500" /> Ranking Intelligence
+            <Zap className="w-8 h-8 text-[#14a800] fill-#14a800]/50" /> Ranking Intelligence
           </h1>
           <p className="text-zinc-500 dark:text-zinc-400">AI-powered analysis of your marketplace positioning and competition.</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/30 transition-all flex items-center gap-2">
+          <button className="px-5 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl font-bold shadow-lg shadow-[#14a800]/25 transition-all flex items-center gap-2">
             <Sparkles className="w-4 h-4" /> Optimize Profile
           </button>
         </div>
@@ -58,9 +58,9 @@ const RankingIntelligence = () => {
       {/* 1. Core Scores Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {[
-          { label: 'Global Ranking', value: 'Top 3%', icon: Award, color: 'text-brand-400', bg: 'bg-brand-500/10' },
+          { label: 'Global Ranking', value: 'Top 3%', icon: Award, color: 'text-[#14a800]', bg: 'bg-[#14a800]/10' },
           { label: 'Trust Score', value: '99/100', icon: ShieldCheck, color: 'text-green-400', bg: 'bg-green-500/10' },
-          { label: 'Skill Mastery', value: 'Elite', icon: Target, color: 'text-brand-400', bg: 'bg-brand-500/10' },
+          { label: 'Skill Mastery', value: 'Elite', icon: Target, color: 'text-[#14a800]', bg: 'bg-[#14a800]/10' },
           { label: 'Market Visibility', value: 'High', icon: Eye, color: 'text-amber-400', bg: 'bg-amber-500/10' }
         ].map((score, i) => (
           <motion.div 
@@ -85,11 +85,11 @@ const RankingIntelligence = () => {
         
         {/* 2. Ranking Trends Chart */}
         <div className="xl:col-span-2 bg-surface-dark rounded-3xl p-6 md:p-8 border border-zinc-800 shadow-2xl relative overflow-hidden">
-          <div className="absolute bottom-0 left-0 w-full h-1/2 bg-brand-500/5 blur-[100px] pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-full h-1/2 bg-[#14a800]/5 blur-[100px] pointer-events-none" />
           <div className="flex justify-between items-center mb-6 relative z-10">
             <div>
               <h2 className="font-bold text-xl text-white flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-brand-400" /> Ranking Trajectory
+                <TrendingUp className="w-5 h-5 text-[#14a800]" /> Ranking Trajectory
               </h2>
               <p className="text-xs text-zinc-400 mt-1">Your marketplace percentile progression over time.</p>
             </div>
@@ -119,7 +119,7 @@ const RankingIntelligence = () => {
         {/* 3. Match Analytics Radar */}
         <div className="bg-surface-dark rounded-3xl p-6 border border-zinc-800 shadow-2xl flex flex-col items-center relative overflow-hidden">
           <h2 className="font-bold text-xl text-white mb-2 w-full text-left flex items-center gap-2">
-            <Crosshair className="w-5 h-5 text-brand-400" /> Match Analytics
+            <Crosshair className="w-5 h-5 text-[#14a800]" /> Match Analytics
           </h2>
           <p className="text-xs text-zinc-400 w-full text-left mb-4">Algorithm assessment of your profile compatibility against top-tier clients.</p>
           <div className="w-full h-[250px] relative z-10">
@@ -180,7 +180,7 @@ const RankingIntelligence = () => {
                 <div className="text-xs text-zinc-400">Top 10% competitors</div>
               </div>
               <div className="text-right">
-                <div className="text-xl font-extrabold text-brand-400">$95.00</div>
+                <div className="text-xl font-extrabold text-[#14a800]">$95.00</div>
                 <div className="text-[10px] font-bold text-green-400">+5% vs last month</div>
               </div>
             </div>
@@ -191,7 +191,7 @@ const RankingIntelligence = () => {
                 <div className="text-xs text-zinc-400">Time to first client reply</div>
               </div>
               <div className="text-right">
-                <div className="text-xl font-extrabold text-brand-400">1.2 hrs</div>
+                <div className="text-xl font-extrabold text-[#14a800]">1.2 hrs</div>
                 <div className="text-[10px] font-bold text-rose-400">You are faster by 15m</div>
               </div>
             </div>
@@ -201,8 +201,8 @@ const RankingIntelligence = () => {
                 <Sparkles className="w-4 h-4 text-amber-400" /> Suggested Actions
               </h4>
               <ul className="space-y-2 text-xs text-zinc-300 font-medium">
-                <li className="flex items-center gap-2 before:content-[''] before:w-1.5 before:h-1.5 before:bg-brand-500 before:rounded-full">Update portfolio with a Next.js project.</li>
-                <li className="flex items-center gap-2 before:content-[''] before:w-1.5 before:h-1.5 before:bg-brand-500 before:rounded-full">Increase hourly rate to $90/hr.</li>
+                <li className="flex items-center gap-2 before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#14a800] before:rounded-full">Update portfolio with a Next.js project.</li>
+                <li className="flex items-center gap-2 before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#14a800] before:rounded-full">Increase hourly rate to $90/hr.</li>
               </ul>
             </div>
           </div>

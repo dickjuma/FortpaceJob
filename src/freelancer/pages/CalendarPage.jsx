@@ -5,6 +5,8 @@ import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import toast, { Toaster } from 'react-hot-toast';
 
+import { useFreelancerBookings } from '../services/freelancerHooks';
+
 // --- Skeleton Loader ---
 const CalendarSkeleton = () => (
   <div className="space-y-8 animate-pulse pb-12">
@@ -25,29 +27,27 @@ const CalendarSkeleton = () => (
   </div>
 );
 
-// --- Mock Data ---
-const MOCK_EVENTS = [
-  { id: 1, title: 'Project Kickoff: Global Finance', type: 'meeting', time: '10:00 AM - 11:00 AM', date: '2026-05-27', link: 'meet.google.com/xyz' },
-  { id: 2, title: 'Milestone 2 Delivery', type: 'milestone', time: 'Due 5:00 PM', date: '2026-05-28', contractId: 'CNT-2024-089' },
-  { id: 3, title: 'Client Sync: HealthSync', type: 'meeting', time: '2:00 PM - 2:30 PM', date: '2026-05-29', link: 'zoom.us/j/123' },
-  { id: 4, title: 'Gig Delivery: React UI', type: 'delivery', time: 'Due 12:00 PM', date: '2026-05-27', orderId: 'ORD-589201' },
-];
-
 export default function CalendarPage() {
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading: loading } = useFreelancerBookings({ status: 'UPCOMING' });
   const [events, setEvents] = useState([]);
-  const [currentDate, setCurrentDate] = useState(new Date('2026-05-27'));
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
-    // Simulate API fetch
-    const fetchEvents = async () => {
-      setLoading(true);
-      await new Promise(res => setTimeout(res, 900));
-      setEvents(MOCK_EVENTS);
-      setLoading(false);
-    };
-    fetchEvents();
-  }, []);
+    if (data?.data?.bookings) {
+      const formatted = data.data.bookings.map(b => {
+        const d = new Date(b.startTime);
+        return {
+          id: b.id,
+          title: `Consultation with ${b.clientName || 'Client'}`,
+          type: 'meeting',
+          time: d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          date: d.toISOString().split('T')[0],
+          link: b.meetingLink
+        };
+      });
+      setEvents(formatted);
+    }
+  }, [data]);
 
   const handleCreateEvent = () => {
     toast.success('Opening event creation modal', { icon: '📅' });
@@ -79,7 +79,7 @@ export default function CalendarPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-accent-purple/10 text-accent-purple rounded-xl shadow-sm border border-accent-purple/20">
+            <div className="p-2.5 bg-success/10 text-success rounded-xl shadow-sm border border-success/20">
               <CalendarIcon size={24} />
             </div>
             <h1 className="text-3xl font-black text-text-primary tracking-tight">Schedule & Calendar</h1>
@@ -103,10 +103,10 @@ export default function CalendarPage() {
             <div className="flex items-center gap-4">
               <h2 className="text-xl font-bold text-text-primary">{currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h2>
               <div className="flex gap-1">
-                <button className="p-1.5 rounded-lg border border-border text-text-secondary hover:bg-white hover:text-navy transition-colors">
+                <button className="p-1.5 rounded-lg border border-border text-text-secondary hover:bg-white hover:text-[#222222] transition-colors">
                   <ChevronLeft size={16} />
                 </button>
-                <button className="p-1.5 rounded-lg border border-border text-text-secondary hover:bg-white hover:text-navy transition-colors">
+                <button className="p-1.5 rounded-lg border border-border text-text-secondary hover:bg-white hover:text-[#222222] transition-colors">
                   <ChevronRight size={16} />
                 </button>
               </div>
@@ -121,10 +121,10 @@ export default function CalendarPage() {
             {upcomingDays.map((day, idx) => (
               <div key={idx} className={cn(
                 "p-4 text-center border-r border-border last:border-r-0",
-                idx === 0 ? "bg-accent-purple/5 border-b-2 border-b-accent-purple" : ""
+                idx === 0 ? "bg-success/5 border-b-2 border-b-success" : ""
               )}>
                 <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">{day.dayName}</p>
-                <p className={cn("text-xl font-black mt-1", idx === 0 ? "text-accent-purple" : "text-text-primary")}>{day.dayNum}</p>
+                <p className={cn("text-xl font-black mt-1", idx === 0 ? "text-success" : "text-text-primary")}>{day.dayNum}</p>
               </div>
             ))}
           </div>
@@ -133,7 +133,7 @@ export default function CalendarPage() {
             {upcomingDays.map((day, idx) => {
               const dayEvents = getDayEvents(day.dateStr);
               return (
-                <div key={idx} className={cn("p-2 sm:p-4 bg-white min-h-[400px]", idx === 0 ? "bg-accent-purple/5" : "")}>
+                <div key={idx} className={cn("p-2 sm:p-4 bg-white min-h-[400px]", idx === 0 ? "bg-success/5" : "")}>
                   <div className="space-y-3">
                     {dayEvents.map(event => (
                       <div 
@@ -141,7 +141,7 @@ export default function CalendarPage() {
                         onClick={() => toast(`Viewing event: ${event.title}`)}
                         className={cn(
                           "p-3 rounded-xl border border-l-4 cursor-pointer hover:shadow-md transition-all group",
-                          event.type === 'meeting' ? "bg-navy/5 border-l-navy border-t-border border-r-border border-b-border" :
+                          event.type === 'meeting' ? "bg-[#222222]/5 border-l-navy border-t-border border-r-border border-b-border" :
                           event.type === 'milestone' ? "bg-success/5 border-l-success border-t-border border-r-border border-b-border" :
                           "bg-warning/5 border-l-warning border-t-border border-r-border border-b-border"
                         )}
@@ -152,7 +152,7 @@ export default function CalendarPage() {
                           {event.type === 'delivery' && <Briefcase size={10} />}
                           {event.type}
                         </p>
-                        <p className="text-xs font-bold text-text-primary group-hover:text-navy transition-colors mb-2 leading-tight">
+                        <p className="text-xs font-bold text-text-primary group-hover:text-[#222222] transition-colors mb-2 leading-tight">
                           {event.title}
                         </p>
                         <p className="text-[10px] font-semibold text-text-secondary flex items-center gap-1">
@@ -169,11 +169,11 @@ export default function CalendarPage() {
 
         {/* Right Sidebar: Upcoming */}
         <div className="w-full lg:w-80 shrink-0 space-y-6">
-          <Card className="bg-navy border-none text-white shadow-xl relative overflow-hidden">
-            <div className="absolute top-[-50%] right-[-20%] w-48 h-48 bg-accent-purple/30 blur-[60px] rounded-full pointer-events-none"></div>
+          <Card className="bg-[#222222] border-none text-white shadow-xl relative overflow-hidden">
+            <div className="absolute top-[-50%] right-[-20%] w-48 h-48 bg-success/30 blur-[60px] rounded-full pointer-events-none"></div>
             <div className="relative z-10">
               <h3 className="font-bold text-white mb-6 uppercase tracking-widest text-xs flex items-center gap-2">
-                <Clock size={16} className="text-accent-purple" /> Next Up Today
+                <Clock size={16} className="text-success" /> Next Up Today
               </h3>
               
               <div className="space-y-4">
@@ -184,7 +184,7 @@ export default function CalendarPage() {
                       <Clock size={12} /> {event.time}
                     </p>
                     {event.type === 'meeting' && (
-                      <Button variant="primary" size="sm" className="w-full bg-accent-purple hover:bg-accent-purple/90 border-none shadow-lg">
+                      <Button variant="primary" size="sm" className="w-full bg-success hover:bg-success/90 border-none shadow-lg">
                         Join Meeting
                       </Button>
                     )}

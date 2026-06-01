@@ -14,7 +14,7 @@ export const FavoritesPage = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-navy">Favorites</h1>
+        <h1 className="text-2xl font-bold text-[#222222]">Favorites</h1>
         <p className="text-text-secondary mt-1">Talent and freelancers you have bookmarked.</p>
       </div>
 
@@ -25,12 +25,12 @@ export const FavoritesPage = () => {
               <div className="flex items-center space-x-4">
                 <Avatar name={talent.name} size="md" />
                 <div>
-                  <h3 className="text-lg font-bold text-navy">{talent.name}</h3>
+                  <h3 className="text-lg font-bold text-[#222222]">{talent.name}</h3>
                   <p className="text-sm text-text-secondary">{talent.role}</p>
                 </div>
               </div>
-              <button className="text-accent-red hover:bg-red-50 p-2 rounded-full transition-colors">
-                <Heart size={20} className="fill-accent-red" />
+              <button className="text-[#e63946] hover:bg-red-50 p-2 rounded-full transition-colors">
+                <Heart size={20} className="fill-[#e63946]" />
               </button>
             </div>
 

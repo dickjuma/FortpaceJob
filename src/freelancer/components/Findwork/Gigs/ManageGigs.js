@@ -34,7 +34,7 @@ const Badge = ({ children, variant = "default", size = "sm", className = "" }) =
     warning: "bg-yellow-100 text-yellow-800 border border-yellow-200",
     danger: "bg-red-100 text-red-800 border border-red-200",
     primary: "bg-[#FDECE7] text-[#9E331E] border border-[#F4C7A1]",
-    purple: "bg-brand-100 text-brand-800 border border-purple-200",
+    purple: "bg-[#14a800]/10 text-[#14a800] border border-[#14a800]/50",
     gray: "bg-[#F8F4F1] text-[#6B5B50] border border-[#E7E1DE]",
     fiverr: "bg-green-50 text-green-700 border border-green-200"
   };
@@ -119,7 +119,7 @@ const ProgressBar = ({ value, max = 100, label, showPercentage = true, color = "
   const colorClasses = {
     green: "bg-green-500",
     blue: "bg-[#FDECE7]",
-    purple: "bg-brand-500",
+    purple: "bg-[#14a800]",
     yellow: "bg-yellow-500",
     red: "bg-red-500"
   };
@@ -223,11 +223,11 @@ const StatusIndicator = ({ status, showIcon = true }) => {
       icon: Clock 
     },
     featured: { 
-      color: "bg-brand-500", 
+      color: "bg-[#14a800]", 
       label: "Featured", 
-      textColor: "text-brand-700",
-      bgColor: "bg-brand-50",
-      borderColor: "border-purple-200",
+      textColor: "text-[#14a800]",
+      bgColor: "bg-[#14a800]/5",
+      borderColor: "border-[#14a800]/50",
       icon: Star 
     },
     limited: { 
@@ -446,7 +446,7 @@ const CATEGORIES = [
   { id: "active", name: "Active", count: 89, icon: Play, color: "text-green-600" },
   { id: "paused", name: "Paused", count: 12, icon: Pause, color: "text-yellow-600" },
   { id: "draft", name: "Drafts", count: 23, icon: FileText, color: "text-[#6B5B50]" },
-  { id: "featured", name: "Featured", count: 8, icon: Star, color: "text-brand-600" },
+  { id: "featured", name: "Featured", count: 8, icon: Star, color: "text-[#14a800]" },
   { id: "promoted", name: "Promoted", count: 15, icon: Rocket, color: "text-[#C9452F]" }
 ];
 
@@ -1120,7 +1120,7 @@ export default function ManageGigs() {
               <h4 className="text-sm font-semibold text-[#2E2322] mb-3">Quick Actions</h4>
               <div className="space-y-2">
                 <button className="w-full text-left p-3 bg-[#F8F4F1] hover:bg-[#F3E9E5] rounded-lg border border-[#E7E1DE] transition-colors flex items-center gap-3">
-                  <Sparkles size={16} className="text-brand-600" />
+                  <Sparkles size={16} className="text-[#14a800]" />
                   <span className="text-sm">Optimize with AI</span>
                 </button>
                 <button className="w-full text-left p-3 bg-[#F8F4F1] hover:bg-[#F3E9E5] rounded-lg border border-[#E7E1DE] transition-colors flex items-center gap-3">
@@ -1352,8 +1352,8 @@ export default function ManageGigs() {
             
             <div className="bg-white rounded-lg p-4 border border-[#E7E1DE] hover:border-green-300 transition-colors">
               <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-brand-50 rounded-lg border border-purple-100">
-                  <Clock size={16} className="text-brand-600" />
+                <div className="p-2 bg-[#14a800]/5 rounded-lg border border-[#14a800]/50">
+                  <Clock size={16} className="text-[#14a800]" />
                 </div>
                 <span className="font-semibold text-[#2E2322]">Best Time to Post</span>
               </div>

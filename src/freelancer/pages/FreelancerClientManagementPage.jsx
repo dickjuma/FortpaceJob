@@ -58,7 +58,7 @@ export default function FreelancerClientManagementPage() {
       <div className="bg-white dark:bg-surface-dark border-b border-zinc-200 dark:border-zinc-800 pt-12 pb-8 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2 flex items-center gap-3">
-            <Users className="w-8 h-8 text-brand-500" /> Client CRM
+            <Users className="w-8 h-8 text-[#14a800]" /> Client CRM
           </h1>
           <p className="text-zinc-500 font-medium">Manage relationships, track revenue, and grow your repeat business.</p>
         </div>
@@ -81,7 +81,7 @@ export default function FreelancerClientManagementPage() {
             <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Avg Client Value (LTV)</p>
             <h3 className="text-3xl font-black text-zinc-900 dark:text-white">$3,450</h3>
           </div>
-          <div className="bg-gradient-to-br from-brand-600 to-purple-600 rounded-2xl p-6 shadow-md text-white">
+          <div className="bg-gradient-to-br from-[#14a800] to-[#118a00] rounded-2xl p-6 shadow-md text-white">
             <h3 className="font-bold mb-1 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> Top Client</h3>
             <p className="text-xl font-black mb-1">Sarah Mitchell</p>
             <p className="text-sm font-medium text-white/80">$12,450 lifetime</p>
@@ -99,7 +99,7 @@ export default function FreelancerClientManagementPage() {
                 <input 
                   type="text" placeholder="Search clients by name, company, or tags..." 
                   value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9 pr-4 py-2.5 w-full bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium outline-none focus:border-brand-500 shadow-sm"
+                  className="pl-9 pr-4 py-2.5 w-full bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20 shadow-sm"
                 />
               </div>
               <button className="px-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-bold text-zinc-700 dark:text-zinc-300 shadow-sm flex items-center gap-2">
@@ -125,7 +125,7 @@ export default function FreelancerClientManagementPage() {
                         onClick={() => setSelectedClient(client)}
                         className={cn(
                           "border-b border-zinc-100 dark:border-zinc-800 transition-colors cursor-pointer",
-                          selectedClient.id === client.id ? "bg-brand-50 dark:bg-brand-500/10" : "hover:bg-surface dark:hover:bg-zinc-800/50"
+                          selectedClient.id === client.id ? "bg-[#14a800]/5 dark:bg-[#14a800]/10" : "hover:bg-surface dark:hover:bg-zinc-800/50"
                         )}
                       >
                         <td className="py-4 px-6">
@@ -181,7 +181,7 @@ export default function FreelancerClientManagementPage() {
                   <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 bg-surface/50 dark:bg-surface-dark/50">
                     <div className="flex justify-between items-start mb-4">
                       <img src={selectedClient.avatar} alt="Avatar" className="w-16 h-16 rounded-2xl object-cover shadow-sm" />
-                      <button className="p-2 text-zinc-400 hover:text-brand-600 bg-white dark:bg-zinc-800 rounded-lg shadow-sm transition-colors">
+                      <button className="p-2 text-zinc-400 hover:text-[#14a800] bg-white dark:bg-zinc-800 rounded-lg shadow-sm transition-colors">
                         <MessageSquare className="w-4 h-4" />
                       </button>
                     </div>
@@ -210,14 +210,14 @@ export default function FreelancerClientManagementPage() {
                       </div>
                       <div className="p-3 bg-surface dark:bg-zinc-800/50 rounded-xl border border-zinc-100 dark:border-zinc-800">
                         <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Last Active</p>
-                        <p className="text-base font-black text-zinc-900 dark:text-white flex items-center gap-1"><Clock className="w-4 h-4 text-brand-500" />{selectedClient.lastActivity}</p>
+                        <p className="text-base font-black text-zinc-900 dark:text-white flex items-center gap-1"><Clock className="w-4 h-4 text-[#14a800]" />{selectedClient.lastActivity}</p>
                       </div>
                     </div>
 
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2"><Edit3 className="w-4 h-4 text-brand-500" /> Private Notes</h3>
-                        <button className="text-xs font-bold text-brand-600 hover:underline">Edit</button>
+                        <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2"><Edit3 className="w-4 h-4 text-[#14a800]" /> Private Notes</h3>
+                        <button className="text-xs font-bold text-[#14a800] hover:underline">Edit</button>
                       </div>
                       <div className="p-4 bg-amber-50/50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 rounded-xl">
                         <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 italic">"{selectedClient.notes}"</p>
@@ -229,7 +229,7 @@ export default function FreelancerClientManagementPage() {
                       <div className="space-y-4 relative before:absolute before:inset-0 before:ml-2.5 before:-tranzinc-x-px md:before:mx-auto md:before:tranzinc-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-zinc-200 dark:before:via-zinc-800 before:to-transparent">
                         
                         <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                          <div className="flex items-center justify-center w-5 h-5 rounded-full border-4 border-white dark:border-zinc-900 bg-brand-500 shadow shrink-0 md:order-1 md:group-odd:-tranzinc-x-1/2 md:group-even:tranzinc-x-1/2 z-10" />
+                          <div className="flex items-center justify-center w-5 h-5 rounded-full border-4 border-white dark:border-zinc-900 bg-[#14a800] shadow shrink-0 md:order-1 md:group-odd:-tranzinc-x-1/2 md:group-even:tranzinc-x-1/2 z-10" />
                           <div className="w-[calc(100%-2.5rem)] md:w-[calc(50%-1.25rem)] p-3 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-surface-dark shadow-sm ml-4 md:ml-0 md:group-odd:mr-4 md:group-even:ml-4">
                             <div className="flex items-center justify-between mb-1">
                               <span className="font-bold text-xs text-zinc-900 dark:text-white">Order Completed</span>

@@ -18,7 +18,7 @@ export const FAQPage = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col items-center justify-center py-8 bg-white rounded-lg border border-border shadow-sm mb-8 text-center px-4">
-        <h1 className="text-3xl font-bold text-navy mb-4">How can we help?</h1>
+        <h1 className="text-3xl font-bold text-[#222222] mb-4">How can we help?</h1>
         <div className="w-full max-w-xl mx-auto">
           <Input 
             placeholder="Search the knowledge base..." 
@@ -29,7 +29,7 @@ export const FAQPage = () => {
       </div>
 
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-xl font-bold text-navy mb-6">Frequently Asked Questions</h2>
+        <h2 className="text-xl font-bold text-[#222222] mb-6">Frequently Asked Questions</h2>
         
         <div className="space-y-4">
           {faqs.map(faq => (
@@ -38,7 +38,7 @@ export const FAQPage = () => {
               className="cursor-pointer transition-all duration-200"
               onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
             >
-              <div className="flex justify-between items-center font-medium text-navy">
+              <div className="flex justify-between items-center font-medium text-[#222222]">
                 <span className="text-lg">{faq.question}</span>
                 <span className="text-text-secondary">
                   {openId === faq.id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -55,7 +55,7 @@ export const FAQPage = () => {
         </div>
 
         <div className="mt-12 text-center bg-light-gray p-8 rounded-lg">
-          <h3 className="text-lg font-bold text-navy mb-2">Still need help?</h3>
+          <h3 className="text-lg font-bold text-[#222222] mb-2">Still need help?</h3>
           <p className="text-text-secondary mb-6">Our support team is available 24/7 to assist you.</p>
           <Button variant="primary">Contact Support</Button>
         </div>

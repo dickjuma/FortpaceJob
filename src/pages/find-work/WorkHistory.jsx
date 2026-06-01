@@ -1,21 +1,70 @@
-import React, { useState } from 'react';
-import { Archive, Search, FileText, Download } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Archive, Search, FileText, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { contractAPI } from '../../common/services/api';
 
-const MOCK_HISTORY = [
-  { id: 'ORD-8001', title: 'React Performance Audit', provider: 'SpeedTech', date: 'Aug 14, 2026', amount: 800, rating: 5.0 },
-  { id: 'ORD-7542', title: 'Figma to React Tailwind', provider: 'UI_Genius', date: 'Jun 02, 2026', amount: 2500, rating: 4.8 },
-  { id: 'ORD-6122', title: 'Node.js API Integration', provider: 'BackendPro', date: 'Jan 15, 2026', amount: 1200, rating: 4.5 },
-];
+function extractList(payload) {
+  if (!payload) return [];
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload.data)) return payload.data;
+  if (Array.isArray(payload.items)) return payload.items;
+  return [];
+}
 
 const WorkHistory = () => {
   const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    contractAPI
+      .getMyContracts({ limit: 100 })
+      .then((response) => {
+        if (!mounted) return;
+        const contracts = extractList(response).filter((contract) => {
+          const status = String(contract.status || '').toUpperCase();
+          return ['COMPLETED', 'CLOSED', 'CANCELLED'].includes(status);
+        });
+        setHistory(
+          contracts.map((contract) => ({
+            id: contract.id,
+            title: contract.title || 'Contract',
+            provider: contract.freelancerName || contract.freelancerId || 'Freelancer',
+            date: contract.completedAt || contract.updatedAt || contract.createdAt,
+            amount: Number(contract.totalAmount || 0),
+            currency: contract.currency || 'KES',
+            rating: contract.rating || null,
+          }))
+        );
+      })
+      .catch(() => {
+        if (mounted) setHistory([]);
+      })
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const filtered = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) return history;
+    return history.filter(
+      (item) =>
+        item.title.toLowerCase().includes(query) ||
+        item.provider.toLowerCase().includes(query) ||
+        item.id.toLowerCase().includes(query)
+    );
+  }, [history, search]);
 
   return (
     <>
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
-          
+
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-zinc-200 text-zinc-700 rounded-xl flex items-center justify-center shadow-sm">
@@ -29,59 +78,53 @@ const WorkHistory = () => {
 
             <div className="relative w-full md:w-64">
               <span className="absolute left-3 top-1/2 -tranzinc-y-1/2 text-zinc-400"><Search className="w-4 h-4" /></span>
-              <input 
-                type="text" 
-                placeholder="Search history..." 
+              <input
+                type="text"
+                placeholder="Search history..."
                 value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2.5 bg-white border border-zinc-200 rounded-xl focus:border-brand-500 focus:outline-none font-medium text-sm text-zinc-900"
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-9 pr-4 py-2.5 bg-white border border-zinc-200 rounded-xl focus:border-[#14a800]/20 focus:outline-none font-medium text-sm text-zinc-900"
               />
             </div>
           </div>
 
           <div className="bg-white border border-zinc-200 rounded-3xl overflow-hidden shadow-sm">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-surface border-b border-zinc-200">
-                <tr>
-                  <th className="p-6 font-bold text-zinc-500 text-sm">Contract Details</th>
-                  <th className="p-6 font-bold text-zinc-500 text-sm hidden sm:table-cell">Provider</th>
-                  <th className="p-6 font-bold text-zinc-500 text-sm hidden md:table-cell">Completed</th>
-                  <th className="p-6 font-bold text-zinc-500 text-sm text-center">Amount</th>
-                  <th className="p-6 font-bold text-zinc-500 text-sm text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-100">
-                {MOCK_HISTORY.map(work => (
-                  <tr key={work.id} className="hover:bg-surface transition-colors">
-                    <td className="p-6">
-                      <div className="text-xs font-bold text-zinc-400 mb-1">{work.id}</div>
-                      <div className="font-bold text-zinc-900 text-lg">{work.title}</div>
-                    </td>
-                    <td className="p-6 hidden sm:table-cell">
-                      <Link to="/profile" className="font-bold text-zinc-700 hover:text-brand-600 transition-colors">{work.provider}</Link>
-                    </td>
-                    <td className="p-6 hidden md:table-cell">
-                      <div className="text-sm font-medium text-zinc-600">{work.date}</div>
-                    </td>
-                    <td className="p-6 text-center">
-                      <div className="font-black text-zinc-900">${work.amount}</div>
-                    </td>
-                    <td className="p-6 text-right">
-                      <div className="flex justify-end gap-2">
-                        <button className="p-2 bg-white border border-zinc-200 hover:bg-zinc-100 text-zinc-600 rounded-lg transition-colors" title="View Contract">
-                          <FileText className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 bg-white border border-zinc-200 hover:bg-zinc-100 text-zinc-600 rounded-lg transition-colors" title="Download Invoice">
-                          <Download className="w-4 h-4" />
-                        </button>
+            {loading ? (
+              <div className="py-16 text-center text-zinc-500">
+                <Loader2 className="w-10 h-10 mx-auto mb-3 animate-spin text-[#14a800]" />
+                Loading contract history...
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="py-16 text-center text-zinc-500 font-medium">
+                <Archive className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                No completed contracts in your history yet.
+              </div>
+            ) : (
+              <div className="divide-y divide-zinc-100">
+                {filtered.map((work) => (
+                  <div key={work.id} className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:bg-surface transition-colors">
+                    <div>
+                      <div className="font-bold text-zinc-900 text-lg mb-1">{work.title}</div>
+                      <div className="text-sm text-zinc-500 font-medium">
+                        {work.provider} • {work.date ? new Date(work.date).toLocaleDateString() : '—'}
                       </div>
-                    </td>
-                  </tr>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-right">
+                        <div className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Amount</div>
+                        <div className="font-black text-success">
+                          {work.currency} {work.amount.toLocaleString()}
+                        </div>
+                      </div>
+                      <Link to={`/find-work/orders/${work.id}`} className="px-4 py-2 bg-white border border-zinc-200 hover:bg-surface text-zinc-700 font-bold rounded-lg transition-colors flex items-center gap-2 text-sm">
+                        <FileText className="w-4 h-4" /> View
+                      </Link>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            )}
           </div>
-
         </div>
       </div>
     </>

@@ -34,7 +34,7 @@ export default function RegisterPage() {
                 className="overflow-hidden rounded-[2rem] border border-zinc-200 bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)] dark:border-zinc-800 dark:bg-zinc-900 sm:p-7 lg:p-10"
               >
                 <div className="mx-auto mb-8 max-w-5xl border-b border-zinc-200 pb-6 text-center dark:border-zinc-800">
-                  <p className="text-xs font-black uppercase tracking-[0.3em] text-brand-600 dark:text-brand-300">
+                  <p className="text-xs font-black uppercase tracking-[0.3em] text-[#14a800] dark:text-[#14a800]">
                       Join the future of work
                   </p>
                   <h1 className="mt-3 text-3xl font-black tracking-tight text-zinc-950 dark:text-white sm:text-4xl lg:text-[2.9rem]">
@@ -47,7 +47,7 @@ export default function RegisterPage() {
                     Already have an account?{' '}
                     <Link
                       to="/auth/login"
-                      className="font-semibold text-brand-600 transition-colors hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
+                      className="font-semibold text-[#14a800] transition-colors hover:text-[#14a800] dark:text-[#14a800] dark:hover:text-[#14a800]"
                     >
                       Log in
                     </Link>
@@ -72,7 +72,7 @@ export default function RegisterPage() {
                 <div className="overflow-hidden rounded-[2rem] border border-zinc-200 bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)] dark:border-zinc-800 dark:bg-zinc-900 sm:p-7 xl:p-9">
                   <div className="mb-6 flex flex-col gap-4 border-b border-zinc-200 pb-6 dark:border-zinc-800 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-[0.28em] text-brand-600 dark:text-brand-300">
+                      <p className="text-xs font-black uppercase tracking-[0.28em] text-[#14a800] dark:text-[#14a800]">
                         Final step
                       </p>
                       <h1 className="mt-2 text-3xl font-black tracking-tight text-zinc-950 dark:text-white sm:text-4xl">
@@ -86,7 +86,7 @@ export default function RegisterPage() {
                       Already have an account?{' '}
                       <Link
                         to="/auth/login"
-                        className="font-semibold text-brand-600 transition-colors hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
+                        className="font-semibold text-[#14a800] transition-colors hover:text-[#14a800] dark:text-[#14a800] dark:hover:text-[#14a800]"
                       >
                         Log in
                       </Link>

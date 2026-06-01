@@ -17,7 +17,7 @@ export const TeamPage = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-navy">Team Management</h1>
+          <h1 className="text-2xl font-bold text-[#222222]">Team Management</h1>
           <p className="text-text-secondary mt-1">Manage internal staff and administrative access.</p>
         </div>
         <Button variant="primary">Invite Member</Button>
@@ -32,7 +32,7 @@ export const TeamPage = () => {
               </button>
             </div>
             <Avatar name={member.name} size="lg" className="mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-navy">{member.name}</h3>
+            <h3 className="text-lg font-bold text-[#222222]">{member.name}</h3>
             <p className="text-sm font-medium text-text-primary mb-1">{member.role}</p>
             <p className="text-xs text-text-secondary mb-4">{member.email}</p>
             

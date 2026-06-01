@@ -1,4 +1,7 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useFreelancerCertifications } from '../services/freelancerHooks';
+import { extractList } from '../../common/utils/apiHelpers';
+import { Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Award, BadgeCheck, Plus, X, Upload, Download, Edit2, Trash2,
@@ -16,93 +19,12 @@ const SKILL_CATEGORIES = [
 ];
 
 const CERT_GRADIENTS = [
-  "from-blue-500 to-indigo-600",
+  "from-#14a800] to-[#118a00]",
   "from-green-500 to-teal-600",
-  "from-purple-500 to-pink-600",
+  "from-[#14a800] to-pink-600",
   "from-orange-500 to-red-500",
   "from-teal-500 to-cyan-600",
   "from-yellow-500 to-orange-500",
-];
-
-const MOCK_CERTS = [
-  {
-    id: 1,
-    name: "AWS Certified Solutions Architect",
-    issuer: "Amazon Web Services",
-    issueDate: "2023-08-15",
-    expiryDate: "2026-08-15",
-    category: "Cloud & DevOps",
-    status: "Verified",
-    gradient: CERT_GRADIENTS[0],
-    skills: ["AWS", "Cloud Architecture", "EC2", "S3", "IAM"],
-    publicVisible: true,
-    credentialUrl: "#",
-  },
-  {
-    id: 2,
-    name: "React Developer Certification",
-    issuer: "Meta (Facebook)",
-    issueDate: "2023-11-01",
-    expiryDate: null,
-    category: "Frontend Development",
-    status: "Verified",
-    gradient: CERT_GRADIENTS[1],
-    skills: ["React", "JavaScript", "JSX", "Hooks", "Redux"],
-    publicVisible: true,
-    credentialUrl: "#",
-  },
-  {
-    id: 3,
-    name: "Google UX Design Certificate",
-    issuer: "Google",
-    issueDate: "2024-01-20",
-    expiryDate: null,
-    category: "UI/UX Design",
-    status: "Pending",
-    gradient: CERT_GRADIENTS[2],
-    skills: ["Figma", "Wireframing", "User Research", "Prototyping"],
-    publicVisible: false,
-    credentialUrl: "#",
-  },
-  {
-    id: 4,
-    name: "Kubernetes Administrator (CKA)",
-    issuer: "Cloud Native Computing Foundation",
-    issueDate: "2022-04-10",
-    expiryDate: "2025-04-10",
-    category: "Cloud & DevOps",
-    status: "Expired",
-    gradient: CERT_GRADIENTS[3],
-    skills: ["Kubernetes", "Docker", "Container Orchestration", "Helm"],
-    publicVisible: false,
-    credentialUrl: "#",
-  },
-  {
-    id: 5,
-    name: "Professional Scrum Master I",
-    issuer: "Scrum.org",
-    issueDate: "2023-06-05",
-    expiryDate: "2026-05-25",
-    category: "Project Management",
-    status: "Verified",
-    gradient: CERT_GRADIENTS[4],
-    skills: ["Scrum", "Agile", "Sprint Planning", "Retrospectives"],
-    publicVisible: true,
-    credentialUrl: "#",
-  },
-  {
-    id: 6,
-    name: "TensorFlow Developer Certificate",
-    issuer: "Google",
-    issueDate: "2024-02-14",
-    expiryDate: null,
-    category: "Data Science",
-    status: "Pending",
-    gradient: CERT_GRADIENTS[5],
-    skills: ["TensorFlow", "Python", "Machine Learning", "Neural Networks"],
-    publicVisible: true,
-    credentialUrl: "#",
-  },
 ];
 
 const ACHIEVEMENT_BADGES = [
@@ -111,11 +33,11 @@ const ACHIEVEMENT_BADGES = [
     description: "Maintain a 4.8+ rating", unlocked: true, progress: 100,
   },
   {
-    id: 2, name: "Fast Delivery", icon: Zap, color: "text-brand-500", bg: "bg-brand-100 dark:bg-brand-900/30",
+    id: 2, name: "Fast Delivery", icon: Zap, color: "text-[#14a800]", bg: "bg-[#14a800]/10 dark:bg-[#14a800]/30",
     description: "Deliver 95% of jobs on time", unlocked: true, progress: 100,
   },
   {
-    id: 3, name: "100 Projects", icon: Target, color: "text-brand-500", bg: "bg-brand-100 dark:bg-brand-900/30",
+    id: 3, name: "100 Projects", icon: Target, color: "text-[#14a800]", bg: "bg-[#14a800]/10 dark:bg-[#14a800]/30",
     description: "Complete 100 projects", unlocked: false, progress: 67,
   },
   {
@@ -251,7 +173,7 @@ function CertCard({ cert, onView, onEdit, onDelete, onTogglePublic }) {
           <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">Validates Skills</p>
           <div className="flex flex-wrap gap-1.5">
             {cert.skills.map(skill => (
-              <span key={skill} className="text-xs px-2 py-0.5 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 rounded-md border border-brand-100 dark:border-brand-800/40">
+              <span key={skill} className="text-xs px-2 py-0.5 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] rounded-md border border-[#14a800]/20 dark:border-[#14a800]/20/40">
                 {skill}
               </span>
             ))}
@@ -266,7 +188,7 @@ function CertCard({ cert, onView, onEdit, onDelete, onTogglePublic }) {
           </span>
           <button
             onClick={() => onTogglePublic(cert.id)}
-            className={`relative w-10 h-5 rounded-full transition-colors ${cert.publicVisible ? "bg-brand-600" : "bg-gray-300 dark:bg-gray-600"}`}
+            className={`relative w-10 h-5 rounded-full transition-colors ${cert.publicVisible ? "bg-[#14a800]" : "bg-gray-300 dark:bg-gray-600"}`}
           >
             <motion.div
               className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"
@@ -280,14 +202,14 @@ function CertCard({ cert, onView, onEdit, onDelete, onTogglePublic }) {
         <div className="flex gap-2">
           <button
             onClick={() => onView(cert)}
-            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-xs font-medium transition-colors"
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-[#14a800] hover:bg-[#118a00] text-white rounded-lg text-xs font-medium transition-colors"
           >
             <Eye className="w-3.5 h-3.5" />
             View
           </button>
           <button
             onClick={() => onEdit(cert)}
-            className="p-2 border border-gray-200 dark:border-gray-700 hover:bg-surface dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-500 hover:text-brand-600"
+            className="p-2 border border-gray-200 dark:border-gray-700 hover:bg-surface dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-500 hover:text-[#14a800]"
           >
             <Edit2 className="w-3.5 h-3.5" />
           </button>
@@ -383,7 +305,7 @@ function AddCertModal({ onClose, onAdd }) {
         type={type}
         value={form[name]}
         onChange={(e) => { setForm(f => ({ ...f, [name]: e.target.value })); setErrors(x => ({ ...x, [name]: "" })); }}
-        className={`w-full px-4 py-2.5 rounded-xl border ${errors[name] ? "border-red-400" : "border-gray-200 dark:border-gray-700"} bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm transition`}
+        className={`w-full px-4 py-2.5 rounded-xl border ${errors[name] ? "border-red-400" : "border-gray-200 dark:border-gray-700"} bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#14a800] text-sm transition`}
       />
       {errors[name] && <p className="text-red-500 text-xs mt-1">{errors[name]}</p>}
     </div>
@@ -446,7 +368,7 @@ function AddCertModal({ onClose, onAdd }) {
                     type="date"
                     value={form.issueDate}
                     onChange={(e) => { setForm(f => ({ ...f, issueDate: e.target.value })); setErrors(x => ({ ...x, issueDate: "" })); }}
-                    className={`w-full px-3 py-2.5 rounded-xl border ${errors.issueDate ? "border-red-400" : "border-gray-200 dark:border-gray-700"} bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm`}
+                    className={`w-full px-3 py-2.5 rounded-xl border ${errors.issueDate ? "border-red-400" : "border-gray-200 dark:border-gray-700"} bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#14a800] text-sm`}
                   />
                   {errors.issueDate && <p className="text-red-500 text-xs mt-1">{errors.issueDate}</p>}
                 </div>
@@ -457,14 +379,14 @@ function AddCertModal({ onClose, onAdd }) {
                     value={form.expiryDate}
                     disabled={form.noExpiry}
                     onChange={(e) => setForm(f => ({ ...f, expiryDate: e.target.value }))}
-                    className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm disabled:opacity-50"
+                    className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#14a800] text-sm disabled:opacity-50"
                   />
                   <label className="flex items-center gap-2 mt-1.5 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={form.noExpiry}
                       onChange={(e) => setForm(f => ({ ...f, noExpiry: e.target.checked, expiryDate: "" }))}
-                      className="rounded text-brand-600"
+                      className="rounded text-[#14a800]"
                     />
                     <span className="text-xs text-gray-500 dark:text-gray-400">No expiry date</span>
                   </label>
@@ -477,7 +399,7 @@ function AddCertModal({ onClose, onAdd }) {
                   <select
                     value={form.category}
                     onChange={(e) => { setForm(f => ({ ...f, category: e.target.value })); setErrors(x => ({ ...x, category: "" })); }}
-                    className={`w-full px-4 py-2.5 rounded-xl border ${errors.category ? "border-red-400" : "border-gray-200 dark:border-gray-700"} bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 appearance-none text-sm`}
+                    className={`w-full px-4 py-2.5 rounded-xl border ${errors.category ? "border-red-400" : "border-gray-200 dark:border-gray-700"} bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#14a800] appearance-none text-sm`}
                   >
                     <option value="">Select category</option>
                     {SKILL_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
@@ -497,8 +419,8 @@ function AddCertModal({ onClose, onAdd }) {
                   onClick={() => fileRef.current?.click()}
                   className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
                     dragOver
-                      ? "border-brand-400 bg-brand-50 dark:bg-brand-900/20"
-                      : "border-gray-200 dark:border-gray-700 hover:border-brand-400 hover:bg-surface dark:hover:bg-gray-800"
+                      ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/20"
+                      : "border-gray-200 dark:border-gray-700 hover:border-[#14a800]/20 hover:bg-surface dark:hover:bg-gray-800"
                   }`}
                 >
                   <input
@@ -513,7 +435,7 @@ function AddCertModal({ onClose, onAdd }) {
                       {form.file.type === "application/pdf" ? (
                         <FileText className="w-8 h-8 text-red-500" />
                       ) : (
-                        <Image className="w-8 h-8 text-brand-500" />
+                        <Image className="w-8 h-8 text-[#14a800]" />
                       )}
                       <div className="text-left">
                         <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{form.file.name}</p>
@@ -530,7 +452,7 @@ function AddCertModal({ onClose, onAdd }) {
                   ) : (
                     <div>
                       <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Drag & drop or <span className="text-brand-600">browse</span></p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Drag & drop or <span className="text-[#14a800]">browse</span></p>
                       <p className="text-xs text-gray-400 mt-1">PDF, PNG, JPG up to 10MB</p>
                     </div>
                   )}
@@ -542,11 +464,11 @@ function AddCertModal({ onClose, onAdd }) {
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <div className="flex items-center justify-between text-sm mb-1.5">
                     <span className="text-gray-600 dark:text-gray-400">Uploading...</span>
-                    <span className="text-brand-600 font-medium">{Math.round(uploadProgress)}%</span>
+                    <span className="text-[#14a800] font-medium">{Math.round(uploadProgress)}%</span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                     <motion.div
-                      className="h-full bg-brand-600 rounded-full"
+                      className="h-full bg-[#14a800] rounded-full"
                       animate={{ width: `${uploadProgress}%` }}
                       transition={{ duration: 0.1 }}
                     />
@@ -561,7 +483,7 @@ function AddCertModal({ onClose, onAdd }) {
                 <button
                   type="submit"
                   disabled={uploading}
-                  className="flex-1 px-4 py-2.5 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white rounded-xl font-medium text-sm transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-2.5 bg-[#14a800] hover:bg-[#118a00] disabled:opacity-60 text-white rounded-xl font-medium text-sm transition-colors flex items-center justify-center gap-2"
                 >
                   {uploading ? (
                     <><RefreshCw className="w-4 h-4 animate-spin" /> Processing...</>
@@ -635,10 +557,10 @@ function CertPreviewModal({ cert, onClose }) {
         <div className="px-6 py-4 flex items-center justify-between">
           <div className="flex flex-wrap gap-1.5">
             {cert.skills.slice(0, 4).map(s => (
-              <span key={s} className="text-xs px-2 py-0.5 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 rounded-md">{s}</span>
+              <span key={s} className="text-xs px-2 py-0.5 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] rounded-md">{s}</span>
             ))}
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-sm font-medium transition-colors">
+          <button className="flex items-center gap-2 px-4 py-2 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl text-sm font-medium transition-colors">
             <Download className="w-4 h-4" />
             Download
           </button>
@@ -715,7 +637,25 @@ function BadgeCard({ badge, index }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function CertificationsPage() {
-  const [certs, setCerts] = useState(MOCK_CERTS);
+  const { data: certsData, isLoading: certsLoading, refetch } = useFreelancerCertifications();
+  const [certs, setCerts] = useState([]);
+
+  useEffect(() => {
+    const list = extractList(certsData).map((c, i) => ({
+      id: c.id || c._id || i,
+      name: c.name || c.title,
+      issuer: c.issuer || c.issuingOrganization || '',
+      issueDate: c.issueDate || c.issuedAt,
+      expiryDate: c.expiryDate || c.expiresAt || null,
+      category: c.category || 'General',
+      status: c.status || 'Pending',
+      gradient: CERT_GRADIENTS[i % CERT_GRADIENTS.length],
+      skills: c.skills || [],
+      publicVisible: c.publicVisible !== false,
+      credentialUrl: c.credentialUrl || c.url || '#',
+    }));
+    setCerts(list);
+  }, [certsData]);
   const [showAdd, setShowAdd] = useState(false);
   const [previewCert, setPreviewCert] = useState(null);
   const [editCert, setEditCert] = useState(null);
@@ -738,9 +678,9 @@ export default function CertificationsPage() {
 
   // Profile completion segments for progress bar
   const completionSegments = [
-    { label: "Basic Info", pct: 30, color: "bg-brand-500" },
+    { label: "Basic Info", pct: 30, color: "bg-[#14a800]" },
     { label: "Certifications", pct: 25, color: "bg-green-500" },
-    { label: "Portfolio", pct: 20, color: "bg-brand-500" },
+    { label: "Portfolio", pct: 20, color: "bg-[#14a800]" },
     { label: "Skills", pct: 10, color: "bg-orange-500" },
   ];
 
@@ -768,7 +708,7 @@ export default function CertificationsPage() {
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => setShowAdd(true)}
-          className="flex items-center gap-2 px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-medium text-sm transition-colors shadow-sm shadow-blue-200 dark:shadow-none"
+          className="flex items-center gap-2 px-4 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl font-medium text-sm transition-colors shadow-sm shadow-blue-200 dark:shadow-none"
         >
           <Plus className="w-4 h-4" />
           Add Certification
@@ -787,7 +727,7 @@ export default function CertificationsPage() {
             <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Profile Completion</h2>
             <p className="text-xs text-gray-500 dark:text-gray-400">Complete your profile to attract more clients</p>
           </div>
-          <span className="text-2xl font-bold text-brand-600">85%</span>
+          <span className="text-2xl font-bold text-[#14a800]">85%</span>
         </div>
         <div className="flex rounded-full overflow-hidden h-3 bg-gray-200 dark:bg-gray-700 gap-0.5">
           {completionSegments.map((seg, i) => (
@@ -861,7 +801,7 @@ export default function CertificationsPage() {
         {[
           { label: "Verified", value: verifiedCount, color: "text-green-600", bg: "bg-green-50 dark:bg-green-900/20", icon: BadgeCheck },
           { label: "Pending", value: pendingCount, color: "text-yellow-600", bg: "bg-yellow-50 dark:bg-yellow-900/20", icon: Clock },
-          { label: "Total", value: certs.length, color: "text-brand-600", bg: "bg-brand-50 dark:bg-brand-900/20", icon: Award },
+          { label: "Total", value: certs.length, color: "text-[#14a800]", bg: "bg-[#14a800]/5 dark:bg-[#14a800]/20", icon: Award },
         ].map((s, i) => {
           const Icon = s.icon;
           return (
@@ -898,7 +838,7 @@ export default function CertificationsPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Add your first certification to showcase your skills</p>
           <button
             onClick={() => setShowAdd(true)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-medium text-sm transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl font-medium text-sm transition-colors"
           >
             <Plus className="w-4 h-4" />
             Add Certification

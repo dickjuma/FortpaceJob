@@ -76,7 +76,7 @@ export default function AccountTypeSelection({
       {currentStep === 1 ? (
         <section>
           <div className="mb-6 rounded-2xl border border-zinc-200/80 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-900/40 sm:p-6">
-            <p className="text-xs font-black uppercase tracking-[0.28em] text-brand-500">Step 1</p>
+            <p className="text-xs font-black uppercase tracking-[0.28em] text-[#14a800]">Step 1</p>
             <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">Join the Future of Work</h2>
             <p className="mt-3 max-w-2xl text-zinc-500 dark:text-zinc-400">
               Hire top talent or offer your professional services worldwide.
@@ -113,7 +113,7 @@ export default function AccountTypeSelection({
                 </p>
               </div>
               {selectedRole && (
-                <div className="inline-flex items-center rounded-full bg-brand-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-brand-600 dark:text-brand-300">
+                <div className="inline-flex items-center rounded-full bg-[#14a800]/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#14a800] dark:text-[#14a800]">
                   {selectedRole === 'CLIENT' ? 'Client account' : 'Freelancer account'}
                 </div>
               )}

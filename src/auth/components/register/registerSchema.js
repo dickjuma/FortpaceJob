@@ -50,56 +50,6 @@ export function buildRegisterSchema(role, accountType) {
             message: 'Business name is required for business accounts',
           });
         }
-
-        if (!values.companySize.trim()) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['companySize'],
-            message: 'Select a company size',
-          });
-        }
-
-        if (!values.industry.trim()) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['industry'],
-            message: 'Select an industry',
-          });
-        }
-
-        if (!values.teamSize.trim()) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['teamSize'],
-            message: 'Select a team size',
-          });
-        }
-      }
-
-      if (role === 'FREELANCER') {
-        if (!values.primarySkillCategory.trim()) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['primarySkillCategory'],
-            message: 'Select a primary skill category',
-          });
-        }
-
-        if (!values.experienceLevel.trim()) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['experienceLevel'],
-            message: 'Select an experience level',
-          });
-        }
-      }
-
-      if (role === 'CLIENT' && !values.hiringNeeds.trim()) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['hiringNeeds'],
-          message: 'Tell us what you want to hire for',
-        });
       }
     });
 }

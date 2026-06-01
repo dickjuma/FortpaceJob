@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchClients } from '../../api/users/clients.api';
-import useUserManagementStore from '../../store/userManagementStore';
+import { fetchClients } from '../../api/users/clients.api.js';
+import useUserManagementStore from '../../store/userManagementStore.js';
 
 export function useClients() {
   const { filters, pagination } = useUserManagementStore();

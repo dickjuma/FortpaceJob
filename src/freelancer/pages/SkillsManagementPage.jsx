@@ -95,7 +95,7 @@ export default function SkillsManagementPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-accent-purple/20 text-accent-purple rounded-xl shadow-sm border border-accent-purple/20">
+            <div className="p-2.5 bg-success/20 text-success rounded-xl shadow-sm border border-success/20">
               <Award size={24} />
             </div>
             <h1 className="text-3xl font-black text-text-primary tracking-tight">Skills Directory</h1>
@@ -112,7 +112,7 @@ export default function SkillsManagementPage() {
         <div className="lg:col-span-1 space-y-6">
           <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
             <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-              <Plus className="w-5 h-5 text-accent-purple" />
+              <Plus className="w-5 h-5 text-success" />
               Add Skill Tag
             </h3>
             
@@ -124,7 +124,7 @@ export default function SkillsManagementPage() {
                   value={newSkillName}
                   onChange={(e) => { setNewSkillName(e.target.value); setSearchQuery(e.target.value); }}
                   placeholder="e.g. Docker, Next.js"
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   required
                 />
               </div>
@@ -138,7 +138,7 @@ export default function SkillsManagementPage() {
                       key={tax} 
                       type="button"
                       onClick={() => { setNewSkillName(tax); setSearchQuery(''); }}
-                      className="w-full text-left px-2 py-1.5 text-xs font-bold text-text-primary hover:bg-accent-purple/10 hover:text-accent-purple rounded-lg transition-colors flex justify-between items-center"
+                      className="w-full text-left px-2 py-1.5 text-xs font-bold text-text-primary hover:bg-success/10 hover:text-success rounded-lg transition-colors flex justify-between items-center"
                     >
                       {tax}
                       <ChevronRight size={12} />
@@ -158,7 +158,7 @@ export default function SkillsManagementPage() {
                       className={cn(
                         "py-2 rounded-xl text-xs font-black border transition-all",
                         newSkillLevel === lvl 
-                          ? "border-accent-purple bg-accent-purple/10 text-accent-purple" 
+                          ? "border-success bg-success/10 text-success" 
                           : "border-border bg-light-gray text-text-secondary hover:border-border-hover hover:text-text-primary"
                       )}
                     >
@@ -168,24 +168,24 @@ export default function SkillsManagementPage() {
                 </div>
               </div>
 
-              <button type="submit" className="w-full py-3 bg-accent-purple hover:bg-accent-purple/95 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-accent-purple/20 mt-4 flex items-center justify-center gap-1.5">
+              <button type="submit" className="w-full py-3 bg-success hover:bg-success/95 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-[#14a800]/20 mt-4 flex items-center justify-center gap-1.5">
                 <Plus size={16} /> Add Skill Tag
               </button>
             </form>
           </Card>
 
           {/* Stats/Distribution Summary */}
-          <Card className="bg-navy border border-border p-6 rounded-[24px] text-white relative overflow-hidden shadow-xl">
-            <div className="absolute top-[-40%] right-[-10%] w-64 h-64 bg-accent-purple/10 blur-[80px] rounded-full pointer-events-none"></div>
+          <Card className="bg-[#222222] border border-border p-6 rounded-[24px] text-white relative overflow-hidden shadow-xl">
+            <div className="absolute top-[-40%] right-[-10%] w-64 h-64 bg-success/10 blur-[80px] rounded-full pointer-events-none"></div>
             <h3 className="text-sm font-black tracking-widest uppercase mb-6 flex items-center gap-2 border-b border-white/10 pb-3">
-              <BarChart2 className="w-4 h-4 text-accent-purple" />
+              <BarChart2 className="w-4 h-4 text-success" />
               Expertise Distribution
             </h3>
             
             <div className="space-y-4 relative z-10">
               {[
-                { label: 'Expert Skills', count: skills.filter(s => s.level === 'Expert').length, pct: 60, color: 'bg-accent-purple' },
-                { label: 'Intermediate', count: skills.filter(s => s.level === 'Intermediate').length, pct: 30, color: 'bg-accent-red' },
+                { label: 'Expert Skills', count: skills.filter(s => s.level === 'Expert').length, pct: 60, color: 'bg-success' },
+                { label: 'Intermediate', count: skills.filter(s => s.level === 'Intermediate').length, pct: 30, color: 'bg-[#e63946]' },
                 { label: 'Beginner', count: skills.filter(s => s.level === 'Beginner').length, pct: 10, color: 'bg-amber-400' },
               ].map(item => (
                 <div key={item.label} className="space-y-1.5">
@@ -211,9 +211,9 @@ export default function SkillsManagementPage() {
 
             <div className="space-y-4">
               {skills.map((skill) => (
-                <div key={skill.name} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-border/80 hover:border-accent-purple/60 rounded-2xl bg-light-gray/20 hover:bg-white hover:shadow-md transition-all group">
+                <div key={skill.name} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-border/80 hover:border-success/60 rounded-2xl bg-light-gray/20 hover:bg-white hover:shadow-md transition-all group">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-accent-purple/15 text-accent-purple flex items-center justify-center font-bold font-mono">
+                    <div className="w-10 h-10 rounded-xl bg-success/15 text-success flex items-center justify-center font-bold font-mono">
                       {skill.name[0].toUpperCase()}
                     </div>
                     <div>
@@ -222,9 +222,9 @@ export default function SkillsManagementPage() {
                         <span className={cn(
                           "px-2 py-0.5 rounded-full text-[10px] font-black border uppercase tracking-widest",
                           skill.level === 'Expert' 
-                            ? 'bg-accent-purple/10 text-accent-purple border-accent-purple/20' 
+                            ? 'bg-success/10 text-success border-success/20' 
                             : skill.level === 'Intermediate' 
-                              ? 'bg-accent-red/10 text-accent-red border-accent-red/20' 
+                              ? 'bg-[#e63946]/10 text-[#e63946] border-[#e63946]/20' 
                               : 'bg-amber-100 text-amber-600 border-amber-200'
                         )}>
                           {skill.level}
@@ -238,7 +238,7 @@ export default function SkillsManagementPage() {
                       <div className="flex items-center gap-1.5 text-xs text-text-secondary mt-1 font-bold">
                         <span>{skill.endorsedCount} Endorsements</span>
                         <span>•</span>
-                        <button onClick={() => handleEndorseSimulate(skill.name)} className="text-accent-purple hover:underline">
+                        <button onClick={() => handleEndorseSimulate(skill.name)} className="text-success hover:underline">
                           Simulate +1
                         </button>
                       </div>
@@ -249,7 +249,7 @@ export default function SkillsManagementPage() {
                     {!skill.verified ? (
                       <button 
                         onClick={() => startVerificationTest(skill)}
-                        className="px-3.5 py-1.5 bg-accent-purple hover:bg-accent-purple/90 text-white rounded-lg text-xs font-black transition-all flex items-center gap-1 shadow-sm"
+                        className="px-3.5 py-1.5 bg-success hover:bg-success/90 text-white rounded-lg text-xs font-black transition-all flex items-center gap-1 shadow-sm"
                       >
                         <PlayCircle size={14} /> Verify Skill
                       </button>
@@ -260,7 +260,7 @@ export default function SkillsManagementPage() {
                     )}
                     <button 
                       onClick={() => removeSkill(skill.name)} 
-                      className="p-2 text-text-secondary hover:text-accent-red hover:bg-light-gray rounded-xl transition-all"
+                      className="p-2 text-text-secondary hover:text-[#e63946] hover:bg-light-gray rounded-xl transition-all"
                       title="Remove Skill Tag"
                     >
                       <X size={16} />
@@ -288,7 +288,7 @@ export default function SkillsManagementPage() {
           <Card className="w-full max-w-lg shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-4 border-b border-border pb-3">
               <h3 className="text-lg font-black text-text-primary flex items-center gap-2">
-                <Award className="w-5 h-5 text-accent-purple" />
+                <Award className="w-5 h-5 text-success" />
                 {testModalSkill.name} Capability Assessment
               </h3>
               <button onClick={() => setTestModalSkill(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
@@ -301,11 +301,11 @@ export default function SkillsManagementPage() {
                 </p>
                 <div className="p-4 bg-light-gray/40 border border-border rounded-xl space-y-2">
                   <div className="flex items-center gap-2 text-xs font-bold text-text-primary">
-                    <CheckCircle2 className="w-4 h-4 text-accent-purple" />
+                    <CheckCircle2 className="w-4 h-4 text-success" />
                     <span>Duration: ~ 2 minutes</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs font-bold text-text-primary">
-                    <CheckCircle2 className="w-4 h-4 text-accent-purple" />
+                    <CheckCircle2 className="w-4 h-4 text-success" />
                     <span>Type: 1 Multiple Choice</span>
                   </div>
                 </div>
@@ -319,7 +319,7 @@ export default function SkillsManagementPage() {
             {testStep === 1 && (
               <div className="space-y-4">
                 <div className="bg-light-gray/40 p-4 rounded-xl border border-border mb-4">
-                  <span className="text-[10px] font-black uppercase text-accent-purple tracking-widest block mb-1">Question 1 of 1</span>
+                  <span className="text-[10px] font-black uppercase text-success tracking-widest block mb-1">Question 1 of 1</span>
                   <p className="text-sm font-bold text-text-primary leading-relaxed">
                     Which of the following is true regarding performance optimization in React applications?
                   </p>
@@ -339,7 +339,7 @@ export default function SkillsManagementPage() {
                       className={cn(
                         "w-full text-left p-3.5 rounded-xl border text-xs font-bold transition-all flex items-center justify-between",
                         selectedAnswer === index
-                          ? "border-accent-purple bg-accent-purple/5 text-accent-purple shadow-sm"
+                          ? "border-success bg-success/5 text-success shadow-sm"
                           : "border-border bg-white text-text-secondary hover:border-border-hover hover:bg-light-gray/20"
                       )}
                     >

@@ -27,10 +27,10 @@ export default function HelpCenterPage() {
       <Toaster position="top-right" />
       
       {/* Search Header Banner */}
-      <div className="bg-navy border border-border rounded-[24px] p-8 text-white relative overflow-hidden mb-8 shadow-sm">
-        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-accent-purple/10 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="bg-[#222222] border border-border rounded-[24px] p-8 text-white relative overflow-hidden mb-8 shadow-sm">
+        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-success/10 blur-[100px] rounded-full pointer-events-none"></div>
         <div className="relative z-10 flex flex-col items-center text-center max-w-xl mx-auto space-y-4">
-          <HelpCircle className="w-12 h-12 text-accent-purple animate-pulse" />
+          <HelpCircle className="w-12 h-12 text-success animate-pulse" />
           <h1 className="text-3xl font-black tracking-tight">How can we assist you?</h1>
           <p className="text-xs text-white/70 font-medium">Search our developer manuals, FAQs, or contact our support desk.</p>
           
@@ -54,8 +54,8 @@ export default function HelpCenterPage() {
           { label: 'Agency Collaborations', icon: Settings, desc: 'Manage team invites, workspaces, and RBAC.' },
           { label: 'Security & Badges', icon: ShieldCheck, desc: 'Learn about verified credentials and MFA locks.' },
         ].map((cat, idx) => (
-          <Card key={idx} className="bg-white border border-border p-6 rounded-2xl shadow-sm hover:border-accent-purple/40 hover:shadow-md transition-all cursor-pointer group">
-            <div className="p-3 bg-accent-purple/10 text-accent-purple rounded-xl shrink-0 w-11 h-11 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+          <Card key={idx} className="bg-white border border-border p-6 rounded-2xl shadow-sm hover:border-success/40 hover:shadow-md transition-all cursor-pointer group">
+            <div className="p-3 bg-success/10 text-success rounded-xl shrink-0 w-11 h-11 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
               <cat.icon size={20} />
             </div>
             <h3 className="font-black text-sm text-text-primary mb-1">{cat.label}</h3>
@@ -70,9 +70,9 @@ export default function HelpCenterPage() {
         
         <div className="space-y-4">
           {filteredFaqs.map((faq, index) => (
-            <Card key={index} className="bg-white border border-border p-6 rounded-2xl shadow-sm hover:border-accent-purple/30 transition-all">
+            <Card key={index} className="bg-white border border-border p-6 rounded-2xl shadow-sm hover:border-success/30 transition-all">
               <div className="flex justify-between items-start gap-4">
-                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-accent-purple/10 text-accent-purple border-accent-purple/20 shrink-0">
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-success/10 text-success border-success/20 shrink-0">
                   {faq.c}
                 </span>
               </div>

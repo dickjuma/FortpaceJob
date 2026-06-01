@@ -40,7 +40,7 @@ export default function SessionExpiredPage() {
             </Button>
             
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Need help? <a href="#" className="font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors">Contact Support</a>
+              Need help? <a href="#" className="font-semibold text-[#14a800] hover:text-[#14a800] dark:text-[#14a800] transition-colors">Contact Support</a>
             </p>
           </div>
         </motion.div>

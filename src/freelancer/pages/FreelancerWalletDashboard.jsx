@@ -16,7 +16,7 @@ export default function FreelancerWalletDashboard() {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-surface-dark dark:text-white flex items-center gap-3">
-            <DollarSign className="w-8 h-8 text-brand-600" /> Earnings & Wallet
+            <DollarSign className="w-8 h-8 text-[#14a800]" /> Earnings & Wallet
           </h1>
           <p className="text-sm text-gray-500 mt-1">Track your income, view pending escrow, and withdraw funds to your local bank or M-Pesa.</p>
         </div>
@@ -44,7 +44,7 @@ export default function FreelancerWalletDashboard() {
         <motion.div whileHover={{ y: -2 }} className="bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border rounded-2xl p-6 shadow-card">
           <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Work in Progress (Escrow)</h3>
           <div className="text-3xl font-bold text-surface-dark dark:text-white mb-4">$3,100.00</div>
-          <div className="text-sm text-brand-600 flex items-center">
+          <div className="text-sm text-[#14a800] flex items-center">
             <Briefcase className="w-4 h-4 mr-1" /> 2 active contracts
           </div>
         </motion.div>
@@ -81,7 +81,7 @@ export default function FreelancerWalletDashboard() {
                       <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-dark text-white text-xs py-1 px-2 rounded-md font-bold z-10 pointer-events-none">
                         ${data.earnings}
                       </div>
-                      <div className="w-full max-w-[40px] bg-brand-100 dark:bg-brand-900/30 group-hover:bg-brand-500 dark:group-hover:bg-brand-500 rounded-t-sm transition-colors" style={{ height }}></div>
+                      <div className="w-full max-w-[40px] bg-[#14a800]/10 dark:bg-[#14a800]/30 group-hover:bg-[#14a800] dark:group-hover:bg-[#14a800] rounded-t-sm transition-colors" style={{ height }}></div>
                     </div>
                     <div className="text-xs text-gray-500 mt-3 font-medium">{data.month}</div>
                   </div>
@@ -99,7 +99,7 @@ export default function FreelancerWalletDashboard() {
             <div className="p-2">
               <button className="w-full flex items-center justify-between p-4 hover:bg-surface dark:hover:bg-surface-dark-secondary rounded-xl transition-colors">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-brand-50 dark:bg-brand-900/20 text-brand-600 rounded-lg"><FileText className="w-5 h-5" /></div>
+                  <div className="p-2 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] rounded-lg"><FileText className="w-5 h-5" /></div>
                   <div className="text-left">
                     <p className="font-bold text-sm text-surface-dark dark:text-white">Certificate of Earnings</p>
                     <p className="text-xs text-gray-500">Official document for visas/loans</p>

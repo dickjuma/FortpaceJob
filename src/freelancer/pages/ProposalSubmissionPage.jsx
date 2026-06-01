@@ -1,14 +1,35 @@
 import React, { useState } from 'react';
 import { Send, DollarSign, Clock, FileText, CheckCircle, ChevronRight, Briefcase } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import {
+  validateCoverLetter,
+  validatePositiveNumber,
+} from '../../common/utils/validation';
 
 export default function ProposalSubmissionPage() {
   const { jobId } = useParams();
   const [step, setStep] = useState(1);
+  const [hourlyRate, setHourlyRate] = useState('85');
+  const [coverLetter, setCoverLetter] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const goToCoverLetter = () => {
+    const rateErr = validatePositiveNumber(hourlyRate, 'Hourly rate');
+    if (rateErr) {
+      toast.error(rateErr);
+      return;
+    }
+    setStep(2);
+  };
+
   const handleSubmit = () => {
+    const coverErr = validateCoverLetter(coverLetter, 50);
+    if (coverErr) {
+      toast.error(coverErr);
+      return;
+    }
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
@@ -19,7 +40,7 @@ export default function ProposalSubmissionPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="mb-8">
-        <Link to="/search/jobs" className="text-sm font-medium text-brand-600 hover:text-brand-500 mb-4 inline-block">
+        <Link to="/search/jobs" className="text-sm font-medium text-[#14a800] hover:text-[#14a800] mb-4 inline-block">
           ← Back to Job Search
         </Link>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Submit Proposal</h1>
@@ -35,7 +56,7 @@ export default function ProposalSubmissionPage() {
 
       <div className="flex mb-8 space-x-2">
         {[1, 2].map((s) => (
-          <div key={s} className={`h-2 flex-1 rounded-full ${step >= s ? 'bg-brand-600' : 'bg-gray-200 dark:bg-gray-800'}`}></div>
+          <div key={s} className={`h-2 flex-1 rounded-full ${step >= s ? 'bg-[#14a800]' : 'bg-gray-200 dark:bg-gray-800'}`}></div>
         ))}
       </div>
 
@@ -54,8 +75,9 @@ export default function ProposalSubmissionPage() {
                     </div>
                     <input 
                       type="number" 
-                      defaultValue={85}
-                      className="w-full pl-11 pr-4 py-3 border border-gray-300 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:ring-brand-500 focus:border-brand-500 font-bold"
+                      value={hourlyRate}
+                      onChange={(e) => setHourlyRate(e.target.value)}
+                      className="w-full pl-11 pr-4 py-3 border border-gray-300 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:ring-[#14a800] focus:border-[#14a800]/20 font-bold"
                     />
                   </div>
                   <p className="text-xs text-gray-500 mt-2">Total amount the client will see.</p>
@@ -67,7 +89,7 @@ export default function ProposalSubmissionPage() {
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                       <Clock className="w-5 h-5 text-gray-400" />
                     </div>
-                    <select className="w-full pl-11 pr-4 py-3 border border-gray-300 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:ring-brand-500 focus:border-brand-500 font-medium">
+                    <select className="w-full pl-11 pr-4 py-3 border border-gray-300 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:ring-[#14a800] focus:border-[#14a800]/20 font-medium">
                       <option>Less than 1 month</option>
                       <option>1 to 3 months</option>
                       <option>3 to 6 months</option>
@@ -97,8 +119,10 @@ export default function ProposalSubmissionPage() {
               <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2">Cover Letter</label>
               <textarea 
                 rows="8"
+                value={coverLetter}
+                onChange={(e) => setCoverLetter(e.target.value)}
                 placeholder="Introduce yourself and explain why you're a strong candidate for this job. Highlight relevant experience..."
-                className="w-full border border-gray-300 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:ring-brand-500 focus:border-brand-500"
+                className="w-full border border-gray-300 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:ring-[#14a800] focus:border-[#14a800]/20"
               ></textarea>
             </div>
 
@@ -123,7 +147,7 @@ export default function ProposalSubmissionPage() {
               Your proposal has been sent to the client. You can track its status in your Bidding Dashboard.
             </p>
             <Link to="/freelancer/proposals">
-              <button className="px-6 py-2.5 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition-colors shadow-sm">
+              <button className="px-6 py-2.5 bg-[#14a800] text-white font-bold rounded-xl hover:bg-[#118a00] transition-colors shadow-sm">
                 View Bidding Dashboard
               </button>
             </Link>
@@ -142,8 +166,8 @@ export default function ProposalSubmissionPage() {
             
             {step < 2 ? (
               <button 
-                onClick={() => setStep(step + 1)}
-                className="flex items-center px-6 py-2.5 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition-colors shadow-sm"
+                onClick={goToCoverLetter}
+                className="flex items-center px-6 py-2.5 bg-[#14a800] text-white font-bold rounded-xl hover:bg-[#118a00] transition-colors shadow-sm"
               >
                 Write Cover Letter <ChevronRight className="w-4 h-4 ml-2" />
               </button>

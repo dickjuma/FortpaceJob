@@ -125,7 +125,7 @@ const EmergencyServices = () => {
             <div className="bg-white rounded-2xl p-8 border border-zinc-200 text-center shadow-sm relative">
               <div className="hidden md:block absolute top-1/2 -left-4 w-8 border-t-2 border-dashed border-zinc-300"></div>
               <div className="hidden md:block absolute top-1/2 -right-4 w-8 border-t-2 border-dashed border-zinc-300"></div>
-              <div className="w-16 h-16 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-[#14a800]/10 text-[#14a800] rounded-full flex items-center justify-center mx-auto mb-6">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
               <h3 className="text-xl font-bold text-zinc-900 mb-3">2. Fast Approval</h3>

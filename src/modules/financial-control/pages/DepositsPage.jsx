@@ -5,18 +5,22 @@ import {
 } from 'lucide-react';
 import { cn } from '../../../admin/utils/cn';
 import { format } from 'date-fns';
-
-const MOCK_DEPOSITS = Array.from({ length: 15 }, (_, i) => ({
-  id: `DEP-${7700 + i}`,
-  client: `Client Name ${i}`,
-  method: i % 3 === 0 ? 'Card' : i % 2 === 0 ? 'M-PESA' : 'Bank Transfer',
-  reference: `REF-${Math.floor(Math.random() * 1000000)}`,
-  amount: Math.floor(Math.random() * 100000) + 10000,
-  status: i % 10 === 0 ? 'failed' : i % 5 === 0 ? 'pending' : 'completed',
-  date: new Date(Date.now() - Math.random() * 86400000 * 5).toISOString(),
-}));
+import { useTransactions } from '../../../admin/hooks/useFinancial';
+import { Loader2 } from 'lucide-react';
 
 export default function DepositsPage() {
+  const { data: trxResponse, isLoading } = useTransactions();
+  const deposits = (trxResponse?.data || [])
+    .filter((t) => ['deposit', 'payment', 'credit'].includes((t.type || '').toLowerCase()))
+    .map((t, i) => ({
+      id: t.id || t._id || `DEP-${i}`,
+      client: t.clientName || t.user?.name || t.payer || '—',
+      method: t.method || t.gateway || '—',
+      reference: t.reference || t.externalRef || '—',
+      amount: t.amount || 0,
+      status: (t.status || 'pending').toLowerCase(),
+      date: t.createdAt || t.date || new Date().toISOString(),
+    }));
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
 
@@ -46,7 +50,7 @@ export default function DepositsPage() {
               placeholder="Search Deposit ID or Client..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500 outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#14a800] outline-none"
             />
           </div>
           <select 
@@ -74,7 +78,11 @@ export default function DepositsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/50">
-              {MOCK_DEPOSITS.filter(d => !status || d.status === status).map(dep => (
+              {isLoading ? (
+                <tr><td colSpan={6} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#14a800]" /></td></tr>
+              ) : deposits.filter(d => !status || d.status === status).length === 0 ? (
+                <tr><td colSpan={6} className="p-8 text-center text-zinc-500 font-medium">No deposits found.</td></tr>
+              ) : deposits.filter(d => !status || d.status === status).map(dep => (
                 <tr key={dep.id} className="hover:bg-surface/50 dark:hover:bg-zinc-800/20 group transition-colors">
                   <td className="p-4">
                     <div className="flex flex-col">

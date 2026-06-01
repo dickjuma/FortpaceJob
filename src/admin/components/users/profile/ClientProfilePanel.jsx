@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { getPublicProfileUrl } from '../../../utils/publicProfileLinks';
 import { 
   Building2, 
   Wallet, 
@@ -28,7 +30,7 @@ const SectionHeader = ({ title, icon: Icon, action }) => (
       <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900 dark:text-white">{title}</h3>
     </div>
     {action && (
-      <button className="text-[10px] font-black uppercase tracking-widest text-brand-600 hover:text-brand-700 transition-colors">
+      <button className="text-[10px] font-black uppercase tracking-widest text-[#14a800] hover:text-[#14a800] transition-colors">
         {action}
       </button>
     )}
@@ -41,8 +43,22 @@ const SectionHeader = ({ title, icon: Icon, action }) => (
 const ClientProfilePanel = ({ user, activeTab }) => {
   if (activeTab !== 'overview') return null;
 
+  const publicUrl = getPublicProfileUrl(user);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {publicUrl && (
+        <div className="lg:col-span-3">
+          <Link
+            to={publicUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-bold text-[#14a800] hover:underline"
+          >
+            <ExternalLink size={14} /> View public client profile
+          </Link>
+        </div>
+      )}
       {/* Left Column: Organization & Preferences */}
       <div className="lg:col-span-2 space-y-8">
         <Card>
@@ -52,7 +68,7 @@ const ClientProfilePanel = ({ user, activeTab }) => {
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Entity Name</p>
                 <p className="text-lg font-black text-zinc-900 dark:text-white">{user.companyName || user.fullName}</p>
-                <p className="text-xs font-bold text-brand-600 capitalize">{user.clientType} Account</p>
+                <p className="text-xs font-bold text-[#14a800] capitalize">{user.clientType} Account</p>
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Industry Vertical</p>
@@ -105,7 +121,7 @@ const ClientProfilePanel = ({ user, activeTab }) => {
                      <span className="text-[10px] font-black text-zinc-900 dark:text-white">KES 240k / {formatCurrency(user.creditLimit)}</span>
                   </div>
                   <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                     <div className="h-full bg-brand-600 w-[45%] rounded-full" />
+                     <div className="h-full bg-[#14a800] w-[45%] rounded-full" />
                   </div>
                </div>
                <div className="flex items-center justify-between pt-2">
@@ -120,8 +136,8 @@ const ClientProfilePanel = ({ user, activeTab }) => {
            <SectionHeader title="Active Operations" icon={Briefcase} />
            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
               {[
-                { label: 'Jobs Posted', value: user.totalJobsPosted, color: 'text-brand-600' },
-                { label: 'Active Jobs', value: user.activeJobs, color: 'text-brand-600' },
+                { label: 'Jobs Posted', value: user.totalJobsPosted, color: 'text-[#14a800]' },
+                { label: 'Active Jobs', value: user.activeJobs, color: 'text-[#14a800]' },
                 { label: 'Contracts', value: user.activeContracts, color: 'text-success' },
                 { label: 'Completed', value: user.completedContracts, color: 'text-zinc-400' }
               ].map(stat => (

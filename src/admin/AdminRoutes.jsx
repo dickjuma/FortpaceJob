@@ -2,7 +2,8 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AdminLayout from "./layouts/AdminLayout";
-import Dashboard from "./pages/Dashboard";
+import AdminAuthGuard from "./components/AdminAuthGuard";
+import DashboardPage from "./pages/DashboardPage";
 import { 
   FinancialHubPage, 
   FeeStructurePage, 
@@ -13,6 +14,35 @@ import { UserManagementRoutes } from "./UserManagementModule";
 import UserRiskPage from "./pages/marketplace/UserRiskPage";
 import MarketplaceDashboardPage from "./pages/marketplace/MarketplaceDashboardPage";
 import ProductionDataPage from "./pages/ProductionDataPage";
+import AuditLogsPage from "./pages/audit/AuditLogsPage";
+import ModuleAuditPage from "./pages/audit/ModuleAuditPage";
+import GeneralSettingsPage from "./pages/config/GeneralSettingsPage";
+import FormSubmissionsPage from "./pages/config/FormSubmissionsPage";
+import SecuritySettingsPage from "./pages/config/SecuritySettingsPage";
+import PaymentGatewaysPage from "./pages/config/PaymentGatewaysPage";
+import SubscriptionControlPage from "./pages/config/SubscriptionControlPage";
+import AdminRolesPage from "./pages/config/AdminRolesPage";
+import FeatureFlagsPage from "./pages/config/FeatureFlagsPage";
+import TrustedCompaniesAdminPage from "./pages/config/TrustedCompaniesAdminPage";
+import ResolvedDisputesPage from "./pages/disputes/ResolvedDisputesPage";
+import ChatAutomodPage from "./pages/chat/ChatAutomodPage";
+import SecurityAuditPage from "./pages/audit/SecurityAuditPage";
+import DisputeAuditPage from "./pages/audit/DisputeAuditPage";
+import MarketplaceAuditPage from "./pages/audit/MarketplaceAuditPage";
+import GigsManagementPage from "./pages/marketplace/GigsManagementPage";
+import ProposalsReviewPage from "./pages/marketplace/ProposalsReviewPage";
+import ModerationDashboard from "./pages/marketplace/ModerationDashboard";
+import MarketplaceContractsPage from "./pages/marketplace/ContractsPage";
+import MarketplaceReviewsPage from "./pages/marketplace/ReviewsPage";
+import FraudDetectionCenter from "./pages/FraudDetectionCenter";
+import PlatformAnalyticsPage from "./pages/PlatformAnalyticsPage";
+import FinancialControl from "./pages/FinancialControl";
+import AuditSecurityMonitoringPage from "./pages/AuditSecurityMonitoringPage";
+import ProposalAuditLogsPage from "./pages/ProposalAuditLogsPage";
+import ProposalModerationDashboard from "./pages/ProposalModerationDashboard";
+import SystemAnalyticsDashboard from "./pages/SystemAnalyticsDashboard";
+import QualityPage from "./pages/marketplace/QualityPage";
+import AlgorithmControlPanel from "./pages/ranking/AlgorithmControlPanel";
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -24,10 +54,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const IntegrationRequired = ({ title, note }) => (
-  <ProductionDataPage title={title} integrationNote={note} />
-);
-
+// ─── Marketplace Action Configs ────────────────────────────────────────────────
 const marketplaceJobActions = [
   {
     label: "Approve",
@@ -130,6 +157,50 @@ const fraudCaseActions = [
   },
 ];
 
+const blacklistActions = [
+  {
+    label: "Remove",
+    endpoint: (row) => `/fraud/blacklist/${row.id || row._id}`,
+    method: "delete",
+    variant: "danger",
+    successMessage: "Removed from blacklist.",
+    confirmMessage: "Remove this entry from the blacklist?",
+  },
+];
+
+const addToBlacklistAction = {
+  label: "Add to Blacklist",
+  endpoint: "/fraud/blacklist",
+  method: "post",
+  fields: [
+    { name: "userId", label: "User ID", prompt: "Enter the user ID to blacklist", required: true },
+    { name: "reason", label: "Reason", prompt: "Enter the reason for blacklisting", required: true },
+  ],
+  successMessage: "User added to blacklist.",
+};
+
+const fraudRuleActions = [
+  {
+    label: "Toggle",
+    endpoint: (row) => `/fraud/rules/${row.id || row._id}/toggle`,
+    method: "patch",
+    successMessage: "Fraud rule toggled.",
+    confirmMessage: "Toggle this fraud rule?",
+  },
+];
+
+const addFraudRuleAction = {
+  label: "Add Rule",
+  endpoint: "/fraud/rules",
+  method: "post",
+  fields: [
+    { name: "name", label: "Rule Name", prompt: "Enter rule name", required: true },
+    { name: "condition", label: "Condition", prompt: "Enter rule condition (e.g. riskScore > 80)", required: true },
+    { name: "action", label: "Action", prompt: "Enter action (e.g. FLAG, RESTRICT, BLOCK)", required: true },
+  ],
+  successMessage: "Fraud rule created.",
+};
+
 const withdrawalActions = [
   {
     label: "Approve",
@@ -146,6 +217,72 @@ const withdrawalActions = [
     requireReason: true,
     successMessage: "Withdrawal rejected.",
     confirmMessage: "Reject this withdrawal?",
+  },
+];
+
+const refundActions = [
+  {
+    label: "Process",
+    endpoint: (row) => `/financial/refunds/${row.id || row._id}/process`,
+    method: "post",
+    requireReason: true,
+    body: (_row, reason) => ({ reason }),
+    successMessage: "Refund processed.",
+    confirmMessage: "Process this refund?",
+  },
+];
+
+const subscriptionActions = [
+  {
+    label: "Cancel",
+    endpoint: (row) => `/financial/subscriptions/${row.id || row._id}/cancel`,
+    method: "post",
+    variant: "danger",
+    requireReason: true,
+    successMessage: "Subscription cancelled.",
+    confirmMessage: "Cancel this subscription?",
+  },
+];
+
+const walletActions = [
+  {
+    label: "Freeze",
+    endpoint: (row) => `/financial/wallets/${row.id || row._id}/freeze`,
+    method: "post",
+    variant: "danger",
+    successMessage: "Wallet frozen.",
+    confirmMessage: "Freeze this wallet?",
+  },
+  {
+    label: "Unfreeze",
+    endpoint: (row) => `/financial/wallets/${row.id || row._id}/unfreeze`,
+    method: "post",
+    variant: "warning",
+    successMessage: "Wallet unfrozen.",
+    confirmMessage: "Unfreeze this wallet?",
+  },
+];
+
+const chatMessageActions = [
+  {
+    label: "Remove",
+    endpoint: (row) => `/chat/reports/${row.id || row._id}/resolve`,
+    method: "patch",
+    variant: "danger",
+    requireReason: true,
+    body: (_row, reason) => ({ action: "REMOVE", reason }),
+    successMessage: "Message removed.",
+    confirmMessage: "Remove this reported message?",
+  },
+  {
+    label: "Dismiss",
+    endpoint: (row) => `/chat/reports/${row.id || row._id}/resolve`,
+    method: "patch",
+    variant: "warning",
+    requireReason: true,
+    body: (_row, reason) => ({ action: "DISMISS", reason }),
+    successMessage: "Report dismissed.",
+    confirmMessage: "Dismiss this report?",
   },
 ];
 
@@ -174,14 +311,12 @@ const AdminRoutes = () => {
     <QueryClientProvider client={queryClient}>
       <Routes>
         <Route path="login" element={<Navigate to="/admin/login" replace />} />
-        
+
+        <Route element={<AdminAuthGuard />}>
         <Route element={<AdminLayout />}>
           {/* Dashboard */}
-          <Route index element={<Dashboard />} />
-          <Route
-            path="activity"
-            element={<ProductionDataPage title="Live Activity" endpoint="/fraud/anomalies" />}
-          />
+          <Route index element={<DashboardPage />} />
+          <Route path="activity" element={<SystemAnalyticsDashboard />} />
           <Route
             path="alerts"
             element={<ProductionDataPage title="Alerts Center" endpoint="/fraud/reports" actions={fraudCaseActions} />}
@@ -196,23 +331,9 @@ const AdminRoutes = () => {
             path="marketplace/jobs"
             element={<ProductionDataPage title="Project Review Queue" endpoint="/marketplace/jobs" actions={marketplaceJobActions} />}
           />
-          <Route
-            path="marketplace/gigs"
-            element={<ProductionDataPage title="Gig Management" endpoint="/marketplace/gigs" actions={marketplaceGigActions} />}
-          />
-          <Route
-            path="marketplace/proposals"
-            element={<ProductionDataPage title="Proposal Review" endpoint="/marketplace/proposals" />}
-          />
-          <Route
-            path="marketplace/contracts"
-            element={
-              <IntegrationRequired
-                title="Contract Management"
-                note="Marketplace contract administration needs a dedicated backend contract endpoint. Dispute handling is available under Admin > Disputes."
-              />
-            }
-          />
+          <Route path="marketplace/gigs" element={<GigsManagementPage />} />
+          <Route path="marketplace/proposals" element={<ProposalsReviewPage />} />
+          <Route path="marketplace/contracts" element={<MarketplaceContractsPage />} />
           <Route
             path="marketplace/reports"
             element={<ProductionDataPage title="Reported Marketplace Content" endpoint="/marketplace/content/flagged" actions={flaggedContentActions} />}
@@ -228,47 +349,16 @@ const AdminRoutes = () => {
               />
             }
           />
-          <Route
-            path="marketplace/rankings"
-            element={
-              <IntegrationRequired
-                title="Marketplace Rankings"
-                note="Ranking controls need a dedicated backend endpoint before admins can safely reorder or override marketplace visibility."
-              />
-            }
-          />
-          <Route
-            path="marketplace/reviews"
-            element={<ProductionDataPage title="Flagged Reviews" endpoint="/marketplace/content/flagged" actions={flaggedContentActions} />}
-          />
-          <Route
-            path="marketplace/quality"
-            element={<ProductionDataPage title="Marketplace Quality" endpoint="/marketplace/content/flagged" actions={flaggedContentActions} />}
-          />
-          <Route
-            path="marketplace/proposal-moderation"
-            element={<ProductionDataPage title="Proposal Moderation" endpoint="/marketplace/proposals" />}
-          />
-          <Route
-            path="marketplace/fraud-center"
-            element={<ProductionDataPage title="Marketplace Fraud Center" endpoint="/fraud/reports" actions={fraudCaseActions} />}
-          />
-          <Route
-            path="marketplace/proposal-audit"
-            element={
-              <IntegrationRequired
-                title="Proposal Audit Logs"
-                note="Proposal audit history is not exposed by the current admin_rbc module. This page is ready for integration once that endpoint is mounted."
-              />
-            }
-          />
+          <Route path="marketplace/rankings" element={<AlgorithmControlPanel />} />
+          <Route path="marketplace/reviews" element={<MarketplaceReviewsPage />} />
+          <Route path="marketplace/quality" element={<QualityPage />} />
+          <Route path="marketplace/proposal-moderation" element={<ProposalModerationDashboard />} />
+          <Route path="marketplace/fraud-center" element={<FraudDetectionCenter />} />
+          <Route path="marketplace/proposal-audit" element={<ProposalAuditLogsPage />} />
           
           {/* Legacy/Specific Marketplace Pages */}
           <Route path="marketplace/user-risk" element={<UserRiskPage />} />
-          <Route
-            path="marketplace/moderation"
-            element={<ProductionDataPage title="Moderation Queue" endpoint="/marketplace/content/flagged" actions={flaggedContentActions} />}
-          />
+          <Route path="marketplace/moderation" element={<ModerationDashboard />} />
           <Route
             path="marketplace/fraud"
             element={<ProductionDataPage title="Fraud Analytics" endpoint="/fraud/reports" actions={fraudCaseActions} />}
@@ -279,17 +369,13 @@ const AdminRoutes = () => {
           />
           <Route
             path="marketplace/chat"
-            element={
-              <IntegrationRequired
-                title="Chat Intelligence"
-                note="Admin chat oversight needs the chat moderation backend mounted under the admin API before it can be production-enabled."
-              />
-            }
+            element={<ProductionDataPage title="Chat Intelligence" endpoint="/chat/conversations" />}
           />
 
           {/* Financial Control */}
           <Route path="finance">
             <Route index element={<FinancialHubPage />} />
+            <Route path="control" element={<FinancialControl />} />
             <Route
               path="transactions"
               element={<ProductionDataPage title="Ledger Transactions" endpoint="/financial/transactions" />}
@@ -304,68 +390,33 @@ const AdminRoutes = () => {
             />
             <Route
               path="deposits"
-              element={
-                <IntegrationRequired
-                  title="Deposits"
-                  note="Deposit reconciliation requires a confirmed financial deposits endpoint. Mock deposit rows are disabled for production."
-                />
-              }
+              element={<ProductionDataPage title="Deposits" endpoint="/financial/deposits" />}
             />
             <Route
               path="refunds"
-              element={
-                <IntegrationRequired
-                  title="Refunds"
-                  note="Refund listing and action endpoints are not exposed in the current admin financial API."
-                />
-              }
+              element={<ProductionDataPage title="Refunds" endpoint="/financial/refunds" actions={refundActions} />}
             />
             <Route path="fees" element={<FeeStructurePage />} />
             <Route
               path="fee-collection"
-              element={
-                <IntegrationRequired
-                  title="Fee Collection"
-                  note="Fee collection reporting needs a dedicated backend endpoint before this page can display live production totals."
-                />
-              }
+              element={<ProductionDataPage title="Fee Collection Report" endpoint="/financial/fee-collection" />}
             />
             <Route
               path="subscriptions"
-              element={
-                <IntegrationRequired
-                  title="Subscriptions"
-                  note="Subscription billing administration is not part of the current admin_rbc financial routes."
-                />
-              }
+              element={<ProductionDataPage title="Subscriptions" endpoint="/financial/subscriptions" actions={subscriptionActions} />}
             />
             <Route
               path="reconciliation"
-              element={
-                <IntegrationRequired
-                  title="Reconciliation"
-                  note="Reconciliation queues need a real financial reconciliation endpoint. The frontend will not show generated rows in production."
-                />
-              }
+              element={<ProductionDataPage title="Reconciliation History" endpoint="/financial/reconciliation/history" />}
             />
             <Route
               path="payouts"
-              element={
-                <IntegrationRequired
-                  title="Payout Reports"
-                  note="Payout reports require a confirmed reporting endpoint. Pending withdrawals are available under the withdrawals route."
-                />
-              }
+              element={<ProductionDataPage title="Payout Reports" endpoint="/financial/payouts" />}
             />
             <Route path="tax" element={<TaxCompliancePage />} />
             <Route
               path="wallets"
-              element={
-                <IntegrationRequired
-                  title="Wallet Controls"
-                  note="Wallet freeze/unfreeze actions exist, but the backend does not expose a wallet listing endpoint yet. Add the wallet index route to enable this admin page."
-                />
-              }
+              element={<ProductionDataPage title="Wallet Controls" endpoint="/financial/wallets" actions={walletActions} />}
             />
           </Route>
 
@@ -377,7 +428,7 @@ const AdminRoutes = () => {
           />
           <Route
             path="disputes/resolved"
-            element={<ProductionDataPage title="Resolved Disputes" endpoint="/disputes?status=RESOLVED" />}
+            element={<ResolvedDisputesPage />}
           />
 
           {/* Fraud & Security */}
@@ -386,18 +437,22 @@ const AdminRoutes = () => {
           <Route
             path="fraud/blacklist"
             element={
-              <IntegrationRequired
-                title="Blacklist"
-                note="Blacklist management needs a dedicated fraud/security endpoint before production actions can be enabled."
+              <ProductionDataPage
+                title="Blacklist Management"
+                endpoint="/fraud/blacklist"
+                actions={blacklistActions}
+                primaryAction={addToBlacklistAction}
               />
             }
           />
           <Route
             path="fraud/rules"
             element={
-              <IntegrationRequired
+              <ProductionDataPage
                 title="Fraud Rules Engine"
-                note="Rules engine CRUD endpoints are not exposed in the current admin fraud module. Mock rules are disabled."
+                endpoint="/fraud/rules"
+                actions={fraudRuleActions}
+                primaryAction={addFraudRuleAction}
               />
             }
           />
@@ -406,79 +461,78 @@ const AdminRoutes = () => {
           {/* Chat */}
           <Route
             path="chat/list"
-            element={
-              <IntegrationRequired
-                title="Chat Conversations"
-                note="Chat conversation review needs the production chat-admin endpoint connected to this admin API client."
-              />
-            }
+            element={<ProductionDataPage title="Chat Conversations" endpoint="/chat/conversations" />}
           />
           <Route
             path="chat/reports"
-            element={
-              <IntegrationRequired
-                title="Reported Messages"
-                note="Reported chat messages need a real moderation endpoint before admins can review them safely."
-              />
-            }
+            element={<ProductionDataPage title="Reported Messages" endpoint="/chat/reports" actions={chatMessageActions} />}
           />
           <Route
             path="chat/automod"
-            element={
-              <IntegrationRequired
-                title="Auto Moderation Logs"
-                note="Auto-moderation logs need a production audit/moderation endpoint. Mock logs are disabled."
-              />
-            }
+            element={<ChatAutomodPage />}
+          />
+          <Route
+            path="messages"
+            element={<ProductionDataPage title="Message Oversight" endpoint="/chat/conversations" />}
+          />
+          <Route
+            path="interviews"
+            element={<ProductionDataPage title="Interview Oversight" endpoint="/hiring/interviews" />}
+          />
+          <Route
+            path="video-calls"
+            element={<ProductionDataPage title="Video Call Oversight" endpoint="/hiring/interviews" />}
           />
 
           {/* Analytics */}
-          <Route path="analytics" element={<ProductionDataPage title="Platform Analytics" endpoint="/users" />} />
+          <Route path="analytics" element={<PlatformAnalyticsPage />} />
+          <Route path="analytics/system" element={<SystemAnalyticsDashboard />} />
           <Route path="analytics/revenue" element={<ProductionDataPage title="Revenue Analytics" endpoint="/financial/reports/revenue" />} />
           <Route path="analytics/growth" element={<ProductionDataPage title="Growth Analytics" endpoint="/users" />} />
           <Route path="analytics/fraud" element={<ProductionDataPage title="Fraud Analytics" endpoint="/fraud/reports" actions={fraudCaseActions} />} />
 
           {/* Audit & Settings */}
-          <Route
-            path="audit"
-            element={
-              <IntegrationRequired
-                title="Audit Logs"
-                note="Audit logs need a confirmed immutable audit endpoint mounted under the admin API before production viewing is enabled."
-              />
-            }
-          />
-          <Route
-            path="audit/:moduleName"
-            element={
-              <IntegrationRequired
-                title="Module Audit Logs"
-                note="Module-level audit history is backend-dependent and is intentionally blocked from displaying generated logs."
-              />
-            }
-          />
+          <Route path="audit" element={<AuditLogsPage />} />
+          <Route path="audit/monitoring" element={<AuditSecurityMonitoringPage />} />
+          <Route path="audit/security" element={<SecurityAuditPage />} />
+          <Route path="audit/disputes" element={<DisputeAuditPage />} />
+          <Route path="audit/marketplace" element={<MarketplaceAuditPage />} />
+          <Route path="audit/:moduleName" element={<ModuleAuditPage />} />
           <Route
             path="config/general"
-            element={<IntegrationRequired title="General Settings" note="Settings mutation endpoints are required before admin configuration can be production-enabled." />}
+            element={<GeneralSettingsPage />}
+          />
+          <Route
+            path="config/submissions"
+            element={<FormSubmissionsPage />}
           />
           <Route
             path="config/security"
-            element={<IntegrationRequired title="Security Settings" note="Security configuration requires backend policy endpoints and audit logging before edits are enabled." />}
+            element={<SecuritySettingsPage />}
           />
           <Route
             path="config/gateways"
-            element={<IntegrationRequired title="Payment Gateways" note="Payment gateway configuration should only be enabled after secure backend secret management endpoints exist." />}
+            element={<PaymentGatewaysPage />}
+          />
+          <Route
+            path="config/subscriptions"
+            element={<SubscriptionControlPage />}
           />
           <Route
             path="config/roles"
-            element={<IntegrationRequired title="Admin Roles" note="Role management needs backend RBAC endpoints before production changes are allowed." />}
+            element={<AdminRolesPage />}
           />
           <Route
             path="config/flags"
-            element={<IntegrationRequired title="Feature Flags" note="Feature flag controls require a production feature-management endpoint." />}
+            element={<FeatureFlagsPage />}
+          />
+          <Route
+            path="config/trusted-companies"
+            element={<TrustedCompaniesAdminPage />}
           />
 
           <Route path="*" element={<Navigate to="/admin" replace />} />
+        </Route>
         </Route>
       </Routes>
     </QueryClientProvider>
@@ -486,4 +540,3 @@ const AdminRoutes = () => {
 };
 
 export default AdminRoutes;
-

@@ -1,64 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Star, MessageCircle, Filter, Search, ThumbsUp, MoreVertical, Reply, 
-  MessageSquare, ShieldCheck, Sparkles, Check, AlertTriangle, Share2 
+  MessageSquare, ShieldCheck, Sparkles, Check, AlertTriangle, Share2, Loader2
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import toast, { Toaster } from 'react-hot-toast';
+import { useMyReceivedReviews, useReplyToReview } from '../../common/hooks/useReviews';
+
+function mapReview(r) {
+  return {
+    id: r.id,
+    client: r.reviewerName || 'Client',
+    rating: Number(r.overallRating || r.rating) || 5,
+    date: r.createdAt ? new Date(r.createdAt).toLocaleDateString() : '',
+    project: r.projectTitle || 'Project',
+    content: r.comment || '',
+    reply: r.reply || null,
+    type: 'Contract',
+    verified: true,
+  };
+}
 
 export default function ReviewsPage() {
   const [filter, setFilter] = useState('All');
   const [replyText, setReplyText] = useState('');
   const [replyingTo, setReplyingTo] = useState(null);
-  
-  const [reviews, setReviews] = useState([
-    { 
-      id: 'REV-001', 
-      client: 'Alex Mercer', 
-      rating: 5, 
-      date: 'May 22, 2026', 
-      project: 'Fullstack SaaS Development',
-      content: 'Absolutely stellar work. Delivered ahead of schedule and the code quality was top-notch. Highly recommend for any complex web application.',
-      reply: null,
-      type: 'Online Gig',
-      verified: true
-    },
-    { 
-      id: 'REV-002', 
-      client: 'Sarah Jenkins', 
-      rating: 4.8, 
-      date: 'May 10, 2026', 
-      project: 'E-commerce UI Redesign',
-      content: 'Great attention to detail and communication throughout the project. Minor delays on the final revisions but overall very satisfied.',
-      reply: 'Thank you Sarah! It was a pleasure working with your team.',
-      type: 'Online Gig',
-      verified: true
-    },
-    { 
-      id: 'REV-003', 
-      client: 'TechNova Solutions', 
-      rating: 5, 
-      date: 'April 28, 2026', 
-      project: 'API Integration & Security Audit',
-      content: 'Exceptional problem-solving skills. Fixed our critical security flaws in record time.',
-      reply: null,
-      type: 'Onsite Booking',
-      verified: true
-    }
-  ]);
+  const { data: apiReviews = [], isLoading, refetch } = useMyReceivedReviews();
+  const replyMutation = useReplyToReview();
 
-  const handleReplySubmit = (id) => {
+  const reviews = useMemo(() => apiReviews.map(mapReview), [apiReviews]);
+
+  const handleReplySubmit = async (id) => {
     if (!replyText.trim()) {
       toast.error('Reply content cannot be empty.');
       return;
     }
-    setReviews(prev => prev.map(r => r.id === id ? { ...r, reply: replyText } : r));
-    setReplyingTo(null);
-    setReplyText('');
-    toast.success('Professional reply submitted successfully! 💬');
+    try {
+      await replyMutation.mutateAsync({ reviewId: id, reply: replyText });
+      setReplyingTo(null);
+      setReplyText('');
+      refetch();
+    } catch {
+      /* toast from mutation */
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+      </div>
+    );
+  }
 
   const filteredReviews = reviews.filter(r => {
     if (filter === '5 Stars') return r.rating === 5;
@@ -91,7 +86,7 @@ export default function ReviewsPage() {
         <div className="lg:col-span-1 space-y-6">
           
           {/* Main Success Score */}
-          <Card className="bg-navy text-white p-6 rounded-3xl border-none shadow-xl text-center relative overflow-hidden">
+          <Card className="bg-[#222222] text-white p-6 rounded-3xl border-none shadow-xl text-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-warning/10 blur-[40px] rounded-full"></div>
             <h3 className="text-xs font-bold text-white/60 uppercase tracking-widest">Success Rating</h3>
             <div className="flex items-baseline justify-center gap-1.5 mt-3 mb-2">
@@ -107,7 +102,7 @@ export default function ReviewsPage() {
           {/* Review Sentiment Analysis */}
           <Card className="p-6 border border-border bg-white shadow-sm space-y-4">
             <h4 className="font-black text-text-primary text-xs uppercase tracking-wider flex items-center gap-1.5 border-b border-border pb-2">
-              <Sparkles className="w-4 h-4 text-accent-purple" /> AI Sentiment Summary
+              <Sparkles className="w-4 h-4 text-success" /> AI Sentiment Summary
             </h4>
             <div className="space-y-2 text-[11px] font-semibold text-text-secondary leading-relaxed">
               <p>
@@ -139,7 +134,7 @@ export default function ReviewsPage() {
                   <span className="text-text-primary">4.9</span>
                 </div>
                 <div className="w-full h-1 bg-light-gray rounded-full overflow-hidden">
-                  <div className="h-full bg-accent-purple rounded-full" style={{ width: '95%' }}></div>
+                  <div className="h-full bg-success rounded-full" style={{ width: '95%' }}></div>
                 </div>
               </div>
 
@@ -169,7 +164,7 @@ export default function ReviewsPage() {
                   onClick={() => setFilter(f)}
                   className={cn(
                     "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all",
-                    filter === f ? "bg-navy text-white shadow-sm" : "text-text-secondary hover:text-text-primary hover:bg-light-gray"
+                    filter === f ? "bg-[#222222] text-white shadow-sm" : "text-text-secondary hover:text-text-primary hover:bg-light-gray"
                   )}
                 >
                   {f}
@@ -181,7 +176,7 @@ export default function ReviewsPage() {
           {/* List */}
           <div className="space-y-4">
             {filteredReviews.map(rev => (
-              <Card key={rev.id} className="p-6 border border-border bg-white shadow-sm space-y-4 hover:border-accent-purple/20 transition-all">
+              <Card key={rev.id} className="p-6 border border-border bg-white shadow-sm space-y-4 hover:border-success/20 transition-all">
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="flex items-center gap-2">
@@ -192,7 +187,7 @@ export default function ReviewsPage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-[10px] font-bold text-accent-purple uppercase tracking-wider mt-1">{rev.project} • {rev.type}</p>
+                    <p className="text-[10px] font-bold text-success uppercase tracking-wider mt-1">{rev.project} • {rev.type}</p>
                   </div>
 
                   <div className="flex items-center gap-1 bg-warning/10 border border-warning/20 rounded-xl px-2.5 py-1 text-xs font-black text-warning">
@@ -210,7 +205,7 @@ export default function ReviewsPage() {
                     <div className="absolute top-4 -left-3 text-border">
                       <Reply size={20} className="scale-x-[-1]" />
                     </div>
-                    <span className="text-[9px] font-black text-navy uppercase tracking-wider block mb-1">Your reply</span>
+                    <span className="text-[9px] font-black text-[#222222] uppercase tracking-wider block mb-1">Your reply</span>
                     <p className="text-xs text-text-primary font-medium">{rev.reply}</p>
                   </div>
                 ) : replyingTo === rev.id ? (
@@ -220,7 +215,7 @@ export default function ReviewsPage() {
                       rows="3"
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
-                      className="w-full text-xs font-semibold text-text-primary border border-border rounded-xl p-3 bg-light-gray focus:bg-white focus:border-accent-purple outline-none"
+                      className="w-full text-xs font-semibold text-text-primary border border-border rounded-xl p-3 bg-light-gray focus:bg-white focus:border-success outline-none"
                     ></textarea>
                     <div className="flex justify-end gap-2">
                       <Button variant="outline" size="sm" onClick={() => setReplyingTo(null)}>Cancel</Button>

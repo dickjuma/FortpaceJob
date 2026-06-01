@@ -14,17 +14,17 @@ export default function SelectionCard({
 }) {
   const isSelected = selected === id;
   const defaultTheme = {
-    border: isSelected ? 'border-brand-500' : 'border-zinc-200 dark:border-zinc-800',
-    bg: isSelected ? 'bg-brand-50/50 dark:bg-brand-500/10' : 'bg-white/50 dark:bg-surface-dark/50',
-    iconBg: isSelected ? 'bg-brand-500' : 'bg-brand-100 dark:bg-brand-500/20',
-    iconColor: isSelected ? 'text-white' : 'text-brand-600 dark:text-brand-400',
+    border: isSelected ? 'border-[#14a800]/20' : 'border-zinc-200 dark:border-zinc-800',
+    bg: isSelected ? 'bg-[#14a800]/5/50 dark:bg-[#14a800]/10' : 'bg-white/50 dark:bg-surface-dark/50',
+    iconBg: isSelected ? 'bg-[#14a800]' : 'bg-[#14a800]/10 dark:bg-[#14a800]/20',
+    iconColor: isSelected ? 'text-white' : 'text-[#14a800] dark:text-[#14a800]',
     shadow: isSelected ? 'shadow-[0_0_20px_rgba(37,99,235,0.2)]' : 'shadow-sm hover:shadow-md',
   };
   const accentClassMap = {
     brand: {
-      radio: 'border-brand-500 bg-brand-500',
-      outline: 'border-brand-500',
-      eyebrow: 'text-brand-600 dark:text-brand-300',
+      radio: 'border-[#14a800]/20 bg-[#14a800]',
+      outline: 'border-[#14a800]/20',
+      eyebrow: 'text-[#14a800] dark:text-[#14a800]',
     },
     cyan: {
       radio: 'border-cyan-500 bg-cyan-500',

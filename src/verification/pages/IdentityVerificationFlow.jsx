@@ -13,7 +13,7 @@ export default function IdentityVerificationFlow() {
   return (
     <div className="max-w-3xl mx-auto py-12 px-4 sm:px-6 font-sans">
       <div className="text-center mb-10">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 mb-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#14a800]/10 dark:bg-[#14a800]/30 text-[#14a800] dark:text-[#14a800] mb-4">
           <ShieldCheck className="w-8 h-8" />
         </div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Identity Verification</h1>
@@ -23,7 +23,7 @@ export default function IdentityVerificationFlow() {
       <div className="flex justify-between items-center mb-12 relative">
         <div className="absolute left-0 top-1/2 -tranzinc-y-1/2 w-full h-1 bg-gray-200 dark:bg-gray-800 -z-10"></div>
         {[1, 2, 3, 4].map((s) => (
-          <div key={s} className={`flex items-center justify-center w-10 h-10 rounded-full font-bold ${step >= s ? 'bg-brand-600 text-white' : 'bg-gray-200 dark:bg-gray-800 text-gray-500'}`}>
+          <div key={s} className={`flex items-center justify-center w-10 h-10 rounded-full font-bold ${step >= s ? 'bg-[#14a800] text-white' : 'bg-gray-200 dark:bg-gray-800 text-gray-500'}`}>
             {step > s ? <CheckCircle className="w-6 h-6" /> : s}
           </div>
         ))}
@@ -43,7 +43,7 @@ export default function IdentityVerificationFlow() {
                 <button
                   key={type}
                   onClick={() => setDocumentType(type)}
-                  className={`p-4 border rounded-xl text-left transition-colors ${documentType === type ? 'border-brand-600 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-200 dark:border-gray-800 hover:border-brand-400'}`}
+                  className={`p-4 border rounded-xl text-left transition-colors ${documentType === type ? 'border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/20' : 'border-gray-200 dark:border-gray-800 hover:border-[#14a800]/20'}`}
                 >
                   <User className="w-6 h-6 mb-2 text-gray-600 dark:text-gray-400" />
                   <span className="font-semibold text-gray-900 dark:text-white">{type}</span>
@@ -92,7 +92,7 @@ export default function IdentityVerificationFlow() {
             <button
               onClick={handleNext}
               disabled={step === 1 && !documentType}
-              className="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-medium transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl font-medium transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Continue <ArrowRight className="w-4 h-4 ml-2" />
             </button>

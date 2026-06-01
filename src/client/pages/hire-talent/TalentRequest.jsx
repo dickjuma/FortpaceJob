@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { faqs, categories } from "./data";
-import { talentAPI } from "../../services/talentAPI";
+import { talentAPI } from "../../../common/services/talentAPI";
+import { createJob } from "../../services/clientApi";
 
 const TalentRequest = () => {
   const [searchParams] = useSearchParams();
@@ -10,9 +11,13 @@ const TalentRequest = () => {
   const presetTalent = searchParams.get("talent") || "";
   const presetCategory = searchParams.get("category") || "";
   const presetPackage = searchParams.get("package") || "";
+  const presetServiceType = presetType === "Onsite" ? "Physical on-site" : presetType;
 
   const [selectedTalent, setSelectedTalent] = useState(null);
   const [talentLoading, setTalentLoading] = useState(Boolean(presetTalent));
+  const [submitting, setSubmitting] = useState(false);
+  const [submittedJob, setSubmittedJob] = useState(null);
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -49,7 +54,7 @@ const TalentRequest = () => {
 
   const [formData, setFormData] = useState({
     service: presetQuery,
-    serviceType: presetType,
+    serviceType: presetServiceType,
     location: "",
     budget: "",
     timeline: "",
@@ -71,8 +76,66 @@ const TalentRequest = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Talent request submitted", formData);
+    setSubmitError("");
+
+    const title = formData.service.trim() || selectedTalent?.name || "Talent request";
+    const description = formData.details.trim();
+    if (!title || !description) {
+      setSubmitError("Please add the service needed and the project details.");
+      return;
+    }
+
+    const numericBudget = Number(String(formData.budget).replace(/[^0-9.]/g, ""));
+    const isHourly = /hr|hour/i.test(formData.budget);
+    if (!Number.isFinite(numericBudget) || numericBudget <= 0) {
+      setSubmitError("Please enter a budget amount so we can create the request.");
+      return;
+    }
+
+    const payload = {
+      title,
+      description: [
+        description,
+        formData.location ? `Location: ${formData.location}` : null,
+        formData.timeline ? `Timeline: ${formData.timeline}` : null,
+        formData.contactName ? `Contact: ${formData.contactName}` : null,
+        formData.contactEmail ? `Email: ${formData.contactEmail}` : null,
+      ].filter(Boolean).join("\n\n"),
+      category: presetCategory || categoryLabel || "Other",
+      type: /onsite/i.test(formData.serviceType) ? "ONSITE" : formData.serviceType === "Hybrid" ? "HYBRID" : "REMOTE",
+      budgetType: isHourly ? "HOURLY" : "FIXED",
+      budgetMin: numericBudget,
+      budgetMax: numericBudget,
+      skills: (selectedTalent?.skills || selectedTalent?.primarySkills || []).slice(0, 8),
+      experienceLevel: "INTERMEDIATE",
+      isUrgent: Boolean(formData.urgent),
+    };
+
+    setSubmitting(true);
+    createJob(payload)
+      .then((result) => setSubmittedJob(result))
+      .catch((error) => setSubmitError(error?.message || "Could not submit the request right now."))
+      .finally(() => setSubmitting(false));
   };
+
+  if (submittedJob) {
+    return (
+      <div className="talent-page">
+        <section className="talent-section empty-state">
+          <p className="eyebrow">Request sent</p>
+          <h2>Your talent request is live.</h2>
+          <p>We’ve stored the request and opened it to matching talent. You can now keep browsing or go back to your dashboard.</p>
+          <div className="empty-state__actions">
+            <Link className="cta-btn" to={`/find-work/work/${submittedJob.id}`}>
+              View request
+            </Link>
+            <Link className="ghost" to="/client/dashboard">Open dashboard</Link>
+            <Link className="ghost" to="/talent">Browse talent</Link>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="talent-page">
@@ -192,7 +255,10 @@ const TalentRequest = () => {
             </div>
           </div>
 
-          <button type="submit" className="cta-btn">Submit request</button>
+          {submitError ? <p className="error-message">{submitError}</p> : null}
+          <button type="submit" className="cta-btn" disabled={submitting}>
+            {submitting ? "Submitting..." : "Submit request"}
+          </button>
         </form>
 
         <aside className="request-summary">
@@ -212,12 +278,12 @@ const TalentRequest = () => {
                 <span>{selectedTalent.location}</span>
               </div>
               <div className="talent-tags">
-                {(selectedTalent.skills || selectedTalent.primarySkills || selectedTalent.tags || []).slice(0, 4).map((tag) => (
+                {((Array.isArray(selectedTalent.skills) ? selectedTalent.skills : Array.isArray(selectedTalent.primarySkills) ? selectedTalent.primarySkills : Array.isArray(selectedTalent.tags) ? selectedTalent.tags : [])).slice(0, 4).map((tag) => (
                   <span key={tag}>{tag}</span>
                 ))}
               </div>
-              <Link className="ghost" to={`/talent/${selectedTalent.id}`}>View profile</Link>
-            </div>
+                <Link className="ghost" to={`/talent/${selectedTalent.id || selectedTalent._id}`}>View profile</Link>
+              </div>
           )}
 
           <div className="summary-help">

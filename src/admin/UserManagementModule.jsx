@@ -6,6 +6,7 @@ import ClientsPage from './pages/users/ClientsPage';
 import AdminsPage from './pages/users/AdminsPage';
 import UserProfilePage from './pages/users/UserProfilePage';
 import ProductionDataPage from './pages/ProductionDataPage';
+import UserAnalyticsPage from './pages/users/UserAnalyticsPage';
 
 // Modals
 import SuspendUserModal from './components/users/modals/SuspendUserModal';
@@ -19,7 +20,7 @@ export function UserManagementRoutes() {
     <>
       <Routes>
         <Route index element={<AllUsersPage />} />
-        <Route path="analytics" element={<ProductionDataPage title="User Analytics" endpoint="/users" />} />
+        <Route path="analytics" element={<UserAnalyticsPage />} />
         <Route path="freelancers" element={<FreelancersPage />} />
         <Route path="clients" element={<ClientsPage />} />
         <Route path="orgs" element={<ProductionDataPage title="Organizations" endpoint="/users?role=organization" />} />

@@ -41,7 +41,7 @@ export default function ClientWorkflowBuilderPage() {
           <p className="text-xs font-semibold text-light-gray/50 mt-1">Design drag-n-drop automation sequences, connect field worker telemetry to fintech releases, and configure notification rules.</p>
         </div>
 
-        <Button onClick={() => toast.success('New workflow node instantiated.')} className="bg-accent-purple border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-accent-purple/20">
+        <Button onClick={() => toast.success('New workflow node instantiated.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20">
           <Plus className="w-4 h-4" /> Create Automation
         </Button>
       </div>
@@ -51,14 +51,14 @@ export default function ClientWorkflowBuilderPage() {
         {/* Left Hand: Configured Rules list */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="border border-white/10 bg-white/5 p-6 rounded-3xl">
-            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><GitBranch className="w-4 h-4 text-accent-purple" /> Configured Automation Sequences</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><GitBranch className="w-4 h-4 text-success" /> Configured Automation Sequences</h3>
             
             <div className="space-y-4">
               {workflows.map(wf => (
                 <div key={wf.id} className="p-4 bg-white/5 border border-white/5 rounded-2xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono font-bold text-accent-purple">{wf.id}</span>
+                      <span className="text-[10px] font-mono font-bold text-success">{wf.id}</span>
                       <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
                         wf.active ? 'bg-success/20 text-success' : 'bg-white/10 text-light-gray/40'
                       }`}>{wf.active ? 'Active' : 'Disabled'}</span>
@@ -68,7 +68,7 @@ export default function ClientWorkflowBuilderPage() {
                     <div className="flex flex-wrap items-center gap-2 text-[10px] text-light-gray/50 mt-2 font-semibold">
                       <span className="bg-white/5 px-2 py-0.5 rounded text-white font-mono">{wf.trigger}</span>
                       <ArrowRight size={10} />
-                      <span className="bg-accent-purple/20 px-2 py-0.5 rounded text-accent-purple font-mono">{wf.action}</span>
+                      <span className="bg-success/20 px-2 py-0.5 rounded text-success font-mono">{wf.action}</span>
                     </div>
                   </div>
 
@@ -82,7 +82,7 @@ export default function ClientWorkflowBuilderPage() {
                     
                     <Button 
                       onClick={() => triggerTest(wf.name)}
-                      className="bg-accent-purple hover:bg-accent-purple/90 border-none font-bold text-[9px] py-1.5 px-3 rounded-lg flex items-center gap-1"
+                      className="bg-success hover:bg-success/90 border-none font-bold text-[9px] py-1.5 px-3 rounded-lg flex items-center gap-1"
                     >
                       <Play size={10} /> Dry Run
                     </Button>
@@ -96,10 +96,10 @@ export default function ClientWorkflowBuilderPage() {
         {/* Right Hand: Visual Nodes Diagram simulation */}
         <div className="lg:col-span-1 space-y-6">
           <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4 relative overflow-hidden min-h-[380px] flex flex-col justify-between">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-accent-purple/10 blur-[50px] rounded-full"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-success/10 blur-[50px] rounded-full"></div>
             
             <div className="border-b border-white/5 pb-3">
-              <h3 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5 text-accent-purple"><Zap className="w-4 h-4" /> Live Execution Node Map</h3>
+              <h3 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5 text-success"><Zap className="w-4 h-4" /> Live Execution Node Map</h3>
               <p className="text-[9px] text-light-gray/50 mt-1">Visual graph simulator for field triggers</p>
             </div>
 
@@ -108,7 +108,7 @@ export default function ClientWorkflowBuilderPage() {
                 ⚡ Check-In QR Scanned
               </div>
               <div className="w-0.5 h-6 bg-white/20"></div>
-              <div className="w-48 p-3 bg-zinc-900 border border-accent-purple text-center rounded-xl font-bold text-[10px] tracking-wide text-accent-purple shadow">
+              <div className="w-48 p-3 bg-zinc-900 border border-success text-center rounded-xl font-bold text-[10px] tracking-wide text-success shadow">
                 ⚙️ Check GPS Centroid
               </div>
               <div className="w-0.5 h-6 bg-white/20"></div>

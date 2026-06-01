@@ -15,19 +15,19 @@ const salesData = [
 export default function GigAnalyticsDashboard() {
   const stats = [
     { name: 'Total Revenue', value: '$12.4K', change: '+24%', icon: DollarSign, color: 'text-green-600' },
-    { name: 'Active Orders', value: '5', change: '+2', icon: ShoppingCart, color: 'text-brand-600' },
-    { name: 'Gig Views (30d)', value: '14.2K', change: '+45%', icon: Eye, color: 'text-brand-600' },
-    { name: 'Conversion Rate', value: '4.8%', change: '+1.2%', icon: TrendingUp, color: 'text-brand-600' },
+    { name: 'Active Orders', value: '5', change: '+2', icon: ShoppingCart, color: 'text-[#14a800]' },
+    { name: 'Gig Views (30d)', value: '14.2K', change: '+45%', icon: Eye, color: 'text-[#14a800]' },
+    { name: 'Conversion Rate', value: '4.8%', change: '+1.2%', icon: TrendingUp, color: 'text-[#14a800]' },
   ];
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="mb-8">
-        <Link to="/freelancer/gigs" className="text-sm font-medium text-brand-600 hover:text-brand-500 mb-4 inline-flex items-center">
+        <Link to="/freelancer/gigs" className="text-sm font-medium text-[#14a800] hover:text-[#14a800] mb-4 inline-flex items-center">
           <ChevronLeft className="w-4 h-4 mr-1" /> Back to My Gigs
         </Link>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-          <Package className="w-8 h-8 mr-3 text-brand-600" /> Gig Business Analytics
+          <Package className="w-8 h-8 mr-3 text-[#14a800]" /> Gig Business Analytics
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Track your marketplace performance, gig views, and conversion rates.</p>
       </div>

@@ -43,13 +43,13 @@ export default function GigPreviewPage() {
           <div className="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-800 p-1 rounded-lg">
             <button 
               onClick={() => setDevice('desktop')}
-              className={cn("p-1.5 rounded-md transition-colors", device === 'desktop' ? "bg-white dark:bg-zinc-700 shadow-sm text-brand-600" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white")}
+              className={cn("p-1.5 rounded-md transition-colors", device === 'desktop' ? "bg-white dark:bg-zinc-700 shadow-sm text-[#14a800]" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white")}
             >
               <Monitor className="w-4 h-4" />
             </button>
             <button 
               onClick={() => setDevice('mobile')}
-              className={cn("p-1.5 rounded-md transition-colors", device === 'mobile' ? "bg-white dark:bg-zinc-700 shadow-sm text-brand-600" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white")}
+              className={cn("p-1.5 rounded-md transition-colors", device === 'mobile' ? "bg-white dark:bg-zinc-700 shadow-sm text-[#14a800]" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white")}
             >
               <Smartphone className="w-4 h-4" />
             </button>
@@ -63,7 +63,7 @@ export default function GigPreviewPage() {
           <button className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors">
             <Pencil className="w-4 h-4" /> Edit Details
           </button>
-          <button className="flex items-center gap-2 px-6 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold rounded-xl shadow-sm transition-colors">
+          <button className="flex items-center gap-2 px-6 py-2 bg-[#14a800] hover:bg-[#118a00] text-white text-sm font-bold rounded-xl shadow-sm transition-colors">
             Publish Gig <Send className="w-4 h-4" />
           </button>
         </div>
@@ -114,7 +114,7 @@ export default function GigPreviewPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-zinc-900 dark:text-white">{GIG.seller.name}</span>
-                      <span className="text-xs font-bold text-brand-600 bg-brand-50 dark:bg-brand-500/10 px-2 py-0.5 rounded-md">{GIG.seller.level}</span>
+                      <span className="text-xs font-bold text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/10 px-2 py-0.5 rounded-md">{GIG.seller.level}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm mt-0.5">
                       <div className="flex items-center text-amber-500 font-bold gap-1">
@@ -153,12 +153,12 @@ export default function GigPreviewPage() {
                         onClick={() => setActiveTab(tab)}
                         className={cn(
                           "flex-1 py-4 text-xs font-bold uppercase tracking-wider transition-colors relative",
-                          activeTab === tab ? "text-brand-600" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white bg-surface dark:bg-zinc-800/50"
+                          activeTab === tab ? "text-[#14a800]" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white bg-surface dark:bg-zinc-800/50"
                         )}
                       >
                         {tab}
                         {activeTab === tab && (
-                          <motion.div layoutId="preview-tab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-600" />
+                          <motion.div layoutId="preview-tab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#14a800]" />
                         )}
                       </button>
                     ))}
@@ -193,7 +193,7 @@ export default function GigPreviewPage() {
                         ))}
                       </div>
 
-                      <button className="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2">
+                      <button className="w-full py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2">
                         Continue (${GIG.packages[activeTab].price}) <ChevronRight className="w-4 h-4" />
                       </button>
                       <button className="w-full py-3 mt-3 bg-transparent border border-zinc-200 dark:border-zinc-700 hover:bg-surface dark:hover:bg-zinc-800 text-zinc-900 dark:text-white font-bold rounded-xl transition-colors">

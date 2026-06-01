@@ -1,4 +1,6 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { getClientTeamMembers } from '../services/clientApi';
+import { Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Users, DollarSign, FileText, Clock, Mail, ChevronDown, ChevronUp,
@@ -13,23 +15,12 @@ import {
 const ROLES = ["Owner", "Hiring Manager", "Finance", "Recruiter", "Viewer"];
 
 const ROLE_COLORS = {
-  Owner: "bg-brand-100 text-brand-700 dark:bg-brand-900/30 dark:text-brand-300",
-  "Hiring Manager": "bg-brand-100 text-brand-700 dark:bg-brand-900/30 dark:text-brand-300",
+  Owner: "bg-[#14a800]/10 text-[#14a800] dark:bg-[#14a800]/30 dark:text-[#14a800]",
+  "Hiring Manager": "bg-[#14a800]/10 text-[#14a800] dark:bg-[#14a800]/30 dark:text-[#14a800]",
   Finance: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
   Recruiter: "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300",
   Viewer: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
 };
-
-const MOCK_MEMBERS = [
-  { id: 1, name: "Alexandra Carter", email: "alex.carter@company.com", role: "Owner", lastActive: "Just now", contracts: 12, status: "Active", avatar: "AC", avatarBg: "bg-brand-500" },
-  { id: 2, name: "Marcus Johnson", email: "m.johnson@company.com", role: "Hiring Manager", lastActive: "2 hours ago", contracts: 8, status: "Active", avatar: "MJ", avatarBg: "bg-brand-500" },
-  { id: 3, name: "Priya Sharma", email: "p.sharma@company.com", role: "Finance", lastActive: "1 day ago", contracts: 3, status: "Active", avatar: "PS", avatarBg: "bg-green-500" },
-  { id: 4, name: "Daniel Kim", email: "d.kim@company.com", role: "Recruiter", lastActive: "3 hours ago", contracts: 5, status: "Active", avatar: "DK", avatarBg: "bg-teal-500" },
-  { id: 5, name: "Sophia Williams", email: "s.williams@company.com", role: "Recruiter", lastActive: "5 hours ago", contracts: 4, status: "Active", avatar: "SW", avatarBg: "bg-teal-400" },
-  { id: 6, name: "James Okafor", email: "j.okafor@company.com", role: "Hiring Manager", lastActive: "2 days ago", contracts: 6, status: "Inactive", avatar: "JO", avatarBg: "bg-brand-400" },
-  { id: 7, name: "Rachel Torres", email: "r.torres@company.com", role: "Viewer", lastActive: "1 week ago", contracts: 0, status: "Inactive", avatar: "RT", avatarBg: "bg-gray-400" },
-  { id: 8, name: "Ben Harper", email: "b.harper@company.com", role: "Finance", lastActive: "4 hours ago", contracts: 2, status: "Active", avatar: "BH", avatarBg: "bg-green-400" },
-];
 
 const PERMISSIONS = [
   { key: "postJobs", label: "Post Jobs" },
@@ -51,22 +42,22 @@ const PERMISSIONS_MATRIX = {
 };
 
 const ACTIVITY_LOG = [
-  { id: 1, icon: UserPlus, color: "text-brand-500", description: "Invited Rachel Torres as Viewer", member: "Alexandra Carter", time: "10 min ago" },
-  { id: 2, icon: Edit2, color: "text-brand-500", description: "Changed Daniel Kim's role to Recruiter", member: "Alexandra Carter", time: "2 hours ago" },
+  { id: 1, icon: UserPlus, color: "text-[#14a800]", description: "Invited Rachel Torres as Viewer", member: "Alexandra Carter", time: "10 min ago" },
+  { id: 2, icon: Edit2, color: "text-[#14a800]", description: "Changed Daniel Kim's role to Recruiter", member: "Alexandra Carter", time: "2 hours ago" },
   { id: 3, icon: FileText, color: "text-green-500", description: "Created contract #C-2041 with freelancer", member: "Marcus Johnson", time: "3 hours ago" },
   { id: 4, icon: CheckCircle, color: "text-teal-500", description: "Approved proposal from John Doe", member: "Sophia Williams", time: "5 hours ago" },
   { id: 5, icon: DollarSign, color: "text-green-600", description: "Processed payment of $4,200", member: "Priya Sharma", time: "8 hours ago" },
   { id: 6, icon: Trash2, color: "text-red-500", description: "Removed Sarah Chen from the team", member: "Alexandra Carter", time: "1 day ago" },
-  { id: 7, icon: Users, color: "text-brand-400", description: "Updated team permissions matrix", member: "Alexandra Carter", time: "2 days ago" },
+  { id: 7, icon: Users, color: "text-[#14a800]", description: "Updated team permissions matrix", member: "Alexandra Carter", time: "2 days ago" },
   { id: 8, icon: Briefcase, color: "text-orange-500", description: "Posted new job: Senior React Developer", member: "Marcus Johnson", time: "2 days ago" },
   { id: 9, icon: Star, color: "text-yellow-500", description: "Left review for freelancer Mike Ross", member: "Sophia Williams", time: "3 days ago" },
   { id: 10, icon: Bell, color: "text-gray-500", description: "Updated notification preferences", member: "Ben Harper", time: "4 days ago" },
 ];
 
 const STAT_CARDS = [
-  { label: "Total Members", value: "8", icon: Users, color: "text-brand-600", bg: "bg-brand-50 dark:bg-brand-900/20" },
+  { label: "Total Members", value: "8", icon: Users, color: "text-[#14a800]", bg: "bg-[#14a800]/5 dark:bg-[#14a800]/20" },
   { label: "Active Contracts", value: "14", icon: FileText, color: "text-green-600", bg: "bg-green-50 dark:bg-green-900/20" },
-  { label: "This Month Spend", value: "$28,400", icon: DollarSign, color: "text-brand-600", bg: "bg-brand-50 dark:bg-brand-900/20" },
+  { label: "This Month Spend", value: "$28,400", icon: DollarSign, color: "text-[#14a800]", bg: "bg-[#14a800]/5 dark:bg-[#14a800]/20" },
   { label: "Pending Invites", value: "2", icon: Clock, color: "text-orange-600", bg: "bg-orange-50 dark:bg-orange-900/20" },
 ];
 
@@ -160,7 +151,7 @@ function InviteModal({ onClose }) {
               <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm">
                 Invitation sent to <span className="font-medium text-gray-700 dark:text-gray-200">{form.email}</span>
               </p>
-              <button onClick={onClose} className="mt-6 px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-medium transition-colors">
+              <button onClick={onClose} className="mt-6 px-6 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white rounded-lg font-medium transition-colors">
                 Done
               </button>
             </motion.div>
@@ -173,7 +164,7 @@ function InviteModal({ onClose }) {
                   value={form.email}
                   onChange={(e) => { setForm(f => ({ ...f, email: e.target.value })); setError(""); }}
                   placeholder="colleague@company.com"
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#14a800] transition"
                 />
                 {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
               </div>
@@ -183,7 +174,7 @@ function InviteModal({ onClose }) {
                   <select
                     value={form.role}
                     onChange={(e) => setForm(f => ({ ...f, role: e.target.value }))}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 appearance-none transition"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#14a800] appearance-none transition"
                   >
                     {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
                   </select>
@@ -197,7 +188,7 @@ function InviteModal({ onClose }) {
                   onChange={(e) => setForm(f => ({ ...f, message: e.target.value }))}
                   placeholder="Add a personal note to the invitation..."
                   rows={3}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none transition"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#14a800] resize-none transition"
                 />
               </div>
               <div className={`rounded-xl p-3 border text-sm ${ROLE_COLORS[form.role]} border-current/20`}>
@@ -213,7 +204,7 @@ function InviteModal({ onClose }) {
                 <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-surface dark:hover:bg-gray-800 font-medium transition-colors">
                   Cancel
                 </button>
-                <button type="submit" disabled={loading} className="flex-1 px-4 py-2.5 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+                <button type="submit" disabled={loading} className="flex-1 px-4 py-2.5 bg-[#14a800] hover:bg-[#118a00] disabled:opacity-60 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
                   {loading ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin" />
@@ -252,7 +243,7 @@ function EditRoleDropdown({ member, onClose, onSave }) {
             onClick={() => { setSelected(r); onSave(r); onClose(); }}
             className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center justify-between transition-colors ${
               selected === r
-                ? "bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300"
+                ? "bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800]"
                 : "hover:bg-surface dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
             }`}
           >
@@ -276,14 +267,14 @@ function MemberRow({ member, selected, onToggleSelect, onUpdateRole, onRemove, i
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: index * 0.05 }}
-        className={`border-b border-gray-100 dark:border-gray-800 hover:bg-surface dark:hover:bg-gray-800/50 transition-colors cursor-pointer ${selected ? "bg-brand-50/50 dark:bg-brand-900/10" : ""}`}
+        className={`border-b border-gray-100 dark:border-gray-800 hover:bg-surface dark:hover:bg-gray-800/50 transition-colors cursor-pointer ${selected ? "bg-[#14a800]/5/50 dark:bg-[#14a800]/10" : ""}`}
       >
         <td className="px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
           <input
             type="checkbox"
             checked={selected}
             onChange={() => onToggleSelect(member.id)}
-            className="rounded border-gray-300 dark:border-gray-600 text-brand-600 focus:ring-brand-500"
+            className="rounded border-gray-300 dark:border-gray-600 text-[#14a800] focus:ring-[#14a800]"
           />
         </td>
         <td className="px-4 py-3.5" onClick={() => setExpanded(!expanded)}>
@@ -321,7 +312,7 @@ function MemberRow({ member, selected, onToggleSelect, onUpdateRole, onRemove, i
             <div className="relative">
               <button
                 onClick={() => { setShowEdit(!showEdit); setShowConfirmRemove(false); }}
-                className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-500 hover:text-brand-600"
+                className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-500 hover:text-[#14a800]"
               >
                 <Edit2 className="w-4 h-4" />
               </button>
@@ -372,7 +363,7 @@ function MemberRow({ member, selected, onToggleSelect, onUpdateRole, onRemove, i
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="bg-brand-50/30 dark:bg-brand-900/5"
+            className="bg-[#14a800]/5/30 dark:bg-[#14a800]/5"
           >
             <td colSpan={7} className="px-6 py-4">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -416,7 +407,38 @@ function MemberRow({ member, selected, onToggleSelect, onUpdateRole, onRemove, i
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function TeamManagementPage() {
-  const [members, setMembers] = useState(MOCK_MEMBERS);
+  const [members, setMembers] = useState([]);
+  const [membersLoading, setMembersLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    getClientTeamMembers()
+      .then((list) => {
+        if (cancelled) return;
+        setMembers(
+          (Array.isArray(list) ? list : []).map((m, i) => ({
+            id: m.id || m._id || i,
+            name: m.name || m.displayName || 'Member',
+            email: m.email || '',
+            role: m.role || 'Viewer',
+            lastActive: m.lastActive || m.lastLoginAt || '—',
+            contracts: m.contractsCount || m.contracts || 0,
+            status: m.status || 'Active',
+            avatar: (m.name || 'M').slice(0, 2).toUpperCase(),
+            avatarBg: 'bg-[#14a800]',
+          }))
+        );
+      })
+      .catch(() => {
+        if (!cancelled) setMembers([]);
+      })
+      .finally(() => {
+        if (!cancelled) setMembersLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   const [selectedIds, setSelectedIds] = useState([]);
   const [showInvite, setShowInvite] = useState(false);
   const [roleFilter, setRoleFilter] = useState("All");
@@ -500,7 +522,7 @@ export default function TeamManagementPage() {
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => setShowInvite(true)}
-          className="flex items-center gap-2 px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-medium text-sm transition-colors shadow-sm shadow-blue-200 dark:shadow-none"
+          className="flex items-center gap-2 px-4 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl font-medium text-sm transition-colors shadow-sm shadow-blue-200 dark:shadow-none"
         >
           <UserPlus className="w-4 h-4" />
           Invite Member
@@ -527,7 +549,7 @@ export default function TeamManagementPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by name or email..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm transition"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#14a800] text-sm transition"
             />
             {search && (
               <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -tranzinc-y-1/2">
@@ -545,12 +567,12 @@ export default function TeamManagementPage() {
               onClick={() => setRoleFilter(tab)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 roleFilter === tab
-                  ? "bg-brand-600 text-white"
+                  ? "bg-[#14a800] text-white"
                   : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
               }`}
             >
               {tab}
-              <span className={`ml-1.5 text-xs ${roleFilter === tab ? "text-brand-200" : "text-gray-400"}`}>
+              <span className={`ml-1.5 text-xs ${roleFilter === tab ? "text-[#14a800]" : "text-gray-400"}`}>
                 {tab === "All" ? members.length : members.filter(m => m.role === tab).length}
               </span>
             </button>
@@ -567,7 +589,7 @@ export default function TeamManagementPage() {
             exit={{ opacity: 0, y: -10, height: 0 }}
             className="overflow-hidden mb-4"
           >
-            <div className="bg-brand-600 rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="bg-[#14a800] rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center gap-3">
               <span className="text-white text-sm font-medium">{selectedIds.length} member{selectedIds.length > 1 ? "s" : ""} selected</span>
               <div className="flex items-center gap-2 flex-wrap">
                 <div className="relative">
@@ -585,7 +607,7 @@ export default function TeamManagementPage() {
                 <button
                   onClick={() => { if (bulkAction) setShowBulkConfirm(true); }}
                   disabled={!bulkAction}
-                  className="px-3 py-1.5 bg-white text-brand-700 rounded-lg text-sm font-medium hover:bg-brand-50 transition-colors disabled:opacity-40"
+                  className="px-3 py-1.5 bg-white text-[#14a800] rounded-lg text-sm font-medium hover:bg-[#14a800]/5 transition-colors disabled:opacity-40"
                 >
                   Apply
                 </button>
@@ -654,7 +676,7 @@ export default function TeamManagementPage() {
                     type="checkbox"
                     checked={allVisibleSelected}
                     onChange={toggleSelectAll}
-                    className="rounded border-gray-300 dark:border-gray-600 text-brand-600 focus:ring-brand-500"
+                    className="rounded border-gray-300 dark:border-gray-600 text-[#14a800] focus:ring-[#14a800]"
                   />
                 </th>
                 <th className="px-4 py-3 text-left">
@@ -721,7 +743,7 @@ export default function TeamManagementPage() {
                     type="checkbox"
                     checked={selectedIds.includes(member.id)}
                     onChange={() => toggleSelect(member.id)}
-                    className="mt-1 rounded border-gray-300 text-brand-600"
+                    className="mt-1 rounded border-gray-300 text-[#14a800]"
                   />
                   <div className={`w-10 h-10 rounded-full ${member.avatarBg} flex items-center justify-center text-white text-sm font-semibold flex-shrink-0`}>
                     {member.avatar}
@@ -765,8 +787,8 @@ export default function TeamManagementPage() {
           className="w-full flex items-center justify-between px-6 py-4 hover:bg-surface dark:hover:bg-gray-800/50 transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-brand-100 dark:bg-brand-900/30 rounded-lg flex items-center justify-center">
-              <Shield className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+            <div className="w-8 h-8 bg-[#14a800]/10 dark:bg-[#14a800]/30 rounded-lg flex items-center justify-center">
+              <Shield className="w-4 h-4 text-[#14a800] dark:text-[#14a800]" />
             </div>
             <div className="text-left">
               <h2 className="text-base font-semibold text-gray-900 dark:text-white">Permissions Matrix</h2>
@@ -835,8 +857,8 @@ export default function TeamManagementPage() {
       >
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-brand-100 dark:bg-brand-900/30 rounded-lg flex items-center justify-center">
-              <Activity className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+            <div className="w-8 h-8 bg-[#14a800]/10 dark:bg-[#14a800]/30 rounded-lg flex items-center justify-center">
+              <Activity className="w-4 h-4 text-[#14a800] dark:text-[#14a800]" />
             </div>
             <div>
               <h2 className="text-base font-semibold text-gray-900 dark:text-white">Activity Log</h2>
@@ -877,7 +899,7 @@ export default function TeamManagementPage() {
         {logCount < ACTIVITY_LOG.length && (
           <button
             onClick={() => setLogCount(ACTIVITY_LOG.length)}
-            className="mt-3 w-full text-center text-sm text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 font-medium py-2 hover:bg-brand-50 dark:hover:bg-brand-900/10 rounded-xl transition-colors"
+            className="mt-3 w-full text-center text-sm text-[#14a800] dark:text-[#14a800] hover:text-[#14a800] dark:hover:text-[#14a800] font-medium py-2 hover:bg-[#14a800]/5 dark:hover:bg-[#14a800]/10 rounded-xl transition-colors"
           >
             Load more ({ACTIVITY_LOG.length - logCount} remaining) →
           </button>

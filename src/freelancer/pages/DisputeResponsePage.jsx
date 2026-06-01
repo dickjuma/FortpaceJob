@@ -26,42 +26,45 @@ import {
   Eye,
   Check,
   AlertCircle,
+  Loader2,
 } from "lucide-react";
 
-// ─── Mock Data ────────────────────────────────────────────────────────────────
-const MOCK_DISPUTE = {
-  id: "#DSP-2024-0092",
-  status: "Under Review",
-  openedDate: "May 14, 2026",
-  escalationLevel: "Level 2",
-  contract: {
-    project: "Mobile App UI Redesign",
-    budget: 4500,
-    clientName: "Sarah Mitchell",
-    deliveryStatus: "Partially Delivered",
-    milestones: [
-      { name: "Design Mockups", delivered: true },
-      { name: "Prototype", delivered: true },
-      { name: "Final Delivery", delivered: false },
-    ],
-  },
-  complaint: {
-    category: "Missed Deadline",
-    explanation:
-      "The freelancer agreed to deliver the final UI package by May 12, 2026. Despite two reminder messages sent on May 10 and May 11, no delivery was made. The final milestone was critical to our product launch scheduled for May 15. The delay has caused direct financial harm and reputational risk to our company. We had to hire another agency at premium rates to complete the work on short notice. We are requesting a full refund for the undelivered milestone.",
-    evidence: [
-      { name: "screenshot.png", type: "image", size: "1.2 MB" },
-      { name: "email_thread.pdf", type: "pdf", size: "340 KB" },
-    ],
-  },
-  timeline: [
-    { date: "May 1, 2026", event: "Contract Started", description: "Project officially kicked off.", color: "bg-brand-500", dot: "border-brand-500" },
-    { date: "May 5, 2026", event: "Milestone 1 Delivered", description: "Design Mockups approved by client.", color: "bg-green-500", dot: "border-green-500" },
-    { date: "May 10, 2026", event: "Milestone 2 Delivered", description: "Interactive prototype submitted.", color: "bg-green-500", dot: "border-green-500" },
-    { date: "May 14, 2026", event: "Final Deadline Missed", description: "Final delivery not made by agreed date.", color: "bg-red-500", dot: "border-red-500" },
-    { date: "May 14, 2026", event: "Dispute Opened", description: "Client filed dispute #DSP-2024-0092.", color: "bg-orange-500", dot: "border-orange-500" },
-  ],
-};
+import { useDisputeById, useSubmitEvidence } from "../services/freelancerHooks";
+
+function mapDisputeFromApi(raw) {
+  const d = raw?.dispute || raw?.data || raw;
+  if (!d || typeof d !== "object") return null;
+  const contract = d.contract || {};
+  return {
+    id: d.id ? `#DSP-${d.id}` : "—",
+    status: d.status || "OPEN",
+    openedDate: d.createdAt ? new Date(d.createdAt).toLocaleDateString() : "—",
+    escalationLevel: d.escalationLevel || d.level || "—",
+    contract: {
+      project: contract.title || contract.projectName || d.projectTitle || "Contract",
+      budget: contract.amount ?? d.amount ?? d.resolutionAmount ?? 0,
+      clientName: contract.client?.name || d.clientName || "Client",
+      deliveryStatus: contract.status || d.deliveryStatus || "—",
+      milestones: contract.milestones || [],
+    },
+    complaint: {
+      category: d.reason || d.category || "Dispute",
+      explanation: d.description || d.details || "",
+      evidence: (d.evidence || d.attachments || []).map((f) => ({
+        name: f.name || f.filename || "file",
+        type: f.type || "file",
+        size: f.size || "",
+      })),
+    },
+    timeline: (d.timeline || d.events || []).map((ev) => ({
+      date: ev.date || (ev.createdAt ? new Date(ev.createdAt).toLocaleDateString() : ""),
+      event: ev.event || ev.type || "Update",
+      description: ev.description || ev.message || "",
+      color: "bg-[#14a800]",
+      dot: "border-[#14a800]/20",
+    })),
+  };
+}
 
 const SETTLEMENT_OPTIONS = [
   {
@@ -87,12 +90,12 @@ const SETTLEMENT_OPTIONS = [
   {
     id: "request_revision",
     icon: Clock,
-    iconBg: "bg-brand-100 dark:bg-brand-900/30",
-    iconColor: "text-brand-600",
+    iconBg: "bg-[#14a800]/10 dark:bg-[#14a800]/30",
+    iconColor: "text-[#14a800]",
     title: "Request Revision Period",
     description: "Propose a 14-day extension to deliver the final milestone.",
     badge: "14-day extension",
-    badgeColor: "bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400",
+    badgeColor: "bg-[#14a800]/10 dark:bg-[#14a800]/30 text-[#14a800] dark:text-[#14a800]",
   },
   {
     id: "reject_dispute",
@@ -108,7 +111,7 @@ const SETTLEMENT_OPTIONS = [
 
 // ─── Evidence File Icon ───────────────────────────────────────────────────────
 function EvidenceIcon({ type, size = "w-8 h-8" }) {
-  if (type === "image") return <ImageIcon className={`${size} text-brand-500`} />;
+  if (type === "image") return <ImageIcon className={`${size} text-[#14a800]`} />;
   if (type === "pdf") return <FileText className={`${size} text-red-500`} />;
   return <FileText className={`${size} text-gray-500`} />;
 }
@@ -142,7 +145,9 @@ function SuccessToast({ onClose }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function DisputeResponsePage() {
   const { id } = useParams();
-  const dispute = MOCK_DISPUTE;
+  const { data, isLoading, error } = useDisputeById(id);
+  const submitEvidence = useSubmitEvidence();
+  const dispute = mapDisputeFromApi(data);
 
   const [responseText, setResponseText] = useState("");
   const [selectedSettlement, setSelectedSettlement] = useState(null);
@@ -186,9 +191,21 @@ export default function DisputeResponsePage() {
   };
 
   // ─── Submit ────────────────────────────────────────────────────────────────
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!canSubmit) return;
-    setShowSuccess(true);
+    try {
+      await submitEvidence.mutateAsync({
+        disputeId: id,
+        data: {
+          type: "freelancer_response",
+          content: responseText,
+          description: selectedSettlement
+        }
+      });
+      setShowSuccess(true);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // ─── Save Draft ────────────────────────────────────────────────────────────
@@ -202,6 +219,26 @@ export default function DisputeResponsePage() {
     if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / 1048576).toFixed(1)} MB`;
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+      </div>
+    );
+  }
+
+  if (error || !dispute) {
+    return (
+      <div className="max-w-5xl mx-auto py-8 px-4 text-center">
+        <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
+        <p className="text-zinc-600 mb-4">Dispute not found or unavailable.</p>
+        <Link to="/freelancer/disputes" className="text-[#14a800] font-bold">
+          Back to disputes
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
@@ -217,9 +254,9 @@ export default function DisputeResponsePage() {
         animate={{ opacity: 1, y: 0 }}
         className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 mb-6"
       >
-        <Link to="/freelancer/dashboard" className="hover:text-brand-600 transition-colors">Dashboard</Link>
+        <Link to="/freelancer/dashboard" className="hover:text-[#14a800] transition-colors">Dashboard</Link>
         <ChevronRight className="w-4 h-4" />
-        <Link to="/freelancer/disputes" className="hover:text-brand-600 transition-colors">Disputes</Link>
+        <Link to="/freelancer/disputes" className="hover:text-[#14a800] transition-colors">Disputes</Link>
         <ChevronRight className="w-4 h-4" />
         <span className="text-gray-900 dark:text-white font-medium">{dispute.id}</span>
       </motion.nav>
@@ -281,7 +318,7 @@ export default function DisputeResponsePage() {
               <div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Client</p>
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-pink-400 to-[#118a00] flex items-center justify-center text-white text-xs font-bold">
                     SM
                   </div>
                   <p className="font-semibold text-gray-900 dark:text-white">{dispute.contract.clientName}</p>
@@ -456,7 +493,7 @@ export default function DisputeResponsePage() {
               onChange={(e) => setResponseText(e.target.value)}
               rows={9}
               placeholder="Explain your side of the story. Include relevant context, what was delivered, any communication issues, and how you'd like to resolve this..."
-              className="w-full rounded-b-xl border border-gray-200 dark:border-gray-700 px-4 py-3 text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors font-mono"
+              className="w-full rounded-b-xl border border-gray-200 dark:border-gray-700 px-4 py-3 text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-[#14a800] transition-colors font-mono"
             />
 
             <div className="flex items-center justify-between mt-2 mb-4">
@@ -497,7 +534,7 @@ export default function DisputeResponsePage() {
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 text-sm text-gray-500 dark:text-gray-400 hover:border-brand-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 text-sm text-gray-500 dark:text-gray-400 hover:border-[#14a800]/20 hover:text-[#14a800] hover:bg-[#14a800]/5 dark:hover:bg-[#14a800]/10 transition-all"
               >
                 <Paperclip className="w-4 h-4" />
                 Attach Supporting Files
@@ -560,7 +597,7 @@ export default function DisputeResponsePage() {
                     onClick={() => setSelectedSettlement(opt.id)}
                     className={`relative flex flex-col gap-3 p-5 rounded-xl border-2 text-left cursor-pointer transition-all ${
                       isSelected
-                        ? "border-brand-500 bg-brand-50 dark:bg-brand-900/20"
+                        ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/20"
                         : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
                     }`}
                   >
@@ -574,7 +611,7 @@ export default function DisputeResponsePage() {
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             exit={{ scale: 0 }}
-                            className="w-5 h-5 rounded-full bg-brand-600 flex items-center justify-center"
+                            className="w-5 h-5 rounded-full bg-[#14a800] flex items-center justify-center"
                           >
                             <Check className="w-3 h-3 text-white" />
                           </motion.div>
@@ -582,7 +619,7 @@ export default function DisputeResponsePage() {
                       </AnimatePresence>
                     </div>
                     <div>
-                      <p className={`font-semibold text-sm ${isSelected ? "text-brand-700 dark:text-brand-400" : "text-gray-900 dark:text-white"}`}>
+                      <p className={`font-semibold text-sm ${isSelected ? "text-[#14a800] dark:text-[#14a800]" : "text-gray-900 dark:text-white"}`}>
                         {opt.title}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-snug">{opt.description}</p>
@@ -605,7 +642,7 @@ export default function DisputeResponsePage() {
               disabled={!canSubmit}
               className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all ${
                 canSubmit
-                  ? "bg-brand-600 hover:bg-brand-700 text-white shadow-sm"
+                  ? "bg-[#14a800] hover:bg-[#118a00] text-white shadow-sm"
                   : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
               }`}
             >
@@ -686,7 +723,7 @@ export default function DisputeResponsePage() {
                 <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                   <motion.div
                     animate={{ width: `${Math.min((responseText.length / 100) * 100, 100)}%` }}
-                    className={`h-full rounded-full ${responseText.length >= 100 ? "bg-green-500" : "bg-brand-500"}`}
+                    className={`h-full rounded-full ${responseText.length >= 100 ? "bg-green-500" : "bg-[#14a800]"}`}
                   />
                 </div>
               </div>
@@ -706,7 +743,7 @@ export default function DisputeResponsePage() {
                 disabled={!canSubmit}
                 className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all ${
                   canSubmit
-                    ? "bg-brand-600 hover:bg-brand-700 text-white shadow-sm"
+                    ? "bg-[#14a800] hover:bg-[#118a00] text-white shadow-sm"
                     : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
                 }`}
               >
@@ -725,7 +762,7 @@ export default function DisputeResponsePage() {
                 )}
               </button>
 
-              <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-colors">
+              <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-[#14a800] dark:hover:text-[#14a800] hover:bg-[#14a800]/5 dark:hover:bg-[#14a800]/10 transition-colors">
                 <Users className="w-4 h-4" />
                 Request Mediation
               </button>
@@ -760,13 +797,13 @@ export default function DisputeResponsePage() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.25 }}
-              className="bg-brand-50 dark:bg-brand-900/20 rounded-xl border border-brand-200 dark:border-brand-800 p-4"
+              className="bg-[#14a800]/5 dark:bg-[#14a800]/20 rounded-xl border border-[#14a800]/20 dark:border-[#14a800]/20 p-4"
             >
               <div className="flex items-start gap-2">
-                <Shield className="w-4 h-4 text-brand-500 flex-shrink-0 mt-0.5" />
+                <Shield className="w-4 h-4 text-[#14a800] flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-xs font-semibold text-brand-700 dark:text-brand-400 mb-1">Forte Protects You</p>
-                  <p className="text-xs text-brand-600 dark:text-brand-500 leading-snug">
+                  <p className="text-xs font-semibold text-[#14a800] dark:text-[#14a800] mb-1">Forte Protects You</p>
+                  <p className="text-xs text-[#14a800] dark:text-[#14a800] leading-snug">
                     Your response will be reviewed by our team. All evidence is considered before any decision is made.
                   </p>
                 </div>
@@ -803,7 +840,7 @@ export default function DisputeResponsePage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-brand-50 dark:bg-brand-900/20 text-brand-600 hover:bg-brand-100 transition-colors">
+                  <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] hover:bg-[#14a800]/10 transition-colors">
                     <Download className="w-3.5 h-3.5" />
                     Download
                   </button>

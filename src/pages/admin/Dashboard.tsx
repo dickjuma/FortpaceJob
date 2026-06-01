@@ -35,7 +35,7 @@ export const Dashboard = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-navy">Dashboard Overview</h1>
+        <h1 className="text-2xl font-bold text-[#222222]">Dashboard Overview</h1>
         <p className="text-text-secondary mt-1">Welcome back, Admin. Here's what's happening today.</p>
       </div>
 
@@ -78,7 +78,7 @@ export const Dashboard = () => {
       </div>
 
       <div>
-        <h2 className="text-xl font-bold text-navy mb-4">Recent Activity</h2>
+        <h2 className="text-xl font-bold text-[#222222] mb-4">Recent Activity</h2>
         <Table
           data={recentActivity}
           columns={columns}

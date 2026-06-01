@@ -8,29 +8,53 @@ import {
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
 import { loadOnboardingDraft, saveOnboardingDraft } from '../utils/onboardingDraft';
+import TaxonomyRolePicker from '../components/TaxonomyRolePicker';
+import { onboardingAPI, publicAPI } from '../../common/services/api';
+import { extractList } from '../../common/utils/apiHelpers';
+import { Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const CATEGORIES = [
-  'Web Development', 'Design', 'Marketing', 'Writing', 
-  'AI & Machine Learning', 'Mobile Apps', 'Video Editing'
+  'All', 'Web Development', 'Design', 'Marketing', 'Writing',
+  'AI & Machine Learning', 'Mobile Apps', 'Video Editing',
 ];
 
-const MOCK_SKILLS = [
-  { id: 's1', name: 'React.js', category: 'Web Development', trending: true },
-  { id: 's2', name: 'Node.js', category: 'Web Development', trending: true },
-  { id: 's3', name: 'UI/UX Design', category: 'Design', trending: true },
-  { id: 's4', name: 'Figma', category: 'Design', trending: false },
-  { id: 's5', name: 'Copywriting', category: 'Writing', trending: false },
-  { id: 's6', name: 'SEO', category: 'Marketing', trending: true },
-  { id: 's7', name: 'Python', category: 'AI & Machine Learning', trending: true },
-  { id: 's8', name: 'Prompt Engineering', category: 'AI & Machine Learning', trending: true },
-  { id: 's9', name: 'Flutter', category: 'Mobile Apps', trending: false },
-  { id: 's10', name: 'React Native', category: 'Mobile Apps', trending: true },
-  { id: 's11', name: 'Premiere Pro', category: 'Video Editing', trending: false },
-  { id: 's12', name: 'After Effects', category: 'Video Editing', trending: false },
-  { id: 's13', name: 'TypeScript', category: 'Web Development', trending: true },
-  { id: 's14', name: 'Next.js', category: 'Web Development', trending: true },
-  { id: 's15', name: 'Tailwind CSS', category: 'Web Development', trending: false },
-];
+function flattenSkillsFromTree(raw) {
+  const tree = extractList(raw?.sections || raw?.data || raw);
+  const skills = [];
+  for (const section of tree) {
+    const sectionName = section.name || section.title || 'General';
+    for (const group of section.groups || []) {
+      for (const role of group.roles || []) {
+        for (const skill of role.skills || []) {
+          const name = typeof skill === 'string' ? skill : skill.name;
+          if (!name) continue;
+          skills.push({
+            id: skill.id || skill.slug || `${role.slug}-${name}`.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+            name,
+            category: sectionName,
+            trending: !!(skill.trending || role.trending),
+          });
+        }
+        if (role.name && !(role.skills || []).length) {
+          skills.push({
+            id: role.slug || role.id,
+            name: role.name,
+            category: sectionName,
+            trending: false,
+          });
+        }
+      }
+    }
+  }
+  const seen = new Set();
+  return skills.filter((s) => {
+    const key = s.name.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
 
 const STEPS = ['Account', 'Role', 'Skills', 'Experience', 'Done'];
 
@@ -38,18 +62,15 @@ export default function SkillSelectionPage() {
   const navigate = useNavigate();
   const initialDraft = loadOnboardingDraft();
   const [searchQuery, setSearchQuery] = useState('');
+  const [catalogSkills, setCatalogSkills] = useState([]);
+  const [skillsLoading, setSkillsLoading] = useState(true);
   const [selectedSkills, setSelectedSkills] = useState(() => {
     if (!Array.isArray(initialDraft.skills)) return [];
-
     return initialDraft.skills
       .map((skill) => {
-        if (typeof skill === 'object' && skill?.id && skill?.name) {
-          return skill;
-        }
-
+        if (typeof skill === 'object' && skill?.id && skill?.name) return skill;
         if (typeof skill !== 'string') return null;
-
-        return MOCK_SKILLS.find((item) => item.name.toLowerCase() === skill.toLowerCase()) || {
+        return {
           id: skill.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
           name: skill,
           category: 'Custom',
@@ -59,22 +80,47 @@ export default function SkillSelectionPage() {
       .filter(Boolean);
   });
   const [activeCategory, setActiveCategory] = useState('All');
+  const [taxonomySelection, setTaxonomySelection] = useState(() => initialDraft.taxonomy || null);
+
+  useEffect(() => {
+    let cancelled = false;
+    publicAPI
+      .getCategoryTree()
+      .then((raw) => {
+        if (!cancelled) setCatalogSkills(flattenSkillsFromTree(raw));
+      })
+      .catch(() => {
+        if (!cancelled) setCatalogSkills([]);
+      })
+      .finally(() => {
+        if (!cancelled) setSkillsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     saveOnboardingDraft({
       skills: selectedSkills.map(({ id, name, category }) => ({ id, name, category })),
+      taxonomy: taxonomySelection,
     });
-  }, [selectedSkills]);
+  }, [selectedSkills, taxonomySelection]);
+
+  const categoryOptions = useMemo(() => {
+    const cats = ['All', ...new Set(catalogSkills.map((s) => s.category).filter(Boolean))];
+    return cats.length > 1 ? cats : ['All', ...CATEGORIES.filter((c) => c !== 'All')];
+  }, [catalogSkills]);
 
   const filteredSkills = useMemo(() => {
-    return MOCK_SKILLS.filter(skill => {
+    return catalogSkills.filter((skill) => {
       const matchesSearch = skill.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = activeCategory === 'All' || skill.category === activeCategory;
       return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, activeCategory]);
+  }, [searchQuery, activeCategory, catalogSkills]);
 
-  const trendingSkills = useMemo(() => MOCK_SKILLS.filter(s => s.trending).slice(0, 5), []);
+  const trendingSkills = useMemo(() => catalogSkills.filter((s) => s.trending).slice(0, 5), [catalogSkills]);
 
   const toggleSkill = (skill) => {
     setSelectedSkills(prev => {
@@ -90,24 +136,45 @@ export default function SkillSelectionPage() {
     setSelectedSkills(prev => prev.filter(s => s.id !== id));
   };
 
-  const handleContinue = () => {
-    if (selectedSkills.length === 0) return;
+  const handleContinue = async () => {
+    if (!taxonomySelection?.roleSlug) {
+      toast.error('Choose your primary role from the Forte taxonomy.');
+      return;
+    }
+    if (selectedSkills.length === 0) {
+      toast.error('Add at least one skill.');
+      return;
+    }
+    try {
+      await onboardingAPI.completeStep('category', {
+        roleSlug: taxonomySelection.roleSlug,
+        roleName: taxonomySelection.roleName,
+        sectionSlug: taxonomySelection.sectionSlug,
+        primaryCategoryId: taxonomySelection.primaryCategoryId,
+        workMode: taxonomySelection.workMode,
+        skills: selectedSkills.map((s) => s.name),
+        displayName: initialDraft.fullName,
+      });
+      await onboardingAPI.completeStep('skills', { skills: selectedSkills.map((s) => s.name) });
+    } catch (err) {
+      console.warn('[SkillSelection] onboarding sync', err);
+    }
     navigate('/auth/experience-level');
   };
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans selection:bg-brand-500/30 overflow-x-hidden">
+    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans selection:bg-[#14a800]/30 overflow-x-hidden">
       {/* Background Gradients */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-brand-500/10 blur-[120px]" />
-        <div className="absolute top-1/3 -left-40 w-[400px] h-[400px] rounded-full bg-violet-500/10 blur-[100px]" />
+        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-[#14a800]/10 blur-[120px]" />
+        <div className="absolute top-1/3 -left-40 w-[400px] h-[400px] rounded-full bg-#14a800]/10 blur-[100px]" />
       </div>
 
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 max-w-7xl mx-auto w-full">
           <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/30">
+            <div className="w-9 h-9 bg-[#14a800] rounded-xl flex items-center justify-center shadow-lg shadow-[#14a800]/25/30">
               <Briefcase className="text-white w-5 h-5" />
             </div>
             <span className="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white">Forte.</span>
@@ -127,16 +194,16 @@ export default function SkillSelectionPage() {
                     <motion.div
                       className={cn(
                         "w-8 h-8 rounded-full flex items-center justify-center shadow-sm",
-                        isCompleted ? "bg-brand-600 text-white" : isCurrent ? "bg-brand-600 text-white ring-4 ring-brand-500/20 scale-110" : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
+                        isCompleted ? "bg-[#14a800] text-white" : isCurrent ? "bg-[#14a800] text-white ring-4 ring-#14a800]/20 scale-110" : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
                       )}
                     >
                       {isCompleted ? <Check className="w-4 h-4" /> : <span className="text-xs font-bold">{idx + 1}</span>}
                     </motion.div>
-                    <span className={cn("text-[10px] font-bold uppercase tracking-wide hidden sm:block", isCurrent ? "text-brand-600" : isCompleted ? "text-zinc-500" : "text-zinc-400")}>
+                    <span className={cn("text-[10px] font-bold uppercase tracking-wide hidden sm:block", isCurrent ? "text-[#14a800]" : isCompleted ? "text-zinc-500" : "text-zinc-400")}>
                       {step}
                     </span>
                   </div>
-                  {!isLast && <div className={cn("h-[2px] w-8 sm:w-16 mx-1 rounded-full", isCompleted ? "bg-brand-600" : "bg-zinc-200 dark:bg-zinc-800")} />}
+                  {!isLast && <div className={cn("h-[2px] w-8 sm:w-16 mx-1 rounded-full", isCompleted ? "bg-[#14a800]" : "bg-zinc-200 dark:bg-zinc-800")} />}
                 </React.Fragment>
               );
             })}
@@ -150,27 +217,31 @@ export default function SkillSelectionPage() {
           <div className="flex-1 w-full min-w-0 space-y-6">
             <div className="mb-6">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-3">
-                What are your main <span className="bg-gradient-to-r from-brand-600 to-violet-600 bg-clip-text text-transparent">skills?</span>
+                What is your <span className="bg-gradient-to-r from-[#14a800] to-violet-600 bg-clip-text text-transparent">primary role?</span>
               </h1>
               <p className="text-zinc-500 dark:text-zinc-400">
-                Add up to 15 skills to help clients find you. This sets up your job feed recommendations.
+                Pick your industry and trade — then add skills so clients and our matcher can find you.
               </p>
+            </div>
+
+            <div className="bg-white dark:bg-surface-dark border-2 border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 mb-6">
+              <TaxonomyRolePicker value={taxonomySelection} onChange={setTaxonomySelection} />
             </div>
 
             {/* Search Input */}
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-zinc-400 group-focus-within:text-brand-500 transition-colors" />
+                <Search className="h-5 w-5 text-zinc-400 group-focus-within:text-[#14a800] transition-colors" />
               </div>
               <input
                 type="text"
                 placeholder="Search skills (e.g. React, UX Design...)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-4 bg-white dark:bg-surface-dark border-2 border-zinc-200 dark:border-zinc-800 rounded-2xl text-zinc-900 dark:text-white font-medium focus:border-brand-500 focus:ring-0 outline-none transition-all shadow-sm"
+                className="w-full pl-11 pr-4 py-4 bg-white dark:bg-surface-dark border-2 border-zinc-200 dark:border-zinc-800 rounded-2xl text-zinc-900 dark:text-white font-medium focus:border-[#14a800]/20 focus:ring-0 outline-none transition-all shadow-sm"
               />
               {/* AI Suggestion Button */}
-              <button className="absolute right-3 top-1/2 -tranzinc-y-1/2 flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-xl text-xs font-bold hover:bg-brand-100 dark:hover:bg-brand-500/20 transition-colors">
+              <button className="absolute right-3 top-1/2 -tranzinc-y-1/2 flex items-center gap-1.5 px-3 py-1.5 bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800] rounded-xl text-xs font-bold hover:bg-[#14a800]/10 dark:hover:bg-[#14a800]/20 transition-colors">
                 <Sparkles className="w-3.5 h-3.5" /> Auto-Suggest
               </button>
             </div>
@@ -199,7 +270,7 @@ export default function SkillSelectionPage() {
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.8 }}
                           key={`selected-${skill.id}`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-600 text-white rounded-xl text-sm font-semibold shadow-sm"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#14a800] text-white rounded-xl text-sm font-semibold shadow-sm"
                         >
                           {skill.name}
                           <button onClick={() => removeSkill(skill.id)} className="p-0.5 hover:bg-black/20 rounded-md transition-colors">
@@ -224,7 +295,7 @@ export default function SkillSelectionPage() {
               >
                 All Categories
               </button>
-              {CATEGORIES.map(cat => (
+              {categoryOptions.filter((c) => c !== 'All').map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
@@ -242,7 +313,7 @@ export default function SkillSelectionPage() {
             {!searchQuery && activeCategory === 'All' && (
               <div className="mb-6">
                 <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-brand-500" /> Trending Right Now
+                  <TrendingUp className="w-4 h-4 text-[#14a800]" /> Trending Right Now
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {trendingSkills.map(skill => {
@@ -254,8 +325,8 @@ export default function SkillSelectionPage() {
                         className={cn(
                           "px-4 py-2 rounded-xl text-sm font-semibold transition-all border",
                           isSelected 
-                            ? "bg-brand-50 border-brand-200 text-brand-700 dark:bg-brand-500/20 dark:border-brand-500/30 dark:text-brand-300" 
-                            : "bg-white dark:bg-surface-dark border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-brand-300 hover:shadow-sm"
+                            ? "bg-[#14a800]/5 border-[#14a800]/20 text-[#14a800] dark:bg-[#14a800]/20 dark:border-[#14a800]/20/30 dark:text-[#14a800]" 
+                            : "bg-white dark:bg-surface-dark border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-[#14a800]/50 hover:shadow-sm"
                         )}
                       >
                         {skill.name}
@@ -273,7 +344,11 @@ export default function SkillSelectionPage() {
                 {searchQuery ? 'Search Results' : 'Suggested Skills'}
               </h3>
               <div className="flex flex-wrap gap-2">
-                {filteredSkills.map(skill => {
+                {skillsLoading ? (
+                  <div className="w-full flex justify-center py-8">
+                    <Loader2 className="w-6 h-6 animate-spin text-[#14a800]" />
+                  </div>
+                ) : filteredSkills.map(skill => {
                   const isSelected = selectedSkills.some(s => s.id === skill.id);
                   return (
                     <motion.button
@@ -285,8 +360,8 @@ export default function SkillSelectionPage() {
                       className={cn(
                         "px-4 py-2 rounded-xl text-sm font-semibold transition-all border",
                         isSelected 
-                          ? "bg-brand-50 border-brand-200 text-brand-700 dark:bg-brand-500/20 dark:border-brand-500/30 dark:text-brand-300" 
-                          : "bg-white dark:bg-surface-dark border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-brand-300 shadow-sm hover:shadow-md"
+                          ? "bg-[#14a800]/5 border-[#14a800]/20 text-[#14a800] dark:bg-[#14a800]/20 dark:border-[#14a800]/20/30 dark:text-[#14a800]" 
+                          : "bg-white dark:bg-surface-dark border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-[#14a800]/50 shadow-sm hover:shadow-md"
                       )}
                     >
                       {skill.name}
@@ -308,9 +383,9 @@ export default function SkillSelectionPage() {
               initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
               className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-500/10 rounded-bl-full pointer-events-none" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#14a800]/10 rounded-bl-full pointer-events-none" />
               <h3 className="text-sm font-extrabold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
-                <Activity className="w-4 h-4 text-brand-500" /> Market Insights
+                <Activity className="w-4 h-4 text-[#14a800]" /> Market Insights
               </h3>
               
               <div className="space-y-4">
@@ -336,11 +411,11 @@ export default function SkillSelectionPage() {
 
             <motion.div 
               initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}
-              className="bg-gradient-to-br from-brand-600 to-violet-600 rounded-2xl p-6 text-white shadow-lg shadow-brand-500/20"
+              className="bg-gradient-to-br from-[#14a800] to-violet-600 rounded-2xl p-6 text-white shadow-lg shadow-[#14a800]/25/20"
             >
-              <Sparkles className="w-6 h-6 mb-3 text-brand-200" />
+              <Sparkles className="w-6 h-6 mb-3 text-[#14a800]" />
               <h3 className="text-lg font-bold mb-2">Pro Tip</h3>
-              <p className="text-sm text-brand-100 leading-relaxed">
+              <p className="text-sm text-[#14a800] leading-relaxed">
                 Freelancers with 5+ verified skills receive <span className="font-bold text-white">3x more interview invites</span>. Be specific with your expertise!
               </p>
             </motion.div>
@@ -364,7 +439,7 @@ export default function SkillSelectionPage() {
               <button 
                 onClick={handleContinue}
                 disabled={selectedSkills.length === 0}
-                className="flex items-center gap-2 px-6 py-2.5 bg-brand-600 hover:bg-brand-700 disabled:bg-zinc-300 dark:disabled:bg-zinc-800 disabled:text-zinc-500 text-white text-sm font-bold rounded-xl shadow-sm transition-all"
+                className="flex items-center gap-2 px-6 py-2.5 bg-[#14a800] hover:bg-[#118a00] disabled:bg-zinc-300 dark:disabled:bg-zinc-800 disabled:text-zinc-500 text-white text-sm font-bold rounded-xl shadow-sm transition-all"
               >
                 Next Step <ChevronRight className="w-4 h-4" />
               </button>

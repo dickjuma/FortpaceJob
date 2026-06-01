@@ -79,7 +79,7 @@ const WalletPage = () => {
     switch(method) {
       case 'mpesa':
       case 'airtel': return <Smartphone className="w-5 h-5 text-green-600" />;
-      case 'bank': return <Building2 className="w-5 h-5 text-blue-600" />;
+      case 'bank': return <Building2 className="w-5 h-5 text-[#14a800]" />;
       default: return <CreditCard className="w-5 h-5 text-zinc-600" />;
     }
   };
@@ -92,7 +92,7 @@ const WalletPage = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-1 flex items-center gap-3">
-            <Wallet className="w-8 h-8 text-brand-600" /> Wallet & Payments
+            <Wallet className="w-8 h-8 text-[#14a800]" /> Wallet & Payments
           </h1>
           <p className="text-zinc-500 dark:text-zinc-400">Manage your earnings, escrows, and financial methods in KES.</p>
         </div>
@@ -116,7 +116,7 @@ const WalletPage = () => {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden"
           >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500/20 rounded-full blur-[80px] -tranzinc-y-1/2 tranzinc-x-1/4 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#14a800]/20 rounded-full blur-[80px] -tranzinc-y-1/2 tranzinc-x-1/4 pointer-events-none" />
             <div className="relative z-10">
               <div className="flex justify-between items-center mb-6">
                 <span className="text-zinc-400 font-semibold uppercase tracking-wider text-sm flex items-center gap-2">
@@ -130,7 +130,7 @@ const WalletPage = () => {
               <div className="flex gap-3">
                 <button 
                   onClick={() => setIsWithdrawModalOpen(true)}
-                  className="flex-1 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-blue-600/20 transition-colors flex justify-center items-center gap-2"
+                  className="flex-1 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg shadow-blue-600/20 transition-colors flex justify-center items-center gap-2"
                 >
                   <ArrowUpRight className="w-4 h-4" /> Withdraw
                 </button>
@@ -180,7 +180,7 @@ const WalletPage = () => {
         <div className="bg-white dark:bg-zinc-800 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-700 shadow-sm flex flex-col">
           <div className="flex justify-between items-center mb-6">
             <h3 className="font-bold text-lg flex items-center gap-2">
-              <Activity className="w-5 h-5 text-brand-600" /> Cash Flow (7d)
+              <Activity className="w-5 h-5 text-[#14a800]" /> Cash Flow (7d)
             </h3>
           </div>
           <div className="flex-1 min-h-[200px]">
@@ -211,7 +211,7 @@ const WalletPage = () => {
             <h2 className="font-bold text-xl text-zinc-900 dark:text-white">Recent Transactions</h2>
             <button 
               onClick={handleViewAllTransactions}
-              className="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 transition-colors"
+              className="text-sm font-semibold text-[#14a800] dark:text-[#14a800] hover:text-[#14a800] transition-colors"
             >
               View All
             </button>
@@ -254,7 +254,7 @@ const WalletPage = () => {
                       <div className="flex items-center gap-1.5">
                         {trx.status === 'Completed' ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : 
                          trx.status === 'Escrow' ? <Lock className="w-4 h-4 text-amber-500" /> :
-                         <Clock className="w-4 h-4 text-brand-500" />}
+                         <Clock className="w-4 h-4 text-[#14a800]" />}
                         <span className="font-medium text-zinc-700 dark:text-zinc-300">{trx.status}</span>
                       </div>
                     </td>
@@ -287,7 +287,7 @@ const WalletPage = () => {
              
              <div className="space-y-3">
                {/* M-Pesa */}
-               <div className="p-4 border border-brand-200 dark:border-brand-800 bg-brand-50/50 dark:bg-brand-900/10 rounded-2xl flex justify-between items-center">
+               <div className="p-4 border border-[#14a800]/20 dark:border-[#14a800]/20 bg-[#14a800]/5/50 dark:bg-[#14a800]/10 rounded-2xl flex justify-between items-center">
                  <div className="flex items-center gap-3">
                    <div className="w-10 h-6 bg-green-600 rounded flex items-center justify-center text-[10px] font-bold text-white tracking-widest">MPESA</div>
                    <div>
@@ -295,7 +295,7 @@ const WalletPage = () => {
                      <div className="text-xs text-zinc-500 font-mono">+254 7** *** 123</div>
                    </div>
                  </div>
-                 <div className="px-2 py-1 bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-400 text-[10px] font-bold uppercase rounded">Primary</div>
+                 <div className="px-2 py-1 bg-[#14a800]/10 dark:bg-[#14a800]/40 text-[#14a800] dark:text-[#14a800] text-[10px] font-bold uppercase rounded">Primary</div>
                </div>
 
                {/* Airtel Money */}
@@ -329,9 +329,9 @@ const WalletPage = () => {
            </div>
 
            {/* 3. Quick Withdrawal Box */}
-           <div className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-zinc-800 dark:to-zinc-900 border border-brand-100 dark:border-zinc-700 rounded-3xl p-6 shadow-sm">
+           <div className="bg-gradient-to-br from-[#14a800] to-blue-50 dark:from-zinc-800 dark:to-zinc-900 border border-[#14a800]/20 dark:border-zinc-700 rounded-3xl p-6 shadow-sm">
              <h3 className="font-bold text-zinc-900 dark:text-white mb-4">Quick Transfer</h3>
-             <div className="bg-white dark:bg-surface-dark rounded-xl p-1 mb-4 flex items-center border border-zinc-200 dark:border-zinc-700 focus-within:ring-2 focus-within:ring-brand-500">
+             <div className="bg-white dark:bg-surface-dark rounded-xl p-1 mb-4 flex items-center border border-zinc-200 dark:border-zinc-700 focus-within:ring-2 focus-within:ring-#14a800]">
                <span className="pl-4 text-zinc-500 font-bold text-sm">KES</span>
                <input 
                  type="number" 
@@ -342,14 +342,14 @@ const WalletPage = () => {
                />
                <button 
                  onClick={() => setWithdrawAmount('1245000')}
-                 className="px-3 text-xs font-bold text-brand-600 hover:text-brand-700 mr-2"
+                 className="px-3 text-xs font-bold text-[#14a800] hover:text-[#14a800] mr-2"
                >
                  Max
                </button>
              </div>
              <button 
                onClick={() => setIsWithdrawModalOpen(true)}
-               className="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-blue-600/20 transition-all flex justify-center items-center gap-2"
+               className="w-full py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg shadow-blue-600/20 transition-all flex justify-center items-center gap-2"
              >
                Withdraw Funds <ArrowRight className="w-4 h-4" />
              </button>
@@ -390,7 +390,7 @@ const WalletPage = () => {
                 <>
                   <div className="flex justify-between items-center p-6 border-b border-zinc-100 dark:border-zinc-800">
                     <h2 className="font-bold text-xl text-zinc-900 dark:text-white flex items-center gap-2">
-                      <ArrowUpRight className="w-5 h-5 text-brand-600" /> Withdraw Funds
+                      <ArrowUpRight className="w-5 h-5 text-[#14a800]" /> Withdraw Funds
                     </h2>
                     <button 
                       onClick={() => !isProcessing && setIsWithdrawModalOpen(false)}
@@ -408,7 +408,7 @@ const WalletPage = () => {
                         {[
                           { id: 'mpesa', name: 'M-Pesa', color: 'border-green-500 bg-green-50 text-green-700' },
                           { id: 'airtel', name: 'Airtel Money', color: 'border-red-500 bg-red-50 text-red-700' },
-                          { id: 'bank', name: 'Local Bank', color: 'border-blue-500 bg-blue-50 text-blue-700' },
+                          { id: 'bank', name: 'Local Bank', color: 'border-#14a800] bg-blue-50 text-blue-700' },
                           { id: 'paypal', name: 'PayPal', color: 'border-zinc-500 bg-zinc-50 text-zinc-700' }
                         ].map((method) => (
                           <div 
@@ -437,7 +437,7 @@ const WalletPage = () => {
                         placeholder={(withdrawMethod === 'mpesa' || withdrawMethod === 'airtel') ? '+254 7...' : 'Enter details...'}
                         value={withdrawAccount}
                         onChange={(e) => setWithdrawAccount(e.target.value)}
-                        className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+                        className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#14a800] transition-shadow"
                       />
                     </div>
 
@@ -445,7 +445,7 @@ const WalletPage = () => {
                     <div className="space-y-1.5">
                       <div className="flex justify-between items-center">
                         <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Amount (KES)</label>
-                        <span className="text-xs text-brand-600 font-bold cursor-pointer" onClick={() => setWithdrawAmount('1245000')}>Balance: KES 1,245,000</span>
+                        <span className="text-xs text-[#14a800] font-bold cursor-pointer" onClick={() => setWithdrawAmount('1245000')}>Balance: KES 1,245,000</span>
                       </div>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-sm font-bold text-zinc-400">KES</span>
@@ -457,7 +457,7 @@ const WalletPage = () => {
                           placeholder="0"
                           value={withdrawAmount}
                           onChange={(e) => setWithdrawAmount(e.target.value)}
-                          className="w-full pl-12 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-lg focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+                          className="w-full pl-12 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-lg focus:outline-none focus:ring-2 focus:ring-[#14a800] transition-shadow"
                         />
                       </div>
                     </div>
@@ -466,7 +466,7 @@ const WalletPage = () => {
                     <button 
                       type="submit" 
                       disabled={isProcessing || !withdrawAmount || !withdrawAccount}
-                      className="w-full py-3.5 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-lg transition-all flex justify-center items-center gap-2"
+                      className="w-full py-3.5 bg-[#14a800] hover:bg-[#118a00] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-lg transition-all flex justify-center items-center gap-2"
                     >
                       {isProcessing ? (
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

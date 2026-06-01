@@ -1,59 +1,79 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { 
   MapPin, Clock, ShieldCheck, Star, 
-  Award, Edit, ExternalLink, MessageSquare, 
-  ChevronRight, Languages, CheckCircle2, Building, Users,
-  X, Plus, Globe, Check, AlertCircle, Save, Settings, Link2, GraduationCap, Briefcase, DollarSign
+  Award, Edit, Languages, Users,
+  X, Plus, Save, Settings, Link2, GraduationCap, DollarSign
 } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import { cn } from '../../admin/utils/cn';
 import { useFreelancer } from '../context/FreelancerContext';
+import { FREELANCER_WORK_MODES, FREELANCER_ACCOUNT_TYPES } from '../../common/constants/accountTypes';
 import toast, { Toaster } from 'react-hot-toast';
+import { profileAPI } from '../../common/services/api';
+import { getProfileSummary } from '../../common/utils/profile';
 
 export default function ProfilePage() {
-  const { accountType } = useFreelancer();
+  const { accountType, workMode, setWorkMode, persistProfile } = useFreelancer();
 
-  // Local state for interactive editing
-  const [profileData, setProfileData] = useState({
-    INDIVIDUAL: {
-      firstName: 'Alex',
-      lastName: 'Morgan',
-      title: 'Senior Full-Stack React Developer',
-      location: 'San Francisco, CA',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop',
-      bio: "I am a highly experienced Full-Stack developer specializing in React and Node.js. With over 8 years of experience building enterprise-grade SaaS platforms, I can help bring your vision to life with robust, scalable, and secure code.",
-      skills: ['React', 'Node.js', 'TypeScript', 'GraphQL', 'AWS', 'Tailwind CSS'],
-      hourlyRate: '8500',
-      availability: 'Active',
-      education: [
-        { school: 'Stanford University', degree: 'M.S. Computer Science', year: '2018' },
-        { school: 'UC Berkeley', degree: 'B.S. Software Engineering', year: '2016' }
-      ],
-      certifications: [
-        { title: 'AWS Solutions Architect Professional', authority: 'Amazon Web Services', year: '2022' },
-        { title: 'Google Professional Cloud Architect', authority: 'Google Cloud', year: '2023' }
-      ],
-      linkedAccounts: ['GitHub', 'LinkedIn', 'Google']
-    },
-    SME: {
-      firstName: 'Acme',
-      lastName: 'Digital Solutions',
-      title: 'Premium Web Development Agency',
-      location: 'London, UK',
-      avatar: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=300&h=300&fit=crop',
-      bio: "We are an award-winning digital agency specializing in high-performance web applications. Our team of 15 senior developers and designers work together to deliver end-to-end solutions for enterprise clients worldwide.",
-      skills: ['Enterprise App Development', 'Cloud Architecture', 'UI/UX Design', 'DevOps & CI/CD', 'React', 'AWS', 'System Integration'],
-      teamSize: '11-50 Employees',
-      hourlyRate: '15000',
-      availability: 'Active',
-      education: [],
-      certifications: [
-        { title: 'ISO 27001 Security Compliance', authority: 'ISO Security Council', year: '2024' }
-      ],
-      linkedAccounts: ['LinkedIn', 'Google', 'Twitter']
-    }
+  const emptyProfile = () => ({
+    firstName: '',
+    lastName: '',
+    title: '',
+    location: '',
+    avatar: '',
+    bio: '',
+    skills: [],
+    hourlyRate: '',
+    availability: '',
+    education: [],
+    certifications: [],
+    linkedAccounts: [],
+    teamSize: '',
+    companyName: '',
   });
+
+  const [profileData, setProfileData] = useState({
+    INDIVIDUAL: emptyProfile(),
+    SME: emptyProfile(),
+    CORPORATE: emptyProfile(),
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    const hydrateProfile = async () => {
+      try {
+        const res = await profileAPI.getMyProfile();
+        const userProfile = res?.user?.profile || res?.user || {};
+        if (cancelled) return;
+        const currentType = accountType === 'CORPORATE' ? 'CORPORATE' : accountType === 'SME' ? 'SME' : 'INDIVIDUAL';
+        setProfileData((prev) => ({
+          ...prev,
+          [currentType]: {
+            ...prev[currentType],
+            firstName: userProfile.firstName || res?.user?.firstName || prev[currentType].firstName,
+            lastName: userProfile.lastName || res?.user?.lastName || prev[currentType].lastName,
+            title: userProfile.professionalTitle || userProfile.title || prev[currentType].title,
+            location: userProfile.location || prev[currentType].location,
+            avatar: userProfile.avatar || res?.user?.avatar || prev[currentType].avatar,
+            bio: userProfile.bio || userProfile.description || prev[currentType].bio,
+            skills: Array.isArray(userProfile.skills) && userProfile.skills.length ? userProfile.skills : prev[currentType].skills,
+            hourlyRate: userProfile.hourlyRate || prev[currentType].hourlyRate,
+            availability: userProfile.availability || prev[currentType].availability,
+            teamSize: userProfile.teamSize || prev[currentType].teamSize,
+            education: Array.isArray(userProfile.education) ? userProfile.education : prev[currentType].education,
+            certifications: Array.isArray(userProfile.certifications) && userProfile.certifications.length ? userProfile.certifications : prev[currentType].certifications,
+            linkedAccounts: Array.isArray(userProfile.linkedAccounts) && userProfile.linkedAccounts.length ? userProfile.linkedAccounts : prev[currentType].linkedAccounts,
+            companyName: userProfile.companyName || res?.user?.companyName || prev[currentType].companyName,
+          }
+        }));
+      } catch (_) {
+        // Keep the local preview data when the profile endpoint is not ready.
+      }
+    };
+    hydrateProfile();
+    return () => { cancelled = true; };
+  }, [accountType]);
 
   const [activeTab, setActiveTab] = useState('gigs'); // 'gigs' | 'portfolio' | 'reviews' | 'fiverr_edit'
   const [languages, setLanguages] = useState([
@@ -85,7 +105,9 @@ export default function ProfilePage() {
     newLangLevel: 'Fluent'
   });
 
-  const currentProfile = accountType === 'INDIVIDUAL' ? profileData.INDIVIDUAL : profileData.SME;
+  const profileKey = accountType === 'CORPORATE' ? 'CORPORATE' : accountType === 'SME' ? 'SME' : 'INDIVIDUAL';
+  const currentProfile = profileData[profileKey] || profileData.INDIVIDUAL;
+  const liveSummary = useMemo(() => getProfileSummary({}, currentProfile), [currentProfile]);
 
   const commonData = {
     memberSince: 'Mar 2024',
@@ -127,19 +149,39 @@ export default function ProfilePage() {
     setActiveTab('fiverr_edit');
   };
 
-  const handleSaveFiverrProfile = (e) => {
+  const handleSaveFiverrProfile = async (e) => {
     e.preventDefault();
-    setProfileData(prev => ({
+    const key = profileKey;
+    setProfileData((prev) => ({
       ...prev,
-      [accountType]: {
-        ...prev[accountType],
+      [key]: {
+        ...prev[key],
         title: fiverrForm.title,
         hourlyRate: fiverrForm.hourlyRate,
         availability: fiverrForm.availability,
-        bio: fiverrForm.bio
-      }
+        bio: fiverrForm.bio,
+      },
     }));
-    toast.success('Fiverr Seller Profile saved successfully!');
+    try {
+      await persistProfile({
+        accountType,
+        workMode,
+        professionalTitle: fiverrForm.title,
+        title: fiverrForm.title,
+        hourlyRate: fiverrForm.hourlyRate,
+        availability: fiverrForm.availability,
+        bio: fiverrForm.bio,
+        description: fiverrForm.bio,
+        firstName: profileData[key]?.firstName,
+        lastName: profileData[key]?.lastName,
+        location: profileData[key]?.location,
+        skills: profileData[key]?.skills,
+        teamSize: profileData[key]?.teamSize,
+      });
+      toast.success('Profile saved to your account');
+    } catch (err) {
+      toast.error(err.message || 'Could not save profile');
+    }
     setActiveTab('gigs');
   };
 
@@ -215,14 +257,6 @@ export default function ProfilePage() {
       }
     }));
     toast.success('Certification badge removed.');
-  };
-
-  const openBioModal = () => {
-    setTempBioForm({
-      title: currentProfile.title,
-      bio: currentProfile.bio
-    });
-    setActiveModal('bio');
   };
 
   const saveBio = (e) => {
@@ -308,12 +342,12 @@ export default function ProfilePage() {
       <Toaster position="top-right" />
       
       {/* Top Banner */}
-      <div className="h-48 rounded-2xl bg-gradient-to-r from-navy to-accent-purple/90 relative overflow-hidden shadow-lg border border-white/10">
+      <div className="h-48 rounded-2xl bg-gradient-to-r from-[#222222] to-success/90 relative overflow-hidden shadow-lg border border-white/10">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent"></div>
         <div className="absolute top-4 right-4 flex gap-2 z-20">
           <button 
             onClick={handleOpenFiverrForm}
-            className="px-4 py-2 bg-white text-navy hover:bg-zinc-100 rounded-xl text-xs font-black shadow-lg transition-all flex items-center gap-1.5 border border-transparent"
+            className="px-4 py-2 bg-white text-[#222222] hover:bg-zinc-100 rounded-xl text-xs font-black shadow-lg transition-all flex items-center gap-1.5 border border-transparent"
           >
             <Settings size={14} className="animate-spin-slow" />
             Edit Fiverr Profile
@@ -324,13 +358,51 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      <div className="px-4 space-y-4">
+        <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-3">Freelancer account type</h2>
+          <div className="grid sm:grid-cols-3 gap-2 mb-4">
+            {FREELANCER_ACCOUNT_TYPES.map((type) => (
+              <div
+                key={type.id}
+                className={`p-3 rounded-lg border text-left ${
+                  accountType === type.id ? 'border-[#14a800] bg-[#14a800]/5' : 'border-zinc-200 bg-zinc-50'
+                }`}
+              >
+                <p className="text-sm font-bold text-zinc-900">{type.label}</p>
+                <p className="text-xs text-zinc-500 mt-0.5">{type.description}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-zinc-500 mb-2">Switch type from the sidebar simulator or settings.</p>
+          <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">Work mode</h2>
+          <div className="grid sm:grid-cols-3 gap-2">
+            {FREELANCER_WORK_MODES.map((mode) => (
+              <button
+                key={mode.id}
+                type="button"
+                onClick={() => setWorkMode(mode.id)}
+                className={`p-3 rounded-lg border text-left transition-colors ${
+                  workMode === mode.id
+                    ? 'border-[#14a800] bg-[#14a800]/5'
+                    : 'border-zinc-200 hover:border-[#14a800]/30'
+                }`}
+              >
+                <p className="text-sm font-bold text-zinc-900">{mode.label}</p>
+                <p className="text-xs text-zinc-500 mt-0.5">{mode.description}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 -mt-20 relative z-10">
         
         {/* Left Column: Freelancer Details */}
         <div className="lg:col-span-1 space-y-6">
-          <Card className="text-center p-8 border-t-4 border-t-accent-purple relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-xl">
+          <Card className="text-center p-8 border-t-4 border-t-success relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-xl">
             <div className="relative inline-block mb-4">
-              <div className={cn("w-32 h-32 mx-auto border-4 border-white shadow-xl overflow-hidden bg-light-gray flex items-center justify-center relative group cursor-pointer", accountType === 'SME' ? 'rounded-xl' : 'rounded-full')}>
+              <div className={cn("w-32 h-32 mx-auto border-4 border-white shadow-xl overflow-hidden bg-light-gray flex items-center justify-center relative group cursor-pointer", profileKey === 'INDIVIDUAL' ? 'rounded-full' : 'rounded-xl')}>
                 <img src={currentProfile.avatar} alt="Profile" className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-300" />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white text-xs font-bold">
                   Update Avatar
@@ -340,13 +412,14 @@ export default function ProfilePage() {
             </div>
             
             <h1 className="text-2xl font-black text-text-primary flex items-center justify-center gap-2">
-              {currentProfile.firstName} {currentProfile.lastName}
-              <ShieldCheck className="w-5 h-5 text-accent-purple" />
+              {currentProfile.firstName || currentProfile.companyName || 'Freelancer'} {currentProfile.lastName || ''}
+              <ShieldCheck className="w-5 h-5 text-success" />
             </h1>
             <p className="text-sm font-bold text-text-secondary mt-1">{currentProfile.title}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-success mt-1">{liveSummary.persona} profile</p>
             
             <div className="flex items-center justify-center gap-2 mt-3">
-              <div className="flex text-accent-red">
+              <div className="flex text-[#e63946]">
                 {[1,2,3,4,5].map(i => <Star key={i} size={16} fill={i <= Math.floor(commonData.rating) ? 'currentColor' : 'none'} />)}
               </div>
               <span className="font-bold text-text-primary">{commonData.rating}</span>
@@ -358,7 +431,7 @@ export default function ProfilePage() {
                 <span className="text-text-secondary flex items-center gap-2"><MapPin size={16} /> From</span>
                 <span className="font-bold text-text-primary flex items-center gap-1.5">
                   {currentProfile.location}
-                  <button onClick={openLocationModal} className="text-text-secondary hover:text-accent-purple opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={openLocationModal} className="text-text-secondary hover:text-success opacity-0 group-hover:opacity-100 transition-opacity">
                     <Edit size={14} />
                   </button>
                 </span>
@@ -369,9 +442,13 @@ export default function ProfilePage() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-text-secondary flex items-center gap-2"><DollarSign size={16} /> Hourly Rate</span>
-                <span className="font-black text-navy text-sm">KES {parseInt(currentProfile.hourlyRate).toLocaleString()}/hr</span>
+                <span className="font-black text-[#222222] text-sm">
+                  {currentProfile.hourlyRate
+                    ? `KES ${Number(currentProfile.hourlyRate).toLocaleString()}/hr`
+                    : '—'}
+                </span>
               </div>
-              {accountType === 'SME' && (
+              {profileKey !== 'INDIVIDUAL' && (
                 <div className="flex justify-between items-center">
                   <span className="text-text-secondary flex items-center gap-2"><Users size={16} /> Team Size</span>
                   <span className="font-bold text-text-primary">{currentProfile.teamSize}</span>
@@ -383,7 +460,7 @@ export default function ProfilePage() {
           {/* Linked Social Accounts */}
           <Card className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md">
             <h2 className="font-bold text-text-primary mb-4 flex items-center gap-2">
-              <Link2 size={16} className="text-accent-purple" /> Linked Accounts
+              <Link2 size={16} className="text-success" /> Linked Accounts
             </h2>
             <div className="space-y-3">
               {['GitHub', 'LinkedIn', 'Google', 'Twitter'].map(net => {
@@ -410,25 +487,25 @@ export default function ProfilePage() {
           <div className="flex gap-4 border-b border-border">
             <button 
               onClick={() => setActiveTab('gigs')} 
-              className={cn("pb-4 text-sm font-bold transition-all border-b-2", activeTab === 'gigs' ? "border-accent-purple text-text-primary" : "border-transparent text-text-secondary hover:text-text-primary")}
+              className={cn("pb-4 text-sm font-bold transition-all border-b-2", activeTab === 'gigs' ? "border-success text-text-primary" : "border-transparent text-text-secondary hover:text-text-primary")}
             >
               Active Gigs
             </button>
             <button 
               onClick={() => setActiveTab('portfolio')} 
-              className={cn("pb-4 text-sm font-bold transition-all border-b-2", activeTab === 'portfolio' ? "border-accent-purple text-text-primary" : "border-transparent text-text-secondary hover:text-text-primary")}
+              className={cn("pb-4 text-sm font-bold transition-all border-b-2", activeTab === 'portfolio' ? "border-success text-text-primary" : "border-transparent text-text-secondary hover:text-text-primary")}
             >
               Portfolio Showcase
             </button>
             <button 
               onClick={() => setActiveTab('reviews')} 
-              className={cn("pb-4 text-sm font-bold transition-all border-b-2", activeTab === 'reviews' ? "border-accent-purple text-text-primary" : "border-transparent text-text-secondary hover:text-text-primary")}
+              className={cn("pb-4 text-sm font-bold transition-all border-b-2", activeTab === 'reviews' ? "border-success text-text-primary" : "border-transparent text-text-secondary hover:text-text-primary")}
             >
               Reviews ({commonData.reviews})
             </button>
             {activeTab === 'fiverr_edit' && (
               <button 
-                className="pb-4 text-sm font-black transition-all border-b-2 border-accent-purple text-accent-purple flex items-center gap-1.5"
+                className="pb-4 text-sm font-black transition-all border-b-2 border-success text-success flex items-center gap-1.5"
               >
                 <Settings size={14} className="animate-spin-slow" />
                 Fiverr Seller Portal
@@ -445,9 +522,9 @@ export default function ProfilePage() {
                       <img src={gig.image} alt={gig.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                     <div className="p-4">
-                      <h3 className="font-bold text-sm text-text-primary line-clamp-2 hover:text-accent-purple transition-colors">{gig.title}</h3>
+                      <h3 className="font-bold text-sm text-text-primary line-clamp-2 hover:text-success transition-colors">{gig.title}</h3>
                       <div className="flex items-center gap-1 mt-2 text-sm">
-                        <Star size={14} className="text-accent-red" fill="currentColor" />
+                        <Star size={14} className="text-[#e63946]" fill="currentColor" />
                         <span className="font-bold text-text-primary">{gig.rating}</span>
                         <span className="text-text-secondary">({gig.reviews})</span>
                       </div>
@@ -469,7 +546,7 @@ export default function ProfilePage() {
                   <div className="aspect-video bg-light-gray">
                     <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#222222]/90 via-[#222222]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                     <span className="text-xs font-bold text-white/70 uppercase tracking-widest mb-1">{item.category}</span>
                     <h3 className="font-bold text-lg text-white">{item.title}</h3>
                   </div>
@@ -484,7 +561,7 @@ export default function ProfilePage() {
                 <div>
                   <h2 className="text-xl font-black text-text-primary">Reviews as Seller</h2>
                   <div className="flex items-center gap-2 mt-1">
-                    <div className="flex text-accent-red">
+                    <div className="flex text-[#e63946]">
                       {[1,2,3,4,5].map(i => <Star key={i} size={16} fill="currentColor" />)}
                     </div>
                     <span className="font-bold text-text-primary">4.9</span>
@@ -497,7 +574,7 @@ export default function ProfilePage() {
                 {commonData.reviewsList.map(review => (
                   <div key={review.id} className="pb-8 border-b border-border last:border-0 last:pb-0">
                     <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-accent-purple/20 text-accent-purple flex items-center justify-center font-bold shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-success/20 text-success flex items-center justify-center font-bold shrink-0">
                         {review.user[0].toUpperCase()}
                       </div>
                       <div className="flex-1">
@@ -508,7 +585,7 @@ export default function ProfilePage() {
                           </span>
                         </div>
                         <div className="flex items-center gap-2 mt-1 mb-3">
-                          <div className="flex text-accent-red">
+                          <div className="flex text-[#e63946]">
                             {[1,2,3,4,5].map(i => <Star key={i} size={12} fill={i <= review.rating ? 'currentColor' : 'none'} />)}
                           </div>
                           <span className="text-xs text-text-secondary">{review.date}</span>
@@ -525,12 +602,12 @@ export default function ProfilePage() {
           {/* Fiverr Seller Setup Form View */}
           {activeTab === 'fiverr_edit' && (
             <form onSubmit={handleSaveFiverrProfile} className="bg-white/90 border border-border p-8 rounded-3xl shadow-xl space-y-8 animate-in fade-in duration-300 relative">
-              <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-accent-purple/5 blur-[100px] rounded-full pointer-events-none"></div>
+              <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-success/5 blur-[100px] rounded-full pointer-events-none"></div>
               
               <div className="flex justify-between items-center border-b border-border pb-4 relative z-10">
                 <div>
-                  <h2 className="text-xl font-black text-navy flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-accent-purple" />
+                  <h2 className="text-xl font-black text-[#222222] flex items-center gap-2">
+                    <Settings className="w-5 h-5 text-success" />
                     Fiverr Seller Profile Setup
                   </h2>
                   <p className="text-xs font-medium text-text-secondary mt-1">Configure your public visibility parameters and marketplace offerings.</p>
@@ -540,7 +617,7 @@ export default function ProfilePage() {
 
               {/* Step 1: General Professional Credentials */}
               <div className="space-y-4 relative z-10">
-                <h3 className="text-xs font-black text-text-secondary uppercase tracking-widest border-l-2 border-accent-purple pl-2">1. Profile Overview Details</h3>
+                <h3 className="text-xs font-black text-text-secondary uppercase tracking-widest border-l-2 border-success pl-2">1. Profile Overview Details</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-[10px] font-black uppercase text-text-secondary tracking-widest mb-1.5">Professional Tagline</label>
@@ -559,7 +636,7 @@ export default function ProfilePage() {
                       type="number"
                       value={fiverrForm.hourlyRate}
                       onChange={(e) => setFiverrForm({ ...fiverrForm, hourlyRate: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-light-gray/50 border border-border rounded-xl text-sm font-semibold text-navy"
+                      className="w-full px-4 py-2.5 bg-light-gray/50 border border-border rounded-xl text-sm font-semibold text-[#222222]"
                       placeholder="8500"
                       required
                     />
@@ -593,7 +670,7 @@ export default function ProfilePage() {
 
               {/* Step 2: Dynamic Education Setup */}
               <div className="space-y-4 relative z-10 pt-4 border-t border-border/50">
-                <h3 className="text-xs font-black text-text-secondary uppercase tracking-widest border-l-2 border-accent-purple pl-2 flex items-center gap-1.5">
+                <h3 className="text-xs font-black text-text-secondary uppercase tracking-widest border-l-2 border-success pl-2 flex items-center gap-1.5">
                   <GraduationCap size={16} /> 2. Academic Background
                 </h3>
                 
@@ -603,10 +680,10 @@ export default function ProfilePage() {
                     {currentProfile.education.map((edu, idx) => (
                       <div key={idx} className="flex justify-between items-center p-3 bg-light-gray/30 border border-border rounded-xl text-xs font-semibold text-text-primary">
                         <div>
-                          <p className="font-bold text-navy">{edu.degree}</p>
+                          <p className="font-bold text-[#222222]">{edu.degree}</p>
                           <p className="text-[10px] text-text-secondary">{edu.school} — Class of {edu.year}</p>
                         </div>
-                        <button type="button" onClick={() => handleRemoveFiverrEdu(idx)} className="p-1 hover:text-accent-red transition-colors">
+                        <button type="button" onClick={() => handleRemoveFiverrEdu(idx)} className="p-1 hover:text-[#e63946] transition-colors">
                           <X size={16} />
                         </button>
                       </div>
@@ -647,7 +724,7 @@ export default function ProfilePage() {
                     <button 
                       type="button" 
                       onClick={handleAddFiverrEdu}
-                      className="px-3 bg-navy text-white text-xs font-black rounded-lg hover:bg-navy/90"
+                      className="px-3 bg-[#222222] text-white text-xs font-black rounded-lg hover:bg-[#222222]/90"
                     >
                       Add
                     </button>
@@ -657,7 +734,7 @@ export default function ProfilePage() {
 
               {/* Step 3: Dynamic Professional Certifications */}
               <div className="space-y-4 relative z-10 pt-4 border-t border-border/50">
-                <h3 className="text-xs font-black text-text-secondary uppercase tracking-widest border-l-2 border-accent-purple pl-2 flex items-center gap-1.5">
+                <h3 className="text-xs font-black text-text-secondary uppercase tracking-widest border-l-2 border-success pl-2 flex items-center gap-1.5">
                   <Award size={16} /> 3. Verified Certifications
                 </h3>
 
@@ -667,10 +744,10 @@ export default function ProfilePage() {
                     {currentProfile.certifications.map((cert, idx) => (
                       <div key={idx} className="flex justify-between items-center p-3 bg-light-gray/30 border border-border rounded-xl text-xs font-semibold text-text-primary">
                         <div>
-                          <p className="font-bold text-navy">{cert.title}</p>
+                          <p className="font-bold text-[#222222]">{cert.title}</p>
                           <p className="text-[10px] text-text-secondary">{cert.authority} — Awarded {cert.year}</p>
                         </div>
-                        <button type="button" onClick={() => handleRemoveFiverrCert(idx)} className="p-1 hover:text-accent-red transition-colors">
+                        <button type="button" onClick={() => handleRemoveFiverrCert(idx)} className="p-1 hover:text-[#e63946] transition-colors">
                           <X size={16} />
                         </button>
                       </div>
@@ -711,7 +788,7 @@ export default function ProfilePage() {
                     <button 
                       type="button" 
                       onClick={handleAddFiverrCert}
-                      className="px-3 bg-navy text-white text-xs font-black rounded-lg hover:bg-navy/90"
+                      className="px-3 bg-[#222222] text-white text-xs font-black rounded-lg hover:bg-[#222222]/90"
                     >
                       Add
                     </button>
@@ -735,7 +812,7 @@ export default function ProfilePage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
           <Card className="w-full max-w-lg shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
             <h3 className="text-lg font-black text-text-primary mb-4 flex items-center gap-2">
-              <Edit className="w-5 h-5 text-accent-purple" />
+              <Edit className="w-5 h-5 text-success" />
               Edit Description
             </h3>
             <form onSubmit={saveBio} className="space-y-4">
@@ -745,7 +822,7 @@ export default function ProfilePage() {
                   type="text" 
                   value={tempBioForm.title} 
                   onChange={(e) => setTempBioForm({ ...tempBioForm, title: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   required
                 />
               </div>
@@ -755,7 +832,7 @@ export default function ProfilePage() {
                   rows={5} 
                   value={tempBioForm.bio} 
                   onChange={(e) => setTempBioForm({ ...tempBioForm, bio: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary resize-none"
                   required
                 />
               </div>
@@ -772,7 +849,7 @@ export default function ProfilePage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
           <Card className="w-full max-w-md shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
             <h3 className="text-lg font-black text-text-primary mb-4 flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-accent-purple" />
+              <MapPin className="w-5 h-5 text-success" />
               Update Location
             </h3>
             <form onSubmit={saveLocation} className="space-y-4">
@@ -782,7 +859,7 @@ export default function ProfilePage() {
                   type="text" 
                   value={tempLocation} 
                   onChange={(e) => setTempLocation(e.target.value)} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   placeholder="e.g. San Francisco, CA"
                   required
                 />
@@ -801,7 +878,7 @@ export default function ProfilePage() {
           <Card className="w-full max-w-md shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-black text-text-primary flex items-center gap-2">
-                <Plus className="w-5 h-5 text-accent-purple" />
+                <Plus className="w-5 h-5 text-success" />
                 Add Skill Tags
               </h3>
               <button onClick={() => setActiveModal(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
@@ -813,7 +890,7 @@ export default function ProfilePage() {
                 value={tempSkill} 
                 onChange={(e) => setTempSkill(e.target.value)} 
                 placeholder="e.g. Next.js, Docker..." 
-                className="flex-1 px-4 py-2 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                className="flex-1 px-4 py-2 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
               />
               <Button type="submit" variant="primary">Add</Button>
             </form>
@@ -822,7 +899,7 @@ export default function ProfilePage() {
               {currentProfile.skills.map((skill, idx) => (
                 <span key={idx} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-light-gray border border-border rounded-full text-xs font-bold text-text-primary">
                   {skill}
-                  <button type="button" onClick={() => removeSkill(skill)} className="text-text-secondary hover:text-accent-red transition-colors">
+                  <button type="button" onClick={() => removeSkill(skill)} className="text-text-secondary hover:text-[#e63946] transition-colors">
                     <X size={12} />
                   </button>
                 </span>
@@ -837,7 +914,7 @@ export default function ProfilePage() {
           <Card className="w-full max-w-md shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-black text-text-primary flex items-center gap-2">
-                <Languages className="w-5 h-5 text-accent-purple" />
+                <Languages className="w-5 h-5 text-success" />
                 Manage Languages
               </h3>
               <button onClick={() => setActiveModal(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
@@ -851,7 +928,7 @@ export default function ProfilePage() {
                   value={tempLanguage.name} 
                   onChange={(e) => setTempLanguage({ ...tempLanguage, name: e.target.value })} 
                   placeholder="e.g. French, German..." 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   required
                 />
               </div>
@@ -860,7 +937,7 @@ export default function ProfilePage() {
                 <select 
                   value={tempLanguage.level} 
                   onChange={(e) => setTempLanguage({ ...tempLanguage, level: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary appearance-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary appearance-none"
                 >
                   <option value="Basic">Basic</option>
                   <option value="Conversational">Conversational</option>
@@ -878,7 +955,7 @@ export default function ProfilePage() {
                     <span className="font-bold text-text-primary">{lang.name}</span>
                     <span className="text-text-secondary text-xs ml-2">({lang.level})</span>
                   </div>
-                  <button onClick={() => removeLanguage(lang.name)} className="text-text-secondary hover:text-accent-red p-1 hover:bg-light-gray rounded-md">
+                  <button onClick={() => removeLanguage(lang.name)} className="text-text-secondary hover:text-[#e63946] p-1 hover:bg-light-gray rounded-md">
                     <X size={14} />
                   </button>
                 </div>

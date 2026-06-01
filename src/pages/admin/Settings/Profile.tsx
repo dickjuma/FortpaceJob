@@ -9,7 +9,7 @@ export const ProfileSettings = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-navy">Profile Settings</h1>
+        <h1 className="text-2xl font-bold text-[#222222]">Profile Settings</h1>
         <p className="text-text-secondary mt-1">Manage your public profile information.</p>
       </div>
 
@@ -38,7 +38,7 @@ export const ProfileSettings = () => {
                 Bio / About
               </label>
               <textarea 
-                className="w-full rounded-md border border-border bg-white px-4 py-3 text-sm transition-colors focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red custom-scrollbar min-h-[120px] resize-y"
+                className="w-full rounded-md border border-border bg-white px-4 py-3 text-sm transition-colors focus:border-[#e63946] focus:outline-none focus:ring-1 focus:ring-[#e63946] custom-scrollbar min-h-[120px] resize-y"
                 defaultValue="I am the system administrator for The Fortespace platform."
               />
             </div>

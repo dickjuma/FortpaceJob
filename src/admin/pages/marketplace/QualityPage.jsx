@@ -1,18 +1,62 @@
 import React from 'react';
 import { 
-  ShieldAlert, AlertTriangle, ShieldX, Flag, XCircle, Search, Eye, CheckCircle
+  ShieldAlert, AlertTriangle, ShieldX, Flag, XCircle, Search, Eye, CheckCircle, RefreshCw
 } from 'lucide-react';
 import { useJobs, useGigs } from '../../hooks/useMarketplace';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Avatar from '../../components/ui/Avatar';
 import { cn } from '../../utils/cn';
+import apiClient, { unwrapAdminResponse } from '../../api/apiClient';
+import toast from 'react-hot-toast';
+import { ConfirmModal, SuccessOverlay } from '../../components/ui/AdminModals';
 
 export default function QualityPage() {
-  const { data: jobsData } = useJobs({ status: '' }); // Fetch some data to extract flagged ones
-  const { data: gigsData } = useGigs({ status: '' });
+  const queryClient = useQueryClient();
+  const [dismissTarget, setDismissTarget] = React.useState(null);
+  const [successMsg, setSuccessMsg] = React.useState(null);
 
-  // For demonstration, mock filter the first few flagged items
-  const flaggedJobs = jobsData?.data?.filter(j => j.flagged) || [];
-  const flaggedGigs = gigsData?.data?.filter(g => g.flagged) || [];
+  const { data: jobsData } = useJobs({ status: 'flagged' });
+  const { data: gigsData } = useGigs({ status: 'flagged' });
+
+  const { data: disputeStats } = useQuery({
+    queryKey: ['admin', 'dispute-count-open'],
+    queryFn: async () => {
+      const res = await apiClient.get('/disputes?status=open&limit=1');
+      const d = unwrapAdminResponse(res);
+      return d.meta?.total || 0;
+    },
+    staleTime: 60_000,
+  });
+
+  const { data: automodStats } = useQuery({
+    queryKey: ['admin', 'automod-today'],
+    queryFn: async () => {
+      const res = await apiClient.get('/chat/automod?period=today&limit=1');
+      const d = unwrapAdminResponse(res);
+      return d.meta?.total || 0;
+    },
+    staleTime: 120_000,
+  });
+
+  const dismissMutation = useMutation({
+    mutationFn: async ({ id, type }) => {
+      const endpoint = type === 'job'
+        ? `/marketplace/jobs/${id}/dismiss-flag`
+        : `/marketplace/gigs/${id}/dismiss-flag`;
+      const res = await apiClient.patch(endpoint, { reason: dismissTarget?.reason });
+      return unwrapAdminResponse(res).data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['jobs'] });
+      queryClient.invalidateQueries({ queryKey: ['gigs'] });
+      setDismissTarget(null);
+      setSuccessMsg('Flagged item dismissed successfully.');
+    },
+    onError: (e) => toast.error(e?.message || 'Failed to dismiss.'),
+  });
+
+  const flaggedJobs = jobsData?.data?.filter(j => j.flagged || j.status === 'FLAGGED') || [];
+  const flaggedGigs = gigsData?.data?.filter(g => g.flagged || g.status === 'FLAGGED') || [];
 
   const allFlagged = [
     ...flaggedJobs.map(j => ({ ...j, type: 'job' })),
@@ -21,6 +65,19 @@ export default function QualityPage() {
 
   return (
     <div className="space-y-6">
+      {/* Modals */}
+      <ConfirmModal
+        isOpen={!!dismissTarget}
+        onClose={() => setDismissTarget(null)}
+        onConfirm={(reason) => dismissMutation.mutate({ ...dismissTarget, reason })}
+        title={`Dismiss Flag on "${dismissTarget?.title}"?`}
+        message="This will clear the flag and mark this item as reviewed."
+        requireReason
+        reasonLabel="Reason for dismissal"
+        variant="warning"
+        isPending={dismissMutation.isPending}
+      />
+      {successMsg && <SuccessOverlay isOpen message={successMsg} onClose={() => setSuccessMsg(null)} />}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
@@ -54,23 +111,23 @@ export default function QualityPage() {
               </div>
               <div className="p-3 bg-surface dark:bg-zinc-800 rounded-xl flex items-center justify-between">
                 <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Active Disputes</span>
-                <span className="font-black text-zinc-700 dark:text-zinc-300">12</span>
+                <span className="font-black text-zinc-700 dark:text-zinc-300">{disputeStats ?? '—'}</span>
               </div>
             </div>
           </div>
           
-          <div className="bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl p-5 text-white shadow-md">
+          <div className="bg-gradient-to-br from-[#14a800] to-violet-600 rounded-2xl p-5 text-white shadow-md">
              <div className="flex items-center gap-3 mb-2">
                <ShieldX size={20} className="text-white/80" />
                <h3 className="font-bold">Auto-Mod Status</h3>
              </div>
-             <p className="text-brand-100 text-sm mb-4">
+             <p className="text-[#14a800] text-sm mb-4">
                The AI moderation engine is actively scanning new listings.
              </p>
              <div className="bg-white/10 rounded-xl p-3 backdrop-blur-sm">
                <div className="flex justify-between items-center text-sm font-medium">
                  <span>Items Scanned Today</span>
-                 <span>4,291</span>
+                 <span>{automodStats?.toLocaleString() ?? '—'}</span>
                </div>
              </div>
           </div>
@@ -95,7 +152,7 @@ export default function QualityPage() {
                   <div key={item.id} className="p-4 hover:bg-surface/50 dark:hover:bg-zinc-800/20 transition-colors flex items-start gap-4">
                     <div className={cn(
                       "p-2 rounded-lg mt-1",
-                      item.type === 'job' ? 'bg-brand-100 text-brand-600 dark:bg-brand-900/30' : 'bg-brand-100 text-brand-600 dark:bg-brand-900/30'
+                      item.type === 'job' ? 'bg-[#14a800]/10 text-[#14a800] dark:bg-[#14a800]/30' : 'bg-[#14a800]/10 text-[#14a800] dark:bg-[#14a800]/30'
                     )}>
                       <AlertTriangle size={20} />
                     </div>
@@ -113,11 +170,17 @@ export default function QualityPage() {
                       </div>
                       <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1 line-clamp-1">{item.description}</p>
                       <div className="flex items-center gap-3 mt-3">
-                        <button className="text-xs font-semibold px-3 py-1.5 bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400 rounded-lg hover:bg-brand-100 transition-colors">
+                        <button
+                          onClick={() => toast('Opening investigation view...', { icon: '🔍' })}
+                          className="text-xs font-semibold px-3 py-1.5 bg-[#14a800]/5 text-[#14a800] dark:bg-[#14a800]/10 dark:text-[#14a800] rounded-lg hover:bg-[#14a800]/10 transition-colors"
+                        >
                           Investigate
                         </button>
-                        <button className="text-xs font-semibold px-3 py-1.5 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">
-                          Dismiss
+                        <button
+                          onClick={() => setDismissTarget({ id: item.id || item._id, type: item.type, title: item.title })}
+                          className="text-xs font-semibold px-3 py-1.5 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+                        >
+                          Dismiss Flag
                         </button>
                       </div>
                     </div>

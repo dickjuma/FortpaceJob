@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, ArrowLeft, Send } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Mail, ArrowLeft, Send, KeyRound } from 'lucide-react';
 import { authAPI } from '../../common/services/api';
 import AuthLayout from '../components/AuthLayout';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import { motion, AnimatePresence } from 'framer-motion';
+import { validateEmail } from '../../common/utils/validation';
 
 export default function ForgotPasswordPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!email) {
-      setError('Please enter your email address');
+    e?.preventDefault();
+    const emailError = validateEmail(email);
+    if (emailError) {
+      setError(emailError);
       return;
     }
 
@@ -25,9 +28,10 @@ export default function ForgotPasswordPage() {
 
     try {
       await authAPI.forgotPassword(email);
+      sessionStorage.setItem('passwordResetEmail', email);
       setIsSuccess(true);
     } catch (err) {
-      setError(err.message || 'Failed to send reset link. Please try again.');
+      setError(err.message || 'Failed to send reset code. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -58,7 +62,7 @@ export default function ForgotPasswordPage() {
               <div className="mb-8">
                 <h2 className="text-3xl font-bold tracking-tight mb-2">Reset password</h2>
                 <p className="text-zinc-500 dark:text-zinc-400">
-                  Enter your email address and we'll send you a link to reset your password.
+                  Enter your email address and we'll send you a 6-digit code to reset your password.
                 </p>
               </div>
 
@@ -82,7 +86,7 @@ export default function ForgotPasswordPage() {
                   icon={Send}
                   iconPosition="right"
                 >
-                  Send Reset Link
+                  Send Reset Code
                 </Button>
               </form>
             </motion.div>
@@ -93,17 +97,26 @@ export default function ForgotPasswordPage() {
               animate={{ opacity: 1, scale: 1 }}
               className="text-center py-6"
             >
-              <div className="w-16 h-16 bg-brand-100 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_20px_rgba(37,99,235,0.2)]">
+              <div className="w-16 h-16 bg-[#14a800]/10 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_20px_rgba(37,99,235,0.2)]">
                 <Mail className="w-8 h-8" />
               </div>
               <h2 className="text-2xl font-bold mb-2">Check your email</h2>
               <p className="text-zinc-500 dark:text-zinc-400 mb-8">
-                We've sent a password reset link to <br/><span className="font-semibold text-zinc-900 dark:text-white">{email}</span>
+                We've sent a 6-digit password reset code to <br/><span className="font-semibold text-zinc-900 dark:text-white">{email}</span>
               </p>
               
               <div className="space-y-4">
                 <Button
                   variant="primary"
+                  onClick={() => navigate(`/auth/reset-password?email=${encodeURIComponent(email)}`)}
+                  fullWidth
+                  icon={KeyRound}
+                >
+                  Enter Reset Code
+                </Button>
+
+                <Button
+                  variant="secondary"
                   onClick={() => window.open(`mailto:${email}`)}
                   fullWidth
                 >
@@ -115,7 +128,7 @@ export default function ForgotPasswordPage() {
                   <button 
                     onClick={handleSubmit}
                     disabled={isSubmitting}
-                    className="font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400 transition-colors"
+                    className="font-semibold text-[#14a800] hover:text-[#14a800] dark:text-[#14a800] transition-colors"
                   >
                     Click to resend
                   </button>

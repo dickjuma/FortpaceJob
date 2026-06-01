@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Clock, Filter, MapPin, Search, Star, Zap } from 'lucide-react';
+import { Clock, Filter, MapPin, Search, Star, Zap, Loader2 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { getFindWorkJobs } from './findWorkData';
+import { getFindWorkJobs, subscribeToFindWorkData, syncJobsWithBackend, loadFindWorkCategories } from './findWorkData';
 
 export default function LocalWorkListings() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
-  const [locationQuery, setLocationQuery] = useState('New York, NY');
+  const [locationQuery, setLocationQuery] = useState('Nairobi, Kenya');
   const [urgentOnly, setUrgentOnly] = useState(false);
   const [selectedSpecialization, setSelectedSpecialization] = useState('all');
   const [activeCard, setActiveCard] = useState(null);
+  const [, setDataVersion] = useState(0);
+  const [syncing, setSyncing] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToFindWorkData(() => setDataVersion((v) => v + 1));
+    Promise.all([loadFindWorkCategories(), syncJobsWithBackend({ workMode: 'local' })]).finally(() =>
+      setSyncing(false)
+    );
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     setQuery(searchParams.get('q') || '');

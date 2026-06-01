@@ -22,14 +22,8 @@ const SuspendUserModal = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.promise(
-      new Promise(resolve => setTimeout(resolve, 1500)),
-      {
-        loading: 'Processing account suspension...',
-        success: 'Account suspended successfully',
-        error: 'Failed to suspend account'
-      }
-    ).then(() => closeModal());
+    await suspendUser.mutateAsync({ userId: user.id, reason, duration });
+    closeModal();
   };
 
   const durations = [

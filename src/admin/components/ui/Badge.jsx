@@ -12,7 +12,7 @@ const Badge = ({
     success: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-success',
     warning: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
     danger: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
-    info: 'bg-brand-100 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400',
+    info: 'bg-[#14a800]/10 text-[#14a800] dark:bg-[#14a800]/30 dark:text-[#14a800]',
     outline: 'border border-surface-border dark:border-surface-dark-border text-zinc-600 dark:text-zinc-400',
   };
 

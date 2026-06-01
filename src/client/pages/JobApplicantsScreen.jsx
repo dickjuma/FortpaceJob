@@ -25,7 +25,7 @@ export default function JobApplicantsScreen({ jobId }) {
             <input 
               type="text" 
               placeholder="Search by name or skill..." 
-              className="pl-9 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
+              className="pl-9 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-sm focus:ring-2 focus:ring-[#14a800] outline-none"
             />
           </div>
         </div>
@@ -42,13 +42,13 @@ export default function JobApplicantsScreen({ jobId }) {
               <div className="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-800 border-2 border-white dark:border-gray-900 shrink-0"></div>
               <div>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center">
-                  {app.name} <CheckCircle className="w-4 h-4 text-brand-500 ml-2" />
+                  {app.name} <CheckCircle className="w-4 h-4 text-[#14a800] ml-2" />
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">{app.role}</p>
                 <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
                   <span className="flex items-center"><Star className="w-4 h-4 text-yellow-400 mr-1 fill-current" /> 4.9 (120 reviews)</span>
                   <span className="flex items-center"><Briefcase className="w-4 h-4 mr-1" /> 100% Job Success</span>
-                  <span className="flex items-center"><Award className="w-4 h-4 mr-1 text-brand-500" /> Top Rated Plus</span>
+                  <span className="flex items-center"><Award className="w-4 h-4 mr-1 text-[#14a800]" /> Top Rated Plus</span>
                 </div>
               </div>
             </div>
@@ -62,7 +62,7 @@ export default function JobApplicantsScreen({ jobId }) {
                 <button className="flex-1 sm:flex-none flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm font-medium hover:bg-surface dark:hover:bg-gray-800">
                   <MessageSquare className="w-4 h-4 mr-2" /> Message
                 </button>
-                <button className="flex-1 sm:flex-none flex items-center justify-center px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-medium transition-colors">
+                <button className="flex-1 sm:flex-none flex items-center justify-center px-4 py-2 bg-[#14a800] hover:bg-[#118a00] text-white rounded-lg text-sm font-medium transition-colors">
                   Hire & Offer
                 </button>
               </div>

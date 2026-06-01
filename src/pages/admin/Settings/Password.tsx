@@ -8,7 +8,7 @@ export const PasswordSettings = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-navy">Update Password</h1>
+        <h1 className="text-2xl font-bold text-[#222222]">Update Password</h1>
         <p className="text-text-secondary mt-1">Ensure your account is using a long, random password to stay secure.</p>
       </div>
 

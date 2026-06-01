@@ -1,213 +1,243 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Star, Clock, RefreshCw, CheckCircle2, ChevronDown, 
-  ChevronRight, Heart, Share2, ShieldCheck, Play
+import {
+  Star, Clock, RefreshCw, CheckCircle2, ChevronDown,
+  ChevronRight, Heart, Share2, ShieldCheck, Play, Loader2,
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
+import { gigAPI, publicAPI } from '../../common/services/api';
+import { useAuthRedirect } from '../../common/utils/authRedirect';
 
-const FAQ = [
-  { q: "What do you need to get started?", a: "I need your brand guidelines, project requirements, and any wireframes or inspiration you have." },
-  { q: "Do you provide source code?", a: "Yes, the Premium package includes the full source code via a GitHub repository." },
-  { q: "Can you do a rush delivery?", a: "Yes, select the 'Extra Fast Delivery' add-on at checkout for 48-hour turnaround." }
-];
+function buildPackageMap(gig) {
+  if (Array.isArray(gig?.packages) && gig.packages.length > 0) {
+    return gig.packages.reduce((acc, pkg, index) => {
+      const key = ['Basic', 'Standard', 'Premium'][index] || pkg.name || `Tier ${index + 1}`;
+      acc[key] = {
+        price: Number(pkg.price || gig.price || 0),
+        desc: pkg.description || gig.description || '',
+        days: pkg.deliveryTime || gig.deliveryTime || 3,
+        revisions: pkg.revisions ?? 1,
+        features: pkg.features || ['Source files', 'Revisions included'],
+      };
+      return acc;
+    }, {});
+  }
+
+  const base = Number(gig?.price || 0);
+  return {
+    Basic: { price: base, desc: gig?.description || '', days: gig?.deliveryTime || 3, revisions: 1, features: ['Delivery included'] },
+    Standard: { price: base * 2, desc: gig?.description || '', days: (gig?.deliveryTime || 3) + 2, revisions: 3, features: ['Priority support'] },
+    Premium: { price: base * 3, desc: gig?.description || '', days: (gig?.deliveryTime || 3) + 5, revisions: 'Unlimited', features: ['Full scope'] },
+  };
+}
 
 export default function PublicGigPage() {
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const { requireAuth } = useAuthRedirect();
+  const [gig, setGig] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [activePackage, setActivePackage] = useState('Standard');
   const [openFaq, setOpenFaq] = useState(null);
 
-  const packages = {
-    Basic: { price: 350, desc: '1 Landing Page + 3 sections. React & Tailwind. No backend.', days: 3, revisions: 1, features: ['Responsive Design', 'Source File', '1 Page'] },
-    Standard: { price: 800, desc: '5 Pages App + State Management. Perfect for MVPs.', days: 7, revisions: 3, features: ['Responsive Design', 'Source File', 'State Management', '5 Pages', 'API Integration'] },
-    Premium: { price: 1500, desc: 'Full-stack Next.js app with DB, Auth, and Payment integration.', days: 14, revisions: 'Unlimited', features: ['Responsive Design', 'Source File', 'State Management', 'Up to 10 Pages', 'API Integration', 'Database Setup', 'Authentication'] },
-  };
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        let data;
+        if (/^\d+$/.test(String(slug))) {
+          data = await gigAPI.getGig(slug);
+        } else {
+          const res = await publicAPI.searchGigs({ query: slug, limit: 1 });
+          const items = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
+          data = items[0];
+          if (data?.id) {
+            data = await gigAPI.getGig(data.id);
+          }
+        }
+        if (!cancelled) {
+          if (!data) throw new Error('Gig not found');
+          setGig(data);
+          const keys = Object.keys(buildPackageMap(data));
+          setActivePackage(keys[1] || keys[0] || 'Standard');
+        }
+      } catch (err) {
+        if (!cancelled) setError(err.message || 'Failed to load gig');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
+
+  const packages = useMemo(() => (gig ? buildPackageMap(gig) : {}), [gig]);
+  const packageKeys = Object.keys(packages);
+  const active = packages[activePackage] || packages[packageKeys[0]];
+  const faqs = Array.isArray(gig?.faqs) && gig.faqs.length > 0 ? gig.faqs : [];
+  const seller = gig?.freelancer || {};
+  const gallery = gig?.gallery?.length ? gig.gallery : [{ url: gig?.coverImage || gig?.thumbnail }].filter((g) => g?.url);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-zinc-50">
+        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+      </div>
+    );
+  }
+
+  if (error || !gig) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 px-4">
+        <p className="text-zinc-600 mb-4">{error || 'Gig not found'}</p>
+        <Link to="/gigs" className="text-[#14a800] font-bold hover:underline">Browse gigs</Link>
+      </div>
+    );
+  }
+
+  const gigId = gig.id;
+  const tierKey = activePackage.toLowerCase();
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans pb-24">
-      
-      {/* Breadcrumbs */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 pt-8 pb-4">
-        <div className="flex items-center gap-2 text-xs font-bold text-zinc-500">
-          <button type="button" className="hover:text-brand-600">Home</button> <ChevronRight className="w-3 h-3" />
-          <button type="button" className="hover:text-brand-600">Programming & Tech</button> <ChevronRight className="w-3 h-3" />
-          <button type="button" className="hover:text-brand-600">Web Development</button>
+    <div className="min-h-screen bg-zinc-50 font-sans pb-24 pt-20">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+        <div className="flex items-center gap-2 text-xs font-bold text-zinc-500 mb-6">
+          <Link to="/" className="hover:text-[#14a800]">Home</Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link to="/gigs" className="hover:text-[#14a800]">Gigs</Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-zinc-800 truncate">{gig.title}</span>
         </div>
-      </div>
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 flex flex-col lg:flex-row gap-12">
-        
-        {/* Left Column: Gig Details */}
-        <div className="flex-1 min-w-0">
-          
-          <h1 className="text-3xl md:text-4xl font-black text-zinc-900 dark:text-white leading-tight mb-6">
-            I will build a scalable React and Next.js web application
-          </h1>
+        <div className="flex flex-col lg:flex-row gap-12">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-3xl md:text-4xl font-black text-zinc-900 leading-tight mb-6">{gig.title}</h1>
 
-          <div className="flex flex-wrap items-center gap-4 mb-8">
-            <div className="flex items-center gap-2">
-              <img src="https://i.pravatar.cc/150?u=a1" alt="Alex Rivera" className="w-8 h-8 rounded-full" />
-              <span className="font-bold text-zinc-900 dark:text-white text-sm hover:underline cursor-pointer">Alex Rivera</span>
-              <span className="text-amber-500 text-sm font-bold flex items-center gap-1"><ShieldCheck className="w-4 h-4" /> Top Rated Plus</span>
-            </div>
-            <div className="h-4 w-px bg-zinc-300 dark:bg-zinc-700 hidden sm:block"></div>
-            <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-              <span className="font-bold text-zinc-900 dark:text-white text-sm">4.9</span>
-              <span className="text-zinc-500 text-sm font-medium">(124 reviews)</span>
-            </div>
-            <div className="h-4 w-px bg-zinc-300 dark:bg-zinc-700 hidden sm:block"></div>
-            <span className="text-zinc-500 text-sm font-medium">12 Orders in Queue</span>
-          </div>
-
-          {/* Media Gallery */}
-          <div className="mb-12">
-            <div className="relative aspect-video rounded-3xl overflow-hidden bg-surface-dark mb-4 group cursor-pointer border border-zinc-200 dark:border-zinc-800 shadow-sm">
-              <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80" alt="Gig Main" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="w-16 h-16 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center">
-                  <Play className="w-6 h-6 text-white ml-1" />
-                </div>
+            <div className="flex flex-wrap items-center gap-4 mb-8">
+              <div className="flex items-center gap-2">
+                <img
+                  src={seller.avatar || `https://i.pravatar.cc/150?u=${seller.id || 'seller'}`}
+                  alt={seller.name || 'Seller'}
+                  className="w-8 h-8 rounded-full"
+                />
+                <span className="font-bold text-zinc-900 text-sm">{seller.name || 'Verified seller'}</span>
+                <span className="text-amber-600 text-sm font-bold flex items-center gap-1">
+                  <ShieldCheck className="w-4 h-4" /> Top Rated
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                <span className="font-bold text-sm">{Number(gig.rating || 5).toFixed(1)}</span>
+                <span className="text-zinc-500 text-sm">({gig.totalReviews || 0} reviews)</span>
               </div>
             </div>
-            <div className="grid grid-cols-4 gap-4">
-              {[1,2,3,4].map(i => (
-                <div key={i} className="aspect-video rounded-xl overflow-hidden cursor-pointer border border-zinc-200 dark:border-zinc-800 hover:border-brand-500 transition-colors">
-                  <img src={`https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=300&q=80&random=${i}`} alt="Thumbnail" className="w-full h-full object-cover" />
+
+            {gallery[0]?.url && (
+              <div className="mb-12 relative aspect-video rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-200">
+                <img src={gallery[0].url} alt={gig.title} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20">
+                  <Play className="w-10 h-10 text-white" />
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            )}
 
-          {/* About This Gig */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">About This Gig</h2>
-            <div className="prose dark:prose-invert max-w-none text-zinc-600 dark:text-zinc-400 font-medium leading-relaxed">
-              <p>Welcome to my premium React & Next.js development service. I specialize in building highly performant, accessible, and scalable web applications that drive real business value.</p>
-              <p><strong>What you will get:</strong></p>
-              <ul>
-                <li>Pixel-perfect Figma to React conversion</li>
-                <li>Responsive design (Mobile, Tablet, Desktop)</li>
-                <li>Server-Side Rendering (SSR) & Static Site Generation (SSG) with Next.js</li>
-                <li>State management (Zustand, Redux, or Context API)</li>
-                <li>API integration (REST or GraphQL)</li>
-                <li>SEO optimized code</li>
-              </ul>
-              <p>Please contact me before placing an order so we can discuss your requirements in detail to ensure we are aligned on the scope and timeline.</p>
+            <div className="mb-12 prose max-w-none text-zinc-600">
+              <h2 className="text-2xl font-bold text-zinc-900 mb-4">About this gig</h2>
+              <p className="whitespace-pre-wrap">{gig.description}</p>
             </div>
-          </div>
 
-          {/* FAQ */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Frequently Asked Questions</h2>
-            <div className="space-y-4">
-              {FAQ.map((item, idx) => (
-                <div key={idx} className="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm">
-                  <button 
-                    onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                    className="w-full px-6 py-4 flex justify-between items-center text-left font-bold text-zinc-900 dark:text-white hover:bg-surface dark:hover:bg-zinc-800/50 transition-colors"
-                  >
-                    {item.q}
-                    <ChevronDown className={cn("w-5 h-5 text-zinc-400 transition-transform", openFaq === idx ? "rotate-180" : "")} />
-                  </button>
-                  <AnimatePresence>
-                    {openFaq === idx && (
-                      <motion.div 
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="px-6 pb-4 text-zinc-600 dark:text-zinc-400 font-medium"
+            {faqs.length > 0 && (
+              <div className="mb-12">
+                <h2 className="text-2xl font-bold text-zinc-900 mb-6">FAQ</h2>
+                <div className="space-y-4">
+                  {faqs.map((item, idx) => (
+                    <div key={idx} className="bg-white border border-zinc-200 rounded-2xl overflow-hidden">
+                      <button
+                        type="button"
+                        onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                        className="w-full px-6 py-4 flex justify-between items-center text-left font-bold"
                       >
-                        {item.a}
-                      </motion.div>
+                        {item.question || item.q}
+                        <ChevronDown className={cn('w-5 h-5 transition-transform', openFaq === idx && 'rotate-180')} />
+                      </button>
+                      <AnimatePresence>
+                        {openFaq === idx && (
+                          <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="px-6 pb-4 text-zinc-600">
+                            {item.answer || item.a}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="w-full lg:w-[400px] shrink-0">
+            <div className="sticky top-28 bg-white rounded-3xl border border-zinc-200 p-1 shadow-xl">
+              <div className="flex bg-zinc-100 rounded-2xl p-1 mb-6">
+                {packageKeys.map((pkg) => (
+                  <button
+                    key={pkg}
+                    type="button"
+                    onClick={() => setActivePackage(pkg)}
+                    className={cn(
+                      'flex-1 py-3 text-sm font-bold rounded-xl transition-all',
+                      activePackage === pkg ? 'bg-white shadow-sm' : 'text-zinc-500'
                     )}
-                  </AnimatePresence>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Mini Profile */}
-          <div className="mb-12 bg-surface-dark dark:bg-surface-dark text-white rounded-3xl p-8 border border-zinc-800 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500/20 rounded-full blur-3xl"></div>
-            
-            <h2 className="text-xl font-bold mb-6">About The Seller</h2>
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 relative z-10">
-              <img src="https://i.pravatar.cc/150?u=a1" alt="Alex Rivera" className="w-24 h-24 rounded-full border-2 border-zinc-700 object-cover shrink-0" />
-              <div className="text-center sm:text-left flex-1">
-                <h3 className="text-lg font-bold">Alex Rivera</h3>
-                <p className="text-sm font-medium text-zinc-400 mb-2">Senior Frontend Engineer</p>
-                <div className="flex flex-wrap justify-center sm:justify-start items-center gap-4 text-xs font-bold mb-4">
-                  <span className="flex items-center gap-1"><Star className="w-4 h-4 text-amber-400 fill-amber-400" /> 4.9 (124)</span>
-                  <span className="px-2 py-0.5 bg-zinc-800 rounded">English (Fluent)</span>
-                  <span className="px-2 py-0.5 bg-zinc-800 rounded">Spanish (Native)</span>
-                </div>
-                <button className="px-6 py-2 border border-zinc-700 hover:bg-zinc-800 rounded-xl font-bold transition-colors text-sm">Contact Me</button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Right Column: Sticky Pricing Card */}
-        <div className="w-full lg:w-[400px] shrink-0 relative">
-          <div className="sticky top-28 bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-1 shadow-xl">
-            
-            {/* Package Tabs */}
-            <div className="flex bg-zinc-100 dark:bg-zinc-800 rounded-2xl p-1 mb-6">
-              {['Basic', 'Standard', 'Premium'].map(pkg => (
-                <button 
-                  key={pkg}
-                  onClick={() => setActivePackage(pkg)}
-                  className={cn(
-                    "flex-1 py-3 text-sm font-bold rounded-xl transition-all",
-                    activePackage === pkg ? "bg-white dark:bg-surface-dark text-zinc-900 dark:text-white shadow-sm" : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-                  )}
-                >
-                  {pkg}
-                </button>
-              ))}
-            </div>
-
-            <div className="px-5 pb-6">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{activePackage}</h3>
-                <span className="text-2xl font-black text-zinc-900 dark:text-white">${packages[activePackage].price}</span>
-              </div>
-              
-              <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-6 h-12 line-clamp-2">
-                {packages[activePackage].desc}
-              </p>
-
-              <div className="flex items-center gap-6 text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-6 pb-6 border-b border-zinc-100 dark:border-zinc-800">
-                <span className="flex items-center gap-2"><Clock className="w-4 h-4 text-zinc-400" /> {packages[activePackage].days} Days Delivery</span>
-                <span className="flex items-center gap-2"><RefreshCw className="w-4 h-4 text-zinc-400" /> {packages[activePackage].revisions} Revisions</span>
-              </div>
-
-              <ul className="space-y-3 mb-8">
-                {packages[activePackage].features.map(feat => (
-                  <li key={feat} className="flex items-center gap-3 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    <CheckCircle2 className="w-5 h-5 text-success shrink-0" /> {feat}
-                  </li>
+                  >
+                    {pkg}
+                  </button>
                 ))}
-              </ul>
+              </div>
 
-              <button className="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-600/20 transition-all flex items-center justify-center gap-2 mb-3">
-                Continue (${packages[activePackage].price}) <ChevronRight className="w-5 h-5" />
-              </button>
-              <button className="w-full py-3 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 font-bold rounded-xl hover:bg-surface dark:hover:bg-zinc-800 transition-colors">
-                Compare Packages
-              </button>
+              <div className="px-5 pb-6">
+                <div className="flex justify-between mb-4">
+                  <h3 className="text-xl font-bold">{activePackage}</h3>
+                  <span className="text-2xl font-black">${active?.price}</span>
+                </div>
+                <p className="text-sm text-zinc-600 mb-6 line-clamp-3">{active?.desc}</p>
+                <div className="flex gap-6 text-sm font-bold text-zinc-700 mb-6 pb-6 border-b">
+                  <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> {active?.days} days</span>
+                  <span className="flex items-center gap-2"><RefreshCw className="w-4 h-4" /> {active?.revisions} revisions</span>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  {(active?.features || []).map((feat) => (
+                    <li key={feat} className="flex items-center gap-3 text-sm text-zinc-600">
+                      <CheckCircle2 className="w-5 h-5 text-[#14a800]" /> {feat}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  type="button"
+                  onClick={() =>
+                    requireAuth(() => navigate(`/gigs/checkout/${gigId}?tier=${tierKey}`), {
+                      returnTo: `/gig/${slug}`,
+                    })
+                  }
+                  className="w-full py-4 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl mb-3"
+                >
+                  Continue (${active?.price})
+                </button>
+                <Link
+                  to={`/gigs/gig/${gigId}`}
+                  className="block w-full py-3 text-center border border-zinc-200 font-bold rounded-xl hover:bg-zinc-50"
+                >
+                  View full details
+                </Link>
+              </div>
             </div>
-
-            <div className="p-4 bg-surface dark:bg-zinc-800/50 rounded-b-[1.4rem] border-t border-zinc-100 dark:border-zinc-800 text-center flex items-center justify-center gap-4">
-              <button className="text-sm font-bold text-zinc-500 hover:text-zinc-900 dark:hover:text-white flex items-center gap-2 transition-colors"><Heart className="w-4 h-4" /> Save</button>
-              <button className="text-sm font-bold text-zinc-500 hover:text-zinc-900 dark:hover:text-white flex items-center gap-2 transition-colors"><Share2 className="w-4 h-4" /> Share</button>
-            </div>
-
           </div>
         </div>
-
       </div>
     </div>
   );

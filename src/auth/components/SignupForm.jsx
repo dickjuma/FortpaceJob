@@ -1,88 +1,134 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { useOnboardingStore } from '../../common/store/onboardingStore';
+import { ArrowLeft, ArrowRight, Briefcase, Building2, Mail, ShieldCheck, UserRound, Users } from 'lucide-react';
+import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import { useAuthStore } from '../../common/authStore';
+import { useOnboardingStore } from '../../common/store/onboardingStore';
 import { authAPI } from '../services/authApi';
-import AccountTypeSelection from './AccountTypeSelection';
-import SignupStepper from './SignupStepper';
 import Button from './ui/Button';
-import RegisterDetailsStep from './register/RegisterDetailsStep';
+import Input from './ui/Input';
+import PasswordInput from './ui/PasswordInput';
+import SignupStepper from './SignupStepper';
+import TurnstileWidget from './TurnstileWidget';
+import { validateEmail, validatePassword } from '../../common/utils/validation';
 
 const SIGNUP_STEPS = [
-  { num: 1, label: 'Join As' },
-  { num: 2, label: 'Account Type' },
-  { num: 3, label: 'Details' },
+  { num: 1, label: 'Choose role' },
+  { num: 2, label: 'Create account' },
 ];
 
+const ROLE_CHOICES = [
+  {
+    id: 'CLIENT',
+    title: 'Client',
+    description: 'Hire talent, post projects, and manage delivery from the client workspace.',
+    icon: Users,
+  },
+  {
+    id: 'FREELANCER',
+    title: 'Freelancer',
+    description: 'Find work, build your reputation, and launch a stronger service profile.',
+    icon: Briefcase,
+  },
+];
+
+const makeFallbackName = (email) => {
+  const localPart = String(email || '')
+    .split('@')[0]
+    .trim();
+
+  if (!localPart) return 'User';
+
+  return localPart
+    .replace(/[._-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+    .trim() || 'User';
+};
+
 export default function SignupForm() {
-  const store = useOnboardingStore();
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
-  const [formError, setFormError] = useState(null);
+  const store = useOnboardingStore();
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [formError, setFormError] = useState('');
+  const [credentials, setCredentials] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const turnstileEnabled = Boolean(process.env.REACT_APP_TURNSTILE_SITE_KEY);
 
-  const accountTypeLabel = useMemo(() => {
-    const roleLabel = store.selectedRole === 'FREELANCER' ? 'Freelancer' : 'Client';
-    const typeLabel = {
-      INDIVIDUAL: 'Individual',
-      SME: 'SME',
-      CORPORATE: 'Corporate',
-    }[store.accountType] || 'Account';
+  const roleLabel = useMemo(() => {
+    if (store.selectedRole === 'CLIENT') return 'Client account';
+    if (store.selectedRole === 'FREELANCER') return 'Freelancer account';
+    return 'Account type';
+  }, [store.selectedRole]);
 
-    return `${typeLabel} ${roleLabel}`;
-  }, [store.accountType, store.selectedRole]);
-
-  const handleContinue = () => {
-    setFormError(null);
-
-    if (store.currentStep === 1) {
-      if (!store.selectedRole) {
-        setFormError('Please select if you are joining as a client or freelancer.');
-        return;
-      }
-
-      store.setStep(2);
-      return;
-    }
-
-    if (store.currentStep === 2) {
-      if (!store.accountType) {
-        setFormError('Please select individual, SME, or corporate account type.');
-        return;
-      }
-
-      store.setStep(3);
-      return;
-    }
+  const resetError = () => {
+    if (formError) setFormError('');
   };
 
-  const handleSubmitDetails = async (values) => {
-    setFormError(null);
+  const handleRoleSelect = (role) => {
+    resetError();
+    store.setSelectedRole(role);
+    store.setStep(2);
+  };
 
-    const fullName = values.fullName.trim();
-    const nameParts = fullName.split(/\s+/).filter(Boolean);
-    const firstName = nameParts[0] || fullName;
-    const lastName = nameParts.slice(1).join(' ') || firstName;
-    const isBusinessAccount = store.accountType === 'SME' || store.accountType === 'CORPORATE';
+  const handleBack = () => {
+    resetError();
+    store.setStep(1);
+  };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    resetError();
+
+    if (!store.selectedRole) {
+      const message = 'Please choose whether you are joining as a client or freelancer.';
+      setFormError(message);
+      toast.error(message);
+      return;
+    }
+
+    const emailError = validateEmail(credentials.email);
+    if (emailError) {
+      setFormError(emailError);
+      toast.error(emailError);
+      return;
+    }
+
+    const passwordError = validatePassword(credentials.password);
+    if (passwordError) {
+      setFormError(passwordError);
+      toast.error(passwordError);
+      return;
+    }
+
+    if (credentials.password !== credentials.confirmPassword) {
+      const message = 'Passwords do not match.';
+      setFormError(message);
+      toast.error(message);
+      return;
+    }
+
+    if (turnstileEnabled && !turnstileToken) {
+      const message = 'Complete the security check before creating your account.';
+      setFormError(message);
+      toast.error(message);
+      return;
+    }
+
+    const email = credentials.email.trim().toLowerCase();
     const payload = {
-      name: fullName,
-      fullName,
-      firstName,
-      lastName,
-      email: values.email.trim().toLowerCase(),
-      password: values.password,
+      email,
+      password: credentials.password,
       role: store.selectedRole,
-      accountType: store.accountType,
-      companyName: isBusinessAccount ? values.businessName.trim() : undefined,
-      industry: isBusinessAccount ? values.industry : undefined,
-      companySize: isBusinessAccount ? values.companySize : undefined,
-      phoneNumber: values.phoneNumber || undefined,
-      country: values.country || undefined,
-      teamSize: values.teamSize || undefined,
-      primarySkillCategory: values.primarySkillCategory || undefined,
-      experienceLevel: values.experienceLevel || undefined,
-      hiringNeeds: values.hiringNeeds || undefined,
+      accountType: 'INDIVIDUAL',
+      name: makeFallbackName(email),
+      fullName: makeFallbackName(email),
+      ...(turnstileToken ? { 'cf-turnstile-response': turnstileToken } : {}),
     };
 
     try {
@@ -91,18 +137,20 @@ export default function SignupForm() {
 
       if (data?.accessToken && data?.user) {
         setAuth(data.user, data.accessToken, data.refreshToken);
+        const role = String(data.user?.role || store.selectedRole || '').toUpperCase();
+        if (role === 'FREELANCER' || role === 'FREELANCE') {
+          const { subscriptionAPI } = await import('../../common/services/subscriptionApi');
+          subscriptionAPI.getMySubscription().catch(() => {});
+        }
       }
 
-      sessionStorage.setItem('pendingVerificationEmail', payload.email);
-      navigate('/auth/verify-email', {
-        state: {
-          email: payload.email,
-          role: payload.role,
-          accountType: payload.accountType,
-        },
-      });
+      sessionStorage.setItem('pendingVerificationEmail', email);
+      toast.success('Account created. Finish your profile to unlock the dashboard.');
+      navigate('/auth/profile-completion', { replace: true });
     } catch (error) {
-      throw error;
+      const message = error.message || 'We could not create your account. Please try again.';
+      setFormError(message);
+      toast.error(message);
     } finally {
       store.setSubmitting(false);
     }
@@ -110,7 +158,7 @@ export default function SignupForm() {
 
   return (
     <div className="w-full">
-      <SignupStepper currentStep={store.currentStep > 3 ? 3 : store.currentStep} steps={SIGNUP_STEPS} />
+      <SignupStepper currentStep={store.currentStep > 2 ? 2 : store.currentStep} steps={SIGNUP_STEPS} />
 
       {formError && (
         <div className="mb-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400">
@@ -118,46 +166,127 @@ export default function SignupForm() {
         </div>
       )}
 
-      {store.currentStep < 3 ? (
-        <AccountTypeSelection
-          currentStep={store.currentStep}
-          selectedRole={store.selectedRole}
-          selectedAccountType={store.accountType}
-          onRoleSelect={store.setSelectedRole}
-          onAccountTypeSelect={store.setAccountType}
-        />
-      ) : (
-        <RegisterDetailsStep
-          role={store.selectedRole}
-          accountType={store.accountType}
-          initialValues={store.details}
-          lastSavedAt={store.lastSavedAt}
-          onBack={() => store.setStep(2)}
-          onAutosave={store.updateDetails}
-          onSubmit={handleSubmitDetails}
-          accountTypeLabel={accountTypeLabel}
-        />
-      )}
+      {store.currentStep === 1 ? (
+        <div className="space-y-6">
+          <div className="grid gap-4 md:grid-cols-2">
+            {ROLE_CHOICES.map((choice) => {
+              const isSelected = store.selectedRole === choice.id;
+              const Icon = choice.icon;
 
-      {store.currentStep < 3 && (
-        <div className="sticky bottom-4 z-20 mt-8 flex flex-col-reverse gap-3 rounded-[1.75rem] border border-zinc-200/80 bg-white/90 p-4 shadow-xl backdrop-blur-xl dark:border-zinc-800/80 dark:bg-zinc-950/88 sm:flex-row">
-          {store.currentStep > 1 && (
-            <Button variant="secondary" onClick={() => store.setStep(store.currentStep - 1)} icon={ArrowLeft} fullWidth={false}>
-              Back
-            </Button>
+              return (
+                <motion.button
+                  key={choice.id}
+                  type="button"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.99 }}
+                  onClick={() => handleRoleSelect(choice.id)}
+                  className={`rounded-[1.6rem] border p-5 text-left transition-all ${
+                    isSelected
+                      ? 'border-[#14a800] bg-[#14a800]/5 shadow-[0_18px_40px_rgba(20,168,0,0.12)]'
+                      : 'border-zinc-200 bg-white hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-white">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span className={`rounded-full px-3 py-1 text-[11px] font-black uppercase tracking-[0.22em] ${isSelected ? 'bg-[#14a800] text-white' : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'}`}>
+                      Select
+                    </span>
+                  </div>
+
+                  <h3 className="mt-4 text-xl font-black text-zinc-950 dark:text-white">{choice.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">{choice.description}</p>
+                </motion.button>
+              );
+            })}
+          </div>
+
+          <div className="rounded-[1.6rem] border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-950/60">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#14a800]/10 text-[#14a800]">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-zinc-900 dark:text-white">Profile details come later</p>
+                <p className="mt-1 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
+                  We only need your role here. Your full profile, business details, skills, and work preferences are completed after sign-up.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="rounded-[1.75rem] border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-6">
+            <div className="mb-5 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.28em] text-[#14a800]">{roleLabel}</p>
+                <h2 className="mt-2 text-2xl font-black tracking-tight text-zinc-950 dark:text-white">Create your account</h2>
+              </div>
+              <div className="hidden rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2 text-xs font-semibold text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 sm:flex">
+                Blank profile will be created automatically
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <Input
+                  label="Email address"
+                  icon={Mail}
+                  type="email"
+                  placeholder="name@company.com"
+                  value={credentials.email}
+                  onChange={(e) => setCredentials((current) => ({ ...current, email: e.target.value }))}
+                  required
+                />
+              </div>
+
+              <PasswordInput
+                label="Password"
+                value={credentials.password}
+                onChange={(e) => setCredentials((current) => ({ ...current, password: e.target.value }))}
+                required
+              />
+
+              <PasswordInput
+                label="Confirm password"
+                value={credentials.confirmPassword}
+                onChange={(e) => setCredentials((current) => ({ ...current, confirmPassword: e.target.value }))}
+                required
+              />
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-4 text-sm text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
+              Your profile details, company information, or freelancer portfolio can be completed from the profile page after sign-up.
+            </div>
+          </div>
+
+          {turnstileEnabled && (
+            <TurnstileWidget
+              onVerify={setTurnstileToken}
+              onExpire={() => setTurnstileToken('')}
+              onError={() => setTurnstileToken('')}
+            />
           )}
 
-          <Button
-            variant="primary"
-            onClick={handleContinue}
-            isLoading={store.isSubmitting}
-            icon={ArrowRight}
-            iconPosition="right"
-            className="flex-1 sm:ml-auto sm:max-w-xs"
-          >
-            Continue
-          </Button>
-        </div>
+          <div className="sticky bottom-4 z-20 flex flex-col-reverse gap-3 rounded-[1.75rem] border border-zinc-200/80 bg-white/90 p-4 shadow-xl backdrop-blur-xl dark:border-zinc-800/80 dark:bg-zinc-950/88 sm:flex-row">
+              <Button type="button" variant="secondary" onClick={handleBack} icon={ArrowLeft} fullWidth={false}>
+                Back
+              </Button>
+
+            <Button
+              variant="primary"
+              type="submit"
+              isLoading={store.isSubmitting}
+              icon={ArrowRight}
+              iconPosition="right"
+              className="flex-1 sm:ml-auto sm:max-w-xs"
+            >
+              Create account
+            </Button>
+          </div>
+        </form>
       )}
     </div>
   );

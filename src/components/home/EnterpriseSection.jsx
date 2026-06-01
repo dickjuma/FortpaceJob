@@ -6,11 +6,11 @@ import Button from '../common/Button';
 
 export default function EnterpriseSection() {
   return (
-    <section id="enterprise" className="py-24 bg-surface-dark overflow-hidden relative">
+    <section id="enterprise" className="py-24 bg-zinc-950 overflow-hidden relative">
       {/* Abstract dark shapes */}
-      <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-success rounded-full blur-[100px]" />
-        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-brand-500 rounded-full blur-[100px]" />
+      <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-emerald-600 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-zinc-600 rounded-full blur-[120px]" />
       </div>
 
       <Container className="relative z-10">
@@ -22,11 +22,16 @@ export default function EnterpriseSection() {
             viewport={{ once: true }}
             className="max-w-xl"
           >
-            <span className="inline-block px-3 py-1 bg-white/10 text-success font-semibold tracking-wide uppercase text-sm rounded-full mb-6">
-              Forte Enterprise
-            </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-6 leading-tight">
-              Built for growing businesses and enterprises
+            <div className="flex items-center gap-2 mb-6">
+              <span className="text-2xl font-bold tracking-tight text-white">
+                Forte<span className="text-emerald-500">.</span>
+              </span>
+              <span className="px-2 py-0.5 bg-zinc-800 text-white text-xs font-bold tracking-widest uppercase rounded">
+                Pro
+              </span>
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-white mb-6 leading-[1.15]">
+              Premium talent, hand-vetted for your most critical projects.
             </h2>
             <p className="text-lg text-zinc-300 mb-10 leading-relaxed">
               Scale your workforce seamlessly with advanced compliance, custom workflows, and dedicated strategic support.
@@ -34,38 +39,40 @@ export default function EnterpriseSection() {
 
             <div className="grid sm:grid-cols-2 gap-6 mb-10">
               <div className="flex items-start gap-3">
-                <Users className="w-6 h-6 text-success shrink-0" />
+                <Users className="w-6 h-6 text-emerald-400 shrink-0" />
                 <div>
-                  <h4 className="font-semibold text-white mb-1">Team Dashboard</h4>
-                  <p className="text-sm text-zinc-400">Manage multiple departments and hiring managers centrally.</p>
+                  <h4 className="font-semibold text-white mb-1">Top 1% Talent</h4>
+                  <p className="text-sm text-zinc-400">Access professionals pre-vetted for technical excellence and communication.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <PieChart className="w-6 h-6 text-success shrink-0" />
+                <PieChart className="w-6 h-6 text-emerald-400 shrink-0" />
                 <div>
-                  <h4 className="font-semibold text-white mb-1">Advanced Analytics</h4>
-                  <p className="text-sm text-zinc-400">Track spend, time, and project ROI in real-time.</p>
+                  <h4 className="font-semibold text-white mb-1">Dedicated Success Manager</h4>
+                  <p className="text-sm text-zinc-400">Get strategic hiring advice and white-glove onboarding support.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Workflow className="w-6 h-6 text-success shrink-0" />
+                <Workflow className="w-6 h-6 text-emerald-400 shrink-0" />
                 <div>
                   <h4 className="font-semibold text-white mb-1">Custom Workflows</h4>
                   <p className="text-sm text-zinc-400">Integrate with your existing ERP and procurement systems.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Building className="w-6 h-6 text-success shrink-0" />
+                <Building className="w-6 h-6 text-emerald-400 shrink-0" />
                 <div>
-                  <h4 className="font-semibold text-white mb-1">Compliance Shield</h4>
+                  <h4 className="font-semibold text-white mb-1">Enterprise Compliance</h4>
                   <p className="text-sm text-zinc-400">Automated worker classification and global tax compliance.</p>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="primary" size="lg">Contact Sales</Button>
-              <Button variant="white" size="lg" className="bg-transparent text-white border-zinc-700 hover:bg-zinc-800">
+              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold border-none">
+                Explore Forte Pro
+              </Button>
+              <Button size="lg" className="bg-transparent text-white border-zinc-700 hover:bg-zinc-800 hover:border-zinc-600">
                 Book a Demo
               </Button>
             </div>

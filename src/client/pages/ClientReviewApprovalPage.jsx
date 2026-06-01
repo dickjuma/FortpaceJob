@@ -6,9 +6,10 @@ import {
   Star, ThumbsUp, DollarSign, ChevronRight, Check
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
+import { useAuthRedirect } from '../../common/utils/authRedirect';
 
 const SUBMITTED_FILES = [
-  { id: 1, name: 'Final_App_Build_v1.zip', size: '145 MB', type: 'zip', icon: FileText, color: 'text-brand-500', bg: 'bg-brand-50' },
+  { id: 1, name: 'Final_App_Build_v1.zip', size: '145 MB', type: 'zip', icon: FileText, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5' },
   { id: 2, name: 'Documentation.pdf', size: '2.4 MB', type: 'pdf', icon: FileText, color: 'text-rose-500', bg: 'bg-rose-50' },
   { id: 3, name: 'App_Screenshots.png', size: '8.1 MB', type: 'image', icon: ImageIcon, color: 'text-success', bg: 'bg-emerald-50' }
 ];
@@ -16,6 +17,7 @@ const SUBMITTED_FILES = [
 export default function ClientReviewApprovalPage() {
   const [activeModal, setActiveModal] = useState(null); // 'approve', 'revision', null
   const [rating, setRating] = useState(0);
+  const { requireAuth } = useAuthRedirect();
 
   return (
     <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans pb-24">
@@ -24,8 +26,8 @@ export default function ClientReviewApprovalPage() {
       <div className="bg-white dark:bg-surface-dark border-b border-zinc-200 dark:border-zinc-800 pt-8 pb-6 sticky top-0 z-30 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="flex items-center gap-2 text-xs font-bold text-zinc-500 mb-2">
-            <a href="#" className="hover:text-brand-600 transition-colors">Contracts</a> <ChevronRight className="w-3 h-3" />
-            <a href="#" className="hover:text-brand-600 transition-colors">React Native E-Commerce App</a>
+            <a href="#" className="hover:text-[#14a800] transition-colors">Contracts</a> <ChevronRight className="w-3 h-3" />
+            <a href="#" className="hover:text-[#14a800] transition-colors">React Native E-Commerce App</a>
           </div>
           
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -36,11 +38,11 @@ export default function ClientReviewApprovalPage() {
               <p className="text-sm font-medium text-zinc-500 mt-1">Freelancer: Alex Rivera • Milestone: Final App Delivery</p>
             </div>
             
-            <div className="flex items-center gap-4 bg-brand-50 dark:bg-brand-500/10 border border-brand-200 dark:border-brand-900/30 px-4 py-2 rounded-xl">
-              <DollarSign className="w-5 h-5 text-brand-600" />
+            <div className="flex items-center gap-4 bg-[#14a800]/5 dark:bg-[#14a800]/10 border border-[#14a800]/20 dark:border-[#14a800]/20/30 px-4 py-2 rounded-xl">
+              <DollarSign className="w-5 h-5 text-[#14a800]" />
               <div>
-                <p className="text-xs font-bold text-brand-900 dark:text-brand-500 uppercase tracking-wider">Payment to Release</p>
-                <p className="text-sm font-black text-brand-700 dark:text-brand-400">$3,200.00</p>
+                <p className="text-xs font-bold text-[#14a800] dark:text-[#14a800] uppercase tracking-wider">Payment to Release</p>
+                <p className="text-sm font-black text-[#14a800] dark:text-[#14a800]">$3,200.00</p>
               </div>
             </div>
           </div>
@@ -80,11 +82,11 @@ export default function ClientReviewApprovalPage() {
                         <file.icon className={cn("w-5 h-5", file.color)} />
                       </div>
                       <div>
-                        <p className="font-bold text-zinc-900 dark:text-white text-sm group-hover:text-brand-600 transition-colors">{file.name}</p>
+                        <p className="font-bold text-zinc-900 dark:text-white text-sm group-hover:text-[#14a800] transition-colors">{file.name}</p>
                         <p className="text-xs font-medium text-zinc-500">{file.size}</p>
                       </div>
                     </div>
-                    <button className="p-2 text-zinc-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-500/10 rounded-lg transition-colors">
+                    <button className="p-2 text-zinc-400 hover:text-[#14a800] hover:bg-[#14a800]/5 dark:hover:bg-[#14a800]/10 rounded-lg transition-colors">
                       <Download className="w-5 h-5" />
                     </button>
                   </div>
@@ -100,7 +102,10 @@ export default function ClientReviewApprovalPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <button 
-                onClick={() => setActiveModal('approve')}
+                onClick={() => requireAuth(() => setActiveModal('approve'), {
+                  returnTo: '/client/review-approval',
+                  state: { intent: 'approve-delivery' },
+                })}
                 className="p-6 border-2 border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-success/10 rounded-2xl flex flex-col items-center justify-center text-center hover:border-emerald-500 transition-colors group"
               >
                 <div className="w-12 h-12 bg-emerald-100 dark:bg-success/20 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -111,7 +116,10 @@ export default function ClientReviewApprovalPage() {
               </button>
 
               <button 
-                onClick={() => setActiveModal('revision')}
+                onClick={() => requireAuth(() => setActiveModal('revision'), {
+                  returnTo: '/client/review-approval',
+                  state: { intent: 'request-revision' },
+                })}
                 className="p-6 border-2 border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-500/10 rounded-2xl flex flex-col items-center justify-center text-center hover:border-amber-500 transition-colors group"
               >
                 <div className="w-12 h-12 bg-amber-100 dark:bg-amber-500/20 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -128,7 +136,7 @@ export default function ClientReviewApprovalPage() {
         {/* Right Sidebar */}
         <div className="w-full lg:w-80 shrink-0 space-y-6">
           <div className="bg-surface-dark dark:bg-surface-dark text-white rounded-3xl p-6 border border-zinc-800 shadow-xl">
-            <h3 className="font-bold flex items-center gap-2 mb-4"><AlertCircle className="w-5 h-5 text-brand-400" /> Important</h3>
+            <h3 className="font-bold flex items-center gap-2 mb-4"><AlertCircle className="w-5 h-5 text-[#14a800]" /> Important</h3>
             <p className="text-sm font-medium text-zinc-400 leading-relaxed">
               Once you approve this delivery, the funds held in escrow will be immediately released to the freelancer. This action cannot be undone. Ensure you have fully reviewed the work before approving.
             </p>
@@ -172,7 +180,7 @@ export default function ClientReviewApprovalPage() {
                   <textarea 
                     rows="4" 
                     placeholder="Alex was great to work with! The code was clean..."
-                    className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-brand-500 resize-none"
+                    className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20 resize-none"
                   ></textarea>
                 </div>
 
@@ -208,7 +216,7 @@ export default function ClientReviewApprovalPage() {
                   <textarea 
                     rows="5" 
                     placeholder="Please update the colors on the dashboard to match the new brand guidelines..."
-                    className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-brand-500 resize-none"
+                    className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20 resize-none"
                   ></textarea>
                 </div>
 
@@ -219,7 +227,7 @@ export default function ClientReviewApprovalPage() {
 
                 <div className="flex gap-4 pt-4">
                   <button onClick={() => setActiveModal(null)} className="flex-1 py-3 font-bold text-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors">Cancel</button>
-                  <button className="flex-1 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-600/20 transition-colors">
+                  <button className="flex-1 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg shadow-[#14a800]/25/20 transition-colors">
                     Send Request
                   </button>
                 </div>

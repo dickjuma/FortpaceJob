@@ -13,7 +13,9 @@ class WebSocketService {
     const token = useAuthStore.getState().token;
     
     // Replace with your actual backend URL
-    this.socket = io(import.meta.env.VITE_API_URL || 'http://localhost:5000', {
+    const apiRoot = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+    const socketRoot = process.env.REACT_APP_SOCKET_URL || apiRoot.replace(/\/api\/?$/, '');
+    this.socket = io(socketRoot, {
       auth: { token },
       autoConnect: true,
       reconnection: true,

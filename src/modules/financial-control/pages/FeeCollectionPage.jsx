@@ -5,16 +5,18 @@ import {
 import { cn } from '../../../admin/utils/cn';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
-
-const MOCK_FEES = Array.from({ length: 12 }, (_, i) => ({
-  id: `FEE-${2000 + i}`,
-  type: i % 4 === 0 ? 'Withdrawal Fee' : 'Platform Commission',
-  sourceId: i % 4 === 0 ? `WTH-${9900 + i}` : `ESC-${4500 + i}`,
-  amount: i % 4 === 0 ? 50 : Math.floor(Math.random() * 5000) + 500,
-  date: new Date(Date.now() - Math.random() * 86400000 * 5).toISOString(),
-}));
+import { useFeeRules } from '../../../admin/hooks/useFinancial';
+import { Loader2 } from 'lucide-react';
 
 export default function FeeCollectionPage() {
+  const { data: feeRules = [], isLoading } = useFeeRules();
+  const fees = feeRules.map((f, i) => ({
+    id: f.id || f._id || `FEE-${i}`,
+    type: f.name || f.type || 'Platform Commission',
+    sourceId: f.sourceId || f.reference || '—',
+    amount: f.amount || f.rate || 0,
+    date: f.updatedAt || f.createdAt || new Date().toISOString(),
+  }));
   const [search, setSearch] = useState('');
   const [type, setType] = useState('');
 
@@ -23,7 +25,7 @@ export default function FeeCollectionPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-violet-500/10 text-violet-600 rounded-xl shadow-sm">
+            <div className="p-2.5 bg-#14a800]/10 text-violet-600 rounded-xl shadow-sm">
               <PiggyBank size={24} />
             </div>
             <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Fee Collection Log</h1>
@@ -35,7 +37,7 @@ export default function FeeCollectionPage() {
         <div className="flex gap-2">
            <button 
              onClick={() => toast.success('Exporting Revenue Log to CSV...')}
-             className="px-4 py-2 bg-surface-dark text-white dark:bg-brand-600 rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+             className="px-4 py-2 bg-surface-dark text-white dark:bg-[#14a800] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
            >
              <Download size={16} /> Export Revenue
            </button>
@@ -51,7 +53,7 @@ export default function FeeCollectionPage() {
               placeholder="Search Fee ID or Source Ref..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500 outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#14a800] outline-none"
             />
           </div>
           <select 
@@ -77,7 +79,11 @@ export default function FeeCollectionPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/50">
-              {MOCK_FEES.filter(f => !type || f.type === type).map(fee => (
+              {isLoading ? (
+                <tr><td colSpan={5} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#14a800]" /></td></tr>
+              ) : fees.filter(f => !type || f.type === type).length === 0 ? (
+                <tr><td colSpan={5} className="p-8 text-center text-zinc-500 font-medium">No fee records found.</td></tr>
+              ) : fees.filter(f => !type || f.type === type).map(fee => (
                 <tr key={fee.id} className="hover:bg-surface/50 dark:hover:bg-zinc-800/20 group transition-colors">
                   <td className="p-4">
                     <div className="flex flex-col">
@@ -98,7 +104,7 @@ export default function FeeCollectionPage() {
                   </td>
                   <td className="p-4 text-right">
                     <span className="text-sm font-black text-zinc-900 dark:text-white flex items-center justify-end gap-1">
-                      <TrendingUp size={14} className="text-brand-500" />
+                      <TrendingUp size={14} className="text-[#14a800]" />
                       +{fee.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </span>
                   </td>

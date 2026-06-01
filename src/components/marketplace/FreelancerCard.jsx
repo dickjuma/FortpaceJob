@@ -1,114 +1,94 @@
 import React from 'react';
-import { Star, MapPin, ShieldCheck, Clock, Heart } from 'lucide-react';
+import { Star, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+function formatRate(freelancer) {
+  const raw = freelancer.hourlyRate ?? freelancer.rate;
+  if (raw == null || raw === '') return null;
+  const num = Number(String(raw).replace(/[^0-9.]/g, ''));
+  if (!Number.isFinite(num) || num <= 0) return null;
+  const currency = freelancer.currency || 'KES';
+  return `${currency} ${num.toLocaleString()}/hr`;
+}
+
 const FreelancerCard = ({ freelancer }) => {
-  const profilePath = `/talent/${freelancer.id}`;
-  const invitePath = `/talent/${freelancer.id}/invite`;
+  if (!freelancer?.id && !freelancer?._id) return null;
+
+  const id = freelancer.id || freelancer._id;
+  const profilePath = `/talent/${id}`;
+  const name = freelancer.name || [freelancer.firstName, freelancer.lastName].filter(Boolean).join(' ') || 'Professional';
+  const title = freelancer.title || freelancer.professionalTitle;
+  const rateLabel = formatRate(freelancer);
+  const skills = Array.isArray(freelancer.skills) ? freelancer.skills.slice(0, 3) : [];
+  const rating = freelancer.rating;
+  const reviews = freelancer.reviews ?? freelancer.reviewCount;
+  const location = freelancer.location || freelancer.city;
+  const avatar =
+    freelancer.image ||
+    freelancer.avatar ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=14a800&color=fff`;
 
   return (
-    <div className="group relative bg-white rounded-2xl border border-zinc-200 overflow-hidden hover:shadow-2xl hover:shadow-blue-900/5 hover:-tranzinc-y-1 transition-all duration-300 flex flex-col h-full">
-      
-      {/* Top Banner & Profile Pic */}
-      <div className="h-20 bg-gradient-to-r from-zinc-100 to-zinc-200 relative">
-        {/* Verification Badge top right */}
-        {freelancer.verified && (
-          <div className="absolute top-3 right-3 bg-white/90 backdrop-blur shadow-sm px-2 py-1 rounded-full flex items-center gap-1 text-[10px] font-bold text-zinc-700 uppercase tracking-wider">
-            <ShieldCheck className="w-3 h-3 text-brand-500" /> Pro Verified
-          </div>
+    <article className="flex flex-col h-full bg-white border border-zinc-200 rounded-xl p-5 hover:border-[#14a800]/40 hover:shadow-sm transition-all">
+      <div className="flex items-start gap-3 mb-3">
+        <img src={avatar} alt="" className="w-12 h-12 rounded-full object-cover border border-zinc-100 shrink-0" />
+        <div className="min-w-0 flex-1">
+          <Link to={profilePath} className="font-bold text-zinc-900 text-sm hover:text-[#14a800] line-clamp-1 block">
+            {name}
+          </Link>
+          {title && <p className="text-xs text-zinc-500 mt-0.5 line-clamp-2">{title}</p>}
+        </div>
+      </div>
+
+      {freelancer.description && (
+        <p className="text-xs text-zinc-600 line-clamp-2 mb-3 flex-1">{freelancer.description}</p>
+      )}
+
+      <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-500 mb-3">
+        {rating != null && (
+          <span className="flex items-center gap-1 font-semibold text-zinc-800">
+            <Star className="w-3.5 h-3.5 text-[#14a800] fill-[#14a800]" />
+            {Number(rating).toFixed(1)}
+            {reviews != null && <span className="text-zinc-400 font-normal">({reviews})</span>}
+          </span>
+        )}
+        {location && (
+          <span className="flex items-center gap-1 truncate">
+            <MapPin className="w-3 h-3 shrink-0" />
+            {location}
+          </span>
+        )}
+        {freelancer.workMode && (
+          <span className="px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 font-bold uppercase text-[10px]">
+            {freelancer.workMode}
+          </span>
         )}
       </div>
-      
-      <div className="px-6 relative flex-1 flex flex-col">
-        {/* Avatar overlapping banner */}
-        <div className="relative w-16 h-16 -mt-8 mb-3">
-          <img 
-            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(freelancer.name)}&background=random`} 
-            alt={freelancer.name} 
-            className="w-full h-full rounded-full border-4 border-white shadow-sm object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-          <div className="absolute bottom-1 right-1 w-3.5 h-3.5 bg-success border-2 border-white rounded-full"></div>
-        </div>
-        
-        {/* Header */}
-        <div className="mb-3">
-          <Link to={profilePath} className="font-bold text-lg text-zinc-900 hover:text-brand-600 transition-colors line-clamp-1">
-            {freelancer.name}
-          </Link>
-          <p className="text-sm text-zinc-600 font-medium mb-1.5">{freelancer.title}</p>
-          <div className="flex items-center justify-between text-xs text-zinc-500">
-            <div className="flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5" /> {freelancer.location || 'Remote'}
-            </div>
-            <div className="bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded font-medium">
-              {freelancer.teamSize || freelancer.workType || 'Remote Available'}
-            </div>
-          </div>
-        </div>
 
-        {/* Rating & Stats */}
-        <div className="flex items-center gap-4 mb-4 text-sm">
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1 font-bold text-zinc-900">
-              <Star className="w-4 h-4 text-amber-400 fill-current" /> {freelancer.rating}
-            </div>
-            <span className="text-xs text-zinc-500">({freelancer.reviews} reviews)</span>
-          </div>
-          <div className="w-px h-8 bg-zinc-200"></div>
-          <div className="flex flex-col">
-            <div className="font-bold text-zinc-900">{freelancer.jobSuccess || 100}%</div>
-            <span className="text-xs text-zinc-500">Job Success</span>
-          </div>
-        </div>
-
-        {/* Description Preview */}
-        <p className="text-sm text-zinc-600 line-clamp-2 mb-4 leading-relaxed flex-1">
-          {freelancer.description || "I help startups and businesses create world-class user experiences, scalable products, and conversion-focused interfaces."}
-        </p>
-
-        {/* Skills */}
-        <div className="flex flex-wrap gap-1.5 mb-5">
-          {freelancer.skills?.slice(0, 4).map((skill, index) => (
-            <span key={index} className="px-2 py-1 bg-surface border border-zinc-100 text-zinc-600 text-xs font-medium rounded-md">
-              {skill}
+      {skills.length > 0 && (
+        <div className="flex flex-wrap gap-1 mb-4">
+          {skills.map((skill) => (
+            <span key={skill} className="px-2 py-0.5 bg-zinc-50 border border-zinc-100 text-zinc-600 text-[10px] font-medium rounded">
+              {typeof skill === 'string' ? skill : skill?.name}
             </span>
           ))}
-          {freelancer.skills?.length > 4 && (
-            <span className="px-2 py-1 bg-surface border border-zinc-100 text-zinc-500 text-xs font-medium rounded-md">
-              +{freelancer.skills.length - 4}
-            </span>
-          )}
         </div>
-      </div>
+      )}
 
-      {/* Bottom Metrics & Actions */}
-      <div className="px-6 py-4 border-t border-zinc-100 bg-surface/50 mt-auto flex flex-col gap-4">
-        <div className="flex items-end justify-between">
-          <div>
-            <div className="text-lg font-black text-zinc-900">${freelancer.hourlyRate}<span className="text-sm font-medium text-zinc-500">/hr</span></div>
-          </div>
-          <div className="text-right">
-            <div className="inline-flex items-center gap-1 text-xs font-bold text-success bg-emerald-50 px-2 py-1 rounded-md mb-1">
-              <Clock className="w-3 h-3" /> Available Now
-            </div>
-            <div className="text-[10px] text-zinc-500 uppercase tracking-wider">Responds in ~10m</div>
-          </div>
-        </div>
-        
-        {/* Hover Actions - Visible on Hover */}
-        <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <Link to={profilePath} className="flex-1 text-center py-2 bg-white border border-zinc-200 text-zinc-700 font-bold text-sm rounded-lg hover:bg-surface hover:text-zinc-900 transition-colors shadow-sm">
-            View Profile
-          </Link>
-          <Link to={invitePath} className="flex-1 text-center py-2 bg-surface-dark text-white font-bold text-sm rounded-lg hover:bg-zinc-800 transition-colors shadow-sm">
-            Invite
-          </Link>
-          <button className="p-2 bg-white border border-zinc-200 text-zinc-400 rounded-lg hover:text-rose-500 hover:bg-rose-50 transition-colors shadow-sm">
-            <Heart className="w-4 h-4" />
-          </button>
-        </div>
+      <div className="mt-auto pt-3 border-t border-zinc-100 flex items-center justify-between gap-2">
+        {rateLabel ? (
+          <span className="text-sm font-bold text-zinc-900">{rateLabel}</span>
+        ) : (
+          <span className="text-xs text-zinc-400">Rate on profile</span>
+        )}
+        <Link
+          to={profilePath}
+          className="px-3 py-1.5 bg-zinc-900 hover:bg-[#14a800] text-white text-xs font-bold rounded-lg transition-colors"
+        >
+          View
+        </Link>
       </div>
-    </div>
+    </article>
   );
 };
 

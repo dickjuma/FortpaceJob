@@ -4,7 +4,6 @@ import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 const initialDetails = {
   fullName: '',
   businessName: '',
-  username: '',
   email: '',
   phoneNumber: '',
   country: 'KE',

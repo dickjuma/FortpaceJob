@@ -49,7 +49,7 @@ export default function AvailabilitySchedulerPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-            <CalendarIcon className="w-8 h-8 text-brand-600" />
+            <CalendarIcon className="w-8 h-8 text-[#14a800]" />
             Availability Scheduler
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-2xl">
@@ -60,7 +60,7 @@ export default function AvailabilitySchedulerPage() {
         <button 
           onClick={handleSave}
           disabled={isSaving}
-          className="flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-70 text-white px-6 py-2.5 rounded-xl font-medium transition-colors shadow-sm shrink-0"
+          className="flex items-center justify-center gap-2 bg-[#14a800] hover:bg-[#118a00] disabled:opacity-70 text-white px-6 py-2.5 rounded-xl font-medium transition-colors shadow-sm shrink-0"
         >
           {isSaving ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -88,7 +88,7 @@ export default function AvailabilitySchedulerPage() {
               {[
                 { id: 'available', label: 'Available for Hire', icon: UserCheck, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-900/20', border: 'border-green-200 dark:border-green-800' },
                 { id: 'busy', label: 'Currently Busy', icon: UserMinus, color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-900/20', border: 'border-red-200 dark:border-red-800' },
-                { id: 'vacation', label: 'On Vacation Mode', icon: Plane, color: 'text-brand-600', bg: 'bg-brand-50 dark:bg-brand-900/20', border: 'border-brand-200 dark:border-brand-800' }
+                { id: 'vacation', label: 'On Vacation Mode', icon: Plane, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/20', border: 'border-[#14a800]/20 dark:border-[#14a800]/20' }
               ].map(s => (
                 <label 
                   key={s.id} 
@@ -136,7 +136,7 @@ export default function AvailabilitySchedulerPage() {
                 <select 
                   value={timezone}
                   onChange={(e) => setTimezone(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-surface dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-brand-500 outline-none"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-surface dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-[#14a800] outline-none"
                 >
                   <option>UTC-08:00 Pacific Time (US & Canada)</option>
                   <option>UTC-05:00 Eastern Time (US & Canada)</option>
@@ -150,7 +150,7 @@ export default function AvailabilitySchedulerPage() {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-2">
                   <Briefcase className="w-4 h-4 text-gray-400" /> Preferred Project Size
                 </label>
-                <select className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-surface dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                <select className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-surface dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-[#14a800] outline-none">
                   <option>Any Size</option>
                   <option>Small (&lt; 1 week)</option>
                   <option>Medium (1-4 weeks)</option>
@@ -165,7 +165,7 @@ export default function AvailabilitySchedulerPage() {
                 <input 
                   type="number" 
                   defaultValue={40}
-                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-surface dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-brand-500 outline-none"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-surface dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-[#14a800] outline-none"
                 />
               </div>
             </div>
@@ -217,9 +217,9 @@ export default function AvailabilitySchedulerPage() {
                 {/* Calendar Grid */}
                 <div className="space-y-2 relative">
                   {status === 'vacation' && (
-                    <div className="absolute inset-0 z-10 bg-white/60 dark:bg-gray-900/60 backdrop-blur-[1px] flex items-center justify-center rounded-xl border border-brand-100 dark:border-brand-900/30">
+                    <div className="absolute inset-0 z-10 bg-white/60 dark:bg-gray-900/60 backdrop-blur-[1px] flex items-center justify-center rounded-xl border border-[#14a800]/20 dark:border-[#14a800]/20/30">
                       <div className="bg-white dark:bg-gray-800 px-6 py-4 rounded-2xl shadow-xl flex items-center gap-4">
-                        <div className="p-3 bg-brand-50 dark:bg-brand-900/20 text-brand-600 rounded-full">
+                        <div className="p-3 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] rounded-full">
                           <Plane className="w-6 h-6" />
                         </div>
                         <div>
@@ -244,7 +244,7 @@ export default function AvailabilitySchedulerPage() {
                             disabled={status === 'vacation'}
                             className={`h-10 rounded-md border text-xs font-medium transition-all ${
                               isSelected 
-                                ? 'bg-brand-100 border-brand-200 text-brand-700 dark:bg-brand-900/40 dark:border-brand-800 dark:text-brand-300 hover:bg-brand-200 dark:hover:bg-brand-900/60' 
+                                ? 'bg-[#14a800]/10 border-[#14a800]/20 text-[#14a800] dark:bg-[#14a800]/40 dark:border-[#14a800]/20 dark:text-[#14a800] hover:bg-[#14a800] dark:hover:bg-[#14a800]/60' 
                                 : 'bg-surface border-gray-100 text-transparent hover:text-gray-400 dark:bg-gray-800/30 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800'
                             }`}
                           >
@@ -260,7 +260,7 @@ export default function AvailabilitySchedulerPage() {
             
             <div className="p-4 bg-surface dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-500 dark:text-gray-400 flex items-center justify-between">
               <div className="flex gap-4">
-                <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded bg-brand-100 border border-brand-200 dark:bg-brand-900/40 dark:border-brand-800" /> Available</span>
+                <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded bg-[#14a800]/10 border border-[#14a800]/20 dark:bg-[#14a800]/40 dark:border-[#14a800]/20" /> Available</span>
                 <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded bg-surface border border-gray-100 dark:bg-gray-800/30 dark:border-gray-800" /> Unavailable</span>
               </div>
               <div>

@@ -44,7 +44,7 @@ export default function ClientCompliancePage() {
           <p className="text-xs font-semibold text-light-gray/50 mt-1">Audit company registrations, manage automated NDA contracts, and inspect KRA tax clearance certificates.</p>
         </div>
 
-        <Button onClick={() => toast.success('New compliance template initialized.')} className="bg-accent-purple border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-accent-purple/20">
+        <Button onClick={() => toast.success('New compliance template initialized.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20">
           <Plus className="w-4 h-4" /> Add Compliance Doc
         </Button>
       </div>
@@ -72,7 +72,7 @@ export default function ClientCompliancePage() {
             </div>
           </Card>
 
-          <Card className="p-5 bg-gradient-to-br from-navy to-zinc-900 border border-white/10 text-white rounded-3xl relative overflow-hidden">
+          <Card className="p-5 bg-gradient-to-br from-[#222222] to-zinc-900 border border-white/10 text-white rounded-3xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-orange-400/20 blur-[50px] rounded-full"></div>
             <h4 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5 mb-3 text-orange-400">
               <AlertTriangle className="w-4 h-4" /> Tax Verification Warning
@@ -86,7 +86,7 @@ export default function ClientCompliancePage() {
         {/* Right Side: Active Document Manager Table */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="border border-white/10 bg-white/5 p-6 rounded-3xl">
-            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><FileText className="w-4 h-4 text-accent-purple" /> Legal Compliance Documents ({documents.length})</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><FileText className="w-4 h-4 text-success" /> Legal Compliance Documents ({documents.length})</h3>
             
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-medium">
@@ -122,7 +122,7 @@ export default function ClientCompliancePage() {
                           <Button 
                             disabled={isVerifying}
                             onClick={() => handleVerifyKra(doc.id)}
-                            className="bg-accent-purple hover:bg-accent-purple/90 border-none font-bold text-[9px] py-1.5 px-3 rounded-lg"
+                            className="bg-success hover:bg-success/90 border-none font-bold text-[9px] py-1.5 px-3 rounded-lg"
                           >
                             Verify iTax Clearance
                           </Button>

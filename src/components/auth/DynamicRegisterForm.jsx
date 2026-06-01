@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRegistrationStore, useAuthStore } from '../../store/authStore';
 import PasswordStrength from './PasswordStrength';
 import { authAPI } from '../../common/services/api';
+import { registerRules, termsRule } from '../../common/utils/validationRules';
 
 const FloatingInput = ({ label, type = "text", register, error, placeholder, ...rest }) => (
   <div className="relative mb-6">
@@ -126,22 +127,22 @@ export default function DynamicRegisterForm() {
           <>
             {freelancerType === 'individual' && (
               <>
-                <FloatingInput label="Full Name" register={register('fullName', { required: "Name required" })} error={errors.fullName} />
-                <FloatingInput label="Email Address" type="email" register={register('email', { required: "Email required" })} error={errors.email} />
+                <FloatingInput label="Full Name" register={register('fullName', registerRules.fullName)} error={errors.fullName} />
+                <FloatingInput label="Email Address" type="email" register={register('email', registerRules.email)} error={errors.email} />
               </>
             )}
 
             {freelancerType === 'sme' && (
               <>
-                <FloatingInput label="Agency Name" register={register('agencyName', { required: "Agency Name required" })} error={errors.agencyName} />
-                <FloatingInput label="Business Email" type="email" register={register('businessEmail', { required: "Email required" })} error={errors.businessEmail} />
+                <FloatingInput label="Agency Name" register={register('agencyName', registerRules.fullName)} error={errors.agencyName} />
+                <FloatingInput label="Business Email" type="email" register={register('businessEmail', registerRules.email)} error={errors.businessEmail} />
               </>
             )}
 
             {freelancerType === 'corporate' && (
               <>
-                <FloatingInput label="Organization Name" register={register('organizationName', { required: "Organization Name required" })} error={errors.organizationName} />
-                <FloatingInput label="Corporate Email" type="email" register={register('corporateEmail', { required: "Email required" })} error={errors.corporateEmail} />
+                <FloatingInput label="Organization Name" register={register('organizationName', registerRules.fullName)} error={errors.organizationName} />
+                <FloatingInput label="Corporate Email" type="email" register={register('corporateEmail', registerRules.email)} error={errors.corporateEmail} />
                 
                 <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 mt-2 mb-6">
                   <h4 className="font-bold text-emerald-900 mb-2">Compliance Agreement Required</h4>
@@ -149,7 +150,7 @@ export default function DynamicRegisterForm() {
                     As a Corporate Service Provider, you must agree to our strict vendor compliance policies and procurement workflows.
                   </p>
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" className="w-5 h-5 rounded border-emerald-300 text-success focus:ring-emerald-500" {...register('complianceAgreement', { required: "Must agree to compliance" })} />
+                    <input type="checkbox" className="w-5 h-5 rounded border-emerald-300 text-success focus:ring-emerald-500" {...register('complianceAgreement', termsRule)} />
                     <span className="text-sm font-semibold text-emerald-900">I accept the Corporate Vendor Terms</span>
                   </label>
                   {errors.complianceAgreement && <span className="text-sm text-red-500 block mt-2">{errors.complianceAgreement.message}</span>}
@@ -166,13 +167,13 @@ export default function DynamicRegisterForm() {
           <>
             {(clientType === 'sme' || clientType === 'corporate') ? (
               <>
-                <FloatingInput label={clientType === 'sme' ? "Business Name" : "Organization Name"} register={register('companyName', { required: "This field is required" })} error={errors.companyName} />
-                <FloatingInput label="Corporate Email" type="email" register={register('email', { required: "Email is required" })} error={errors.email} />
+                <FloatingInput label={clientType === 'sme' ? "Business Name" : "Organization Name"} register={register('companyName', registerRules.fullName)} error={errors.companyName} />
+                <FloatingInput label="Corporate Email" type="email" register={register('email', registerRules.email)} error={errors.email} />
                 
                 {clientType === 'corporate' && (
-                  <div className="bg-brand-50 border border-brand-100 rounded-2xl p-6 mt-2 mb-6">
-                    <h4 className="font-bold text-brand-900 mb-2">Enterprise Compliance</h4>
-                    <p className="text-sm text-brand-700 leading-relaxed">
+                  <div className="bg-[#14a800]/5 border border-[#14a800]/20 rounded-2xl p-6 mt-2 mb-6">
+                    <h4 className="font-bold text-[#14a800] mb-2">Enterprise Compliance</h4>
+                    <p className="text-sm text-[#14a800] leading-relaxed">
                       By proceeding, you acknowledge that this account will be subject to Forte's Enterprise Vendor Master Agreement and automated worker classification compliance checks.
                     </p>
                   </div>
@@ -180,8 +181,8 @@ export default function DynamicRegisterForm() {
               </>
             ) : (
               <>
-                <FloatingInput label="Legal Full Name" register={register('fullName', { required: "Full name is required" })} error={errors.fullName} />
-                <FloatingInput label="Email Address" type="email" register={register('email', { required: "Email is required" })} error={errors.email} />
+                <FloatingInput label="Legal Full Name" register={register('fullName', registerRules.fullName)} error={errors.fullName} />
+                <FloatingInput label="Email Address" type="email" register={register('email', registerRules.email)} error={errors.email} />
               </>
             )}
           </>
@@ -194,7 +195,7 @@ export default function DynamicRegisterForm() {
           <FloatingInput 
             label="Create Secure Password" 
             type={showPassword ? "text" : "password"} 
-            register={register('password', { required: "Password is required" })} 
+            register={register('password', registerRules.password)} 
             error={errors.password} 
           />
           <button 
@@ -212,7 +213,7 @@ export default function DynamicRegisterForm() {
           type="submit"
           disabled={isSubmitting}
           className={`w-full py-5 rounded-2xl font-bold text-xl text-white transition-all duration-300 transform hover:-tranzinc-y-1 hover:shadow-2xl disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none mt-8 ${
-            role === 'client' ? 'bg-brand-600 hover:bg-brand-700 shadow-indigo-600/30' : 'bg-success hover:bg-emerald-700 shadow-emerald-600/30'
+            role === 'client' ? 'bg-[#14a800] hover:bg-[#118a00] shadow-[#14a800]/25' : 'bg-success hover:bg-emerald-700 shadow-emerald-600/30'
           }`}
         >
           {isSubmitting ? 'Provisioning Account...' : 'Complete Account Setup'}

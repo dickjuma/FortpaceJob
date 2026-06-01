@@ -3,6 +3,7 @@ import {
   ShieldCheck, ArrowRight, RefreshCw, X, MessageSquare, Key, AlertCircle
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
+import { validateOtp } from '../../common/utils/validation';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import { cn } from '../../admin/utils/cn';
@@ -39,8 +40,9 @@ export default function OtpVerificationPage() {
   const handleVerify = (e) => {
     e.preventDefault();
     const joined = otp.join('');
-    if (joined.length < 6) {
-      toast.error('Please input a valid 6-digit OTP verification code!');
+    const otpError = validateOtp(joined);
+    if (otpError) {
+      toast.error(otpError);
       return;
     }
 
@@ -72,7 +74,7 @@ export default function OtpVerificationPage() {
       <Toaster position="top-right" />
       
       <Card className="bg-white border border-border p-8 rounded-[24px] shadow-2xl text-center space-y-6">
-        <div className="w-16 h-16 bg-accent-purple/10 text-accent-purple rounded-2xl flex items-center justify-center mx-auto animate-pulse">
+        <div className="w-16 h-16 bg-success/10 text-success rounded-2xl flex items-center justify-center mx-auto animate-pulse">
           <Key size={32} />
         </div>
 
@@ -94,7 +96,7 @@ export default function OtpVerificationPage() {
                 value={char}
                 onChange={(e) => handleInputChange(e.target.value, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
-                className="w-12 h-14 border border-border rounded-xl text-center font-black text-xl bg-light-gray/60 focus:outline-none focus:bg-white focus:border-accent-purple text-text-primary select-all"
+                className="w-12 h-14 border border-border rounded-xl text-center font-black text-xl bg-light-gray/60 focus:outline-none focus:bg-white focus:border-success text-text-primary select-all"
                 required
               />
             ))}
@@ -102,15 +104,15 @@ export default function OtpVerificationPage() {
 
           <div className="text-xs font-bold text-text-secondary">
             {timer > 0 ? (
-              <span>Resend verification code in <span className="text-accent-purple">{timer}s</span></span>
+              <span>Resend verification code in <span className="text-success">{timer}s</span></span>
             ) : (
-              <button type="button" onClick={resendCode} className="text-accent-purple hover:underline flex items-center gap-1 mx-auto">
+              <button type="button" onClick={resendCode} className="text-success hover:underline flex items-center gap-1 mx-auto">
                 <RefreshCw size={12} /> Resend OTP Code
               </button>
             )}
           </div>
 
-          <button type="submit" className="w-full py-3.5 bg-accent-purple hover:bg-accent-purple/95 text-white font-black rounded-xl text-sm transition-all shadow-lg shadow-accent-purple/20 flex items-center justify-center gap-1.5">
+          <button type="submit" className="w-full py-3.5 bg-success hover:bg-success/95 text-white font-black rounded-xl text-sm transition-all shadow-lg shadow-[#14a800]/20 flex items-center justify-center gap-1.5">
             <ShieldCheck size={18} /> Confirm Identity & Sign In
           </button>
         </form>

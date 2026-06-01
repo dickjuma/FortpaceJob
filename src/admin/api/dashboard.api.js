@@ -1,4 +1,4 @@
-import apiClient, { unwrapAdminResponse } from './apiClient';
+import apiClient, { unwrapAdminResponse } from './apiClient.js';
 
 const listTotal = async (path) => {
   const response = await apiClient.get(`${path}?limit=1`);
@@ -52,7 +52,21 @@ export const fetchDashboardMetrics = async () => {
 export const fetchActivityFeed = async (limit = 10) => {
   const response = await apiClient.get(`/fraud/anomalies?limit=${limit}`);
   const { data } = unwrapAdminResponse(response);
-  return Array.isArray(data) ? data : [];
+  const anomalies = Array.isArray(data) ? data : [];
+  
+  // Transform anomalies into activity feed format
+  return anomalies.map(item => ({
+    id: item.id || item._id,
+    type: item.type || 'fraud_flag',
+    actor: {
+      id: item.adminId || item.userId,
+      name: item.admin?.email || item.user?.email || 'System',
+      avatar: item.admin?.avatar || item.user?.avatar,
+    },
+    title: item.title || item.action || 'Security Event Detected',
+    description: item.description || item.message || 'Automated system detected potential fraud.',
+    timestamp: item.createdAt || item.timestamp || Date.now(),
+  }));
 };
 
 export const fetchAlerts = async () => {
@@ -61,13 +75,26 @@ export const fetchAlerts = async () => {
   return Array.isArray(data) ? data : [];
 };
 
-export const fetchRevenueChart = async () => {
-  const response = await apiClient.get('/financial/reports/revenue');
+export const fetchRevenueChart = async (period = '30d') => {
+  const response = await apiClient.get(`/financial/reports/revenue?period=${period}`);
   const { data } = unwrapAdminResponse(response);
+  
+  // Generate time-series data if API returns daily data, otherwise create fallback
+  const dailyData = Array.isArray(data?.daily) ? data.daily : [];
+  
+  if (dailyData.length > 1) {
+    return dailyData.map((d, i) => ({
+      label: d.date || `Day ${i + 1}`,
+      value: d.revenue || d.totalFees || 0,
+      secondaryValue: d.fees || d.platformFees || 0,
+    }));
+  }
+  
+  // Fallback single data point with proper format
   return [
     {
-      label: 'Current',
-      value: data?.totalFees || 0,
+      label: 'Total',
+      value: data?.totalFees || data?.revenue || 0,
       secondaryValue: data?.totalVolume || 0,
     },
   ];

@@ -18,7 +18,7 @@ const DynamicRevenueAreaChart = () => (
             className="w-full bg-success/20 group-hover:bg-success rounded-t-lg transition-all duration-300 relative"
             style={{ height: `${(val / 150) * 100}%` }}
           >
-            <div className="absolute -top-8 left-1/2 -tranzinc-x-1/2 bg-navy text-white text-[9px] font-black px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow z-30 pointer-events-none">
+            <div className="absolute -top-8 left-1/2 -tranzinc-x-1/2 bg-[#222222] text-white text-[9px] font-black px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow z-30 pointer-events-none">
               KES {val * 1000}
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function RevenueReportsPage() {
           <Button 
             onClick={handleExportPDF}
             variant="primary" 
-            className="bg-accent-purple hover:bg-accent-purple/95 font-bold text-xs rounded-xl"
+            className="bg-success hover:bg-success/95 font-bold text-xs rounded-xl"
             icon={<FileText size={14} />}
           >
             Export Procurement PDF
@@ -107,7 +107,7 @@ export default function RevenueReportsPage() {
 
         <Card className="p-5 border border-border bg-white shadow-sm">
           <p className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Escrow Lock</p>
-          <h3 className="text-2xl font-black text-accent-purple mt-1">KES {earnings.escrow.toLocaleString()}</h3>
+          <h3 className="text-2xl font-black text-success mt-1">KES {earnings.escrow.toLocaleString()}</h3>
         </Card>
 
         <Card className="p-5 border border-border bg-white shadow-sm">
@@ -151,7 +151,7 @@ export default function RevenueReportsPage() {
                     <span className="text-text-primary">KES {earnings.gigRevenue.toLocaleString()}</span>
                   </div>
                   <div className="w-full h-1.5 bg-light-gray rounded-full overflow-hidden">
-                    <div className="h-full bg-accent-purple rounded-full" style={{ width: '65%' }}></div>
+                    <div className="h-full bg-success rounded-full" style={{ width: '65%' }}></div>
                   </div>
                 </div>
 
@@ -198,7 +198,7 @@ export default function RevenueReportsPage() {
             <select 
               value={selectedService}
               onChange={(e) => setSelectedService(e.target.value)}
-              className="text-xs font-bold text-text-primary border border-border bg-light-gray rounded-xl px-3 py-2 outline-none focus:bg-white focus:border-accent-purple"
+              className="text-xs font-bold text-text-primary border border-border bg-light-gray rounded-xl px-3 py-2 outline-none focus:bg-white focus:border-success"
             >
               <option value="All">All Services</option>
               <option value="Gig Revenue">Gigs</option>
@@ -226,14 +226,14 @@ export default function RevenueReportsPage() {
                   <td className="px-6 py-5 font-bold text-text-secondary uppercase">{rec.id}</td>
                   <td className="px-6 py-5 font-bold text-text-primary">{rec.client}</td>
                   <td className="px-6 py-5 font-semibold text-text-secondary">{rec.service}</td>
-                  <td className="px-6 py-5 font-black text-accent-purple uppercase tracking-wider text-[9px]">{rec.type}</td>
+                  <td className="px-6 py-5 font-black text-success uppercase tracking-wider text-[9px]">{rec.type}</td>
                   <td className="px-6 py-5 text-right font-black text-text-primary">KES {rec.amount.toLocaleString()}</td>
                   <td className="px-6 py-5 text-center">
                     <span className={cn(
                       "px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border",
                       rec.status === 'Cleared' ? "bg-success/10 text-success border-success/20" :
                       rec.status === 'Pending' ? "bg-warning/10 text-warning border-warning/20" :
-                      "bg-accent-purple/10 text-accent-purple border-accent-purple/20"
+                      "bg-success/10 text-success border-success/20"
                     )}>
                       {rec.status}
                     </span>

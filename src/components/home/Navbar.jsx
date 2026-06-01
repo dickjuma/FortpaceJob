@@ -35,35 +35,83 @@ export default function Navbar() {
       <Container>
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 rounded-lg bg-success flex items-center justify-center transition-transform group-hover:scale-105">
+          <div className="flex items-center gap-8 flex-1">
+            <Link to="/" className="flex items-center gap-2 group shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center transition-transform group-hover:scale-105">
                 <span className="text-white font-bold text-lg leading-none">F</span>
               </div>
               <span className="text-xl font-bold tracking-tight text-zinc-900">
-                Forte<span className="text-success">.</span>
+                Forte<span className="text-emerald-600">.</span>
               </span>
             </Link>
 
-            {/* Desktop Links */}
-            <div className="hidden md:flex items-center gap-6">
-              {NAV_LINKS.map((link) => (
-                <Link 
-                  key={link.name} 
-                  to={link.href}
-                  className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
-                >
-                  {link.name}
-                </Link>
-              ))}
+            {/* Desktop Links / Search */}
+            <div className="hidden md:flex items-center gap-6 flex-1 transition-all duration-300">
+              <AnimatePresence mode="wait">
+                {isScrolled ? (
+                  <motion.form 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex-1 max-w-xl ml-4 relative"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const query = e.target.search.value;
+                      if (query.trim()) navigate(`/search?q=${encodeURIComponent(query)}`);
+                    }}
+                  >
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Search className="h-4 w-4 text-zinc-400" />
+                      </div>
+                      <input
+                        type="text"
+                        name="search"
+                        className="block w-full pl-10 pr-3 py-2 border border-zinc-200 rounded-lg leading-5 bg-zinc-50 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-colors"
+                        placeholder="What service are you looking for today?"
+                      />
+                      <button 
+                        type="submit"
+                        className="absolute inset-y-1 right-1 px-3 bg-emerald-600 text-white text-xs font-bold rounded hover:bg-emerald-700 transition-colors"
+                      >
+                        Search
+                      </button>
+                    </div>
+                  </motion.form>
+                ) : (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex items-center gap-6"
+                  >
+                    {NAV_LINKS.map((link) => (
+                      <Link 
+                        key={link.name} 
+                        to={link.href}
+                        className="text-sm font-medium text-zinc-600 hover:text-emerald-700 transition-colors"
+                      >
+                        {link.name}
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
           {/* Desktop Right */}
           <div className="hidden md:flex items-center gap-4">
-            <button className="p-2 text-zinc-400 hover:text-zinc-600 transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
+            {!isScrolled && (
+              <Link 
+                to="/search"
+                className="p-2 text-zinc-400 hover:text-emerald-600 transition-colors"
+              >
+                <Search className="w-5 h-5" />
+              </Link>
+            )}
             <div className="w-px h-5 bg-zinc-200 mx-1"></div>
             <Link 
               to="/auth/login"

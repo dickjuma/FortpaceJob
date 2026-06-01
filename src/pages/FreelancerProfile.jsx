@@ -9,18 +9,21 @@ import {
   ShieldCheck,
   Star,
 } from 'lucide-react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import FreelancerCard from '../components/marketplace/FreelancerCard';
 import {
   getFeaturedTalent,
   getRelatedTalent,
   getTalentById,
 } from './find-talent/talentMarketplaceData';
+import { useAuthRedirect } from '../common/utils/authRedirect';
 
 const tabs = ['services', 'portfolio', 'reviews', 'experience'];
 
 const FreelancerProfile = () => {
   const { talentId } = useParams();
+  const navigate = useNavigate();
+  const { requireAuth } = useAuthRedirect();
   const talent = getTalentById(talentId) || getFeaturedTalent()[0];
   const [activeTab, setActiveTab] = useState('services');
   const relatedTalent = getRelatedTalent(talent.id);
@@ -55,7 +58,7 @@ const FreelancerProfile = () => {
                     <div>
                       <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 flex items-center gap-2 mb-1">
                         {talent.name}
-                        {talent.verified ? <ShieldCheck className="w-6 h-6 text-brand-500" title="Identity Verified" /> : null}
+                        {talent.verified ? <ShieldCheck className="w-6 h-6 text-[#14a800]" title="Identity Verified" /> : null}
                       </h1>
                       <h2 className="text-lg text-zinc-600 font-medium">{talent.title}</h2>
                       <p className="text-sm text-zinc-500 mt-2">{talent.headline}</p>
@@ -65,7 +68,7 @@ const FreelancerProfile = () => {
                       <button className="w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-500 hover:text-rose-500 hover:bg-rose-50 transition-colors" type="button">
                         <Heart className="w-5 h-5" />
                       </button>
-                      <button className="w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-500 hover:text-brand-600 hover:bg-brand-50 transition-colors" type="button">
+                      <button className="w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-500 hover:text-[#14a800] hover:bg-[#14a800]/5 transition-colors" type="button">
                         <Share2 className="w-5 h-5" />
                       </button>
                     </div>
@@ -82,7 +85,7 @@ const FreelancerProfile = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Award className="w-5 h-5 text-brand-500" />
+                  <Award className="w-5 h-5 text-[#14a800]" />
                   <div>
                     <div className="font-bold text-zinc-900">{talent.jobSuccess}% Job Success</div>
                     <div className="text-zinc-500">{talent.completedJobs} jobs completed</div>
@@ -119,7 +122,7 @@ const FreelancerProfile = () => {
                 {tabs.map((tab) => (
                   <button
                     className={`px-6 py-4 font-medium text-sm whitespace-nowrap border-b-2 transition-colors ${
-                      activeTab === tab ? 'border-brand-600 text-brand-600' : 'border-transparent text-zinc-500 hover:text-zinc-700 hover:bg-surface'
+                      activeTab === tab ? 'border-[#14a800]/20 text-[#14a800]' : 'border-transparent text-zinc-500 hover:text-zinc-700 hover:bg-surface'
                     }`}
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -134,9 +137,9 @@ const FreelancerProfile = () => {
                 {activeTab === 'services' ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {talent.services.map((service) => (
-                      <div className="border border-zinc-200 rounded-xl p-5 hover:border-brand-300 transition-colors group" key={service.id}>
+                      <div className="border border-zinc-200 rounded-xl p-5 hover:border-[#14a800]/50 transition-colors group" key={service.id}>
                         <div className="flex justify-between items-start mb-3 gap-3">
-                          <h4 className="font-bold text-zinc-900 group-hover:text-brand-600 transition-colors">{service.title}</h4>
+                          <h4 className="font-bold text-zinc-900 group-hover:text-[#14a800] transition-colors">{service.title}</h4>
                           <span className="font-bold text-zinc-900">From ${service.price}</span>
                         </div>
                         <p className="text-sm text-zinc-500 mb-4">{service.summary}</p>
@@ -193,7 +196,7 @@ const FreelancerProfile = () => {
             <div className="mb-6">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-2xl font-bold text-zinc-900">Related talent</h3>
-                <Link className="text-brand-600 font-bold hover:text-brand-700" to="/search-results">
+                <Link className="text-[#14a800] font-bold hover:text-[#14a800]" to="/search-results">
                   Search more talent
                 </Link>
               </div>
@@ -216,12 +219,30 @@ const FreelancerProfile = () => {
                   <div className="text-sm font-medium text-success">{talent.availability}</div>
                 </div>
 
-                <Link className="w-full block text-center bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-xl transition-colors mb-3" to={`/talent/${talent.id}/hire`}>
+                <button
+                  className="w-full block text-center bg-[#14a800] hover:bg-[#118a00] text-white font-bold py-3 px-4 rounded-xl transition-colors mb-3"
+                  onClick={() =>
+                    requireAuth(() => navigate(`/talent/${talent.id}/hire`), {
+                      returnTo: `/talent/${talent.id}/hire`,
+                      state: { intent: 'hire-talent', talentId: talent.id },
+                    })
+                  }
+                  type="button"
+                >
                   Hire {talent.name.split(' ')[0]}
-                </Link>
-                <Link className="w-full block text-center bg-white border border-zinc-300 hover:bg-surface text-zinc-700 font-bold py-3 px-4 rounded-xl transition-colors mb-4" to={`/talent/${talent.id}/invite`}>
+                </button>
+                <button
+                  className="w-full block text-center bg-white border border-zinc-300 hover:bg-surface text-zinc-700 font-bold py-3 px-4 rounded-xl transition-colors mb-4"
+                  onClick={() =>
+                    requireAuth(() => navigate(`/talent/${talent.id}/invite`), {
+                      returnTo: `/talent/${talent.id}/invite`,
+                      state: { intent: 'invite-talent', talentId: talent.id },
+                    })
+                  }
+                  type="button"
+                >
                   Invite to Job
-                </Link>
+                </button>
 
                 <p className="text-xs text-center text-zinc-500">
                   <ShieldCheck className="w-3 h-3 inline mr-1 text-zinc-400" />

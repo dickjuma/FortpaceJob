@@ -295,7 +295,7 @@ const RequestCard = ({ request, isSaved, onSave, onApply, onQuickView }) => {
 
   const getUrgencyLevel = () => {
     if (request.urgent) return { color: "bg-red-100 text-red-700 border-red-200", text: "Urgent Hire", icon: <Zap size={10} /> };
-    if (request.featuredBadge) return { color: "bg-brand-100 text-brand-700 border-purple-200", text: "Featured", icon: <Sparkles size={10} /> };
+    if (request.featuredBadge) return { color: "bg-[#14a800]/10 text-[#14a800] border-[#14a800]/50", text: "Featured", icon: <Sparkles size={10} /> };
     return null;
   };
 
@@ -337,7 +337,7 @@ const RequestCard = ({ request, isSaved, onSave, onApply, onQuickView }) => {
                     {request.title}
                   </h3>
                   {request.featuredBadge && (
-                    <span className="px-2 py-0.5 text-xs font-medium bg-brand-100 text-brand-700 rounded-full border border-purple-200">
+                    <span className="px-2 py-0.5 text-xs font-medium bg-[#14a800]/10 text-[#14a800] rounded-full border border-[#14a800]/50">
                       Featured
                     </span>
                   )}
@@ -1202,7 +1202,7 @@ export default function CategoryResults() {
                   </div>
                   <div>
                     <div className="text-sm text-[#7A5A4C] mb-1">Featured</div>
-                    <div className="text-lg font-semibold text-brand-600">{stats.featuredCount}</div>
+                    <div className="text-lg font-semibold text-[#14a800]">{stats.featuredCount}</div>
                   </div>
                 </div>
                 <div className="pt-4 border-t border-[#E7E1DE]">

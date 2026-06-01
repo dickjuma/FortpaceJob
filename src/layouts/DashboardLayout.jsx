@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuthStore } from '../common/authStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -7,10 +8,9 @@ import {
   DollarSign, Star, TrendingUp, ShieldCheck, Zap
 } from 'lucide-react';
 
-// This would typically come from your auth context/store
-const MOCK_USER_ROLE = 'client'; // 'client' or 'freelancer'
-
 const DashboardLayout = ({ children }) => {
+  const user = useAuthStore((state) => state.user);
+  const userRole = user?.role === 'freelancer' || user?.userType === 'freelancer' ? 'freelancer' : 'client';
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -36,7 +36,7 @@ const DashboardLayout = ({ children }) => {
     { name: 'Payments', icon: DollarSign, path: '/client/payments' },
   ];
 
-  const navigation = MOCK_USER_ROLE === 'client' ? clientNav : freelancerNav;
+  const navigation = userRole === 'client' ? clientNav : freelancerNav;
 
   return (
     <div className="min-h-screen bg-surface dark:bg-surface-dark text-zinc-900 dark:text-zinc-50 flex overflow-hidden">
@@ -49,7 +49,7 @@ const DashboardLayout = ({ children }) => {
       >
         <div className="h-20 flex items-center justify-between px-6 border-b border-zinc-200 dark:border-zinc-800">
           <div className={`flex items-center gap-2 overflow-hidden ${!sidebarOpen && 'justify-center'}`}>
-            <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center shrink-0 shadow-lg shadow-blue-500/20">
+            <div className="w-8 h-8 rounded-lg bg-[#14a800] flex items-center justify-center shrink-0 shadow-lg shadow-#14a800]/20">
               <Zap className="w-5 h-5 text-white" />
             </div>
             {sidebarOpen && <span className="text-xl font-bold tracking-tight whitespace-nowrap">Forte</span>}
@@ -65,17 +65,17 @@ const DashboardLayout = ({ children }) => {
                 href={item.path}
                 className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all group relative ${
                   isActive 
-                    ? 'bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 font-semibold' 
+                    ? 'bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800] font-semibold' 
                     : 'text-zinc-500 hover:bg-surface dark:hover:bg-zinc-800/50 hover:text-zinc-900 dark:hover:text-white font-medium'
                 }`}
                 title={!sidebarOpen ? item.name : ""}
               >
-                <item.icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-brand-600 dark:text-brand-400' : 'text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300'}`} />
+                <item.icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-[#14a800] dark:text-[#14a800]' : 'text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300'}`} />
                 {sidebarOpen && <span className="whitespace-nowrap">{item.name}</span>}
                 
                 {/* Notification indicator logic could go here */}
                 {sidebarOpen && item.name === 'Messages' && (
-                  <span className="ml-auto w-5 h-5 flex items-center justify-center bg-brand-600 text-white text-[10px] font-bold rounded-full">3</span>
+                  <span className="ml-auto w-5 h-5 flex items-center justify-center bg-[#14a800] text-white text-[10px] font-bold rounded-full">3</span>
                 )}
               </a>
             );
@@ -109,14 +109,14 @@ const DashboardLayout = ({ children }) => {
               <input 
                 type="text" 
                 placeholder="Search command palette (Cmd + K)"
-                className="w-full pl-10 pr-4 py-2 bg-zinc-100 dark:bg-surface-dark border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-zinc-800 rounded-xl outline-none text-sm transition-all"
+                className="w-full pl-10 pr-4 py-2 bg-zinc-100 dark:bg-surface-dark border border-transparent focus:border-[#14a800]/20 focus:bg-white dark:focus:bg-zinc-800 rounded-xl outline-none text-sm transition-all"
               />
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            {MOCK_USER_ROLE === 'client' && (
-              <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-blue-500/20">
+            {userRole === 'client' && (
+              <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#14a800] hover:bg-[#118a00] text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-#14a800]/20">
                 Post Job
               </button>
             )}
@@ -129,7 +129,7 @@ const DashboardLayout = ({ children }) => {
             <div className="relative">
               <button onClick={() => setNotificationsOpen(!notificationsOpen)} className="relative p-2 text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors">
                 <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-brand-500 rounded-full border-2 border-white dark:border-zinc-950 animate-pulse" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#14a800] rounded-full border-2 border-white dark:border-zinc-950 animate-pulse" />
               </button>
             </div>
 
@@ -168,7 +168,7 @@ const DashboardLayout = ({ children }) => {
             >
                <div className="h-20 flex items-center justify-between px-6 border-b border-zinc-200 dark:border-zinc-800">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center"><Zap className="w-5 h-5 text-white" /></div>
+                  <div className="w-8 h-8 rounded-lg bg-[#14a800] flex items-center justify-center"><Zap className="w-5 h-5 text-white" /></div>
                   <span className="text-xl font-bold">Forte</span>
                 </div>
                 <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-zinc-400"><X className="w-5 h-5" /></button>

@@ -20,6 +20,7 @@ import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { gigAPI } from '../../common/services/api';
 
 const WIZARD_STEPS = [
   { id: 'overview', title: 'Overview', icon: FileText },
@@ -157,11 +158,25 @@ export default function CreateGigWizardPage() {
     } else {
       setLoading(true);
       toast.loading('Publishing your service...', { id: 'publish' });
-      setTimeout(() => {
-        setLoading(false);
-        toast.success('Service published successfully!', { id: 'publish' });
-        navigate('/freelancer/gigs');
-      }, 1500);
+      const basicPrice = parseFloat(packages.Basic.price);
+      gigAPI
+        .createGigJson({
+          title: title.trim(),
+          description: description.trim(),
+          price: basicPrice,
+          deliveryTime: parseInt(packages.Basic.delivery, 10) || 3,
+          revisions: 1,
+          category: subcategory || category,
+          status: 'ACTIVE',
+        })
+        .then(() => {
+          toast.success('Service published successfully!', { id: 'publish' });
+          navigate('/freelancer/gigs');
+        })
+        .catch((err) => {
+          toast.error(err.message || 'Failed to publish gig', { id: 'publish' });
+        })
+        .finally(() => setLoading(false));
     }
   };
 
@@ -191,7 +206,7 @@ export default function CreateGigWizardPage() {
         <div className="flex justify-between items-center relative">
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-light-gray -tranzinc-y-1/2 z-0 hidden sm:block">
             <div 
-              className="h-full bg-accent-purple transition-all duration-500 ease-in-out" 
+              className="h-full bg-success transition-all duration-500 ease-in-out" 
               style={{ width: `${(currentStep / (WIZARD_STEPS.length - 1)) * 100}%` }}
             ></div>
           </div>
@@ -205,7 +220,7 @@ export default function CreateGigWizardPage() {
               <div key={step.id} className="relative z-10 flex flex-col items-center gap-2">
                 <div className={cn(
                   "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300",
-                  isActive ? "bg-accent-purple border-accent-purple text-white scale-110 shadow-lg shadow-accent-purple/20" :
+                  isActive ? "bg-success border-success text-white scale-110 shadow-lg shadow-[#14a800]/20" :
                   isCompleted ? "bg-success border-success text-white" :
                   "bg-white border-border text-text-secondary"
                 )}>
@@ -213,7 +228,7 @@ export default function CreateGigWizardPage() {
                 </div>
                 <span className={cn(
                   "text-xs font-bold uppercase tracking-widest hidden sm:block",
-                  isActive ? "text-accent-purple" : 
+                  isActive ? "text-success" : 
                   isCompleted ? "text-text-primary" : 
                   "text-text-secondary"
                 )}>
@@ -227,7 +242,7 @@ export default function CreateGigWizardPage() {
 
       {/* Wizard Content Area */}
       <Card className="p-0 overflow-hidden bg-white border-border shadow-sm relative">
-        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-accent-purple/5 blur-[100px] rounded-full pointer-events-none"></div>
+        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-success/5 blur-[100px] rounded-full pointer-events-none"></div>
 
         <div className="p-8 relative z-10 min-h-[400px]">
           
@@ -246,7 +261,7 @@ export default function CreateGigWizardPage() {
                     <textarea 
                       value={title}
                       onChange={(e) => setTitle(e.target.value.substring(0, 80))}
-                      className="w-full pl-16 pr-4 py-3 bg-light-gray/50 border border-border rounded-xl text-lg font-bold focus:outline-none focus:border-navy focus:ring-1 focus:ring-navy transition-all resize-none h-24"
+                      className="w-full pl-16 pr-4 py-3 bg-light-gray/50 border border-border rounded-xl text-lg font-bold focus:outline-none focus:border-[#222222] focus:ring-1 focus:ring-navy transition-all resize-none h-24"
                       placeholder="design a high-converting landing page for your brand"
                     ></textarea>
                   </div>
@@ -262,7 +277,7 @@ export default function CreateGigWizardPage() {
                         setCategory(e.target.value);
                         setSubcategory('');
                       }}
-                      className="w-full p-3 bg-light-gray/50 border border-border rounded-xl text-sm font-semibold focus:outline-none focus:border-navy"
+                      className="w-full p-3 bg-light-gray/50 border border-border rounded-xl text-sm font-semibold focus:outline-none focus:border-[#222222]"
                     >
                       <option value="">Select Category</option>
                       <option value="web">Programming & Tech</option>
@@ -276,7 +291,7 @@ export default function CreateGigWizardPage() {
                       value={subcategory}
                       onChange={(e) => setSubcategory(e.target.value)}
                       disabled={!category}
-                      className="w-full p-3 bg-light-gray/50 border border-border rounded-xl text-sm font-semibold focus:outline-none focus:border-navy disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full p-3 bg-light-gray/50 border border-border rounded-xl text-sm font-semibold focus:outline-none focus:border-[#222222] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <option value="">Select Subcategory</option>
                       {category && CATEGORY_MAP[category]?.map(sub => (
@@ -290,9 +305,9 @@ export default function CreateGigWizardPage() {
                   <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-2">Search Tags (Press Enter or Comma to add)</label>
                   <div className="w-full p-2 bg-light-gray/50 border border-border rounded-xl flex flex-wrap gap-2 items-center">
                     {tags.map(tag => (
-                      <span key={tag} className="px-3 py-1 bg-navy text-white text-xs font-bold rounded-lg flex items-center gap-1.5 transition-all">
+                      <span key={tag} className="px-3 py-1 bg-[#222222] text-white text-xs font-bold rounded-lg flex items-center gap-1.5 transition-all">
                         {tag}
-                        <button type="button" onClick={() => handleRemoveTag(tag)} className="hover:text-accent-red transition-colors">
+                        <button type="button" onClick={() => handleRemoveTag(tag)} className="hover:text-[#e63946] transition-colors">
                           <X size={12} />
                         </button>
                       </span>
@@ -320,9 +335,9 @@ export default function CreateGigWizardPage() {
                 {['Basic', 'Standard', 'Premium'].map((tier, idx) => (
                   <div key={tier} className={cn(
                     "p-6 rounded-2xl border transition-all",
-                    idx === 1 ? "border-accent-purple bg-accent-purple/5 shadow-md relative scale-102" : "border-border bg-light-gray/30"
+                    idx === 1 ? "border-success bg-success/5 shadow-md relative scale-102" : "border-border bg-light-gray/30"
                   )}>
-                    {idx === 1 && <span className="absolute -top-3 left-1/2 -tranzinc-x-1/2 bg-accent-purple text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">Recommended</span>}
+                    {idx === 1 && <span className="absolute -top-3 left-1/2 -tranzinc-x-1/2 bg-success text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">Recommended</span>}
                     <h3 className="text-lg font-bold text-text-primary mb-4">{tier} Package</h3>
                     <div className="space-y-4">
                       <div>
@@ -353,7 +368,7 @@ export default function CreateGigWizardPage() {
                             type="number" 
                             value={packages[tier].price}
                             onChange={(e) => handlePackageChange(tier, 'price', e.target.value)}
-                            className="w-full pl-12 p-2 bg-white border border-border rounded-lg text-sm font-black text-navy" 
+                            className="w-full pl-12 p-2 bg-white border border-border rounded-lg text-sm font-black text-[#222222]" 
                             placeholder="5000" 
                           />
                         </div>
@@ -378,7 +393,7 @@ export default function CreateGigWizardPage() {
                   <textarea 
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full p-4 bg-light-gray/50 border border-border rounded-xl text-sm font-semibold focus:outline-none focus:border-navy focus:ring-1 focus:ring-navy transition-all h-64"
+                    className="w-full p-4 bg-light-gray/50 border border-border rounded-xl text-sm font-semibold focus:outline-none focus:border-[#222222] focus:ring-1 focus:ring-navy transition-all h-64"
                     placeholder="Describe what you are offering in detail. Highlight your experience, tech stack, and what the client will receive at the end..."
                   ></textarea>
                 </div>
@@ -405,7 +420,7 @@ export default function CreateGigWizardPage() {
                       <button 
                         type="button" 
                         onClick={() => handleRemoveImage(idx)}
-                        className="p-2.5 bg-accent-red rounded-full text-white hover:scale-110 transition-transform"
+                        className="p-2.5 bg-[#e63946] rounded-full text-white hover:scale-110 transition-transform"
                       >
                         <Trash2 size={16} />
                       </button>
@@ -416,10 +431,10 @@ export default function CreateGigWizardPage() {
                 {galleryImages.length < 3 && (
                   <div 
                     onClick={handleMockUpload}
-                    className="aspect-video bg-light-gray border-2 border-dashed border-border rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-accent-purple hover:bg-accent-purple/5 transition-all group"
+                    className="aspect-video bg-light-gray border-2 border-dashed border-border rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-success hover:bg-success/5 transition-all group"
                   >
-                    <UploadCloud className="w-8 h-8 text-text-secondary group-hover:text-accent-purple mb-2" />
-                    <span className="text-xs font-bold text-text-secondary group-hover:text-accent-purple">Upload Showcase Image</span>
+                    <UploadCloud className="w-8 h-8 text-text-secondary group-hover:text-success mb-2" />
+                    <span className="text-xs font-bold text-text-secondary group-hover:text-success">Upload Showcase Image</span>
                   </div>
                 )}
               </div>
@@ -444,7 +459,7 @@ export default function CreateGigWizardPage() {
                 <div className="space-y-4">
                   <div>
                     <span className="text-[10px] font-black text-text-secondary uppercase tracking-wider block">Gig Title</span>
-                    <p className="text-sm font-bold text-navy mt-1">I will {title}</p>
+                    <p className="text-sm font-bold text-[#222222] mt-1">I will {title}</p>
                   </div>
                   <div className="flex gap-4">
                     <div>
@@ -460,7 +475,7 @@ export default function CreateGigWizardPage() {
                     <span className="text-[10px] font-black text-text-secondary uppercase tracking-wider block">Search Tags</span>
                     <div className="flex flex-wrap gap-1.5 mt-1.5">
                       {tags.map(t => (
-                        <span key={t} className="px-2 py-0.5 bg-navy/10 text-navy text-[10px] font-bold rounded">{t}</span>
+                        <span key={t} className="px-2 py-0.5 bg-[#222222]/10 text-[#222222] text-[10px] font-bold rounded">{t}</span>
                       ))}
                     </div>
                   </div>
@@ -475,7 +490,7 @@ export default function CreateGigWizardPage() {
                           <p className="font-bold text-text-primary">{tier}: {packages[tier].title}</p>
                           <p className="text-[10px] text-text-secondary">Delivers in {packages[tier].delivery} days</p>
                         </div>
-                        <span className="font-black text-navy text-sm">KES {parseFloat(packages[tier].price).toLocaleString()}</span>
+                        <span className="font-black text-[#222222] text-sm">KES {parseFloat(packages[tier].price).toLocaleString()}</span>
                       </div>
                     ))}
                   </div>
@@ -501,7 +516,7 @@ export default function CreateGigWizardPage() {
             onClick={handleNext}
             disabled={loading}
             icon={currentStep === WIZARD_STEPS.length - 1 ? <Check size={16} /> : <ArrowRight size={16} />}
-            className={currentStep === WIZARD_STEPS.length - 1 ? "bg-success hover:bg-success/90 border-none shadow-lg shadow-success/20" : ""}
+            className={currentStep === WIZARD_STEPS.length - 1 ? "bg-success hover:bg-success/90 border-none shadow-lg shadow-[#14a800]/20" : ""}
           >
             {loading ? 'Publishing...' : currentStep === WIZARD_STEPS.length - 1 ? 'Publish Gig' : 'Save & Continue'}
           </Button>

@@ -8,21 +8,25 @@ export default {
   theme: {
     extend: {
       colors: {
-        navy: '#1a1d2e',
-        'dark-purple': '#3e007d',
-        'vivid-lavender': '#963dfc',
-        'light-gray': '#f4f4f4',
+        navy: '#222222', // Upwork dark slate/charcoal
+        'dark-purple': '#118a00', // Upwork hover dark green
+        'vivid-lavender': '#14a800', // Upwork primary green
+        'light-gray': '#f2f2f2',
         'pure-white': '#ffffff',
-        'vivid-green': '#0fbb1e',
+        'vivid-green': '#14a800', // Upwork primary green
         'accent-red': '#e63946',
-        'accent-purple': '#963dfc', // mapped to Vivid Lavender
-        'text-primary': '#333333',
-        'text-secondary': '#8b8b8b',
+        'accent-purple': '#14a800', // Upwork primary green
+        'text-primary': '#222222',
+        'text-secondary': '#5e6d55',
         border: '#e0e0e0',
-        success: '#0fbb1e', // mapped to Vivid Green
+        success: '#14a800', // Upwork primary green
         warning: '#ffc107',
         error: '#dc3545',
         info: '#17a2b8',
+        surface: '#f7f7f7',
+        'surface-dark': '#222222',
+        'surface-border': '#e0e0e0',
+        'accent-light': 'rgba(20, 168, 0, 0.12)',
       },
       fontFamily: {
         sans: ['"Segoe UI"', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],

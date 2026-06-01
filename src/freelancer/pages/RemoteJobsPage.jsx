@@ -40,7 +40,7 @@ export default function RemoteJobsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <Globe className="w-8 h-8 text-accent-purple" />
+            <Globe className="w-8 h-8 text-success" />
             Remote Jobs Directory
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -57,7 +57,7 @@ export default function RemoteJobsPage() {
             placeholder="Search remote contracts..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 pr-4 py-2 w-full border border-border rounded-xl bg-light-gray/40 text-sm focus:outline-none focus:border-accent-purple text-text-primary"
+            className="pl-9 pr-4 py-2 w-full border border-border rounded-xl bg-light-gray/40 text-sm focus:outline-none focus:border-success text-text-primary"
           />
         </div>
       </div>
@@ -68,15 +68,15 @@ export default function RemoteJobsPage() {
           <Card key={job.id} className="bg-white border border-border p-6 rounded-3xl shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group">
             <div className="space-y-2 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-accent-purple/10 text-accent-purple border-accent-purple/20">
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-success/10 text-success border-success/20">
                   {job.timezone}
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-brand-50 text-brand-600 border-brand-200">
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-[#14a800]/5 text-[#14a800] border-[#14a800]/20">
                   Async: {job.async}
                 </span>
               </div>
               
-              <h3 className="font-black text-sm text-text-primary leading-tight group-hover:text-accent-purple transition-colors cursor-pointer">{job.title}</h3>
+              <h3 className="font-black text-sm text-text-primary leading-tight group-hover:text-success transition-colors cursor-pointer">{job.title}</h3>
               <p className="text-xs text-text-secondary font-bold">Client: {job.client}</p>
             </div>
 
@@ -87,7 +87,7 @@ export default function RemoteJobsPage() {
               </div>
               <button 
                 onClick={() => handleApplySimulate(job.title)}
-                className="px-4 py-2 bg-accent-purple hover:bg-accent-purple/95 text-white font-black rounded-xl text-xs transition-colors shadow-lg shadow-accent-purple/15 flex items-center gap-1"
+                className="px-4 py-2 bg-success hover:bg-success/95 text-white font-black rounded-xl text-xs transition-colors shadow-lg shadow-[#14a800]/15 flex items-center gap-1"
               >
                 Apply Remote
               </button>

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
-  Wallet, Search, Clock, CheckCircle2, XCircle, MoreVertical, Activity 
+  Wallet, Search, Clock, CheckCircle2, XCircle, MoreVertical, Activity, Loader2
 } from 'lucide-react';
+import { usePendingWithdrawals } from '../../../admin/hooks/useFinancial';
 import AuditLogViewer from '../../../admin/components/audit/AuditLogViewer';
 import AdminActionModal from '../../../admin/components/ui/AdminActionModal';
 import PopoverConfirm from '../../../admin/components/ui/PopoverConfirm';
@@ -10,26 +11,20 @@ import { format } from 'date-fns';
 import { cn } from '../../../admin/utils/cn';
 import toast from 'react-hot-toast';
 
-const MOCK_WITHDRAWALS = Array.from({ length: 12 }, (_, i) => ({
-  id: `WTH-${9900 + i}`,
-  freelancer: `Freelancer ${i}`,
-  method: i % 2 === 0 ? 'M-PESA' : 'Bank Transfer',
-  destination: i % 2 === 0 ? '+254712345678' : 'KCB ****4567',
-  amount: 5000 + (Math.random() * 45000),
-  status: i % 4 === 0 ? 'pending' : i % 5 === 0 ? 'failed' : 'completed',
-  date: new Date(Date.now() - Math.random() * 500000000).toISOString(),
-}));
-
 export default function WithdrawalsPage() {
+  const { data: withdrawalsRaw = [], isLoading } = usePendingWithdrawals();
+  const withdrawals = withdrawalsRaw.map((w, i) => ({
+    id: w.id || w._id || `WTH-${i}`,
+    freelancer: w.freelancerName || w.user?.name || w.freelancer || '—',
+    method: w.method || w.payoutMethod || '—',
+    destination: w.destination || w.account || '—',
+    amount: w.amount || 0,
+    status: (w.status || 'pending').toLowerCase(),
+    date: w.createdAt || w.date || new Date().toISOString(),
+  }));
   const [activeTab, setActiveTab] = useState('management');
-  const [isLoading, setIsLoading] = useState(true);
   const [actionModal, setActionModal] = useState({ isOpen: false, type: '', data: null });
   const { filters, setFilter } = useFinancialStore();
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const triggerAction = (type, data) => {
     setActionModal({ isOpen: true, type, data });
@@ -58,14 +53,14 @@ export default function WithdrawalsPage() {
             onClick={() => setActiveTab(activeTab === 'management' ? 'audit' : 'management')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-brand-600" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#14a800]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={16} /> {activeTab === 'management' ? 'Audit Trail' : 'Back to Management'}
           </button>
           <button 
             onClick={() => toast.success('Processing manual batch...')}
-            className="px-4 py-2 bg-surface-dark text-white dark:bg-brand-600 rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-surface-dark text-white dark:bg-[#14a800] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
           >
              Process Manual Batch
           </button>
@@ -91,7 +86,7 @@ export default function WithdrawalsPage() {
                   placeholder="Search freelancer or ID..." 
                   value={filters.withdrawals.search}
                   onChange={(e) => setFilter('withdrawals', 'search', e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500 outline-none"
+                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#14a800] outline-none"
                 />
               </div>
               <select 
@@ -131,7 +126,7 @@ export default function WithdrawalsPage() {
                       </tr>
                     ))
                   ) : (
-                    MOCK_WITHDRAWALS.filter(w => !filters.withdrawals.status || w.status === filters.withdrawals.status).map(withdrawal => (
+                    withdrawals.filter(w => !filters.withdrawals.status || w.status === filters.withdrawals.status).map(withdrawal => (
                       <tr key={withdrawal.id} className="hover:bg-surface/50 dark:hover:bg-zinc-800/20 group transition-colors">
                         <td className="p-4">
                           <div className="flex flex-col">

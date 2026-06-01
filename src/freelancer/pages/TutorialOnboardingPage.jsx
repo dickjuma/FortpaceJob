@@ -37,7 +37,7 @@ export default function TutorialOnboardingPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <BookOpen className="w-8 h-8 text-accent-purple" />
+            <BookOpen className="w-8 h-8 text-success" />
             Academy & Onboarding
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -58,13 +58,13 @@ export default function TutorialOnboardingPage() {
               className={cn(
                 "p-4 rounded-2xl border cursor-pointer transition-all flex items-center gap-3",
                 activeStep === idx 
-                  ? "border-accent-purple bg-accent-purple/5 shadow-sm scale-[1.01]" 
+                  ? "border-success bg-success/5 shadow-sm scale-[1.01]" 
                   : "border-border bg-white hover:border-border-hover"
               )}
             >
               <div className={cn(
                 "w-6 h-6 rounded-full flex items-center justify-center font-black text-xs border",
-                activeStep === idx ? "border-accent-purple bg-accent-purple text-white" : "border-border bg-light-gray text-text-secondary"
+                activeStep === idx ? "border-success bg-success text-white" : "border-border bg-light-gray text-text-secondary"
               )}>
                 {idx + 1}
               </div>
@@ -76,14 +76,14 @@ export default function TutorialOnboardingPage() {
         {/* Right Interactive Content Display */}
         <div className="lg:col-span-2">
           <Card className="bg-white border border-border p-8 rounded-[24px] shadow-md flex flex-col justify-between min-h-[340px] relative overflow-hidden">
-            <div className="absolute top-[-50%] right-[-10%] w-64 h-64 bg-accent-purple/5 blur-[80px] rounded-full pointer-events-none"></div>
+            <div className="absolute top-[-50%] right-[-10%] w-64 h-64 bg-success/5 blur-[80px] rounded-full pointer-events-none"></div>
 
             <div className="space-y-6 relative z-10">
               <div className="flex justify-between items-start">
-                <div className="p-4 bg-accent-purple/10 text-accent-purple rounded-2xl animate-pulse">
+                <div className="p-4 bg-success/10 text-success rounded-2xl animate-pulse">
                   <StepIcon size={24} />
                 </div>
-                <span className="text-[10px] font-black uppercase text-accent-purple tracking-widest bg-accent-purple/10 border border-accent-purple/20 px-3 py-1 rounded-full">
+                <span className="text-[10px] font-black uppercase text-success tracking-widest bg-success/10 border border-success/20 px-3 py-1 rounded-full">
                   Step {activeStep + 1} of {onboardingSteps.length}
                 </span>
               </div>
@@ -101,12 +101,12 @@ export default function TutorialOnboardingPage() {
                   <span>{Math.round(((activeStep + 1) / onboardingSteps.length) * 100)}%</span>
                 </div>
                 <div className="w-full bg-light-gray rounded-full h-1.5 overflow-hidden border border-border">
-                  <div className="h-full bg-accent-purple rounded-full transition-all" style={{ width: `${((activeStep + 1) / onboardingSteps.length) * 100}%` }}></div>
+                  <div className="h-full bg-success rounded-full transition-all" style={{ width: `${((activeStep + 1) / onboardingSteps.length) * 100}%` }}></div>
                 </div>
               </div>
               <button 
                 onClick={handleNextStep}
-                className="px-5 py-2.5 bg-accent-purple hover:bg-accent-purple/95 text-white font-black rounded-xl text-xs transition-colors shadow-lg shadow-accent-purple/20 flex items-center gap-1"
+                className="px-5 py-2.5 bg-success hover:bg-success/95 text-white font-black rounded-xl text-xs transition-colors shadow-lg shadow-[#14a800]/20 flex items-center gap-1"
               >
                 {activeStep === onboardingSteps.length - 1 ? 'Finalize Tour' : 'Next Step'} <ChevronRight size={14} />
               </button>

@@ -42,12 +42,12 @@ export default function RegisterBrandPanel() {
   return (
     <aside className="relative overflow-hidden rounded-[2rem] border border-zinc-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)] dark:border-zinc-800 dark:bg-[linear-gradient(180deg,#0f172a_0%,#020617_100%)] sm:p-8 xl:p-10">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -right-16 top-12 h-40 w-40 rounded-full bg-brand-100 blur-3xl dark:bg-brand-500/10" />
+        <div className="absolute -right-16 top-12 h-40 w-40 rounded-full bg-[#14a800]/10 blur-3xl dark:bg-[#14a800]/10" />
         <div className="absolute -left-12 bottom-12 h-32 w-32 rounded-full bg-cyan-100 blur-3xl dark:bg-cyan-500/10" />
       </div>
 
       <div className="relative z-10 flex h-full flex-col text-zinc-950 dark:text-white">
-        <div className="inline-flex w-fit items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-brand-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-brand-300">
+        <div className="inline-flex w-fit items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-[#14a800] dark:border-zinc-700 dark:bg-zinc-900 dark:text-[#14a800]">
           <Sparkles className="h-3.5 w-3.5" />
           Trusted onboarding
         </div>

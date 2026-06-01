@@ -57,25 +57,25 @@ const Sidebar = () => {
   return (
     <aside
       className={twMerge(clsx(
-        'flex h-full flex-col bg-navy border-r border-light-gray/10 text-light-gray transition-all duration-300 relative',
+        'flex h-full flex-col bg-[#222222] border-r border-light-gray/10 text-light-gray transition-all duration-300 relative',
         isCollapsed ? 'w-20' : 'w-[min(300px,calc(100vw-1rem))] sm:w-[280px]'
       ))}
     >
       <button 
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-6 bg-accent-purple text-navy rounded-full p-1 border border-light-gray/20 hover:scale-110 transition-transform z-10 hidden sm:block"
+        className="absolute -right-3 top-6 bg-success text-[#222222] rounded-full p-1 border border-light-gray/20 hover:scale-110 transition-transform z-10 hidden sm:block"
       >
         {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
       </button>
 
       <div className="flex h-[72px] shrink-0 items-center border-b border-white/10 px-5 transition-all">
         <Link to="/admin" className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-purple text-navy shadow-lg shadow-accent-purple/20">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-success text-[#222222] shadow-lg shadow-[#14a800]/20">
             <ShieldCheck size={22} strokeWidth={2.5} />
           </div>
           {!isCollapsed && (
             <span className="animate-in fade-in text-xl font-black tracking-tight text-white duration-300">
-              Forte<span className="text-accent-purple">Admin</span>
+              Forte<span className="text-success">Admin</span>
             </span>
           )}
         </Link>

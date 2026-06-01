@@ -9,14 +9,14 @@ export default function WorkspaceDashboard() {
       <div className="w-64 flex-shrink-0 bg-white dark:bg-surface-dark border-r border-gray-200 dark:border-surface-dark-border flex flex-col">
         <div className="p-4 border-b border-gray-200 dark:border-surface-dark-border">
           <h2 className="font-bold text-gray-900 dark:text-white truncate">Enterprise Dashboard Redesign</h2>
-          <p className="text-xs text-brand-600 mt-1 font-medium">Active Workspace</p>
+          <p className="text-xs text-[#14a800] mt-1 font-medium">Active Workspace</p>
         </div>
         
         <div className="flex-1 overflow-y-auto py-4">
           <div className="px-3 mb-6">
             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-2">Channels</h3>
             <div className="space-y-1">
-              <button className="w-full flex items-center px-2 py-1.5 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 rounded-md text-sm font-medium">
+              <button className="w-full flex items-center px-2 py-1.5 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] rounded-md text-sm font-medium">
                 <Hash className="w-4 h-4 mr-2" /> general
               </button>
               <button className="w-full flex items-center px-2 py-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-surface-dark-tertiary rounded-md text-sm font-medium">
@@ -54,8 +54,8 @@ export default function WorkspaceDashboard() {
           </div>
           <div className="flex items-center gap-3">
             <div className="flex -space-x-2">
-              <div className="w-8 h-8 rounded-full bg-brand-500 border-2 border-white dark:border-surface-dark z-10"></div>
-              <div className="w-8 h-8 rounded-full bg-brand-500 border-2 border-white dark:border-surface-dark z-0"></div>
+              <div className="w-8 h-8 rounded-full bg-[#14a800] border-2 border-white dark:border-surface-dark z-10"></div>
+              <div className="w-8 h-8 rounded-full bg-[#14a800] border-2 border-white dark:border-surface-dark z-0"></div>
             </div>
             <button className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-white">
               <MoreVertical className="w-5 h-5" />
@@ -65,7 +65,7 @@ export default function WorkspaceDashboard() {
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           <div className="flex gap-4">
-            <div className="w-10 h-10 rounded-full bg-brand-500 shrink-0"></div>
+            <div className="w-10 h-10 rounded-full bg-[#14a800] shrink-0"></div>
             <div>
               <div className="flex items-baseline gap-2 mb-1">
                 <span className="font-bold text-gray-900 dark:text-white">Alex Client</span>
@@ -76,7 +76,7 @@ export default function WorkspaceDashboard() {
           </div>
 
           <div className="flex gap-4">
-            <div className="w-10 h-10 rounded-full bg-brand-500 shrink-0"></div>
+            <div className="w-10 h-10 rounded-full bg-[#14a800] shrink-0"></div>
             <div>
               <div className="flex items-baseline gap-2 mb-1">
                 <span className="font-bold text-gray-900 dark:text-white">Sarah Jenkins</span>
@@ -92,7 +92,7 @@ export default function WorkspaceDashboard() {
                     <p className="text-sm font-bold truncate text-gray-900 dark:text-white">M2_Designs_Final.pdf</p>
                     <p className="text-xs text-gray-500">4.2 MB</p>
                   </div>
-                  <button className="text-gray-400 hover:text-brand-600"><Download className="w-4 h-4" /></button>
+                  <button className="text-gray-400 hover:text-[#14a800]"><Download className="w-4 h-4" /></button>
                 </div>
               </div>
             </div>
@@ -101,8 +101,8 @@ export default function WorkspaceDashboard() {
 
         {/* Message Input */}
         <div className="p-4 border-t border-gray-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark">
-          <div className="flex items-end gap-2 bg-surface dark:bg-surface-dark-secondary border border-gray-200 dark:border-surface-dark-border rounded-2xl p-2 focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-transparent transition-all">
-            <button className="p-2 text-gray-400 hover:text-brand-600 rounded-full">
+          <div className="flex items-end gap-2 bg-surface dark:bg-surface-dark-secondary border border-gray-200 dark:border-surface-dark-border rounded-2xl p-2 focus-within:ring-2 focus-within:ring-#14a800] focus-within:border-transparent transition-all">
+            <button className="p-2 text-gray-400 hover:text-[#14a800] rounded-full">
               <Plus className="w-5 h-5" />
             </button>
             <textarea 
@@ -110,7 +110,7 @@ export default function WorkspaceDashboard() {
               placeholder="Message #general" 
               className="flex-1 bg-transparent border-none outline-none py-2 px-2 text-gray-900 dark:text-white resize-none max-h-32"
             />
-            <button className="p-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl shadow-md transition-colors">
+            <button className="p-2 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl shadow-md transition-colors">
               <MessageSquare className="w-4 h-4" />
             </button>
           </div>

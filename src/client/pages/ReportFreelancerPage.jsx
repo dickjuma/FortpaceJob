@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
+import { userAPI } from '../../common/services/api';
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
+import { disputeDescriptionRule } from "../../common/utils/validationRules";
 import {
   AlertTriangle,
   Package,
@@ -31,20 +33,6 @@ import {
 } from "lucide-react";
 
 // ─── Mock Data ───────────────────────────────────────────────────────────────
-const MOCK_FREELANCER = {
-  id: "alexrivera",
-  name: "Alex Rivera",
-  username: "@alexrivera",
-  initials: "AR",
-  rating: 4.7,
-  trustScore: 94,
-  contract: {
-    title: "E-commerce Platform Rebuild",
-    amount: "$3,200",
-    id: "#CTR-2024-8821",
-  },
-};
-
 const REPORT_CATEGORIES = [
   {
     id: "fraud",
@@ -77,18 +65,18 @@ const REPORT_CATEGORIES = [
     id: "harassment",
     label: "Harassment",
     icon: Shield,
-    color: "text-brand-500",
-    bg: "bg-brand-50 dark:bg-brand-900/20",
-    border: "border-purple-400",
+    color: "text-[#14a800]",
+    bg: "bg-[#14a800]/5 dark:bg-[#14a800]/20",
+    border: "border-[#14a800]/50",
     description: "Threatening, intimidating, or abusive behavior.",
   },
   {
     id: "spam",
     label: "Spam",
     icon: Mail,
-    color: "text-brand-500",
-    bg: "bg-brand-50 dark:bg-brand-900/20",
-    border: "border-brand-400",
+    color: "text-[#14a800]",
+    bg: "bg-[#14a800]/5 dark:bg-[#14a800]/20",
+    border: "border-[#14a800]/20",
     description: "Unsolicited messages, promotions, or irrelevant content.",
   },
   {
@@ -187,15 +175,15 @@ const SAFETY_INFO = [
   },
   {
     icon: Lock,
-    color: "text-brand-500",
-    bg: "bg-brand-50 dark:bg-brand-900/20",
+    color: "text-[#14a800]",
+    bg: "bg-[#14a800]/5 dark:bg-[#14a800]/20",
     title: "Your Privacy",
     text: "Your identity will remain confidential throughout this process. The freelancer will not know who filed the report.",
   },
   {
     icon: Eye,
-    color: "text-brand-500",
-    bg: "bg-brand-50 dark:bg-brand-900/20",
+    color: "text-[#14a800]",
+    bg: "bg-[#14a800]/5 dark:bg-[#14a800]/20",
     title: "Review Timeline",
     text: "Our Trust & Safety team reviews all reports within 2-3 business days. Complex cases may take up to 7 days.",
   },
@@ -205,8 +193,8 @@ const STORAGE_KEY = "forte_report_draft";
 
 // ─── File Icon Helper ─────────────────────────────────────────────────────────
 function FileIcon({ type }) {
-  if (type.startsWith("image/")) return <Image className="w-5 h-5 text-brand-500" />;
-  if (type.startsWith("video/")) return <Film className="w-5 h-5 text-brand-500" />;
+  if (type.startsWith("image/")) return <Image className="w-5 h-5 text-[#14a800]" />;
+  if (type.startsWith("video/")) return <Film className="w-5 h-5 text-[#14a800]" />;
   if (type === "application/pdf") return <FileText className="w-5 h-5 text-red-500" />;
   return <File className="w-5 h-5 text-gray-500" />;
 }
@@ -229,7 +217,40 @@ function StarRating({ value }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function ReportFreelancerPage() {
   const { freelancerId } = useParams();
-  const freelancer = MOCK_FREELANCER;
+  const [freelancer, setFreelancer] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+
+  useEffect(() => {
+    if (!freelancerId) {
+      setProfileLoading(false);
+      return undefined;
+    }
+    let cancelled = false;
+    userAPI
+      .getProfile(freelancerId)
+      .then((profile) => {
+        if (cancelled) return;
+        const name = profile?.displayName || profile?.name || 'Freelancer';
+        setFreelancer({
+          id: freelancerId,
+          name,
+          username: profile?.username ? `@${profile.username}` : '',
+          initials: name.slice(0, 2).toUpperCase(),
+          rating: Number(profile?.rating || 0),
+          trustScore: profile?.trustScore || profile?.trust || 0,
+          contract: profile?.activeContract || null,
+        });
+      })
+      .catch(() => {
+        if (!cancelled) setFreelancer(null);
+      })
+      .finally(() => {
+        if (!cancelled) setProfileLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [freelancerId]);
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSeverity, setSelectedSeverity] = useState(null);
@@ -401,7 +422,7 @@ export default function ReportFreelancerPage() {
           <div className="bg-surface dark:bg-gray-800 rounded-xl p-4 mb-6 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-500 dark:text-gray-400">Ticket Number</span>
-              <span className="font-mono font-semibold text-brand-600">{ticketNumber}</span>
+              <span className="font-mono font-semibold text-[#14a800]">{ticketNumber}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-500 dark:text-gray-400">Estimated Review</span>
@@ -417,7 +438,7 @@ export default function ReportFreelancerPage() {
           </p>
           <Link
             to="/client/dashboard"
-            className="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-6 py-3 font-medium transition-colors"
+            className="inline-flex items-center gap-2 bg-[#14a800] hover:bg-[#118a00] text-white rounded-lg px-6 py-3 font-medium transition-colors"
           >
             Back to Dashboard
           </Link>
@@ -434,9 +455,9 @@ export default function ReportFreelancerPage() {
         animate={{ opacity: 1, y: 0 }}
         className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 mb-6"
       >
-        <Link to="/client/dashboard" className="hover:text-brand-600 transition-colors">Dashboard</Link>
+        <Link to="/client/dashboard" className="hover:text-[#14a800] transition-colors">Dashboard</Link>
         <ChevronRight className="w-4 h-4" />
-        <Link to="/client/contracts" className="hover:text-brand-600 transition-colors">Contracts</Link>
+        <Link to="/client/contracts" className="hover:text-[#14a800] transition-colors">Contracts</Link>
         <ChevronRight className="w-4 h-4" />
         <span className="text-gray-900 dark:text-white font-medium">Report Freelancer</span>
       </motion.nav>
@@ -465,8 +486,15 @@ export default function ReportFreelancerPage() {
             <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
               Reporting About
             </h2>
+            {profileLoading ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+              </div>
+            ) : !freelancer ? (
+              <p className="text-gray-500 dark:text-gray-400 text-sm">Freelancer profile could not be loaded.</p>
+            ) : (
             <div className="flex items-start gap-4">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#14a800] to-[#118a00] flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
                 {freelancer.initials}
               </div>
               <div className="flex-1 min-w-0">
@@ -475,6 +503,7 @@ export default function ReportFreelancerPage() {
                   <span className="text-sm text-gray-500 dark:text-gray-400">{freelancer.username}</span>
                 </div>
                 <StarRating value={freelancer.rating} />
+                {freelancer.contract && (
                 <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="bg-surface dark:bg-gray-800 rounded-xl p-3">
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Contract</p>
@@ -486,9 +515,10 @@ export default function ReportFreelancerPage() {
                   </div>
                   <div className="bg-surface dark:bg-gray-800 rounded-xl p-3">
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Contract ID</p>
-                    <p className="text-sm font-mono font-medium text-brand-600">{freelancer.contract.id}</p>
+                    <p className="text-sm font-mono font-medium text-[#14a800]">{freelancer.contract.id}</p>
                   </div>
                 </div>
+                )}
               </div>
               <div className="flex-shrink-0 text-center">
                 <div className="w-14 h-14 rounded-full bg-green-50 dark:bg-green-900/20 border-2 border-green-300 flex flex-col items-center justify-center">
@@ -497,6 +527,7 @@ export default function ReportFreelancerPage() {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Trust</p>
               </div>
             </div>
+            )}
           </motion.div>
 
           {/* ── Category Selection ── */}
@@ -574,14 +605,13 @@ export default function ReportFreelancerPage() {
             <div className="relative">
               <textarea
                 {...register("description", {
-                  required: "Description is required.",
-                  minLength: { value: 50, message: "Please provide at least 50 characters." },
+                  ...disputeDescriptionRule,
                   maxLength: { value: 2000, message: "Description cannot exceed 2000 characters." },
                 })}
                 rows={7}
                 maxLength={2000}
                 placeholder="Describe the issue in detail... (minimum 50 characters)"
-                className={`w-full rounded-xl border px-4 py-3 text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors ${
+                className={`w-full rounded-xl border px-4 py-3 text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-[#14a800] transition-colors ${
                   errors.description ? "border-red-400" : "border-gray-200 dark:border-gray-700"
                 }`}
               />
@@ -645,8 +675,8 @@ export default function ReportFreelancerPage() {
               onClick={() => fileInputRef.current?.click()}
               className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
                 dragging
-                  ? "border-brand-500 bg-brand-50 dark:bg-brand-900/20"
-                  : "border-gray-300 dark:border-gray-600 hover:border-brand-400 hover:bg-surface dark:hover:bg-gray-800"
+                  ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/20"
+                  : "border-gray-300 dark:border-gray-600 hover:border-[#14a800]/20 hover:bg-surface dark:hover:bg-gray-800"
               }`}
             >
               <input
@@ -658,7 +688,7 @@ export default function ReportFreelancerPage() {
                 onChange={(e) => addFiles(e.target.files)}
               />
               <motion.div animate={{ scale: dragging ? 1.05 : 1 }}>
-                <Upload className={`w-10 h-10 mx-auto mb-3 ${dragging ? "text-brand-500" : "text-gray-400"}`} />
+                <Upload className={`w-10 h-10 mx-auto mb-3 ${dragging ? "text-[#14a800]" : "text-gray-400"}`} />
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {dragging ? "Drop files here" : "Drag & drop files, or click to browse"}
                 </p>
@@ -698,7 +728,7 @@ export default function ReportFreelancerPage() {
                               <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${prog}%` }}
-                                className="h-full bg-brand-600 rounded-full"
+                                className="h-full bg-[#14a800] rounded-full"
                               />
                             </div>
                             <span className="text-xs text-gray-500 flex-shrink-0">
@@ -758,7 +788,7 @@ export default function ReportFreelancerPage() {
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="w-4 h-4 rounded-full bg-brand-600 flex items-center justify-center"
+                        className="w-4 h-4 rounded-full bg-[#14a800] flex items-center justify-center"
                       >
                         <Check className="w-2.5 h-2.5 text-white" />
                       </motion.div>
@@ -880,7 +910,7 @@ export default function ReportFreelancerPage() {
                   <div className="flex-1 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <motion.div
                       animate={{ width: `${Math.min((descriptionValue.length / 50) * 100, 100)}%` }}
-                      className="h-full bg-brand-600 rounded-full"
+                      className="h-full bg-[#14a800] rounded-full"
                     />
                   </div>
                   <span className="text-xs text-gray-500">{Math.min(descriptionValue.length, 50)}/50</span>

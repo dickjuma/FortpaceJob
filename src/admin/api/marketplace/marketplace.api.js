@@ -1,4 +1,4 @@
-import apiClient, { unwrapAdminResponse } from '../apiClient';
+import apiClient, { unwrapAdminResponse } from '../apiClient.js';
 
 export const fetchUserRiskData = async () => {
   const response = await apiClient.get('/fraud/flagged-accounts');

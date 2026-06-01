@@ -17,26 +17,22 @@ const GithubIcon = () => (
   </svg>
 );
 
-const LinkedInIcon = () => (
-  <svg className="w-5 h-5" fill="#0A66C2" viewBox="0 0 24 24">
-    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-  </svg>
-);
-
-export default function SocialLoginButtons({ isLoading }) {
+export default function SocialLoginButtons({ isLoading, returnTo = '' }) {
   const [loadingProvider, setLoadingProvider] = useState(null);
 
   const handleLogin = (provider, handler) => {
     if (isLoading || loadingProvider) return;
     setLoadingProvider(provider);
-    handler();
-    // Simulate loading since actual OAuth redirects away
-    setTimeout(() => setLoadingProvider(null), 3000);
+    try {
+      handler(returnTo);
+    } catch (error) {
+      setLoadingProvider(null);
+      throw error;
+    }
   };
 
   const buttons = [
     { name: 'Google', icon: GoogleIcon, action: oauthService.loginWithGoogle },
-    { name: 'LinkedIn', icon: LinkedInIcon, action: oauthService.loginWithLinkedIn },
     { name: 'GitHub', icon: GithubIcon, action: oauthService.loginWithGithub },
   ];
 
@@ -53,7 +49,7 @@ export default function SocialLoginButtons({ isLoading }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {buttons.map((btn) => (
           <motion.button
             key={btn.name}

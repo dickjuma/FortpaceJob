@@ -31,8 +31,8 @@ export default function ClientRoiAnalyticsPage() {
 
       {/* Analytics KPI rows */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <Card className="p-6 border-none bg-gradient-to-br from-navy to-zinc-900 text-white shadow-xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-accent-purple/20 blur-[50px] rounded-full"></div>
+        <Card className="p-6 border-none bg-gradient-to-br from-[#222222] to-zinc-900 text-white shadow-xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-success/20 blur-[50px] rounded-full"></div>
           <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest flex items-center gap-1"><Sparkles className="w-3.5 h-3.5" /> Platform Talent ROI Index</p>
           <h2 className="text-4xl font-black mt-2 text-white">+{roiForecast}%</h2>
           <span className="text-[9px] uppercase tracking-wider font-bold text-success mt-4 block flex items-center gap-1">
@@ -43,7 +43,7 @@ export default function ClientRoiAnalyticsPage() {
         <Card className="p-6 border border-white/10 bg-white/5 shadow-sm relative overflow-hidden">
           <p className="text-[10px] font-bold text-light-gray/50 uppercase tracking-widest flex items-center gap-1"><BarChart2 className="w-3.5 h-3.5" /> Direct Budget Savings</p>
           <h2 className="text-4xl font-black mt-2 text-white">KES 185,000</h2>
-          <span className="text-[9px] uppercase tracking-wider font-bold text-accent-purple mt-4 block flex items-center gap-1">
+          <span className="text-[9px] uppercase tracking-wider font-bold text-success mt-4 block flex items-center gap-1">
             <Activity className="w-3.5 h-3.5" /> Optimization via offline radius dispatch
           </span>
         </Card>
@@ -76,14 +76,14 @@ export default function ClientRoiAnalyticsPage() {
                       <h4 className="text-xs font-bold text-white">{dept.name}</h4>
                       <p className="text-[9px] text-light-gray/50 mt-0.5">Budget Limit Target: KES {dept.target.toLocaleString()}</p>
                     </div>
-                    <span className={`text-[10px] font-mono font-bold ${dept.savings >= 0 ? 'text-success' : 'text-accent-red'}`}>
+                    <span className={`text-[10px] font-mono font-bold ${dept.savings >= 0 ? 'text-success' : 'text-[#e63946]'}`}>
                       {dept.savings >= 0 ? `Saved KES ${dept.savings.toLocaleString()}` : `Overbudget KES ${Math.abs(dept.savings).toLocaleString()}`}
                     </span>
                   </div>
 
                   <div className="space-y-1">
                     <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                      <div className={`h-full ${dept.percentage > 100 ? 'bg-accent-red' : 'bg-accent-purple'}`} style={{ width: `${Math.min(dept.percentage, 100)}%` }}></div>
+                      <div className={`h-full ${dept.percentage > 100 ? 'bg-[#e63946]' : 'bg-success'}`} style={{ width: `${Math.min(dept.percentage, 100)}%` }}></div>
                     </div>
                     <div className="flex justify-between text-[9px] font-bold text-light-gray/40">
                       <span>KES {dept.cost.toLocaleString()} Allocated</span>
@@ -98,10 +98,10 @@ export default function ClientRoiAnalyticsPage() {
 
         {/* Right Side: AI Assistant & Insights */}
         <div className="lg:col-span-1 space-y-6">
-          <Card className="p-6 bg-gradient-to-br from-navy to-zinc-900 border border-white/10 text-white rounded-3xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-accent-purple/20 blur-[50px] rounded-full"></div>
-            <h4 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5 mb-3 text-accent-purple">
-              <Bot className="w-4 h-4 text-accent-purple animate-bounce" /> AI Analytics insights
+          <Card className="p-6 bg-gradient-to-br from-[#222222] to-zinc-900 border border-white/10 text-white rounded-3xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-success/20 blur-[50px] rounded-full"></div>
+            <h4 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5 mb-3 text-success">
+              <Bot className="w-4 h-4 text-success animate-bounce" /> AI Analytics insights
             </h4>
             <p className="text-[10px] font-semibold text-white/70 leading-relaxed">
               We tracked field travel logs and auto-suggested dispatching **Kiprotich Arap** to Nairobi Pipeline Site A instead of Mombasa. This single optimization auto-saved **KES 15,000** in transport allowances.

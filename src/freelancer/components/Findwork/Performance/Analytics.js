@@ -82,7 +82,7 @@ function ProgressMetric({ label, percentage, color = "blue" }) {
   const colorClasses = {
     blue: "bg-[#FDECE7]",
     green: "bg-green-500",
-    purple: "bg-brand-500",
+    purple: "bg-[#14a800]",
     orange: "bg-orange-500"
   };
 
@@ -434,7 +434,7 @@ export default function Analytics() {
             <div className="p-4 border border-[#E7E1DE] rounded-lg">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-[#4A312F]">Repeat Buyers</span>
-                <span className="text-xs px-2 py-1 bg-brand-50 text-brand-600 rounded">
+                <span className="text-xs px-2 py-1 bg-[#14a800]/5 text-[#14a800] rounded">
                   {funnelData.repeatBuyers}%
                 </span>
               </div>

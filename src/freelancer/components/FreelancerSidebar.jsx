@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { 
-  Search, Briefcase, UserCircle, MessageSquare, BarChart2, Settings, 
+  Search, Briefcase, UserCircle, MessageSquare, BarChart2, 
   ChevronDown, Bell, Wallet, LayoutDashboard, FileText, ShoppingCart, Calendar, 
-  DollarSign, Star, Receipt, Layers, PlusSquare, Heart, Send, Clock, 
+  DollarSign, Star, Receipt, Layers, PlusSquare, Heart, Send, 
   Users, FolderKanban, Building2, Building, Shield, Folder, Upload, Share2, 
   Download, BadgeCheck, Lock, Blocks, Palette, HelpCircle, Ticket, 
   MessageCircle, GraduationCap, Zap, Gift, LogOut, PanelLeftClose, PanelLeft, Plus,
-  MapPin, CalendarCheck, Compass, Map
+  MapPin, CalendarCheck, Compass, Map, Video
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
 import { useFreelancer } from '../context/FreelancerContext';
+import { useAuthStore } from '../../common/authStore';
+import { useFreelancerWallet } from '../services/freelancerHooks';
 
 export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCollapsed, setIsCollapsed }) {
   const { accountType, isOfflineProvider } = useFreelancer();
+  const { user, logout } = useAuthStore();
+  const { data: walletData } = useFreelancerWallet();
+  const availableBalance = walletData?.availableBalance || walletData?.available || 0;
   
   // Track open dropdowns (desktop & mobile)
   const [openDropdowns, setOpenDropdowns] = useState({
@@ -44,6 +49,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
           { name: 'Find Work', path: '/freelancer/jobs', icon: Search },
           { name: 'My Jobs', path: '/freelancer/my-jobs', icon: Briefcase },
           { name: 'Contracts', path: '/freelancer/contracts', icon: FileText },
+          { name: 'Disputes', path: '/freelancer/disputes', icon: Shield },
           { name: 'Orders', path: '/freelancer/orders', icon: ShoppingCart },
           { name: 'Messages', path: '/freelancer/messages', icon: MessageSquare },
           { name: 'Calendar', path: '/freelancer/calendar', icon: Calendar },
@@ -67,10 +73,12 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
         icon: Layers,
         links: [
           { name: 'My Services', path: '/freelancer/gigs', icon: Layers },
+          { name: 'Portfolio', path: '/freelancer/portfolio', icon: Upload },
           { name: 'Create Service', path: '/freelancer/gigs/create', icon: PlusSquare },
           { name: 'Saved Jobs', path: '/freelancer/saved', icon: Heart },
           { name: 'Proposals', path: '/freelancer/proposals', icon: Send },
-          { name: 'Bookings', path: '/freelancer/bookings', icon: Clock },
+          { name: 'Plans & Pricing', path: '/pricing', icon: Zap },
+           { name: 'Video Calls', path: '/freelancer/bookings', icon: Video },
         ]
       }
     ];
@@ -89,7 +97,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
       });
     }
 
-    if (accountType === 'AGENCY' || accountType === 'CORPORATE') {
+    if (accountType === 'SME' || accountType === 'CORPORATE') {
       sections.push({
         key: 'team',
         title: 'TEAM & WORKSPACE',
@@ -122,6 +130,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
         icon: UserCircle,
         links: [
           { name: 'My Profile', path: '/freelancer/profile', icon: UserCircle },
+          { name: 'Profile Intelligence', path: '/freelancer/profile-intelligence', icon: BadgeCheck },
           { name: 'Verification', path: '/freelancer/verification-center', icon: BadgeCheck },
           { name: 'Notification Settings', path: '/freelancer/notifications', icon: Bell },
           { name: 'Privacy & Security', path: '/freelancer/security', icon: Lock },
@@ -152,7 +161,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
       {/* Mobile Overlay */}
       {isMobileOpen && (
         <div 
-          className="fixed inset-0 bg-navy/20 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-[#222222]/20 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
@@ -167,14 +176,14 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
         {/* Header Area */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-border shrink-0 bg-white">
           <Link to="/freelancer" className={cn("flex items-center gap-2 overflow-hidden transition-all duration-300", isCollapsed ? "w-8" : "w-auto")}>
-            <div className="w-8 h-8 bg-navy rounded-lg flex items-center justify-center font-black text-white shadow-sm shrink-0">
+            <div className="w-8 h-8 bg-[#222222] rounded-lg flex items-center justify-center font-black text-white shadow-sm shrink-0">
               F
             </div>
-            {!isCollapsed && <span className="font-black text-lg tracking-tight text-navy whitespace-nowrap">Forte Space</span>}
+            {!isCollapsed && <span className="font-black text-lg tracking-tight text-[#222222] whitespace-nowrap">Forte Space</span>}
           </Link>
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden lg:flex p-1.5 text-text-secondary hover:text-navy hover:bg-light-gray rounded-md transition-colors"
+            className="hidden lg:flex p-1.5 text-text-secondary hover:text-[#222222] hover:bg-light-gray rounded-md transition-colors"
           >
             {isCollapsed ? <PanelLeft size={20} /> : <PanelLeftClose size={20} />}
           </button>
@@ -188,7 +197,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
           <div className="flex items-center gap-3">
             <div className="relative shrink-0 mx-auto">
               <img 
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop" 
+                src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop"} 
                 alt="Profile" 
                 className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
               />
@@ -197,9 +206,9 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
             
             {!isCollapsed && (
               <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-bold text-text-primary truncate">Alex Mitchell</h3>
+                <h3 className="text-sm font-bold text-text-primary truncate">{user?.firstName || 'User'} {user?.lastName || ''}</h3>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="text-[10px] font-bold bg-accent-purple/10 text-accent-purple px-1.5 py-0.5 rounded-sm uppercase tracking-wider truncate">
+                  <span className="text-[10px] font-bold bg-success/10 text-success px-1.5 py-0.5 rounded-sm uppercase tracking-wider truncate">
                     {accountType} PRO
                   </span>
                 </div>
@@ -211,9 +220,9 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
             <div className="mt-4 space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-text-secondary font-medium">Wallet Balance</span>
-                <span className="font-bold text-text-primary">KES 450,000</span>
+                <span className="font-bold text-text-primary">KES {availableBalance.toLocaleString()}</span>
               </div>
-              <Link to="/freelancer/gigs/create" className="w-full flex items-center justify-center gap-2 bg-navy hover:bg-navy/90 text-white py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+              <Link to="/freelancer/gigs/create" className="w-full flex items-center justify-center gap-2 bg-[#14a800] hover:bg-[#118a00] text-white py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
                 <Plus size={16} /> Create Service
               </Link>
             </div>
@@ -223,7 +232,6 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
         {/* Scrollable Navigation */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar py-4 space-y-6">
           {navSections.map(section => {
-            const SectionIcon = section.icon;
             const isOpen = openDropdowns[section.key] || isCollapsed; // Keep open structure if collapsed to render links as icons
 
             return (
@@ -256,12 +264,12 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
                           className={({ isActive }) => cn(
                             "flex items-center gap-3 py-2 rounded-lg transition-all relative group",
                             isCollapsed ? "justify-center px-0" : "px-3",
-                            isActive ? "bg-accent-purple/10 text-accent-purple font-bold" : "text-text-secondary hover:text-navy hover:bg-light-gray font-medium"
+                            isActive ? "bg-success/10 text-success font-bold" : "text-text-secondary hover:text-[#222222] hover:bg-light-gray font-medium"
                           )}
                         >
                           {({ isActive }) => (
                             <>
-                              <LinkIcon size={isCollapsed ? 20 : 18} className={cn("shrink-0 transition-colors", isActive ? "text-accent-purple" : "text-text-secondary group-hover:text-navy")} />
+                              <LinkIcon size={isCollapsed ? 20 : 18} className={cn("shrink-0 transition-colors", isActive ? "text-success" : "text-text-secondary group-hover:text-[#222222]")} />
                               
                               {!isCollapsed && (
                                 <span className="text-sm truncate">{link.name}</span>
@@ -269,14 +277,14 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
 
                               {/* Tooltip for collapsed mode */}
                               {isCollapsed && (
-                                <div className="absolute left-full ml-3 px-2 py-1 bg-navy text-white text-xs font-bold rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+                                <div className="absolute left-full ml-3 px-2 py-1 bg-[#222222] text-white text-xs font-bold rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
                                   {link.name}
                                 </div>
                               )}
                               
                               {/* Active indicator bar */}
                               {isActive && !isCollapsed && (
-                                <div className="absolute left-0 top-1/2 -tranzinc-y-1/2 w-1 h-5 bg-accent-purple rounded-r-full" />
+                                <div className="absolute left-0 top-1/2 -tranzinc-y-1/2 w-1 h-5 bg-success rounded-r-full" />
                               )}
                             </>
                           )}
@@ -303,7 +311,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
             <Zap size={isCollapsed ? 20 : 18} className="shrink-0" />
             {!isCollapsed && <span className="text-sm">Upgrade Plan</span>}
             {isCollapsed && (
-              <div className="absolute left-full ml-3 px-2 py-1 bg-navy text-white text-xs font-bold rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+              <div className="absolute left-full ml-3 px-2 py-1 bg-[#222222] text-white text-xs font-bold rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
                 Upgrade Plan
               </div>
             )}
@@ -313,27 +321,28 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
             className={({ isActive }) => cn(
               "flex items-center gap-3 py-2 rounded-lg transition-all relative group",
               isCollapsed ? "justify-center px-0" : "px-3",
-              isActive ? "bg-accent-purple/10 text-accent-purple font-bold" : "text-text-secondary hover:text-navy hover:bg-light-gray font-medium"
+              isActive ? "bg-success/10 text-success font-bold" : "text-text-secondary hover:text-[#222222] hover:bg-light-gray font-medium"
             )}
           >
             <Gift size={isCollapsed ? 20 : 18} className="shrink-0" />
             {!isCollapsed && <span className="text-sm">Referral Program</span>}
             {isCollapsed && (
-              <div className="absolute left-full ml-3 px-2 py-1 bg-navy text-white text-xs font-bold rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+              <div className="absolute left-full ml-3 px-2 py-1 bg-[#222222] text-white text-xs font-bold rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
                 Referral Program
               </div>
             )}
           </NavLink>
           <button 
+            onClick={logout}
             className={cn(
-              "w-full flex items-center gap-3 py-2 rounded-lg transition-all relative group text-text-secondary hover:text-accent-red hover:bg-accent-red/5 font-medium",
+              "w-full flex items-center gap-3 py-2 rounded-lg transition-all relative group text-text-secondary hover:text-[#e63946] hover:bg-[#e63946]/5 font-medium",
               isCollapsed ? "justify-center px-0" : "px-3"
             )}
           >
             <LogOut size={isCollapsed ? 20 : 18} className="shrink-0" />
             {!isCollapsed && <span className="text-sm">Log out</span>}
             {isCollapsed && (
-              <div className="absolute left-full ml-3 px-2 py-1 bg-navy text-white text-xs font-bold rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+              <div className="absolute left-full ml-3 px-2 py-1 bg-[#222222] text-white text-xs font-bold rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
                 Log out
               </div>
             )}

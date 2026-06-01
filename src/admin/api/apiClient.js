@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { removeTokens } from '../../common/services/api';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const ADMIN_API_BASE_PATH = process.env.REACT_APP_ADMIN_API_BASE_PATH || '/admin_rbc';
@@ -34,7 +35,9 @@ apiClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.clear();
+      removeTokens();
+      localStorage.removeItem('admin-token');
+      localStorage.removeItem('auth-storage');
       if (typeof window !== 'undefined') {
         window.location.href = '/admin/login';
       }

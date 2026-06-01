@@ -43,7 +43,7 @@ export default function DownloadsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <Download className="w-8 h-8 text-accent-purple" />
+            <Download className="w-8 h-8 text-success" />
             Downloads & Receipts
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -58,7 +58,7 @@ export default function DownloadsPage() {
         <div className="lg:col-span-1 space-y-6">
           <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
             <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-              <ShieldCheck className="w-5 h-5 text-accent-purple" />
+              <ShieldCheck className="w-5 h-5 text-success" />
               Download Policy
             </h3>
             <p className="text-xs text-text-secondary leading-relaxed font-medium">
@@ -88,7 +88,7 @@ export default function DownloadsPage() {
               {downloads.map((item) => (
                 <div key={item.id} className="p-4 border border-border rounded-2xl bg-light-gray/25 hover:bg-white hover:shadow-sm transition-all group flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-accent-purple/10 text-accent-purple rounded-xl shrink-0">
+                    <div className="p-3 bg-success/10 text-success rounded-xl shrink-0">
                       <FileText size={20} />
                     </div>
                     <div>
@@ -105,14 +105,14 @@ export default function DownloadsPage() {
                         "px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1",
                         item.status === 'Expired' 
                           ? 'bg-light-gray border border-border text-text-secondary cursor-not-allowed' 
-                          : 'bg-accent-purple/15 text-accent-purple hover:bg-accent-purple hover:text-white'
+                          : 'bg-success/15 text-success hover:bg-success hover:text-white'
                       )}
                     >
                       <Download size={14} /> {item.status}
                     </button>
                     <button 
                       onClick={() => deleteHistory(item.id)}
-                      className="p-2 text-text-secondary hover:text-accent-red hover:bg-light-gray rounded-xl transition-all"
+                      className="p-2 text-text-secondary hover:text-[#e63946] hover:bg-light-gray rounded-xl transition-all"
                       title="Clear History Entry"
                     >
                       <Trash2 size={16} />

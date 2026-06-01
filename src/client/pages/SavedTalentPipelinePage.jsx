@@ -1,104 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, Bookmark, Star, MoreVertical, FileText, Check, X, Calendar, MessageSquare, LayoutGrid, List, MapPin, Mail, Phone, ChevronRight } from 'lucide-react';
+import {
+  Search, Bookmark, Star, MoreVertical, MessageSquare,
+  LayoutGrid, List, ChevronRight, Loader2, AlertCircle, RefreshCw,
+} from 'lucide-react';
+import { workAPI } from '../../common/services/api';
 
-const mockStages = ['Sourced', 'Screening', 'Interview', 'Offer', 'Hired', 'Rejected'];
+const DEFAULT_STAGES = ['Sourced', 'Screening', 'Interview', 'Offer', 'Hired', 'Rejected'];
 
-const mockCandidates = [
-  {
-    id: 'c1',
-    name: 'Alice Johnson',
-    role: 'Senior Frontend Engineer',
-    stage: 'Interview',
-    score: 92,
-    location: 'Remote (US)',
-    hourlyRate: '$85/hr',
-    notes: 3,
-    avatar: 'https://i.pravatar.cc/150?u=alice',
-    skills: ['React', 'TypeScript', 'Node.js']
-  },
-  {
-    id: 'c2',
-    name: 'Bob Smith',
-    role: 'UX/UI Designer',
-    stage: 'Sourced',
-    score: 88,
-    location: 'London, UK',
-    hourlyRate: '$65/hr',
-    notes: 1,
-    avatar: 'https://i.pravatar.cc/150?u=bob',
-    skills: ['Figma', 'Prototyping', 'User Research']
-  },
-  {
-    id: 'c3',
-    name: 'Charlie Davis',
-    role: 'DevOps Engineer',
-    stage: 'Screening',
-    score: 95,
-    location: 'Berlin, DE',
-    hourlyRate: '$90/hr',
-    notes: 5,
-    avatar: 'https://i.pravatar.cc/150?u=charlie',
-    skills: ['AWS', 'Docker', 'Kubernetes']
-  },
-  {
-    id: 'c4',
-    name: 'Diana Prince',
-    role: 'Product Manager',
-    stage: 'Offer',
-    score: 98,
-    location: 'Remote (Global)',
-    hourlyRate: '$110/hr',
-    notes: 2,
-    avatar: 'https://i.pravatar.cc/150?u=diana',
-    skills: ['Agile', 'Strategy', 'Jira']
-  }
-];
+function mapCandidate(c) {
+  return {
+    id: c.id,
+    name: c.name || c.freelancerId || 'Candidate',
+    role: c.jobId ? `Job ${c.jobId}` : 'Open role',
+    stage: c.stage || 'Sourced',
+    score: c.score ?? 85,
+    hourlyRate: c.bidAmount ? `$${c.bidAmount}/hr` : '—',
+    notes: c.notes ?? 0,
+    avatar: c.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name || c.freelancerId || 'C')}&background=14a800&color=fff`,
+    skills: c.skills || [],
+  };
+}
 
 export default function SavedTalentPipelinePage() {
-  const [viewMode, setViewMode] = useState('kanban'); // 'kanban' or 'list'
+  const [viewMode, setViewMode] = useState('kanban');
   const [searchQuery, setSearchQuery] = useState('');
-  const [candidates, setCandidates] = useState(mockCandidates);
 
-  const filteredCandidates = candidates.filter(c => 
-    c.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const { data: pipeline, isLoading, error, refetch, isFetching } = useQuery({
+    queryKey: ['client', 'work', 'pipeline'],
+    queryFn: () => workAPI.getPipeline(),
+    staleTime: 60_000,
+  });
+
+  const stages = pipeline?.stages?.length ? pipeline.stages : DEFAULT_STAGES;
+  const candidates = useMemo(
+    () => (pipeline?.candidates || []).map(mapCandidate),
+    [pipeline]
+  );
+
+  const filteredCandidates = candidates.filter((c) =>
+    c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     c.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div className="min-h-screen bg-surface dark:bg-gray-950 font-sans text-gray-900 dark:text-gray-100 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
-        
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-3">
-              <Bookmark className="w-8 h-8 text-brand-600" />
+              <Bookmark className="w-8 h-8 text-[#14a800]" />
               Talent Pipeline
             </h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">Manage and track your saved freelancers across hiring stages.</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">
+              Manage and track saved freelancers across hiring stages.
+              {pipeline?.total != null && ` (${pipeline.total} total)`}
+            </p>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => refetch()}
+              disabled={isFetching}
+              className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+            >
+              <RefreshCw className={`w-5 h-5 ${isFetching ? 'animate-spin' : ''}`} />
+            </button>
             <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -tranzinc-y-1/2 text-gray-400" />
-              <input 
-                type="text" 
-                placeholder="Search candidates..." 
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search candidates..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-4 py-2 w-full sm:w-64 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white"
+                className="pl-9 pr-4 py-2 w-full sm:w-64 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#14a800] dark:text-white"
               />
             </div>
             <div className="flex bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
-              <button 
+              <button
                 onClick={() => setViewMode('kanban')}
-                className={`p-2 ${viewMode === 'kanban' ? 'bg-gray-100 dark:bg-gray-800 text-brand-600' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
+                className={`p-2 ${viewMode === 'kanban' ? 'bg-gray-100 dark:bg-gray-800 text-[#14a800]' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
               >
                 <LayoutGrid className="w-5 h-5" />
               </button>
-              <button 
+              <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 ${viewMode === 'list' ? 'bg-gray-100 dark:bg-gray-800 text-brand-600' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
+                className={`p-2 ${viewMode === 'list' ? 'bg-gray-100 dark:bg-gray-800 text-[#14a800]' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
               >
                 <List className="w-5 h-5" />
               </button>
@@ -106,11 +93,20 @@ export default function SavedTalentPipelinePage() {
           </div>
         </div>
 
-        {/* Board / List Content */}
-        {viewMode === 'kanban' ? (
+        {isLoading ? (
+          <div className="flex items-center justify-center h-48">
+            <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center h-48 gap-3 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
+            <AlertCircle className="w-10 h-10 text-red-400" />
+            <p className="text-gray-500">Failed to load pipeline.</p>
+            <button onClick={() => refetch()} className="text-sm text-[#14a800] hover:underline">Retry</button>
+          </div>
+        ) : viewMode === 'kanban' ? (
           <div className="flex gap-6 overflow-x-auto pb-4 custom-scrollbar">
-            {mockStages.map(stage => {
-              const stageCandidates = filteredCandidates.filter(c => c.stage === stage);
+            {stages.map((stage) => {
+              const stageCandidates = filteredCandidates.filter((c) => c.stage === stage);
               return (
                 <div key={stage} className="flex-shrink-0 w-80 flex flex-col">
                   <div className="flex items-center justify-between mb-4 px-1">
@@ -131,7 +127,7 @@ export default function SavedTalentPipelinePage() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, scale: 0.95 }}
                           transition={{ duration: 0.2, delay: idx * 0.05 }}
-                          className="bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm cursor-pointer hover:border-brand-500 transition-colors group"
+                          className="bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm cursor-pointer hover:border-[#14a800]/20 transition-colors group"
                         >
                           <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
@@ -145,20 +141,6 @@ export default function SavedTalentPipelinePage() {
                               <MoreVertical className="w-4 h-4" />
                             </button>
                           </div>
-                          
-                          <div className="flex flex-wrap gap-1 mb-3">
-                            {candidate.skills.slice(0, 2).map(skill => (
-                              <span key={skill} className="px-2 py-1 bg-surface dark:bg-gray-800 text-xs rounded-md text-gray-600 dark:text-gray-400">
-                                {skill}
-                              </span>
-                            ))}
-                            {candidate.skills.length > 2 && (
-                              <span className="px-2 py-1 bg-surface dark:bg-gray-800 text-xs rounded-md text-gray-600 dark:text-gray-400">
-                                +{candidate.skills.length - 2}
-                              </span>
-                            )}
-                          </div>
-
                           <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-800 pt-3 mt-2">
                             <div className="flex items-center gap-3">
                               <span className="flex items-center gap-1 text-yellow-600 dark:text-yellow-500 font-medium">
@@ -175,7 +157,7 @@ export default function SavedTalentPipelinePage() {
                     </AnimatePresence>
                     {stageCandidates.length === 0 && (
                       <div className="h-full flex items-center justify-center text-sm text-gray-400 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-lg p-6 text-center">
-                        Drop candidates here
+                        No candidates in this stage
                       </div>
                     )}
                   </div>
@@ -198,7 +180,7 @@ export default function SavedTalentPipelinePage() {
                 </thead>
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                   {filteredCandidates.map((candidate, idx) => (
-                    <motion.tr 
+                    <motion.tr
                       key={candidate.id}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -215,7 +197,7 @@ export default function SavedTalentPipelinePage() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="px-3 py-1 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 text-xs font-medium rounded-full">
+                        <span className="px-3 py-1 bg-[#14a800]/5 dark:bg-[#14a800]/30 text-[#14a800] dark:text-[#14a800] text-xs font-medium rounded-full">
                           {candidate.stage}
                         </span>
                       </td>
@@ -224,11 +206,9 @@ export default function SavedTalentPipelinePage() {
                           <Star className="w-4 h-4 fill-current" /> {candidate.score}
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-gray-500 dark:text-gray-400">
-                        {candidate.hourlyRate}
-                      </td>
+                      <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{candidate.hourlyRate}</td>
                       <td className="px-6 py-4 text-right">
-                        <button className="text-gray-400 hover:text-brand-600 transition-colors p-2 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20">
+                        <button className="text-gray-400 hover:text-[#14a800] transition-colors p-2 rounded-lg hover:bg-[#14a800]/5 dark:hover:bg-[#14a800]/20">
                           <ChevronRight className="w-5 h-5" />
                         </button>
                       </td>

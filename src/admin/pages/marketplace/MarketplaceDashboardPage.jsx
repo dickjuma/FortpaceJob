@@ -4,26 +4,22 @@ import {
   Activity, Shield, Star, FileText
 } from 'lucide-react';
 import { useMarketplaceStats } from '../../hooks/useMarketplace';
-import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '../../utils/cn';
 import AuditLogViewer from '../../components/audit/AuditLogViewer';
 
 export default function MarketplaceDashboardPage() {
   const [activeTab, setActiveTab] = React.useState('dashboard');
-  const { data: stats, isLoading } = useMarketplaceStats();
+  const { data: stats, isLoading, refetch } = useMarketplaceStats();
+  const navigate = useNavigate();
 
-  const handleTimeRangeChange = () => {
-    toast.loading('Filtering analytics for 30 days...', { duration: 2000 });
-  };
-
-  const handleReviewQueue = () => {
-    toast('Redirecting to Content Review Queue...', { icon: '🛡️' });
-  };
+  const handleTimeRangeChange = () => refetch();
+  const handleReviewQueue = () => navigate('/admin/marketplace/reports');
 
   if (isLoading) {
     return (
       <div className="p-8 flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#14a800]/20"></div>
       </div>
     );
   }
@@ -43,7 +39,7 @@ export default function MarketplaceDashboardPage() {
             onClick={() => setActiveTab(activeTab === 'dashboard' ? 'audit' : 'dashboard')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-brand-600" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#14a800]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={16} /> {activeTab === 'dashboard' ? 'Audit Trail' : 'Back to Dashboard'}
@@ -71,7 +67,7 @@ export default function MarketplaceDashboardPage() {
       {/* Top Stats Banner */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-5 bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-brand-50 dark:bg-brand-900/20 text-brand-600 rounded-xl">
+          <div className="p-3 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] rounded-xl">
             <Briefcase size={24} />
           </div>
           <div>

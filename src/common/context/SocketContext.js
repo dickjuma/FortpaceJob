@@ -1,6 +1,7 @@
 // context/SocketContext.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import { getSocketUrl } from '../utils/socketUrl';
 
 const SocketContext = createContext();
 
@@ -17,7 +18,7 @@ export const SocketProvider = ({ children, token }) => {
   useEffect(() => {
     if (!token) return;
 
-    const newSocket = io(process.env.REACT_APP_SOCKET_URL || '/', {
+    const newSocket = io(getSocketUrl(), {
       auth: { token },
       transports: ['websocket'],
       reconnection: true,
@@ -47,11 +48,15 @@ export const SocketProvider = ({ children, token }) => {
 
   // Helper functions
   const joinConversation = (conversationId) => {
-    if (socket && isConnected) socket.emit('join_conversation', conversationId);
+    if (socket && isConnected && conversationId) {
+      socket.emit('conversation:join', { conversationId });
+    }
   };
 
   const leaveConversation = (conversationId) => {
-    if (socket && isConnected) socket.emit('leave_conversation', conversationId);
+    if (socket && isConnected && conversationId) {
+      socket.emit('conversation:leave', { conversationId });
+    }
   };
 
   const sendMessage = (data) => {
@@ -59,15 +64,15 @@ export const SocketProvider = ({ children, token }) => {
   };
 
   const startTyping = (conversationId) => {
-    if (socket && isConnected) socket.emit('typing_start', { conversationId });
+    if (socket && isConnected) socket.emit('typing', { conversationId, isTyping: true });
   };
 
   const stopTyping = (conversationId) => {
-    if (socket && isConnected) socket.emit('typing_stop', { conversationId });
+    if (socket && isConnected) socket.emit('typing', { conversationId, isTyping: false });
   };
 
-  const markRead = (conversationId) => {
-    if (socket && isConnected) socket.emit('mark_read', { conversationId });
+  const markRead = (messageId) => {
+    if (socket && isConnected && messageId) socket.emit('mark_read', { messageId });
   };
 
   const value = {

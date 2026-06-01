@@ -20,13 +20,13 @@ const TalentTypeSelector = () => {
           {/* Online Talent Card */}
           <motion.div 
             whileHover={{ y: -5 }}
-            className="group relative bg-surface rounded-3xl p-8 border border-zinc-100 hover:border-brand-100 hover:shadow-xl transition-all duration-300 overflow-hidden"
+            className="group relative bg-surface rounded-3xl p-8 border border-zinc-100 hover:border-[#14a800]/20 hover:shadow-xl transition-all duration-300 overflow-hidden"
           >
             <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
               <Globe className="w-32 h-32" />
             </div>
             
-            <div className="w-14 h-14 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center mb-6">
+            <div className="w-14 h-14 bg-[#14a800]/10 text-[#14a800] rounded-2xl flex items-center justify-center mb-6">
               <Globe className="w-7 h-7" />
             </div>
             
@@ -37,20 +37,20 @@ const TalentTypeSelector = () => {
             
             <ul className="space-y-3 mb-8 text-sm text-zinc-700">
               <li className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-brand-500"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#14a800]"></div>
                 Global talent pool
               </li>
               <li className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-brand-500"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#14a800]"></div>
                 Flexible hourly or fixed-price contracts
               </li>
               <li className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-brand-500"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#14a800]"></div>
                 Integrated milestone tracking
               </li>
             </ul>
             
-            <Link to="/online" className="inline-flex items-center font-semibold text-brand-600 group-hover:text-brand-700 transition-colors">
+            <Link to="/online" className="inline-flex items-center font-semibold text-[#14a800] group-hover:text-[#14a800] transition-colors">
               Find Online Talent <ArrowRight className="w-4 h-4 ml-2 group-hover:tranzinc-x-1 transition-transform" />
             </Link>
           </motion.div>

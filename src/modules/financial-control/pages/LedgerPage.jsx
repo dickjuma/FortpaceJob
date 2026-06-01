@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   BookOpen, Search, Filter, Calendar, 
-  Download, Eye, Plus, ArrowRightLeft, Activity, X
+  Download, Eye, Plus, ArrowRightLeft, Activity, X, Loader2
 } from 'lucide-react';
+import { useTransactions } from '../../../admin/hooks/useFinancial';
 import { format } from 'date-fns';
 
 // Inline cn utility to avoid missing import
@@ -46,17 +47,6 @@ function TransactionDetailModal({ isOpen, transaction, onClose }) {
   );
 }
 
-const MOCK_TRANSACTIONS = Array.from({ length: 20 }, (_, i) => ({
-  id: `TRX-${1000 + i}`,
-  type: i % 3 === 0 ? 'payment' : i % 4 === 0 ? 'withdrawal' : 'refund',
-  amount: 25000 + (Math.random() * 75000),
-  currency: 'KES',
-  status: i % 7 === 0 ? 'failed' : i % 5 === 0 ? 'pending' : 'completed',
-  date: new Date(Date.now() - Math.random() * 1000000000).toISOString(),
-  reference: `REF-${Math.floor(Math.random() * 1000000)}`,
-  account: i % 2 === 0 ? 'Escrow Holding' : 'Platform Revenue'
-}));
-
 const LedgerEntryBadge = ({ type }) => (
   <span className={cn(
     "px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-widest",
@@ -67,21 +57,12 @@ const LedgerEntryBadge = ({ type }) => (
 );
 
 export default function LedgerPage() {
+  const { data: trxResponse, isLoading } = useTransactions();
+  const trxData = { data: trxResponse?.data || [] };
   const [activeTab, setActiveTab] = useState('ledger');
-  const [isLoading, setIsLoading] = useState(true);
-  const [trxData, setTrxData] = useState({ data: [] });
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [isManualEntryOpen, setIsManualEntryOpen] = useState(false);
   const { filters, setFilter } = useFinancialStore();
-
-  useEffect(() => {
-    // Simulate live data fetch
-    const timer = setTimeout(() => {
-      setTrxData({ data: MOCK_TRANSACTIONS });
-      setIsLoading(false);
-    }, 1300);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <div className="space-y-6">
@@ -103,7 +84,7 @@ export default function LedgerPage() {
             onClick={() => setActiveTab(activeTab === 'ledger' ? 'audit' : 'ledger')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-brand-600" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#14a800]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={16} /> {activeTab === 'ledger' ? 'Audit Trail' : 'Back to Ledger'}
@@ -113,7 +94,7 @@ export default function LedgerPage() {
           </button>
           <button 
             onClick={() => setIsManualEntryOpen(true)}
-            className="px-4 py-2 bg-surface-dark text-white dark:bg-brand-600 rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-surface-dark text-white dark:bg-[#14a800] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
           >
             <Plus size={16} /> Manual Entry
           </button>
@@ -130,7 +111,7 @@ export default function LedgerPage() {
               placeholder="Search TXN ID, Reference, or Account..." 
               value={filters.transactions.search}
               onChange={(e) => setFilter('transactions', 'search', e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500 outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#14a800] outline-none"
             />
           </div>
           <select className="px-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold outline-none cursor-pointer">
@@ -224,7 +205,7 @@ export default function LedgerPage() {
                       <td className="p-4 text-right">
                         <button 
                           onClick={() => setSelectedTransaction(trx)}
-                          className="p-1.5 text-brand-600 bg-brand-50 hover:bg-brand-100 dark:bg-brand-900/20 dark:hover:bg-brand-900/40 rounded-lg transition-colors" title="View Detail"
+                          className="p-1.5 text-[#14a800] bg-[#14a800]/5 hover:bg-[#14a800]/10 dark:bg-[#14a800]/20 dark:hover:bg-[#14a800]/40 rounded-lg transition-colors" title="View Detail"
                         >
                           <Eye size={16} />
                         </button>

@@ -2,7 +2,7 @@ import React from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export class ErrorBoundary extends React.Component {
+export default class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null, errorInfo: null };
@@ -36,7 +36,7 @@ export class ErrorBoundary extends React.Component {
             <div className="flex flex-col space-y-3">
               <button 
                 onClick={() => window.location.reload()}
-                className="w-full flex items-center justify-center px-4 py-2.5 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition-colors shadow-sm"
+                className="w-full flex items-center justify-center px-4 py-2.5 bg-[#14a800] text-white font-bold rounded-xl hover:bg-[#118a00] transition-colors shadow-sm"
               >
                 <RefreshCw className="w-4 h-4 mr-2" /> Reload Page
               </button>

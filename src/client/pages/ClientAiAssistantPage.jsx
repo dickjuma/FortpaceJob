@@ -44,7 +44,7 @@ export default function ClientAiAssistantPage() {
       <div className="bg-white dark:bg-surface-dark border-b border-zinc-200 dark:border-zinc-800 pt-12 pb-8 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2 flex items-center gap-3">
-            <BrainCircuit className="w-8 h-8 text-brand-500" /> AI Hiring Assistant
+            <BrainCircuit className="w-8 h-8 text-[#14a800]" /> AI Hiring Assistant
           </h1>
           <p className="text-zinc-500 font-medium">Automate your hiring workflow with intelligent recommendations.</p>
         </div>
@@ -55,9 +55,9 @@ export default function ClientAiAssistantPage() {
         {/* Left Column: Chat Interface */}
         <div className="flex-1 flex flex-col bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden h-[calc(100vh-12rem)]">
           
-          <div className="p-4 border-b border-zinc-100 dark:border-zinc-800 bg-brand-50/50 dark:bg-brand-500/5 flex items-center justify-between">
+          <div className="p-4 border-b border-zinc-100 dark:border-zinc-800 bg-[#14a800]/5/50 dark:bg-[#14a800]/5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-500/20 flex items-center justify-center text-brand-600 dark:text-brand-400">
+              <div className="w-10 h-10 rounded-full bg-[#14a800]/10 dark:bg-[#14a800]/20 flex items-center justify-center text-[#14a800] dark:text-[#14a800]">
                 <Bot className="w-5 h-5" />
               </div>
               <div>
@@ -65,7 +65,7 @@ export default function ClientAiAssistantPage() {
                 <p className="text-xs font-bold text-success flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-success"></span> Online</p>
               </div>
             </div>
-            <button className="text-xs font-bold text-zinc-400 hover:text-brand-600 transition-colors">Clear Chat</button>
+            <button className="text-xs font-bold text-zinc-400 hover:text-[#14a800] transition-colors">Clear Chat</button>
           </div>
 
           <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
@@ -77,13 +77,13 @@ export default function ClientAiAssistantPage() {
               >
                 <div className={cn(
                   "w-8 h-8 shrink-0 rounded-full flex items-center justify-center", 
-                  msg.role === 'user' ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-600" : "bg-brand-600 text-white"
+                  msg.role === 'user' ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-600" : "bg-[#14a800] text-white"
                 )}>
                   {msg.role === 'user' ? <User className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
                 </div>
                 <div className={cn(
                   "p-4 rounded-2xl text-sm font-medium",
-                  msg.role === 'user' ? "bg-brand-600 text-white rounded-tr-sm" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-tl-sm"
+                  msg.role === 'user' ? "bg-[#14a800] text-white rounded-tr-sm" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-tl-sm"
                 )}>
                   {msg.content}
                 </div>
@@ -92,7 +92,7 @@ export default function ClientAiAssistantPage() {
             
             {isTyping && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-4 max-w-[85%]">
-                <div className="w-8 h-8 shrink-0 rounded-full bg-brand-600 text-white flex items-center justify-center">
+                <div className="w-8 h-8 shrink-0 rounded-full bg-[#14a800] text-white flex items-center justify-center">
                   <Bot className="w-4 h-4" />
                 </div>
                 <div className="p-4 rounded-2xl bg-zinc-100 dark:bg-zinc-800 rounded-tl-sm flex items-center gap-1">
@@ -110,7 +110,7 @@ export default function ClientAiAssistantPage() {
                 <button 
                   key={suggestion}
                   onClick={() => { setInputValue(suggestion); }}
-                  className="px-3 py-1.5 shrink-0 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-xs font-bold text-zinc-600 dark:text-zinc-300 hover:border-brand-300 hover:text-brand-600 transition-colors"
+                  className="px-3 py-1.5 shrink-0 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-xs font-bold text-zinc-600 dark:text-zinc-300 hover:border-[#14a800]/50 hover:text-[#14a800] transition-colors"
                 >
                   {suggestion}
                 </button>
@@ -122,12 +122,12 @@ export default function ClientAiAssistantPage() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Ask Forte AI to help you hire..."
-                className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl pl-4 pr-12 py-4 text-sm font-medium outline-none focus:border-brand-500 shadow-sm"
+                className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl pl-4 pr-12 py-4 text-sm font-medium outline-none focus:border-[#14a800]/20 shadow-sm"
               />
               <button 
                 type="submit"
                 disabled={!inputValue.trim() || isTyping}
-                className="absolute right-2 top-1/2 -tranzinc-y-1/2 p-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white rounded-lg transition-colors"
+                className="absolute right-2 top-1/2 -tranzinc-y-1/2 p-2 bg-[#14a800] hover:bg-[#118a00] disabled:opacity-50 text-white rounded-lg transition-colors"
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -140,12 +140,12 @@ export default function ClientAiAssistantPage() {
         <div className="w-full lg:w-[420px] shrink-0 space-y-6">
           
           {/* Active Analysis */}
-          <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl p-6 shadow-md text-white">
+          <div className="bg-gradient-to-br from-[#14a800] to-[#118a00] rounded-3xl p-6 shadow-md text-white">
             <h3 className="font-bold mb-4 flex items-center gap-2"><Target className="w-5 h-5" /> Job Analysis Engine</h3>
             
             <div className="space-y-4">
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
-                <p className="text-xs font-bold text-brand-100 uppercase tracking-wider mb-1">Optimal Budget</p>
+                <p className="text-xs font-bold text-[#14a800] uppercase tracking-wider mb-1">Optimal Budget</p>
                 <div className="flex items-center gap-2">
                   <DollarSign className="w-5 h-5 text-success" />
                   <span className="text-xl font-black">$45 - $65/hr</span>
@@ -154,7 +154,7 @@ export default function ClientAiAssistantPage() {
               </div>
               
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
-                <p className="text-xs font-bold text-brand-100 uppercase tracking-wider mb-1">Time to Hire Forecast</p>
+                <p className="text-xs font-bold text-[#14a800] uppercase tracking-wider mb-1">Time to Hire Forecast</p>
                 <div className="flex items-center gap-2">
                   <Zap className="w-5 h-5 text-amber-400" />
                   <span className="text-xl font-black">2 - 3 Days</span>
@@ -167,14 +167,14 @@ export default function ClientAiAssistantPage() {
           <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-brand-500" /> Top Matches
+                <Sparkles className="w-5 h-5 text-[#14a800]" /> Top Matches
               </h3>
-              <span className="text-xs font-bold bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 px-2 py-1 rounded-md">Live Update</span>
+              <span className="text-xs font-bold bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800] px-2 py-1 rounded-md">Live Update</span>
             </div>
 
             <div className="space-y-4">
               {RECOMMENDATIONS.map(freelancer => (
-                <div key={freelancer.id} className="p-4 border border-zinc-100 dark:border-zinc-800 rounded-2xl hover:border-brand-200 dark:hover:border-brand-800 transition-colors bg-surface/50 dark:bg-zinc-800/50">
+                <div key={freelancer.id} className="p-4 border border-zinc-100 dark:border-zinc-800 rounded-2xl hover:border-[#14a800]/20 dark:hover:border-[#14a800]/20 transition-colors bg-surface/50 dark:bg-zinc-800/50">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex gap-3">
                       <img src={freelancer.avatar} alt="Avatar" className="w-10 h-10 rounded-full" />
@@ -189,15 +189,15 @@ export default function ClientAiAssistantPage() {
                     </div>
                   </div>
                   
-                  <div className="bg-brand-50 dark:bg-brand-500/10 rounded-xl p-3 border border-brand-100 dark:border-brand-900/30 mb-3">
-                    <p className="text-xs font-medium text-brand-800 dark:text-brand-300 flex gap-2">
-                      <BrainCircuit className="w-4 h-4 shrink-0 text-brand-500" />
+                  <div className="bg-[#14a800]/5 dark:bg-[#14a800]/10 rounded-xl p-3 border border-[#14a800]/20 dark:border-[#14a800]/20/30 mb-3">
+                    <p className="text-xs font-medium text-[#14a800] dark:text-[#14a800] flex gap-2">
+                      <BrainCircuit className="w-4 h-4 shrink-0 text-[#14a800]" />
                       {freelancer.reason}
                     </p>
                   </div>
 
                   <div className="flex gap-2">
-                    <button className="flex-1 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-lg transition-colors">Invite to Job</button>
+                    <button className="flex-1 py-2 bg-[#14a800] hover:bg-[#118a00] text-white text-xs font-bold rounded-lg transition-colors">Invite to Job</button>
                     <button className="px-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-bold rounded-lg transition-colors">Profile</button>
                   </div>
                 </div>

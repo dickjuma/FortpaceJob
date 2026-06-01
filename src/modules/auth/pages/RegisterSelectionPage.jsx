@@ -7,16 +7,16 @@ const RegisterSelectionPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface dark:bg-surface-dark text-zinc-900 dark:text-zinc-50 p-6 selection:bg-brand-500/30">
+    <div className="min-h-screen flex items-center justify-center bg-surface dark:bg-surface-dark text-zinc-900 dark:text-zinc-50 p-6 selection:bg-[#14a800]/30">
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-500/10 rounded-full blur-[100px]" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#14a800]/10 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[100px]" />
       </div>
 
       <div className="w-full max-w-4xl relative z-10">
         <div className="text-center mb-12">
           <div className="flex justify-center items-center gap-2 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <div className="w-10 h-10 rounded-xl bg-[#14a800] flex items-center justify-center shadow-lg shadow-#14a800]/20">
               <ShieldCheck className="w-6 h-6 text-white" />
             </div>
             <span className="text-3xl font-bold tracking-tight">Forte</span>
@@ -33,23 +33,23 @@ const RegisterSelectionPage = () => {
           {/* Client Card */}
           <motion.div 
             initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
-            className="group relative bg-white dark:bg-zinc-800 rounded-3xl p-8 border border-zinc-200 dark:border-zinc-700 shadow-sm hover:shadow-2xl hover:border-brand-500/50 transition-all duration-300 hover:-tranzinc-y-2 cursor-pointer overflow-hidden"
+            className="group relative bg-white dark:bg-zinc-800 rounded-3xl p-8 border border-zinc-200 dark:border-zinc-700 shadow-sm hover:shadow-2xl hover:border-[#14a800]/20/50 transition-all duration-300 hover:-tranzinc-y-2 cursor-pointer overflow-hidden"
             onClick={() => navigate('/auth/register/client')}
           >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-500/10 rounded-bl-full pointer-events-none transition-transform group-hover:scale-110" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#14a800]/10 rounded-bl-full pointer-events-none transition-transform group-hover:scale-110" />
             
-            <div className="w-16 h-16 rounded-2xl bg-brand-50 dark:bg-brand-500/10 flex items-center justify-center mb-8 border border-brand-100 dark:border-brand-500/20">
-              <Briefcase className="w-8 h-8 text-brand-600 dark:text-brand-400" />
+            <div className="w-16 h-16 rounded-2xl bg-[#14a800]/5 dark:bg-[#14a800]/10 flex items-center justify-center mb-8 border border-[#14a800]/20 dark:border-[#14a800]/20/20">
+              <Briefcase className="w-8 h-8 text-[#14a800] dark:text-[#14a800]" />
             </div>
             
             <h2 className="text-2xl font-bold mb-4">I'm a client, hiring for a project</h2>
             <ul className="space-y-3 mb-8 text-zinc-600 dark:text-zinc-400">
-              <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-brand-500" /> AI-matched elite talent</li>
-              <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-brand-500" /> Secure escrow payments</li>
-              <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-brand-500" /> Enterprise-grade contracts</li>
+              <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#14a800]" /> AI-matched elite talent</li>
+              <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#14a800]" /> Secure escrow payments</li>
+              <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#14a800]" /> Enterprise-grade contracts</li>
             </ul>
 
-            <button className="w-full flex items-center justify-center gap-2 py-4 px-6 bg-surface-dark dark:bg-zinc-700 text-white rounded-xl font-semibold group-hover:bg-brand-600 transition-colors">
+            <button className="w-full flex items-center justify-center gap-2 py-4 px-6 bg-surface-dark dark:bg-zinc-700 text-white rounded-xl font-semibold group-hover:bg-[#14a800] transition-colors">
               Join as a Client <ArrowRight className="w-5 h-5 group-hover:tranzinc-x-1 transition-transform" />
             </button>
           </motion.div>
@@ -80,7 +80,7 @@ const RegisterSelectionPage = () => {
         </div>
 
         <p className="mt-12 text-center text-zinc-600 dark:text-zinc-400">
-          Already have an account? <a href="/auth/login" className="font-semibold text-brand-600 hover:underline">Log in</a>
+          Already have an account? <a href="/auth/login" className="font-semibold text-[#14a800] hover:underline">Log in</a>
         </p>
       </div>
     </div>

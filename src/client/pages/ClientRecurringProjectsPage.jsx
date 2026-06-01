@@ -60,13 +60,13 @@ export default function ClientRecurringProjectsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2 flex items-center gap-3">
-              <RefreshCw className="w-8 h-8 text-brand-500" /> Recurring Projects
+              <RefreshCw className="w-8 h-8 text-[#14a800]" /> Recurring Projects
             </h1>
             <p className="text-zinc-500 font-medium">Automate repeated hiring and milestone renewals.</p>
           </div>
           <button 
             onClick={() => setShowNewModal(true)}
-            className="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-sm transition-all flex items-center gap-2"
+            className="px-6 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-sm transition-all flex items-center gap-2"
           >
             <Plus className="w-5 h-5" /> New Recurring Job
           </button>
@@ -87,12 +87,12 @@ export default function ClientRecurringProjectsPage() {
               <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Monthly Spend (Est)</p>
               <h3 className="text-3xl font-black text-zinc-900 dark:text-white">$1,100</h3>
             </div>
-            <div className="bg-brand-50 dark:bg-brand-500/10 p-6 rounded-2xl border border-brand-100 dark:border-brand-500/20">
+            <div className="bg-[#14a800]/5 dark:bg-[#14a800]/10 p-6 rounded-2xl border border-[#14a800]/20 dark:border-[#14a800]/20/20">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-brand-600 dark:text-brand-400 shrink-0 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-[#14a800] dark:text-[#14a800] shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-bold text-brand-800 dark:text-brand-400 mb-1">Upcoming Billing</p>
-                  <p className="text-xs font-medium text-brand-700/80 dark:text-brand-400/80">$150 will be charged on May 24 for "Weekly Blog Post".</p>
+                  <p className="text-sm font-bold text-[#14a800] dark:text-[#14a800] mb-1">Upcoming Billing</p>
+                  <p className="text-xs font-medium text-[#14a800]/80 dark:text-[#14a800]/80">$150 will be charged on May 24 for "Weekly Blog Post".</p>
                 </div>
               </div>
             </div>
@@ -112,7 +112,7 @@ export default function ClientRecurringProjectsPage() {
                 <div className="p-6 flex-1 flex flex-col justify-between border-b md:border-b-0 md:border-r border-zinc-100 dark:border-zinc-800">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <span className="text-xs font-bold text-brand-600 bg-brand-50 dark:bg-brand-500/10 px-2 py-1 rounded-md inline-block mb-2">
+                      <span className="text-xs font-bold text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/10 px-2 py-1 rounded-md inline-block mb-2">
                         {job.frequency}
                       </span>
                       <h3 className="text-lg font-bold text-zinc-900 dark:text-white">{job.title}</h3>
@@ -135,7 +135,7 @@ export default function ClientRecurringProjectsPage() {
                     <div>
                       <p className="text-xs font-bold text-zinc-400 uppercase leading-none mb-1">Next Execution</p>
                       <p className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-1 leading-none">
-                        <Calendar className="w-3.5 h-3.5 text-brand-500" /> {job.nextExecution}
+                        <Calendar className="w-3.5 h-3.5 text-[#14a800]" /> {job.nextExecution}
                       </p>
                     </div>
                   </div>
@@ -178,7 +178,7 @@ export default function ClientRecurringProjectsPage() {
             
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <input type="checkbox" defaultChecked className="mt-1 w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-zinc-300" />
+                <input type="checkbox" defaultChecked className="mt-1 w-4 h-4 rounded text-[#14a800] focus:ring-[#14a800] border-zinc-300" />
                 <div>
                   <p className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Require Approval</p>
                   <p className="text-xs text-zinc-500 font-medium mt-1">Review work before the next cycle starts and payment is released.</p>
@@ -186,7 +186,7 @@ export default function ClientRecurringProjectsPage() {
               </div>
               
               <div className="flex items-start gap-3">
-                <input type="checkbox" defaultChecked className="mt-1 w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-zinc-300" />
+                <input type="checkbox" defaultChecked className="mt-1 w-4 h-4 rounded text-[#14a800] focus:ring-[#14a800] border-zinc-300" />
                 <div>
                   <p className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Auto-fund Escrow</p>
                   <p className="text-xs text-zinc-500 font-medium mt-1">Automatically charge primary payment method 1 day before next execution.</p>

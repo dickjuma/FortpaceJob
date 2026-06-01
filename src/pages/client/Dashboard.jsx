@@ -45,17 +45,17 @@ const ClientDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <motion.div 
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          className="lg:col-span-2 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden"
+          className="lg:col-span-2 bg-gradient-to-r from-blue-600 to-[#118a00] rounded-3xl p-8 text-white shadow-xl relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -tranzinc-y-1/2 tranzinc-x-1/2" />
           <div className="relative z-10">
             <h1 className="text-3xl font-bold mb-2">Welcome back, Enterprise Corp!</h1>
-            <p className="text-brand-100 mb-6 max-w-lg">Your team is moving fast. You have 3 pending approvals and 2 new proposals matching your open jobs.</p>
+            <p className="text-[#14a800] mb-6 max-w-lg">Your team is moving fast. You have 3 pending approvals and 2 new proposals matching your open jobs.</p>
             <div className="flex gap-4">
-              <button className="bg-white text-brand-600 px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:-tranzinc-y-0.5">
+              <button className="bg-white text-[#14a800] px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:-tranzinc-y-0.5">
                 Post New Job
               </button>
-              <button className="bg-brand-500/30 border border-brand-400/50 backdrop-blur-sm text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-brand-500/50 transition-all">
+              <button className="bg-[#14a800]/30 border border-[#14a800]/20/50 backdrop-blur-sm text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-[#14a800]/50 transition-all">
                 Review Approvals
               </button>
             </div>
@@ -75,7 +75,7 @@ const ClientDashboard = () => {
           <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4 leading-relaxed">
             Demand for <strong className="text-zinc-900 dark:text-white">Web3 Developers</strong> has increased by 15% this week. Consider locking in contracts now to secure current rates.
           </p>
-          <button className="text-sm font-semibold text-brand-600 dark:text-brand-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+          <button className="text-sm font-semibold text-[#14a800] dark:text-[#14a800] flex items-center gap-1 group-hover:gap-2 transition-all">
             View full report <ArrowRight className="w-4 h-4" />
           </button>
         </motion.div>
@@ -84,9 +84,9 @@ const ClientDashboard = () => {
       {/* 2. Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Total Spend (30d)', value: '$24,500', trend: '+12%', icon: TrendingUp, color: 'text-brand-600', bg: 'bg-brand-50 dark:bg-brand-500/10' },
+          { label: 'Total Spend (30d)', value: '$24,500', trend: '+12%', icon: TrendingUp, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/10' },
           { label: 'Active Contracts', value: '12', trend: 'Stable', icon: Briefcase, color: 'text-teal-600', bg: 'bg-teal-50 dark:bg-teal-500/10' },
-          { label: 'Open Jobs', value: '4', trend: '2 new today', icon: FileText, color: 'text-brand-600', bg: 'bg-brand-50 dark:bg-brand-500/10' },
+          { label: 'Open Jobs', value: '4', trend: '2 new today', icon: FileText, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/10' },
           { label: 'Total Freelancers', value: '45', trend: 'Top 5% client', icon: Users, color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-500/10' }
         ].map((stat, i) => (
           <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 + (i * 0.05) }} 
@@ -112,7 +112,7 @@ const ClientDashboard = () => {
             <h2 className="font-bold text-xl text-zinc-900 dark:text-white">Active Projects</h2>
             <div className="relative w-full sm:w-auto">
               <Search className="w-4 h-4 absolute left-3 top-2.5 text-zinc-400" />
-              <input type="text" placeholder="Search projects..." className="w-full sm:w-64 pl-9 pr-4 py-2 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none" />
+              <input type="text" placeholder="Search projects..." className="w-full sm:w-64 pl-9 pr-4 py-2 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-[#14a800] outline-none" />
             </div>
           </div>
           <div className="overflow-x-auto flex-1">
@@ -135,7 +135,7 @@ const ClientDashboard = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-900 flex items-center justify-center text-xs font-bold text-brand-700 dark:text-brand-300">
+                        <div className="w-6 h-6 rounded-full bg-[#14a800]/10 dark:bg-[#14a800] flex items-center justify-center text-xs font-bold text-[#14a800] dark:text-[#14a800]">
                           {project.freelancer[0]}
                         </div>
                         <span className="font-medium text-zinc-700 dark:text-zinc-300">{project.freelancer}</span>
@@ -144,7 +144,7 @@ const ClientDashboard = () => {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <div className="w-24 h-2 bg-zinc-100 dark:bg-zinc-700 rounded-full overflow-hidden">
-                          <div className="h-full bg-brand-500 rounded-full" style={{ width: `${project.progress}%` }} />
+                          <div className="h-full bg-[#14a800] rounded-full" style={{ width: `${project.progress}%` }} />
                         </div>
                         <span className="text-xs font-medium text-zinc-500">{project.progress}%</span>
                       </div>
@@ -171,7 +171,7 @@ const ClientDashboard = () => {
             <span className="text-sm text-zinc-500">Showing 1 to 4 of 12 entries</span>
             <div className="flex gap-1">
               <button className="p-2 border border-zinc-200 dark:border-zinc-700 rounded-lg hover:bg-surface dark:hover:bg-zinc-800 disabled:opacity-50"><ChevronLeft className="w-4 h-4" /></button>
-              <button className="p-2 border border-zinc-200 dark:border-zinc-700 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 font-medium text-sm w-9">1</button>
+              <button className="p-2 border border-zinc-200 dark:border-zinc-700 rounded-lg bg-[#14a800]/5 dark:bg-[#14a800]/30 text-[#14a800] font-medium text-sm w-9">1</button>
               <button className="p-2 border border-zinc-200 dark:border-zinc-700 rounded-lg hover:bg-surface dark:hover:bg-zinc-800 font-medium text-sm w-9">2</button>
               <button className="p-2 border border-zinc-200 dark:border-zinc-700 rounded-lg hover:bg-surface dark:hover:bg-zinc-800"><ChevronRight className="w-4 h-4" /></button>
             </div>
@@ -182,18 +182,18 @@ const ClientDashboard = () => {
         <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-3xl shadow-sm p-6 flex flex-col">
           <div className="flex justify-between items-center mb-6">
             <h2 className="font-bold text-xl text-zinc-900 dark:text-white">Top Matches</h2>
-            <button className="text-brand-600 hover:text-brand-700 p-1"><MoreHorizontal className="w-5 h-5" /></button>
+            <button className="text-[#14a800] hover:text-[#14a800] p-1"><MoreHorizontal className="w-5 h-5" /></button>
           </div>
           <div className="space-y-4 flex-1">
             {suggestedFreelancers.map((freelancer) => (
-              <div key={freelancer.id} className="p-4 border border-zinc-100 dark:border-zinc-700/50 rounded-2xl hover:border-brand-200 dark:hover:border-brand-800 transition-colors group">
+              <div key={freelancer.id} className="p-4 border border-zinc-100 dark:border-zinc-700/50 rounded-2xl hover:border-[#14a800]/20 dark:hover:border-[#14a800]/20 transition-colors group">
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-#14a800] to-[#118a00] flex items-center justify-center text-white font-bold shadow-md">
                       {freelancer.name[0]}
                     </div>
                     <div>
-                      <h4 className="font-bold text-sm text-zinc-900 dark:text-white group-hover:text-brand-600 transition-colors">{freelancer.name}</h4>
+                      <h4 className="font-bold text-sm text-zinc-900 dark:text-white group-hover:text-[#14a800] transition-colors">{freelancer.name}</h4>
                       <p className="text-xs text-zinc-500">{freelancer.title}</p>
                     </div>
                   </div>
@@ -210,14 +210,14 @@ const ClientDashboard = () => {
                     <span className="text-zinc-400 mx-1">•</span> {freelancer.rate}
                   </div>
                   <div className="flex gap-2">
-                    <button className="p-1.5 text-zinc-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/30 rounded-lg transition-colors"><Star className="w-4 h-4" /></button>
+                    <button className="p-1.5 text-zinc-400 hover:text-[#14a800] hover:bg-[#14a800]/5 dark:hover:bg-[#14a800]/30 rounded-lg transition-colors"><Star className="w-4 h-4" /></button>
                     <button className="px-3 py-1.5 bg-surface-dark dark:bg-white text-white dark:text-zinc-900 text-xs font-bold rounded-lg hover:opacity-90 transition-opacity">Hire</button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          <button className="w-full mt-4 py-3 text-sm font-semibold text-brand-600 bg-brand-50 dark:bg-brand-500/10 hover:bg-brand-100 dark:hover:bg-brand-500/20 rounded-xl transition-colors">
+          <button className="w-full mt-4 py-3 text-sm font-semibold text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/10 hover:bg-[#14a800]/10 dark:hover:bg-[#14a800]/20 rounded-xl transition-colors">
             View All Recommendations
           </button>
         </div>
@@ -229,7 +229,7 @@ const ClientDashboard = () => {
         <div className="xl:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
            {/* Pending Contracts */}
            <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-3xl shadow-sm p-6">
-             <h2 className="font-bold text-lg mb-4 flex items-center justify-between">Pending Contracts <span className="w-6 h-6 bg-brand-100 dark:bg-brand-900/30 text-brand-600 rounded-full flex items-center justify-center text-xs">2</span></h2>
+             <h2 className="font-bold text-lg mb-4 flex items-center justify-between">Pending Contracts <span className="w-6 h-6 bg-[#14a800]/10 dark:bg-[#14a800]/30 text-[#14a800] rounded-full flex items-center justify-center text-xs">2</span></h2>
              <div className="space-y-3">
                {[1, 2].map(i => (
                  <div key={i} className="p-3 border border-zinc-100 dark:border-zinc-700 rounded-xl bg-surface dark:bg-surface-dark/50">
@@ -237,7 +237,7 @@ const ClientDashboard = () => {
                    <p className="text-xs text-zinc-500 mb-3">Awaiting signature from John Doe</p>
                    <div className="flex gap-2">
                      <button className="flex-1 py-1.5 text-xs font-semibold bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 rounded shadow-sm hover:bg-surface dark:hover:bg-zinc-700">Review</button>
-                     <button className="flex-1 py-1.5 text-xs font-semibold bg-brand-600 text-white rounded shadow-sm hover:bg-brand-700">Remind</button>
+                     <button className="flex-1 py-1.5 text-xs font-semibold bg-[#14a800] text-white rounded shadow-sm hover:bg-[#118a00]">Remind</button>
                    </div>
                  </div>
                ))}
@@ -248,7 +248,7 @@ const ClientDashboard = () => {
            <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-3xl shadow-sm p-6">
              <div className="flex justify-between items-center mb-4">
                <h2 className="font-bold text-lg">Recent Payments</h2>
-               <button className="text-zinc-400 hover:text-brand-600"><Download className="w-4 h-4" /></button>
+               <button className="text-zinc-400 hover:text-[#14a800]"><Download className="w-4 h-4" /></button>
              </div>
              <div className="space-y-4">
                {[
@@ -283,7 +283,7 @@ const ClientDashboard = () => {
             {timeline.map((item, i) => (
               <div key={i} className="relative">
                 <div className={`absolute -left-[21px] w-3 h-3 rounded-full border-2 border-white dark:border-zinc-800 ${
-                  item.type === 'success' ? 'bg-green-500' : item.type === 'info' ? 'bg-brand-500' : 'bg-amber-500'
+                  item.type === 'success' ? 'bg-green-500' : item.type === 'info' ? 'bg-[#14a800]' : 'bg-amber-500'
                 }`} />
                 <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-0.5">{item.time}</div>
                 <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">{item.title}</h4>

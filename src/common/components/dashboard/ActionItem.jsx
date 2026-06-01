@@ -6,10 +6,10 @@ const ActionItem = ({ icon: Icon, title, description, buttonText, onClick, isUrg
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl hover:border-indigo-100 dark:hover:border-indigo-900/50 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors group"
+      className="flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl hover:border-[#14a800]/20 dark:hover:border-[#14a800]/50 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors group"
     >
       <div className="flex items-center gap-4">
-        <div className={`p-3 rounded-full flex-shrink-0 ${isUrgent ? 'bg-red-50 text-red-500 dark:bg-red-500/10 dark:text-red-400' : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 dark:group-hover:bg-indigo-500/10 dark:group-hover:text-indigo-400'} transition-colors`}>
+        <div className={`p-3 rounded-full flex-shrink-0 ${isUrgent ? 'bg-red-50 text-red-500 dark:bg-red-500/10 dark:text-red-400' : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 group-hover:bg-[#14a800]/5 group-hover:text-[#14a800] dark:group-hover:bg-[#14a800]/10 dark:group-hover:text-[#14a800]'} transition-colors`}>
           <Icon className="w-5 h-5" />
         </div>
         <div>
@@ -22,7 +22,7 @@ const ActionItem = ({ icon: Icon, title, description, buttonText, onClick, isUrg
       </div>
       <button 
         onClick={onClick}
-        className="ml-4 flex-shrink-0 px-4 py-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 rounded-xl hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors"
+        className="ml-4 flex-shrink-0 px-4 py-2 text-sm font-semibold text-[#14a800] dark:text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/10 rounded-xl hover:bg-[#14a800]/10 dark:hover:bg-[#14a800]/20 transition-colors"
       >
         {buttonText}
       </button>

@@ -1,40 +1,28 @@
 import React, { useState } from 'react';
 import {
-  ArrowRight,
   Briefcase,
-  Code,
   Globe,
   MapPin,
-  Monitor,
-  Palette,
   Search,
   Sparkles,
-  TrendingUp,
-  BrainCircuit,
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  getFeaturedFindWorkJobs,
-  getFindWorkCategories,
-  getFindWorkStats,
-} from './findWorkData';
-
-const CATEGORY_ICONS = {
-  'web-development': Code,
-  'design-creative': Palette,
-  'marketing-sales': TrendingUp,
-  'data-ai': BrainCircuit,
-  'local-services': MapPin,
-};
+  useFindWorkCategories,
+  useFeaturedFindWorkJobs,
+  useFindWorkStats,
+} from '../../common/services/findWorkHooks';
+import CategoryTile from '../../components/marketplace/CategoryTile';
+import JobCard from '../../components/marketplace/JobCard';
+import CategoryNavBar from '../../components/marketplace/CategoryNavBar';
 
 export default function FindWorkHub() {
   const navigate = useNavigate();
   const [workType, setWorkType] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-
-  const categories = getFindWorkCategories();
-  const featuredJobs = getFeaturedFindWorkJobs(3);
-  const stats = getFindWorkStats();
+  const { data: categories = [], isLoading: categoriesLoading } = useFindWorkCategories();
+  const { data: featuredJobs = [], isLoading: jobsLoading } = useFeaturedFindWorkJobs(3);
+  const { data: stats = { onlineJobs: 0, localJobs: 0, verifiedJobs: 0, urgentJobs: 0 } } = useFindWorkStats();
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -60,11 +48,14 @@ export default function FindWorkHub() {
 
   return (
     <>
-      <div className="bg-surface-dark text-white pt-24 pb-20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-600/20 rounded-full blur-3xl -mr-40 -mt-40" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-success/20 rounded-full blur-3xl -ml-20 -mb-20" />
+      <div className="bg-[#14a800] text-white pt-24 pb-20 relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#118a00] via-[#14a800] to-[#0d7a00]" />
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/10 rounded-full blur-3xl -mr-40 -mt-40" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-black/10 rounded-full blur-3xl -ml-20 -mb-20" />
+        </div>
 
-        <div className="container mx-auto px-4 md:px-8 relative z-10 max-w-6xl">
+        <div className="container mx-auto px-4 md:px-8 relative z-10 max-w-6xl text-white">
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/15 text-sm font-bold tracking-wide mb-6">
               <Sparkles className="w-4 h-4 text-amber-300" /> Marketplace-ready work discovery
@@ -99,7 +90,7 @@ export default function FindWorkHub() {
                   onClick={() => setWorkType(id)}
                   className={`flex-1 md:flex-none px-5 py-2.5 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-2 ${
                     workType === id
-                      ? 'bg-white shadow-sm text-brand-600 border border-zinc-200'
+                      ? 'bg-white shadow-sm text-[#14a800] border border-zinc-200'
                       : 'text-zinc-500 hover:text-zinc-900'
                   }`}
                 >
@@ -107,7 +98,7 @@ export default function FindWorkHub() {
                 </button>
               ))}
             </div>
-            <button type="submit" className="px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition-colors md:ml-2 text-center">
+            <button type="submit" className="px-8 py-4 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl transition-colors md:ml-2 text-center">
               Find Work
             </button>
           </form>
@@ -133,6 +124,12 @@ export default function FindWorkHub() {
         </div>
       </div>
 
+      <CategoryNavBar
+        categories={categories}
+        loading={categoriesLoading}
+        basePath="/find-work"
+      />
+
       <div className="bg-surface min-h-screen py-16">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
           <div className="mb-16">
@@ -141,29 +138,28 @@ export default function FindWorkHub() {
                 <h2 className="text-2xl font-bold text-zinc-900 mb-2">Browse Categories</h2>
                 <p className="text-zinc-600">Real categories, consistent counts, and working detail pages.</p>
               </div>
-              <Link to="/find-work/categories" className="text-brand-600 font-bold text-sm hover:underline">
+              <Link to="/find-work/categories" className="text-[#14a800] font-bold text-sm hover:underline">
                 View All
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-6">
-              {categories.map((category) => {
-                const Icon = CATEGORY_ICONS[category.id] || Briefcase;
-                return (
-                  <Link
-                    key={category.id}
-                    to={category.path}
-                    className="bg-white border border-zinc-200 rounded-2xl p-6 hover:border-brand-300 hover:shadow-md transition-all group cursor-pointer"
-                  >
-                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform ${category.accentClass}`}>
-                      <Icon className="w-7 h-7" />
-                    </div>
-                    <h3 className="font-bold text-lg text-zinc-900 mb-2 group-hover:text-brand-600 transition-colors">{category.name}</h3>
-                    <p className="text-zinc-500 font-medium text-sm mb-3">{category.summary}</p>
-                    <div className="text-sm font-black text-zinc-900">{category.openJobs} open jobs</div>
-                  </Link>
-                );
-              })}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
+              {categoriesLoading && categories.length === 0 && (
+                <p className="text-zinc-500 col-span-full">Loading categories…</p>
+              )}
+              {!categoriesLoading && categories.length === 0 && (
+                <p className="text-zinc-500 col-span-full">No categories available yet.</p>
+              )}
+              {categories.map((category) => (
+                <CategoryTile
+                  key={category.id}
+                  title={category.name}
+                  subtitle={category.description}
+                  count={category.openJobs}
+                  countLabel="jobs"
+                  to={category.path}
+                />
+              ))}
             </div>
           </div>
 
@@ -173,51 +169,20 @@ export default function FindWorkHub() {
                 <h2 className="text-2xl font-bold text-zinc-900 mb-2">Featured Opportunities</h2>
                 <p className="text-zinc-600">Prioritized by verified clients, urgency, and current hiring momentum.</p>
               </div>
-              <Link to="/find-work/search?type=all" className="text-brand-600 font-bold text-sm hover:underline">
+              <Link to="/find-work/search?type=all" className="text-[#14a800] font-bold text-sm hover:underline">
                 Explore All Results
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {jobsLoading && featuredJobs.length === 0 && (
+                <p className="text-zinc-500 col-span-full">Loading opportunities…</p>
+              )}
+              {!jobsLoading && featuredJobs.length === 0 && (
+                <p className="text-zinc-500 col-span-full">No featured jobs yet. Check back soon or browse all results.</p>
+              )}
               {featuredJobs.map((job) => (
-                <div key={job.id} className="bg-white border border-zinc-200 rounded-2xl p-6 hover:shadow-lg transition-shadow flex flex-col h-full relative">
-                  {job.urgent && (
-                    <div className="absolute -top-3 -right-3 px-3 py-1 bg-rose-500 text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-md">
-                      Urgent Need
-                    </div>
-                  )}
-                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider mb-3">
-                    <span className={job.workMode === 'local' ? 'text-amber-600' : 'text-brand-600'}>{job.workModeLabel}</span>
-                    <span className="text-zinc-300">/</span>
-                    <span className="text-zinc-500">{job.category.name}</span>
-                  </div>
-                  <h3 className="font-bold text-xl text-zinc-900 mb-3 line-clamp-2 leading-snug">{job.title}</h3>
-                  <p className="text-zinc-600 text-sm mb-4">{job.summary}</p>
-                  <div className="font-black text-zinc-900 text-lg mb-4">
-                    {job.budgetLabel}
-                    <span className="text-sm font-medium text-zinc-500 font-normal ml-2">({job.budgetType})</span>
-                  </div>
-
-                  <div className="mt-auto space-y-2 pt-4 border-t border-zinc-100">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-zinc-500">Client</span>
-                      <span className="font-bold text-zinc-900">{job.client.name}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-zinc-500">Applicants</span>
-                      <span className="font-bold text-zinc-900">{job.applicants}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-xs text-zinc-400 mt-2 font-medium">
-                      <Monitor className="w-3.5 h-3.5" /> {job.postedLabel}
-                    </div>
-                  </div>
-                  <Link
-                    to={job.detailPath}
-                    className="mt-6 w-full py-3 bg-surface hover:bg-zinc-100 text-zinc-900 border border-zinc-200 font-bold rounded-xl text-center transition-colors flex items-center justify-center gap-2"
-                  >
-                    View Details <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
+                <JobCard key={job.id} job={job} />
               ))}
             </div>
           </div>

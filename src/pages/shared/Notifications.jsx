@@ -17,8 +17,8 @@ const initialNotifications = [
     unread: true,
     action: 'View Contract',
     icon: Briefcase,
-    color: 'text-brand-600',
-    bg: 'bg-brand-50 dark:bg-brand-500/10'
+    color: 'text-[#14a800]',
+    bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/10'
   },
   {
     id: 2,
@@ -41,8 +41,8 @@ const initialNotifications = [
     unread: true,
     action: 'Reply',
     icon: MessageSquare,
-    color: 'text-brand-600',
-    bg: 'bg-brand-50 dark:bg-brand-500/10'
+    color: 'text-[#14a800]',
+    bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/10'
   },
   {
     id: 4,
@@ -77,8 +77,8 @@ const initialNotifications = [
     unread: false,
     action: 'Review Proposal',
     icon: Briefcase,
-    color: 'text-brand-600',
-    bg: 'bg-brand-50 dark:bg-brand-500/10'
+    color: 'text-[#14a800]',
+    bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/10'
   }
 ];
 
@@ -125,7 +125,7 @@ const Notifications = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Bell className="w-8 h-8 text-brand-600" />
+            <Bell className="w-8 h-8 text-[#14a800]" />
             {unreadCount > 0 && (
               <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-red-500 border-2 border-zinc-50 dark:border-zinc-900 rounded-full animate-pulse" />
             )}
@@ -139,7 +139,7 @@ const Notifications = () => {
           {unreadCount > 0 && (
             <button 
               onClick={markAllAsRead}
-              className="px-4 py-2 text-sm font-semibold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-500/10 hover:bg-brand-100 dark:hover:bg-brand-500/20 rounded-lg transition-colors flex items-center gap-2"
+              className="px-4 py-2 text-sm font-semibold text-[#14a800] dark:text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/10 hover:bg-[#14a800]/10 dark:hover:bg-[#14a800]/20 rounded-lg transition-colors flex items-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4" /> Mark all read
             </button>
@@ -189,11 +189,11 @@ const Notifications = () => {
                       exit={{ opacity: 0, height: 0 }}
                       onClick={() => markAsRead(notification.id)}
                       className={`p-6 flex gap-4 transition-colors cursor-pointer relative group ${
-                        notification.unread ? 'bg-brand-50/30 dark:bg-brand-900/10' : 'hover:bg-surface dark:hover:bg-zinc-800/50'
+                        notification.unread ? 'bg-[#14a800]/5/30 dark:bg-[#14a800]/10' : 'hover:bg-surface dark:hover:bg-zinc-800/50'
                       }`}
                     >
                       {notification.unread && (
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-600" />
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#14a800]" />
                       )}
                       
                       <div className={`w-12 h-12 rounded-full shrink-0 flex items-center justify-center ${notification.bg}`}>
@@ -212,14 +212,14 @@ const Notifications = () => {
                           {notification.message}
                         </p>
                         
-                        <button className="text-sm font-bold text-brand-600 dark:text-brand-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        <button className="text-sm font-bold text-[#14a800] dark:text-[#14a800] flex items-center gap-1 group-hover:gap-2 transition-all">
                           {notification.action} <ArrowRight className="w-4 h-4" />
                         </button>
                       </div>
 
                       <div className="shrink-0 pt-1">
                         {notification.unread ? (
-                          <div className="w-3 h-3 bg-brand-600 rounded-full" />
+                          <div className="w-3 h-3 bg-[#14a800] rounded-full" />
                         ) : (
                           <Circle className="w-3 h-3 text-zinc-300 dark:text-zinc-600" />
                         )}
@@ -250,7 +250,7 @@ const Notifications = () => {
             className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-sm font-bold rounded-xl hover:bg-surface dark:hover:bg-zinc-700 transition-colors shadow-sm disabled:opacity-70"
           >
             {isLoadingMore ? (
-              <><Loader2 className="w-4 h-4 animate-spin text-brand-600" /> Loading older alerts...</>
+              <><Loader2 className="w-4 h-4 animate-spin text-[#14a800]" /> Loading older alerts...</>
             ) : (
               'Load More'
             )}

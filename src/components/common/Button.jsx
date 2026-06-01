@@ -21,7 +21,7 @@ export default function Button({
   };
 
   const variantStyles = {
-    primary: 'bg-accent-red text-white hover:bg-red-700 hover:shadow-lg focus:ring-accent-red',
+    primary: 'bg-[#e63946] text-white hover:bg-red-700 hover:shadow-lg focus:ring-[#e63946]',
     secondary: 'bg-light-gray text-text-primary hover:bg-gray-200 focus:ring-gray-300',
     outline: 'border border-border bg-transparent text-text-primary hover:bg-light-gray focus:ring-gray-300',
     ghost: 'bg-transparent text-text-primary hover:bg-light-gray focus:ring-gray-300',

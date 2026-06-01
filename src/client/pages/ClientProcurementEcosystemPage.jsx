@@ -46,7 +46,7 @@ export default function ClientProcurementEcosystemPage() {
           <p className="text-xs font-semibold text-light-gray/50 mt-1">Audit active requests for quotes (RFQs), analyze multi-vendor compliance matrices, and authorize purchase orders.</p>
         </div>
 
-        <Button onClick={() => toast.success('New RFQ template generated.')} className="bg-accent-purple border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-accent-purple/20">
+        <Button onClick={() => toast.success('New RFQ template generated.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20">
           Create New RFQ
         </Button>
       </div>
@@ -56,7 +56,7 @@ export default function ClientProcurementEcosystemPage() {
         {/* Left Side: RFQs Listing */}
         <div className="lg:col-span-1 space-y-6">
           <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4">
-            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Briefcase className="w-4 h-4 text-accent-purple" /> Active RFQ Postings</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Briefcase className="w-4 h-4 text-success" /> Active RFQ Postings</h3>
             
             <div className="space-y-3">
               {rfqs.map(rfq => (
@@ -65,12 +65,12 @@ export default function ClientProcurementEcosystemPage() {
                   onClick={() => setSelectedRfq(rfq.id)}
                   className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                     selectedRfq === rfq.id 
-                      ? 'border-accent-purple bg-accent-purple/10' 
+                      ? 'border-success bg-success/10' 
                       : 'border-white/5 bg-white/5 hover:border-white/10'
                   }`}
                 >
                   <div className="flex justify-between items-start">
-                    <span className="text-[10px] font-mono font-bold text-accent-purple">{rfq.id}</span>
+                    <span className="text-[10px] font-mono font-bold text-success">{rfq.id}</span>
                     <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
                       rfq.status === 'Awarded' ? 'bg-success/20 text-success' : 'bg-orange-400/20 text-orange-400'
                     }`}>{rfq.status}</span>
@@ -89,7 +89,7 @@ export default function ClientProcurementEcosystemPage() {
         {/* Right Side: Multi-Vendor Bidding & Comparison */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="border border-white/10 bg-white/5 p-6 rounded-3xl">
-            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><Users className="w-4 h-4 text-accent-purple" /> Vendor Proposal Bid Matrix ({selectedRfq})</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><Users className="w-4 h-4 text-success" /> Vendor Proposal Bid Matrix ({selectedRfq})</h3>
             
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-medium">
@@ -107,7 +107,7 @@ export default function ClientProcurementEcosystemPage() {
                   {vendors.map(v => (
                     <tr key={v.id} className="hover:bg-white/[0.02] transition-colors">
                       <td className="py-4 font-bold text-white flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-accent-purple/20 text-accent-purple flex items-center justify-center font-bold text-xs"><Truck size={14} /></div>
+                        <div className="w-8 h-8 rounded-full bg-success/20 text-success flex items-center justify-center font-bold text-xs"><Truck size={14} /></div>
                         <span>{v.name}</span>
                       </td>
                       <td className="py-4">

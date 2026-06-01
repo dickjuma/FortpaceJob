@@ -36,7 +36,7 @@ export const Modal = ({ isOpen, onClose, title, children, footer, size = 'md' }:
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
       <div 
-        className="fixed inset-0 bg-navy/50 backdrop-blur-sm transition-opacity" 
+        className="fixed inset-0 bg-[#222222]/50 backdrop-blur-sm transition-opacity" 
         onClick={onClose}
         aria-hidden="true"
       />
@@ -53,10 +53,10 @@ export const Modal = ({ isOpen, onClose, title, children, footer, size = 'md' }:
       >
         {title && (
           <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-            <h2 className="text-xl font-semibold text-navy">{title}</h2>
+            <h2 className="text-xl font-semibold text-[#222222]">{title}</h2>
             <button
               onClick={onClose}
-              className="p-2 text-text-secondary hover:text-navy hover:bg-light-gray rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
+              className="p-2 text-text-secondary hover:text-[#222222] hover:bg-light-gray rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#e63946]"
             >
               <X size={20} />
             </button>

@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { 
-  suspendUserApi, 
+  suspendUserApi,
+  restrictUserApi, 
   activateUserApi, 
   banUserApi, 
   verifyKycApi, 
   freezeWalletApi 
-} from '../../api/users/users.api';
+} from '../../api/users/users.api.js';
+import { createAdminApi, assignRoleApi } from '../../api/users/admins.api.js';
 
 export function useUserActions() {
   const queryClient = useQueryClient();
@@ -60,17 +62,30 @@ export function useUserActions() {
     onError: (error) => toast.error(error.message || 'Failed to freeze wallet'),
   });
 
-  const unsupportedAdminMutation = async () => {
-    throw new Error('This admin operation is not exposed by the current backend API.');
-  };
+  const flagUser = useMutation({
+    mutationFn: ({ userId, reason }) => suspendUserApi(userId, { reason, flag: true }),
+    onSuccess: () => {
+      invalidateUsers();
+      toast.success('User flagged successfully');
+    },
+    onError: (error) => toast.error(error.message || 'Failed to flag user'),
+  });
 
   const assignRole = useMutation({
-    mutationFn: unsupportedAdminMutation,
+    mutationFn: ({ userId, role, permissions }) => assignRoleApi(userId, role, permissions),
+    onSuccess: () => {
+      invalidateUsers();
+      toast.success('Role assigned successfully');
+    },
     onError: (error) => toast.error(error.message || 'Failed to assign role'),
   });
 
   const createAdmin = useMutation({
-    mutationFn: unsupportedAdminMutation,
+    mutationFn: (data) => createAdminApi(data),
+    onSuccess: () => {
+      invalidateUsers();
+      toast.success('Administrator created successfully');
+    },
     onError: (error) => toast.error(error.message || 'Failed to create administrator'),
   });
 
@@ -79,7 +94,8 @@ export function useUserActions() {
     activateUser, 
     banUser, 
     verifyKyc, 
-    freezeWallet, 
+    freezeWallet,
+    flagUser,
     assignRole, 
     createAdmin 
   };

@@ -90,11 +90,11 @@ export default function PersonalDetailsPage() {
               className={cn(
                 "p-6 rounded-lg border-2 cursor-pointer transition-all flex items-start gap-4",
                 workModality === 'ONLINE' 
-                  ? "border-accent-purple bg-accent-purple/5" 
+                  ? "border-success bg-success/5" 
                   : "border-border bg-white hover:border-text-secondary"
               )}
             >
-              <div className={cn("p-2.5 rounded-md shrink-0", workModality === 'ONLINE' ? "bg-accent-purple text-white" : "bg-light-gray text-text-secondary")}>
+              <div className={cn("p-2.5 rounded-md shrink-0", workModality === 'ONLINE' ? "bg-success text-white" : "bg-light-gray text-text-secondary")}>
                 <Globe size={20} />
               </div>
               <div>
@@ -109,11 +109,11 @@ export default function PersonalDetailsPage() {
               className={cn(
                 "p-6 rounded-lg border-2 cursor-pointer transition-all flex items-start gap-4",
                 workModality === 'OFFLINE' 
-                  ? "border-accent-red bg-accent-red/5" 
+                  ? "border-[#e63946] bg-[#e63946]/5" 
                   : "border-border bg-white hover:border-text-secondary"
               )}
             >
-              <div className={cn("p-2.5 rounded-md shrink-0", workModality === 'OFFLINE' ? "bg-accent-red text-white" : "bg-light-gray text-text-secondary")}>
+              <div className={cn("p-2.5 rounded-md shrink-0", workModality === 'OFFLINE' ? "bg-[#e63946] text-white" : "bg-light-gray text-text-secondary")}>
                 <Home size={20} />
               </div>
               <div>
@@ -125,8 +125,8 @@ export default function PersonalDetailsPage() {
 
           {/* Conditional Location Input for Offline work */}
           {workModality === 'OFFLINE' && (
-            <Card className="border-l-4 border-l-accent-red p-6">
-              <div className="flex items-center gap-3 mb-4 text-accent-red">
+            <Card className="border-l-4 border-l-[#e63946] p-6">
+              <div className="flex items-center gap-3 mb-4 text-[#e63946]">
                 <MapPin size={20} />
                 <h3 className="font-bold text-text-primary">Service Area Settings</h3>
               </div>
@@ -141,7 +141,7 @@ export default function PersonalDetailsPage() {
                     name="baseCity"
                     value={formData.baseCity}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 bg-white border border-border rounded-md focus:border-accent-red outline-none text-sm font-medium"
+                    className="w-full px-4 py-2.5 bg-white border border-border rounded-md focus:border-[#e63946] outline-none text-sm font-medium"
                     placeholder="e.g. Nairobi, Kenya"
                   />
                 </div>
@@ -152,7 +152,7 @@ export default function PersonalDetailsPage() {
                     name="travelRadius"
                     value={formData.travelRadius}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 bg-white border border-border rounded-md focus:border-accent-red outline-none text-sm font-medium"
+                    className="w-full px-4 py-2.5 bg-white border border-border rounded-md focus:border-[#e63946] outline-none text-sm font-medium"
                     placeholder="e.g. 50"
                   />
                 </div>
@@ -173,13 +173,13 @@ export default function PersonalDetailsPage() {
                 {[
                   { id: 'mpesa', name: 'M-Pesa', icon: Smartphone, color: 'text-green-600' },
                   { id: 'airtel', name: 'Airtel Money', icon: Smartphone, color: 'text-red-600' },
-                  { id: 'bank', name: 'Bank Account', icon: Building2, color: 'text-blue-600' }
+                  { id: 'bank', name: 'Bank Account', icon: Building2, color: 'text-[#14a800]' }
                 ].map(method => (
                   <div 
                     key={method.id}
                     onClick={() => setFormData({...formData, preferredPaymentMethod: method.id})}
                     className={`p-3 border-2 rounded-xl cursor-pointer transition-all flex items-center gap-2 ${
-                      formData.preferredPaymentMethod === method.id ? 'border-brand-500 bg-brand-50' : 'border-border hover:border-zinc-300'
+                      formData.preferredPaymentMethod === method.id ? 'border-[#14a800]/20 bg-[#14a800]/5' : 'border-border hover:border-zinc-300'
                     }`}
                   >
                     <method.icon size={18} className={method.color} />
@@ -211,7 +211,7 @@ export default function PersonalDetailsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-text-secondary uppercase tracking-widest flex items-center gap-1">
-                      <Building2 size={14} className="text-blue-600" /> Select Bank
+                      <Building2 size={14} className="text-[#14a800]" /> Select Bank
                     </label>
                     <select 
                       name="bankName"
@@ -229,7 +229,7 @@ export default function PersonalDetailsPage() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-text-secondary uppercase tracking-widest flex items-center gap-1">
-                      <CreditCard size={14} className="text-blue-600" /> Account Number
+                      <CreditCard size={14} className="text-[#14a800]" /> Account Number
                     </label>
                     <input 
                       type="text" 

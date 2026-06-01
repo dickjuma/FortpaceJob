@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Star, Search, Filter, MoreVertical, ThumbsUp, Flag, CheckCircle, Trash2
 } from 'lucide-react';
-import { useReviews } from '../../hooks/useMarketplace';
+import { useReviews, useMarketplaceActions } from '../../hooks/useMarketplace';
 import useMarketplaceStore from '../../store/marketplaceStore';
 import Avatar from '../../components/ui/Avatar';
 import { cn } from '../../utils/cn';
@@ -30,7 +30,8 @@ const StatusBadge = ({ status }) => {
 };
 
 export default function ReviewsPage() {
-  const { data: reviewsData, isLoading } = useReviews();
+  const { data: reviewsData, isLoading, refetch } = useReviews();
+  const { approveItem, deleteItem } = useMarketplaceActions();
   const { filters, setFilter, setPage } = useMarketplaceStore();
   const [selectedIds, setSelectedIds] = useState([]);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -51,19 +52,32 @@ export default function ReviewsPage() {
   };
 
   const handleAction = (action, id) => {
-    toast.promise(
-      new Promise(resolve => setTimeout(resolve, 800)),
-      {
-        loading: `${action} in progress...`,
-        success: `Review ${id} successfully ${action.toLowerCase()}ed`,
-        error: `Failed to ${action.toLowerCase()} review`,
-      }
-    );
+    const run =
+      action === 'Verify'
+        ? () => approveItem.mutateAsync({ id, type: 'review', reason: 'Admin verified' })
+        : action === 'Remove'
+          ? () => deleteItem.mutateAsync({ id, type: 'review', reason: 'Removed by moderator' })
+          : null;
+    if (!run) {
+      toast.error('Action not supported');
+      return;
+    }
+    toast.promise(run(), {
+      loading: `${action} in progress...`,
+      success: `Review ${action.toLowerCase()}d`,
+      error: `Failed to ${action.toLowerCase()} review`,
+    }).then(() => refetch());
   };
 
-  const handleBulkAction = (action) => {
+  const handleBulkAction = async (action) => {
+    const fn =
+      action === 'Verified'
+        ? (id) => approveItem.mutateAsync({ id, type: 'review' })
+        : (id) => deleteItem.mutateAsync({ id, type: 'review', reason: 'Bulk moderation' });
+    await Promise.all(selectedIds.map(fn));
     toast.success(`${action} applied to ${selectedIds.length} reviews`);
     setSelectedIds([]);
+    refetch();
   };
 
   const handleUserAction = (type, user) => {
@@ -98,7 +112,7 @@ export default function ReviewsPage() {
               placeholder="Search reviews..." 
               value={filters.reviews.search}
               onChange={(e) => setFilter('reviews', 'search', e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-surface dark:bg-zinc-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none"
+              className="w-full pl-10 pr-4 py-2 bg-surface dark:bg-zinc-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-[#14a800] outline-none"
             />
           </div>
           <select 
@@ -114,8 +128,8 @@ export default function ReviewsPage() {
         </div>
 
         {selectedIds.length > 0 && (
-          <div className="bg-brand-50 dark:bg-brand-500/10 border-b border-brand-100 dark:border-brand-500/20 p-3 flex items-center justify-between px-6">
-            <span className="text-sm font-medium text-brand-700 dark:text-brand-300">
+          <div className="bg-[#14a800]/5 dark:bg-[#14a800]/10 border-b border-[#14a800]/20 dark:border-[#14a800]/20/20 p-3 flex items-center justify-between px-6">
+            <span className="text-sm font-medium text-[#14a800] dark:text-[#14a800]">
               {selectedIds.length} reviews selected
             </span>
             <div className="flex gap-2">
@@ -140,7 +154,7 @@ export default function ReviewsPage() {
             <thead>
               <tr className="bg-surface dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 text-xs uppercase tracking-wider font-semibold">
                 <th className="p-4 w-12 text-center">
-                  <input type="checkbox" onChange={toggleAll} checked={selectedIds.length > 0 && selectedIds.length === reviewsData?.data?.length} className="rounded border-zinc-300 dark:border-zinc-600 text-brand-600 focus:ring-brand-500" />
+                  <input type="checkbox" onChange={toggleAll} checked={selectedIds.length > 0 && selectedIds.length === reviewsData?.data?.length} className="rounded border-zinc-300 dark:border-zinc-600 text-[#14a800] focus:ring-[#14a800]" />
                 </th>
                 <th className="p-4">Review Details</th>
                 <th className="p-4">Reviewer</th>
@@ -156,7 +170,7 @@ export default function ReviewsPage() {
                 reviewsData?.data?.map(review => (
                   <tr key={review.id} className={cn("hover:bg-surface/50 dark:hover:bg-zinc-800/20", review.flagged && "bg-red-50/30 dark:bg-red-900/10")}>
                     <td className="p-4 text-center align-top">
-                      <input type="checkbox" checked={selectedIds.includes(review.id)} onChange={() => toggleSelect(review.id)} className="rounded border-zinc-300 dark:border-zinc-600 text-brand-600 mt-2" />
+                      <input type="checkbox" checked={selectedIds.includes(review.id)} onChange={() => toggleSelect(review.id)} className="rounded border-zinc-300 dark:border-zinc-600 text-[#14a800] mt-2" />
                     </td>
                     <td className="p-4 max-w-md whitespace-normal">
                       <p className="font-bold text-zinc-900 dark:text-white">{review.title}</p>
@@ -174,7 +188,7 @@ export default function ReviewsPage() {
                       >
                         <Avatar name={review.reviewerName} size="sm" />
                         <div>
-                          <p className="text-sm font-semibold text-zinc-900 dark:text-white group-hover:text-brand-600 transition-colors">{review.reviewerName}</p>
+                          <p className="text-sm font-semibold text-zinc-900 dark:text-white group-hover:text-[#14a800] transition-colors">{review.reviewerName}</p>
                           <p className="text-xs text-zinc-500 capitalize">{review.reviewerRole}</p>
                         </div>
                       </div>

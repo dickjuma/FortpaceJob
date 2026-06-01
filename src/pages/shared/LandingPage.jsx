@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
+import { useHomepageData } from '../../common/hooks/useHomepageData';
+import {
+  StatCardSkeleton,
+  FreelancerCardSkeleton,
+  CategoryPillSkeleton,
+  TestimonialSkeleton,
+  Skeleton,
+} from '../../components/ui/Skeleton';
 import {
   ArrowRight, ShieldCheck, Zap, BrainCircuit, TrendingUp, Users, Star,
   CheckCircle2, ChevronRight, Menu, X, Briefcase, Building2,
@@ -84,59 +92,16 @@ const NAV_LINKS = [
   { label: 'How It Works', href: '#how-it-works', isRoute: false },
 ];
 
-const STATS = [
-  { label: 'Active Freelancers', value: 150, suffix: 'K+', icon: Users, color: 'text-brand-500' },
-  { label: 'Projects Completed', value: 2, suffix: 'M+', icon: CheckCircle2, color: 'text-teal-500' },
-  { label: 'Avg. Response Time', value: '< 2 hrs', isStatic: true, icon: Clock, color: 'text-violet-500' },
-  { label: 'Client Satisfaction', value: 99.8, suffix: '%', icon: Star, color: 'text-amber-500' },
-];
+const ACTIVITY_ICONS = {
+  job: Briefcase,
+  talent: Users,
+  platform: Activity,
+};
 
-const RECENT_ACTIVITY = [
-  { icon: '🚀', text: 'Sarah M. just hired a Senior React Developer for $4,800' },
-  { icon: '⭐', text: 'John D. completed a $5k contract with a 5-star review' },
-  { icon: '🔥', text: 'New AI Matching algorithm deployed — 40% faster matches' },
-  { icon: '💼', text: 'Top-rated UI/UX Designer available — book now' },
-  { icon: '✅', text: 'Milestone payment of $1,200 released to Alex K.' },
-  { icon: '🌍', text: 'New talent from 12 countries joined this week' },
-];
-
-const FEATURED_FREELANCERS = [
-  {
-    name: 'Elena R.',
-    role: 'Senior Full Stack Engineer',
-    rate: '$85/hr',
-    score: 99,
-    skills: ['React', 'Node.js', 'AWS'],
-    avatar: 'ER',
-    avatarColor: 'from-violet-500 to-indigo-600',
-    available: true,
-    projects: 127,
-    earnings: '$240K+',
-  },
-  {
-    name: 'Marcus T.',
-    role: 'UX/UI Product Designer',
-    rate: '$65/hr',
-    score: 97,
-    skills: ['Figma', 'Prototyping', 'Research'],
-    avatar: 'MT',
-    avatarColor: 'from-sky-400 to-cyan-600',
-    available: true,
-    projects: 89,
-    earnings: '$180K+',
-  },
-  {
-    name: 'Sarah K.',
-    role: 'AI/ML Specialist',
-    rate: '$120/hr',
-    score: 98,
-    skills: ['Python', 'TensorFlow', 'LLMs'],
-    avatar: 'SK',
-    avatarColor: 'from-amber-400 to-orange-500',
-    available: false,
-    projects: 54,
-    earnings: '$310K+',
-  },
+const AVATAR_GRADIENTS = [
+  'from-[#14a800] to-[#118a00]',
+  'from-sky-400 to-cyan-600',
+  'from-amber-400 to-orange-500',
 ];
 
 const BENEFITS = [
@@ -144,7 +109,7 @@ const BENEFITS = [
     icon: BrainCircuit,
     title: 'AI-Powered Matching',
     desc: 'Our engine analyses 200+ data points to connect you with the perfect match in under 60 seconds.',
-    gradient: 'from-violet-500 to-indigo-600',
+    gradient: 'from-[#14a800] to-[#118a00]',
     delay: 0,
   },
   {
@@ -179,7 +144,7 @@ const BENEFITS = [
     icon: MessageSquare,
     title: 'Built-In Workspace',
     desc: 'Chat, video calls, file sharing, and milestones — everything in one seamless workspace.',
-    gradient: 'from-blue-400 to-brand-600',
+    gradient: 'from-blue-400 to-[#118a00]',
     delay: 0.5,
   },
 ];
@@ -192,9 +157,9 @@ const PATHS = [
     tagline: 'Earn by offering your skills',
     description: 'Join 150,000+ freelancers earning top dollar on Forte. Set your rates, choose your projects, and build your reputation on the world\'s most trusted marketplace.',
     cta: 'Continue as Freelancer',
-    gradient: 'from-violet-600 to-indigo-600',
-    glow: 'shadow-violet-500/30',
-    border: 'border-violet-500/30',
+    gradient: 'from-violet-600 to-[#118a00]',
+    glow: 'shadow-[#14a800]/30',
+    border: 'border-[#14a800]/30',
     bg: 'bg-violet-50 dark:bg-violet-950/20',
     perks: [
       'Zero commission for first 30 days',
@@ -223,66 +188,7 @@ const PATHS = [
   },
 ];
 
-const TESTIMONIALS = [
-  {
-    name: 'Priya Mehta',
-    role: 'CTO, NexaScale',
-    avatar: 'PM',
-    avatarColor: 'from-pink-500 to-rose-600',
-    rating: 5,
-    text: 'Forte found us a senior backend engineer in 48 hours. The trust scoring system gave us confidence from day one. We\'ve hired 6 more people since.',
-    highlight: 'Found talent in 48 hours',
-    revenue: '$120K saved',
-  },
-  {
-    name: 'James Okafor',
-    role: 'Freelance Product Designer',
-    avatar: 'JO',
-    avatarColor: 'from-emerald-500 to-teal-600',
-    rating: 5,
-    text: 'I switched from Upwork 18 months ago and tripled my monthly income. The escrow system and milestone tracking are genuinely world-class.',
-    highlight: '3× income growth',
-    revenue: '$8,400/mo',
-  },
-  {
-    name: 'Lisa Chen',
-    role: 'Head of Product, Vanta',
-    avatar: 'LC',
-    avatarColor: 'from-violet-500 to-purple-600',
-    rating: 5,
-    text: 'The AI matching is scary good. It recommended a freelancer whose portfolio matched our design system perfectly. Shipped our redesign 2 weeks early.',
-    highlight: 'Shipped 2 weeks early',
-    revenue: '$40K project',
-  },
-  {
-    name: 'David Park',
-    role: 'Freelance AI Engineer',
-    avatar: 'DP',
-    avatarColor: 'from-amber-500 to-orange-600',
-    rating: 5,
-    text: 'Forte\'s vetting process meant clients trusted me immediately. I went from $60/hr to $140/hr in 6 months by building my verified profile.',
-    highlight: '$60 → $140/hr',
-    revenue: 'In 6 months',
-  },
-];
-
-const PAYMENT_PROVIDERS = [
-  { name: 'Visa', symbol: '💳' },
-  { name: 'Mastercard', symbol: '🔴' },
-  { name: 'Stripe', symbol: '⚡' },
-  { name: 'PayPal', symbol: '🅿' },
-  { name: 'Crypto', symbol: '₿' },
-  { name: 'SWIFT', symbol: '🏦' },
-];
-
-const CATEGORIES = [
-  { icon: Code2, label: 'Development', count: '42K+' },
-  { icon: Palette, label: 'Design', count: '28K+' },
-  { icon: BrainCircuit, label: 'AI & ML', count: '9K+' },
-  { icon: PenTool, label: 'Writing', count: '19K+' },
-  { icon: Camera, label: 'Video', count: '12K+' },
-  { icon: Headphones, label: 'Support', count: '7K+' },
-];
+const DEFAULT_PAYMENT_METHODS = ['M-Pesa', 'Paystack', 'Visa', 'Mastercard', 'Bank transfer', 'Escrow'];
 
 const HOW_IT_WORKS_STEPS = [
   { step: '01', title: 'Create Your Profile', desc: 'Sign up free and build your verified profile in minutes. AI-assisted portfolio import available.', icon: Users },
@@ -303,11 +209,11 @@ function Navbar({ scrolled, mobileOpen, onToggleMobile }) {
         <div className="flex justify-between items-center h-18 py-4">
           {/* Logo */}
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/30">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#14a800] to-blue-700 flex items-center justify-center shadow-lg shadow-[#14a800]/30">
               <Zap className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-              Forte<span className="text-brand-600">.</span>
+              Forte<span className="text-[#14a800]">.</span>
             </span>
           </div>
 
@@ -318,7 +224,7 @@ function Navbar({ scrolled, mobileOpen, onToggleMobile }) {
                 <Link
                   key={label}
                   to={href}
-                  className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+                  className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-[#14a800] dark:hover:text-[#14a800] transition-colors"
                 >
                   {label}
                 </Link>
@@ -326,7 +232,7 @@ function Navbar({ scrolled, mobileOpen, onToggleMobile }) {
                 <a
                   key={label}
                   href={href}
-                  className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+                  className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-[#14a800] dark:hover:text-[#14a800] transition-colors"
                 >
                   {label}
                 </a>
@@ -338,13 +244,13 @@ function Navbar({ scrolled, mobileOpen, onToggleMobile }) {
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={() => navigate('/auth/login')}
-              className="text-sm font-semibold text-zinc-700 dark:text-zinc-200 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-4 py-2"
+              className="text-sm font-semibold text-zinc-700 dark:text-zinc-200 hover:text-[#14a800] dark:hover:text-[#14a800] transition-colors px-4 py-2"
             >
               Log in
             </button>
             <button
               onClick={() => navigate('/auth/register')}
-              className="px-5 py-2.5 rounded-full bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition-all shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98]"
+              className="px-5 py-2.5 rounded-full bg-[#14a800] text-white text-sm font-semibold hover:bg-[#118a00] transition-all shadow-lg shadow-[#14a800]/25 hover:shadow-[#14a800]/40 hover:scale-[1.02] active:scale-[0.98]"
             >
               Get Started Free
             </button>
@@ -396,7 +302,7 @@ function Navbar({ scrolled, mobileOpen, onToggleMobile }) {
                 <button onClick={() => navigate('/auth/login')} className="w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-surface dark:hover:bg-zinc-800 transition-colors">
                   Log in
                 </button>
-                <button onClick={() => navigate('/auth/register')} className="w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 transition-colors">
+                <button onClick={() => navigate('/auth/register')} className="w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#14a800] hover:bg-[#118a00] transition-colors">
                   Get Started Free
                 </button>
               </div>
@@ -408,9 +314,23 @@ function Navbar({ scrolled, mobileOpen, onToggleMobile }) {
   );
 }
 
-function LiveTicker() {
+function LiveTicker({ activity = [], loading = false }) {
+  const items = activity.length
+    ? activity
+    : [{ type: 'platform', text: 'Marketplace activity updates in real time' }];
+
+  if (loading) {
+    return (
+      <div className="w-full border-y border-zinc-200/60 dark:border-zinc-800/60 py-3 px-4">
+        <Skeleton className="h-8 w-full max-w-3xl mx-auto" />
+      </div>
+    );
+  }
+
+  const loop = [...items, ...items, ...items];
+
   return (
-    <div className="w-full border-y border-zinc-200/60 dark:border-zinc-800/60 bg-white/40 dark:bg-surface-dark/40 backdrop-blur-sm overflow-hidden py-3">
+    <div className="w-full border-y border-zinc-200/60 dark:border-zinc-800/60 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm overflow-hidden py-3">
       <div className="flex items-center gap-3 px-4 mb-0">
         <div className="flex-shrink-0 flex items-center gap-1.5 text-xs font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20 px-2.5 py-1 rounded-full">
           <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
@@ -421,21 +341,57 @@ function LiveTicker() {
           animate={{ x: [0, -2400] }}
           transition={{ repeat: Infinity, duration: 35, ease: 'linear' }}
         >
-          {[...RECENT_ACTIVITY, ...RECENT_ACTIVITY, ...RECENT_ACTIVITY].map((item, i) => (
-            <span key={i} className="inline-flex items-center gap-2 mx-10 text-sm text-zinc-500 dark:text-zinc-400">
-              <span>{item.icon}</span>
-              <span>{item.text}</span>
-              <span className="text-zinc-300 dark:text-zinc-700">·</span>
-            </span>
-          ))}
+          {loop.map((item, i) => {
+            const Icon = ACTIVITY_ICONS[item.type] || Activity;
+            return (
+              <span key={i} className="inline-flex items-center gap-2 mx-10 text-sm text-zinc-500 dark:text-zinc-400">
+                <Icon className="w-4 h-4 text-[#14a800] shrink-0" />
+                <span>{item.text}</span>
+                <span className="text-zinc-300 dark:text-zinc-700">·</span>
+              </span>
+            );
+          })}
         </motion.div>
       </div>
     </div>
   );
 }
 
-function HeroSection({ onScrollToPath }) {
+function HeroSection({ stats, categories = [], openJobs = 0, loading = false }) {
   const navigate = useNavigate();
+
+  const heroStats = [
+    {
+      label: 'Active professionals',
+      value: stats?.talentCount || 0,
+      suffix: '+',
+      icon: Users,
+      color: 'text-[#14a800]',
+    },
+    {
+      label: 'Open jobs',
+      value: stats?.openJobs ?? openJobs,
+      suffix: '',
+      icon: Briefcase,
+      color: 'text-teal-500',
+    },
+    {
+      label: 'Categories',
+      value: stats?.categoriesCount || categories.length,
+      suffix: '',
+      icon: Globe,
+      color: 'text-[#14a800]',
+    },
+    {
+      label: 'Avg. rating',
+      value: stats?.avgRating || 4.9,
+      suffix: '',
+      isFloat: true,
+      icon: Star,
+      color: 'text-amber-500',
+    },
+  ];
+
   return (
     <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8 text-center">
       {/* Announcement badge */}
@@ -443,11 +399,11 @@ function HeroSection({ onScrollToPath }) {
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 text-xs sm:text-sm font-semibold mb-8 border border-brand-100 dark:border-brand-500/20 shadow-sm"
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800] text-xs sm:text-sm font-semibold mb-8 border border-[#14a800]/20 dark:border-[#14a800]/20/20 shadow-sm"
       >
         <Sparkles className="w-4 h-4" />
         <span>AI-Powered Matching Engine 2.0 — Now Live</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
+        <span className="w-1.5 h-1.5 rounded-full bg-[#14a800] animate-pulse" />
       </motion.div>
 
       {/* Headline */}
@@ -485,22 +441,22 @@ function HeroSection({ onScrollToPath }) {
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate('/auth/register', { state: { role: 'FREELANCER' } })}
-          className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 text-white text-base font-bold shadow-2xl shadow-blue-500/30 hover:shadow-blue-500/50 transition-all"
+          className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 text-white text-base font-bold shadow-2xl shadow-[#14a800]/30 hover:shadow-[#14a800]/50 transition-all"
         >
           <Briefcase className="w-5 h-5" />
           Continue as Freelancer
-          <ArrowRight className="w-4 h-4 group-hover:tranzinc-x-1 transition-transform" />
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </motion.button>
 
         <motion.button
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate('/auth/register', { state: { role: 'CLIENT' } })}
-          className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white text-base font-bold border border-zinc-200 dark:border-zinc-700 hover:border-brand-300 dark:hover:border-brand-600 shadow-sm hover:shadow-md transition-all"
+          className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white text-base font-bold border border-zinc-200 dark:border-zinc-700 hover:border-[#14a800]/50 dark:hover:border-[#14a800]/20 shadow-sm hover:shadow-md transition-all"
         >
           <Building2 className="w-5 h-5" />
           Continue as Client
-          <ChevronRight className="w-4 h-4 group-hover:tranzinc-x-1 transition-transform" />
+          <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </motion.button>
       </motion.div>
 
@@ -514,48 +470,61 @@ function HeroSection({ onScrollToPath }) {
         {/* Glassmorphism Hero Card */}
         <div className="relative rounded-3xl overflow-hidden border border-zinc-200/60 dark:border-zinc-700/60 shadow-2xl shadow-zinc-200/50 dark:shadow-black/50 bg-white/60 dark:bg-surface-dark/60 backdrop-blur-xl p-6 sm:p-8">
           {/* Inner gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-violet-500/5 to-cyan-500/5 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#14a800]/5 via-[#14a800]/5 to-cyan-500/5 pointer-events-none" />
 
           {/* Floating stat badges */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            {STATS.map((stat, i) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5 + i * 0.1, type: 'spring', stiffness: 200 }}
-                  className="flex flex-col items-center p-4 rounded-2xl bg-white/80 dark:bg-zinc-800/80 border border-zinc-100 dark:border-zinc-700 shadow-sm"
-                >
-                  <Icon className={cn('w-5 h-5 mb-2', stat.color)} />
-                  <div className="text-2xl font-extrabold text-zinc-900 dark:text-white">
-                    {stat.isStatic ? stat.value : (
-                      <AnimatedCounter target={stat.value} suffix={stat.suffix} />
-                    )}
-                  </div>
-                  <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mt-0.5 text-center">{stat.label}</div>
-                </motion.div>
-              );
-            })}
+            {loading
+              ? [0, 1, 2, 3].map((i) => <StatCardSkeleton key={i} />)
+              : heroStats.map((stat, i) => {
+                  const Icon = stat.icon;
+                  return (
+                    <motion.div
+                      key={stat.label}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.5 + i * 0.1, type: 'spring', stiffness: 200 }}
+                      className="flex flex-col items-center p-4 rounded-2xl bg-white/80 dark:bg-zinc-800/80 border border-zinc-100 dark:border-zinc-700 shadow-sm"
+                    >
+                      <Icon className={cn('w-5 h-5 mb-2', stat.color)} />
+                      <div className="text-2xl font-extrabold text-zinc-900 dark:text-white">
+                        {stat.isStatic ? (
+                          stat.value
+                        ) : stat.isFloat ? (
+                          stat.value
+                        ) : (
+                          <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                        )}
+                      </div>
+                      <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mt-0.5 text-center">
+                        {stat.label}
+                      </div>
+                    </motion.div>
+                  );
+                })}
           </div>
 
-          {/* Category Pills */}
           <div className="flex flex-wrap justify-center gap-3">
-            {CATEGORIES.map(({ icon: CatIcon, label, count }, i) => (
-              <motion.div
-                key={label}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.8 + i * 0.06 }}
-                whileHover={{ scale: 1.05, y: -2 }}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm cursor-pointer hover:border-brand-300 dark:hover:border-brand-600 transition-all"
-              >
-                <CatIcon className="w-4 h-4 text-brand-600 dark:text-brand-400" />
-                <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{label}</span>
-                <span className="text-xs text-zinc-400 dark:text-zinc-500">{count}</span>
-              </motion.div>
-            ))}
+            {loading
+              ? [0, 1, 2, 3, 4, 5].map((i) => <CategoryPillSkeleton key={i} />)
+              : categories.map((cat, i) => (
+                  <Link
+                    key={cat.slug || cat.id}
+                    to={`/find-talent?section=${encodeURIComponent(cat.slug || cat.id)}`}
+                  >
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.8 + i * 0.06 }}
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm cursor-pointer hover:border-[#14a800]/50 transition-all"
+                    >
+                      <Briefcase className="w-4 h-4 text-[#14a800]" />
+                      <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{cat.label}</span>
+                      <span className="text-xs text-zinc-400 dark:text-zinc-500">{cat.count}</span>
+                    </motion.div>
+                  </Link>
+                ))}
           </div>
         </div>
 
@@ -578,7 +547,7 @@ function HeroSection({ onScrollToPath }) {
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
           className="absolute -top-5 -right-4 sm:-right-8 bg-white dark:bg-zinc-800 rounded-2xl shadow-xl border border-zinc-100 dark:border-zinc-700 px-4 py-3 hidden sm:flex items-center gap-2.5"
         >
-          <Activity className="w-5 h-5 text-brand-500" />
+          <Activity className="w-5 h-5 text-[#14a800]" />
           <div>
             <div className="text-xs font-bold text-zinc-900 dark:text-white">847 Matches</div>
             <div className="text-[10px] text-zinc-500">Made today</div>
@@ -589,10 +558,12 @@ function HeroSection({ onScrollToPath }) {
         <motion.div
           animate={{ y: [0, -6, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-          className="absolute -bottom-5 left-1/2 -tranzinc-x-1/2 bg-white dark:bg-zinc-800 rounded-2xl shadow-xl border border-zinc-100 dark:border-zinc-700 px-5 py-3 flex items-center gap-2.5 whitespace-nowrap"
+          className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-white dark:bg-zinc-800 rounded-2xl shadow-xl border border-zinc-100 dark:border-zinc-700 px-5 py-3 flex items-center gap-2.5 whitespace-nowrap"
         >
           <Flame className="w-4 h-4 text-orange-500" />
-          <span className="text-xs font-bold text-zinc-900 dark:text-white">2,340 active jobs right now</span>
+          <span className="text-xs font-bold text-zinc-900 dark:text-white">
+            {openJobs > 0 ? `${openJobs} open jobs right now` : 'Open jobs posted daily'}
+          </span>
         </motion.div>
       </motion.div>
     </section>
@@ -608,7 +579,7 @@ function BenefitsSection() {
         viewport={{ once: true }}
         className="text-center mb-16"
       >
-        <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400 mb-4">
+        <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#14a800] dark:text-[#14a800] mb-4">
           <Sparkles className="w-4 h-4" /> Platform Benefits
         </span>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-4">
@@ -649,7 +620,9 @@ function BenefitsSection() {
   );
 }
 
-function FreelancersSection() {
+function FreelancersSection({ freelancers = [], loading = false, talentCount = 0 }) {
+  const navigate = useNavigate();
+
   return (
     <section id="freelancers" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-zinc-200/60 dark:border-zinc-800/60">
       <div className="flex flex-col md:flex-row justify-between items-end mb-12">
@@ -664,15 +637,26 @@ function FreelancersSection() {
             Our trust-scoring engine surfaces only professionals with proven delivery track records.
           </p>
         </div>
-        <button className="mt-6 md:mt-0 text-sm font-semibold text-brand-600 dark:text-brand-400 flex items-center gap-1.5 hover:gap-3 transition-all group">
-          View all 150K+ freelancers
-          <ArrowRight className="w-4 h-4 group-hover:tranzinc-x-1 transition-transform" />
-        </button>
+        <Link
+          to="/find-talent"
+          className="mt-6 md:mt-0 text-sm font-semibold text-[#14a800] flex items-center gap-1.5 hover:gap-3 transition-all group"
+        >
+          View all {talentCount > 0 ? `${talentCount}+` : ''} professionals
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {FEATURED_FREELANCERS.map((f, i) => (
-          <TiltCard key={i}>
+        {loading
+          ? [0, 1, 2].map((i) => <FreelancerCardSkeleton key={i} />)
+          : freelancers.length === 0
+            ? (
+              <p className="col-span-full text-center text-zinc-500 py-12">
+                No featured profiles yet. Complete onboarding to appear here.
+              </p>
+            )
+            : freelancers.map((f, i) => (
+          <TiltCard key={f.id || f.userId || i}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -680,12 +664,12 @@ function FreelancersSection() {
               transition={{ delay: i * 0.1 }}
               className="group relative bg-white dark:bg-zinc-800 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-700 shadow-card hover:shadow-2xl transition-all overflow-hidden h-full"
             >
-              <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${f.avatarColor} opacity-10 rounded-bl-[80px] pointer-events-none`} />
+              <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${AVATAR_GRADIENTS[i % AVATAR_GRADIENTS.length]} opacity-10 rounded-bl-[80px] pointer-events-none`} />
 
               {/* Header */}
               <div className="flex items-start justify-between mb-5">
                 <div className="flex items-center gap-3">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${f.avatarColor} flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${AVATAR_GRADIENTS[i % AVATAR_GRADIENTS.length]} flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
                     {f.avatar}
                   </div>
                   <div>
@@ -736,13 +720,13 @@ function FreelancersSection() {
 
               {/* Stats row */}
               <div className="grid grid-cols-2 gap-3 mb-5">
-                <div className="rounded-xl bg-surface dark:bg-zinc-700/50 p-3 text-center">
+                <div className="rounded-xl bg-zinc-50 dark:bg-zinc-700/50 p-3 text-center">
                   <div className="text-sm font-extrabold text-zinc-900 dark:text-white">{f.projects}</div>
                   <div className="text-[10px] text-zinc-500">Projects</div>
                 </div>
-                <div className="rounded-xl bg-surface dark:bg-zinc-700/50 p-3 text-center">
-                  <div className="text-sm font-extrabold text-zinc-900 dark:text-white">{f.earnings}</div>
-                  <div className="text-[10px] text-zinc-500">Earned</div>
+                <div className="rounded-xl bg-zinc-50 dark:bg-zinc-700/50 p-3 text-center">
+                  <div className="text-sm font-extrabold text-zinc-900 dark:text-white">{f.score}/100</div>
+                  <div className="text-[10px] text-zinc-500">Trust score</div>
                 </div>
               </div>
 
@@ -750,16 +734,18 @@ function FreelancersSection() {
               <div className="flex items-center justify-between pt-4 border-t border-zinc-100 dark:border-zinc-700">
                 <div className="text-base font-extrabold text-zinc-900 dark:text-white">{f.rate}</div>
                 <motion.button
+                  type="button"
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
-                  className="text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-2 rounded-xl shadow-md shadow-blue-500/20 hover:shadow-blue-500/40 transition-all"
+                  onClick={() => navigate(`/freelancer/${f.userId || f.id}`)}
+                  className="text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-2 rounded-xl shadow-md shadow-[#14a800]/20 hover:shadow-[#14a800]/40 transition-all"
                 >
                   View Profile
                 </motion.button>
               </div>
             </motion.div>
           </TiltCard>
-        ))}
+            ))}
       </div>
     </section>
   );
@@ -803,9 +789,9 @@ function HowItWorksSection() {
                 )}
                 <div className="relative mb-4">
                   <div className="w-20 h-20 rounded-2xl bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-lg flex items-center justify-center">
-                    <Icon className="w-8 h-8 text-brand-600 dark:text-brand-400" />
+                    <Icon className="w-8 h-8 text-[#14a800] dark:text-[#14a800]" />
                   </div>
-                  <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-brand-600 text-white text-xs font-extrabold flex items-center justify-center shadow-md">
+                  <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#14a800] text-white text-xs font-extrabold flex items-center justify-center shadow-md">
                     {step.step.slice(1)}
                   </span>
                 </div>
@@ -895,15 +881,17 @@ function PathSection() {
   );
 }
 
-function TestimonialsSection() {
+function TestimonialsSection({ testimonials = [], loading = false }) {
   const [active, setActive] = useState(0);
-  const prev = () => setActive((a) => (a - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
-  const next = () => setActive((a) => (a + 1) % TESTIMONIALS.length);
+  const list = testimonials.length ? testimonials : [];
+  const prev = () => setActive((a) => (a - 1 + list.length) % Math.max(list.length, 1));
+  const next = () => setActive((a) => (a + 1) % Math.max(list.length, 1));
 
   useEffect(() => {
+    if (list.length < 2) return undefined;
     const t = setInterval(next, 5000);
     return () => clearInterval(t);
-  }, []);
+  }, [list.length]);
 
   return (
     <section className="py-24 bg-gradient-to-b from-white to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 border-t border-zinc-200/60 dark:border-zinc-800/60">
@@ -923,6 +911,11 @@ function TestimonialsSection() {
         </motion.div>
 
         <div className="relative">
+          {loading ? (
+            <TestimonialSkeleton />
+          ) : list.length === 0 ? (
+            <p className="text-center text-zinc-500 py-12">Reviews from completed work will appear here.</p>
+          ) : (
           <AnimatePresence mode="wait">
             <motion.div
               key={active}
@@ -933,70 +926,66 @@ function TestimonialsSection() {
               className="bg-white dark:bg-zinc-800 rounded-3xl p-8 sm:p-10 border border-zinc-200 dark:border-zinc-700 shadow-2xl"
             >
               <div className="flex flex-col sm:flex-row gap-8 items-start">
-                {/* Avatar & meta */}
                 <div className="flex-shrink-0 flex flex-col items-center sm:items-start gap-3">
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${TESTIMONIALS[active].avatarColor} flex items-center justify-center text-white font-extrabold text-xl shadow-xl`}>
-                    {TESTIMONIALS[active].avatar}
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${AVATAR_GRADIENTS[active % AVATAR_GRADIENTS.length]} flex items-center justify-center text-white font-extrabold text-xl shadow-xl`}>
+                    {list[active].avatar}
                   </div>
                   <div>
-                    <div className="font-bold text-zinc-900 dark:text-white">{TESTIMONIALS[active].name}</div>
-                    <div className="text-xs text-zinc-500 dark:text-zinc-400">{TESTIMONIALS[active].role}</div>
+                    <div className="font-bold text-zinc-900 dark:text-white">{list[active].name}</div>
+                    <div className="text-xs text-zinc-500 dark:text-zinc-400">{list[active].role}</div>
                   </div>
                   <div className="flex gap-0.5">
-                    {[...Array(TESTIMONIALS[active].rating)].map((_, s) => (
+                    {[...Array(list[active].rating || 5)].map((_, s) => (
                       <Star key={s} className="w-4 h-4 text-amber-400 fill-current" />
                     ))}
                   </div>
                 </div>
 
-                {/* Quote */}
                 <div className="flex-1">
-                  <div className="text-3xl text-brand-200 dark:text-brand-800 font-serif leading-none mb-3">"</div>
+                  <div className="text-3xl text-[#14a800] font-serif leading-none mb-3">&ldquo;</div>
                   <p className="text-base sm:text-lg text-zinc-700 dark:text-zinc-200 leading-relaxed mb-6">
-                    {TESTIMONIALS[active].text}
+                    {list[active].text}
                   </p>
-                  <div className="flex flex-wrap gap-3">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-success/10 border border-emerald-200 dark:border-emerald-500/20 text-xs font-bold text-emerald-700 dark:text-success">
+                  {list[active].highlight && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 text-xs font-bold text-emerald-700">
                       <TrendingUp className="w-3 h-3" />
-                      {TESTIMONIALS[active].highlight}
+                      {list[active].highlight}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-50 dark:bg-brand-500/10 border border-brand-200 dark:border-brand-500/20 text-xs font-bold text-brand-700 dark:text-brand-400">
-                      <DollarSign className="w-3 h-3" />
-                      {TESTIMONIALS[active].revenue}
-                    </span>
-                  </div>
+                  )}
                 </div>
               </div>
             </motion.div>
           </AnimatePresence>
+          )}
 
-          {/* Controls */}
+          {list.length > 1 && (
           <div className="flex items-center justify-center gap-4 mt-8">
             <button
               onClick={prev}
-              className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex items-center justify-center hover:border-brand-300 dark:hover:border-brand-600 hover:text-brand-600 transition-all shadow-sm"
+              className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex items-center justify-center hover:border-[#14a800]/50 dark:hover:border-[#14a800]/20 hover:text-[#14a800] transition-all shadow-sm"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <div className="flex gap-2">
-              {TESTIMONIALS.map((_, i) => (
+              {list.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setActive(i)}
                   className={cn(
                     'h-2 rounded-full transition-all',
-                    i === active ? 'w-8 bg-brand-600' : 'w-2 bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400'
+                    i === active ? 'w-8 bg-[#14a800]' : 'w-2 bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400'
                   )}
                 />
               ))}
             </div>
             <button
               onClick={next}
-              className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex items-center justify-center hover:border-brand-300 dark:hover:border-brand-600 hover:text-brand-600 transition-all shadow-sm"
+              className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex items-center justify-center hover:border-[#14a800]/50 dark:hover:border-[#14a800]/20 hover:text-[#14a800] transition-all shadow-sm"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
+          )}
         </div>
       </div>
     </section>
@@ -1012,7 +1001,7 @@ function TrustSection() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
         >
-          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400 mb-4">
+          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#14a800] dark:text-[#14a800] mb-4">
             <Lock className="w-4 h-4" /> Trust & Safety
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-6">
@@ -1022,7 +1011,7 @@ function TrustSection() {
             {[
               {
                 icon: ShieldCheck,
-                color: 'bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400',
+                color: 'bg-[#14a800]/10 dark:bg-[#14a800]/30 text-[#14a800] dark:text-[#14a800]',
                 title: 'Identity & Fraud Protection',
                 desc: 'Every user undergoes rigorous KYC and real-time fraud monitoring — absolute safety guaranteed.',
               },
@@ -1069,7 +1058,7 @@ function TrustSection() {
           viewport={{ once: true }}
           className="relative"
         >
-          <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-teal-500/20 rounded-3xl blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-[#14a800]/20 to-teal-500/20 rounded-3xl blur-3xl" />
           <div className="relative bg-white dark:bg-zinc-800 rounded-3xl p-8 border border-zinc-200 dark:border-zinc-700 shadow-2xl">
             <div className="flex items-center gap-5 mb-8">
               <div className="relative w-20 h-20">
@@ -1100,8 +1089,8 @@ function TrustSection() {
                 <div className="text-lg font-extrabold text-zinc-900 dark:text-white">Trust Score Verified</div>
                 <div className="text-sm text-zinc-500 dark:text-zinc-400">Based on 200+ data points</div>
                 <div className="flex items-center gap-1.5 mt-2">
-                  <BadgeCheck className="w-4 h-4 text-brand-600" />
-                  <span className="text-xs font-bold text-brand-600">Forte Certified Elite</span>
+                  <BadgeCheck className="w-4 h-4 text-[#14a800]" />
+                  <span className="text-xs font-bold text-[#14a800]">Forte Certified Elite</span>
                 </div>
               </div>
             </div>
@@ -1109,7 +1098,7 @@ function TrustSection() {
             <div className="space-y-4">
               {[
                 { label: 'Identity Verified', value: 100, color: 'from-emerald-400 to-teal-500' },
-                { label: 'Work History', value: 98, color: 'from-blue-400 to-violet-500' },
+                { label: 'Work History', value: 98, color: 'from-blue-400 to-[#14a800]' },
                 { label: 'Client Reviews', value: 99, color: 'from-amber-400 to-orange-500' },
                 { label: 'On-Time Delivery', value: 96, color: 'from-pink-400 to-rose-500' },
               ].map((bar, i) => (
@@ -1147,22 +1136,22 @@ function TrustSection() {
   );
 }
 
-function PaymentSection() {
+function PaymentSection({ methods = DEFAULT_PAYMENT_METHODS }) {
   return (
-    <div className="border-t border-zinc-200/60 dark:border-zinc-800/60 py-12 bg-white/50 dark:bg-surface-dark/50">
+    <div className="border-t border-zinc-200/60 dark:border-zinc-800/60 py-12 bg-white/50 dark:bg-zinc-950/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p className="text-center text-xs font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-600 mb-6">
           Accepted Payment Methods
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8">
-          {PAYMENT_PROVIDERS.map((p) => (
+          {methods.map((name) => (
             <motion.div
-              key={p.name}
-              whileHover={{ scale: 1.1, y: -2 }}
+              key={name}
+              whileHover={{ scale: 1.05, y: -2 }}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm"
             >
-              <span className="text-lg">{p.symbol}</span>
-              <span className="text-sm font-bold text-zinc-700 dark:text-zinc-200">{p.name}</span>
+              <DollarSign className="w-4 h-4 text-[#14a800]" />
+              <span className="text-sm font-bold text-zinc-700 dark:text-zinc-200">{name}</span>
             </motion.div>
           ))}
         </div>
@@ -1195,9 +1184,9 @@ function CTASection() {
 
           <h2 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-5 leading-tight">
             Start building your future<br />
-            <span className="text-brand-100">on Forte today.</span>
+            <span className="text-[#14a800]">on Forte today.</span>
           </h2>
-          <p className="text-lg text-brand-100 mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg text-[#14a800] mb-10 max-w-xl mx-auto leading-relaxed">
             Free to join. Zero risk. World-class talent and projects waiting for you right now.
           </p>
 
@@ -1206,11 +1195,11 @@ function CTASection() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate('/auth/register', { state: { role: 'FREELANCER' } })}
-              className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white text-brand-700 text-base font-extrabold shadow-2xl hover:shadow-white/20 transition-all"
+              className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white text-[#14a800] text-base font-extrabold shadow-2xl hover:shadow-white/20 transition-all"
             >
               <Briefcase className="w-5 h-5" />
               Continue as Freelancer
-              <ArrowRight className="w-4 h-4 group-hover:tranzinc-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -1220,11 +1209,11 @@ function CTASection() {
             >
               <Building2 className="w-5 h-5" />
               Continue as Client
-              <ChevronRight className="w-4 h-4 group-hover:tranzinc-x-1 transition-transform" />
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </motion.button>
           </div>
 
-          <p className="mt-8 text-brand-200 text-sm">
+          <p className="mt-8 text-[#14a800] text-sm">
             No credit card required · Cancel anytime · 30-day money-back guarantee
           </p>
         </motion.div>
@@ -1240,10 +1229,10 @@ function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#14a800] to-blue-700 flex items-center justify-center">
                 <Zap className="w-4 h-4 text-white" />
               </div>
-              <span className="font-extrabold text-zinc-900 dark:text-white">Forte<span className="text-brand-600">.</span></span>
+              <span className="font-extrabold text-zinc-900 dark:text-white">Forte<span className="text-[#14a800]">.</span></span>
             </div>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
               The world's most trusted AI-powered freelance marketplace.
@@ -1259,7 +1248,7 @@ function Footer() {
               <ul className="space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link}>
-                    <button type="button" className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors text-left">
+                    <button type="button" className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-[#14a800] dark:hover:text-[#14a800] transition-colors text-left">
                       {link}
                     </button>
                   </li>
@@ -1284,12 +1273,16 @@ function Footer() {
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data: homepage, isLoading, isError } = useHomepageData();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const stats = homepage?.stats;
+  const openJobs = stats?.openJobs ?? 0;
 
   return (
     <>
@@ -1300,22 +1293,36 @@ export default function LandingPage() {
       />
       {/* Ambient background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-brand-500/8 blur-[140px]" />
-        <div className="absolute top-[30%] -right-[10%] w-[50%] h-[50%] rounded-full bg-violet-500/8 blur-[140px]" />
+        <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-[#14a800]/8 blur-[140px]" />
+        <div className="absolute top-[30%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#14a800]/8 blur-[140px]" />
         <div className="absolute bottom-0 left-[20%] w-[40%] h-[40%] rounded-full bg-teal-500/8 blur-[120px]" />
       </div>
 
       <main className="relative z-10 pt-24">
-        <HeroSection />
+        {isError && (
+          <div className="max-w-3xl mx-auto px-4 mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 text-center">
+            Could not refresh live marketplace data. Showing cached layout.
+          </div>
+        )}
+        <HeroSection
+          stats={stats}
+          categories={homepage?.categories}
+          openJobs={openJobs}
+          loading={isLoading}
+        />
         <div className="mt-20" />
-        <LiveTicker />
+        <LiveTicker activity={homepage?.activity} loading={isLoading} />
         <BenefitsSection />
-        <FreelancersSection />
+        <FreelancersSection
+          freelancers={homepage?.featuredFreelancers}
+          loading={isLoading}
+          talentCount={stats?.talentCount}
+        />
         <HowItWorksSection />
         <PathSection />
-        <TestimonialsSection />
+        <TestimonialsSection testimonials={homepage?.testimonials} loading={isLoading} />
         <TrustSection />
-        <PaymentSection />
+        <PaymentSection methods={homepage?.paymentMethods} />
         <CTASection />
       </main>
       <Footer />

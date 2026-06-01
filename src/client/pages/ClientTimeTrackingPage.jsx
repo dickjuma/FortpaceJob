@@ -43,7 +43,7 @@ export default function ClientTimeTrackingPage() {
           <p className="text-xs font-semibold text-light-gray/50 mt-1">Audit active hourly billing sheets, review geo-tagged screenshot proofs, and approve completed work logs.</p>
         </div>
 
-        <Button onClick={() => toast.success('Time log CSV spreadsheet downloaded.')} className="bg-accent-purple border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-accent-purple/20">
+        <Button onClick={() => toast.success('Time log CSV spreadsheet downloaded.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20">
           Export Timesheets
         </Button>
       </div>
@@ -53,7 +53,7 @@ export default function ClientTimeTrackingPage() {
         {/* Left Hand: Configured Rules list */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="border border-white/10 bg-white/5 p-6 rounded-3xl">
-            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><Clock className="w-4 h-4 text-accent-purple" /> Logged Billing Sheets</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><Clock className="w-4 h-4 text-success" /> Logged Billing Sheets</h3>
             
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-medium">
@@ -78,7 +78,7 @@ export default function ClientTimeTrackingPage() {
                       <td className="py-4 font-black text-white">KES {log.amount.toLocaleString()}</td>
                       <td className="py-4">
                         <span className="flex items-center gap-1 text-[10px] text-light-gray/60 font-mono">
-                          <Camera className="w-3.5 h-3.5 text-accent-purple" /> {log.screenshot}
+                          <Camera className="w-3.5 h-3.5 text-success" /> {log.screenshot}
                         </span>
                       </td>
                       <td className="py-4 text-right">

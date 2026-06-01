@@ -67,7 +67,7 @@ export default function FreelancerAnalyticsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6 mb-8">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-accent-purple/20 text-accent-purple rounded-xl border border-accent-purple/20 shadow-sm">
+            <div className="p-2.5 bg-success/20 text-success rounded-xl border border-success/20 shadow-sm">
               <BarChart2 className="w-6 h-6 animate-pulse" />
             </div>
             <h1 className="text-3xl font-black text-text-primary tracking-tight">Business Intelligence Dashboard</h1>
@@ -105,14 +105,14 @@ export default function FreelancerAnalyticsPage() {
         {stats.map((st, idx) => {
           const Icon = st.icon;
           return (
-            <Card key={idx} className="p-6 border border-border bg-white shadow-sm relative overflow-hidden group hover:border-accent-purple/30 transition-all">
+            <Card key={idx} className="p-6 border border-border bg-white shadow-sm relative overflow-hidden group hover:border-success/30 transition-all">
               <div className="flex justify-between items-center mb-4">
                 <div className="p-2 bg-light-gray text-text-secondary rounded-xl group-hover:scale-105 transition-all">
-                  <Icon className="w-5 h-5 text-accent-purple" />
+                  <Icon className="w-5 h-5 text-success" />
                 </div>
                 <span className={cn(
                   "text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md flex items-center gap-0.5",
-                  st.isPositive ? "bg-success/10 text-success" : "bg-accent-red/10 text-accent-red"
+                  st.isPositive ? "bg-success/10 text-success" : "bg-[#e63946]/10 text-[#e63946]"
                 )}>
                   {st.isPositive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
                   {st.change}
@@ -147,7 +147,7 @@ export default function FreelancerAnalyticsPage() {
                 <h4 className="text-xs font-bold text-text-primary">Deliver On-time Index</h4>
                 <p className="text-[9px] font-semibold text-text-secondary mt-0.5">Projects finalized before client deadline</p>
               </div>
-              <CustomProgressRing percent={98} colorClass="text-accent-purple" />
+              <CustomProgressRing percent={98} colorClass="text-success" />
             </div>
 
             <div className="flex items-center justify-between gap-4 p-3 bg-light-gray/40 rounded-2xl">

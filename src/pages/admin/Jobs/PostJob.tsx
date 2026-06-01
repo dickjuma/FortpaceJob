@@ -9,7 +9,7 @@ export const PostJob = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-navy">Post a Job</h1>
+        <h1 className="text-2xl font-bold text-[#222222]">Post a Job</h1>
         <p className="text-text-secondary mt-1">Fill out the form below to post a new job to the marketplace.</p>
       </div>
 
@@ -65,10 +65,10 @@ export const PostJob = () => {
 
           <div className="flex flex-col mb-4">
             <label className="mb-1 text-sm font-semibold text-text-primary">
-              Job Description <span className="text-accent-red">*</span>
+              Job Description <span className="text-[#e63946]">*</span>
             </label>
             <textarea 
-              className="w-full rounded-md border border-border bg-white px-4 py-3 text-sm transition-colors focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red custom-scrollbar min-h-[200px] resize-y"
+              className="w-full rounded-md border border-border bg-white px-4 py-3 text-sm transition-colors focus:border-[#e63946] focus:outline-none focus:ring-1 focus:ring-[#e63946] custom-scrollbar min-h-[200px] resize-y"
               placeholder="Describe the project details, requirements, and deliverables..."
               required
             />

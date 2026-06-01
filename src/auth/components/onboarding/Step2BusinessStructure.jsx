@@ -61,16 +61,16 @@ const Step2BusinessStructure = () => {
             onClick={() => setBusinessStructure(struct.id)}
             className={`relative cursor-pointer overflow-hidden rounded-3xl p-6 transition-all duration-300 border-2 flex flex-col ${
               businessStructure === struct.id 
-                ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-500/10 shadow-xl shadow-indigo-500/20' 
-                : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-lg'
+                ? 'border-[#14a800] bg-[#14a800]/5/50 dark:bg-[#14a800]/10 shadow-xl shadow-[#14a800]/25' 
+                : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-[#14a800]/50 dark:hover:border-[#14a800] hover:shadow-lg'
             }`}
           >
             {businessStructure === struct.id && (
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-blue-500/5 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#14a800]/5 to-#14a800]/5 pointer-events-none" />
             )}
             <div className="relative z-10 flex flex-col h-full">
               <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-colors ${
-                businessStructure === struct.id ? 'bg-indigo-600 text-white shadow-md' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300'
+                businessStructure === struct.id ? 'bg-[#14a800] text-white shadow-md' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300'
               }`}>
                 <struct.icon className="w-7 h-7" />
               </div>
@@ -83,7 +83,7 @@ const Step2BusinessStructure = () => {
                 <ul className="space-y-2">
                   {struct.examples.map((example, i) => (
                     <li key={i} className="flex items-center text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg px-3 py-1.5">
-                      <div className={`w-1.5 h-1.5 rounded-full mr-2 ${businessStructure === struct.id ? 'bg-indigo-500' : 'bg-zinc-300 dark:bg-zinc-600'}`} />
+                      <div className={`w-1.5 h-1.5 rounded-full mr-2 ${businessStructure === struct.id ? 'bg-[#14a800]' : 'bg-zinc-300 dark:bg-zinc-600'}`} />
                       {example}
                     </li>
                   ))}
@@ -108,7 +108,7 @@ const Step2BusinessStructure = () => {
           disabled={!businessStructure}
           className={`group flex items-center justify-center px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
             businessStructure 
-              ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-tranzinc-y-1' 
+              ? 'bg-gradient-to-r from-[#14a800] to-blue-600 text-white shadow-lg shadow-[#14a800]/25 hover:shadow-[#14a800]/25 hover:-tranzinc-y-1' 
               : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed'
           }`}
         >

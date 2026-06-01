@@ -1,23 +1,89 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { useAuthStore } from '../../common/authStore';
+import { profileAPI } from '../../common/services/api';
+import { normalizeWorkMode, workModeToFlags } from '../../common/constants/accountTypes';
 
 const FreelancerContext = createContext();
 
 export function FreelancerProvider({ children }) {
-  // Global state for account type simulation
-  // This will eventually be populated by your real backend API / JWT token
-  const [accountType, setAccountType] = useState('INDIVIDUAL'); // INDIVIDUAL, SME, AGENCY, CORPORATE
-  const [isOfflineProvider, setIsOfflineProvider] = useState(false);
+  const { user, updateUser } = useAuthStore();
+  const [accountType, setAccountType] = useState('INDIVIDUAL');
+  const [workMode, setWorkMode] = useState('ONLINE');
+  const [hydrated, setHydrated] = useState(false);
 
-  const switchAccountType = (type) => {
+  useEffect(() => {
+    const profile = user?.profile || user || {};
+    const type = String(profile.accountType || user?.accountType || 'INDIVIDUAL').toUpperCase();
+    const mode = normalizeWorkMode(profile.workMode || profile.freelancerMode || (profile.isOfflineProvider ? 'OFFLINE' : 'ONLINE'));
     setAccountType(type);
+    setWorkMode(mode);
+    setHydrated(true);
+  }, [user?.id, user?.accountType, user?.profile]);
+
+  const persistProfile = useCallback(
+    async (patch) => {
+      const flags = patch.workMode ? workModeToFlags(patch.workMode) : {};
+      const payload = {
+        accountType: patch.accountType ?? accountType,
+        workMode: patch.workMode ?? workMode,
+        isOfflineProvider: flags.isOffline ?? patch.isOfflineProvider,
+        isOnline: flags.isOnline,
+        ...patch,
+      };
+      const res = await profileAPI.updateMyProfile(payload);
+      if (res?.user) {
+        updateUser(res.user);
+      }
+      return res;
+    },
+    [accountType, workMode, updateUser]
+  );
+
+  const switchAccountType = async (type) => {
+    const upper = String(type).toUpperCase();
+    setAccountType(upper);
+    try {
+      await persistProfile({ accountType: upper });
+    } catch {
+      // UI still updates locally
+    }
   };
 
+  const setWorkModeAndPersist = async (mode) => {
+    const normalized = normalizeWorkMode(mode);
+    setWorkMode(normalized);
+    const flags = workModeToFlags(normalized);
+    try {
+      await persistProfile({
+        workMode: normalized,
+        isOfflineProvider: flags.isOffline,
+        isOnline: flags.isOnline,
+      });
+    } catch {
+      // keep local state
+    }
+  };
+
+  const isOfflineProvider = workMode === 'OFFLINE' || workMode === 'HYBRID';
+
   const toggleOfflineProvider = () => {
-    setIsOfflineProvider(prev => !prev);
+    const next = workMode === 'OFFLINE' ? 'ONLINE' : workMode === 'ONLINE' ? 'OFFLINE' : 'HYBRID';
+    setWorkModeAndPersist(next);
   };
 
   return (
-    <FreelancerContext.Provider value={{ accountType, switchAccountType, isOfflineProvider, toggleOfflineProvider }}>
+    <FreelancerContext.Provider
+      value={{
+        accountType,
+        workMode,
+        isOfflineProvider,
+        hydrated,
+        switchAccountType,
+        setWorkMode: setWorkModeAndPersist,
+        toggleOfflineProvider,
+        persistProfile,
+      }}
+    >
       {children}
     </FreelancerContext.Provider>
   );

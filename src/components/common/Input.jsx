@@ -16,7 +16,7 @@ export default function Input({
     <div className={`flex flex-col gap-1.5 ${className}`}>
       {label && (
         <label className="text-sm font-semibold text-text-primary">
-          {label} {required && <span className="text-accent-red">*</span>}
+          {label} {required && <span className="text-[#e63946]">*</span>}
         </label>
       )}
       <div className="relative flex items-center">
@@ -32,7 +32,7 @@ export default function Input({
           placeholder={placeholder}
           disabled={disabled}
           required={required}
-          className={`w-full bg-white border rounded-md px-4 py-2.5 text-sm text-text-primary transition-all placeholder:text-text-secondary disabled:bg-light-gray disabled:opacity-60 focus:outline-none focus:ring-1 focus:ring-accent-red focus:border-accent-red ${
+          className={`w-full bg-white border rounded-md px-4 py-2.5 text-sm text-text-primary transition-all placeholder:text-text-secondary disabled:bg-light-gray disabled:opacity-60 focus:outline-none focus:ring-1 focus:ring-[#e63946] focus:border-[#e63946] ${
             icon ? 'pl-10' : ''
           } ${
             error ? 'border-error focus:ring-error focus:border-error' : 'border-border'

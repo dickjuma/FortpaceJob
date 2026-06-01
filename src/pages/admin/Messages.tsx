@@ -26,7 +26,7 @@ export const MessagesPage = () => {
       <div className="w-1/3 border-r border-border flex flex-col">
         <div className="p-4 border-b border-border">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold text-navy">Messages</h2>
+            <h2 className="text-lg font-bold text-[#222222]">Messages</h2>
             <Button variant="primary" size="sm">Compose</Button>
           </div>
           <Input 
@@ -43,14 +43,14 @@ export const MessagesPage = () => {
               onClick={() => setSelectedMessage(msg.id)}
               className={clsx(
                 'p-4 border-b border-border cursor-pointer transition-colors flex items-start space-x-3',
-                selectedMessage === msg.id ? 'bg-accent-purple/20 border-l-4 border-l-accent-purple' : 'hover:bg-light-gray',
+                selectedMessage === msg.id ? 'bg-success/20 border-l-4 border-l-success' : 'hover:bg-light-gray',
                 !msg.isRead && 'bg-gray-50'
               )}
             >
               <Avatar name={msg.senderName} src={msg.senderAvatar} size="md" />
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-start mb-1">
-                  <h4 className={clsx('text-sm truncate', !msg.isRead ? 'font-bold text-navy' : 'font-medium text-navy')}>
+                  <h4 className={clsx('text-sm truncate', !msg.isRead ? 'font-bold text-[#222222]' : 'font-medium text-[#222222]')}>
                     {msg.senderName}
                   </h4>
                   <span className="text-xs text-text-secondary shrink-0">{msg.timestamp}</span>
@@ -74,7 +74,7 @@ export const MessagesPage = () => {
             <div className="flex items-center space-x-3">
               <Avatar name="Alice Smith" size="md" status="online" />
               <div>
-                <h3 className="font-bold text-navy">Alice Smith</h3>
+                <h3 className="font-bold text-[#222222]">Alice Smith</h3>
                 <p className="text-xs text-text-secondary">alice@example.com</p>
               </div>
             </div>
@@ -99,19 +99,19 @@ export const MessagesPage = () => {
             
             <div className="flex items-end space-x-3 flex-row-reverse space-x-reverse">
               <Avatar name="Admin User" size="sm" />
-              <div className="bg-accent-purple border border-accent-purple p-4 rounded-lg rounded-br-none max-w-xl shadow-sm text-navy">
+              <div className="bg-success border border-success p-4 rounded-lg rounded-br-none max-w-xl shadow-sm text-[#222222]">
                 <p className="text-sm font-medium">I'll take a look right now and get back to you within the hour.</p>
-                <p className="text-[10px] text-navy/70 mt-2 text-right">10:45 AM</p>
+                <p className="text-[10px] text-[#222222]/70 mt-2 text-right">10:45 AM</p>
               </div>
             </div>
           </div>
           
           <div className="p-4 bg-white border-t border-border">
             <div className="flex items-end space-x-2">
-              <button className="p-3 text-text-secondary hover:bg-light-gray hover:text-navy rounded-full transition-colors">
+              <button className="p-3 text-text-secondary hover:bg-light-gray hover:text-[#222222] rounded-full transition-colors">
                 <Paperclip size={20} />
               </button>
-              <div className="flex-1 bg-light-gray rounded-lg border border-border focus-within:border-accent-red focus-within:ring-1 focus-within:ring-accent-red transition-all">
+              <div className="flex-1 bg-light-gray rounded-lg border border-border focus-within:border-[#e63946] focus-within:ring-1 focus-within:ring-[#e63946] transition-all">
                 <textarea 
                   className="w-full bg-transparent p-3 text-sm focus:outline-none resize-none min-h-[60px] custom-scrollbar"
                   placeholder="Type your message here..."

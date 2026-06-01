@@ -18,7 +18,7 @@ const CityTalentDirectory = () => {
         <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
           {cities.map((city) => (
             <Link
-              className="bg-white rounded-3xl p-6 border border-zinc-200 hover:border-brand-300 hover:shadow-xl transition-all"
+              className="bg-white rounded-3xl p-6 border border-zinc-200 hover:border-[#14a800]/50 hover:shadow-xl transition-all"
               key={city.city}
               to={`/search-results?location=${encodeURIComponent(city.city)}&mode=all`}
             >

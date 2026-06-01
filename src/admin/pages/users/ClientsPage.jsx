@@ -19,12 +19,12 @@ import Button from '../../components/ui/Button';
 const StatCard = ({ title, value, change, trend, icon: Icon, isDark = false }) => (
   <div className={`p-6 rounded-2xl border shadow-sm transition-all hover:scale-[1.02] ${
     isDark 
-      ? 'bg-navy border-white/10 text-white' 
+      ? 'bg-[#222222] border-white/10 text-white' 
       : 'bg-white border-zinc-100 text-zinc-900'
   }`}>
     <div className="flex items-start justify-between">
       <div className={`p-3 rounded-2xl ${
-        isDark ? 'bg-accent-purple/20 text-accent-purple' : 'bg-zinc-50 text-accent-purple'
+        isDark ? 'bg-success/20 text-success' : 'bg-zinc-50 text-success'
       }`}>
         <Icon size={24} />
       </div>

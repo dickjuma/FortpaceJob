@@ -4,90 +4,207 @@ import {
   Search, Code, PenTool, TrendingUp,
   Star, PlayCircle, Zap, Video, Music, BookOpen
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import FreelancerCard from '../../components/marketplace/FreelancerCard';
+import { useTrendingCategories, useTopFreelancers, useFeaturedGigs } from '../../common/services/publicHooks';
 
-const CATEGORIES = [
-  { name: 'Graphics & Design', icon: PenTool, color: 'bg-emerald-50 text-success', link: '/categories/design' },
-  { name: 'Programming & Tech', icon: Code, color: 'bg-brand-50 text-brand-600', link: '/categories/tech' },
-  { name: 'Digital Marketing', icon: TrendingUp, color: 'bg-rose-50 text-rose-600', link: '/categories/marketing' },
-  { name: 'Video & Animation', icon: Video, color: 'bg-brand-50 text-brand-600', link: '/categories/video' },
-  { name: 'Writing & Translation', icon: BookOpen, color: 'bg-amber-50 text-amber-600', link: '/categories/writing' },
-  { name: 'Music & Audio', icon: Music, color: 'bg-cyan-50 text-cyan-600', link: '/categories/audio' },
-  { name: 'Business', icon: BriefcaseIcon, color: 'bg-brand-50 text-brand-600', link: '/categories/business' },
-  { name: 'AI Services', icon: Zap, color: 'bg-fuchsia-50 text-fuchsia-600', link: '/categories/ai' }
-];
+// Helper functions for category icons and colors
+function getCategoryIcon(categoryName) {
+  const iconMap = {
+    'Graphics & Design': PenTool,
+    'Programming & Tech': Code,
+    'Digital Marketing': TrendingUp,
+    'Video & Animation': Video,
+    'Writing & Translation': BookOpen,
+    'Music & Audio': Music,
+    'Business': BriefcaseIcon,
+    'AI Services': Zap
+  };
+  return iconMap[categoryName] || Code; // Default to Code icon
+}
 
-const FEATURED_GIGS = [
-  { id: 1, title: 'I will design a modern minimal UI/UX for your app', author: 'Sarah Mitchell', rating: 5.0, reviews: 89, price: 350, image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80', avatar: 'https://i.pravatar.cc/150?u=s1', level: 'Top Rated' },
-  { id: 2, title: 'I will develop a scalable Node.js backend API', author: 'David Kim', rating: 4.9, reviews: 210, price: 800, image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80', avatar: 'https://i.pravatar.cc/150?u=d2', level: 'Level 2' },
-  { id: 3, title: 'I will create professional video ads for social media', author: 'Elena Rossi', rating: 4.8, reviews: 156, price: 200, image: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?w=600&q=80', avatar: 'https://i.pravatar.cc/150?u=e3', level: 'Top Rated' },
-  { id: 4, title: 'I will write SEO optimized articles and blog posts', author: 'James Wilson', rating: 4.9, reviews: 342, price: 50, image: 'https://images.unsplash.com/photo-1455390582262-044cdead27d8?w=600&q=80', avatar: 'https://i.pravatar.cc/150?u=j4', level: 'Level 2' },
-];
+function getCategoryColor(categoryName) {
+  const colorMap = {
+    'Graphics & Design': 'bg-emerald-50 text-success',
+    'Programming & Tech': 'bg-[#14a800]/5 text-[#14a800]',
+    'Digital Marketing': 'bg-rose-50 text-rose-600',
+    'Video & Animation': 'bg-[#14a800]/5 text-[#14a800]',
+    'Writing & Translation': 'bg-amber-50 text-amber-600',
+    'Music & Audio': 'bg-cyan-50 text-cyan-600',
+    'Business': 'bg-[#14a800]/5 text-[#14a800]',
+    'AI Services': 'bg-fuchsia-50 text-fuchsia-600'
+  };
+  return colorMap[categoryName] || 'bg-[#14a800]/5 text-[#14a800]';
+}
 
 export default function GlobalHomepage() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+
+  const handleHeroSearch = (e) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) navigate(`/search?q=${encodeURIComponent(q)}&tab=freelancers`);
+    else navigate('/find-talent');
+  };
+
+  const { data: trendingCategories = [] } = useTrendingCategories();
+  const { data: topFreelancers = [] } = useTopFreelancers(6);
+  const { data: apiGigs = [] } = useFeaturedGigs(8);
+
+  // Convert trending categories to the format expected by the UI
+  const dynamicCategories = trendingCategories.map(category => ({
+    name: category.name,
+    icon: getCategoryIcon(category.name),
+    color: getCategoryColor(category.name),
+    link: `/categories/${category.slug || category.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+  }));
+
+  const CATEGORIES = dynamicCategories;
+
+  const mapApiGig = (gig, index) => ({
+    id: gig.id || index + 1,
+    title: gig.title || gig.name || 'Professional service',
+    author: gig.freelancer?.name || gig.seller?.name || gig.owner?.name || 'Verified seller',
+    rating: Number(gig.rating || gig.averageRating || 0).toFixed(1),
+    reviews: gig.totalReviews || gig.reviewsCount || gig.reviews || 0,
+    price: gig.price || gig.minPrice || gig.packages?.[0]?.price || 0,
+    image: gig.coverImage || gig.thumbnail || gig.gallery?.[0]?.url || '',
+    avatar: gig.freelancer?.avatar || '',
+    level: gig.freelancer?.topRated ? 'Top Rated' : 'Level 2',
+    slug: gig.slug || gig.id,
+  });
+
+  const FEATURED_GIGS = Array.isArray(apiGigs) && apiGigs.length > 0 ? apiGigs.map(mapApiGig) : [];
 
   return (
     <>
-      {/* Hero Section - Fiverr Style */}
-      <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 px-4 bg-brand-900 text-white overflow-hidden">
+      {/* Hero Section - Upwork/Fiverr Style */}
+      <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 px-4 bg-[#14a800] text-white overflow-hidden">
         {/* Background Image Overlay */}
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600&q=80" 
             alt="Freelancer working" 
-            className="w-full h-full object-cover opacity-40 mix-blend-overlay"
+            className="w-full h-full object-cover opacity-30 mix-blend-overlay"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-900 via-brand-900/80 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#14a800] via-[#14a800]/80 to-transparent"></div>
         </div>
         
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col justify-center min-h-[450px]">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-8 text-white">
-              Find the right <span className="font-serif italic text-accent-light">freelance</span> service, right away
+              Find the right <span className="font-serif italic text-white/90">freelance</span> service, right away
             </h1>
             
-            {/* Search Bar */}
-            <div className="bg-white rounded-lg p-2 flex items-center mb-8 shadow-2xl">
+            <form onSubmit={handleHeroSearch} className="bg-white rounded-lg p-2 flex items-center mb-8 shadow-2xl">
               <input 
-                type="text" 
+                type="search" 
                 placeholder="Search for any service..." 
                 className="w-full bg-transparent border-none outline-none px-4 py-3 text-zinc-900 font-medium text-lg placeholder:text-zinc-400"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button className="bg-success hover:bg-success-dark text-white px-8 py-4 rounded-md font-bold transition-all shrink-0 flex items-center gap-2">
+              <button type="submit" className="bg-[#14a800] hover:bg-[#118a00] text-white px-8 py-4 rounded-md font-bold transition-all shrink-0 flex items-center gap-2">
                 <Search className="w-5 h-5" />
                 <span className="hidden sm:inline">Search</span>
               </button>
-            </div>
+            </form>
             
-            {/* Popular Searches */}
             <div className="flex flex-wrap items-center gap-3 text-sm font-semibold">
               <span className="opacity-80">Popular:</span>
-              {['Website Design', 'WordPress', 'Logo Design', 'AI Services'].map(term => (
-                <span key={term} className="px-4 py-1.5 rounded-full border border-white/40 hover:bg-white hover:text-brand-900 cursor-pointer transition-colors backdrop-blur-sm">
+              {['Website Design', 'WordPress', 'Logo Design', 'AI Services'].map((term) => (
+                <button
+                  key={term}
+                  type="button"
+                  onClick={() => navigate(`/search?q=${encodeURIComponent(term)}&tab=freelancers`)}
+                  className="px-4 py-1.5 rounded-full border border-white/40 hover:bg-white hover:text-[#14a800] transition-colors backdrop-blur-sm"
+                >
                   {term}
-                </span>
+                </button>
               ))}
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Trusted By Logos */}
-      <section className="bg-surface py-6 border-b border-zinc-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-center gap-8">
-          <span className="text-zinc-400 font-bold text-sm uppercase tracking-widest">Trusted by:</span>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
-            <h3 className="text-2xl font-black text-zinc-800">META</h3>
-            <h3 className="text-2xl font-black text-zinc-800">GOOGLE</h3>
-            <h3 className="text-2xl font-black text-zinc-800">NETFLIX</h3>
-            <h3 className="text-2xl font-black text-zinc-800">P&G</h3>
-            <h3 className="text-2xl font-black text-zinc-800">PAYPAL</h3>
+      {/* How it works */}
+      <section className="py-20 bg-white border-b border-zinc-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <h2 className="text-3xl font-bold text-zinc-900 mb-4 text-center">How Fortspace works</h2>
+          <p className="text-zinc-600 text-center max-w-2xl mx-auto mb-12">
+            Hire talent, buy fixed-price gigs, or find contract work — all in one marketplace built for production teams.
+          </p>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { step: '1', title: 'Post or browse', desc: 'Clients post jobs; freelancers browse Find Work and Gigs.' },
+              { step: '2', title: 'Connect securely', desc: 'Proposals, contracts, and escrow keep every deal protected.' },
+              { step: '3', title: 'Deliver & get paid', desc: 'Milestones, reviews, and payouts when work is approved.' },
+            ].map((item) => (
+              <div key={item.step} className="text-center p-6 rounded-xl border border-zinc-200 hover:border-[#14a800]/40 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-[#14a800]/10 text-[#14a800] font-black text-lg flex items-center justify-center mx-auto mb-4">
+                  {item.step}
+                </div>
+                <h3 className="font-bold text-lg text-zinc-900 mb-2">{item.title}</h3>
+                <p className="text-zinc-600 text-sm">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
+
+      {/* Dual audience CTA */}
+      <section className="py-16 bg-[#f2f2f2]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-6">
+          <Link
+            to="/find-talent"
+            className="group bg-white rounded-2xl p-8 border border-zinc-200 shadow-sm hover:shadow-lg hover:border-[#14a800]/30 transition-all"
+          >
+            <h3 className="text-2xl font-bold text-zinc-900 mb-2 group-hover:text-[#14a800]">I need to hire</h3>
+            <p className="text-zinc-600 mb-4">Find vetted freelancers, agencies, and ready-made gigs for your next project.</p>
+            <span className="text-[#14a800] font-bold text-sm">Browse talent →</span>
+          </Link>
+          <Link
+            to="/find-work"
+            className="group bg-[#14a800] rounded-2xl p-8 text-white shadow-lg hover:bg-[#118a00] transition-colors"
+          >
+            <h3 className="text-2xl font-bold mb-2">I want to earn</h3>
+            <p className="text-white/90 mb-4">Discover remote contracts, local gigs, and sell services on the marketplace.</p>
+            <span className="font-bold text-sm text-white/95">Find work →</span>
+          </Link>
+        </div>
+      </section>
+
+      {topFreelancers.length > 0 && (
+        <section className="py-16 bg-white border-b border-zinc-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex justify-between items-end mb-8 gap-4">
+              <h2 className="text-2xl font-bold text-zinc-900">Top freelancers</h2>
+              <Link to="/find-talent" className="text-[#14a800] font-bold text-sm hover:underline">
+                View all
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {topFreelancers.slice(0, 4).map((f) => (
+                <FreelancerCard
+                  key={f.id}
+                  freelancer={{
+                    id: f.id,
+                    name: f.name,
+                    title: f.title || f.professionalTitle,
+                    rating: f.rating,
+                    reviews: f.reviews,
+                    hourlyRate: f.hourlyRate,
+                    avatar: f.avatar || f.image,
+                    description: f.bio,
+                    skills: f.skills,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Popular Services Slider (Grid representation) */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6">
@@ -99,7 +216,7 @@ export default function GlobalHomepage() {
             { title: 'WordPress', subtitle: 'Customize your site', img: 'https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=400&q=80', color: 'bg-orange-900' },
             { title: 'Voice Over', subtitle: 'Share your message', img: 'https://images.unsplash.com/photo-1593697821252-0c9137d9fc45?w=400&q=80', color: 'bg-surface-dark' },
             { title: 'Video Explainer', subtitle: 'Engage your audience', img: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?w=400&q=80', color: 'bg-rose-900' },
-            { title: 'SEO', subtitle: 'Unlock growth online', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80', color: 'bg-brand-900' },
+            { title: 'SEO', subtitle: 'Unlock growth online', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80', color: 'bg-[#14a800]' },
           ].map((service, i) => (
             <motion.div 
               initial={{ opacity: 0, x: 20 }}
@@ -174,12 +291,12 @@ export default function GlobalHomepage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12">
           {CATEGORIES.map((cat, i) => (
             <Link key={cat.name} to={cat.link} className="group flex flex-col items-center text-center">
-              <div className="w-20 h-20 rounded-full bg-surface flex items-center justify-center mb-4 group-hover:bg-brand-50 transition-colors border border-surface-border shadow-sm group-hover:shadow-md">
-                <cat.icon className="w-8 h-8 text-zinc-700 group-hover:text-accent transition-colors" />
+              <div className="w-20 h-20 rounded-full bg-surface flex items-center justify-center mb-4 group-hover:bg-[#14a800]/10 transition-colors border border-surface-border shadow-sm group-hover:shadow-md">
+                <cat.icon className="w-8 h-8 text-zinc-700 group-hover:text-[#14a800] transition-colors" />
               </div>
-              <h3 className="font-medium text-zinc-800 group-hover:text-accent transition-colors relative">
+              <h3 className="font-medium text-zinc-800 group-hover:text-[#14a800] transition-colors relative">
                 {cat.name}
-                <span className="absolute -bottom-2 left-1/2 -tranzinc-x-1/2 w-0 h-0.5 bg-accent group-hover:w-8 transition-all duration-300"></span>
+                <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#14a800] group-hover:w-8 transition-all duration-300"></span>
               </h3>
             </Link>
           ))}
@@ -212,7 +329,7 @@ export default function GlobalHomepage() {
               </li>
             </ul>
             
-            <button className="px-8 py-3 bg-success hover:bg-success-dark text-white font-bold rounded-md shadow-lg transition-colors text-lg">
+            <button className="px-8 py-3 bg-success hover:bg-[#118a00] text-white font-bold rounded-md shadow-lg transition-colors text-lg">
               Explore Fortspace Enterprise
             </button>
           </div>
@@ -232,7 +349,7 @@ export default function GlobalHomepage() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {FEATURED_GIGS.map(gig => (
-            <div key={gig.id} className="bg-white rounded-md overflow-hidden border border-zinc-200 shadow-sm hover:shadow-xl transition-all group cursor-pointer flex flex-col">
+            <Link key={gig.id} to={gig.slug ? `/gig/${gig.slug}` : `/gigs/gig/${gig.id}`} className="bg-white rounded-md overflow-hidden border border-zinc-200 shadow-sm hover:shadow-xl transition-all group cursor-pointer flex flex-col">
               <div className="h-48 overflow-hidden relative">
                 <img src={gig.image} alt={gig.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <button className="absolute top-3 right-3 text-white hover:text-rose-500 transition-colors drop-shadow-md">
@@ -262,7 +379,7 @@ export default function GlobalHomepage() {
                   Starting at <span className="text-lg text-zinc-900 ml-1">${gig.price}</span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

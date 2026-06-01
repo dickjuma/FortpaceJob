@@ -1,9 +1,10 @@
 import React from 'react';
-import { AlertTriangle, ChevronDown, MapPin, Search, SlidersHorizontal } from 'lucide-react';
+import { AlertTriangle, ChevronDown, MapPin, Search, SlidersHorizontal, Loader2 } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import FilterSidebar from '../components/marketplace/FilterSidebar';
 import OnsiteWorkerCard from '../components/marketplace/OnsiteWorkerCard';
-import { getMarketplaceTalent, getTalentCategories } from './find-talent/talentMarketplaceData';
+import { useMarketplaceTalent, useTalentCategories } from '../common/services/talentHooks';
+import { getTalentCategories, getMarketplaceTalent } from './find-talent/talentMarketplaceData';
 
 function toggleListValue(values, nextValue) {
   return values.includes(nextValue) ? values.filter((value) => value !== nextValue) : [...values, nextValue];
@@ -12,7 +13,7 @@ function toggleListValue(values, nextValue) {
 const OnsiteProfessionals = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
-  const location = searchParams.get('location') || 'San Francisco, CA';
+  const location = searchParams.get('location') || 'Nairobi, Kenya';
   const sortBy = searchParams.get('sort') || 'recommended';
   const urgent = searchParams.get('urgent') === 'true';
   const rate = searchParams.get('rate') || 'all';
@@ -21,7 +22,7 @@ const OnsiteProfessionals = () => {
   const badgeIds = searchParams.getAll('badge');
   const distanceIds = searchParams.getAll('distance');
 
-  const workers = getMarketplaceTalent({
+  const { data: workersRaw = [], isLoading } = useMarketplaceTalent({
     query,
     mode: 'onsite',
     categoryIds,
@@ -31,7 +32,11 @@ const OnsiteProfessionals = () => {
     location,
     urgent,
     sortBy,
-  }).filter((worker) => {
+  });
+
+  useTalentCategories('onsite');
+
+  const workers = workersRaw.filter((worker) => {
     if (!distanceIds.length) {
       return true;
     }
@@ -216,12 +221,16 @@ const OnsiteProfessionals = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
-              {workers.map((worker) => (
-                <OnsiteWorkerCard key={worker.id} worker={worker} />
-              ))}
+              {isLoading
+                ? Array.from({ length: 6 }).map((_, index) => (
+                    <div key={`skeleton-${index}`} className="bg-white border border-zinc-200 rounded-2xl p-6 animate-pulse h-72" />
+                  ))
+                : workers.map((worker) => (
+                    <OnsiteWorkerCard key={worker.id} worker={worker} />
+                  ))}
             </div>
 
-            {workers.length === 0 ? (
+            {!isLoading && workers.length === 0 ? (
               <div className="bg-white border border-dashed border-zinc-300 rounded-2xl p-10 text-center text-zinc-600">
                 No onsite professionals matched those filters. Try broadening the service radius or turning off emergency-only filtering.
               </div>

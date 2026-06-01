@@ -15,18 +15,9 @@ import UserStatsCard from '../../components/users/cards/UserStatsCard';
 import UserTypeBreakdown from '../../components/users/analytics/UserTypeBreakdown';
 import Button from '../../components/ui/Button';
 
-const MOCK_GROWTH_DATA = [
-  { name: 'Jan', freelancers: 120, clients: 80 },
-  { name: 'Feb', freelancers: 150, clients: 95 },
-  { name: 'Mar', freelancers: 200, clients: 120 },
-  { name: 'Apr', freelancers: 280, clients: 150 },
-  { name: 'May', freelancers: 350, clients: 190 },
-  { name: 'Jun', freelancers: 450, clients: 250 },
-  { name: 'Jul', freelancers: 580, clients: 320 },
-];
-
 const UserAnalyticsPage = () => {
-  const { data } = useUsers();
+  const { data, isLoading } = useUsers();
+  const growthData = Array.isArray(data?.growthTrend) ? data.growthTrend : [];
   
   const stats = [
     { label: 'Total Users', value: data?.total || 0, icon: Users, color: 'brand', trend: 12.5 },
@@ -42,7 +33,7 @@ const UserAnalyticsPage = () => {
         <div>
           <div className="flex items-center gap-3">
              <h1 className="text-4xl font-black text-zinc-900 dark:text-white tracking-tight">User Analytics</h1>
-             <span className="h-7 px-3 flex items-center justify-center bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 text-xs font-black rounded-full border border-brand-200 dark:border-brand-700/50">
+             <span className="h-7 px-3 flex items-center justify-center bg-[#14a800]/10 dark:bg-[#14a800]/30 text-[#14a800] dark:text-[#14a800] text-xs font-black rounded-full border border-[#14a800]/20 dark:border-[#14a800]/20/50">
                Live Data
              </span>
           </div>
@@ -62,12 +53,12 @@ const UserAnalyticsPage = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
          {/* Governance Insight Banner */}
-         <div className="lg:col-span-2 bg-gradient-to-br from-brand-600 to-indigo-700 rounded-3xl p-8 text-white shadow-xl shadow-brand-500/20 overflow-hidden relative group flex flex-col justify-center">
+         <div className="lg:col-span-2 bg-gradient-to-br from-[#14a800] to-[#118a00] rounded-3xl p-8 text-white shadow-xl shadow-[#14a800]/25/20 overflow-hidden relative group flex flex-col justify-center">
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
                <PieIcon size={120} strokeWidth={1} />
             </div>
             <h3 className="text-xl font-black mb-2 relative z-10">Governance Insight</h3>
-            <p className="text-brand-100 text-sm font-medium leading-relaxed mb-6 relative z-10 max-w-xl">
+            <p className="text-[#14a800] text-sm font-medium leading-relaxed mb-6 relative z-10 max-w-xl">
                Freelancers represent 62% of your active user base this month, with a 15% increase in verification completion.
                Client acquisition cost has decreased by 4% over the same period.
             </p>
@@ -89,7 +80,7 @@ const UserAnalyticsPage = () => {
         <div className="flex items-center justify-between mb-8">
            <div>
               <h3 className="text-lg font-black text-zinc-900 dark:text-white flex items-center gap-2">
-                 <TrendingUp size={20} className="text-brand-500" /> User Growth Trends
+                 <TrendingUp size={20} className="text-[#14a800]" /> User Growth Trends
               </h3>
               <p className="text-sm font-medium text-zinc-500 mt-1">Platform adoption over the last 7 months</p>
            </div>
@@ -99,7 +90,7 @@ const UserAnalyticsPage = () => {
                  <span className="text-xs font-bold text-zinc-600 dark:text-zinc-400">Freelancers</span>
               </div>
               <div className="flex items-center gap-2">
-                 <div className="w-3 h-3 rounded-full bg-brand-500"></div>
+                 <div className="w-3 h-3 rounded-full bg-[#14a800]"></div>
                  <span className="text-xs font-bold text-zinc-600 dark:text-zinc-400">Clients</span>
               </div>
            </div>
@@ -107,7 +98,7 @@ const UserAnalyticsPage = () => {
 
         <div className="h-[350px] w-full">
            <ResponsiveContainer width="100%" height="100%">
-             <AreaChart data={MOCK_GROWTH_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+             <AreaChart data={growthData.length ? growthData : [{ name: '—', freelancers: 0, clients: 0 }]} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                <defs>
                  <linearGradient id="colorFreelancers" x1="0" y1="0" x2="0" y2="1">
                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>

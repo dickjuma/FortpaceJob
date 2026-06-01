@@ -1,0 +1,82 @@
+import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+/**
+ * Fiverr-style top category strip — main marketplace pillars.
+ */
+export default function CategoryNavBar({
+  categories = [],
+  loading = false,
+  basePath = '/find-talent',
+  activeSlug = null,
+  onSelect,
+}) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleClick = (cat, event) => {
+    if (onSelect) {
+      event.preventDefault();
+      onSelect(cat);
+      return;
+    }
+    const slug = cat.slug || cat.id;
+    navigate(`${basePath}?section=${encodeURIComponent(slug)}`);
+  };
+
+  const currentSection =
+    activeSlug ||
+    new URLSearchParams(location.search).get('section') ||
+    new URLSearchParams(location.search).get('category');
+
+  if (loading) {
+    return (
+      <div className="border-b border-zinc-200 bg-white">
+        <div className="container mx-auto px-4 flex gap-4 py-3 overflow-hidden">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="h-8 w-24 bg-zinc-100 rounded-full animate-pulse shrink-0" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (!categories.length) return null;
+
+  return (
+    <nav className="border-b border-zinc-200 bg-white sticky top-0 z-30 shadow-sm">
+      <div className="container mx-auto px-4 md:px-8">
+        <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-2">
+          <Link
+            to={basePath}
+            className={`shrink-0 px-4 py-2 rounded-full text-sm font-bold transition-colors ${
+              !currentSection
+                ? 'bg-[#14a800] text-white'
+                : 'text-zinc-600 hover:bg-zinc-100'
+            }`}
+          >
+            All
+          </Link>
+          {categories.map((cat) => {
+            const slug = cat.slug || cat.id;
+            const active = currentSection === slug || currentSection === cat.id;
+            return (
+              <a
+                key={slug}
+                href={`${basePath}?section=${encodeURIComponent(slug)}`}
+                onClick={(e) => handleClick(cat, e)}
+                className={`shrink-0 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${
+                  active
+                    ? 'bg-[#14a800] text-white'
+                    : 'text-zinc-700 hover:bg-zinc-100'
+                }`}
+              >
+                {cat.name || cat.title}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </nav>
+  );
+}

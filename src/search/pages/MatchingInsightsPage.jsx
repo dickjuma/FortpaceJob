@@ -28,7 +28,7 @@ export default function MatchingInsightsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
-          <div className="flex items-center text-brand-600 mb-2"><Target className="w-5 h-5 mr-2" /> <span className="font-semibold text-gray-900 dark:text-white">Average Match Score</span></div>
+          <div className="flex items-center text-[#14a800] mb-2"><Target className="w-5 h-5 mr-2" /> <span className="font-semibold text-gray-900 dark:text-white">Average Match Score</span></div>
           <div className="text-3xl font-bold text-gray-900 dark:text-white">88%</div>
           <p className="text-sm text-gray-500 mt-1">For top 10 candidates</p>
         </div>
@@ -38,7 +38,7 @@ export default function MatchingInsightsPage() {
           <p className="text-sm text-gray-500 mt-1">Similar hires succeeded</p>
         </div>
         <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
-          <div className="flex items-center text-brand-500 mb-2"><Users className="w-5 h-5 mr-2" /> <span className="font-semibold text-gray-900 dark:text-white">Talent Pool</span></div>
+          <div className="flex items-center text-[#14a800] mb-2"><Users className="w-5 h-5 mr-2" /> <span className="font-semibold text-gray-900 dark:text-white">Talent Pool</span></div>
           <div className="text-3xl font-bold text-gray-900 dark:text-white">245</div>
           <p className="text-sm text-gray-500 mt-1">Candidates analyzed</p>
         </div>
@@ -48,7 +48,7 @@ export default function MatchingInsightsPage() {
         {/* Radar Chart: Skill Alignment */}
         <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center mb-6">
-            <Activity className="w-5 h-5 mr-2 text-brand-500" /> Skill Alignment Analysis
+            <Activity className="w-5 h-5 mr-2 text-[#14a800]" /> Skill Alignment Analysis
           </h2>
           <div className="h-80 relative">
             <ResponsiveContainer width="100%" height="100%">

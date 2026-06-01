@@ -1,38 +1,64 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CheckCircle, Lock } from 'lucide-react';
+import { CheckCircle, KeyRound, Lock, Mail } from 'lucide-react';
 import { authAPI } from '../../common/services/api';
 import AuthLayout from '../components/AuthLayout';
 import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
+import OTPInput from '../components/ui/OTPInput';
 import PasswordInput from '../components/ui/PasswordInput';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  validateConfirmPassword,
+  validateEmail,
+  validateOtp,
+  validatePassword,
+} from '../../common/utils/validation';
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
+  const initialEmail = searchParams.get('email') || sessionStorage.getItem('passwordResetEmail') || '';
   const navigate = useNavigate();
 
+  const [email, setEmail] = useState(initialEmail);
+  const [otp, setOtp] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
 
+  const isOtpReset = !token;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!token) {
+    if (isOtpReset) {
+      const emailError = validateEmail(email);
+      if (emailError) {
+        setError(emailError);
+        return;
+      }
+      const otpError = validateOtp(otp);
+      if (otpError) {
+        setError(otpError);
+        return;
+      }
+    } else if (!token) {
       setError('Invalid or missing reset token.');
       return;
     }
 
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
-    
-    // Simple length check, PasswordInput component handles the visual strength meter
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters long.');
+
+    const confirmError = validateConfirmPassword(password, confirmPassword);
+    if (confirmError) {
+      setError(confirmError);
       return;
     }
 
@@ -40,12 +66,33 @@ export default function ResetPasswordPage() {
     setError('');
 
     try {
-      await authAPI.resetPassword({ token, password });
+      await authAPI.resetPassword(isOtpReset ? { email, otp, password } : { token, password });
+      sessionStorage.removeItem('passwordResetEmail');
       setIsSuccess(true);
     } catch (err) {
-      setError(err.message || 'Failed to reset password. The link might be expired.');
+      setError(err.message || 'Failed to reset password. The code might be expired.');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleResend = async () => {
+    const emailError = validateEmail(email);
+    if (emailError) {
+      setError(emailError);
+      return;
+    }
+
+    setIsResending(true);
+    setError('');
+
+    try {
+      await authAPI.resendPasswordResetOTP(email);
+      sessionStorage.setItem('passwordResetEmail', email);
+    } catch (err) {
+      setError(err.message || 'Failed to resend reset code. Please try again.');
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -67,17 +114,47 @@ export default function ResetPasswordPage() {
               <div className="mb-8 text-center sm:text-left">
                 <h2 className="text-3xl font-bold tracking-tight mb-2">Create new password</h2>
                 <p className="text-zinc-500 dark:text-zinc-400">
-                  Please enter your new password below.
+                  {isOtpReset ? 'Enter the code from your email and choose a new password.' : 'Please enter your new password below.'}
                 </p>
               </div>
 
-              {!token && (
-                <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 rounded-xl text-sm font-medium border border-yellow-200 dark:border-yellow-500/20">
-                  Warning: No reset token found in URL. You need to click the link in your email to reset your password.
-                </div>
-              )}
-
               <form onSubmit={handleSubmit} className="space-y-6">
+                {isOtpReset && (
+                  <>
+                    <Input
+                      label="Email address"
+                      type="email"
+                      value={email}
+                      onChange={(e) => { setEmail(e.target.value); setError(''); }}
+                      icon={Mail}
+                      placeholder="name@company.com"
+                    />
+
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
+                          Reset code
+                        </label>
+                        <button
+                          type="button"
+                          onClick={handleResend}
+                          disabled={isResending}
+                          className="text-sm font-semibold text-[#14a800] hover:text-[#14a800] dark:text-[#14a800] disabled:opacity-60"
+                        >
+                          {isResending ? 'Sending...' : 'Resend code'}
+                        </button>
+                      </div>
+                      <OTPInput
+                        value={otp}
+                        onChange={(value) => { setOtp(value); setError(''); }}
+                        error={error && otp.length !== 6 ? error : ''}
+                        disabled={isSubmitting}
+                        autoFocus={Boolean(email)}
+                      />
+                    </div>
+                  </>
+                )}
+
                 <PasswordInput
                   label="New Password"
                   value={password}
@@ -107,8 +184,8 @@ export default function ResetPasswordPage() {
                   size="lg"
                   fullWidth
                   isLoading={isSubmitting}
-                  disabled={!token || !password || !confirmPassword}
-                  icon={Lock}
+                  disabled={(isOtpReset ? (!email || otp.length !== 6) : !token) || !password || !confirmPassword}
+                  icon={isOtpReset ? KeyRound : Lock}
                 >
                   Reset Password
                 </Button>

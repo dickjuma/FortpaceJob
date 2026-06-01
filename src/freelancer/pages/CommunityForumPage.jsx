@@ -62,7 +62,7 @@ export default function CommunityForumPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <Users className="w-8 h-8 text-accent-purple" />
+            <Users className="w-8 h-8 text-success" />
             Community Lounge
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -94,10 +94,10 @@ export default function CommunityForumPage() {
                 <button 
                   key={board.name}
                   onClick={() => setSearchTerm(board.name)}
-                  className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-accent-purple hover:bg-accent-purple/5 transition-all flex justify-between items-center group"
+                  className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-success hover:bg-success/5 transition-all flex justify-between items-center group"
                 >
                   <span>{board.name}</span>
-                  <span className="bg-light-gray group-hover:bg-accent-purple/20 group-hover:text-accent-purple px-2 py-0.5 rounded text-[10px] font-black">{board.count} threads</span>
+                  <span className="bg-light-gray group-hover:bg-success/20 group-hover:text-success px-2 py-0.5 rounded text-[10px] font-black">{board.count} threads</span>
                 </button>
               ))}
             </div>
@@ -113,22 +113,22 @@ export default function CommunityForumPage() {
               placeholder="Search active discussions..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-4 py-2 w-full border border-border rounded-xl bg-light-gray/40 text-sm focus:outline-none focus:border-accent-purple text-text-primary"
+              className="pl-9 pr-4 py-2 w-full border border-border rounded-xl bg-light-gray/40 text-sm focus:outline-none focus:border-success text-text-primary"
             />
           </div>
 
           <div className="space-y-4">
             {filteredThreads.map((thread) => (
-              <Card key={thread.id} className="bg-white border border-border p-6 rounded-3xl shadow-sm hover:border-accent-purple/30 transition-all flex flex-col justify-between min-h-[160px]">
+              <Card key={thread.id} className="bg-white border border-border p-6 rounded-3xl shadow-sm hover:border-success/30 transition-all flex flex-col justify-between min-h-[160px]">
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-accent-purple/10 text-accent-purple border-accent-purple/20">
+                    <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-success/10 text-success border-success/20">
                       {thread.category}
                     </span>
                     <span className="text-[10px] text-text-secondary font-bold flex items-center gap-1"><Clock size={12} /> {thread.date}</span>
                   </div>
 
-                  <h3 className="font-black text-sm text-text-primary leading-snug hover:text-accent-purple transition-colors cursor-pointer">{thread.title}</h3>
+                  <h3 className="font-black text-sm text-text-primary leading-snug hover:text-success transition-colors cursor-pointer">{thread.title}</h3>
                 </div>
 
                 <div className="pt-4 border-t border-border mt-4 flex justify-between items-center bg-transparent">
@@ -138,17 +138,17 @@ export default function CommunityForumPage() {
                     </div>
                     <div>
                       <p className="text-[10px] font-bold text-text-primary">{thread.author}</p>
-                      <p className="text-[8px] font-black uppercase text-accent-purple tracking-widest mt-0.5">{thread.role}</p>
+                      <p className="text-[8px] font-black uppercase text-success tracking-widest mt-0.5">{thread.role}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3 text-xs font-bold text-text-secondary">
-                    <button onClick={() => handleLike(thread.id)} className="flex items-center gap-1.5 hover:text-accent-red transition-colors">
-                      <Heart size={14} className="text-accent-red" />
+                    <button onClick={() => handleLike(thread.id)} className="flex items-center gap-1.5 hover:text-[#e63946] transition-colors">
+                      <Heart size={14} className="text-[#e63946]" />
                       <span>{thread.likes}</span>
                     </button>
                     <span className="flex items-center gap-1.5">
-                      <MessageSquare size={14} className="text-accent-purple" />
+                      <MessageSquare size={14} className="text-success" />
                       <span>{thread.replies} replies</span>
                     </span>
                   </div>
@@ -174,7 +174,7 @@ export default function CommunityForumPage() {
           <Card className="w-full max-w-lg shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-4 border-b border-border pb-3">
               <h3 className="text-lg font-black text-text-primary flex items-center gap-2">
-                <Plus className="w-5 h-5 text-accent-purple" />
+                <Plus className="w-5 h-5 text-success" />
                 Start Discussion Thread
               </h3>
               <button onClick={() => setActiveModal(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
@@ -187,7 +187,7 @@ export default function CommunityForumPage() {
                   type="text" 
                   value={threadForm.title} 
                   onChange={(e) => setThreadForm({ ...threadForm, title: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   placeholder="e.g. Standard billing terms for multi-currency contracts"
                   required
                 />
@@ -198,7 +198,7 @@ export default function CommunityForumPage() {
                 <select
                   value={threadForm.category}
                   onChange={(e) => setThreadForm({ ...threadForm, category: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary appearance-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary appearance-none"
                 >
                   <option value="Gig Strategy">Gig Strategy</option>
                   <option value="Web3 / Contracts">Web3 / Contracts</option>
@@ -213,7 +213,7 @@ export default function CommunityForumPage() {
                   rows={4} 
                   value={threadForm.text} 
                   onChange={(e) => setThreadForm({ ...threadForm, text: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary resize-none font-medium"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary resize-none font-medium"
                   placeholder="Share details, questions, or boilerplates..."
                   required
                 />

@@ -179,26 +179,26 @@ export default function IdentityVerificationCenterPage() {
         return (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="w-5 h-5 text-accent-purple" />
+              <Sparkles className="w-5 h-5 text-success" />
               <h3 className="text-xl font-bold text-text-primary">Personal Details</h3>
             </div>
             <p className="text-sm text-text-secondary">Please provide your legal name as it appears on your government-issued ID.</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
               <div>
                 <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">First Name</label>
-                <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-all shadow-inner" />
+                <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-all shadow-inner" />
               </div>
               <div>
                 <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">Last Name</label>
-                <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-all shadow-inner" />
+                <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-all shadow-inner" />
               </div>
               <div>
                 <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">Date of Birth</label>
-                <input type="date" name="dob" value={formData.dob} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-all" />
+                <input type="date" name="dob" value={formData.dob} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-all" />
               </div>
               <div>
                 <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">Nationality</label>
-                <input type="text" name="nationality" value={formData.nationality} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-all" />
+                <input type="text" name="nationality" value={formData.nationality} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-all" />
               </div>
             </div>
           </motion.div>
@@ -216,19 +216,19 @@ export default function IdentityVerificationCenterPage() {
               onClick={() => fileInputRef.current?.click()}
               className={cn(
                 "mt-6 border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer flex flex-col items-center justify-center min-h-[220px]",
-                isDragging ? "border-accent-purple bg-accent-purple/5 scale-[0.98]" : "border-border hover:bg-light-gray hover:border-accent-purple"
+                isDragging ? "border-success bg-success/5 scale-[0.98]" : "border-border hover:bg-light-gray hover:border-success"
               )}
             >
               <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*,.pdf" />
-              <UploadCloud className="h-12 w-12 text-accent-purple mb-4 animate-bounce" />
+              <UploadCloud className="h-12 w-12 text-success mb-4 animate-bounce" />
               <h4 className="text-base font-bold text-text-primary">Drag & drop document here, or browse</h4>
               <p className="text-xs text-text-secondary mt-1">Supports PNG, JPG, PDF up to 10MB</p>
             </div>
 
             {ocrStatus === 'scanning' && (
-              <div className="mt-4 p-4 bg-accent-purple/5 border border-accent-purple/20 rounded-xl flex items-center gap-3">
-                <Loader2 className="w-5 h-5 text-accent-purple animate-spin" />
-                <span className="text-xs font-bold text-accent-purple">Extracting data via OCR Neural Engine...</span>
+              <div className="mt-4 p-4 bg-success/5 border border-success/20 rounded-xl flex items-center gap-3">
+                <Loader2 className="w-5 h-5 text-success animate-spin" />
+                <span className="text-xs font-bold text-success">Extracting data via OCR Neural Engine...</span>
               </div>
             )}
 
@@ -258,9 +258,9 @@ export default function IdentityVerificationCenterPage() {
               <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
               
               {cameraActive ? (
-                <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-accent-purple animate-pulse flex items-center justify-center bg-black/40">
-                  <Camera className="w-12 h-12 text-accent-purple" />
-                  <div className="absolute inset-x-0 top-1/2 h-0.5 bg-accent-purple shadow-[0_0_8px_#a855f7] animate-bounce"></div>
+                <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-success animate-pulse flex items-center justify-center bg-black/40">
+                  <Camera className="w-12 h-12 text-success" />
+                  <div className="absolute inset-x-0 top-1/2 h-0.5 bg-success shadow-[0_0_8px_#a855f7] animate-bounce"></div>
                 </div>
               ) : biometricStatus === 'matched' ? (
                 <div className="text-center space-y-3">
@@ -274,14 +274,14 @@ export default function IdentityVerificationCenterPage() {
                 <div className="text-center space-y-4">
                   <Camera className="w-16 h-16 text-white/30 mx-auto" />
                   <p className="text-xs text-white/60 max-w-[280px]">Enable camera permission to complete live face verification.</p>
-                  <Button variant="primary" onClick={startBiometricScan} className="bg-accent-purple hover:bg-accent-purple/90 border-0">
+                  <Button variant="primary" onClick={startBiometricScan} className="bg-success hover:bg-success/90 border-0">
                     Launch Biometric Scan
                   </Button>
                 </div>
               )}
 
               {biometricStatus === 'scanning' && (
-                <div className="absolute bottom-4 left-1/2 -tranzinc-x-1/2 text-xs font-bold text-accent-purple tracking-widest uppercase flex items-center gap-1.5 bg-zinc-950 px-4 py-2 rounded-full border border-white/5">
+                <div className="absolute bottom-4 left-1/2 -tranzinc-x-1/2 text-xs font-bold text-success tracking-widest uppercase flex items-center gap-1.5 bg-zinc-950 px-4 py-2 rounded-full border border-white/5">
                   <Loader2 className="w-3.5 h-3.5 animate-spin" /> Analyzing Facial Vectors...
                 </div>
               )}
@@ -296,16 +296,16 @@ export default function IdentityVerificationCenterPage() {
             <div className="space-y-4 mt-4">
               <div>
                 <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">Street Address</label>
-                <input type="text" name="address" value={formData.address} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-colors" />
+                <input type="text" name="address" value={formData.address} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-colors" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">City</label>
-                  <input type="text" name="city" value={formData.city} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-colors" />
+                  <input type="text" name="city" value={formData.city} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-colors" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">ZIP Code</label>
-                  <input type="text" name="zip" value={formData.zip} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-colors" />
+                  <input type="text" name="zip" value={formData.zip} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-colors" />
                 </div>
               </div>
             </div>
@@ -314,7 +314,7 @@ export default function IdentityVerificationCenterPage() {
       case 4:
         return (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-center py-6">
-            <div className="w-20 h-20 bg-accent-purple/10 text-accent-purple border border-accent-purple/20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl">
+            <div className="w-20 h-20 bg-success/10 text-success border border-success/20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl">
               <ShieldCheck className="w-10 h-10" />
             </div>
             <h3 className="text-2xl font-black text-text-primary">Submit KYC Package</h3>
@@ -346,11 +346,11 @@ export default function IdentityVerificationCenterPage() {
             <div className="space-y-4 mt-4">
               <div>
                 <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">Legal Company Name</label>
-                <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-colors" />
+                <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-colors" />
               </div>
               <div>
                 <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">Business Address</label>
-                <input type="text" name="address" value={formData.address} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-colors" />
+                <input type="text" name="address" value={formData.address} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-colors" />
               </div>
             </div>
           </motion.div>
@@ -362,7 +362,7 @@ export default function IdentityVerificationCenterPage() {
             <p className="text-sm text-text-secondary">Upload Incorporation Certificate or Corporate Articles.</p>
             <div>
               <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">Registration Number</label>
-              <input type="text" name="registrationNumber" value={formData.registrationNumber} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-colors mb-4" />
+              <input type="text" name="registrationNumber" value={formData.registrationNumber} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-colors mb-4" />
             </div>
             
             <div 
@@ -372,11 +372,11 @@ export default function IdentityVerificationCenterPage() {
               onClick={() => fileInputRef.current?.click()}
               className={cn(
                 "border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer flex flex-col items-center justify-center min-h-[200px]",
-                isDragging ? "border-accent-purple bg-accent-purple/5" : "border-border hover:bg-light-gray hover:border-accent-purple"
+                isDragging ? "border-success bg-success/5" : "border-border hover:bg-light-gray hover:border-success"
               )}
             >
               <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*,.pdf" />
-              <UploadCloud className="mx-auto h-12 w-12 text-accent-purple mb-3 animate-bounce" />
+              <UploadCloud className="mx-auto h-12 w-12 text-success mb-3 animate-bounce" />
               <h4 className="text-base font-bold text-text-primary">Drag & drop certificate here, or browse</h4>
             </div>
           </motion.div>
@@ -389,7 +389,7 @@ export default function IdentityVerificationCenterPage() {
             <div className="space-y-4 mt-4">
               <div>
                 <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">Tax ID / VAT Number</label>
-                <input type="text" name="taxId" value={formData.taxId} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-accent-purple outline-none transition-colors" />
+                <input type="text" name="taxId" value={formData.taxId} onChange={handleInputChange} className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-text-primary focus:bg-white focus:border-success outline-none transition-colors" />
               </div>
             </div>
           </motion.div>
@@ -401,9 +401,9 @@ export default function IdentityVerificationCenterPage() {
             <p className="text-sm text-text-secondary">Upload passport or identity card of the primary director or owner.</p>
             <div 
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-border rounded-2xl p-8 text-center hover:bg-light-gray hover:border-accent-purple transition-all cursor-pointer flex flex-col items-center justify-center min-h-[200px]"
+              className="border-2 border-dashed border-border rounded-2xl p-8 text-center hover:bg-light-gray hover:border-success transition-all cursor-pointer flex flex-col items-center justify-center min-h-[200px]"
             >
-              <User className="mx-auto h-12 w-12 text-accent-purple mb-3" />
+              <User className="mx-auto h-12 w-12 text-success mb-3" />
               <h4 className="text-base font-bold text-text-primary">Upload Passport or National ID</h4>
             </div>
           </motion.div>
@@ -415,8 +415,8 @@ export default function IdentityVerificationCenterPage() {
             <p className="text-sm text-text-secondary">Verify the identity of the beneficial owner through real-time facial alignment matching.</p>
             <div className="mt-6 flex flex-col items-center justify-center p-8 bg-zinc-900 text-white rounded-3xl relative overflow-hidden min-h-[280px]">
               {cameraActive ? (
-                <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-accent-purple animate-pulse flex items-center justify-center">
-                  <Camera className="w-10 h-10 text-accent-purple" />
+                <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-success animate-pulse flex items-center justify-center">
+                  <Camera className="w-10 h-10 text-success" />
                 </div>
               ) : biometricStatus === 'matched' ? (
                 <div className="text-center space-y-2">
@@ -424,7 +424,7 @@ export default function IdentityVerificationCenterPage() {
                   <h4 className="font-bold text-white">Director Verified Successfully</h4>
                 </div>
               ) : (
-                <Button variant="primary" onClick={startBiometricScan} className="bg-accent-purple hover:bg-accent-purple/95">
+                <Button variant="primary" onClick={startBiometricScan} className="bg-success hover:bg-success/95">
                   Launch Director Scan
                 </Button>
               )}
@@ -434,7 +434,7 @@ export default function IdentityVerificationCenterPage() {
       case 5:
         return (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-center py-6">
-            <ShieldCheck className="h-16 w-16 text-accent-purple mx-auto" />
+            <ShieldCheck className="h-16 w-16 text-success mx-auto" />
             <h3 className="text-2xl font-black text-text-primary">Submit Corporate KYB Package</h3>
             <p className="text-sm text-text-secondary font-medium">Verify your agency registration status and business tax certificates safely.</p>
           </motion.div>
@@ -451,7 +451,7 @@ export default function IdentityVerificationCenterPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-6">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-accent-purple/20 text-accent-purple rounded-xl border border-accent-purple/20 shadow-sm">
+            <div className="p-2.5 bg-success/20 text-success rounded-xl border border-success/20 shadow-sm">
               <Shield className="w-6 h-6" />
             </div>
             <h1 className="text-3xl font-black text-text-primary tracking-tight">Identity Verification Center</h1>
@@ -467,7 +467,7 @@ export default function IdentityVerificationCenterPage() {
             onClick={() => setAccountType('INDIVIDUAL')}
             className={cn(
               "px-4 py-2 text-xs font-black uppercase tracking-wider rounded-lg transition-all",
-              accountType === 'INDIVIDUAL' ? "bg-white text-accent-purple shadow-sm font-bold" : "text-text-secondary hover:text-text-primary"
+              accountType === 'INDIVIDUAL' ? "bg-white text-success shadow-sm font-bold" : "text-text-secondary hover:text-text-primary"
             )}
           >
             Individual
@@ -476,7 +476,7 @@ export default function IdentityVerificationCenterPage() {
             onClick={() => setAccountType('AGENCY')}
             className={cn(
               "px-4 py-2 text-xs font-black uppercase tracking-wider rounded-lg transition-all",
-              accountType !== 'INDIVIDUAL' ? "bg-white text-accent-purple shadow-sm font-bold" : "text-text-secondary hover:text-text-primary"
+              accountType !== 'INDIVIDUAL' ? "bg-white text-success shadow-sm font-bold" : "text-text-secondary hover:text-text-primary"
             )}
           >
             SME/Agency
@@ -501,14 +501,14 @@ export default function IdentityVerificationCenterPage() {
                       <div className={cn(
                         "h-10 w-10 rounded-full flex items-center justify-center border-2 transition-all duration-300",
                         isCompleted ? 'bg-success border-success text-white' : 
-                        isCurrent ? 'border-accent-purple text-accent-purple bg-accent-purple/10 scale-105' : 
+                        isCurrent ? 'border-success text-success bg-success/10 scale-105' : 
                         'border-border text-text-secondary/50 bg-light-gray'
                       )}>
                         {isCompleted ? <Check className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
                       </div>
                       <span className={cn(
                         "text-[9px] uppercase tracking-wider mt-3 font-bold",
-                        isCurrent ? 'text-accent-purple' : 'text-text-secondary'
+                        isCurrent ? 'text-success' : 'text-text-secondary'
                       )}>{step.label}</span>
                     </div>
                     {index < steps.length - 1 && (
@@ -545,7 +545,7 @@ export default function IdentityVerificationCenterPage() {
                 <Button 
                   variant="primary" 
                   onClick={handleSubmitAll}
-                  className="bg-accent-purple hover:bg-accent-purple/95 font-bold rounded-xl px-6 py-2.5 text-sm"
+                  className="bg-success hover:bg-success/95 font-bold rounded-xl px-6 py-2.5 text-sm"
                 >
                   Submit for Ledger Review
                 </Button>
@@ -553,7 +553,7 @@ export default function IdentityVerificationCenterPage() {
                 <Button 
                   variant="primary" 
                   onClick={handleNext} 
-                  className="bg-accent-purple hover:bg-accent-purple/95 font-bold rounded-xl px-6 py-2.5 text-sm"
+                  className="bg-success hover:bg-success/95 font-bold rounded-xl px-6 py-2.5 text-sm"
                   icon={<ArrowRight size={16} />}
                 >
                   Continue
@@ -567,7 +567,7 @@ export default function IdentityVerificationCenterPage() {
         <div className="lg:col-span-1 space-y-6">
           <Card className="p-6 border border-border bg-light-gray rounded-3xl space-y-4">
             <h4 className="font-black text-text-primary text-sm flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-accent-purple" /> Verification Level
+              <ShieldCheck className="w-4 h-4 text-success" /> Verification Level
             </h4>
             <p className="text-xs text-text-secondary leading-relaxed font-semibold">
               Verify your identity to lock in higher billing limits, reduced platform commissions, and instant withdrawal routing keys.
@@ -583,7 +583,7 @@ export default function IdentityVerificationCenterPage() {
               </div>
               <div className="flex items-center justify-between text-xs font-bold text-text-secondary">
                 <span>Commission Discount</span>
-                <span className="text-accent-purple uppercase text-[10px]">-1.5%</span>
+                <span className="text-success uppercase text-[10px]">-1.5%</span>
               </div>
             </div>
           </Card>

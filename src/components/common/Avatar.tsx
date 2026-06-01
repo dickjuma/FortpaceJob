@@ -47,7 +47,7 @@ export const Avatar = ({ className, src, alt, name, size = 'md', status, ...prop
           {...props}
         />
       ) : (
-        <div className="w-full h-full rounded-full bg-accent-purple text-navy flex items-center justify-center font-semibold border border-border">
+        <div className="w-full h-full rounded-full bg-success text-[#222222] flex items-center justify-center font-semibold border border-border">
           {initials}
         </div>
       )}

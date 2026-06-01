@@ -26,7 +26,7 @@ export default function TransactionDrawer({ isOpen, onClose, transaction }) {
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-surface-dark-border">
             <h2 className="text-lg font-bold text-surface-dark dark:text-white flex items-center">
-              <Receipt className="w-5 h-5 mr-2 text-brand-600" /> Transaction Details
+              <Receipt className="w-5 h-5 mr-2 text-[#14a800]" /> Transaction Details
             </h2>
             <button onClick={onClose} className="p-2 bg-gray-100 dark:bg-surface-dark-secondary rounded-full hover:bg-gray-200 dark:hover:bg-surface-dark-tertiary transition-colors">
               <X className="w-4 h-4 text-gray-600 dark:text-gray-300" />
@@ -49,7 +49,7 @@ export default function TransactionDrawer({ isOpen, onClose, transaction }) {
                   <span className="text-sm text-gray-500">Transaction ID</span>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-mono font-bold text-surface-dark dark:text-white">TXN-982184920</span>
-                    <Copy className="w-3 h-3 text-gray-400 cursor-pointer hover:text-brand-600" />
+                    <Copy className="w-3 h-3 text-gray-400 cursor-pointer hover:text-[#14a800]" />
                   </div>
                 </div>
                 <div className="flex justify-between items-center mb-4">
@@ -82,7 +82,7 @@ export default function TransactionDrawer({ isOpen, onClose, transaction }) {
                   </div>
                   <div className="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-surface-dark-border text-sm">
                     <span className="font-bold text-surface-dark dark:text-white">Total Credited</span>
-                    <span className="font-bold text-brand-600 dark:text-brand-400">$5,000.00</span>
+                    <span className="font-bold text-[#14a800] dark:text-[#14a800]">$5,000.00</span>
                   </div>
                 </div>
               </div>
@@ -115,7 +115,7 @@ export default function TransactionDrawer({ isOpen, onClose, transaction }) {
             <button className="flex-1 py-3 bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border rounded-button text-sm font-bold text-surface-dark dark:text-white hover:bg-surface transition-colors shadow-sm">
               Download Receipt
             </button>
-            <button className="flex-1 py-3 bg-brand-600 text-white rounded-button text-sm font-bold hover:bg-brand-700 transition-colors shadow-sm">
+            <button className="flex-1 py-3 bg-[#14a800] text-white rounded-button text-sm font-bold hover:bg-[#118a00] transition-colors shadow-sm">
               Report Issue
             </button>
           </div>

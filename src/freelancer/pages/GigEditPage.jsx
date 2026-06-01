@@ -1,34 +1,69 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Save, RefreshCw, Send, ChevronLeft, Check, 
+  RefreshCw, Send, ChevronLeft, Check, 
   History, Settings, MoreHorizontal, FileText, Image as ImageIcon,
-  DollarSign, AlignLeft, Info
+  DollarSign, AlignLeft, Info, Loader2
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
+import { gigAPI } from '../../common/services/api';
+import toast from 'react-hot-toast';
 
-// Minimal inline editing approach like Notion
 export default function GigEditPage() {
-  const [title, setTitle] = useState('I will build a responsive modern React JS web application');
-  const [description, setDescription] = useState('Hi there! I am a senior React developer with 5+ years of experience. I specialize in building fast, accessible, and beautiful web applications using modern technologies like React, Tailwind CSS, and Framer Motion.\n\nWhat you will get:\n- Clean, maintainable code\n- Fully responsive design\n- SEO optimization\n- Fast load times\n\nPlease message me before placing an order so we can discuss your specific requirements.');
-  
+  const { gigId } = useParams();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-  const [lastSaved, setLastSaved] = useState('Just now');
+  const [lastSaved, setLastSaved] = useState('—');
   const [hasChanges, setHasChanges] = useState(false);
-  const [activeTab, setActiveTab] = useState('content'); // content, pricing, media, settings
+  const [activeTab, setActiveTab] = useState('content');
 
-  // Simulate auto-save
+  const { data: gig, isLoading, error } = useQuery({
+    queryKey: ['freelancer', 'gig', gigId],
+    queryFn: () => gigAPI.getGig(gigId),
+    enabled: !!gigId,
+  });
+
   useEffect(() => {
-    if (hasChanges) {
-      setIsSaving(true);
-      const timer = setTimeout(() => {
-        setIsSaving(false);
-        setLastSaved(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
-        setHasChanges(false);
-      }, 1500);
-      return () => clearTimeout(timer);
+    const g = gig?.gig || gig?.data || gig;
+    if (!g) return;
+    setTitle(g.title || '');
+    setDescription(g.description || g.summary || '');
+  }, [gig]);
+
+  const handleSave = async () => {
+    if (!gigId) return;
+    setIsSaving(true);
+    try {
+      await gigAPI.updateGig(gigId, { title, description });
+      setLastSaved(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+      setHasChanges(false);
+      toast.success('Gig updated');
+    } catch (err) {
+      toast.error(err.message || 'Failed to save gig');
+    } finally {
+      setIsSaving(false);
     }
-  }, [title, description, hasChanges]);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 text-center">
+        <p className="text-red-600 mb-4">Could not load this gig.</p>
+        <Link to="/freelancer/gigs" className="text-[#14a800] font-bold">Back to services</Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans flex flex-col">
@@ -36,9 +71,9 @@ export default function GigEditPage() {
       {/* Notion-style Top Bar */}
       <header className="sticky top-0 z-50 bg-white dark:bg-surface-dark border-b border-zinc-200 dark:border-zinc-800 px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <button className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white flex items-center gap-1 text-sm font-bold transition-colors">
-            <ChevronLeft className="w-4 h-4" /> Back to Dashboard
-          </button>
+          <Link to="/freelancer/gigs" className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white flex items-center gap-1 text-sm font-bold transition-colors">
+            <ChevronLeft className="w-4 h-4" /> Back to services
+          </Link>
           <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800" />
           <div className="flex items-center gap-2 text-xs font-medium text-zinc-500">
             {isSaving ? (
@@ -57,8 +92,14 @@ export default function GigEditPage() {
             <MoreHorizontal className="w-4 h-4" />
           </button>
           <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800 mx-1" />
-          <button className="flex items-center gap-2 px-4 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors">
-            Update Gig <Send className="w-3.5 h-3.5" />
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving}
+            className="flex items-center gap-2 px-4 py-1.5 bg-[#14a800] hover:bg-[#118a00] text-white text-xs font-bold rounded-lg shadow-sm transition-colors disabled:opacity-50"
+          >
+            {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+            Save changes
           </button>
         </div>
       </header>
@@ -82,7 +123,7 @@ export default function GigEditPage() {
                   activeTab === tab.id ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-surface dark:hover:bg-zinc-800/50"
                 )}
               >
-                <tab.icon className={cn("w-4 h-4", activeTab === tab.id ? "text-brand-500" : "text-zinc-400")} />
+                <tab.icon className={cn("w-4 h-4", activeTab === tab.id ? "text-[#14a800]" : "text-zinc-400")} />
                 {tab.label}
               </button>
             ))}
@@ -141,7 +182,7 @@ export default function GigEditPage() {
       
       {/* Floating Info */}
       <div className="fixed bottom-6 right-6 flex items-center gap-2 p-3 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-lg">
-        <Info className="w-4 h-4 text-brand-500" />
+        <Info className="w-4 h-4 text-[#14a800]" />
         <span className="text-xs font-bold text-zinc-600 dark:text-zinc-300">Click any text to edit instantly.</span>
       </div>
 

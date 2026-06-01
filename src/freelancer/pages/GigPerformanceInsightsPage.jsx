@@ -15,7 +15,7 @@ export default function GigPerformanceInsightsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="px-3 py-1 bg-brand-100 dark:bg-brand-500/20 text-brand-700 dark:text-brand-400 rounded-lg text-xs font-black uppercase tracking-wider flex items-center gap-1.5">
+            <span className="px-3 py-1 bg-[#14a800]/10 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] rounded-lg text-xs font-black uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" /> AI-Powered
             </span>
           </div>
@@ -30,7 +30,7 @@ export default function GigPerformanceInsightsPage() {
         <div className="flex-1 w-full space-y-6">
           
           {/* Top AI Summary Alert */}
-          <div className="bg-gradient-to-r from-violet-600 to-brand-600 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+          <div className="bg-gradient-to-r from-violet-600 to-[#118a00] rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-black/10 rounded-full blur-2xl pointer-events-none" />
             
@@ -40,23 +40,23 @@ export default function GigPerformanceInsightsPage() {
                   <Zap className="w-5 h-5 text-yellow-300 fill-yellow-300" />
                   <h2 className="text-lg font-bold">Optimization Opportunity</h2>
                 </div>
-                <p className="text-brand-50 leading-relaxed font-medium mb-6">
+                <p className="text-[#14a800] leading-relaxed font-medium mb-6">
                   Your "React JS Development" gig is performing well in search, but dropping off at the pricing page. Aligning your Premium package with market averages could increase your monthly revenue by an estimated <strong className="text-white text-lg">$1,200</strong>.
                 </p>
                 <div className="flex flex-wrap gap-3">
-                  <button className="px-6 py-2.5 bg-white text-brand-700 font-bold rounded-xl hover:bg-surface shadow-sm transition-colors text-sm">
+                  <button className="px-6 py-2.5 bg-white text-[#14a800] font-bold rounded-xl hover:bg-surface shadow-sm transition-colors text-sm">
                     Review Pricing
                   </button>
-                  <button className="px-6 py-2.5 bg-brand-700/50 hover:bg-brand-700 border border-brand-400/30 text-white font-bold rounded-xl transition-colors text-sm">
+                  <button className="px-6 py-2.5 bg-[#118a00]/50 hover:bg-[#118a00] border border-[#14a800]/20/30 text-white font-bold rounded-xl transition-colors text-sm">
                     Dismiss
                   </button>
                 </div>
               </div>
               
               <div className="w-full md:w-48 bg-black/20 backdrop-blur-sm rounded-2xl p-5 border border-white/10 text-center shrink-0">
-                <span className="text-xs font-bold text-brand-200 uppercase tracking-wider block mb-1">Growth Potential</span>
+                <span className="text-xs font-bold text-[#14a800] uppercase tracking-wider block mb-1">Growth Potential</span>
                 <span className="text-4xl font-black text-white block mb-1">+24%</span>
-                <span className="text-xs font-medium text-brand-100 flex items-center justify-center gap-1">
+                <span className="text-xs font-medium text-[#14a800] flex items-center justify-center gap-1">
                   <TrendingUp className="w-3.5 h-3.5" /> in Conversion
                 </span>
               </div>
@@ -67,9 +67,9 @@ export default function GigPerformanceInsightsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             {/* SEO Analysis Card */}
-            <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm group hover:border-brand-300 dark:hover:border-brand-700 transition-colors cursor-pointer">
+            <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm group hover:border-[#14a800]/50 dark:hover:border-[#14a800]/50 transition-colors cursor-pointer">
               <div className="flex justify-between items-start mb-6">
-                <div className="p-3 bg-brand-50 dark:bg-brand-500/10 rounded-xl text-brand-600 dark:text-brand-400">
+                <div className="p-3 bg-[#14a800]/5 dark:bg-[#14a800]/10 rounded-xl text-[#14a800] dark:text-[#14a800]">
                   <Search className="w-6 h-6" />
                 </div>
                 <span className="bg-rose-100 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
@@ -87,13 +87,13 @@ export default function GigPerformanceInsightsPage() {
                   <span className="text-zinc-600 dark:text-zinc-400">Current Ranking Score</span>
                   <span className="text-amber-500">72/100</span>
                 </div>
-                <div className="flex justify-between items-center text-sm font-semibold p-3 bg-brand-50 dark:bg-brand-500/10 rounded-xl border border-brand-100 dark:border-brand-500/20">
-                  <span className="text-brand-700 dark:text-brand-400">Predicted Score</span>
-                  <span className="text-brand-600 dark:text-brand-400 flex items-center gap-1">94/100 <TrendingUp className="w-3.5 h-3.5" /></span>
+                <div className="flex justify-between items-center text-sm font-semibold p-3 bg-[#14a800]/5 dark:bg-[#14a800]/10 rounded-xl border border-[#14a800]/20 dark:border-[#14a800]/20/20">
+                  <span className="text-[#14a800] dark:text-[#14a800]">Predicted Score</span>
+                  <span className="text-[#14a800] dark:text-[#14a800] flex items-center gap-1">94/100 <TrendingUp className="w-3.5 h-3.5" /></span>
                 </div>
               </div>
 
-              <div className="flex items-center text-sm font-bold text-brand-600 dark:text-brand-400 group-hover:underline">
+              <div className="flex items-center text-sm font-bold text-[#14a800] dark:text-[#14a800] group-hover:underline">
                 Update Keywords <ChevronRight className="w-4 h-4 ml-1" />
               </div>
             </div>
@@ -137,7 +137,7 @@ export default function GigPerformanceInsightsPage() {
             {/* Competitor Comparison Card */}
             <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm md:col-span-2">
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 bg-violet-50 dark:bg-violet-500/10 rounded-xl text-violet-600 dark:text-violet-400">
+                <div className="p-3 bg-violet-50 dark:bg-#14a800]/10 rounded-xl text-violet-600 dark:text-violet-400">
                   <Users className="w-6 h-6" />
                 </div>
                 <div>
@@ -187,11 +187,11 @@ export default function GigPerformanceInsightsPage() {
         <div className="w-full lg:w-80 shrink-0 space-y-6">
           
           <div className="bg-surface-dark rounded-3xl p-6 shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-500/20 rounded-bl-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#14a800]/20 rounded-bl-full pointer-events-none" />
             
             <div className="flex items-center justify-between mb-6 relative z-10">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Target className="w-4 h-4 text-brand-400" /> Visibility Score
+                <Target className="w-4 h-4 text-[#14a800]" /> Visibility Score
               </h3>
               <span className="text-xs font-bold text-success flex items-center gap-1">
                 <ArrowUpRight className="w-3 h-3" /> Top 15%
@@ -204,7 +204,7 @@ export default function GigPerformanceInsightsPage() {
                   <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-zinc-800" />
                   <motion.circle 
                     cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" 
-                    className="text-brand-500"
+                    className="text-[#14a800]"
                     strokeLinecap="round"
                     initial={{ strokeDasharray: "0 251.2" }}
                     animate={{ strokeDasharray: `${(85 / 100) * 251.2} 251.2` }}
@@ -222,7 +222,7 @@ export default function GigPerformanceInsightsPage() {
               Your gig appears on page 2 for most primary keywords. Completing our AI suggestions will push you to page 1.
             </p>
 
-            <button className="w-full py-3 bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold rounded-xl shadow-sm transition-colors relative z-10">
+            <button className="w-full py-3 bg-[#14a800] hover:bg-[#14a800] text-white text-sm font-bold rounded-xl shadow-sm transition-colors relative z-10">
               Auto-Apply AI Fixes
             </button>
           </div>
@@ -239,9 +239,9 @@ export default function GigPerformanceInsightsPage() {
                 <span className="text-xs font-bold text-emerald-700 dark:text-success">Search Impressions</span>
                 <span className="text-sm font-black text-success dark:text-emerald-300">+45%</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-brand-50 dark:bg-brand-500/10 rounded-xl">
-                <span className="text-xs font-bold text-brand-700 dark:text-brand-400">Monthly Revenue</span>
-                <span className="text-sm font-black text-brand-600 dark:text-brand-300">+$1.2K</span>
+              <div className="flex items-center justify-between p-3 bg-[#14a800]/5 dark:bg-[#14a800]/10 rounded-xl">
+                <span className="text-xs font-bold text-[#14a800] dark:text-[#14a800]">Monthly Revenue</span>
+                <span className="text-sm font-black text-[#14a800] dark:text-[#14a800]">+$1.2K</span>
               </div>
             </div>
           </div>

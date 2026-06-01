@@ -58,7 +58,7 @@ const SavedSearches = () => {
                     <div className="flex items-center gap-3 mb-2">
                       <h2 className="text-lg font-bold text-zinc-900">{search.name}</h2>
                       {search.newResults > 0 && (
-                        <span className="bg-brand-100 text-brand-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                        <span className="bg-[#14a800]/10 text-[#14a800] text-xs font-bold px-2 py-0.5 rounded-full">
                           {search.newResults} New
                         </span>
                       )}
@@ -84,7 +84,7 @@ const SavedSearches = () => {
                     </div>
                     
                     <div className="flex items-center gap-2 w-full md:w-auto">
-                      <button className="flex-1 md:flex-none justify-center flex items-center gap-1 bg-brand-50 hover:bg-brand-100 text-brand-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                      <button className="flex-1 md:flex-none justify-center flex items-center gap-1 bg-[#14a800]/5 hover:bg-[#14a800]/10 text-[#14a800] px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                         <Play className="w-4 h-4" /> Run
                       </button>
                       <button className="p-2 text-zinc-400 hover:text-zinc-600 border border-zinc-200 rounded-lg hover:bg-surface">
@@ -101,12 +101,12 @@ const SavedSearches = () => {
             ))}
           </div>
           
-          <div className="mt-8 bg-brand-50 border border-brand-100 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="mt-8 bg-[#14a800]/5 border border-[#14a800]/20 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <h3 className="font-bold text-zinc-900 text-lg mb-1">Let AI build your pipeline</h3>
               <p className="text-zinc-600">Upgrade to Enterprise to automatically source candidates into a pipeline based on your saved searches.</p>
             </div>
-            <Link to="/enterprise" className="bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-xl font-medium transition-colors whitespace-nowrap">
+            <Link to="/enterprise" className="bg-[#14a800] hover:bg-[#118a00] text-white px-6 py-3 rounded-xl font-medium transition-colors whitespace-nowrap">
               Explore Enterprise
             </Link>
           </div>

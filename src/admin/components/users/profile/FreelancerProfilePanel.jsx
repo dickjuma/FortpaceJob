@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { getPublicProfileUrl } from '../../../utils/publicProfileLinks';
 import { 
   Briefcase, 
   Target, 
@@ -28,7 +30,7 @@ const SectionHeader = ({ title, icon: Icon, action }) => (
       <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900 dark:text-white">{title}</h3>
     </div>
     {action && (
-      <button className="text-[10px] font-black uppercase tracking-widest text-brand-600 hover:text-brand-700 transition-colors">
+      <button className="text-[10px] font-black uppercase tracking-widest text-[#14a800] hover:text-[#14a800] transition-colors">
         {action}
       </button>
     )}
@@ -41,8 +43,24 @@ const SectionHeader = ({ title, icon: Icon, action }) => (
 const FreelancerProfilePanel = ({ user, activeTab }) => {
   if (activeTab !== 'overview') return null;
 
+  const skills = Array.isArray(user.skills) ? user.skills : [];
+  const categories = Array.isArray(user.categories) ? user.categories : [];
+  const publicUrl = getPublicProfileUrl(user);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {publicUrl && (
+        <div className="lg:col-span-3">
+          <Link
+            to={publicUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-bold text-[#14a800] hover:underline"
+          >
+            <ExternalLink size={14} /> View public freelancer profile
+          </Link>
+        </div>
+      )}
       {/* Left Column: Bio & Skills */}
       <div className="lg:col-span-2 space-y-8">
         <Card>
@@ -55,7 +73,7 @@ const FreelancerProfilePanel = ({ user, activeTab }) => {
         <Card>
           <SectionHeader title="Skills & Categories" icon={Target} />
           <div className="flex flex-wrap gap-2">
-            {user.skills.map((skill) => (
+            {skills.map((skill) => (
               <Badge key={skill} variant="secondary" className="px-3 py-1.5 bg-surface dark:bg-zinc-800 border-none">
                 {skill}
               </Badge>
@@ -64,9 +82,9 @@ const FreelancerProfilePanel = ({ user, activeTab }) => {
           <div className="mt-8 pt-8 border-t border-zinc-50 dark:border-zinc-800/50">
              <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-4">Primary Categories</h4>
              <div className="flex gap-4">
-                {user.categories.map(cat => (
-                  <div key={cat} className="flex items-center gap-3 p-3 rounded-2xl bg-brand-50/50 dark:bg-brand-900/10 border border-brand-100/50 dark:border-brand-800/50 flex-1">
-                    <div className="h-10 w-10 bg-brand-600 text-white rounded-xl flex items-center justify-center">
+                {categories.map(cat => (
+                  <div key={cat} className="flex items-center gap-3 p-3 rounded-2xl bg-[#14a800]/5/50 dark:bg-[#14a800]/10 border border-[#14a800]/20/50 dark:border-[#14a800]/20/50 flex-1">
+                    <div className="h-10 w-10 bg-[#14a800] text-white rounded-xl flex items-center justify-center">
                       <Briefcase size={20} />
                     </div>
                     <span className="font-black text-zinc-900 dark:text-white text-sm">{cat}</span>
@@ -102,9 +120,9 @@ const FreelancerProfilePanel = ({ user, activeTab }) => {
             <SectionHeader title="Certifications" icon={CheckCircle2} />
             <div className="space-y-3">
               {[1, 2].map(i => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-xl border border-zinc-50 dark:border-zinc-800 group hover:border-brand-500 transition-all cursor-pointer">
+                <div key={i} className="flex items-center justify-between p-3 rounded-xl border border-zinc-50 dark:border-zinc-800 group hover:border-[#14a800]/20 transition-all cursor-pointer">
                   <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 bg-zinc-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-zinc-400 group-hover:text-brand-600">
+                    <div className="h-8 w-8 bg-zinc-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-zinc-400 group-hover:text-[#14a800]">
                       <AwardIcon size={18} />
                     </div>
                     <div>
@@ -112,7 +130,7 @@ const FreelancerProfilePanel = ({ user, activeTab }) => {
                       <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-tighter">Verified 2024</p>
                     </div>
                   </div>
-                  <ExternalLink size={14} className="text-zinc-300 group-hover:text-brand-600" />
+                  <ExternalLink size={14} className="text-zinc-300 group-hover:text-[#14a800]" />
                 </div>
               ))}
             </div>
@@ -179,7 +197,7 @@ const FreelancerProfilePanel = ({ user, activeTab }) => {
               <span className="text-xs font-black text-zinc-900 dark:text-white">{user.profileCompletion}%</span>
             </div>
             <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-               <div className="h-full bg-brand-600 rounded-full" style={{ width: `${user.profileCompletion}%` }} />
+               <div className="h-full bg-[#14a800] rounded-full" style={{ width: `${user.profileCompletion}%` }} />
             </div>
           </div>
         </Card>

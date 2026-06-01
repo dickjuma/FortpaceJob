@@ -34,10 +34,10 @@ export default function AppearanceSettingsPage() {
   };
 
   const accentColors = [
-    { key: 'purple', label: 'Royal Purple', class: 'bg-accent-purple border-accent-purple' },
-    { key: 'blue', label: 'Deep Blue', class: 'bg-brand-600 border-brand-600' },
+    { key: 'purple', label: 'Royal Purple', class: 'bg-success border-success' },
+    { key: 'blue', label: 'Deep Blue', class: 'bg-[#14a800] border-[#14a800]/20' },
     { key: 'green', label: 'Emerald Green', class: 'bg-success border-success' },
-    { key: 'red', label: 'Sunset Red', class: 'bg-accent-red border-accent-red' }
+    { key: 'red', label: 'Sunset Red', class: 'bg-[#e63946] border-[#e63946]' }
   ];
 
   return (
@@ -48,7 +48,7 @@ export default function AppearanceSettingsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <Palette className="w-8 h-8 text-accent-purple" />
+            <Palette className="w-8 h-8 text-success" />
             Appearance Configurator
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -69,7 +69,7 @@ export default function AppearanceSettingsPage() {
         {/* Theme configuration */}
         <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
           <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-            <Sun className="w-5 h-5 text-accent-purple" />
+            <Sun className="w-5 h-5 text-success" />
             Theme Color Settings
           </h3>
 
@@ -85,15 +85,15 @@ export default function AppearanceSettingsPage() {
                 className={cn(
                   "p-5 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between min-h-[140px]",
                   theme === opt.key 
-                    ? "border-accent-purple bg-accent-purple/5 shadow-sm" 
+                    ? "border-success bg-success/5 shadow-sm" 
                     : "border-border bg-light-gray hover:border-border-hover hover:bg-white"
                 )}
               >
                 <div className="flex justify-between items-start">
-                  <div className={cn("p-2.5 rounded-xl border border-border bg-white text-text-primary", theme === opt.key && "text-accent-purple")}>
+                  <div className={cn("p-2.5 rounded-xl border border-border bg-white text-text-primary", theme === opt.key && "text-success")}>
                     <opt.icon size={18} />
                   </div>
-                  {theme === opt.key && <span className="w-5 h-5 bg-accent-purple rounded-full flex items-center justify-center text-white"><Check size={12} /></span>}
+                  {theme === opt.key && <span className="w-5 h-5 bg-success rounded-full flex items-center justify-center text-white"><Check size={12} /></span>}
                 </div>
                 <div className="mt-4">
                   <h4 className="font-black text-sm text-text-primary">{opt.label}</h4>
@@ -107,7 +107,7 @@ export default function AppearanceSettingsPage() {
         {/* Accent Selector */}
         <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
           <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-            <Sparkles className="w-5 h-5 text-accent-purple" />
+            <Sparkles className="w-5 h-5 text-success" />
             Primary Accent Color
           </h3>
 
@@ -123,7 +123,7 @@ export default function AppearanceSettingsPage() {
               >
                 <span className={cn("w-5 h-5 rounded-full border border-white/20 shrink-0", color.class)}></span>
                 <span className="font-bold text-xs text-text-primary">{color.label}</span>
-                {accentColor === color.key && <Check size={14} className="ml-auto text-accent-purple" />}
+                {accentColor === color.key && <Check size={14} className="ml-auto text-success" />}
               </div>
             ))}
           </div>
@@ -132,7 +132,7 @@ export default function AppearanceSettingsPage() {
         {/* Sidebar layouts */}
         <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
           <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-            <Layout className="w-5 h-5 text-accent-purple" />
+            <Layout className="w-5 h-5 text-success" />
             Navigation Layout Grid
           </h3>
 
@@ -147,13 +147,13 @@ export default function AppearanceSettingsPage() {
                 className={cn(
                   "p-5 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between min-h-[120px]",
                   sidebarLayout === opt.key 
-                    ? "border-accent-purple bg-accent-purple/5 shadow-sm" 
+                    ? "border-success bg-success/5 shadow-sm" 
                     : "border-border bg-light-gray hover:border-border-hover hover:bg-white"
                 )}
               >
                 <div className="flex justify-between items-start">
                   <h4 className="font-black text-sm text-text-primary">{opt.label}</h4>
-                  {sidebarLayout === opt.key && <span className="w-5 h-5 bg-accent-purple rounded-full flex items-center justify-center text-white"><Check size={12} /></span>}
+                  {sidebarLayout === opt.key && <span className="w-5 h-5 bg-success rounded-full flex items-center justify-center text-white"><Check size={12} /></span>}
                 </div>
                 <p className="text-xs text-text-secondary font-medium mt-2 leading-relaxed">{opt.desc}</p>
               </div>

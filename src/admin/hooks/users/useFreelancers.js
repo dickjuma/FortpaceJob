@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchFreelancers } from '../../api/users/freelancers.api';
-import useUserManagementStore from '../../store/userManagementStore';
+import { fetchFreelancers } from '../../api/users/freelancers.api.js';
+import useUserManagementStore from '../../store/userManagementStore.js';
 
 export function useFreelancers() {
   const { filters, pagination } = useUserManagementStore();

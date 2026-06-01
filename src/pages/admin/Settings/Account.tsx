@@ -24,14 +24,14 @@ export const AccountSettings = () => {
     { 
       key: 'actions', 
       label: '', 
-      render: () => <Button variant="ghost" size="sm" className="text-accent-red">Download</Button> 
+      render: () => <Button variant="ghost" size="sm" className="text-[#e63946]">Download</Button> 
     }
   ];
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-navy">Account Management</h1>
+        <h1 className="text-2xl font-bold text-[#222222]">Account Management</h1>
         <p className="text-text-secondary mt-1">Manage your subscription, billing, and security.</p>
       </div>
 
@@ -39,12 +39,12 @@ export const AccountSettings = () => {
         <Card title="Current Subscription">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h4 className="text-lg font-bold text-navy">Pro Plan</h4>
+              <h4 className="text-lg font-bold text-[#222222]">Pro Plan</h4>
               <p className="text-sm text-text-secondary">Billed monthly</p>
             </div>
             <Badge variant="info">Active</Badge>
           </div>
-          <div className="text-3xl font-bold text-navy mb-6">
+          <div className="text-3xl font-bold text-[#222222] mb-6">
             $49<span className="text-lg text-text-secondary font-normal">/mo</span>
           </div>
           <div className="flex space-x-3">

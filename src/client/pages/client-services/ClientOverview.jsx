@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, BadgeCheck, BriefcaseBusiness, FilePlus2, Layers3, MessagesSquare, UserCircle2, WalletCards } from "lucide-react";
+import { ArrowRight, BadgeCheck, BriefcaseBusiness, FilePlus2, Layers3, MessagesSquare, UserCircle2, Video, WalletCards } from "lucide-react";
 import { profileAPI } from "../../../common/services/api";
 import { clientWorkspaceAPI } from "../../../common/services/clientWorkspaceAPI";
 
@@ -60,10 +60,10 @@ export default function ClientOverview() {
       icon: Layers3,
     },
     {
-      title: "Messages and payments",
-      text: "Stay connected to your inbox and finance tools from the same client flow.",
-      to: "/pricing",
-      icon: WalletCards,
+      title: "Video interviews",
+      text: "Schedule and review live calls with shortlisted freelancers.",
+      to: "/client/interviews",
+      icon: Video,
     },
   ];
 
@@ -120,7 +120,7 @@ export default function ClientOverview() {
             <div className="rounded-2xl bg-[#FCFAF8] px-4 py-3">Keep your company profile polished and verified.</div>
             <div className="rounded-2xl bg-[#FCFAF8] px-4 py-3">Create jobs, edit briefs, and close requests when work is complete.</div>
             <div className="rounded-2xl bg-[#FCFAF8] px-4 py-3">Review proposals and move freelancers to shortlisted, accepted, or rejected.</div>
-            <div className="rounded-2xl bg-[#FCFAF8] px-4 py-3">Jump into messages, wallet, and payments from the same client journey.</div>
+            <div className="rounded-2xl bg-[#FCFAF8] px-4 py-3">Jump into messages, video interviews, wallet, and payments from the same client journey.</div>
           </div>
         </div>
 
@@ -143,12 +143,12 @@ export default function ClientOverview() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1fr]">
-        <Link to="/messages" className="rounded-[26px] border border-[#E5D9D0] bg-white p-5 shadow-[0_18px_45px_rgba(33,24,21,0.06)] transition hover:-tranzinc-y-0.5">
+        <Link to="/client/messages" className="rounded-[26px] border border-[#E5D9D0] bg-white p-5 shadow-[0_18px_45px_rgba(33,24,21,0.06)] transition hover:-tranzinc-y-0.5">
           <MessagesSquare size={18} className="text-[#B53A27]" />
           <h2 className="mt-4 text-lg font-semibold text-[#2B211F]">Messages</h2>
           <p className="mt-2 text-sm text-[#6F5B53]">Stay in touch with freelancers and keep project communication moving.</p>
         </Link>
-        <Link to="/wallet" className="rounded-[26px] border border-[#E5D9D0] bg-white p-5 shadow-[0_18px_45px_rgba(33,24,21,0.06)] transition hover:-tranzinc-y-0.5">
+        <Link to="/client/financial-dashboard" className="rounded-[26px] border border-[#E5D9D0] bg-white p-5 shadow-[0_18px_45px_rgba(33,24,21,0.06)] transition hover:-tranzinc-y-0.5">
           <WalletCards size={18} className="text-[#B53A27]" />
           <h2 className="mt-4 text-lg font-semibold text-[#2B211F]">Wallet and payments</h2>
           <p className="mt-2 text-sm text-[#6F5B53]">Review finance tools, linked payout methods, and payment readiness.</p>

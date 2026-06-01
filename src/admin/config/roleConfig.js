@@ -9,10 +9,10 @@ export const ROLE_CONFIG = {
   super_admin: {
     label: 'Super Admin',
     color: '#6366f1',
-    bgColor: 'bg-brand-100 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400',
+    bgColor: 'bg-[#14a800]/10 text-[#14a800] dark:bg-[#14a800]/30 dark:text-[#14a800]',
     description: 'Full system access',
     widgets: [
-      { id: 'total_users', title: 'Total Users', dataKey: 'totalUsers', icon: Users, iconBg: 'bg-brand-100 dark:bg-brand-900/30', iconColor: 'text-brand-600 dark:text-brand-400', format: 'number', size: 'md', showSparkline: true, showTrend: true },
+      { id: 'total_users', title: 'Total Users', dataKey: 'totalUsers', icon: Users, iconBg: 'bg-[#14a800]/10 dark:bg-[#14a800]/30', iconColor: 'text-[#14a800] dark:text-[#14a800]', format: 'number', size: 'md', showSparkline: true, showTrend: true },
       { id: 'active_jobs', title: 'Active Jobs', dataKey: 'activeJobs', icon: Briefcase, iconBg: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-success dark:text-success', format: 'number', size: 'md', showSparkline: true, showTrend: true },
       { id: 'total_revenue', title: 'Total Revenue', dataKey: 'totalRevenue', icon: TrendingUp, iconBg: 'bg-violet-100 dark:bg-violet-900/30', iconColor: 'text-violet-600 dark:text-violet-400', format: 'currency', size: 'md', showSparkline: true, showTrend: true },
       { id: 'escrow_balance', title: 'Escrow Balance', dataKey: 'escrowBalance', icon: Wallet, iconBg: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600 dark:text-amber-400', format: 'currency', size: 'md', showSparkline: false, showTrend: true },
@@ -32,6 +32,19 @@ export const ROLE_CONFIG = {
     ],
     modules: [
       { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
+      {
+        id: 'operations',
+        label: 'Operations',
+        icon: Activity,
+        href: '/admin/activity',
+        children: [
+          { id: 'live_activity', label: 'Live Activity', path: '/admin/activity' },
+          { id: 'alerts_center', label: 'Alerts Center', path: '/admin/alerts' },
+          { id: 'message_oversight', label: 'Messages', path: '/admin/messages' },
+          { id: 'interview_oversight', label: 'Interviews', path: '/admin/interviews' },
+          { id: 'video_calls', label: 'Video Calls', path: '/admin/video-calls' },
+        ],
+      },
       { 
         id: 'users', 
         label: 'Users & Identity', 
@@ -60,6 +73,11 @@ export const ROLE_CONFIG = {
           { id: 'contracts', label: 'Contracts', path: '/admin/marketplace/contracts' },
           { id: 'rankings', label: 'Rankings', path: '/admin/marketplace/rankings' },
           { id: 'reviews', label: 'Reviews', path: '/admin/marketplace/reviews' },
+          { id: 'categories', label: 'Categories', path: '/admin/marketplace/categories' },
+          { id: 'moderation', label: 'Moderation', path: '/admin/marketplace/moderation' },
+          { id: 'proposal_audit', label: 'Proposal Audit', path: '/admin/marketplace/proposal-audit' },
+          { id: 'fraud_center', label: 'Fraud Center', path: '/admin/marketplace/fraud-center' },
+          { id: 'payments', label: 'Escrow Oversight', path: '/admin/marketplace/payments' },
           { id: 'quality', label: 'Quality Control', path: '/admin/marketplace/quality' },
           { id: 'marketplace_audit', label: 'Activity Logs', path: '/admin/audit/marketplace' },
         ]
@@ -145,6 +163,9 @@ export const ROLE_CONFIG = {
           { id: 'config_gateways', label: 'Gateways', path: '/admin/config/gateways' },
           { id: 'config_roles', label: 'Permissions', path: '/admin/config/roles' },
           { id: 'config_flags', label: 'Feature Flags', path: '/admin/config/flags' },
+          { id: 'config_trusted_companies', label: 'Trusted Companies', path: '/admin/config/trusted-companies' },
+          { id: 'config_submissions', label: 'Form Submissions', path: '/admin/config/submissions' },
+          { id: 'config_subscriptions', label: 'Subscriptions', path: '/admin/config/subscriptions' },
           { 
             id: 'audit_logs', 
             label: 'System Audit', 
@@ -176,7 +197,7 @@ export const ROLE_CONFIG = {
     description: 'Financial operations',
     widgets: [
       { id: 'total_revenue', title: 'Total Revenue', dataKey: 'totalRevenue', icon: TrendingUp, iconBg: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-success dark:text-success', format: 'currency', size: 'lg', showSparkline: true, showTrend: true },
-      { id: 'escrow_balance', title: 'Escrow Balance', dataKey: 'escrowBalance', icon: Wallet, iconBg: 'bg-brand-100 dark:bg-brand-900/30', iconColor: 'text-brand-600 dark:text-brand-400', format: 'currency', size: 'lg', showSparkline: true, showTrend: true },
+      { id: 'escrow_balance', title: 'Escrow Balance', dataKey: 'escrowBalance', icon: Wallet, iconBg: 'bg-[#14a800]/10 dark:bg-[#14a800]/30', iconColor: 'text-[#14a800] dark:text-[#14a800]', format: 'currency', size: 'lg', showSparkline: true, showTrend: true },
       { id: 'pending_withdrawals', title: 'Pending Withdrawals', dataKey: 'pendingWithdrawals', icon: Clock, iconBg: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600 dark:text-amber-400', format: 'number', size: 'md', showSparkline: false, showTrend: false, warningThreshold: 50 },
       { id: 'failed_transactions', title: 'Failed Transactions', dataKey: 'failedTransactions', icon: AlertTriangle, iconBg: 'bg-red-100 dark:bg-red-900/30', iconColor: 'text-red-600 dark:text-red-400', format: 'number', size: 'md', showSparkline: false, showTrend: false, criticalThreshold: 20, warningThreshold: 10 },
     ],
@@ -230,10 +251,10 @@ export const ROLE_CONFIG = {
   customer_care: {
     label: 'Customer Care',
     color: '#3b82f6',
-    bgColor: 'bg-brand-100 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400',
+    bgColor: 'bg-[#14a800]/10 text-[#14a800] dark:bg-[#14a800]/30 dark:text-[#14a800]',
     description: 'User support operations',
     widgets: [
-      { id: 'open_tickets', title: 'Open Tickets', dataKey: 'openTickets', icon: MessageSquare, iconBg: 'bg-brand-100 dark:bg-brand-900/30', iconColor: 'text-brand-600 dark:text-brand-400', format: 'number', size: 'lg', showSparkline: true, showTrend: true, warningThreshold: 30 },
+      { id: 'open_tickets', title: 'Open Tickets', dataKey: 'openTickets', icon: MessageSquare, iconBg: 'bg-[#14a800]/10 dark:bg-[#14a800]/30', iconColor: 'text-[#14a800] dark:text-[#14a800]', format: 'number', size: 'lg', showSparkline: true, showTrend: true, warningThreshold: 30 },
       { id: 'active_disputes', title: 'Active Disputes', dataKey: 'activeDisputes', icon: Scale, iconBg: 'bg-orange-100 dark:bg-orange-900/30', iconColor: 'text-orange-600 dark:text-orange-400', format: 'number', size: 'md', showSparkline: false, showTrend: false },
       { id: 'pending_responses', title: 'Pending Responses', dataKey: 'pendingResponses', icon: Clock, iconBg: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600 dark:text-amber-400', format: 'number', size: 'md', showSparkline: false, showTrend: false, criticalThreshold: 20 },
     ],

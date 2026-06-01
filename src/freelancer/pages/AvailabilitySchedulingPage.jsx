@@ -51,7 +51,7 @@ export default function AvailabilitySchedulingPage() {
       
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-border pb-6 mb-8">
-        <div className="p-2.5 bg-accent-purple/20 text-accent-purple rounded-xl shadow-sm border border-accent-purple/20">
+        <div className="p-2.5 bg-success/20 text-success rounded-xl shadow-sm border border-success/20">
           <CalendarDays className="w-6 h-6" />
         </div>
         <div>
@@ -69,14 +69,14 @@ export default function AvailabilitySchedulingPage() {
           {/* Capacity */}
           <Card className="p-6 border border-border bg-white rounded-3xl shadow-sm">
             <div className="flex items-center mb-6">
-              <Calendar className="w-5 h-5 text-accent-purple mr-2" />
+              <Calendar className="w-5 h-5 text-success mr-2" />
               <h2 className="text-lg font-bold text-text-primary">Weekly Capacity</h2>
             </div>
             <div className="space-y-4">
               <label 
                 className={cn(
                   "flex items-start p-4 border rounded-2xl cursor-pointer transition-all",
-                  capacity === 'full_time' ? "border-accent-purple bg-accent-purple/5" : "border-border hover:bg-light-gray"
+                  capacity === 'full_time' ? "border-success bg-success/5" : "border-border hover:bg-light-gray"
                 )}
                 onClick={() => setCapacity('full_time')}
               >
@@ -85,7 +85,7 @@ export default function AvailabilitySchedulingPage() {
                   name="capacity" 
                   checked={capacity === 'full_time'} 
                   onChange={() => setCapacity('full_time')} 
-                  className="h-4 w-4 mt-1 text-accent-purple focus:ring-accent-purple" 
+                  className="h-4 w-4 mt-1 text-success focus:ring-success" 
                 />
                 <div className="ml-3">
                   <span className="block text-sm font-bold text-text-primary">Full-time (30+ hrs/week)</span>
@@ -96,7 +96,7 @@ export default function AvailabilitySchedulingPage() {
               <label 
                 className={cn(
                   "flex items-start p-4 border rounded-2xl cursor-pointer transition-all",
-                  capacity === 'part_time' ? "border-accent-purple bg-accent-purple/5" : "border-border hover:bg-light-gray"
+                  capacity === 'part_time' ? "border-success bg-success/5" : "border-border hover:bg-light-gray"
                 )}
                 onClick={() => setCapacity('part_time')}
               >
@@ -105,7 +105,7 @@ export default function AvailabilitySchedulingPage() {
                   name="capacity" 
                   checked={capacity === 'part_time'} 
                   onChange={() => setCapacity('part_time')} 
-                  className="h-4 w-4 mt-1 text-accent-purple focus:ring-accent-purple" 
+                  className="h-4 w-4 mt-1 text-success focus:ring-success" 
                 />
                 <div className="ml-3">
                   <span className="block text-sm font-bold text-text-primary">Part-time (Less than 30 hrs/week)</span>
@@ -116,7 +116,7 @@ export default function AvailabilitySchedulingPage() {
               <label 
                 className={cn(
                   "flex items-start p-4 border rounded-2xl cursor-pointer transition-all",
-                  capacity === 'unavailable' ? "border-accent-purple bg-accent-purple/5" : "border-border hover:bg-light-gray"
+                  capacity === 'unavailable' ? "border-success bg-success/5" : "border-border hover:bg-light-gray"
                 )}
                 onClick={() => setCapacity('unavailable')}
               >
@@ -125,7 +125,7 @@ export default function AvailabilitySchedulingPage() {
                   name="capacity" 
                   checked={capacity === 'unavailable'} 
                   onChange={() => setCapacity('unavailable')} 
-                  className="h-4 w-4 mt-1 text-accent-purple focus:ring-accent-purple" 
+                  className="h-4 w-4 mt-1 text-success focus:ring-success" 
                 />
                 <div className="ml-3">
                   <span className="block text-sm font-bold text-text-primary">Not available for new work</span>
@@ -138,7 +138,7 @@ export default function AvailabilitySchedulingPage() {
           {/* Timezone and standard hours */}
           <Card className="p-6 border border-border bg-white rounded-3xl shadow-sm">
             <div className="flex items-center mb-6">
-              <Clock className="w-5 h-5 text-accent-purple mr-2" />
+              <Clock className="w-5 h-5 text-success mr-2" />
               <h2 className="text-lg font-bold text-text-primary">Working Days & Standard Hours</h2>
             </div>
             
@@ -150,7 +150,7 @@ export default function AvailabilitySchedulingPage() {
                       type="checkbox" 
                       checked={config.active}
                       onChange={() => handleDayToggle(day)}
-                      className="w-4 h-4 rounded text-accent-purple focus:ring-accent-purple" 
+                      className="w-4 h-4 rounded text-success focus:ring-success" 
                     />
                     <span className="text-sm font-bold text-text-primary capitalize min-w-[90px]">{day}</span>
                   </div>
@@ -161,14 +161,14 @@ export default function AvailabilitySchedulingPage() {
                         type="time" 
                         value={config.start} 
                         onChange={(e) => handleTimeChange(day, 'start', e.target.value)}
-                        className="rounded-xl border border-border bg-white px-3 py-1.5 text-xs text-text-primary outline-none focus:border-accent-purple" 
+                        className="rounded-xl border border-border bg-white px-3 py-1.5 text-xs text-text-primary outline-none focus:border-success" 
                       />
                       <span className="text-text-secondary text-xs font-bold">to</span>
                       <input 
                         type="time" 
                         value={config.end} 
                         onChange={(e) => handleTimeChange(day, 'end', e.target.value)}
-                        className="rounded-xl border border-border bg-white px-3 py-1.5 text-xs text-text-primary outline-none focus:border-accent-purple" 
+                        className="rounded-xl border border-border bg-white px-3 py-1.5 text-xs text-text-primary outline-none focus:border-success" 
                       />
                     </div>
                   ) : (
@@ -185,12 +185,12 @@ export default function AvailabilitySchedulingPage() {
           <Card className="p-6 border border-border bg-white rounded-3xl shadow-sm space-y-6">
             <div>
               <h3 className="font-bold text-text-primary text-sm flex items-center gap-1.5 mb-2">
-                <Globe className="w-4 h-4 text-accent-purple" /> Global Timezone
+                <Globe className="w-4 h-4 text-success" /> Global Timezone
               </h3>
               <select 
                 value={timezone}
                 onChange={(e) => setTimezone(e.target.value)}
-                className="w-full text-xs font-semibold text-text-primary border border-border rounded-xl px-3 py-2 bg-light-gray focus:bg-white focus:border-accent-purple outline-none"
+                className="w-full text-xs font-semibold text-text-primary border border-border rounded-xl px-3 py-2 bg-light-gray focus:bg-white focus:border-success outline-none"
               >
                 <option>Pacific Time (PT) - US & Canada</option>
                 <option>Eastern Time (ET) - US & Canada</option>
@@ -201,15 +201,15 @@ export default function AvailabilitySchedulingPage() {
 
             <div className="border-t border-border pt-4">
               <h3 className="font-bold text-text-primary text-sm flex items-center gap-1.5 mb-2">
-                <MapPin className="w-4 h-4 text-accent-purple" /> Work Modes
+                <MapPin className="w-4 h-4 text-success" /> Work Modes
               </h3>
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-xs font-bold text-text-secondary">
-                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-accent-purple" />
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-success" />
                   <span>Accept Remote Contracts</span>
                 </label>
                 <label className="flex items-center gap-2 text-xs font-bold text-text-secondary">
-                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-accent-purple" />
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-success" />
                   <span>Accept Local Onsite Bookings</span>
                 </label>
               </div>
@@ -219,7 +219,7 @@ export default function AvailabilitySchedulingPage() {
               <Button 
                 variant="primary" 
                 onClick={handleSave} 
-                className="w-full py-3 bg-accent-purple hover:bg-accent-purple/95 font-bold rounded-2xl flex items-center justify-center gap-2"
+                className="w-full py-3 bg-success hover:bg-success/95 font-bold rounded-2xl flex items-center justify-center gap-2"
                 icon={<Save size={16} />}
               >
                 Save Preferences

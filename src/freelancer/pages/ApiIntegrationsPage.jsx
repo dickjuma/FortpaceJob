@@ -86,7 +86,7 @@ export default function ApiIntegrationsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <Code className="w-8 h-8 text-accent-purple" />
+            <Code className="w-8 h-8 text-success" />
             Developer Integrations
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -100,7 +100,7 @@ export default function ApiIntegrationsPage() {
         {/* API keys section */}
         <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
           <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-            <Key className="w-5 h-5 text-accent-purple" />
+            <Key className="w-5 h-5 text-success" />
             Programmatic API Keys
           </h3>
 
@@ -113,14 +113,14 @@ export default function ApiIntegrationsPage() {
                     <p className="text-[10px] text-text-secondary font-black uppercase tracking-wider">{key.date}</p>
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={() => toggleReveal(key.id)} className="p-2 text-text-secondary hover:text-accent-purple hover:bg-light-gray rounded-xl transition-all">
+                    <button onClick={() => toggleReveal(key.id)} className="p-2 text-text-secondary hover:text-success hover:bg-light-gray rounded-xl transition-all">
                       {key.revealed ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
-                    <button onClick={() => regenerateKey(key.id, key.name)} className="p-2 text-text-secondary hover:text-accent-purple hover:bg-light-gray rounded-xl transition-all" title="Regenerate credentials"><RefreshCw size={16} /></button>
+                    <button onClick={() => regenerateKey(key.id, key.name)} className="p-2 text-text-secondary hover:text-success hover:bg-light-gray rounded-xl transition-all" title="Regenerate credentials"><RefreshCw size={16} /></button>
                   </div>
                 </div>
 
-                <div className="bg-navy rounded-xl p-3.5 border border-white/10 font-mono text-xs text-white/90 overflow-x-auto select-all flex items-center justify-between">
+                <div className="bg-[#222222] rounded-xl p-3.5 border border-white/10 font-mono text-xs text-white/90 overflow-x-auto select-all flex items-center justify-between">
                   <span>{key.revealed ? key.key : `${key.key.substring(0, 12)}••••••••••••••••••••••••••••`}</span>
                 </div>
               </div>
@@ -132,7 +132,7 @@ export default function ApiIntegrationsPage() {
         <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
           <div className="flex justify-between items-center mb-4 border-b border-border pb-3">
             <h3 className="text-base font-black text-text-primary flex items-center gap-2">
-              <Globe className="w-5 h-5 text-accent-purple animate-pulse" />
+              <Globe className="w-5 h-5 text-success animate-pulse" />
               Webhook Endpoints
             </h3>
             <Button 
@@ -151,16 +151,16 @@ export default function ApiIntegrationsPage() {
                   <h4 className="font-bold text-sm text-text-primary select-all">{wh.url}</h4>
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {wh.events.map(ev => (
-                      <span key={ev} className="text-[10px] px-2 py-0.5 rounded bg-accent-purple/10 border border-accent-purple/20 text-accent-purple font-black">{ev}</span>
+                      <span key={ev} className="text-[10px] px-2 py-0.5 rounded bg-success/10 border border-success/20 text-success font-black">{ev}</span>
                     ))}
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 self-end sm:self-center">
-                  <button onClick={() => triggerTestPing(wh.url)} className="px-3 py-1.5 bg-accent-purple/10 hover:bg-accent-purple text-accent-purple hover:text-white rounded-lg text-xs font-black transition-all flex items-center gap-1">
+                  <button onClick={() => triggerTestPing(wh.url)} className="px-3 py-1.5 bg-success/10 hover:bg-success text-success hover:text-white rounded-lg text-xs font-black transition-all flex items-center gap-1">
                     <PlayCircle size={14} /> Send Ping
                   </button>
-                  <button onClick={() => deleteWebhook(wh.id, wh.url)} className="p-2 text-text-secondary hover:text-accent-red hover:bg-light-gray rounded-xl transition-all" title="Remove Webhook"><Trash2 size={16} /></button>
+                  <button onClick={() => deleteWebhook(wh.id, wh.url)} className="p-2 text-text-secondary hover:text-[#e63946] hover:bg-light-gray rounded-xl transition-all" title="Remove Webhook"><Trash2 size={16} /></button>
                 </div>
               </div>
             ))}
@@ -182,7 +182,7 @@ export default function ApiIntegrationsPage() {
           <Card className="w-full max-w-md shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-4 border-b border-border pb-3">
               <h3 className="text-lg font-black text-text-primary flex items-center gap-2">
-                <Plus className="w-5 h-5 text-accent-purple" />
+                <Plus className="w-5 h-5 text-success" />
                 Configure Webhook
               </h3>
               <button onClick={() => setActiveModal(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
@@ -195,7 +195,7 @@ export default function ApiIntegrationsPage() {
                   type="url" 
                   value={webhookUrl} 
                   onChange={(e) => setWebhookUrl(e.target.value)} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   placeholder="https://api.domain.io/webhooks"
                   required
                 />
@@ -206,7 +206,7 @@ export default function ApiIntegrationsPage() {
                 <select
                   value={webhookEvent}
                   onChange={(e) => setWebhookEvent(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary appearance-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary appearance-none"
                 >
                   <option value="contract.funded">contract.funded (Escrow funded)</option>
                   <option value="contract.completed">contract.completed (Contract resolved)</option>

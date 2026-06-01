@@ -11,7 +11,7 @@ export default function DigitalContractViewer({ contractTitle = "Enterprise Web 
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-surface-dark dark:text-white flex items-center gap-3">
-            <FileText className="w-6 h-6 text-brand-600" /> Contract Overview
+            <FileText className="w-6 h-6 text-[#14a800]" /> Contract Overview
           </h1>
           <p className="text-sm text-gray-500 mt-1">Ref: CON-9921 • Generated on May 19, 2026</p>
         </div>
@@ -46,7 +46,7 @@ export default function DigitalContractViewer({ contractTitle = "Enterprise Web 
         {/* Contract Body */}
         <div className="p-8 md:p-12 space-y-10 text-surface-dark dark:text-gray-300 font-serif leading-relaxed">
           <section>
-            <h3 className="text-xl font-bold font-sans text-brand-600 mb-4 uppercase tracking-wider">1. The Parties</h3>
+            <h3 className="text-xl font-bold font-sans text-[#14a800] mb-4 uppercase tracking-wider">1. The Parties</h3>
             <p>
               This Agreement is made between <strong>TechCorp Inc.</strong> ("Client") and <strong>Sarah Jenkins</strong> ("Contractor"). 
               Client agrees to engage Contractor, and Contractor agrees to be engaged by Client to perform the services outlined in this agreement.
@@ -54,7 +54,7 @@ export default function DigitalContractViewer({ contractTitle = "Enterprise Web 
           </section>
 
           <section>
-            <h3 className="text-xl font-bold font-sans text-brand-600 mb-4 uppercase tracking-wider">2. Scope of Work</h3>
+            <h3 className="text-xl font-bold font-sans text-[#14a800] mb-4 uppercase tracking-wider">2. Scope of Work</h3>
             <p className="mb-4">Contractor will provide the following services:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Design and develop a complete overhaul of the enterprise dashboard.</li>
@@ -64,7 +64,7 @@ export default function DigitalContractViewer({ contractTitle = "Enterprise Web 
           </section>
 
           <section>
-            <h3 className="text-xl font-bold font-sans text-brand-600 mb-4 uppercase tracking-wider">3. Compensation & Milestones</h3>
+            <h3 className="text-xl font-bold font-sans text-[#14a800] mb-4 uppercase tracking-wider">3. Compensation & Milestones</h3>
             <p className="mb-4">Total compensation for this project is <strong>$12,500.00 USD</strong>. Payments will be released via Escrow upon completion of the following milestones:</p>
             <div className="bg-surface-tertiary dark:bg-surface-dark-secondary rounded-xl border border-gray-200 dark:border-surface-dark-border p-4 font-sans text-sm">
               <div className="flex justify-between py-2 border-b border-gray-200 dark:border-gray-700">
@@ -83,7 +83,7 @@ export default function DigitalContractViewer({ contractTitle = "Enterprise Web 
           </section>
 
           <section>
-            <h3 className="text-xl font-bold font-sans text-brand-600 mb-4 uppercase tracking-wider">4. IP & Confidentiality</h3>
+            <h3 className="text-xl font-bold font-sans text-[#14a800] mb-4 uppercase tracking-wider">4. IP & Confidentiality</h3>
             <p>
               Upon full payment, all intellectual property rights related to the deliverables transfer to the Client. 
               The Contractor agrees to maintain strict confidentiality regarding all proprietary information.
@@ -120,13 +120,13 @@ export default function DigitalContractViewer({ contractTitle = "Enterprise Web 
                       placeholder="Type your full legal name to sign" 
                       value={signature}
                       onChange={(e) => setSignature(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border-2 border-brand-200 dark:border-brand-900/50 focus:border-brand-500 rounded-xl bg-white dark:bg-surface-dark outline-none font-serif text-lg italic"
+                      className="w-full pl-10 pr-4 py-3 border-2 border-[#14a800]/20 dark:border-[#14a800]/20/50 focus:border-[#14a800]/20 rounded-xl bg-white dark:bg-surface-dark outline-none font-serif text-lg italic"
                     />
                   </div>
                   <button 
                     onClick={() => { if(signature) setIsSigned(true); }}
                     disabled={!signature}
-                    className="w-full py-3 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-button font-bold transition-all shadow-lg shadow-brand-500/25"
+                    className="w-full py-3 bg-[#14a800] hover:bg-[#118a00] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-button font-bold transition-all shadow-lg shadow-[#14a800]/25/25"
                   >
                     Agree & Sign Contract
                   </button>
@@ -136,13 +136,13 @@ export default function DigitalContractViewer({ contractTitle = "Enterprise Web 
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="p-4 border border-brand-200 dark:border-brand-900/50 rounded-xl bg-brand-50 dark:bg-brand-900/10 flex items-center justify-between"
+                  className="p-4 border border-[#14a800]/20 dark:border-[#14a800]/20/50 rounded-xl bg-[#14a800]/5 dark:bg-[#14a800]/10 flex items-center justify-between"
                 >
                   <div>
-                    <p className="font-serif text-xl italic text-brand-700 dark:text-brand-300">{signature}</p>
-                    <p className="text-xs text-brand-600/70 dark:text-brand-400/70 mt-1">Verified IP: 192.168.1.1 • Just now</p>
+                    <p className="font-serif text-xl italic text-[#14a800] dark:text-[#14a800]">{signature}</p>
+                    <p className="text-xs text-[#14a800]/70 dark:text-[#14a800]/70 mt-1">Verified IP: 192.168.1.1 • Just now</p>
                   </div>
-                  <CheckCircle className="w-6 h-6 text-brand-600 dark:text-brand-400" />
+                  <CheckCircle className="w-6 h-6 text-[#14a800] dark:text-[#14a800]" />
                 </motion.div>
               )}
             </div>

@@ -202,7 +202,7 @@ export default function FileManagerPage() {
       <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 border-b border-border pb-6 mb-8">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-accent-purple/20 text-accent-purple rounded-xl border border-accent-purple/20 shadow-sm">
+            <div className="p-2.5 bg-success/20 text-success rounded-xl border border-success/20 shadow-sm">
               <Folder className="w-6 h-6 animate-pulse" />
             </div>
             <h1 className="text-3xl font-black text-text-primary tracking-tight">Enterprise cloud workspace</h1>
@@ -236,7 +236,7 @@ export default function FileManagerPage() {
           <Button 
             onClick={() => setActiveModal('upload')}
             variant="primary" 
-            className="bg-accent-purple hover:bg-accent-purple/95 font-bold text-xs rounded-xl border-none shadow-lg shadow-accent-purple/10"
+            className="bg-success hover:bg-success/95 font-bold text-xs rounded-xl border-none shadow-lg shadow-[#14a800]/10"
             icon={<Plus size={16} />}
           >
             Quick Upload
@@ -252,7 +252,7 @@ export default function FileManagerPage() {
           {/* Workspace switcher mockup */}
           <div className="p-3 bg-light-gray/60 border border-border rounded-2xl flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded bg-navy text-white text-[10px] font-black flex items-center justify-center">E</div>
+              <div className="w-6 h-6 rounded bg-[#222222] text-white text-[10px] font-black flex items-center justify-center">E</div>
               <span className="text-xs font-bold text-text-primary uppercase tracking-wider">Enterprise Suite</span>
             </div>
             <ChevronRight className="w-4 h-4 text-text-secondary" />
@@ -279,7 +279,7 @@ export default function FileManagerPage() {
                 className={cn(
                   "w-full text-left px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex justify-between items-center",
                   activeCategory === cat.id 
-                    ? "bg-navy text-white shadow" 
+                    ? "bg-[#222222] text-white shadow" 
                     : "text-text-secondary hover:text-text-primary hover:bg-light-gray"
                 )}
               >
@@ -300,7 +300,7 @@ export default function FileManagerPage() {
               onClick={() => setActiveCategory('File Analytics')}
               className={cn(
                 "w-full text-left px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-2",
-                activeCategory === 'File Analytics' ? "text-accent-purple" : "text-text-secondary hover:text-text-primary"
+                activeCategory === 'File Analytics' ? "text-success" : "text-text-secondary hover:text-text-primary"
               )}
             >
               <BarChart3 className="w-4 h-4" /> Storage Analytics
@@ -309,7 +309,7 @@ export default function FileManagerPage() {
               onClick={() => setActiveCategory('Recent Activity')}
               className={cn(
                 "w-full text-left px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-2",
-                activeCategory === 'Recent Activity' ? "text-accent-purple" : "text-text-secondary hover:text-text-primary"
+                activeCategory === 'Recent Activity' ? "text-success" : "text-text-secondary hover:text-text-primary"
               )}
             >
               <Clock className="w-4 h-4" /> Compliance Activity
@@ -317,12 +317,12 @@ export default function FileManagerPage() {
           </Card>
 
           {/* Storage Quota widget */}
-          <Card className="p-5 border-none bg-navy text-white shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-accent-purple/10 blur-[40px] rounded-full"></div>
+          <Card className="p-5 border-none bg-[#222222] text-white shadow-xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-success/10 blur-[40px] rounded-full"></div>
             <h4 className="text-[10px] font-bold text-white/60 uppercase tracking-wider">Cloud Space Occupancy</h4>
             <h3 className="text-2xl font-black mt-2">42.6 GB of 100 GB used</h3>
             <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mt-3">
-              <div className="h-full bg-accent-purple rounded-full" style={{ width: '42.6%' }}></div>
+              <div className="h-full bg-success rounded-full" style={{ width: '42.6%' }}></div>
             </div>
             <span className="block text-[8px] text-white/40 mt-1 uppercase font-bold">Encrypted cloud space active</span>
           </Card>
@@ -340,7 +340,7 @@ export default function FileManagerPage() {
                 placeholder="Deep query OCR metadata..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 pr-4 py-2 w-full text-xs font-semibold text-text-primary border border-border bg-light-gray rounded-xl outline-none focus:bg-white focus:border-accent-purple"
+                className="pl-9 pr-4 py-2 w-full text-xs font-semibold text-text-primary border border-border bg-light-gray rounded-xl outline-none focus:bg-white focus:border-success"
               />
             </div>
             
@@ -362,7 +362,7 @@ export default function FileManagerPage() {
                     onClick={() => setViewMode(mode)}
                     className={cn(
                       "px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all", 
-                      viewMode === mode ? "bg-white text-navy shadow-sm" : "text-text-secondary"
+                      viewMode === mode ? "bg-white text-[#222222] shadow-sm" : "text-text-secondary"
                     )}
                   >
                     {mode}
@@ -374,13 +374,13 @@ export default function FileManagerPage() {
 
           {/* Active Uploading status widget */}
           {uploadProgress !== null && (
-            <Card className="p-4 border border-accent-purple/20 bg-accent-purple/5 rounded-2xl space-y-2 animate-in slide-in-from-top-2">
-              <div className="flex justify-between items-center text-xs font-black text-accent-purple">
+            <Card className="p-4 border border-success/20 bg-success/5 rounded-2xl space-y-2 animate-in slide-in-from-top-2">
+              <div className="flex justify-between items-center text-xs font-black text-success">
                 <span className="flex items-center gap-1.5"><Loader2 className="w-4 h-4 animate-spin" /> Uploading background logs...</span>
                 <span>{uploadProgress}%</span>
               </div>
-              <div className="w-full h-1.5 bg-accent-purple/20 rounded-full overflow-hidden">
-                <div className="h-full bg-accent-purple rounded-full" style={{ width: `${uploadProgress}%` }}></div>
+              <div className="w-full h-1.5 bg-success/20 rounded-full overflow-hidden">
+                <div className="h-full bg-success rounded-full" style={{ width: `${uploadProgress}%` }}></div>
               </div>
               <div className="flex justify-between text-[9px] font-bold text-text-secondary">
                 <span>Speed: {uploadSpeed}</span>
@@ -396,10 +396,10 @@ export default function FileManagerPage() {
             onDrop={handleDrop}
             className={cn(
               "border-2 border-dashed rounded-3xl p-6 text-center transition-all cursor-pointer",
-              isDragging ? "border-accent-purple bg-accent-purple/5 scale-[0.99]" : "border-border hover:bg-light-gray/40"
+              isDragging ? "border-success bg-success/5 scale-[0.99]" : "border-border hover:bg-light-gray/40"
             )}
           >
-            <UploadCloud className="w-10 h-10 text-accent-purple mx-auto mb-2 animate-bounce" />
+            <UploadCloud className="w-10 h-10 text-success mx-auto mb-2 animate-bounce" />
             <span className="text-xs font-black text-text-primary uppercase tracking-wider block">Drag files to launch background upload</span>
           </div>
 
@@ -446,17 +446,17 @@ export default function FileManagerPage() {
                       key={file.id}
                       onClick={() => { setSelectedFile(file); setAiAnalysis(null); }}
                       className={cn(
-                        "p-5 border bg-white rounded-3xl shadow-sm hover:border-accent-purple/30 cursor-pointer transition-all flex flex-col justify-between min-h-[160px]",
-                        selectedFile?.id === file.id && "border-accent-purple bg-accent-purple/5"
+                        "p-5 border bg-white rounded-3xl shadow-sm hover:border-success/30 cursor-pointer transition-all flex flex-col justify-between min-h-[160px]",
+                        selectedFile?.id === file.id && "border-success bg-success/5"
                       )}
                     >
                       <div>
                         <div className="flex justify-between items-start mb-3">
-                          <div className="p-2.5 bg-light-gray rounded-xl text-accent-purple">
+                          <div className="p-2.5 bg-light-gray rounded-xl text-success">
                             <FileText className="w-5 h-5" />
                           </div>
                           <div className="flex gap-1">
-                            {file.locked && <Lock className="w-3.5 h-3.5 text-accent-red" />}
+                            {file.locked && <Lock className="w-3.5 h-3.5 text-[#e63946]" />}
                           </div>
                         </div>
 
@@ -467,9 +467,9 @@ export default function FileManagerPage() {
                       <div className="border-t border-border pt-3 mt-4 flex items-center justify-between">
                         <span className="text-[8px] font-black text-text-secondary uppercase tracking-wider">{file.date}</span>
                         <div className="flex gap-2">
-                          <button onClick={(e) => { e.stopPropagation(); handleDownload(file.name); }} className="p-1 hover:bg-light-gray rounded text-text-secondary hover:text-accent-purple"><Download className="w-4 h-4" /></button>
-                          <button onClick={(e) => { e.stopPropagation(); toggleLock(file.id); }} className="p-1 hover:bg-light-gray rounded text-text-secondary hover:text-accent-purple"><Lock className="w-4 h-4" /></button>
-                          <button onClick={(e) => { e.stopPropagation(); handleDelete(file.id, file.name); }} className="p-1 hover:bg-light-gray rounded text-text-secondary hover:text-accent-red"><Trash className="w-4 h-4" /></button>
+                          <button onClick={(e) => { e.stopPropagation(); handleDownload(file.name); }} className="p-1 hover:bg-light-gray rounded text-text-secondary hover:text-success"><Download className="w-4 h-4" /></button>
+                          <button onClick={(e) => { e.stopPropagation(); toggleLock(file.id); }} className="p-1 hover:bg-light-gray rounded text-text-secondary hover:text-success"><Lock className="w-4 h-4" /></button>
+                          <button onClick={(e) => { e.stopPropagation(); handleDelete(file.id, file.name); }} className="p-1 hover:bg-light-gray rounded text-text-secondary hover:text-[#e63946]"><Trash className="w-4 h-4" /></button>
                         </div>
                       </div>
                     </Card>
@@ -485,11 +485,11 @@ export default function FileManagerPage() {
                       onClick={() => { setSelectedFile(file); setAiAnalysis(null); }}
                       className={cn(
                         "flex justify-between items-center text-xs p-3 bg-light-gray/30 hover:bg-light-gray/70 rounded-xl cursor-pointer transition-all border border-transparent",
-                        selectedFile?.id === file.id && "border-accent-purple bg-accent-purple/5"
+                        selectedFile?.id === file.id && "border-success bg-success/5"
                       )}
                     >
                       <div className="flex items-center gap-3">
-                        <FileText className="w-4 h-4 text-accent-purple" />
+                        <FileText className="w-4 h-4 text-success" />
                         <div>
                           <h4 className="font-bold text-text-primary">{file.name}</h4>
                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-wider">{file.size} • {file.type}</p>
@@ -497,7 +497,7 @@ export default function FileManagerPage() {
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="text-[9px] font-bold text-text-secondary">{file.date}</span>
-                        <button onClick={(e) => { e.stopPropagation(); handleDuplicate(file); }} className="text-text-secondary hover:text-accent-purple">Dup</button>
+                        <button onClick={(e) => { e.stopPropagation(); handleDuplicate(file); }} className="text-text-secondary hover:text-success">Dup</button>
                       </div>
                     </div>
                   ))}
@@ -512,7 +512,7 @@ export default function FileManagerPage() {
                       onClick={() => { setSelectedFile(file); setAiAnalysis(null); }}
                       className={cn(
                         "flex justify-between items-center text-[10px] p-2 hover:bg-light-gray/50 rounded-lg cursor-pointer transition-all",
-                        selectedFile?.id === file.id && "bg-accent-purple/5 text-accent-purple"
+                        selectedFile?.id === file.id && "bg-success/5 text-success"
                       )}
                     >
                       <span className="font-bold truncate max-w-[200px]">{file.name}</span>
@@ -606,7 +606,7 @@ export default function FileManagerPage() {
                 </div>
                 <button 
                   onClick={() => handleAddTag(selectedFile, 'cloud-audited')}
-                  className="text-[9px] text-accent-purple hover:underline"
+                  className="text-[9px] text-success hover:underline"
                 >
                   + Add compliance tag
                 </button>
@@ -615,8 +615,8 @@ export default function FileManagerPage() {
               {/* AI OCR summary extract buttons */}
               <div className="border-t border-border pt-4">
                 {aiAnalysis ? (
-                  <div className="bg-accent-purple/5 border border-accent-purple/20 rounded-2xl p-4 space-y-2">
-                    <h4 className="font-black text-[10px] text-accent-purple flex items-center gap-1">
+                  <div className="bg-success/5 border border-success/20 rounded-2xl p-4 space-y-2">
+                    <h4 className="font-black text-[10px] text-success flex items-center gap-1">
                       <Sparkles className="w-3.5 h-3.5" /> AI Scan Complete
                     </h4>
                     <p className="text-[9px] font-semibold text-text-secondary leading-relaxed">
@@ -627,7 +627,7 @@ export default function FileManagerPage() {
                   <Button 
                     onClick={() => triggerAISummary(selectedFile)}
                     variant="primary" 
-                    className="w-full py-2.5 bg-accent-purple hover:bg-accent-purple/95 font-bold rounded-xl text-xs flex justify-center gap-1.5 border-none"
+                    className="w-full py-2.5 bg-success hover:bg-success/95 font-bold rounded-xl text-xs flex justify-center gap-1.5 border-none"
                     icon={<Sparkles size={14} />}
                   >
                     Initiate AI OCR Summary
@@ -655,7 +655,7 @@ export default function FileManagerPage() {
           <Card className="w-full max-w-md shadow-2xl relative bg-white border border-border p-6 rounded-3xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-4 border-b border-border pb-3">
               <h3 className="text-lg font-black text-text-primary flex items-center gap-2">
-                <Plus className="w-5 h-5 text-accent-purple" />
+                <Plus className="w-5 h-5 text-success" />
                 Upload New Asset
               </h3>
               <button onClick={() => setActiveModal(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
@@ -668,13 +668,13 @@ export default function FileManagerPage() {
                   type="text" 
                   placeholder="e.g. design_specification.pdf"
                   required
-                  className="w-full rounded-xl border border-border bg-light-gray px-3.5 py-2.5 text-xs text-text-primary focus:bg-white focus:border-accent-purple outline-none"
+                  className="w-full rounded-xl border border-border bg-light-gray px-3.5 py-2.5 text-xs text-text-primary focus:bg-white focus:border-success outline-none"
                 />
               </div>
 
               <div className="flex gap-3 justify-end pt-4 border-t border-border mt-6">
                 <Button type="button" variant="outline" onClick={() => setActiveModal(null)}>Cancel</Button>
-                <Button type="submit" variant="primary" className="bg-accent-purple hover:bg-accent-purple/95 font-bold rounded-xl text-xs border-none px-4">Upload Secure Document</Button>
+                <Button type="submit" variant="primary" className="bg-success hover:bg-success/95 font-bold rounded-xl text-xs border-none px-4">Upload Secure Document</Button>
               </div>
             </form>
           </Card>
@@ -687,7 +687,7 @@ export default function FileManagerPage() {
           <Card className="w-full max-w-md shadow-2xl relative bg-white border border-border p-6 rounded-3xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-4 border-b border-border pb-3">
               <h3 className="text-lg font-black text-text-primary flex items-center gap-2">
-                <Plus className="w-5 h-5 text-accent-purple" />
+                <Plus className="w-5 h-5 text-success" />
                 Create New Folder
               </h3>
               <button onClick={() => setActiveModal(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
@@ -702,13 +702,13 @@ export default function FileManagerPage() {
                   onChange={(e) => setNewFolderName(e.target.value)}
                   placeholder="e.g. Brand Assets"
                   required
-                  className="w-full rounded-xl border border-border bg-light-gray px-3.5 py-2.5 text-xs text-text-primary focus:bg-white focus:border-accent-purple outline-none"
+                  className="w-full rounded-xl border border-border bg-light-gray px-3.5 py-2.5 text-xs text-text-primary focus:bg-white focus:border-success outline-none"
                 />
               </div>
 
               <div className="flex gap-3 justify-end pt-4 border-t border-border mt-6">
                 <Button type="button" variant="outline" onClick={() => setActiveModal(null)}>Cancel</Button>
-                <Button type="submit" variant="primary" className="bg-accent-purple hover:bg-accent-purple/95 font-bold rounded-xl text-xs border-none px-4">Create Folder</Button>
+                <Button type="submit" variant="primary" className="bg-success hover:bg-success/95 font-bold rounded-xl text-xs border-none px-4">Create Folder</Button>
               </div>
             </form>
           </Card>

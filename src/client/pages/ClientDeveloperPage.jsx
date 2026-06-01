@@ -53,11 +53,11 @@ export default function ClientDeveloperPage() {
         {/* Left Side: API secrets */}
         <div className="lg:col-span-1 space-y-6">
           <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4">
-            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Key className="w-4 h-4 text-accent-purple" /> OAuth Credentials</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Key className="w-4 h-4 text-success" /> OAuth Credentials</h3>
             
             <div className="space-y-4 pt-2">
               <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
-                <label className="flex justify-between"><span>Client Application ID</span> <button onClick={() => copyCred(credentials.clientKey)} className="text-accent-purple font-bold">Copy</button></label>
+                <label className="flex justify-between"><span>Client Application ID</span> <button onClick={() => copyCred(credentials.clientKey)} className="text-success font-bold">Copy</button></label>
                 <input 
                   type="text" 
                   className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none text-white/95 font-mono text-xs"
@@ -67,7 +67,7 @@ export default function ClientDeveloperPage() {
               </div>
 
               <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
-                <label className="flex justify-between"><span>Client Secret Token</span> <button onClick={() => copyCred('oauth_client_prod_secret_token_key_xyz')} className="text-accent-purple font-bold">Copy</button></label>
+                <label className="flex justify-between"><span>Client Secret Token</span> <button onClick={() => copyCred('oauth_client_prod_secret_token_key_xyz')} className="text-success font-bold">Copy</button></label>
                 <input 
                   type="password" 
                   className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none text-white/95 font-mono text-xs"
@@ -82,20 +82,20 @@ export default function ClientDeveloperPage() {
         {/* Right Side: Webhook URL config */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4">
-            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Globe className="w-4 h-4 text-accent-purple" /> Webhook Integrations</h3>
+            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Globe className="w-4 h-4 text-success" /> Webhook Integrations</h3>
             
             <div className="space-y-4 pt-2">
               <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
                 <label>Callback Event URL</label>
                 <input 
                   type="text" 
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-accent-purple text-white/95"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success text-white/95"
                   value={webhookUrl}
                   onChange={e => setWebhookUrl(e.target.value)}
                 />
               </div>
 
-              <Button onClick={handleSave} className="w-full bg-accent-purple border-none rounded-xl text-xs font-bold py-2.5">
+              <Button onClick={handleSave} className="w-full bg-success border-none rounded-xl text-xs font-bold py-2.5">
                 Save & Encrypt Developer Config
               </Button>
             </div>

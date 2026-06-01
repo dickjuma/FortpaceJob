@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, MapPin, Clock, DollarSign, Briefcase, Filter, ChevronRight, Bookmark, ThumbsUp, ThumbsDown, Zap, ShieldCheck, Target } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import toast, { Toaster } from 'react-hot-toast';
 import { useFreelancer } from '../context/FreelancerContext';
+import { useFreelancerJobs, useSaveJob, useUnsaveJob } from '../services/freelancerHooks';
+import { useAuthRedirect } from '../../common/utils/authRedirect';
+import SubscriptionUsageBanner from '../components/SubscriptionUsageBanner';
+import { useMySubscription } from '../../common/hooks/useSubscription';
+import { subscriptionAPI } from '../../common/services/subscriptionApi';
+import QuotaPaywallModal from '../../components/subscription/QuotaPaywallModal';
 
 // --- Skeleton Loaders ---
 const JobCardSkeleton = () => (
@@ -32,120 +39,135 @@ const JobCardSkeleton = () => (
   </Card>
 );
 
-// --- Mock Data ---
-const MOCK_JOBS = [
-  { 
-    id: 1, 
-    title: 'Senior React Developer for FinTech Dashboard', 
-    client: 'Global Finance Corp', 
-    budget: 'KES 500,000', 
-    type: 'Fixed Price',
-    postedAt: '2 mins ago',
-    description: 'We are looking for an experienced React developer to help build our new analytics dashboard. Must have experience with complex state management.',
-    skills: ['React', 'TypeScript', 'Tailwind'],
-    verified: true,
-    matchScore: 98,
-    isUrgent: true
-  },
-  { 
-    id: 2, 
-    title: 'UI/UX Designer for SaaS Mobile App', 
-    client: 'HealthSync App', 
-    budget: 'KES 8,500/hr', 
-    type: 'Hourly',
-    postedAt: '15 mins ago',
-    description: 'Need a talented designer to revamp our iOS and Android mobile applications. Looking for modern, clean, and accessible design patterns.',
-    skills: ['Figma', 'UI/UX', 'Mobile Design'],
-    verified: true,
-    matchScore: 85,
-    isUrgent: false
-  },
-  { 
-    id: 3, 
-    title: 'Node.js Backend Architecture Optimization', 
-    client: 'TechFlow Solutions', 
-    budget: 'KES 350,000', 
-    type: 'Fixed Price',
-    postedAt: '1 hour ago',
-    description: 'Our Express.js backend is experiencing bottleneck issues. We need an expert to refactor the database queries and implement caching layers.',
-    skills: ['Node.js', 'Express', 'Redis', 'PostgreSQL'],
-    verified: false,
-    matchScore: 72,
-    isUrgent: false
-  }
-];
+
 
 export default function JobsPage() {
   const { accountType, isOfflineProvider } = useFreelancer();
+  const navigate = useNavigate();
+  const { requireAuth } = useAuthRedirect();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All Matches');
-  const [loading, setLoading] = useState(true);
-  const [jobs, setJobs] = useState([]);
+  const [page, setPage] = useState(1);
   const [savedJobs, setSavedJobs] = useState(new Set());
 
+  const { data: sub, refetch: refetchSub } = useMySubscription();
+  const { data, isLoading: loading } = useFreelancerJobs({ page, limit: 10, search: searchTerm, filter: activeFilter });
+  const rawJobs = data?.items || [];
+  const recCap = sub?.remaining?.gigRecommendations;
+  const [unlockedCount, setUnlockedCount] = useState(null);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const unlockAttempted = useRef(false);
+
   useEffect(() => {
-    // Simulate initial data load
-    const fetchJobs = async () => {
-      setLoading(true);
-      await new Promise(res => setTimeout(res, 1200));
-      setJobs(MOCK_JOBS);
-      setLoading(false);
-    };
-    fetchJobs();
-  }, [activeFilter]);
+    if (loading || !sub || rawJobs.length === 0) return;
+    if (recCap === 0) return;
+    if (unlockAttempted.current) return;
+    unlockAttempted.current = true;
+
+    const limit =
+      recCap == null ? Math.min(rawJobs.length, 50) : Math.min(rawJobs.length, recCap);
+
+    subscriptionAPI
+      .unlockRecommendedFeed(limit)
+      .then((res) => {
+        setUnlockedCount(res?.allowed ?? limit);
+        refetchSub();
+      })
+      .catch(() => {
+        unlockAttempted.current = false;
+      });
+  }, [loading, sub, rawJobs.length, recCap, refetchSub]);
+
+  const jobs =
+    unlockedCount == null
+      ? recCap === 0
+        ? []
+        : rawJobs
+      : rawJobs.slice(0, unlockedCount);
+  const quotaExhausted = !loading && sub && recCap === 0 && rawJobs.length > 0;
+  const hasMore = data?.page < data?.totalPages;
+
+  const saveJobMutation = useSaveJob();
+  const unsaveJobMutation = useUnsaveJob();
 
   const toggleSaveJob = (id, e) => {
     e.preventDefault();
     e.stopPropagation();
-    setSavedJobs(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-        toast('Job removed from saved list');
-      } else {
-        newSet.add(id);
-        toast.success('Job saved successfully');
-      }
-      return newSet;
-    });
+    
+    const isSaved = savedJobs.has(id);
+    if (isSaved) {
+      unsaveJobMutation.mutate(id, {
+        onSuccess: () => {
+          setSavedJobs(prev => {
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+          });
+          toast('Job removed from saved list');
+        }
+      });
+    } else {
+      saveJobMutation.mutate(id, {
+        onSuccess: () => {
+          setSavedJobs(prev => {
+            const next = new Set(prev);
+            next.add(id);
+            return next;
+          });
+          toast.success('Job saved successfully');
+        }
+      });
+    }
   };
 
   const handleApply = (id, e) => {
     e.preventDefault();
-    toast.success('Redirecting to application flow...', { icon: '🚀' });
+    e.stopPropagation();
+    requireAuth(() => navigate(`/freelancer/job/${id}`), {
+      returnTo: `/freelancer/job/${id}`,
+      state: { intent: 'apply-job', jobId: id },
+    });
   };
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-12">
       <Toaster position="top-right" />
-      
+      <QuotaPaywallModal
+        open={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        title="No recommendations left"
+        message={`You've used all ${sub?.plan?.gigRecommendationsPerMonth ?? ''} gig recommendations on your ${sub?.plan?.name ?? ''} plan this month.`}
+        quotaType="gig_recommendation"
+      />
+      <SubscriptionUsageBanner />
+
       {/* Premium Header Banner */}
-      <div className="bg-navy border border-border rounded-2xl p-8 md:p-12 shadow-xl relative overflow-hidden group">
-        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-accent-purple/20 blur-[80px] rounded-full pointer-events-none group-hover:bg-accent-purple/30 transition-colors duration-700"></div>
-        <div className="absolute bottom-[-20%] left-[-10%] w-64 h-64 bg-accent-red/10 blur-[60px] rounded-full pointer-events-none group-hover:bg-accent-red/20 transition-colors duration-700"></div>
+      <div className="bg-[#14a800] rounded-2xl p-8 md:p-12 shadow-xl relative overflow-hidden group">
+        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-[#118a00] blur-[80px] rounded-full pointer-events-none transition-colors duration-700"></div>
+        <div className="absolute bottom-[-20%] left-[-10%] w-64 h-64 bg-white/10 blur-[60px] rounded-full pointer-events-none transition-colors duration-700"></div>
         
         <div className="relative z-10 max-w-3xl">
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-bold text-white uppercase tracking-widest border border-white/10 flex items-center gap-2">
-              <Zap size={12} className="text-accent-red" /> AI-Powered Matching
+            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold text-white uppercase tracking-widest border border-white/20 flex items-center gap-2">
+              <Zap size={12} className="text-amber-300" /> AI-Powered Matching
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4 leading-tight">Find enterprise projects that match your expertise.</h1>
-          <p className="text-sm font-medium text-text-secondary mb-8 max-w-2xl text-white/80">We've scanned thousands of postings and curated these specifically for your {accountType} profile.</p>
+          <p className="text-sm font-medium mb-8 max-w-2xl text-white/90">We've scanned thousands of postings and curated these specifically for your {accountType} profile.</p>
           
-          <div className="flex flex-col sm:flex-row gap-4 bg-white/5 p-2 rounded-xl backdrop-blur-md border border-white/10">
+          <div className="flex flex-col sm:flex-row gap-4 bg-white/10 p-2 rounded-xl backdrop-blur-md border border-white/20">
             <div className="relative flex-1 group/input">
-              <Search className="absolute left-4 top-1/2 -tranzinc-y-1/2 w-5 h-5 text-white/50 group-focus-within/input:text-white transition-colors" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60 group-focus-within/input:text-white transition-colors" />
               <input 
                 type="text" 
                 placeholder="Search by keywords, skills, or clients..." 
-                className="w-full pl-12 pr-4 py-3.5 rounded-lg bg-transparent border-none text-white font-medium placeholder:text-white/50 focus:outline-none focus:ring-0 transition-all"
+                className="w-full pl-12 pr-4 py-3.5 rounded-lg bg-transparent border-none text-white font-medium placeholder:text-white/60 focus:outline-none focus:ring-0 transition-all"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && toast.success('Searching...')}
               />
             </div>
-            <Button variant="primary" size="lg" className="bg-white text-navy hover:bg-light-gray rounded-lg shadow-lg" onClick={() => toast.success('Searching...')}>
+            <Button variant="primary" size="lg" className="bg-white text-[#14a800] hover:bg-zinc-100 rounded-lg shadow-lg font-bold" onClick={() => toast.success('Searching...')}>
               Search
             </Button>
           </div>
@@ -162,7 +184,7 @@ export default function JobsPage() {
               <h3 className="font-bold text-text-primary uppercase tracking-widest text-xs flex items-center gap-2">
                 <Filter size={14} /> Filters
               </h3>
-              <button className="text-[10px] font-bold text-text-secondary uppercase tracking-widest hover:text-accent-red transition-colors" onClick={() => toast('Filters cleared')}>Clear All</button>
+              <button className="text-[10px] font-bold text-text-secondary uppercase tracking-widest hover:text-[#e63946] transition-colors" onClick={() => toast('Filters cleared')}>Clear All</button>
             </div>
 
             <div className="space-y-8">
@@ -172,8 +194,8 @@ export default function JobsPage() {
                   <div className="space-y-3">
                     {['Remote Only', 'Hybrid', 'On-Site / Nearby'].map(type => (
                       <label key={type} className="flex items-center gap-3 cursor-pointer group">
-                        <div className="w-5 h-5 rounded-md border-2 border-border group-hover:border-accent-purple flex items-center justify-center transition-colors">
-                          {type === 'Remote Only' && <div className="w-2.5 h-2.5 bg-accent-purple rounded-sm" />}
+                        <div className="w-5 h-5 rounded-md border-2 border-border group-hover:border-[#14a800] flex items-center justify-center transition-colors">
+                          {type === 'Remote Only' && <div className="w-2.5 h-2.5 bg-[#14a800] rounded-sm" />}
                         </div>
                         <span className="text-sm font-semibold text-text-secondary group-hover:text-text-primary transition-colors">{type}</span>
                       </label>
@@ -187,8 +209,8 @@ export default function JobsPage() {
                 <div className="space-y-3">
                   {['Any Job Type', 'Hourly', 'Fixed Price'].map(type => (
                     <label key={type} className="flex items-center gap-3 cursor-pointer group">
-                      <div className="w-5 h-5 rounded-md border-2 border-border group-hover:border-accent-purple flex items-center justify-center transition-colors">
-                        {type === 'Any Job Type' && <div className="w-2.5 h-2.5 bg-accent-purple rounded-sm" />}
+                      <div className="w-5 h-5 rounded-md border-2 border-border group-hover:border-[#14a800] flex items-center justify-center transition-colors">
+                        {type === 'Any Job Type' && <div className="w-2.5 h-2.5 bg-[#14a800] rounded-sm" />}
                       </div>
                       <span className="text-sm font-semibold text-text-secondary group-hover:text-text-primary transition-colors">{type}</span>
                     </label>
@@ -199,8 +221,8 @@ export default function JobsPage() {
               <div>
                 <h4 className="font-bold text-text-primary text-xs tracking-widest uppercase mb-3">Client Info</h4>
                 <label className="flex items-center gap-3 cursor-pointer group">
-                  <div className="w-5 h-5 rounded-md border-2 border-border group-hover:border-accent-purple flex items-center justify-center transition-colors">
-                    <div className="w-2.5 h-2.5 bg-accent-purple rounded-sm" />
+                  <div className="w-5 h-5 rounded-md border-2 border-border group-hover:border-[#14a800] flex items-center justify-center transition-colors">
+                    <div className="w-2.5 h-2.5 bg-[#14a800] rounded-sm" />
                   </div>
                   <span className="text-sm font-semibold text-text-secondary group-hover:text-text-primary transition-colors">Payment Verified</span>
                 </label>
@@ -220,7 +242,7 @@ export default function JobsPage() {
                   onClick={() => setActiveFilter(filter)}
                   className={cn(
                     "px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded-md transition-all whitespace-nowrap",
-                    activeFilter === filter ? "bg-white text-navy shadow-sm border border-border" : "text-text-secondary hover:text-text-primary"
+                    activeFilter === filter ? "bg-white text-[#222222] shadow-sm border border-border" : "text-text-secondary hover:text-text-primary"
                   )}
                 >
                   {filter}
@@ -236,6 +258,20 @@ export default function JobsPage() {
                 <JobCardSkeleton />
                 <JobCardSkeleton />
               </>
+            ) : quotaExhausted ? (
+              <Card className="text-center py-12 border-[#14a800]/30 bg-[#14a800]/5">
+                <Zap className="w-12 h-12 text-[#14a800] mx-auto mb-4" />
+                <h3 className="text-lg font-bold text-text-primary">Monthly recommendation limit reached</h3>
+                <p className="text-sm text-text-secondary mt-1 mb-4 max-w-md mx-auto">
+                  Upgrade your plan to see more AI-matched jobs this month.
+                </p>
+                <Button variant="primary" onClick={() => setPaywallOpen(true)}>
+                  View upgrade options
+                </Button>
+                <Link to="/pricing" className="block mt-3 text-sm font-bold text-[#14a800] hover:underline">
+                  Go to pricing
+                </Link>
+              </Card>
             ) : jobs.length === 0 ? (
               <Card className="text-center py-12">
                 <Search className="w-12 h-12 text-text-secondary mx-auto mb-4 opacity-50" />
@@ -244,20 +280,20 @@ export default function JobsPage() {
               </Card>
             ) : (
               jobs.map(job => (
-                <a href="#" key={job.id} onClick={(e) => { e.preventDefault(); toast(`Viewing Job Details: ${job.id}`); }} className="block group">
-                  <Card hover className="bg-white border-border shadow-sm group-hover:border-accent-purple/50 transition-colors">
+                <Link to={`/freelancer/job/${job.id}`} key={job.id} className="block group">
+                  <Card hover className="bg-white border-border shadow-sm group-hover:border-[#14a800]/50 transition-colors">
                     <div className="flex justify-between items-start gap-4 mb-3">
                       <div>
                         {job.isUrgent && (
-                          <span className="inline-flex items-center gap-1 text-[9px] font-bold bg-accent-red/10 text-accent-red px-2 py-0.5 rounded-md uppercase tracking-widest mb-2 animate-pulse">
+                          <span className="inline-flex items-center gap-1 text-[9px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md uppercase tracking-widest mb-2 animate-pulse">
                             Urgent Hiring
                           </span>
                         )}
-                        <h3 className="text-lg font-bold text-text-primary group-hover:text-navy transition-colors tracking-tight">{job.title}</h3>
+                        <h3 className="text-lg font-bold text-text-primary group-hover:text-[#14a800] transition-colors tracking-tight">{job.title}</h3>
                         <div className="flex items-center gap-1.5 mt-1 text-xs font-semibold text-text-secondary">
-                          <span className={job.verified ? "text-navy flex items-center gap-1" : ""}>
+                          <span className={job.verified ? "text-[#222222] flex items-center gap-1" : ""}>
                             {job.client}
-                            {job.verified && <ShieldCheck size={12} className="text-success" />}
+                            {job.verified && <ShieldCheck size={12} className="text-[#14a800]" />}
                           </span>
                           <span>•</span>
                           <span>Posted {job.postedAt}</span>
@@ -267,7 +303,7 @@ export default function JobsPage() {
                         onClick={(e) => toggleSaveJob(job.id, e)}
                         className={cn(
                           "p-2 rounded-full transition-colors",
-                          savedJobs.has(job.id) ? "bg-accent-purple/10 text-accent-purple" : "bg-light-gray text-text-secondary hover:bg-border hover:text-navy"
+                          savedJobs.has(job.id) ? "bg-[#14a800]/10 text-[#14a800]" : "bg-light-gray text-text-secondary hover:bg-border hover:text-[#14a800]"
                         )}
                       >
                         <Bookmark size={18} className={savedJobs.has(job.id) ? "fill-current" : ""} />
@@ -300,13 +336,13 @@ export default function JobsPage() {
                       </Button>
                     </div>
                   </Card>
-                </a>
+                </Link>
               ))
             )}
 
-            {!loading && jobs.length > 0 && (
+            {!loading && hasMore && (
               <div className="flex justify-center pt-8">
-                <Button variant="outline" className="w-full sm:w-auto" onClick={() => toast.loading('Loading more jobs...', { duration: 1000 })}>
+                <Button variant="outline" className="w-full sm:w-auto" onClick={() => setPage(p => p + 1)}>
                   Load More Jobs
                 </Button>
               </div>

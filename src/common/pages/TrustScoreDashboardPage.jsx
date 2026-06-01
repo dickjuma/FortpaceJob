@@ -45,7 +45,7 @@ const ScoreCircle = ({ score, maxScore }) => {
           d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
         />
         <motion.path
-          className="text-accent-red"
+          className="text-[#e63946]"
           strokeWidth="3"
           strokeDasharray={strokeDasharray}
           strokeLinecap="round"
@@ -75,8 +75,8 @@ export default function TrustScoreDashboardPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-navy flex items-center gap-2">
-              <ShieldCheck className="w-8 h-8 text-accent-red" />
+            <h1 className="text-3xl font-bold text-[#222222] flex items-center gap-2">
+              <ShieldCheck className="w-8 h-8 text-[#e63946]" />
               Trust & Performance Score
             </h1>
             <p className="mt-1 text-text-secondary">
@@ -88,7 +88,7 @@ export default function TrustScoreDashboardPage() {
               <Activity className="w-4 h-4" />
               View Analytics
             </button>
-            <button className="px-4 py-2 bg-accent-red text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm shadow-sm">
+            <button className="px-4 py-2 bg-[#e63946] text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm shadow-sm">
               Share Score
             </button>
           </div>
@@ -104,9 +104,9 @@ export default function TrustScoreDashboardPage() {
             <ScoreCircle score={mockTrustData.score} maxScore={mockTrustData.maxScore} />
             <div className="flex-1 space-y-4">
               <div>
-                <h2 className="text-2xl font-bold text-navy">Exceptional Trust Level</h2>
+                <h2 className="text-2xl font-bold text-[#222222]">Exceptional Trust Level</h2>
                 <p className="text-text-secondary mt-1 text-lg">
-                  You are in the <span className="font-semibold text-accent-red">{mockTrustData.percentile}</span> of all freelancers on Forte.
+                  You are in the <span className="font-semibold text-[#e63946]">{mockTrustData.percentile}</span> of all freelancers on Forte.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -117,12 +117,12 @@ export default function TrustScoreDashboardPage() {
                   </div>
                   <span className="text-xl font-bold text-success">+{mockTrustData.score - mockTrustData.previousScore} Points</span>
                 </div>
-                <div className="bg-accent-purple p-5 rounded-lg border border-accent-purple/50">
-                  <div className="flex items-center gap-2 text-navy mb-2">
+                <div className="bg-success p-5 rounded-lg border border-success/50">
+                  <div className="flex items-center gap-2 text-[#222222] mb-2">
                     <Award className="w-4 h-4" />
                     <span className="text-sm font-medium">Current Status</span>
                   </div>
-                  <span className="text-xl font-bold text-navy">Top Rated Plus</span>
+                  <span className="text-xl font-bold text-[#222222]">Top Rated Plus</span>
                 </div>
               </div>
             </div>
@@ -133,11 +133,11 @@ export default function TrustScoreDashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-accent-purple/30 rounded-lg border border-accent-purple shadow-sm p-6 flex flex-col"
+            className="bg-success/30 rounded-lg border border-success shadow-sm p-6 flex flex-col"
           >
             <div className="flex items-center gap-2 mb-4">
-              <Zap className="w-5 h-5 text-accent-red" />
-              <h3 className="font-semibold text-navy">AI Insights</h3>
+              <Zap className="w-5 h-5 text-[#e63946]" />
+              <h3 className="font-semibold text-[#222222]">AI Insights</h3>
             </div>
             <div className="space-y-4 flex-1">
               {mockTrustData.recommendations.map((rec) => {
@@ -145,8 +145,8 @@ export default function TrustScoreDashboardPage() {
                 return (
                   <div key={rec.id} className="bg-white rounded-lg p-4 shadow-sm border border-border">
                     <div className="flex items-start gap-3">
-                      <div className="p-2 bg-accent-purple/50 rounded-lg shrink-0">
-                        <Icon className="w-4 h-4 text-navy" />
+                      <div className="p-2 bg-success/50 rounded-lg shrink-0">
+                        <Icon className="w-4 h-4 text-[#222222]" />
                       </div>
                       <div>
                         <h4 className="font-medium text-sm text-text-primary">{rec.title}</h4>
@@ -157,7 +157,7 @@ export default function TrustScoreDashboardPage() {
                 );
               })}
             </div>
-            <button className="w-full mt-4 py-2 bg-accent-red hover:bg-red-700 text-white rounded-lg transition-colors text-sm font-medium shadow-sm">
+            <button className="w-full mt-4 py-2 bg-[#e63946] hover:bg-red-700 text-white rounded-lg transition-colors text-sm font-medium shadow-sm">
               View All Recommendations
             </button>
           </motion.div>
@@ -167,7 +167,7 @@ export default function TrustScoreDashboardPage() {
           {/* Trust Factors Grid */}
           <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold text-navy">Trust Factors</h3>
+              <h3 className="text-lg font-bold text-[#222222]">Trust Factors</h3>
               <div className="flex bg-border/50 rounded-lg p-1">
                 {['overview', 'details'].map(tab => (
                   <button
@@ -194,7 +194,7 @@ export default function TrustScoreDashboardPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 * idx }}
-                    className="bg-white rounded-lg border border-border p-6 shadow-sm hover:border-accent-purple transition-colors cursor-pointer group"
+                    className="bg-white rounded-lg border border-border p-6 shadow-sm hover:border-success transition-colors cursor-pointer group"
                   >
                     <div className="flex justify-between items-start mb-5">
                       <div className="flex items-center gap-3">
@@ -238,7 +238,7 @@ export default function TrustScoreDashboardPage() {
               className="bg-white rounded-lg border border-border shadow-sm p-6 mt-6"
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-navy">Performance Analytics</h3>
+                <h3 className="text-lg font-bold text-[#222222]">Performance Analytics</h3>
                 <BarChart2 className="w-5 h-5 text-text-secondary" />
               </div>
               <div className="h-64 w-full flex items-end justify-between gap-2 px-4 pb-4 border-b border-border relative">
@@ -254,15 +254,15 @@ export default function TrustScoreDashboardPage() {
                 {[60, 75, 82, 85, 90, 88, 94, 98].map((height, i) => (
                   <motion.div 
                     key={i}
-                    className="w-full bg-accent-red/20 hover:bg-accent-red/40 rounded-t-sm relative group z-10 cursor-pointer transition-colors"
+                    className="w-full bg-[#e63946]/20 hover:bg-[#e63946]/40 rounded-t-sm relative group z-10 cursor-pointer transition-colors"
                     initial={{ height: 0 }}
                     animate={{ height: `${height}%` }}
                     transition={{ duration: 0.5, delay: i * 0.1 }}
                   >
-                    <div className="absolute -top-8 left-1/2 -tranzinc-x-1/2 bg-navy text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    <div className="absolute -top-8 left-1/2 -tranzinc-x-1/2 bg-[#222222] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                       {height}%
                     </div>
-                    <div className="absolute top-0 left-0 w-full bg-accent-red rounded-t-sm" style={{ height: '4px' }}></div>
+                    <div className="absolute top-0 left-0 w-full bg-[#e63946] rounded-t-sm" style={{ height: '4px' }}></div>
                   </motion.div>
                 ))}
               </div>
@@ -283,7 +283,7 @@ export default function TrustScoreDashboardPage() {
           {/* Timeline Sidebar */}
           <div className="space-y-6">
             <div className="bg-white rounded-lg border border-border shadow-sm p-6">
-              <h3 className="text-lg font-bold text-navy mb-6">Recent Activity</h3>
+              <h3 className="text-lg font-bold text-[#222222] mb-6">Recent Activity</h3>
               <div className="relative border-l border-border ml-3 space-y-6">
                 {mockTrustData.timeline.map((item, idx) => (
                   <motion.div 
@@ -306,13 +306,13 @@ export default function TrustScoreDashboardPage() {
               </button>
             </div>
 
-            <div className="bg-navy rounded-lg shadow-sm p-8 text-white relative overflow-hidden">
-              <ShieldCheck className="w-10 h-10 mb-5 text-accent-purple" />
+            <div className="bg-[#222222] rounded-lg shadow-sm p-8 text-white relative overflow-hidden">
+              <ShieldCheck className="w-10 h-10 mb-5 text-success" />
               <h3 className="text-xl font-bold mb-2">Trust & Safety Hub</h3>
               <p className="text-light-gray text-sm mb-6 leading-relaxed">
                 Learn how Forte protects both freelancers and clients through our comprehensive trust systems.
               </p>
-              <button className="bg-accent-red text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors w-full flex items-center justify-center gap-2 shadow-sm">
+              <button className="bg-[#e63946] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors w-full flex items-center justify-center gap-2 shadow-sm">
                 Explore Policies
                 <ChevronRight className="w-4 h-4" />
               </button>

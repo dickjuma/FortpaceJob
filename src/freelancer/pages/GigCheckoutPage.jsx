@@ -5,6 +5,8 @@ import {
   Plus, X, Clock, RefreshCw, ChevronRight, Zap
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
+import CheckoutFeeBreakdown from '../../components/payments/CheckoutFeeBreakdown';
+import { useCheckoutFees } from '../../common/hooks/useCheckoutFees';
 
 // Mock Data
 const GIG = {
@@ -46,12 +48,13 @@ export default function GigCheckoutPage() {
     const addonsTotal = selectedAddons.reduce((sum, id) => {
       return sum + ADDONS.find(a => a.id === id).price;
     }, 0);
-    const subtotal = base + addonsTotal;
-    const serviceFee = subtotal * 0.05; // 5% fee
-    return { subtotal, serviceFee, total: subtotal + serviceFee };
+    return { subtotal: base + addonsTotal };
   };
 
-  const { subtotal, serviceFee, total } = calculateTotal();
+  const { subtotal } = calculateTotal();
+  const { breakdown } = useCheckoutFees(subtotal, 'HIRE_COMMITMENT');
+  const serviceFee = breakdown.platformFee;
+  const total = subtotal;
 
   const handleCheckout = () => {
     setIsProcessing(true);
@@ -73,7 +76,7 @@ export default function GigCheckoutPage() {
           </div>
           <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">Payment Successful!</h2>
           <p className="text-zinc-500 mb-8">Your order has been placed. Please submit the requirements so the seller can start working.</p>
-          <button className="w-full py-3.5 bg-brand-600 text-white font-bold rounded-xl shadow-sm hover:bg-brand-700 transition-colors">
+          <button className="w-full py-3.5 bg-[#14a800] text-white font-bold rounded-xl shadow-sm hover:bg-[#118a00] transition-colors">
             Submit Requirements
           </button>
         </motion.div>
@@ -102,13 +105,13 @@ export default function GigCheckoutPage() {
                     onClick={() => toggleAddon(addon.id)}
                     className={cn(
                       "flex items-center justify-between p-4 rounded-2xl border-2 cursor-pointer transition-colors",
-                      isSelected ? "border-brand-500 bg-brand-50 dark:bg-brand-500/10" : "border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600"
+                      isSelected ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10" : "border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600"
                     )}
                   >
                     <div className="flex items-start gap-4">
                       <div className={cn(
                         "w-6 h-6 rounded flex items-center justify-center mt-0.5 transition-colors shrink-0",
-                        isSelected ? "bg-brand-500 text-white" : "border-2 border-zinc-300 dark:border-zinc-600 bg-transparent"
+                        isSelected ? "bg-[#14a800] text-white" : "border-2 border-zinc-300 dark:border-zinc-600 bg-transparent"
                       )}>
                         {isSelected && <Check className="w-4 h-4" />}
                       </div>
@@ -132,11 +135,11 @@ export default function GigCheckoutPage() {
               {/* Credit Card */}
               <label className={cn(
                 "flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-colors",
-                paymentMethod === 'card' ? "border-brand-500 bg-brand-50 dark:bg-brand-500/10" : "border-zinc-200 dark:border-zinc-700"
+                paymentMethod === 'card' ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10" : "border-zinc-200 dark:border-zinc-700"
               )}>
                 <input type="radio" name="payment" className="hidden" checked={paymentMethod === 'card'} onChange={() => setPaymentMethod('card')} />
-                <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0", paymentMethod === 'card' ? "border-brand-500" : "border-zinc-300 dark:border-zinc-600")}>
-                  {paymentMethod === 'card' && <div className="w-2.5 h-2.5 rounded-full bg-brand-500" />}
+                <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0", paymentMethod === 'card' ? "border-[#14a800]/20" : "border-zinc-300 dark:border-zinc-600")}>
+                  {paymentMethod === 'card' && <div className="w-2.5 h-2.5 rounded-full bg-[#14a800]" />}
                 </div>
                 <CreditCard className="w-6 h-6 text-zinc-400" />
                 <span className="font-bold text-zinc-900 dark:text-white flex-1">Credit / Debit Card</span>
@@ -145,13 +148,13 @@ export default function GigCheckoutPage() {
               {/* PayPal */}
               <label className={cn(
                 "flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-colors",
-                paymentMethod === 'paypal' ? "border-brand-500 bg-brand-50 dark:bg-brand-500/10" : "border-zinc-200 dark:border-zinc-700"
+                paymentMethod === 'paypal' ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10" : "border-zinc-200 dark:border-zinc-700"
               )}>
                 <input type="radio" name="payment" className="hidden" checked={paymentMethod === 'paypal'} onChange={() => setPaymentMethod('paypal')} />
-                <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0", paymentMethod === 'paypal' ? "border-brand-500" : "border-zinc-300 dark:border-zinc-600")}>
-                  {paymentMethod === 'paypal' && <div className="w-2.5 h-2.5 rounded-full bg-brand-500" />}
+                <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0", paymentMethod === 'paypal' ? "border-[#14a800]/20" : "border-zinc-300 dark:border-zinc-600")}>
+                  {paymentMethod === 'paypal' && <div className="w-2.5 h-2.5 rounded-full bg-[#14a800]" />}
                 </div>
-                <div className="w-6 h-6 bg-brand-600 text-white font-black italic rounded flex items-center justify-center text-xs">P</div>
+                <div className="w-6 h-6 bg-[#14a800] text-white font-black italic rounded flex items-center justify-center text-xs">P</div>
                 <span className="font-bold text-zinc-900 dark:text-white flex-1">PayPal</span>
               </label>
             </div>
@@ -162,16 +165,16 @@ export default function GigCheckoutPage() {
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="space-y-4 overflow-hidden">
                   <div>
                     <label className="text-xs font-bold text-zinc-500 uppercase mb-2 block">Card Number</label>
-                    <input type="text" placeholder="0000 0000 0000 0000" className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 p-3 rounded-xl outline-none focus:border-brand-500 transition-colors text-zinc-900 dark:text-white font-medium" />
+                    <input type="text" placeholder="0000 0000 0000 0000" className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 p-3 rounded-xl outline-none focus:border-[#14a800]/20 transition-colors text-zinc-900 dark:text-white font-medium" />
                   </div>
                   <div className="flex gap-4">
                     <div className="flex-1">
                       <label className="text-xs font-bold text-zinc-500 uppercase mb-2 block">Expiry Date</label>
-                      <input type="text" placeholder="MM/YY" className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 p-3 rounded-xl outline-none focus:border-brand-500 transition-colors text-zinc-900 dark:text-white font-medium" />
+                      <input type="text" placeholder="MM/YY" className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 p-3 rounded-xl outline-none focus:border-[#14a800]/20 transition-colors text-zinc-900 dark:text-white font-medium" />
                     </div>
                     <div className="flex-1">
                       <label className="text-xs font-bold text-zinc-500 uppercase mb-2 block">CVC</label>
-                      <input type="text" placeholder="123" className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 p-3 rounded-xl outline-none focus:border-brand-500 transition-colors text-zinc-900 dark:text-white font-medium" />
+                      <input type="text" placeholder="123" className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 p-3 rounded-xl outline-none focus:border-[#14a800]/20 transition-colors text-zinc-900 dark:text-white font-medium" />
                     </div>
                   </div>
                 </motion.div>
@@ -211,17 +214,7 @@ export default function GigCheckoutPage() {
               </div>
             </div>
 
-            {/* Price Calculation */}
-            <div className="space-y-3 mb-6">
-              <div className="flex justify-between text-sm">
-                <span className="text-zinc-500 font-medium">Subtotal</span>
-                <span className="font-bold text-zinc-900 dark:text-white">${subtotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-zinc-500 font-medium flex items-center gap-1">Service Fee <Info className="w-3 h-3" /></span>
-                <span className="font-bold text-zinc-900 dark:text-white">${serviceFee.toFixed(2)}</span>
-              </div>
-            </div>
+            <CheckoutFeeBreakdown subtotal={subtotal} appliesTo="HIRE_COMMITMENT" className="mb-6" />
 
             <div className="flex justify-between items-center mb-8 pt-4 border-t border-zinc-200 dark:border-zinc-700">
               <span className="text-lg font-bold text-zinc-900 dark:text-white">Total</span>
@@ -231,7 +224,7 @@ export default function GigCheckoutPage() {
             <button 
               onClick={handleCheckout}
               disabled={isProcessing}
-              className="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-tranzinc-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full py-4 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-tranzinc-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isProcessing ? (
                 <>Processing <span className="animate-pulse">...</span></>

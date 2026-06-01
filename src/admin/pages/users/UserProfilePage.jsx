@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft, User, Briefcase, Building2, Shield, Settings, History, Lock, FileText, Star, Activity } from 'lucide-react';
 import { fetchUserById } from '../../api/users/users.api';
@@ -17,7 +17,7 @@ const TabButton = ({ id, label, icon: Icon, active, onClick }) => (
     className={cn(
       "flex items-center gap-2 px-6 py-4 text-xs font-black uppercase tracking-widest border-b-2 transition-all",
       active 
-        ? "border-brand-600 text-brand-600 bg-brand-50/30" 
+        ? "border-[#14a800]/20 text-[#14a800] bg-[#14a800]/5/30" 
         : "border-transparent text-zinc-400 hover:text-zinc-600 hover:bg-surface dark:hover:bg-zinc-800/50"
     )}
   >
@@ -32,7 +32,13 @@ const TabButton = ({ id, label, icon: Icon, active, onClick }) => (
 const UserProfilePage = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'overview');
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab) setActiveTab(tab);
+  }, [searchParams]);
 
   const { data: user, isLoading, error } = useQuery({
     queryKey: ['users', userId],
@@ -68,7 +74,7 @@ const UserProfilePage = () => {
         <p className="text-zinc-500 mt-2 max-w-sm font-medium italic">The specified user ID could not be retrieved from the directory.</p>
         <button 
           onClick={() => navigate('/admin/users')}
-          className="mt-8 px-6 py-3 bg-surface-dark text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-brand-600 transition-all active:scale-95 shadow-xl"
+          className="mt-8 px-6 py-3 bg-surface-dark text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-[#14a800] transition-all active:scale-95 shadow-xl"
         >
           Return to Directory
         </button>
@@ -123,9 +129,9 @@ const UserProfilePage = () => {
       {/* Navigation */}
       <button 
         onClick={() => navigate(-1)}
-        className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-brand-600 transition-colors"
+        className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-[#14a800] transition-colors"
       >
-        <div className="p-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 group-hover:bg-brand-50 dark:group-hover:bg-brand-900/20 transition-colors">
+        <div className="p-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 group-hover:bg-[#14a800]/5 dark:group-hover:bg-[#14a800]/20 transition-colors">
           <ChevronLeft size={14} />
         </div>
         Back to Users List
@@ -143,7 +149,10 @@ const UserProfilePage = () => {
             label={tab.label}
             icon={tab.icon}
             active={activeTab === tab.id}
-            onClick={setActiveTab}
+            onClick={(id) => {
+              setActiveTab(id);
+              setSearchParams(id === 'overview' ? {} : { tab: id });
+            }}
           />
         ))}
       </div>

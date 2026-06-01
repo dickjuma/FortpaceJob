@@ -11,7 +11,7 @@ const FreelancerOnboardingLanding = () => {
         
         <div className="container mx-auto px-4 md:px-8 relative z-10 max-w-5xl">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/20 text-brand-400 font-bold tracking-wide text-sm mb-8 border border-brand-500/30">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#14a800]/20 text-[#14a800] font-bold tracking-wide text-sm mb-8 border border-[#14a800]/20/30">
               <Rocket className="w-4 h-4 fill-current" /> JOIN FORTSPACE
             </div>
             
@@ -24,7 +24,7 @@ const FreelancerOnboardingLanding = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-16">
-              <button className="px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition-colors shadow-lg shadow-blue-900/50 flex items-center justify-center gap-2 text-lg">
+              <button className="px-8 py-4 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl transition-colors shadow-lg shadow-blue-900/50 flex items-center justify-center gap-2 text-lg">
                 Create Free Profile <ArrowRight className="w-5 h-5" />
               </button>
               <button className="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl transition-colors border border-white/20 text-lg">

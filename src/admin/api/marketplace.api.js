@@ -1,4 +1,4 @@
-import apiClient, { unwrapAdminResponse } from './apiClient';
+import apiClient, { unwrapAdminResponse } from './apiClient.js';
 
 const normalizeListResponse = (response) => {
   const { data, meta } = unwrapAdminResponse(response);
@@ -83,14 +83,57 @@ export async function fetchProposals(params = {}) {
 
 export async function fetchContracts(params = {}) {
   const query = new URLSearchParams(params).toString();
-  const response = await apiClient.get(`/disputes${query ? `?${query}` : ''}`);
+  const response = await apiClient.get(`/marketplace/contracts${query ? `?${query}` : ''}`);
   return normalizeListResponse(response);
 }
 
+const PUBLIC_API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+function readAdminToken() {
+  return (
+    localStorage.getItem('admin-token') ||
+    localStorage.getItem('accessToken') ||
+    null
+  );
+}
+
 export async function fetchReviews(params = {}) {
-  const query = new URLSearchParams({ ...params, status: params.status || 'flagged' }).toString();
-  const response = await apiClient.get(`/marketplace/content/flagged${query ? `?${query}` : ''}`);
-  return normalizeListResponse(response);
+  const query = new URLSearchParams({
+    page: params.page || 1,
+    limit: params.limit || 20,
+    ...(params.status ? { status: params.status } : {}),
+    ...(params.search ? { search: params.search } : {}),
+  }).toString();
+  const token = readAdminToken();
+  const res = await fetch(`${PUBLIC_API_BASE}/reviews/admin/list?${query}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.message || 'Failed to load reviews');
+  const payload = body.data ?? body;
+  const list = Array.isArray(payload?.data) ? payload.data : [];
+  return {
+    data: list,
+    total: payload.total ?? list.length,
+    page: payload.page ?? 1,
+    limit: payload.limit ?? list.length,
+    totalPages: payload.totalPages ?? 1,
+  };
+}
+
+export async function moderateReview(reviewId, { action, reason } = {}) {
+  const token = readAdminToken();
+  const res = await fetch(`${PUBLIC_API_BASE}/reviews/admin/${reviewId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify({ action, reason }),
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.message || 'Moderation failed');
+  return body.data ?? body;
 }
 
 export async function approveJob(jobId, data = {}) {
@@ -114,6 +157,11 @@ export async function removeGig(gigId, data = {}) {
 }
 
 export async function resolveFlaggedContent(contentId, data) {
+  if (data?.type === 'review' || !data?.type) {
+    const action =
+      data?.action === 'REMOVE' ? 'REMOVE' : data?.action === 'FLAG' ? 'FLAG' : 'VERIFY';
+    return moderateReview(contentId, { action, reason: data?.reason });
+  }
   const response = await apiClient.patch(`/marketplace/content/${contentId}/resolve`, data);
   return unwrapAdminResponse(response).data;
 }

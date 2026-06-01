@@ -22,14 +22,14 @@ const SidebarItem = React.memo(({
       className={({ isActive }) => twMerge(clsx(
         "group relative flex items-center gap-3 px-3 h-10 rounded-lg transition-all duration-200 no-underline text-sm font-medium",
         isActive 
-          ? "bg-accent-purple/10 text-accent-purple" 
+          ? "bg-success/10 text-success" 
           : "text-light-gray/80 hover:bg-white/5 hover:text-white",
         isSubItem && "ml-4 h-9 text-xs"
       ))}
     >
       <Icon size={isSubItem ? 16 : 20} className={twMerge(clsx(
         "shrink-0 transition-colors",
-        isActive ? "text-accent-purple" : "text-light-gray/60 group-hover:text-white"
+        isActive ? "text-success" : "text-light-gray/60 group-hover:text-white"
       ))} />
       
       {!isCollapsed && (
@@ -37,19 +37,19 @@ const SidebarItem = React.memo(({
       )}
 
       {badge && !isCollapsed && (
-        <span className="ml-auto bg-accent-purple/20 text-accent-purple text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+        <span className="ml-auto bg-success/20 text-success text-[10px] font-bold px-1.5 py-0.5 rounded-full">
           {badge}
         </span>
       )}
 
       {isCollapsed && (
-        <div className="absolute left-full ml-4 px-3 py-1.5 bg-navy text-white text-xs font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 shadow-xl border border-white/10">
+        <div className="absolute left-full ml-4 px-3 py-1.5 bg-[#222222] text-white text-xs font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 shadow-xl border border-white/10">
           {label}
         </div>
       )}
 
       {isActive && (
-        <div className="absolute left-0 top-2 bottom-2 w-1 bg-accent-purple rounded-r-full" />
+        <div className="absolute left-0 top-2 bottom-2 w-1 bg-success rounded-r-full" />
       )}
     </NavLink>
   );

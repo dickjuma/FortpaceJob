@@ -82,7 +82,7 @@ export default function InvoiceManagementPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6 mb-8">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-accent-purple/15 text-accent-purple rounded-xl border border-accent-purple/20 shadow-sm">
+            <div className="p-2.5 bg-success/15 text-success rounded-xl border border-success/20 shadow-sm">
               <FileSignature className="w-6 h-6" />
             </div>
             <h1 className="text-3xl font-black text-text-primary tracking-tight">Billing & Invoices</h1>
@@ -96,7 +96,7 @@ export default function InvoiceManagementPage() {
           <Button 
             onClick={() => setShowGenModal(true)}
             variant="primary" 
-            className="bg-accent-purple hover:bg-accent-purple/95 font-bold text-xs rounded-xl"
+            className="bg-success hover:bg-success/95 font-bold text-xs rounded-xl"
             icon={<Plus size={16} />}
           >
             Create Tax Invoice
@@ -121,7 +121,7 @@ export default function InvoiceManagementPage() {
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
                   placeholder="e.g. Acme Tech Solutions"
-                  className="w-full rounded-xl border border-border bg-light-gray px-3.5 py-2.5 text-text-primary focus:bg-white focus:border-accent-purple outline-none"
+                  className="w-full rounded-xl border border-border bg-light-gray px-3.5 py-2.5 text-text-primary focus:bg-white focus:border-success outline-none"
                 />
               </div>
 
@@ -132,7 +132,7 @@ export default function InvoiceManagementPage() {
                   value={invoiceAmount}
                   onChange={(e) => setInvoiceAmount(e.target.value)}
                   placeholder="e.g. 80000"
-                  className="w-full rounded-xl border border-border bg-light-gray px-3.5 py-2.5 text-text-primary focus:bg-white focus:border-accent-purple outline-none"
+                  className="w-full rounded-xl border border-border bg-light-gray px-3.5 py-2.5 text-text-primary focus:bg-white focus:border-success outline-none"
                 />
               </div>
 
@@ -141,12 +141,12 @@ export default function InvoiceManagementPage() {
                   type="checkbox" 
                   checked={includeVAT}
                   onChange={(e) => setIncludeVAT(e.target.checked)}
-                  className="w-4 h-4 rounded text-accent-purple" 
+                  className="w-4 h-4 rounded text-success" 
                 />
                 <span>Include 16% standard VAT distribution</span>
               </label>
 
-              <Button type="submit" variant="primary" className="w-full py-3 bg-accent-purple hover:bg-accent-purple/95 font-bold rounded-xl text-xs">
+              <Button type="submit" variant="primary" className="w-full py-3 bg-success hover:bg-success/95 font-bold rounded-xl text-xs">
                 Issue & Send Invoice
               </Button>
             </form>
@@ -168,7 +168,7 @@ export default function InvoiceManagementPage() {
 
         <Card className="p-6 border border-border bg-white shadow-sm">
           <p className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Overdue Ledger Balance</p>
-          <h2 className="text-3xl font-black text-accent-red mt-2">KES 80,000</h2>
+          <h2 className="text-3xl font-black text-[#e63946] mt-2">KES 80,000</h2>
         </Card>
       </div>
 
@@ -182,7 +182,7 @@ export default function InvoiceManagementPage() {
               placeholder="Search invoice id..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-border bg-light-gray text-xs font-bold text-text-primary focus:bg-white focus:border-accent-purple outline-none"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-border bg-light-gray text-xs font-bold text-text-primary focus:bg-white focus:border-success outline-none"
             />
           </div>
 
@@ -193,7 +193,7 @@ export default function InvoiceManagementPage() {
                 onClick={() => setFilter(f)}
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all",
-                  filter === f ? "bg-navy text-white shadow-sm" : "text-text-secondary hover:text-text-primary hover:bg-light-gray"
+                  filter === f ? "bg-[#222222] text-white shadow-sm" : "text-text-secondary hover:text-text-primary hover:bg-light-gray"
                 )}
               >
                 {f}
@@ -228,7 +228,7 @@ export default function InvoiceManagementPage() {
                       "px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border",
                       inv.status === 'Paid' ? "bg-success/10 text-success border-success/20" :
                       inv.status === 'Pending' ? "bg-warning/10 text-warning border-warning/20" :
-                      "bg-accent-red/10 text-accent-red border-accent-red/20"
+                      "bg-[#e63946]/10 text-[#e63946] border-[#e63946]/20"
                     )}>
                       {inv.status}
                     </span>

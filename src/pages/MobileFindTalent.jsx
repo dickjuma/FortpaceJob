@@ -52,7 +52,7 @@ const MobileFindTalent = () => {
                     <h2 className="text-xl font-bold text-zinc-900">Messages</h2>
                   </div>
                   <div className="flex-1 p-4 space-y-4">
-                    <div className="bg-brand-600 text-white p-3 rounded-2xl rounded-tr-sm ml-8 text-sm shadow-sm">
+                    <div className="bg-[#14a800] text-white p-3 rounded-2xl rounded-tr-sm ml-8 text-sm shadow-sm">
                       Can you start the React dashboard rebuild tomorrow?
                     </div>
                     <div className="bg-white p-3 rounded-2xl border border-zinc-200 text-zinc-800 rounded-tl-sm mr-8 text-sm shadow-sm">
@@ -62,8 +62,8 @@ const MobileFindTalent = () => {
                     <div className="bg-white border border-zinc-200 rounded-xl p-4 mt-8 shadow-sm">
                       <div className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Proposal Received</div>
                       <div className="font-bold text-zinc-900 mb-1">Milestone 1: Architecture</div>
-                      <div className="text-lg font-black text-brand-600 mb-3">$1,200.00</div>
-                      <button className="w-full py-2 bg-brand-600 text-white text-sm font-bold rounded-lg flex items-center justify-center gap-1">
+                      <div className="text-lg font-black text-[#14a800] mb-3">$1,200.00</div>
+                      <button className="w-full py-2 bg-[#14a800] text-white text-sm font-bold rounded-lg flex items-center justify-center gap-1">
                         <CheckCircle2 className="w-4 h-4" /> Approve & Fund
                       </button>
                     </div>
@@ -71,7 +71,7 @@ const MobileFindTalent = () => {
                   
                   <div className="bg-white border-t border-zinc-200 p-4 pb-6 flex justify-around text-zinc-400">
                     <Search className="w-6 h-6" />
-                    <Smartphone className="w-6 h-6 text-brand-600" />
+                    <Smartphone className="w-6 h-6 text-[#14a800]" />
                     <Star className="w-6 h-6" />
                   </div>
                 </div>

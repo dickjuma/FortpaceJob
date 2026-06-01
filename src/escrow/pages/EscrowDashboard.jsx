@@ -13,7 +13,7 @@ export default function EscrowDashboard() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Escrow & Financials</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage deposits, milestone releases, and view secure transaction history.</p>
         </div>
-        <Link to="/escrow/deposit" className="inline-flex items-center px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-medium transition-colors">
+        <Link to="/escrow/deposit" className="inline-flex items-center px-4 py-2 bg-[#14a800] hover:bg-[#118a00] text-white rounded-lg text-sm font-medium transition-colors">
           <DollarSign className="w-4 h-4 mr-2" /> Add Funds
         </Link>
       </div>
@@ -22,7 +22,7 @@ export default function EscrowDashboard() {
         <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Available Balance</h3>
-            <div className="w-8 h-8 rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] flex items-center justify-center">
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
@@ -36,11 +36,11 @@ export default function EscrowDashboard() {
 
         <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5">
-            <ShieldCheck className="w-24 h-24 text-brand-600" />
+            <ShieldCheck className="w-24 h-24 text-[#14a800]" />
           </div>
           <div className="flex items-center justify-between mb-4 relative z-10">
             <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total in Escrow</h3>
-            <div className="w-8 h-8 rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] flex items-center justify-center">
               <ShieldCheck className="w-4 h-4" />
             </div>
           </div>
@@ -69,7 +69,7 @@ export default function EscrowDashboard() {
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">Recent Escrow Activity</h2>
-          <button className="text-sm font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700">View All</button>
+          <button className="text-sm font-medium text-[#14a800] dark:text-[#14a800] hover:text-[#14a800]">View All</button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
@@ -90,7 +90,7 @@ export default function EscrowDashboard() {
                 <td className="px-6 py-4 font-bold text-gray-900 dark:text-white">$4,500.00</td>
                 <td className="px-6 py-4 text-gray-500">May 18, 2026</td>
                 <td className="px-6 py-4">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#14a800]/5 text-[#14a800] dark:bg-[#14a800]/30 dark:text-[#14a800]">
                     <ShieldCheck className="w-3 h-3 mr-1" /> Secured
                   </span>
                 </td>

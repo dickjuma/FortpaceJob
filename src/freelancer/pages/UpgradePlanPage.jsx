@@ -76,7 +76,7 @@ export default function UpgradePlanPage() {
       
       {/* Header */}
       <div className="text-center max-w-xl mx-auto space-y-4 mb-12">
-        <Sparkles className="w-12 h-12 text-accent-purple mx-auto animate-pulse" />
+        <Sparkles className="w-12 h-12 text-success mx-auto animate-pulse" />
         <h1 className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight">Flexible plans for your career</h1>
         <p className="text-sm text-text-secondary font-medium">
           Scale your operation, invite team members, access priority verified badges, and unlock advanced billing configurations.
@@ -94,18 +94,18 @@ export default function UpgradePlanPage() {
               key={plan.name}
               className={cn(
                 "bg-white border p-8 rounded-[32px] shadow-md flex flex-col justify-between min-h-[500px] relative transition-all hover:scale-[1.01]",
-                isActive ? "border-accent-purple ring-2 ring-accent-purple/20 bg-accent-purple/5 shadow-xl" : "border-border hover:border-border-hover"
+                isActive ? "border-success ring-2 ring-success/20 bg-success/5 shadow-xl" : "border-border hover:border-border-hover"
               )}
             >
               {isActive && (
-                <span className="absolute top-4 right-4 bg-accent-purple text-white text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-white/20">
+                <span className="absolute top-4 right-4 bg-success text-white text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-white/20">
                   Active Tier
                 </span>
               )}
 
               <div className="space-y-6">
                 <div className="flex items-center gap-3">
-                  <div className={cn("p-3 rounded-2xl bg-light-gray text-text-secondary border border-border", isActive && "bg-accent-purple/15 text-accent-purple border-accent-purple/20")}>
+                  <div className={cn("p-3 rounded-2xl bg-light-gray text-text-secondary border border-border", isActive && "bg-success/15 text-success border-success/20")}>
                     <PlanIcon size={22} />
                   </div>
                   <div>
@@ -124,7 +124,7 @@ export default function UpgradePlanPage() {
                 <div className="border-t border-border pt-6 space-y-3">
                   {plan.features.map((feature, i) => (
                     <div key={i} className="flex items-start gap-2.5 text-xs text-text-secondary font-bold">
-                      <CheckCircle2 size={16} className={cn("text-text-secondary shrink-0", isActive ? "text-accent-purple" : "text-success")} />
+                      <CheckCircle2 size={16} className={cn("text-text-secondary shrink-0", isActive ? "text-success" : "text-success")} />
                       <span>{feature}</span>
                     </div>
                   ))}
@@ -137,7 +137,7 @@ export default function UpgradePlanPage() {
                   "w-full py-3.5 mt-8 font-black rounded-xl text-xs transition-all shadow-sm border",
                   isActive 
                     ? "bg-light-gray border-border text-text-secondary cursor-default" 
-                    : "bg-accent-purple hover:bg-accent-purple/95 text-white shadow-lg shadow-accent-purple/20"
+                    : "bg-success hover:bg-success/95 text-white shadow-lg shadow-[#14a800]/20"
                 )}
                 disabled={isActive}
               >

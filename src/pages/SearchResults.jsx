@@ -22,6 +22,8 @@ import {
   getMarketplaceTalent,
   getRecentMarketplaceActivity,
   getTalentCategories,
+  subscribeToTalentData,
+  syncTalentWithBackend,
 } from './find-talent/talentMarketplaceData';
 
 function toggleListValue(values, nextValue) {
@@ -31,6 +33,13 @@ function toggleListValue(values, nextValue) {
 const SearchResults = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState('grid');
+  const [, setDataVersion] = useState(0);
+
+  React.useEffect(() => {
+    const unsubscribe = subscribeToTalentData(() => setDataVersion((version) => version + 1));
+    syncTalentWithBackend();
+    return unsubscribe;
+  }, []);
   const query = searchParams.get('q') || '';
   const location = searchParams.get('location') || '';
   const mode = searchParams.get('mode') || 'all';
@@ -96,8 +105,8 @@ const SearchResults = () => {
   return (
     <>
       <div className="bg-surface-dark text-white pt-20 pb-24 relative overflow-hidden">
-        <div className="absolute top-0 right-0 -mr-40 -mt-40 w-96 h-96 rounded-full bg-brand-600/20 blur-3xl" />
-        <div className="absolute bottom-0 left-0 -ml-40 -mb-40 w-96 h-96 rounded-full bg-brand-600/20 blur-3xl" />
+        <div className="absolute top-0 right-0 -mr-40 -mt-40 w-96 h-96 rounded-full bg-[#14a800]/20 blur-3xl" />
+        <div className="absolute bottom-0 left-0 -ml-40 -mb-40 w-96 h-96 rounded-full bg-[#14a800]/20 blur-3xl" />
 
         <div className="container mx-auto px-4 md:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-12">
           <div className="flex-1 text-center lg:text-left">
@@ -113,7 +122,7 @@ const SearchResults = () => {
               <div className="flex items-center gap-2"><CheckCircle2 className="w-5 h-5 text-success" /> Invite and hire flows</div>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Link className="px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition-colors shadow-lg shadow-blue-900/50" to="/recommended-talent">
+              <Link className="px-8 py-4 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl transition-colors shadow-lg shadow-blue-900/50" to="/recommended-talent">
                 Explore AI matches
               </Link>
               <Link className="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold rounded-xl transition-colors" to="/saved">
@@ -137,7 +146,7 @@ const SearchResults = () => {
                 </div>
                 <div>
                   <div className="font-bold text-white">Live marketplace signal</div>
-                  <div className="text-xs text-brand-200">{activity[0]?.action}</div>
+                  <div className="text-xs text-[#14a800]">{activity[0]?.action}</div>
                 </div>
               </div>
             </div>
@@ -147,7 +156,7 @@ const SearchResults = () => {
 
       <div className="container mx-auto px-4 md:px-8 -mt-8 relative z-20">
         <form className="bg-white rounded-2xl shadow-xl border border-zinc-200 p-2 md:p-3 flex flex-col md:flex-row gap-2" onSubmit={submitSearch}>
-          <div className="flex-1 flex items-center bg-surface rounded-xl px-4 py-3 border border-zinc-200 hover:border-brand-300 focus-within:border-brand-500 focus-within:bg-white transition-colors">
+          <div className="flex-1 flex items-center bg-surface rounded-xl px-4 py-3 border border-zinc-200 hover:border-[#14a800]/50 focus-within:border-[#14a800]/20 focus-within:bg-white transition-colors">
             <Search className="w-5 h-5 text-zinc-400 mr-3" />
             <input
               className="w-full bg-transparent border-none outline-none text-zinc-900 font-medium placeholder:text-zinc-500 placeholder:font-normal"
@@ -157,7 +166,7 @@ const SearchResults = () => {
               type="text"
             />
           </div>
-          <div className="w-full md:w-64 flex items-center bg-surface rounded-xl px-4 py-3 border border-zinc-200 hover:border-brand-300 focus-within:border-brand-500 focus-within:bg-white transition-colors">
+          <div className="w-full md:w-64 flex items-center bg-surface rounded-xl px-4 py-3 border border-zinc-200 hover:border-[#14a800]/50 focus-within:border-[#14a800]/20 focus-within:bg-white transition-colors">
             <MapPin className="w-5 h-5 text-zinc-400 mr-3" />
             <input
               className="w-full bg-transparent border-none outline-none text-zinc-900 font-medium placeholder:text-zinc-500 placeholder:font-normal"
@@ -168,13 +177,13 @@ const SearchResults = () => {
             />
           </div>
           <div className="flex gap-2">
-            <select className="bg-surface border border-zinc-200 rounded-xl px-4 py-3 text-zinc-700 font-medium outline-none hover:border-brand-300 transition-colors hidden sm:block" defaultValue={mode} name="mode">
+            <select className="bg-surface border border-zinc-200 rounded-xl px-4 py-3 text-zinc-700 font-medium outline-none hover:border-[#14a800]/50 transition-colors hidden sm:block" defaultValue={mode} name="mode">
               <option value="all">Remote and onsite</option>
               <option value="online">Remote only</option>
               <option value="onsite">Onsite only</option>
               <option value="hybrid">Hybrid only</option>
             </select>
-            <button className="w-full sm:w-auto px-8 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition-colors whitespace-nowrap" type="submit">
+            <button className="w-full sm:w-auto px-8 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl transition-colors whitespace-nowrap" type="submit">
               Search
             </button>
           </div>
@@ -186,7 +195,7 @@ const SearchResults = () => {
           <span className="text-sm font-bold text-zinc-400 uppercase tracking-wider whitespace-nowrap mr-2">Popular:</span>
           {categories.map((category) => (
             <button
-              className="px-4 py-2 rounded-full border border-zinc-200 bg-white text-zinc-700 text-sm font-medium hover:bg-surface hover:border-brand-200 hover:text-brand-600 transition-colors whitespace-nowrap flex items-center gap-2"
+              className="px-4 py-2 rounded-full border border-zinc-200 bg-white text-zinc-700 text-sm font-medium hover:bg-surface hover:border-[#14a800]/20 hover:text-[#14a800] transition-colors whitespace-nowrap flex items-center gap-2"
               key={category.id}
               onClick={() =>
                 setParamState((params) => {
@@ -272,7 +281,7 @@ const SearchResults = () => {
                 <div className="flex items-center gap-2 mt-2 flex-wrap">
                   <span className="px-3 py-1 bg-zinc-100 text-zinc-600 rounded-full text-xs font-medium">{mode === 'all' ? 'Remote and onsite' : mode}</span>
                   {badgeIds.map((badge) => (
-                    <span className="px-3 py-1 bg-brand-50 text-brand-600 border border-brand-100 rounded-full text-xs font-medium" key={badge}>
+                    <span className="px-3 py-1 bg-[#14a800]/5 text-[#14a800] border border-[#14a800]/20 rounded-full text-xs font-medium" key={badge}>
                       {badge}
                     </span>
                   ))}
@@ -287,7 +296,7 @@ const SearchResults = () => {
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <div className="relative flex-1 sm:flex-none">
                   <select
-                    className="w-full appearance-none bg-white border border-zinc-200 rounded-lg pl-4 pr-10 py-2.5 text-sm font-medium text-zinc-700 outline-none hover:bg-surface focus:border-brand-500"
+                    className="w-full appearance-none bg-white border border-zinc-200 rounded-lg pl-4 pr-10 py-2.5 text-sm font-medium text-zinc-700 outline-none hover:bg-surface focus:border-[#14a800]/20"
                     onChange={(event) => setParamState((params) => params.set('sort', event.target.value))}
                     value={sortBy}
                   >
@@ -301,13 +310,13 @@ const SearchResults = () => {
                 </div>
 
                 <div className="flex bg-zinc-100 p-1 rounded-lg border border-zinc-200">
-                  <button className={`p-1.5 rounded-md ${viewMode === 'grid' ? 'bg-white shadow-sm text-brand-600' : 'text-zinc-500 hover:text-zinc-700'}`} onClick={() => setViewMode('grid')} type="button">
+                  <button className={`p-1.5 rounded-md ${viewMode === 'grid' ? 'bg-white shadow-sm text-[#14a800]' : 'text-zinc-500 hover:text-zinc-700'}`} onClick={() => setViewMode('grid')} type="button">
                     <Grid className="w-4 h-4" />
                   </button>
-                  <button className={`p-1.5 rounded-md ${viewMode === 'compact' ? 'bg-white shadow-sm text-brand-600' : 'text-zinc-500 hover:text-zinc-700'}`} onClick={() => setViewMode('compact')} type="button">
+                  <button className={`p-1.5 rounded-md ${viewMode === 'compact' ? 'bg-white shadow-sm text-[#14a800]' : 'text-zinc-500 hover:text-zinc-700'}`} onClick={() => setViewMode('compact')} type="button">
                     <List className="w-4 h-4" />
                   </button>
-                  <button className={`p-1.5 rounded-md ${viewMode === 'map' ? 'bg-white shadow-sm text-brand-600' : 'text-zinc-500 hover:text-zinc-700'}`} onClick={() => setViewMode('map')} type="button">
+                  <button className={`p-1.5 rounded-md ${viewMode === 'map' ? 'bg-white shadow-sm text-[#14a800]' : 'text-zinc-500 hover:text-zinc-700'}`} onClick={() => setViewMode('map')} type="button">
                     <Map className="w-4 h-4" />
                   </button>
                 </div>
@@ -331,7 +340,7 @@ const SearchResults = () => {
                 {talent.map((entry) => (
                   <div className="bg-white rounded-2xl border border-zinc-200 p-5 flex flex-col md:flex-row gap-5 items-start md:items-center" key={entry.id}>
                     <div className="flex-1">
-                      <Link className="text-xl font-bold text-zinc-900 hover:text-brand-600 transition-colors" to={`/talent/${entry.id}`}>
+                      <Link className="text-xl font-bold text-zinc-900 hover:text-[#14a800] transition-colors" to={`/talent/${entry.id}`}>
                         {entry.name}
                       </Link>
                       <div className="text-zinc-600 mt-1">{entry.title}</div>
@@ -355,7 +364,7 @@ const SearchResults = () => {
             {viewMode === 'map' ? (
               <div className="bg-zinc-200 rounded-2xl h-[600px] w-full mb-12 flex items-center justify-center border border-zinc-300">
                 <div className="text-center p-6 bg-white/90 backdrop-blur rounded-xl shadow-lg">
-                  <Map className="w-8 h-8 text-brand-500 mx-auto mb-3" />
+                  <Map className="w-8 h-8 text-[#14a800] mx-auto mb-3" />
                   <h3 className="font-bold text-zinc-900">Map view active</h3>
                   <p className="text-sm text-zinc-600">
                     {talent.filter((entry) => entry.modes.includes('onsite')).length} onsite professionals are available in the current result set.
@@ -375,11 +384,11 @@ const SearchResults = () => {
                 <Star className="w-64 h-64 text-white" />
               </div>
               <div className="relative z-10 mb-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 text-xs font-bold uppercase tracking-wider mb-4 border border-brand-500/30">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#14a800]/20 text-[#14a800] text-xs font-bold uppercase tracking-wider mb-4 border border-[#14a800]/20/30">
                   Top 1% Talent
                 </div>
                 <h2 className="text-3xl font-bold mb-2">Featured marketplace leaders</h2>
-                <p className="text-brand-200">Elite talent and agencies linked into the same live hiring flows.</p>
+                <p className="text-[#14a800]">Elite talent and agencies linked into the same live hiring flows.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
@@ -393,26 +402,26 @@ const SearchResults = () => {
                       />
                       <div className="absolute inset-0 bg-surface-dark/20 group-hover:bg-transparent transition-colors" />
                       {entry.providerType === 'agency' ? (
-                        <div className="absolute top-3 left-3 bg-brand-600 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded">
+                        <div className="absolute top-3 left-3 bg-[#14a800] text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded">
                           Agency
                         </div>
                       ) : (
                         <div className="absolute bottom-3 left-3 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-lg">
-                          <Play className="w-4 h-4 text-brand-600 ml-1" />
+                          <Play className="w-4 h-4 text-[#14a800] ml-1" />
                         </div>
                       )}
                     </div>
                     <div className="p-5 flex-1 flex flex-col justify-center">
                       <div className="flex items-center gap-1 mb-1">
-                        <h3 className="font-bold text-lg leading-tight group-hover:text-brand-600 transition-colors">{entry.name}</h3>
-                        {entry.providerType === 'agency' ? <Building className="w-4 h-4 text-brand-500" /> : <ShieldCheck className="w-4 h-4 text-brand-500" />}
+                        <h3 className="font-bold text-lg leading-tight group-hover:text-[#14a800] transition-colors">{entry.name}</h3>
+                        {entry.providerType === 'agency' ? <Building className="w-4 h-4 text-[#14a800]" /> : <ShieldCheck className="w-4 h-4 text-[#14a800]" />}
                       </div>
                       <p className="text-sm text-zinc-600 mb-3 line-clamp-1">{entry.title}</p>
                       <div className="flex items-center gap-4 text-xs font-medium text-zinc-500 mb-4">
                         <div className="flex items-center gap-1"><Star className="w-3.5 h-3.5 text-amber-500 fill-current" /> {entry.rating}</div>
                         <div>${entry.hourlyRate}/hr</div>
                       </div>
-                      <Link className="w-full py-2 bg-zinc-100 text-center text-zinc-700 rounded-lg text-sm font-bold group-hover:bg-brand-50 group-hover:text-brand-700 transition-colors" to={`/talent/${entry.id}`}>
+                      <Link className="w-full py-2 bg-zinc-100 text-center text-zinc-700 rounded-lg text-sm font-bold group-hover:bg-[#14a800]/5 group-hover:text-[#14a800] transition-colors" to={`/talent/${entry.id}`}>
                         View Profile
                       </Link>
                     </div>
@@ -451,7 +460,7 @@ const SearchResults = () => {
                 Compare saved talent, open a profile, invite the right candidate, and move directly into hiring setup without losing context.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Link className="px-8 py-4 bg-brand-600 text-white hover:bg-brand-700 font-bold rounded-xl transition-colors shadow-lg" to="/saved">
+                <Link className="px-8 py-4 bg-[#14a800] text-white hover:bg-[#118a00] font-bold rounded-xl transition-colors shadow-lg" to="/saved">
                   Open saved collections
                 </Link>
                 <Link className="px-8 py-4 bg-white border border-zinc-300 text-zinc-700 hover:bg-surface font-bold rounded-xl transition-colors" to="/shortlist">

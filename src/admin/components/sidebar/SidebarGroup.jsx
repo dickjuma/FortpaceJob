@@ -37,7 +37,7 @@ const SidebarGroup = React.memo(({
           size={20} 
           className={twMerge(clsx(
             "shrink-0 transition-colors",
-            (isOpen || hasActiveChild) ? "text-accent-purple" : "text-light-gray/60 group-hover:text-white"
+            (isOpen || hasActiveChild) ? "text-success" : "text-light-gray/60 group-hover:text-white"
           ))} 
         />
         
@@ -52,7 +52,7 @@ const SidebarGroup = React.memo(({
         )}
 
         {isCollapsed && (
-          <div className="absolute left-full ml-4 px-3 py-1.5 bg-navy text-white text-xs font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 shadow-xl border border-white/10">
+          <div className="absolute left-full ml-4 px-3 py-1.5 bg-[#222222] text-white text-xs font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 shadow-xl border border-white/10">
             {label}
           </div>
         )}

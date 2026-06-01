@@ -26,6 +26,27 @@ export const useAuthStore = create(
           }
         },
 
+        hydrateFromStorage: () => {
+          const token = localStorage.getItem('accessToken');
+          const refreshToken = localStorage.getItem('refreshToken');
+          const storedUser = localStorage.getItem('user');
+          if (!token || !storedUser) {
+            return;
+          }
+          try {
+            const user = JSON.parse(storedUser);
+            set({
+              isAuthenticated: true,
+              user,
+              token,
+              refreshToken,
+              sessionExpired: false,
+            });
+          } catch {
+            removeTokens();
+          }
+        },
+
         setAuth: (user, token, refreshToken) => {
           get().syncPersistedSession(user, token, refreshToken);
           set({
@@ -41,13 +62,14 @@ export const useAuthStore = create(
         login: async (identifier, password, rememberMe = false, deviceMetadata = null) => {
           set({ isLoading: true, error: null });
           try {
-            const data = await authAPI.login(identifier, password, rememberMe, deviceMetadata);
+            const data = await authAPI.login(identifier, password, { rememberMe, deviceMetadata });
 
             if (data?.requiresTwoFactor) {
               set({ isLoading: false, error: null });
               return data;
             }
 
+            get().syncPersistedSession(data.user, data.accessToken, data.refreshToken);
             set({
               isAuthenticated: true,
               user: data.user,
@@ -103,6 +125,10 @@ export const useAuthStore = create(
       {
         name: 'auth-store', // storage key
         getStorage: () => localStorage,
+        partialize: (state) => ({ 
+          isAuthenticated: state.isAuthenticated, 
+          user: state.user,
+        }),
       }
     )
   )

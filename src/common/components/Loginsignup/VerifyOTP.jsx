@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { authAPI, setUser, setTokens, removeTokens } from "../../../services/api";
 import { toast } from "sonner";
+import { validateOtp } from "../../../common/utils/validation";
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
@@ -55,9 +56,9 @@ const VerifyOTP = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const otpValue = otp.join("");
-
-    if (otpValue.length !== 6) {
-      toast.error("Please enter the complete 6-digit code");
+    const otpError = validateOtp(otpValue);
+    if (otpError) {
+      toast.error(otpError);
       return;
     }
 
@@ -127,7 +128,7 @@ const VerifyOTP = () => {
                 value={digit}
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-12 h-12 text-center text-2xl font-bold border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-12 h-12 text-center text-2xl font-bold border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-#14a800] focus:border-transparent"
               />
             ))}
           </div>
@@ -135,7 +136,7 @@ const VerifyOTP = () => {
             <button
               type="submit"
               disabled={isLoading || otp.some((d) => !d)}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#14a800] hover:bg-[#118a00] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-#14a800] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? "Verifying..." : "Verify Code"}
             </button>
@@ -145,7 +146,7 @@ const VerifyOTP = () => {
               type="button"
               onClick={handleResend}
               disabled={resendCooldown > 0}
-              className="text-sm text-brand-600 hover:text-brand-500 disabled:text-gray-400"
+              className="text-sm text-[#14a800] hover:text-[#14a800] disabled:text-gray-400"
             >
               {resendCooldown > 0
                 ? `Resend in ${resendCooldown}s`

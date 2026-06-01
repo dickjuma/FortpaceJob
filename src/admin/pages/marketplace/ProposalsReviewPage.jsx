@@ -93,7 +93,7 @@ export default function ProposalsReviewPage() {
             onClick={() => setActiveTab(activeTab === 'proposals' ? 'audit' : 'proposals')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-brand-600" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#14a800]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={18} /> {activeTab === 'proposals' ? 'Audit Trail' : 'Back to Proposals'}
@@ -121,7 +121,7 @@ export default function ProposalsReviewPage() {
               placeholder="Search by job or freelancer..." 
               value={filters.proposals.search}
               onChange={(e) => setFilter('proposals', 'search', e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-surface dark:bg-zinc-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none"
+              className="w-full pl-10 pr-4 py-2 bg-surface dark:bg-zinc-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-[#14a800] outline-none"
             />
           </div>
           <select 
@@ -143,7 +143,7 @@ export default function ProposalsReviewPage() {
             <thead>
               <tr className="bg-surface dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 text-xs uppercase tracking-wider font-semibold">
                 <th className="p-4 w-12 text-center">
-                  <input type="checkbox" onChange={toggleAll} checked={selectedIds.length > 0 && selectedIds.length === proposalsData?.data?.length} className="rounded border-zinc-300 dark:border-zinc-600 text-brand-600 focus:ring-brand-500" />
+                  <input type="checkbox" onChange={toggleAll} checked={selectedIds.length > 0 && selectedIds.length === proposalsData?.data?.length} className="rounded border-zinc-300 dark:border-zinc-600 text-[#14a800] focus:ring-[#14a800]" />
                 </th>
                 <th className="p-4">Proposal / Job</th>
                 <th className="p-4">Freelancer</th>
@@ -160,7 +160,7 @@ export default function ProposalsReviewPage() {
                 proposalsData?.data?.map(proposal => (
                   <tr key={proposal.id} className="hover:bg-surface/50 dark:hover:bg-zinc-800/20">
                     <td className="p-4 text-center">
-                      <input type="checkbox" checked={selectedIds.includes(proposal.id)} onChange={() => toggleSelect(proposal.id)} className="rounded border-zinc-300 dark:border-zinc-600 text-brand-600" />
+                      <input type="checkbox" checked={selectedIds.includes(proposal.id)} onChange={() => toggleSelect(proposal.id)} className="rounded border-zinc-300 dark:border-zinc-600 text-[#14a800]" />
                     </td>
                     <td className="p-4">
                       <div>
@@ -175,7 +175,7 @@ export default function ProposalsReviewPage() {
                       >
                         <Avatar name={proposal.freelancerName} size="sm" />
                         <div>
-                          <p className="text-sm font-semibold text-zinc-900 dark:text-white group-hover:text-brand-600 transition-colors">{proposal.freelancerName}</p>
+                          <p className="text-sm font-semibold text-zinc-900 dark:text-white group-hover:text-[#14a800] transition-colors">{proposal.freelancerName}</p>
                           <div 
                             className="flex items-center text-xs text-amber-500 gap-1 hover:bg-amber-50 dark:hover:bg-amber-900/20 px-1 rounded transition-colors"
                             onClick={(e) => { e.stopPropagation(); handleUserAction('ranking', { name: proposal.freelancerName }); }}
@@ -192,7 +192,7 @@ export default function ProposalsReviewPage() {
                     <td className="p-4">
                       <div className="flex items-center gap-2 w-24">
                         <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                          <div className={cn("h-full rounded-full", proposal.matchScore > 80 ? "bg-success" : "bg-brand-500")} style={{ width: `${proposal.matchScore}%` }} />
+                          <div className={cn("h-full rounded-full", proposal.matchScore > 80 ? "bg-success" : "bg-[#14a800]")} style={{ width: `${proposal.matchScore}%` }} />
                         </div>
                         <span className="text-[10px] font-bold text-zinc-500">{proposal.matchScore}%</span>
                       </div>
@@ -202,7 +202,7 @@ export default function ProposalsReviewPage() {
                       <div className="flex items-center justify-end gap-2">
                         <button 
                           onClick={() => handleAction('View', proposal.id)}
-                          className="p-1.5 text-brand-600 bg-brand-50 hover:bg-brand-100 dark:bg-brand-900/20 dark:hover:bg-brand-900/40 rounded-lg transition-colors tooltip-trigger" title="View Proposal"
+                          className="p-1.5 text-[#14a800] bg-[#14a800]/5 hover:bg-[#14a800]/10 dark:bg-[#14a800]/20 dark:hover:bg-[#14a800]/40 rounded-lg transition-colors tooltip-trigger" title="View Proposal"
                         >
                           <Eye size={16} />
                         </button>

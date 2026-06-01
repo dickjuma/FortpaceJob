@@ -20,7 +20,7 @@ export default function CreateGigPage() {
     <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <Toaster position="top-center" />
       <div className="mb-8">
-        <Link to="/freelancer/gigs" className="text-sm font-medium text-brand-600 hover:text-brand-500 mb-4 inline-block">
+        <Link to="/freelancer/gigs" className="text-sm font-medium text-[#14a800] hover:text-[#14a800] mb-4 inline-block">
           ← Back to My Gigs
         </Link>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Create a New Gig</h1>
@@ -30,8 +30,8 @@ export default function CreateGigPage() {
       <div className="flex mb-8 space-x-2">
         {['Overview', 'Pricing', 'Gallery', 'Publish'].map((label, idx) => (
           <div key={idx} className="flex-1">
-            <div className={`h-2 w-full rounded-full mb-2 ${step > idx ? 'bg-brand-600' : 'bg-gray-200 dark:bg-gray-800'}`}></div>
-            <p className={`text-xs font-bold text-center ${step > idx ? 'text-brand-600' : 'text-gray-400'}`}>{label}</p>
+            <div className={`h-2 w-full rounded-full mb-2 ${step > idx ? 'bg-[#14a800]' : 'bg-gray-200 dark:bg-gray-800'}`}></div>
+            <p className={`text-xs font-bold text-center ${step > idx ? 'text-[#14a800]' : 'text-gray-400'}`}>{label}</p>
           </div>
         ))}
       </div>
@@ -46,7 +46,7 @@ export default function CreateGigPage() {
                 <input 
                   type="text" 
                   placeholder="build a custom enterprise React dashboard"
-                  className="w-full border-b-2 border-gray-200 dark:border-gray-700 bg-transparent py-2 focus:border-brand-500 focus:outline-none focus:ring-0 placeholder-gray-300 dark:placeholder-gray-700"
+                  className="w-full border-b-2 border-gray-200 dark:border-gray-700 bg-transparent py-2 focus:border-[#14a800]/20 focus:outline-none focus:ring-0 placeholder-gray-300 dark:placeholder-gray-700"
                 />
               </div>
             </div>
@@ -54,7 +54,7 @@ export default function CreateGigPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2">Category</label>
-                <select className="w-full border border-gray-300 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:ring-brand-500 focus:border-brand-500">
+                <select className="w-full border border-gray-300 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:ring-[#14a800] focus:border-[#14a800]/20">
                   <option>Programming & Tech</option>
                   <option>Design</option>
                   <option>Writing</option>
@@ -65,7 +65,7 @@ export default function CreateGigPage() {
                 <input 
                   type="text" 
                   placeholder="react, tailwind, dashboard..."
-                  className="w-full border border-gray-300 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:ring-brand-500 focus:border-brand-500"
+                  className="w-full border border-gray-300 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:ring-[#14a800] focus:border-[#14a800]/20"
                 />
               </div>
             </div>
@@ -75,7 +75,7 @@ export default function CreateGigPage() {
               <textarea 
                 rows="6"
                 placeholder="Describe what makes your service unique..."
-                className="w-full border border-gray-300 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:ring-brand-500 focus:border-brand-500"
+                className="w-full border border-gray-300 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:ring-[#14a800] focus:border-[#14a800]/20"
               ></textarea>
             </div>
           </div>
@@ -151,7 +151,7 @@ export default function CreateGigPage() {
               Your gig is now visible in the marketplace. Clients can now purchase your services instantly.
             </p>
             <Link to="/freelancer/gigs/analytics">
-              <button className="px-6 py-2.5 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition-colors shadow-sm">
+              <button className="px-6 py-2.5 bg-[#14a800] text-white font-bold rounded-xl hover:bg-[#118a00] transition-colors shadow-sm">
                 View Gig Analytics
               </button>
             </Link>
@@ -171,7 +171,7 @@ export default function CreateGigPage() {
             {step < 4 ? (
               <button 
                 onClick={() => setStep(step + 1)}
-                className="flex items-center px-6 py-2.5 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition-colors shadow-sm"
+                className="flex items-center px-6 py-2.5 bg-[#14a800] text-white font-bold rounded-xl hover:bg-[#118a00] transition-colors shadow-sm"
               >
                 Save & Continue <ChevronRight className="w-4 h-4 ml-2" />
               </button>

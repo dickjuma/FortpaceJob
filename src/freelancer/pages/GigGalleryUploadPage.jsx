@@ -85,7 +85,7 @@ export default function GigGalleryUploadPage() {
           <div className="flex justify-between items-end mb-6">
             <div>
               <h3 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <ImageIcon className="w-5 h-5 text-brand-500" /> Images (up to 3)
+                <ImageIcon className="w-5 h-5 text-[#14a800]" /> Images (up to 3)
               </h3>
               <p className="text-xs text-zinc-500 mt-1">Get noticed by the right buyers with visual examples of your services.</p>
             </div>
@@ -102,11 +102,11 @@ export default function GigGalleryUploadPage() {
                 onDrop={handleDrop}
                 className={cn(
                   "col-span-1 aspect-[4/3] rounded-2xl border-2 border-dashed flex flex-col items-center justify-center p-4 text-center cursor-pointer transition-colors relative overflow-hidden group",
-                  isDragging ? "border-brand-500 bg-brand-50 dark:bg-brand-500/10" : "border-zinc-300 dark:border-zinc-700 bg-surface dark:bg-zinc-800 hover:border-brand-400 dark:hover:border-brand-600"
+                  isDragging ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10" : "border-zinc-300 dark:border-zinc-700 bg-surface dark:bg-zinc-800 hover:border-[#14a800]/20 dark:hover:border-[#14a800]/20"
                 )}
               >
-                <div className="absolute inset-0 bg-brand-500/0 group-hover:bg-brand-500/5 transition-colors" />
-                <UploadCloud className={cn("w-8 h-8 mb-3 transition-colors", isDragging ? "text-brand-500" : "text-zinc-400 group-hover:text-brand-500")} />
+                <div className="absolute inset-0 bg-[#14a800]/0 group-hover:bg-[#14a800]/5 transition-colors" />
+                <UploadCloud className={cn("w-8 h-8 mb-3 transition-colors", isDragging ? "text-[#14a800]" : "text-zinc-400 group-hover:text-[#14a800]")} />
                 <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Drag & drop</span>
                 <span className="text-xs font-medium text-zinc-500 mt-1">or browse files</span>
               </div>
@@ -121,14 +121,14 @@ export default function GigGalleryUploadPage() {
                   key={img.id}
                   className={cn(
                     "col-span-1 aspect-[4/3] rounded-2xl border-2 relative overflow-hidden group",
-                    img.isCover ? "border-brand-500 shadow-md" : "border-zinc-200 dark:border-zinc-700"
+                    img.isCover ? "border-[#14a800]/20 shadow-md" : "border-zinc-200 dark:border-zinc-700"
                   )}
                 >
                   {img.progress < 100 ? (
                     // Upload Progress State
                     <div className="absolute inset-0 bg-zinc-100 dark:bg-zinc-800 flex flex-col items-center justify-center p-4">
                       <div className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden mb-2">
-                        <motion.div className="h-full bg-brand-500 rounded-full" animate={{ width: `${img.progress}%` }} />
+                        <motion.div className="h-full bg-[#14a800] rounded-full" animate={{ width: `${img.progress}%` }} />
                       </div>
                       <span className="text-xs font-bold text-zinc-500">Uploading {img.progress}%</span>
                     </div>
@@ -157,7 +157,7 @@ export default function GigGalleryUploadPage() {
 
                       {/* Cover Badge */}
                       {img.isCover && (
-                        <div className="absolute top-3 left-3 bg-brand-500 text-white text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm flex items-center gap-1">
+                        <div className="absolute top-3 left-3 bg-[#14a800] text-white text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md shadow-sm flex items-center gap-1">
                           <Star className="w-3 h-3 fill-white" /> Cover
                         </div>
                       )}
@@ -174,7 +174,7 @@ export default function GigGalleryUploadPage() {
            <div className="flex justify-between items-end mb-6">
             <div>
               <h3 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <Video className="w-5 h-5 text-violet-500" /> Video (1 only)
+                <Video className="w-5 h-5 text-#14a800]" /> Video (1 only)
               </h3>
               <p className="text-xs text-zinc-500 mt-1">Capture buyers' attention with a video that showcases your service. Gigs with videos get 200% more orders.</p>
             </div>
@@ -182,7 +182,7 @@ export default function GigGalleryUploadPage() {
 
           {videos.length === 0 ? (
             <div className="w-full h-40 rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 bg-surface dark:bg-zinc-800 hover:border-violet-400 dark:hover:border-violet-600 flex flex-col items-center justify-center p-4 text-center cursor-pointer transition-colors group">
-              <PlayCircle className="w-10 h-10 text-zinc-300 dark:text-zinc-600 mb-3 group-hover:text-violet-500 transition-colors" />
+              <PlayCircle className="w-10 h-10 text-zinc-300 dark:text-zinc-600 mb-3 group-hover:text-#14a800] transition-colors" />
               <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Add a Video</span>
               <span className="text-xs font-medium text-zinc-500 mt-1">MP4 or AVI, max 50MB, under 75 seconds.</span>
             </div>
@@ -216,15 +216,15 @@ export default function GigGalleryUploadPage() {
       <div className="w-full lg:w-80 shrink-0 space-y-6">
         
         {/* Important Info */}
-        <div className="bg-brand-50 dark:bg-brand-900/10 rounded-3xl border border-brand-100 dark:border-brand-900/30 p-6">
+        <div className="bg-[#14a800]/5 dark:bg-[#14a800]/10 rounded-3xl border border-[#14a800]/20 dark:border-[#14a800]/20/30 p-6">
           <div className="flex items-center gap-2 mb-3">
-            <Info className="w-5 h-5 text-brand-500" />
-            <h3 className="font-bold text-brand-900 dark:text-brand-400">Media Policy</h3>
+            <Info className="w-5 h-5 text-[#14a800]" />
+            <h3 className="font-bold text-[#14a800] dark:text-[#14a800]">Media Policy</h3>
           </div>
-          <p className="text-xs text-brand-700 dark:text-brand-300 leading-relaxed mb-4">
+          <p className="text-xs text-[#14a800] dark:text-[#14a800] leading-relaxed mb-4">
             To ensure the quality of our marketplace, all uploaded media must comply with Forte's Terms of Service.
           </p>
-          <button className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline">Read full guidelines &rarr;</button>
+          <button className="text-xs font-bold text-[#14a800] dark:text-[#14a800] hover:underline">Read full guidelines &rarr;</button>
         </div>
 
         {/* Guidelines Box */}

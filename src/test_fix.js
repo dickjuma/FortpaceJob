@@ -1,4 +1,4 @@
-﻿const fs = require('fs');
+const fs = require('fs');
 let code = fs.readFileSync('c:/Users/USER/Desktop/Fort-space/fortefrontend/src/App.jsx', 'utf8');
 
 // We need to parse <Route ... element={<ClientProtectedRoute><ClientLayout><Component / /></ClientLayout></ClientProtectedRoute>} />

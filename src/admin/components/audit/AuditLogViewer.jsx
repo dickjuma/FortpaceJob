@@ -9,18 +9,19 @@ import {
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { format } from 'date-fns';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { auditAPI } from '../../../common/services/api';
+import apiClient, { unwrapAdminResponse } from '../../api/apiClient';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
 
-const MOCK_METRICS = [
-  { label: 'Total Logs (24h)', value: '14,203', icon: History, color: 'blue' },
-  { label: 'Critical Errors', value: '12', icon: AlertOctagon, color: 'rose' },
-  { label: 'Fraud Alerts', value: '4', icon: ShieldAlert, color: 'amber' },
-  { label: 'Avg Latency', value: '142ms', icon: Zap, color: 'emerald' },
-];
+const SEVERITY_COLORS = {
+  CRITICAL: 'bg-rose-500 text-white',
+  HIGH: 'bg-amber-500 text-white',
+  MEDIUM: 'bg-amber-100 text-amber-800',
+  INFO: 'bg-emerald-100 text-emerald-800',
+};
 
 export default function AuditLogViewer({ 
   moduleFilter = '', 
@@ -29,63 +30,65 @@ export default function AuditLogViewer({
   title = 'Enterprise Audit Console',
   description = 'Forensic-grade observability for all platform operations and security events.'
 }) {
-  const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [total, setTotal] = useState(0);
+  const [selectedLog, setSelectedLog] = useState(null);
+  const [showTrace, setShowTrace] = useState(false);
+
   const [page, setPage] = useState(1);
   const [limit] = useState(20);
-  
   const [filters, setFilters] = useState({
     search: '',
     module: moduleFilter,
     severity: '',
-    action: '',
     riskLevel: '',
-    userId: userFilter
+    userId: userFilter,
   });
 
-  const [selectedLog, setSelectedLog] = useState(null);
-  const [showTrace, setShowTrace] = useState(false);
-  const [traceLogs, setTraceLogs] = useState([]);
+  const buildQueryParams = useCallback(() => {
+    const params = new URLSearchParams();
+    if (filters.search) params.append('search', filters.search);
+    if (filters.module) params.append('module', filters.module);
+    if (filters.severity) params.append('severity', filters.severity);
+    if (filters.riskLevel) params.append('riskLevel', filters.riskLevel);
+    if (filters.userId) params.append('actorId', filters.userId);
+    params.append('page', String(page));
+    params.append('limit', String(limit));
+    return params.toString();
+  }, [filters, page, limit]);
+
+  const { data: logsData, isLoading, error, refetch } = useQuery({
+    queryKey: ['audit', 'logs', buildQueryParams()],
+    queryFn: async () => {
+      const response = await apiClient.get(`/audit/logs?${buildQueryParams()}`);
+      const { data, meta } = unwrapAdminResponse(response);
+      return { logs: data?.logs || data?.data || (Array.isArray(data) ? data : []), total: meta?.total || 0, totalPages: meta?.totalPages || 1 };
+    },
+    staleTime: 30_000,
+    gcTime: 60_000,
+    keepPreviousData: true,
+  });
+
+  const logs = logsData?.logs || [];
+  const total = logsData?.total || 0;
+  const totalPages = logsData?.totalPages || 1;
+
+  const handleExport = async () => {
+    try {
+      const response = await apiClient.get(`/audit/logs/export?${buildQueryParams()}`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `audit-logs-${Date.now()}.csv`;
+      a.click();
+      toast.success('Audit log export started.');
+    } catch (e) {
+      toast.error('Export failed: ' + (e?.message || 'Server error'));
+    }
+  };
 
   useEffect(() => {
-    // Generate high-fidelity mock logs
-    const generateLogs = () => {
-      const actions = ['USER_LOGIN', 'ESCROW_RELEASE', 'CONTRACT_SIGNED', 'WITHDRAWAL_BLOCKED', 'PROFILE_UPDATED', 'KYC_VERIFIED'];
-      const modules = ['AUTH', 'PAYMENT', 'CONTRACT', 'KYC', 'BILLING'];
-      const severities = ['INFO', 'MEDIUM', 'HIGH', 'CRITICAL'];
-      
-      return Array.from({ length: 15 }, (_, i) => ({
-        id: `LOG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-        createdAt: new Date(Date.now() - i * 1800000).toISOString(),
-        actor: i % 3 === 0 ? 'Admin_Sarah' : `User_${1000 + i}`,
-        role: i % 3 === 0 ? 'ADMIN' : 'USER',
-        module: modules[i % modules.length],
-        action: actions[i % actions.length],
-        severity: i % 5 === 0 ? 'CRITICAL' : i % 4 === 0 ? 'HIGH' : 'INFO',
-        status: i % 7 === 0 ? 'FAILED' : 'SUCCESS',
-        riskScore: Math.floor(Math.random() * 100),
-        ipAddress: `192.168.1.${Math.floor(Math.random() * 255)}`,
-        geo: 'Nairobi, KE',
-        traceId: `TRC-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
-        metadata: {
-          browser: 'Chrome 124.0',
-          os: 'macOS 14.4',
-          payload: { amount: 25000, currency: 'KES', target: 'ESC-4402' },
-          path: '/api/v1/payments/release'
-        },
-        currentHash: '0x' + Math.random().toString(16).substr(2, 40),
-        previousHash: '0x' + Math.random().toString(16).substr(2, 40)
-      }));
-    };
+    if (error) toast.error(error?.message || 'Failed to load audit logs');
+  }, [error]);
 
-    setLoading(true);
-    setTimeout(() => {
-      setLogs(generateLogs());
-      setTotal(1420);
-      setLoading(false);
-    }, 1200);
-  }, [filters, page]);
 
   const getSeverityStyle = (severity) => {
     switch (severity) {
@@ -103,22 +106,27 @@ export default function AuditLogViewer({
 
   return (
     <div className={cn("space-y-8 max-w-[1700px] mx-auto", !isEmbedded && "pb-24")}>
-      {/* 🚀 Metric Cards Section */}
+      {/* Live Stats from real logs */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {MOCK_METRICS.map((metric, i) => (
+        {[
+          { label: 'Total Logs', value: total.toLocaleString(), icon: History, color: 'blue' },
+          { label: 'Critical Events', value: logs.filter(l => l.metadata?.severity === 'CRITICAL').length, icon: AlertOctagon, color: 'rose' },
+          { label: 'Fraud Alerts', value: logs.filter(l => (l.action || '').toUpperCase().includes('FRAUD')).length, icon: ShieldAlert, color: 'amber' },
+          { label: 'Page', value: `${page} of ${totalPages}`, icon: BarChart3, color: 'emerald' },
+        ].map((metric, i) => (
           <div key={i} className="bg-white dark:bg-surface-dark p-6 rounded-[2rem] border border-zinc-100 dark:border-zinc-800 shadow-sm group hover:shadow-xl transition-all duration-500 relative overflow-hidden">
-             <div className={cn("absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 rounded-full opacity-5 group-hover:scale-150 transition-transform duration-700", 
-               metric.color === 'blue' ? 'bg-brand-500' : metric.color === 'rose' ? 'bg-rose-500' : metric.color === 'amber' ? 'bg-amber-500' : 'bg-success'
+             <div className={cn("absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 rounded-full opacity-5 group-hover:scale-150 transition-transform duration-700",
+               metric.color === 'blue' ? 'bg-[#14a800]' : metric.color === 'rose' ? 'bg-rose-500' : metric.color === 'amber' ? 'bg-amber-500' : 'bg-success'
              )} />
              <div className="flex items-center gap-4 relative z-10">
-                <div className={cn("p-4 rounded-2xl", 
-                  metric.color === 'blue' ? 'bg-brand-50 text-brand-600' : metric.color === 'rose' ? 'bg-rose-50 text-rose-600' : metric.color === 'amber' ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-success'
+                <div className={cn("p-4 rounded-2xl",
+                  metric.color === 'blue' ? 'bg-[#14a800]/5 text-[#14a800]' : metric.color === 'rose' ? 'bg-rose-50 text-rose-600' : metric.color === 'amber' ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-success'
                 )}>
                   <metric.icon size={24} />
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">{metric.label}</p>
-                  <p className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight">{metric.value}</p>
+                  <p className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight">{isLoading ? '…' : metric.value}</p>
                 </div>
              </div>
           </div>
@@ -136,8 +144,8 @@ export default function AuditLogViewer({
            </div>
         </div>
         <div className="flex gap-2">
-           <Button variant="secondary" leftIcon={<Download size={18} />} className="rounded-2xl h-12 px-6 font-bold">Export Logs</Button>
-           <Button variant="primary" leftIcon={<Activity size={18} />} className="rounded-2xl h-12 px-6 font-bold bg-surface-dark hover:bg-zinc-800">Live Stream</Button>
+           <Button variant="secondary" leftIcon={<Download size={18} />} className="rounded-2xl h-12 px-6 font-bold" onClick={handleExport}>Export Logs</Button>
+           <Button variant="primary" leftIcon={<Activity size={18} />} className="rounded-2xl h-12 px-6 font-bold bg-surface-dark hover:bg-zinc-800" onClick={() => refetch()}>Refresh</Button>
         </div>
       </div>
 
@@ -145,36 +153,54 @@ export default function AuditLogViewer({
       <Card className="p-6 rounded-[2.5rem] bg-surface/50 dark:bg-zinc-800/30 backdrop-blur-md border-zinc-200/60 dark:border-zinc-800 shadow-inner">
         <div className="flex flex-wrap gap-4 items-center">
           <div className="relative flex-1 min-w-[340px] group">
-            <Search className="absolute left-5 top-1/2 -tranzinc-y-1/2 text-zinc-400 group-focus-within:text-brand-500 transition-colors" size={20} />
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#14a800] transition-colors" size={20} />
             <input 
               type="text" 
-              placeholder="Search Actor, Trace ID, or Transaction Hash..." 
-              className="w-full pl-14 pr-4 py-4 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-brand-500/10 outline-none transition-all shadow-sm"
+              value={filters.search}
+              onChange={(e) => { setFilters(f => ({ ...f, search: e.target.value })); setPage(1); }}
+              placeholder="Search actor, action, or entity..." 
+              className="w-full pl-14 pr-4 py-4 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-[#14a800]/10 outline-none transition-all shadow-sm"
             />
           </div>
           
           <div className="flex items-center gap-3 flex-wrap">
              <div className="flex items-center gap-2 px-4 py-4 bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-700 shadow-sm">
                 <Filter size={16} className="text-zinc-400" />
-                <select className="bg-transparent outline-none text-sm font-bold text-zinc-700 dark:text-zinc-300 min-w-[120px]">
-                   <option>All Modules</option>
-                   <option>AUTH</option>
-                   <option>PAYMENTS</option>
-                   <option>CONTRACTS</option>
+                <select 
+                  value={filters.module}
+                  onChange={(e) => { setFilters(f => ({ ...f, module: e.target.value })); setPage(1); }}
+                  className="bg-transparent outline-none text-sm font-bold text-zinc-700 dark:text-zinc-300 min-w-[120px]"
+                >
+                   <option value="">All Modules</option>
+                   <option value="AUTH">AUTH</option>
+                   <option value="PAYMENT">PAYMENT</option>
+                   <option value="CONTRACT">CONTRACT</option>
+                   <option value="FRAUD">FRAUD</option>
+                   <option value="DISPUTES">DISPUTES</option>
                 </select>
              </div>
              <div className="flex items-center gap-2 px-4 py-4 bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-700 shadow-sm">
                 <AlertOctagon size={16} className="text-zinc-400" />
-                <select className="bg-transparent outline-none text-sm font-bold text-zinc-700 dark:text-zinc-300 min-w-[120px]">
-                   <option>Risk Level</option>
-                   <option>High ( &gt; 80 )</option>
-                   <option>Medium ( 40-80 )</option>
-                   <option>Low ( &lt; 40 )</option>
+                <select 
+                  value={filters.severity}
+                  onChange={(e) => { setFilters(f => ({ ...f, severity: e.target.value })); setPage(1); }}
+                  className="bg-transparent outline-none text-sm font-bold text-zinc-700 dark:text-zinc-300 min-w-[120px]"
+                >
+                   <option value="">All Severity</option>
+                   <option value="CRITICAL">Critical</option>
+                   <option value="HIGH">High</option>
+                   <option value="MEDIUM">Medium</option>
+                   <option value="INFO">Info</option>
                 </select>
              </div>
-             <button className="h-14 w-14 bg-surface-dark text-white rounded-2xl flex items-center justify-center hover:scale-105 transition-all shadow-lg active:scale-95">
-                <TrendingUp size={24} />
-             </button>
+             {(filters.search || filters.module || filters.severity) && (
+               <button
+                 onClick={() => { setFilters({ search: '', module: moduleFilter, severity: '', riskLevel: '', userId: userFilter }); setPage(1); }}
+                 className="h-14 px-4 text-xs font-black text-zinc-400 hover:text-red-500 transition-colors"
+               >
+                 Clear
+               </button>
+             )}
           </div>
         </div>
       </Card>
@@ -194,7 +220,7 @@ export default function AuditLogViewer({
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/50">
-              {loading ? (
+              {isLoading ? (
                 Array.from({ length: 8 }).map((_, i) => (
                   <tr key={i} className="animate-pulse">
                     <td className="p-8" colSpan={6}>
@@ -209,71 +235,131 @@ export default function AuditLogViewer({
                   </tr>
                 ))
               ) : (
-                logs.map(log => (
-                  <tr key={log.id} 
-                    className="hover:bg-surface/50 dark:hover:bg-zinc-800/20 transition-all group cursor-pointer"
-                    onClick={() => setSelectedLog(log)}
-                  >
-                    <td className="p-8">
-                       <div className="flex flex-col">
-                          <span className="text-sm font-black text-zinc-900 dark:text-white mb-1 group-hover:text-brand-500 transition-colors">
-                            {format(new Date(log.createdAt), 'HH:mm:ss.SSS')}
-                          </span>
-                          <span className="text-[10px] font-mono text-zinc-400 tracking-tighter uppercase">{log.id}</span>
-                       </div>
-                    </td>
-                    <td className="p-8">
-                       <div className="flex items-center gap-4">
-                          <div className="h-12 w-12 bg-zinc-100 dark:bg-zinc-800 rounded-2xl flex items-center justify-center border border-zinc-200 dark:border-zinc-700 shadow-sm group-hover:border-brand-500/40 transition-colors">
-                             {log.role === 'ADMIN' ? <Shield size={20} className="text-amber-500" /> : <User size={20} className="text-zinc-500" />}
-                          </div>
-                          <div className="flex flex-col">
-                             <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300">{log.actor}</span>
-                             <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">{log.role}</span>
-                          </div>
-                       </div>
-                    </td>
-                    <td className="p-8">
-                       <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-2">
-                             <Badge variant="secondary" className="text-[9px] tracking-widest">{log.module}</Badge>
-                             <span className="text-sm font-bold text-zinc-900 dark:text-white capitalize">{log.action.replace(/_/g, ' ').toLowerCase()}</span>
-                          </div>
-                          <div className={cn("px-2 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest w-fit", getSeverityStyle(log.severity))}>
-                             {log.severity}
-                          </div>
-                       </div>
-                    </td>
-                    <td className="p-8">
-                       <div className="flex items-center gap-3">
-                          <div className="flex-1 max-w-[80px] h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                             <div 
-                               className={cn("h-full rounded-full transition-all duration-1000", log.riskScore > 80 ? 'bg-rose-500' : log.riskScore > 50 ? 'bg-amber-500' : 'bg-success')} 
-                               style={{ width: `${log.riskScore}%` }} 
-                             />
-                          </div>
-                          <span className={cn("text-xs font-black", getRiskColor(log.riskScore))}>{log.riskScore}</span>
-                       </div>
-                    </td>
-                    <td className="p-8">
-                       <div className="flex items-center gap-2">
-                          <div className={cn("h-2 w-2 rounded-full", log.status === 'SUCCESS' ? 'bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]')} />
-                          <span className={cn("text-[10px] font-black uppercase tracking-widest", log.status === 'SUCCESS' ? 'text-success' : 'text-rose-600')}>
-                            {log.status}
-                          </span>
-                       </div>
-                    </td>
-                    <td className="p-8 text-right">
-                       <button className="p-3 bg-surface dark:bg-zinc-800 rounded-2xl text-zinc-400 group-hover:bg-surface-dark group-hover:text-white dark:group-hover:bg-brand-500 transition-all duration-300">
-                          <Hash size={18} />
-                       </button>
-                    </td>
-                  </tr>
-                ))
+                logs.map(log => {
+                  const displayName = log.admin?.email || log.user?.email || log.actor || 'Unknown';
+                  const roleName = log.adminId ? 'ADMIN' : (log.userId ? 'USER' : 'SYSTEM');
+                  const riskScore = log.metadata?.riskScore || null;
+                  const status = log.metadata?.status || 'SUCCESS';
+                  const traceId = log.metadata?.traceId || null;
+                  const ipAddress = log.ipAddress || 'N/A';
+                  const geo = log.metadata?.geo || 'Unknown';
+                  
+                  return (
+                    <tr key={log.id} 
+                      className="hover:bg-surface/50 dark:hover:bg-zinc-800/20 transition-all group cursor-pointer"
+                      onClick={() => setSelectedLog(log)}
+                    >
+                      <td className="p-8">
+                         <div className="flex flex-col">
+                            <span className="text-sm font-black text-zinc-900 dark:text-white mb-1 group-hover:text-[#14a800] transition-colors">
+                              {format(new Date(log.createdAt), 'HH:mm:ss.SSS')}
+                            </span>
+                            <span className="text-[10px] font-mono text-zinc-400 tracking-tighter uppercase">{log.id}</span>
+                         </div>
+                      </td>
+                      <td className="p-8">
+                         <div className="flex items-center gap-4">
+                            <div className="h-12 w-12 bg-zinc-100 dark:bg-zinc-800 rounded-2xl flex items-center justify-center border border-zinc-200 dark:border-zinc-700 shadow-sm group-hover:border-[#14a800]/20/40 transition-colors">
+                               {log.adminId ? <Shield size={20} className="text-amber-500" /> : <User size={20} className="text-zinc-500" />}
+                            </div>
+                            <div className="flex flex-col">
+                               <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300">{displayName}</span>
+                               <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">{roleName}</span>
+                            </div>
+                         </div>
+                      </td>
+                      <td className="p-8">
+                         <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-2">
+                               <Badge variant="secondary" className="text-[9px] tracking-widest">{log.entityType || log.module}</Badge>
+                               <span className="text-sm font-bold text-zinc-900 dark:text-white capitalize">{log.action?.replace(/_/g, ' ').toLowerCase()}</span>
+                            </div>
+                            <div className={cn("px-2 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest w-fit", getSeverityStyle(log.metadata?.severity))}>
+                               {log.metadata?.severity || 'INFO'}
+                            </div>
+                         </div>
+                      </td>
+                      <td className="p-8">
+                         <div className="flex items-center gap-3">
+                            <div className="flex-1 max-w-[80px] h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                               <div 
+                                 className={cn("h-full rounded-full transition-all duration-1000", riskScore > 80 ? 'bg-rose-500' : riskScore > 50 ? 'bg-amber-500' : 'bg-success')} 
+                                 style={{ width: `${riskScore}%` }} 
+                               />
+                            </div>
+                            <span className={cn("text-xs font-black", getRiskColor(riskScore))}>{riskScore}</span>
+                         </div>
+                      </td>
+                      <td className="p-8">
+                         <div className="flex items-center gap-2">
+                            <div className={cn("h-2 w-2 rounded-full", status === 'SUCCESS' ? 'bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]')} />
+                            <span className={cn("text-[10px] font-black uppercase tracking-widest", status === 'SUCCESS' ? 'text-success' : 'text-rose-600')}>
+                              {status}
+                            </span>
+                         </div>
+                      </td>
+                      <td className="p-8 text-right">
+                         <button className="p-3 bg-surface dark:bg-zinc-800 rounded-2xl text-zinc-400 group-hover:bg-surface-dark group-hover:text-white dark:group-hover:bg-[#14a800] transition-all duration-300">
+                            <Hash size={18} />
+                         </button>
+                      </td>
+                    </tr>
+                  )
+                })
               )}
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-8 py-5 border-t border-zinc-100 dark:border-zinc-800">
+            <p className="text-xs text-zinc-500 font-medium">
+              Page <span className="font-bold text-zinc-700 dark:text-zinc-300">{page}</span> of <span className="font-bold text-zinc-700 dark:text-zinc-300">{totalPages}</span> — {total.toLocaleString()} total entries
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setPage(1)}
+                disabled={page === 1}
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:border-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >‹‹</button>
+              <button
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:border-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >‹</button>
+
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                const start = Math.max(1, Math.min(page - 2, totalPages - 4));
+                const p = start + i;
+                return (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p)}
+                    className={`flex h-10 w-10 items-center justify-center rounded-xl border text-xs font-black transition-colors ${
+                      p === page
+                        ? 'border-[#14a800]/20/50 bg-[#14a800]/10 text-[#14a800]'
+                        : 'border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:border-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                );
+              })}
+
+              <button
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:border-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >›</button>
+              <button
+                onClick={() => setPage(totalPages)}
+                disabled={page === totalPages}
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:border-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >››</button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 🧾 LOG DETAILS DRAWER (Enterprise Style) */}
@@ -302,11 +388,11 @@ export default function AuditLogViewer({
 
                <div className="flex flex-wrap gap-3">
                   <div className="px-4 py-2 bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 flex items-center gap-2 shadow-sm">
-                     <Globe size={14} className="text-brand-500" />
+                     <Globe size={14} className="text-[#14a800]" />
                      <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400 uppercase tracking-widest">{selectedLog.geo} • {selectedLog.ipAddress}</span>
                   </div>
                   <div className="px-4 py-2 bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 flex items-center gap-2 shadow-sm">
-                     <Cpu size={14} className="text-brand-500" />
+                     <Cpu size={14} className="text-[#14a800]" />
                      <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400 uppercase tracking-widest">TraceID: {selectedLog.traceId}</span>
                   </div>
                </div>
@@ -335,13 +421,13 @@ export default function AuditLogViewer({
                {/* Request Payload */}
                <div className="space-y-4">
                   <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                    <FileText size={14} className="text-brand-500" /> Structured Payload Analysis
+                    <FileText size={14} className="text-[#14a800]" /> Structured Payload Analysis
                   </h3>
                   <div className="bg-surface-dark rounded-[2rem] p-8 border border-zinc-800 shadow-2xl relative group">
                      <button className="absolute top-6 right-6 p-2 bg-zinc-800 text-zinc-400 rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:text-white">
                         <ExternalLink size={14} />
                      </button>
-                     <pre className="text-[12px] font-mono text-brand-400 overflow-x-auto leading-relaxed">
+                     <pre className="text-[12px] font-mono text-[#14a800] overflow-x-auto leading-relaxed">
                         {JSON.stringify(selectedLog.metadata, null, 3)}
                      </pre>
                   </div>
@@ -365,7 +451,7 @@ export default function AuditLogViewer({
                <Button 
                  variant="primary" 
                  fullWidth 
-                 className="rounded-2xl h-16 text-sm font-black uppercase tracking-widest bg-brand-600 hover:bg-brand-700 shadow-xl shadow-brand-600/20"
+                 className="rounded-2xl h-16 text-sm font-black uppercase tracking-widest bg-[#14a800] hover:bg-[#118a00] shadow-xl shadow-[#14a800]/25/20"
                  leftIcon={<Activity size={20} />}
                  onClick={() => setShowTrace(true)}
                >
@@ -384,12 +470,12 @@ export default function AuditLogViewer({
              <div className="p-10 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
                 <div>
                    <h2 className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight flex items-center gap-4">
-                      <div className="p-3 bg-brand-500 text-white rounded-[1.25rem]">
+                      <div className="p-3 bg-[#14a800] text-white rounded-[1.25rem]">
                          <Activity size={28} />
                       </div>
                       Distributed Trace Analysis
                    </h2>
-                   <p className="text-zinc-500 font-medium mt-1">Tracing execution flow across microservices for TraceID: <span className="text-brand-500 font-mono font-bold">{selectedLog?.traceId}</span></p>
+                   <p className="text-zinc-500 font-medium mt-1">Tracing execution flow across microservices for TraceID: <span className="text-[#14a800] font-mono font-bold">{selectedLog?.traceId}</span></p>
                 </div>
                 <button onClick={() => setShowTrace(false)} className="p-4 bg-zinc-100 dark:bg-zinc-800 rounded-[1.5rem] transition-all hover:rotate-90">
                    <X size={28} />
@@ -398,7 +484,7 @@ export default function AuditLogViewer({
 
              <div className="flex-1 overflow-y-auto p-12 bg-surface/30 dark:bg-surface-dark/30 custom-scrollbar">
                 <div className="relative">
-                   <div className="absolute left-10 top-0 bottom-0 w-1 bg-gradient-to-b from-brand-500 via-blue-500 to-transparent opacity-20" />
+                   <div className="absolute left-10 top-0 bottom-0 w-1 bg-gradient-to-b from-[#14a800] via-#14a800] to-transparent opacity-20" />
                    
                    <div className="space-y-16">
                       {[
@@ -414,7 +500,7 @@ export default function AuditLogViewer({
                               <step.icon size={32} />
                            </div>
                            
-                           <div className="flex-1 bg-white dark:bg-surface-dark p-8 rounded-[2.5rem] border border-zinc-100 dark:border-zinc-800 shadow-sm group-hover:shadow-2xl group-hover:border-brand-500/20 transition-all duration-500 relative">
+                           <div className="flex-1 bg-white dark:bg-surface-dark p-8 rounded-[2.5rem] border border-zinc-100 dark:border-zinc-800 shadow-sm group-hover:shadow-2xl group-hover:border-[#14a800]/20/20 transition-all duration-500 relative">
                               <div className="absolute top-8 right-8 flex items-center gap-2">
                                  <div className="px-3 py-1 bg-surface dark:bg-zinc-800 rounded-full text-[10px] font-black text-zinc-400">
                                     {step.duration}
@@ -436,7 +522,7 @@ export default function AuditLogViewer({
 
              <div className="p-10 border-t border-zinc-100 dark:border-zinc-800 flex justify-end gap-4">
                 <Button variant="secondary" className="rounded-2xl px-10 h-14 font-black" onClick={() => setShowTrace(false)}>Back to Investigation</Button>
-                <Button variant="primary" className="rounded-2xl px-10 h-14 font-black bg-brand-600">Export Trace JSON</Button>
+                <Button variant="primary" className="rounded-2xl px-10 h-14 font-black bg-[#14a800]">Export Trace JSON</Button>
              </div>
           </div>
         </div>

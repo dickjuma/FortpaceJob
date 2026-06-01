@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import { Star, Clock, Check, RefreshCw, ChevronRight, ShieldCheck, Heart, Share2, Award } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { useAuthRedirect } from '../../common/utils/authRedirect';
+import { useSavedGigIds, useToggleSaveGig } from '../../common/hooks/useSavedGig';
 
 export default function GigDetailsPage() {
+  const { id: gigId = 'gig-001' } = useParams();
+  const { requireAuth } = useAuthRedirect();
+  const { data: savedGigIds } = useSavedGigIds();
+  const toggleSaveGig = useToggleSaveGig();
+  const isSaved = savedGigIds?.has?.(gigId);
   const [activeTier, setActiveTier] = useState('standard');
 
   const gig = {
@@ -22,7 +29,7 @@ export default function GigDetailsPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="flex text-sm text-gray-500 mb-6 font-medium">
-        <Link to="/search/gigs" className="hover:text-brand-600 transition-colors">Gig Marketplace</Link>
+        <Link to="/search/gigs" className="hover:text-[#14a800] transition-colors">Gig Marketplace</Link>
         <span className="mx-2">/</span>
         <span className="text-gray-900 dark:text-white">Programming & Tech</span>
       </div>
@@ -33,7 +40,7 @@ export default function GigDetailsPage() {
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">{gig.title}</h1>
             <div className="flex flex-wrap items-center gap-4 text-sm">
               <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/50 text-brand-600 flex items-center justify-center font-bold mr-2">{gig.seller.name[0]}</div>
+                <div className="w-8 h-8 rounded-full bg-[#14a800]/10 dark:bg-[#14a800]/50 text-[#14a800] flex items-center justify-center font-bold mr-2">{gig.seller.name[0]}</div>
                 <span className="font-bold text-gray-900 dark:text-white">{gig.seller.name}</span>
                 <span className="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 text-xs font-bold rounded flex items-center">
                   <Award className="w-3 h-3 mr-1" /> {gig.seller.level}
@@ -61,8 +68,20 @@ export default function GigDetailsPage() {
         <div className="space-y-6">
           <div className="sticky top-8">
             <div className="flex justify-end mb-4 space-x-2">
-              <button className="p-2 border border-gray-200 dark:border-gray-700 rounded-full text-gray-500 hover:bg-surface dark:hover:bg-gray-800 transition-colors">
-                <Heart className="w-5 h-5" />
+              <button
+                type="button"
+                onClick={() =>
+                  requireAuth(() => toggleSaveGig.mutate({ gigId, saved: isSaved }), {
+                    returnTo: `/search/gigs/${gigId}`,
+                  })
+                }
+                className={`p-2 border rounded-full transition-colors ${
+                  isSaved
+                    ? 'border-rose-200 text-rose-600 bg-rose-50'
+                    : 'border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-surface dark:hover:bg-gray-800'
+                }`}
+              >
+                <Heart className={`w-5 h-5 ${isSaved ? 'fill-current' : ''}`} />
               </button>
               <button className="p-2 border border-gray-200 dark:border-gray-700 rounded-full text-gray-500 hover:bg-surface dark:hover:bg-gray-800 transition-colors">
                 <Share2 className="w-5 h-5" />
@@ -75,7 +94,7 @@ export default function GigDetailsPage() {
                   <button 
                     key={key} 
                     onClick={() => setActiveTier(key)}
-                    className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider text-center transition-colors ${activeTier === key ? 'text-brand-600 border-b-2 border-brand-600 bg-brand-50/50 dark:bg-brand-900/10' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
+                    className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider text-center transition-colors ${activeTier === key ? 'text-[#14a800] border-b-2 border-[#14a800]/20 bg-[#14a800]/5/50 dark:bg-[#14a800]/10' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
                   >
                     {key}
                   </button>
@@ -103,7 +122,7 @@ export default function GigDetailsPage() {
                   ))}
                 </ul>
 
-                <button className="w-full flex items-center justify-center px-6 py-3.5 bg-brand-600 text-white font-bold text-lg rounded-xl hover:bg-brand-700 transition-colors shadow-sm shadow-brand-500/30">
+                <button className="w-full flex items-center justify-center px-6 py-3.5 bg-[#14a800] text-white font-bold text-lg rounded-xl hover:bg-[#118a00] transition-colors shadow-sm shadow-[#14a800]/25/30">
                   Continue (${tier.price}) <ChevronRight className="w-5 h-5 ml-2" />
                 </button>
                 <div className="mt-4 flex items-center justify-center text-xs text-gray-500 font-medium">

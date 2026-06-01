@@ -18,7 +18,7 @@ const TrustScoreExplanation = () => {
           <div className="space-y-8">
             
             <div className="bg-white border border-zinc-200 rounded-3xl p-8 shadow-sm flex flex-col sm:flex-row gap-6 items-start">
-              <div className="w-16 h-16 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center shrink-0">
+              <div className="w-16 h-16 bg-[#14a800]/10 text-[#14a800] rounded-2xl flex items-center justify-center shrink-0">
                 <FileText className="w-8 h-8" />
               </div>
               <div>
@@ -30,7 +30,7 @@ const TrustScoreExplanation = () => {
             </div>
 
             <div className="bg-white border border-zinc-200 rounded-3xl p-8 shadow-sm flex flex-col sm:flex-row gap-6 items-start">
-              <div className="w-16 h-16 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center shrink-0">
+              <div className="w-16 h-16 bg-[#14a800]/10 text-[#14a800] rounded-2xl flex items-center justify-center shrink-0">
                 <Activity className="w-8 h-8" />
               </div>
               <div>

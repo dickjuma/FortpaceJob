@@ -1,285 +1,367 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Users, Shield, Mail, CheckCircle2, Clock, 
-  Settings, MoreVertical, Plus, Filter, Search,
-  Briefcase, Activity, AlertCircle
+import {
+  Users, Mail, CheckCircle, Clock, Settings, MoreVertical,
+  Plus, Search, Briefcase, Activity, AlertCircle, Shield,
+  X, Send, User, ChevronDown, RefreshCw, Loader2, Trash2
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiFetch } from '../services/clientApi';
+import toast, { Toaster } from 'react-hot-toast';
+import ConfirmModal from '../../components/ui/ConfirmModal';
 
-const TEAM_MEMBERS = [
-  { id: 1, name: 'Sarah Mitchell', email: 'sarah@techflow.io', role: 'Owner', department: 'Executive', activeProjects: 12, status: 'Active' },
-  { id: 2, name: 'David Kim', email: 'david@techflow.io', role: 'Hiring Manager', department: 'Engineering', activeProjects: 4, status: 'Active' },
-  { id: 3, name: 'Alex Rivera', email: 'alex@techflow.io', role: 'Recruiter', department: 'HR', activeProjects: 8, status: 'Active' },
-  { id: 4, name: 'Emma Roberts', email: 'emma@techflow.io', role: 'Finance', department: 'Finance', activeProjects: 0, status: 'Invited' },
-];
+// ── API Functions ─────────────────────────────────────────────────────────────
+async function getTeamMembers() {
+  const r = await apiFetch('/profilesystem/client/team').catch(() => ({ data: [] }));
+  const raw = r?.data ?? r?.members ?? r ?? [];
+  return Array.isArray(raw) ? raw : [];
+}
 
+async function inviteTeamMember(payload) {
+  const r = await apiFetch('/profilesystem/client/team/invite', {
+    method: 'POST', body: JSON.stringify(payload),
+  });
+  return r?.data ?? r;
+}
+
+async function removeTeamMember(memberId) {
+  return apiFetch(`/profilesystem/client/team/${memberId}`, { method: 'DELETE' });
+}
+
+async function updateMemberRole(memberId, role) {
+  const r = await apiFetch(`/profilesystem/client/team/${memberId}/role`, {
+    method: 'PATCH', body: JSON.stringify({ role }),
+  });
+  return r?.data ?? r;
+}
+
+// ── Constants ─────────────────────────────────────────────────────────────────
 const ROLES = [
-  { name: 'Owner', permissions: ['Post jobs', 'Hire freelancers', 'Approve payments', 'View analytics', 'Manage contracts', 'Manage team'] },
-  { name: 'Hiring Manager', permissions: ['Post jobs', 'Hire freelancers', 'View analytics', 'Manage contracts'] },
-  { name: 'Recruiter', permissions: ['Post jobs', 'View analytics'] },
-  { name: 'Finance', permissions: ['Approve payments', 'View analytics'] },
-  { name: 'Viewer', permissions: ['View analytics'] },
+  { name: 'Owner',          color: 'text-success bg-success/10 border-success/20', permissions: ['Post jobs', 'Hire freelancers', 'Approve payments', 'View analytics', 'Manage contracts', 'Manage team'] },
+  { name: 'Hiring Manager', color: 'text-blue-400 bg-blue-400/10 border-blue-400/20',     permissions: ['Post jobs', 'Hire freelancers', 'View analytics', 'Manage contracts'] },
+  { name: 'Recruiter',      color: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20', permissions: ['Post jobs', 'View analytics'] },
+  { name: 'Finance',        color: 'text-success bg-success/10 border-success/20', permissions: ['Approve payments', 'View analytics'] },
+  { name: 'Viewer',         color: 'text-zinc-400 bg-zinc-700/30 border-zinc-600/20',    permissions: ['View analytics'] },
 ];
+
+const getRoleStyle = (roleName) =>
+  ROLES.find(r => r.name.toLowerCase() === roleName?.toLowerCase())?.color ||
+  'text-zinc-400 bg-zinc-700/30 border-zinc-600/20';
+
+const TABS = ['Members', 'Roles & Permissions'];
 
 export default function ClientTeamManagementPage() {
-  const [activeTab, setActiveTab] = useState('members'); // members, permissions, approvals, activity
+  const qc = useQueryClient();
+  const [activeTab, setActiveTab] = useState('Members');
+  const [search, setSearch] = useState('');
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(null);
+  const [editingRole, setEditingRole] = useState(null);
+  const [inviteForm, setInviteForm] = useState({ email: '', role: 'Hiring Manager', name: '' });
+
+  // ── Queries ─────────────────────────────────────────────────────────────────
+  const { data: members = [], isLoading, error, refetch } = useQuery({
+    queryKey: ['client', 'team'],
+    queryFn: getTeamMembers,
+    staleTime: 60_000,
+  });
+
+  const inviteMutation = useMutation({
+    mutationFn: inviteTeamMember,
+    onSuccess: () => {
+      toast.success(`Invitation sent to ${inviteForm.email}`);
+      qc.invalidateQueries({ queryKey: ['client', 'team'] });
+      setShowInviteModal(false);
+      setInviteForm({ email: '', role: 'Hiring Manager', name: '' });
+    },
+    onError: (err) => toast.error(err?.message || 'Failed to send invitation'),
+  });
+
+  const removeMutation = useMutation({
+    mutationFn: removeTeamMember,
+    onSuccess: () => {
+      toast.success('Member removed');
+      qc.invalidateQueries({ queryKey: ['client', 'team'] });
+      setConfirmModal(null);
+    },
+    onError: (err) => toast.error(err?.message || 'Failed to remove member'),
+  });
+
+  const roleUpdateMutation = useMutation({
+    mutationFn: ({ memberId, role }) => updateMemberRole(memberId, role),
+    onSuccess: () => {
+      toast.success('Role updated');
+      qc.invalidateQueries({ queryKey: ['client', 'team'] });
+      setEditingRole(null);
+    },
+    onError: (err) => toast.error(err?.message || 'Failed to update role'),
+  });
+
+  const filtered = members.filter(m => {
+    if (!search) return true;
+    const name = m.name || m.user?.name || m.email || '';
+    return name.toLowerCase().includes(search.toLowerCase()) ||
+      m.email?.toLowerCase().includes(search.toLowerCase());
+  });
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans pb-24">
-      
-      {/* Header */}
-      <div className="bg-white dark:bg-surface-dark border-b border-zinc-200 dark:border-zinc-800 pt-12 pb-8 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="min-h-screen bg-zinc-950 text-zinc-200 p-6 overflow-y-auto custom-scrollbar">
+      <Toaster position="top-right" />
+      <div className="max-w-6xl mx-auto space-y-6">
+
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2 flex items-center gap-3">
-              <Users className="w-8 h-8 text-brand-500" /> Enterprise Team Management
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <Users className="w-6 h-6 text-success" /> Team Management
             </h1>
-            <p className="text-zinc-500 font-medium">Collaborate on hiring, manage permissions, and track approvals.</p>
+            <p className="text-sm text-zinc-400 mt-1">Manage team members, roles, and hiring permissions</p>
           </div>
-          <button 
+          <button
             onClick={() => setShowInviteModal(true)}
-            className="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-sm transition-all flex items-center gap-2"
+            className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#14a800]/20"
           >
-            <Mail className="w-5 h-5" /> Invite Member
+            <Mail className="w-4 h-4" /> Invite Member
           </button>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        
-        {/* Navigation Tabs */}
-        <div className="flex bg-zinc-200/50 dark:bg-zinc-800/50 p-1 rounded-xl mb-8 overflow-x-auto custom-scrollbar">
-          {[
-            { id: 'members', label: 'Team Members', icon: Users },
-            { id: 'permissions', label: 'Roles & Permissions', icon: Shield },
-            { id: 'approvals', label: 'Approval Workflows', icon: CheckCircle2 },
-            { id: 'activity', label: 'Activity Log', icon: Activity },
-          ].map(tab => (
-            <button 
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "flex-1 py-2.5 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap",
-                activeTab === tab.id ? "bg-white dark:bg-surface-dark text-zinc-900 dark:text-white shadow-sm" : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-              )}
+        {/* Tabs */}
+        <div className="flex border-b border-zinc-800 gap-1">
+          {TABS.map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-5 py-2.5 text-sm font-bold transition-colors border-b-2 -mb-px ${
+                activeTab === tab ? 'text-success border-success' : 'text-zinc-400 border-transparent hover:text-zinc-300'
+              }`}
             >
-              <tab.icon className="w-4 h-4" /> {tab.label}
+              {tab}
             </button>
           ))}
         </div>
 
-        {/* Tab Content */}
-        <div className="space-y-6">
-          
-          {activeTab === 'members' && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-              
-              <div className="flex flex-col md:flex-row justify-between gap-4">
-                <div className="relative w-full md:w-96">
-                  <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -tranzinc-y-1/2" />
-                  <input type="text" placeholder="Search team members..." className="pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-medium outline-none focus:border-brand-500 w-full shadow-sm" />
-                </div>
-                <button className="px-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm font-bold text-zinc-700 dark:text-zinc-300 shadow-sm flex items-center gap-2">
-                  <Filter className="w-4 h-4" /> Filter by Role
-                </button>
+        {/* ── MEMBERS TAB ──────────────────────────────────────────────────── */}
+        {activeTab === 'Members' && (
+          <div className="space-y-4">
+            {/* Search + refresh */}
+            <div className="flex gap-3 items-center">
+              <div className="relative flex-1 max-w-sm">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search members..."
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-9 pr-4 py-2 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-success" />
               </div>
+              <button onClick={refetch} className="p-2 text-zinc-400 hover:text-white transition-colors"><RefreshCw className="w-4 h-4" /></button>
+            </div>
 
-              <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="border-b border-zinc-100 dark:border-zinc-800 bg-surface/50 dark:bg-surface-dark/50">
-                        <th className="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider">Name & Email</th>
-                        <th className="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider">Role & Dept</th>
-                        <th className="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider">Active Projects</th>
-                        <th className="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider">Status</th>
-                        <th className="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {TEAM_MEMBERS.map(member => (
-                        <tr key={member.id} className="border-b border-zinc-100 dark:border-zinc-800 hover:bg-surface dark:hover:bg-zinc-800/50 transition-colors">
-                          <td className="py-4 px-6">
+            {isLoading ? (
+              <div className="space-y-3">
+                {[1,2,3].map(i => <div key={i} className="h-20 bg-zinc-900/40 rounded-2xl animate-pulse" />)}
+              </div>
+            ) : error ? (
+              <div className="flex flex-col items-center justify-center h-48 gap-3 bg-zinc-900/30 rounded-2xl border border-zinc-800">
+                <AlertCircle className="w-10 h-10 text-red-400 opacity-60" />
+                <p className="text-zinc-400 text-sm">Failed to load team members.</p>
+                <button onClick={refetch} className="text-xs text-success hover:underline">Retry</button>
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-48 gap-4 bg-zinc-900/30 rounded-2xl border border-zinc-800">
+                <Users className="w-12 h-12 text-zinc-600" />
+                <div className="text-center">
+                  <p className="text-zinc-300 font-bold">No team members yet</p>
+                  <p className="text-zinc-500 text-sm mt-1">Invite colleagues to collaborate on hiring.</p>
+                </div>
+                <button onClick={() => setShowInviteModal(true)} className="px-5 py-2 bg-success text-white rounded-full text-sm font-bold hover:bg-success transition-colors">Invite First Member</button>
+              </div>
+            ) : (
+              <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-zinc-800 bg-zinc-900/80">
+                      <th className="text-left px-5 py-3.5 text-xs text-zinc-500 font-bold">Member</th>
+                      <th className="text-left px-5 py-3.5 text-xs text-zinc-500 font-bold">Role</th>
+                      <th className="text-left px-5 py-3.5 text-xs text-zinc-500 font-bold">Department</th>
+                      <th className="text-left px-5 py-3.5 text-xs text-zinc-500 font-bold">Status</th>
+                      <th className="text-left px-5 py-3.5 text-xs text-zinc-500 font-bold">Active Projects</th>
+                      <th className="text-right px-5 py-3.5 text-xs text-zinc-500 font-bold">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-800/50">
+                    {filtered.map(member => {
+                      const name = member.name || member.user?.name || member.email?.split('@')[0] || 'Member';
+                      const email = member.email || member.user?.email || '';
+                      const role = member.role || 'Viewer';
+                      const status = member.status || (member.acceptedAt ? 'Active' : 'Invited');
+                      const projects = member.activeProjects ?? 0;
+                      const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                      const isOwner = role === 'Owner';
+                      return (
+                        <tr key={member.id} className="hover:bg-zinc-800/30 transition-colors">
+                          <td className="px-5 py-4">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-500/20 text-brand-600 flex items-center justify-center font-bold text-sm">
-                                {member.name.charAt(0)}
+                              <div className="w-9 h-9 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-sm font-bold text-zinc-300 shrink-0">
+                                {member.avatar ? <img src={member.avatar} alt={name} className="w-full h-full rounded-full object-cover" /> : initials}
                               </div>
                               <div>
-                                <p className="text-sm font-bold text-zinc-900 dark:text-white">{member.name}</p>
-                                <p className="text-xs font-medium text-zinc-500">{member.email}</p>
+                                <p className="font-bold text-white">{name}</p>
+                                <p className="text-xs text-zinc-500">{email}</p>
                               </div>
                             </div>
                           </td>
-                          <td className="py-4 px-6">
-                            <p className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-1"><Shield className="w-3.5 h-3.5 text-brand-500" /> {member.role}</p>
-                            <p className="text-xs font-medium text-zinc-500">{member.department}</p>
+                          <td className="px-5 py-4">
+                            {editingRole === member.id && !isOwner ? (
+                              <div className="flex items-center gap-2">
+                                <select
+                                  defaultValue={role}
+                                  onChange={(e) => roleUpdateMutation.mutate({ memberId: member.id, role: e.target.value })}
+                                  className="bg-zinc-800 border border-zinc-700 rounded-lg px-2 py-1 text-xs text-zinc-200 focus:outline-none focus:border-success"
+                                  disabled={roleUpdateMutation.isPending}
+                                >
+                                  {ROLES.map(r => <option key={r.name} value={r.name}>{r.name}</option>)}
+                                </select>
+                                <button onClick={() => setEditingRole(null)} className="text-zinc-500 hover:text-zinc-300"><X className="w-3.5 h-3.5" /></button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => !isOwner && setEditingRole(member.id)}
+                                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border ${getRoleStyle(role)} ${!isOwner ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}`}
+                              >
+                                {role}
+                                {!isOwner && <ChevronDown className="w-3 h-3 opacity-60" />}
+                              </button>
+                            )}
                           </td>
-                          <td className="py-4 px-6">
-                            <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-1">
-                              <Briefcase className="w-4 h-4 text-zinc-400" /> {member.activeProjects}
-                            </span>
+                          <td className="px-5 py-4 text-zinc-400 text-sm">{member.department || '—'}</td>
+                          <td className="px-5 py-4">
+                            <div className="flex items-center gap-1.5 text-xs">
+                              {status === 'Active' || status === 'ACTIVE' ? (
+                                <span className="flex items-center gap-1 text-success font-bold">
+                                  <CheckCircle className="w-3.5 h-3.5" /> Active
+                                </span>
+                              ) : (
+                                <span className="flex items-center gap-1 text-yellow-400 font-bold">
+                                  <Clock className="w-3.5 h-3.5" /> Invited
+                                </span>
+                              )}
+                            </div>
                           </td>
-                          <td className="py-4 px-6">
-                            <span className={cn(
-                              "px-2 py-1 text-xs font-bold rounded-md",
-                              member.status === 'Active' ? "bg-emerald-100 text-emerald-700 dark:bg-success/20 dark:text-success" : "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400"
-                            )}>
-                              {member.status}
-                            </span>
+                          <td className="px-5 py-4">
+                            <div className="flex items-center gap-1.5 text-sm">
+                              <Briefcase className="w-3.5 h-3.5 text-zinc-500" />
+                              <span className={projects > 0 ? 'text-success font-bold' : 'text-zinc-500'}>{projects}</span>
+                            </div>
                           </td>
-                          <td className="py-4 px-6 text-right">
-                            <button className="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
-                              <MoreVertical className="w-5 h-5" />
-                            </button>
+                          <td className="px-5 py-4 text-right">
+                            {!isOwner && (
+                              <button
+                                onClick={() => setConfirmModal({ memberId: member.id, name })}
+                                className="p-1.5 text-zinc-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
                           </td>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── ROLES & PERMISSIONS TAB ──────────────────────────────────────── */}
+        {activeTab === 'Roles & Permissions' && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {ROLES.map(role => (
+              <div key={role.name} className="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-5 hover:border-zinc-700 transition-colors">
+                <div className="flex items-center gap-2 mb-4">
+                  <Shield className={`w-5 h-5 ${role.color.split(' ')[0]}`} />
+                  <h3 className="font-bold text-white">{role.name}</h3>
+                  <span className={`ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold border ${role.color}`}>
+                    {members.filter(m => (m.role || 'Viewer') === role.name).length} members
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  {role.permissions.map(perm => (
+                    <div key={perm} className="flex items-center gap-2 text-xs">
+                      <CheckCircle className="w-3.5 h-3.5 text-success shrink-0" />
+                      <span className="text-zinc-300">{perm}</span>
+                    </div>
+                  ))}
+                  {/* Show what this role can't do */}
+                  {ROLES[0].permissions.filter(p => !role.permissions.includes(p)).map(perm => (
+                    <div key={perm} className="flex items-center gap-2 text-xs opacity-40">
+                      <X className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                      <span className="text-zinc-500">{perm}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </motion.div>
-          )}
-
-          {activeTab === 'permissions' && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {ROLES.map(role => (
-                <div key={role.name} className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm flex flex-col">
-                  <div className="flex justify-between items-start mb-6">
-                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                      <Shield className="w-5 h-5 text-brand-500" /> {role.name}
-                    </h3>
-                    <button className="text-xs font-bold text-brand-600 hover:underline">Edit</button>
-                  </div>
-                  <ul className="space-y-3 flex-1 mb-6">
-                    {role.permissions.map(perm => (
-                      <li key={perm} className="flex items-start gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                        <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" /> {perm}
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="text-xs font-bold text-zinc-400 border-t border-zinc-100 dark:border-zinc-800 pt-4">
-                    {TEAM_MEMBERS.filter(m => m.role === role.name).length} member(s) assigned
-                  </p>
-                </div>
-              ))}
-            </motion.div>
-          )}
-
-          {activeTab === 'approvals' && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-              <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
-                <div className="flex items-center justify-between mb-8">
-                  <div>
-                    <h2 className="text-xl font-bold text-zinc-900 dark:text-white">Active Workflows</h2>
-                    <p className="text-sm font-medium text-zinc-500">Require specific roles to approve actions.</p>
-                  </div>
-                  <button className="px-4 py-2 bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-400 font-bold rounded-lg text-sm flex items-center gap-2">
-                    <Plus className="w-4 h-4" /> New Rule
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="p-4 border border-zinc-200 dark:border-zinc-700 rounded-xl flex items-center justify-between bg-surface dark:bg-zinc-800/50">
-                    <div>
-                      <h4 className="font-bold text-zinc-900 dark:text-white">Contract Offers &gt; $5,000</h4>
-                      <p className="text-xs font-medium text-zinc-500 mt-1">Requires approval from <span className="font-bold text-brand-600">Finance</span> before sending.</p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" defaultChecked className="sr-only peer" />
-                      <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none rounded-full peer dark:bg-zinc-700 peer-checked:after:tranzinc-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-brand-600"></div>
-                    </label>
-                  </div>
-                  
-                  <div className="p-4 border border-zinc-200 dark:border-zinc-700 rounded-xl flex items-center justify-between bg-surface dark:bg-zinc-800/50">
-                    <div>
-                      <h4 className="font-bold text-zinc-900 dark:text-white">Milestone Payments</h4>
-                      <p className="text-xs font-medium text-zinc-500 mt-1">Requires approval from <span className="font-bold text-brand-600">Hiring Manager</span> before releasing funds.</p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" defaultChecked className="sr-only peer" />
-                      <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none rounded-full peer dark:bg-zinc-700 peer-checked:after:tranzinc-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-brand-600"></div>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {activeTab === 'activity' && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-6">Team Activity Log</h2>
-              
-              <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-tranzinc-x-px md:before:mx-auto md:before:tranzinc-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-zinc-200 dark:before:via-zinc-800 before:to-transparent">
-                
-                <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white dark:border-zinc-900 bg-success text-white shadow shrink-0 md:order-1 md:group-odd:-tranzinc-x-1/2 md:group-even:tranzinc-x-1/2 z-10">
-                    <CheckCircle2 className="w-5 h-5" />
-                  </div>
-                  <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-surface dark:bg-zinc-800/50 shadow-sm ml-4 md:ml-0 md:group-odd:mr-4 md:group-even:ml-4">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-sm text-zinc-900 dark:text-white">Payment Approved</span>
-                      <span className="text-[10px] font-bold text-zinc-400">2 mins ago</span>
-                    </div>
-                    <div className="text-sm text-zinc-600 dark:text-zinc-400 font-medium">
-                      <strong className="text-zinc-900 dark:text-white">Emma Roberts</strong> approved milestone payment of $1,200 for contract #CTR-092.
-                    </div>
-                  </div>
-                </div>
-
-                <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white dark:border-zinc-900 bg-brand-500 text-white shadow shrink-0 md:order-1 md:group-odd:-tranzinc-x-1/2 md:group-even:tranzinc-x-1/2 z-10">
-                    <Users className="w-5 h-5" />
-                  </div>
-                  <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-surface dark:bg-zinc-800/50 shadow-sm ml-4 md:ml-0 md:group-odd:mr-4 md:group-even:ml-4">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-sm text-zinc-900 dark:text-white">Team Member Invited</span>
-                      <span className="text-[10px] font-bold text-zinc-400">1 hour ago</span>
-                    </div>
-                    <div className="text-sm text-zinc-600 dark:text-zinc-400 font-medium">
-                      <strong className="text-zinc-900 dark:text-white">Sarah Mitchell</strong> invited emma@techflow.io as <span className="font-bold">Finance</span>.
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </motion.div>
-          )}
-
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Invite Modal Overlay */}
-      <AnimatePresence>
-        {showInviteModal && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-surface-dark/50 backdrop-blur-sm p-4">
-            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-white dark:bg-surface-dark rounded-3xl w-full max-w-md overflow-hidden shadow-2xl">
-              <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center">
-                <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Invite Team Member</h3>
-                <button onClick={() => setShowInviteModal(false)} className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white"><Plus className="w-6 h-6 rotate-45" /></button>
+      {/* ── INVITE MODAL ──────────────────────────────────────────────────────── */}
+      {showInviteModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold text-white">Invite Team Member</h3>
+              <button onClick={() => setShowInviteModal(false)} className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs text-zinc-400 mb-1.5 block">Name</label>
+                <input value={inviteForm.name} onChange={e => setInviteForm(f => ({ ...f, name: e.target.value }))}
+                  placeholder="Full name (optional)" className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-success" />
               </div>
-              <div className="p-6 space-y-4">
-                <div>
-                  <label className="text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-2 block">Email Address</label>
-                  <input type="email" placeholder="colleague@company.com" className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-brand-500" />
-                </div>
-                <div>
-                  <label className="text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-2 block">Role</label>
-                  <select className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-brand-500">
-                    {ROLES.map(r => <option key={r.name}>{r.name}</option>)}
-                  </select>
-                </div>
-                <div className="pt-4">
-                  <button className="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-sm transition-all">Send Invitation</button>
-                </div>
+              <div>
+                <label className="text-xs text-zinc-400 mb-1.5 block">Email Address *</label>
+                <input type="email" value={inviteForm.email} onChange={e => setInviteForm(f => ({ ...f, email: e.target.value }))}
+                  placeholder="colleague@company.com" className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-success" />
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <div>
+                <label className="text-xs text-zinc-400 mb-1.5 block">Role</label>
+                <select value={inviteForm.role} onChange={e => setInviteForm(f => ({ ...f, role: e.target.value }))}
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-success">
+                  {ROLES.filter(r => r.name !== 'Owner').map(r => <option key={r.name} value={r.name}>{r.name}</option>)}
+                </select>
+                <p className="text-[10px] text-zinc-500 mt-1">
+                  Permissions: {ROLES.find(r => r.name === inviteForm.role)?.permissions.join(' · ')}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-3 pt-2">
+              <button onClick={() => setShowInviteModal(false)} className="flex-1 px-4 py-2.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-xl text-sm font-bold hover:bg-zinc-700 transition-colors">Cancel</button>
+              <button
+                onClick={() => {
+                  if (!inviteForm.email) { toast.error('Email is required'); return; }
+                  inviteMutation.mutate(inviteForm);
+                }}
+                disabled={inviteMutation.isPending}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-success hover:bg-success text-white rounded-xl text-sm font-bold transition-colors disabled:opacity-50"
+              >
+                {inviteMutation.isPending ? <><Loader2 className="w-4 h-4 animate-spin" />Sending...</> : <><Send className="w-4 h-4" />Send Invite</>}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
+      {/* Remove Confirm */}
+      <ConfirmModal
+        isOpen={!!confirmModal}
+        title="Remove Team Member"
+        message={`Remove ${confirmModal?.name} from your team? They will lose access to all team features immediately.`}
+        confirmLabel="Remove Member"
+        confirmVariant="danger"
+        isLoading={removeMutation.isPending}
+        onConfirm={() => removeMutation.mutate(confirmModal.memberId)}
+        onClose={() => setConfirmModal(null)}
+      />
     </div>
   );
 }

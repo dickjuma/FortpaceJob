@@ -1,12 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, User, Bell, CreditCard, Lock, Smartphone, 
   MapPin, XCircle, Key, Eye, Monitor, LogOut
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
+import { useMyProfile, useUpdateProfile, useSessions, useRevokeSession } from '../services/clientHooks';
 
 export default function ClientSecurityCenterPage() {
   const [activeTab, setActiveTab] = useState('Profile');
+  
+  const { data: profileData, isLoading } = useMyProfile();
+  const updateProfileMutation = useUpdateProfile();
+  const profile = profileData || {};
+
+  const { data: sessionsData, isLoading: sessionsLoading } = useSessions();
+  const revokeSessionMutation = useRevokeSession();
+  const sessions = sessionsData || [];
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    companyName: ''
+  });
+
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        firstName: profile.firstName || '',
+        lastName: profile.lastName || '',
+        email: profile.email || '',
+        companyName: profile.companyName || ''
+      });
+    }
+  }, [profile]);
 
   const tabs = [
     { name: 'Profile', icon: User },
@@ -15,17 +42,21 @@ export default function ClientSecurityCenterPage() {
     { name: 'Payment Methods', icon: CreditCard },
   ];
 
-  const sessions = [
-    { id: 1, device: 'MacBook Pro 16', browser: 'Chrome', location: 'Nairobi, Kenya', ip: '197.248.82.10', active: true },
-    { id: 2, device: 'iPhone 15 Pro Max', browser: 'Forte App', location: 'Mombasa, Kenya', ip: '102.222.140.8', active: false },
-  ];
-
   const handleSave = () => {
-    toast.success('Settings saved successfully');
+    updateProfileMutation.mutate(formData, {
+      onSuccess: () => {
+        toast.success('Settings saved successfully');
+      },
+      onError: (err) => {
+        toast.error(err.message || 'Failed to save settings');
+      }
+    });
   };
 
-  const handleRevoke = (device) => {
-    toast.success(`Revoked access for ${device}`);
+  const handleRevoke = async (sessionId, deviceName) => {
+    try {
+      await revokeSessionMutation.mutateAsync(sessionId);
+    } catch (_) {}
   };
 
   return (
@@ -54,11 +85,11 @@ export default function ClientSecurityCenterPage() {
                 onClick={() => setActiveTab(tab.name)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-colors ${
                   activeTab === tab.name 
-                    ? 'bg-vivid-lavender/10 text-vivid-lavender' 
+                    ? 'bg-success/10 text-success' 
                     : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
                 }`}
               >
-                <tab.icon className={`w-5 h-5 ${activeTab === tab.name ? 'text-vivid-lavender' : 'text-zinc-500'}`} />
+                <tab.icon className={`w-5 h-5 ${activeTab === tab.name ? 'text-success' : 'text-zinc-500'}`} />
                 {tab.name}
               </button>
             ))}
@@ -76,8 +107,12 @@ export default function ClientSecurityCenterPage() {
               </div>
 
               <div className="flex items-center gap-6 pb-6 border-b border-zinc-800">
-                <div className="w-24 h-24 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-3xl font-bold text-white shrink-0">
-                  FS
+                <div className="w-24 h-24 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-3xl font-bold text-white shrink-0 overflow-hidden">
+                  {profile.avatarUrl ? (
+                    <img src={profile.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    formData.firstName?.charAt(0) || formData.companyName?.charAt(0) || 'FS'
+                  )}
                 </div>
                 <div>
                   <div className="flex gap-3">
@@ -94,26 +129,50 @@ export default function ClientSecurityCenterPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Company Name</label>
-                  <input type="text" defaultValue="ForteSpace HQ" className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-vivid-lavender transition-colors" />
+                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">First Name</label>
+                  <input 
+                    type="text" 
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-success transition-colors" 
+                  />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Industry</label>
-                  <select className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-vivid-lavender transition-colors appearance-none">
-                    <option>Technology & Software</option>
-                    <option>Design & Creative</option>
-                    <option>Construction</option>
-                  </select>
+                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Last Name</label>
+                  <input 
+                    type="text" 
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-success transition-colors" 
+                  />
                 </div>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Company Description</label>
-                  <textarea rows="4" defaultValue="Leading tech innovator based in Nairobi." className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-vivid-lavender transition-colors resize-none"></textarea>
+                <div>
+                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Company Name</label>
+                  <input 
+                    type="text" 
+                    value={formData.companyName}
+                    onChange={(e) => setFormData({...formData, companyName: e.target.value})}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-success transition-colors" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Email Address</label>
+                  <input 
+                    type="email" 
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-success transition-colors opacity-70" 
+                  />
                 </div>
               </div>
 
-              <div className="flex justify-end pt-6 border-t border-zinc-800">
-                <button onClick={handleSave} className="bg-vivid-lavender hover:bg-dark-purple text-white px-6 py-3 rounded-xl font-bold text-sm transition-colors shadow-lg shadow-vivid-lavender/20">
-                  Save Changes
+              <div className="flex justify-end pt-4">
+                <button 
+                  onClick={handleSave}
+                  disabled={updateProfileMutation.isPending}
+                  className="bg-success hover:bg-success text-white px-6 py-3 rounded-xl font-bold text-sm transition-colors disabled:opacity-50"
+                >
+                  {updateProfileMutation.isPending ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </div>
@@ -129,20 +188,20 @@ export default function ClientSecurityCenterPage() {
               {/* Password Change */}
               <div className="space-y-4 pb-8 border-b border-zinc-800">
                 <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-vivid-lavender" /> Change Password
+                  <Lock className="w-4 h-4 text-success" /> Change Password
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="md:col-span-2">
                     <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Current Password</label>
-                    <input type="password" placeholder="••••••••" className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-vivid-lavender transition-colors" />
+                    <input type="password" placeholder="••••••••" className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-success transition-colors" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">New Password</label>
-                    <input type="password" placeholder="••••••••" className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-vivid-lavender transition-colors" />
+                    <input type="password" placeholder="••••••••" className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-success transition-colors" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Confirm New Password</label>
-                    <input type="password" placeholder="••••••••" className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-vivid-lavender transition-colors" />
+                    <input type="password" placeholder="••••••••" className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-success transition-colors" />
                   </div>
                 </div>
                 <div className="flex justify-end pt-2">
@@ -155,39 +214,52 @@ export default function ClientSecurityCenterPage() {
               {/* Active Sessions */}
               <div className="space-y-4">
                 <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <Monitor className="w-4 h-4 text-vivid-lavender" /> Active Sessions
+                  <Monitor className="w-4 h-4 text-success" /> Active Sessions
                 </h3>
                 <div className="space-y-3">
-                  {sessions.map(s => (
-                    <div key={s.id} className="p-4 bg-zinc-950 border border-zinc-800 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-vivid-lavender shrink-0">
-                          {s.device.includes('iPhone') ? <Smartphone className="w-5 h-5" /> : <Monitor className="w-5 h-5" />}
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-bold text-white">{s.device} <span className="text-zinc-500 font-normal">({s.browser})</span></h4>
-                          <div className="flex flex-wrap items-center gap-2 text-[10px] text-zinc-500 mt-1 font-bold uppercase tracking-wider">
-                            <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {s.location}</span>
-                            <span>•</span>
-                            <span className="font-mono">{s.ip}</span>
+                  {sessionsLoading ? (
+                    <div className="p-4 text-center text-zinc-500 text-sm">Loading sessions...</div>
+                  ) : sessions.length === 0 ? (
+                    <div className="p-4 text-center text-zinc-500 text-sm">No active sessions.</div>
+                  ) : (
+                    sessions.map(s => {
+                      const isMobile = (s.deviceName || '').toLowerCase().includes('iphone') || 
+                                       (s.deviceName || '').toLowerCase().includes('android') ||
+                                       (s.userAgent || '').toLowerCase().includes('mobile');
+                      return (
+                        <div key={s.id} className="p-4 bg-zinc-950 border border-zinc-800 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-success shrink-0">
+                              {isMobile ? <Smartphone className="w-5 h-5" /> : <Monitor className="w-5 h-5" />}
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-bold text-white">
+                                {s.deviceName || 'Web Browser'} <span className="text-zinc-500 font-normal">({s.userAgent ? s.userAgent.split(' ')[0] : 'Chrome'})</span>
+                              </h4>
+                              <div className="flex flex-wrap items-center gap-2 text-[10px] text-zinc-500 mt-1 font-bold uppercase tracking-wider">
+                                <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> Nairobi, Kenya</span>
+                                <span>•</span>
+                                <span className="font-mono">{s.ipAddress || '127.0.0.1'}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-4 justify-between sm:justify-end shrink-0">
+                            {s.active || s.id === profile.id ? (
+                              <span className="text-[10px] font-black uppercase text-success px-2 py-1 bg-success/10 border border-success/20 rounded">Current Session</span>
+                            ) : (
+                              <button 
+                                onClick={() => handleRevoke(s.id, s.deviceName || 'Web Browser')}
+                                className="text-red-400 hover:text-red-300 transition-colors flex items-center gap-1 font-bold text-xs"
+                              >
+                                <XCircle className="w-4 h-4" /> Revoke
+                              </button>
+                            )}
                           </div>
                         </div>
-                      </div>
-
-                      <div className="flex items-center gap-4 justify-between sm:justify-end shrink-0">
-                        {s.active ? (
-                          <span className="text-[10px] font-black uppercase text-vivid-green px-2 py-1 bg-vivid-green/10 border border-vivid-green/20 rounded">Current Session</span>
-                        ) : (
-                          <button 
-                            onClick={() => handleRevoke(s.device)}
-                            className="text-red-400 hover:text-red-300 transition-colors flex items-center gap-1 font-bold text-xs"
-                          >
-                            <XCircle className="w-4 h-4" /> Revoke
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                      );
+                    })
+                  )}
                 </div>
               </div>
             </div>
@@ -209,7 +281,7 @@ export default function ClientSecurityCenterPage() {
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" defaultChecked />
-                    <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vivid-lavender"></div>
+                    <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success"></div>
                   </label>
                 </div>
 
@@ -220,7 +292,7 @@ export default function ClientSecurityCenterPage() {
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" defaultChecked />
-                    <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vivid-lavender"></div>
+                    <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success"></div>
                   </label>
                 </div>
 
@@ -231,7 +303,7 @@ export default function ClientSecurityCenterPage() {
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" />
-                    <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vivid-lavender"></div>
+                    <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success"></div>
                   </label>
                 </div>
 
@@ -249,10 +321,10 @@ export default function ClientSecurityCenterPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                 
                 {/* Saved Card */}
-                <div className="bg-zinc-950 border border-vivid-lavender/50 rounded-2xl p-5 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-vivid-lavender/10 blur-[30px] rounded-full"></div>
+                <div className="bg-zinc-950 border border-success/50 rounded-2xl p-5 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-success/10 blur-[30px] rounded-full"></div>
                   <div className="flex justify-between items-start mb-6">
-                    <div className="text-xs font-black uppercase tracking-widest text-vivid-lavender bg-vivid-lavender/10 px-2 py-1 rounded border border-vivid-lavender/20">Default</div>
+                    <div className="text-xs font-black uppercase tracking-widest text-success bg-success/10 px-2 py-1 rounded border border-success/20">Default</div>
                     <CreditCard className="w-6 h-6 text-white" />
                   </div>
                   <p className="text-lg font-mono tracking-widest text-white mb-1">•••• •••• •••• 4242</p>
@@ -263,7 +335,7 @@ export default function ClientSecurityCenterPage() {
                 </div>
 
                 {/* Add New */}
-                <button className="bg-zinc-950 border-2 border-dashed border-zinc-800 hover:border-vivid-lavender hover:bg-zinc-900 rounded-2xl p-5 flex flex-col items-center justify-center gap-3 transition-colors text-zinc-500 hover:text-vivid-lavender min-h-[140px]">
+                <button className="bg-zinc-950 border-2 border-dashed border-zinc-800 hover:border-success hover:bg-zinc-900 rounded-2xl p-5 flex flex-col items-center justify-center gap-3 transition-colors text-zinc-500 hover:text-success min-h-[140px]">
                   <CreditCard className="w-6 h-6" />
                   <span className="text-sm font-bold">Add New Method</span>
                 </button>

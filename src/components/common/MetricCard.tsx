@@ -11,7 +11,7 @@ export const MetricCard = ({ title, value, icon, trend }: any) => {
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-text-secondary mb-1">{title}</p>
-          <h4 className="text-2xl font-bold text-navy">{value}</h4>
+          <h4 className="text-2xl font-bold text-[#222222]">{value}</h4>
           
           {trend && (
             <div className="flex items-center mt-2 text-sm">
@@ -30,7 +30,7 @@ export const MetricCard = ({ title, value, icon, trend }: any) => {
         </div>
         
         {icon && (
-          <div className="p-3 bg-light-gray rounded-lg text-accent-red">
+          <div className="p-3 bg-light-gray rounded-lg text-[#e63946]">
             {icon}
           </div>
         )}

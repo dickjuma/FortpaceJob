@@ -26,7 +26,7 @@ const ClientReviewsDirectory = () => {
                       {item.client.charAt(0)}
                     </div>
                     <div>
-                      <Link to="/client-profile" className="font-bold text-xl text-zinc-900 hover:text-brand-600 transition-colors">
+                      <Link to="/client-profile" className="font-bold text-xl text-zinc-900 hover:text-[#14a800] transition-colors">
                         {item.client}
                       </Link>
                       <div className="flex items-center gap-3 text-sm text-zinc-500 mt-1">

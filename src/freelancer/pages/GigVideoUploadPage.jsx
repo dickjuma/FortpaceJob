@@ -69,10 +69,10 @@ export default function GigVideoUploadPage() {
             {!video ? (
               <div 
                 onClick={handleUpload}
-                className="aspect-video w-full rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:border-violet-500 group transition-all"
+                className="aspect-video w-full rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:border-#14a800] group transition-all"
               >
                 <div className="w-16 h-16 bg-zinc-100 dark:bg-surface-dark rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <UploadCloud className="w-8 h-8 text-zinc-400 group-hover:text-violet-500 transition-colors" />
+                  <UploadCloud className="w-8 h-8 text-zinc-400 group-hover:text-#14a800] transition-colors" />
                 </div>
                 <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">Upload Video</h3>
                 <p className="text-sm text-zinc-500 max-w-sm mb-4">Drag & drop your video file here or browse from your computer.</p>
@@ -88,7 +88,7 @@ export default function GigVideoUploadPage() {
                 <div className="relative z-10 w-full max-w-sm">
                   <h3 className="text-white font-bold mb-4">Processing Video...</h3>
                   <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden mb-2">
-                    <motion.div className="h-full bg-violet-500 rounded-full" animate={{ width: `${uploadProgress}%` }} />
+                    <motion.div className="h-full bg-#14a800] rounded-full" animate={{ width: `${uploadProgress}%` }} />
                   </div>
                   <span className="text-xs font-bold text-violet-300">{uploadProgress}% complete</span>
                 </div>
@@ -145,13 +145,13 @@ export default function GigVideoUploadPage() {
                           onClick={() => setThumbnail(idx)}
                           className={cn(
                             "w-40 aspect-video rounded-xl border-2 overflow-hidden cursor-pointer shrink-0 transition-all",
-                            thumbnail === idx ? "border-violet-500 shadow-md scale-105" : "border-transparent opacity-60 hover:opacity-100"
+                            thumbnail === idx ? "border-#14a800] shadow-md scale-105" : "border-transparent opacity-60 hover:opacity-100"
                           )}
                         >
                           <img src={url} alt={`Thumbnail ${idx+1}`} className="w-full h-full object-cover" />
                         </div>
                       ))}
-                      <div className="w-40 aspect-video rounded-xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex flex-col items-center justify-center text-zinc-400 cursor-pointer hover:border-violet-400 hover:text-violet-500 shrink-0">
+                      <div className="w-40 aspect-video rounded-xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex flex-col items-center justify-center text-zinc-400 cursor-pointer hover:border-violet-400 hover:text-#14a800] shrink-0">
                         <UploadCloud className="w-5 h-5 mb-1" />
                         <span className="text-xs font-bold">Custom</span>
                       </div>
@@ -161,7 +161,7 @@ export default function GigVideoUploadPage() {
                   {/* Subtitles Toggle */}
                   <div className="flex items-center justify-between p-4 bg-surface dark:bg-zinc-800/50 rounded-2xl border border-zinc-200 dark:border-zinc-700">
                     <div className="flex items-start gap-3">
-                      <div className="p-2 bg-violet-100 dark:bg-violet-500/20 rounded-lg shrink-0">
+                      <div className="p-2 bg-violet-100 dark:bg-#14a800]/20 rounded-lg shrink-0">
                         <Subtitles className="w-5 h-5 text-violet-600 dark:text-violet-400" />
                       </div>
                       <div>
@@ -173,7 +173,7 @@ export default function GigVideoUploadPage() {
                       onClick={() => setSubtitlesEnabled(!subtitlesEnabled)}
                       className={cn(
                         "w-12 h-6 rounded-full transition-colors relative flex items-center p-1 cursor-pointer shrink-0",
-                        subtitlesEnabled ? "bg-violet-500" : "bg-zinc-200 dark:bg-zinc-700"
+                        subtitlesEnabled ? "bg-#14a800]" : "bg-zinc-200 dark:bg-zinc-700"
                       )}
                     >
                       <motion.div layout className="w-4 h-4 bg-white rounded-full shadow-sm" animate={{ x: subtitlesEnabled ? 24 : 0 }} />
@@ -193,10 +193,10 @@ export default function GigVideoUploadPage() {
         
         {/* AI Video Quality Analysis */}
         <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-violet-500/10 rounded-bl-full pointer-events-none" />
+          <div className="absolute top-0 right-0 w-24 h-24 bg-#14a800]/10 rounded-bl-full pointer-events-none" />
           
           <div className="flex items-center gap-2 mb-6">
-            <Wand2 className="w-5 h-5 text-violet-500" />
+            <Wand2 className="w-5 h-5 text-#14a800]" />
             <h3 className="font-bold text-zinc-900 dark:text-white">AI Studio Analysis</h3>
           </div>
 
@@ -232,7 +232,7 @@ export default function GigVideoUploadPage() {
                 <span className="text-xs font-bold text-success flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> {aiAnalysis.pacing}</span>
               </div>
 
-              <div className="mt-4 p-3 bg-violet-50 dark:bg-violet-500/10 rounded-xl border border-violet-100 dark:border-violet-500/20">
+              <div className="mt-4 p-3 bg-violet-50 dark:bg-#14a800]/10 rounded-xl border border-violet-100 dark:border-#14a800]/20">
                 <p className="text-xs text-violet-700 dark:text-violet-300 font-medium">Your video meets all marketplace standards and is optimized for high conversion.</p>
               </div>
             </motion.div>

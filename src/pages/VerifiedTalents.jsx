@@ -10,7 +10,7 @@ const VerifiedTalents = () => {
     <>
       <div className="bg-surface-dark text-white pt-20 pb-24 relative overflow-hidden">
         <div className="absolute top-0 right-0 -mr-40 -mt-40 w-96 h-96 rounded-full bg-success/20 blur-3xl" />
-        <div className="absolute bottom-0 left-0 -ml-40 -mb-40 w-96 h-96 rounded-full bg-brand-600/20 blur-3xl" />
+        <div className="absolute bottom-0 left-0 -ml-40 -mb-40 w-96 h-96 rounded-full bg-[#14a800]/20 blur-3xl" />
 
         <div className="container mx-auto px-4 md:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-12">
           <div className="flex-1 text-center lg:text-left">

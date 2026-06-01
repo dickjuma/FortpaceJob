@@ -21,9 +21,13 @@ import {
   Send,
   ArrowUpDown,
 } from "lucide-react";
+import { useFreelancerWallet, useFreelancerTransactions, useInitiateWithdrawal, useFreelancerProfile } from '../services/freelancerHooks';
+import toast from 'react-hot-toast';
+import { useConfirm } from '../../common/context/ConfirmContext';
+import { useAuthStore } from '../../common/authStore';
+import KraComplianceBanner from '../../components/compliance/KraComplianceBanner';
 
-// ─── Mock Data ────────────────────────────────────────────────────────────────
-
+// ─── Single source of truth for supported methods and currencies (configuration) ───
 const CURRENCIES = [
   { code: "USD", symbol: "$", rate: 1 },
   { code: "EUR", symbol: "€", rate: 0.92 },
@@ -41,11 +45,11 @@ const METHODS = [
     color: "blue",
     accountLabel: "PayPal Email",
     placeholder: "you@email.com",
-    gradient: "from-blue-500 to-blue-700",
-    bgLight: "bg-brand-50",
-    bgDark: "dark:bg-brand-900/20",
-    border: "border-brand-300 dark:border-brand-600",
-    text: "text-brand-700 dark:text-brand-300",
+    gradient: "from-#14a800] to-blue-700",
+    bgLight: "bg-[#14a800]/5",
+    bgDark: "dark:bg-[#14a800]/20",
+    border: "border-[#14a800]/20 dark:border-[#14a800]/20",
+    text: "text-[#14a800] dark:text-[#14a800]",
   },
   {
     id: "bank",
@@ -101,88 +105,15 @@ const METHODS = [
     color: "purple",
     accountLabel: "Wallet Address",
     placeholder: "0x… or bc1…",
-    gradient: "from-purple-500 to-purple-700",
-    bgLight: "bg-brand-50",
-    bgDark: "dark:bg-brand-900/20",
-    border: "border-purple-300 dark:border-purple-600",
-    text: "text-brand-700 dark:text-brand-300",
+    gradient: "from-[#14a800] to-[#118a00]",
+    bgLight: "bg-[#14a800]/5",
+    bgDark: "dark:bg-[#14a800]/20",
+    border: "border-[#14a800]/50 dark:border-[#14a800]/50",
+    text: "text-[#14a800] dark:text-[#14a800]",
   },
 ];
 
-const MOCK_TRANSACTIONS = [
-  {
-    id: "t1",
-    date: "2024-04-18",
-    method: "PayPal",
-    amount: 500,
-    fee: 12.5,
-    status: "Completed",
-  },
-  {
-    id: "t2",
-    date: "2024-04-12",
-    method: "Bank Transfer",
-    amount: 1200,
-    fee: 12.0,
-    status: "Completed",
-  },
-  {
-    id: "t3",
-    date: "2024-04-08",
-    method: "M-Pesa",
-    amount: 300,
-    fee: 4.5,
-    status: "Pending",
-  },
-  {
-    id: "t4",
-    date: "2024-04-01",
-    method: "Payoneer",
-    amount: 750,
-    fee: 15.0,
-    status: "Completed",
-  },
-  {
-    id: "t5",
-    date: "2024-03-25",
-    method: "Crypto Wallet",
-    amount: 2000,
-    fee: 10.0,
-    status: "Completed",
-  },
-  {
-    id: "t6",
-    date: "2024-03-18",
-    method: "PayPal",
-    amount: 450,
-    fee: 11.25,
-    status: "Failed",
-  },
-  {
-    id: "t7",
-    date: "2024-03-10",
-    method: "Bank Transfer",
-    amount: 1800,
-    fee: 18.0,
-    status: "Completed",
-  },
-  {
-    id: "t8",
-    date: "2024-03-02",
-    method: "M-Pesa",
-    amount: 200,
-    fee: 3.0,
-    status: "Completed",
-  },
-];
-
-const AVAILABLE_BALANCE = 12840.5;
-const PENDING_BALANCE = 1200;
-const TOTAL_EARNED = 48320;
-const DAILY_LIMIT = 5000;
-const MONTHLY_LIMIT = 20000;
-const REMAINING_TODAY = 4800;
-const MONTHLY_USED = 8320;
+const DEFAULT_METHOD = METHODS.find(m => m.id === 'mpesa') || METHODS[2];
 
 // ─── Animated Counter ─────────────────────────────────────────────────────────
 
@@ -206,9 +137,7 @@ function useAnimatedNumber(target, duration = 1200) {
 
 function SkeletonBlock({ className }) {
   return (
-    <div
-      className={`rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse ${className}`}
-    />
+    <div className={`rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse ${className}`} />
   );
 }
 
@@ -300,8 +229,8 @@ function OTPModal({ onClose, onSuccess }) {
         </button>
 
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-brand-50 dark:bg-brand-900/20 rounded-2xl mb-4">
-            <Lock size={24} className="text-brand-600 dark:text-brand-400" />
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-[#14a800]/5 dark:bg-[#14a800]/20 rounded-2xl mb-4">
+            <Lock size={24} className="text-[#14a800] dark:text-[#14a800]" />
           </div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
             Verify Withdrawal
@@ -329,10 +258,10 @@ function OTPModal({ onClose, onSuccess }) {
                   error
                     ? "border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20"
                     : digit
-                    ? "border-brand-500 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300"
+                    ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800]"
                     : "border-gray-200 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white"
                 }
-                focus:border-brand-500 dark:focus:border-brand-400`}
+                focus:border-[#14a800]/20 dark:focus:border-[#14a800]/20`}
             />
           ))}
         </div>
@@ -348,7 +277,7 @@ function OTPModal({ onClose, onSuccess }) {
 
         <button
           onClick={handleVerify}
-          className="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 mb-4"
+          className="w-full bg-[#14a800] hover:bg-[#118a00] text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 mb-4"
         >
           <CheckCircle size={16} /> Verify & Withdraw
         </button>
@@ -364,7 +293,7 @@ function OTPModal({ onClose, onSuccess }) {
           ) : (
             <button
               onClick={handleResend}
-              className="text-brand-600 dark:text-brand-400 font-medium hover:underline flex items-center gap-1 mx-auto"
+              className="text-[#14a800] dark:text-[#14a800] font-medium hover:underline flex items-center gap-1 mx-auto"
             >
               <RefreshCw size={12} /> Resend code
             </button>
@@ -404,10 +333,9 @@ function SuccessToast({ amount, symbol, onDismiss }) {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function WithdrawalPage() {
-  const [loading, setLoading] = useState(true);
   const [currency, setCurrency] = useState(CURRENCIES[0]);
   const [showCurrencyMenu, setShowCurrencyMenu] = useState(false);
-  const [selectedMethod, setSelectedMethod] = useState(METHODS[0]);
+  const [selectedMethod, setSelectedMethod] = useState(DEFAULT_METHOD);
   const [amount, setAmount] = useState("");
   const [accountDetail, setAccountDetail] = useState("");
   const [amountError, setAmountError] = useState("");
@@ -418,12 +346,32 @@ export default function WithdrawalPage() {
   const [page, setPage] = useState(1);
   const ROWS_PER_PAGE = 3;
   const currencyMenuRef = useRef(null);
+  const { confirm } = useConfirm();
 
-  // Skeleton delay
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(t);
-  }, []);
+  const { data: profileData } = useFreelancerProfile();
+
+  // Hook-based data loading
+  const { data: walletData, isLoading: walletLoading } = useFreelancerWallet();
+  const { data: txPagedData, isLoading: txLoading } = useFreelancerTransactions({ page, limit: 10 });
+  const withdrawMutation = useInitiateWithdrawal();
+  const loading = walletLoading || txLoading;
+
+  // Real balance values from API - DRY single source
+  const availableBalance =
+    walletData?.withdrawableBalance ?? walletData?.availableBalance ?? walletData?.available ?? 0;
+  const pendingBalance = walletData?.pendingBalance ?? walletData?.pending ?? 0;
+  const lockedBalance = walletData?.lockedBalance ?? 0;
+  const heldBalance = walletData?.safetyHoldBalance ?? walletData?.heldBalance ?? 0;
+  const totalEarned = walletData?.totalEarnings ?? walletData?.availableBalance ?? 0;
+  const withdrawalEligible = walletData?.withdrawalEligible !== false;
+  const taxLocked = walletData?.compliance?.taxLocked || walletData?.compliance?.withdrawalBlocked;
+
+  // Real transaction list from API
+  const rawTxList = txPagedData?.items ?? txPagedData?.transactions ?? txPagedData?.data ?? txPagedData ?? [];
+
+  // Limit/max values derived from actual balances - DRY
+  const maxAmount = availableBalance * currency.rate;
+  const minAmount = 10 * currency.rate;
 
   // Close currency menu on outside click
   useEffect(() => {
@@ -436,17 +384,36 @@ export default function WithdrawalPage() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Animated numbers
-  const animBalance = useAnimatedNumber(AVAILABLE_BALANCE * currency.rate);
-  const animPending = useAnimatedNumber(PENDING_BALANCE * currency.rate);
-  const animTotal = useAnimatedNumber(TOTAL_EARNED * currency.rate);
+  // Pre-fill user phone number if MPesa selected; only update if accountDetail empty (DRY - prevents overwrite)
+  const { user } = useAuthStore();
+  useEffect(() => {
+    if (selectedMethod.id === 'mpesa' && user?.phoneNumber && !accountDetail) {
+      setAccountDetail(user.phoneNumber);
+    }
+  }, [selectedMethod, user, accountDetail]);
+
+  // Pre-fill account detail from profile if empty
+  useEffect(() => {
+    if (!accountDetail && profileData) {
+      if (selectedMethod.id === 'mpesa' && profileData.phoneNumber) {
+        setAccountDetail(profileData.phoneNumber);
+      } else if (selectedMethod.id === 'paypal' && profileData.paypalEmail) {
+        setAccountDetail(profileData.paypalEmail);
+      } else if (selectedMethod.id === 'bank' && profileData.accountNumber) {
+        setAccountDetail(profileData.accountNumber);
+      }
+    }
+  }, [profileData, selectedMethod, accountDetail]);
+
+  // Animated numbers from real balance
+  const animBalance = useAnimatedNumber(maxAmount);
+  const animPending = useAnimatedNumber(pendingBalance * currency.rate);
+  const animTotal = useAnimatedNumber(totalEarned * currency.rate);
 
   const feePercent = selectedMethod.feePercent;
   const parsedAmount = parseFloat(amount) || 0;
   const fee = (parsedAmount * feePercent) / 100;
   const receives = parsedAmount - fee;
-  const maxAmount = AVAILABLE_BALANCE * currency.rate;
-  const minAmount = 10 * currency.rate;
 
   const validateAmount = (val) => {
     const n = parseFloat(val);
@@ -463,27 +430,80 @@ export default function WithdrawalPage() {
     validateAmount(val);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!withdrawalEligible || taxLocked) {
+      toast.error('Withdrawals are locked. Complete KRA compliance to continue.');
+      return;
+    }
     validateAmount(amount);
     if (amountError || !parsedAmount) return;
+
+    if (selectedMethod.id !== 'mpesa') {
+      toast.error('Payouts use Paystack Transfers — select M-Pesa for mobile money.');
+      return;
+    }
+
+    if (!accountDetail.trim()) {
+      toast.error('Phone number is required for Safaricom payout.');
+      return;
+    }
+
+    const ok = await confirm({
+      title: 'Confirm withdrawal',
+      message: `Withdraw ${currency.symbol}${parsedAmount.toFixed(2)} to ${accountDetail}? A fee of ${feePercent}% applies (you receive ${currency.symbol}${receives.toFixed(2)}).`,
+      confirmLabel: 'Continue to OTP',
+      critical: true,
+    });
+    if (!ok) return;
+
     setShowOTP(true);
   };
 
   const handleOTPSuccess = () => {
     setShowOTP(false);
-    setShowSuccess(true);
-    setAmount("");
-    setAccountDetail("");
+    
+    const toastId = toast.loading('Processing Paystack transfer to your M-Pesa...');
+    
+    withdrawMutation.mutate({
+      amount: parseFloat(amount),
+      phoneNumber: accountDetail,
+      method: 'paystack',
+      bankCode: 'MPESA',
+      recipientType: 'mobile_money',
+    }, {
+      onSuccess: () => {
+        toast.success(`KES ${parseFloat(amount).toLocaleString()} successfully cashed out to M-Pesa!`, { id: toastId });
+        setShowSuccess(true);
+        setAmount("");
+        setPage(1);
+      },
+      onError: (err) => {
+        toast.error(err.message || 'Payout failed. Escrow ledger check failed.', { id: toastId });
+      }
+    });
   };
 
-  // Sorting
+  // Sorting for real transactions
+  const mappedTransactions = rawTxList.map(tx => ({
+    id: tx.id || String(Math.random()),
+    date: tx.createdAt || tx.timestamp || new Date(),
+    method: tx.method || tx.description || 'M-Pesa Payout',
+    amount: Math.abs(tx.amount || 0),
+    fee: tx.fee || 0,
+    status: tx.status === 'COMPLETED' || tx.status === 'SUCCESS' ? 'Completed' : tx.status === 'PENDING' ? 'Pending' : 'Failed'
+  }));
+
   const handleSort = (col) => {
-    if (sortCol === col) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    else { setSortCol(col); setSortDir("asc"); }
+    if (sortCol === col) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortCol(col);
+      setSortDir("asc");
+    }
   };
 
-  const sortedTx = [...MOCK_TRANSACTIONS].sort((a, b) => {
+  const sortedTx = [...mappedTransactions].sort((a, b) => {
     let va = a[sortCol], vb = b[sortCol];
     if (sortCol === "date") { va = new Date(va); vb = new Date(vb); }
     if (va < vb) return sortDir === "asc" ? -1 : 1;
@@ -493,6 +513,14 @@ export default function WithdrawalPage() {
 
   const totalPages = Math.ceil(sortedTx.length / ROWS_PER_PAGE);
   const pagedTx = sortedTx.slice((page - 1) * ROWS_PER_PAGE, page * ROWS_PER_PAGE);
+
+  // Real withdraw limits from API or sensible defaults
+  const dailyLimit = walletData?.dailyLimit || 5000;
+  const monthlyLimit = walletData?.monthlyLimit || 20000;
+  const dailyUsed = walletData?.dailyUsed ?? totalEarned > 0 ? totalEarned - availableBalance : 0;
+  const monthlyUsed = walletData?.monthlyUsed ?? pendingBalance + dailyUsed;
+  const remainingToday = Math.max(0, dailyLimit - dailyUsed);
+  const monthlyRemaining = Math.max(0, monthlyLimit - monthlyUsed);
 
   const SortIcon = ({ col }) => (
     <span className="ml-1 opacity-60">
@@ -538,6 +566,22 @@ export default function WithdrawalPage() {
     <div className="min-h-screen bg-surface dark:bg-gray-950 font-sans">
       <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
 
+        <KraComplianceBanner />
+
+        {(heldBalance > 0 || lockedBalance > 0) && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            {heldBalance > 0 && (
+              <p>
+                <Lock className="w-4 h-4 inline mr-1" />
+                KES {heldBalance.toLocaleString()} in 24h safety hold after escrow release.
+              </p>
+            )}
+            {lockedBalance > 0 && (
+              <p className="mt-1">KES {lockedBalance.toLocaleString()} locked (processing payout or dispute).</p>
+            )}
+          </div>
+        )}
+
         {/* ── Page Header ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -547,7 +591,7 @@ export default function WithdrawalPage() {
         >
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <div className="p-2 bg-brand-600 rounded-xl">
+              <div className="p-2 bg-[#14a800] rounded-xl">
                 <Wallet size={20} className="text-white" />
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
@@ -585,7 +629,7 @@ export default function WithdrawalPage() {
                       onClick={() => { setCurrency(c); setShowCurrencyMenu(false); setAmount(""); }}
                       className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${
                         currency.code === c.code
-                          ? "bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 font-semibold"
+                          ? "bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] font-semibold"
                           : "text-gray-700 dark:text-gray-300 hover:bg-surface dark:hover:bg-gray-800"
                       }`}
                     >
@@ -604,11 +648,11 @@ export default function WithdrawalPage() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, delay: 0.05 }}
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-600 via-blue-600 to-violet-700 text-white p-6 sm:p-8 shadow-xl"
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#14a800] via-blue-600 to-violet-700 text-white p-6 sm:p-8 shadow-xl"
         >
           {/* Background decoration */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -tranzinc-y-1/2 tranzinc-x-1/4 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full tranzinc-y-1/2 -tranzinc-x-1/4 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/4 pointer-events-none" />
 
           <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-6">
             {/* Available */}
@@ -738,15 +782,15 @@ export default function WithdrawalPage() {
                 Amount
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-gray-500 dark:text-gray-400 font-semibold text-base">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 font-semibold text-base">
                   {currency.symbol}
                 </span>
                 <input
                   type="number"
                   value={amount}
                   onChange={(e) => handleAmountChange(e.target.value)}
-                  placeholder={`Min ${currency.symbol}${(10 * currency.rate).toFixed(2)}`}
-                  className={`w-full pl-8 pr-4 py-3 rounded-xl border text-base font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors text-gray-900 dark:text-white bg-surface dark:bg-gray-800 ${
+                  placeholder={`Min ${currency.symbol}${minAmount.toFixed(2)}`}
+                  className={`w-full pl-8 pr-4 py-3 rounded-xl border text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#14a800] transition-colors text-gray-900 dark:text-white bg-surface dark:bg-gray-800 ${
                     amountError
                       ? "border-red-400 dark:border-red-500"
                       : "border-gray-200 dark:border-gray-700"
@@ -756,7 +800,7 @@ export default function WithdrawalPage() {
                   <button
                     type="button"
                     onClick={() => handleAmountChange(maxAmount.toFixed(2))}
-                    className="absolute right-3 top-1/2 -tranzinc-y-1/2 text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#14a800] dark:text-[#14a800] font-semibold hover:underline"
                   >
                     MAX
                   </button>
@@ -776,7 +820,7 @@ export default function WithdrawalPage() {
                       key={q}
                       type="button"
                       onClick={() => handleAmountChange(adj)}
-                      className="text-xs px-2.5 py-1 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+                      className="text-xs px-2.5 py-1 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-[#14a800]/20 hover:text-[#14a800] dark:hover:text-[#14a800] transition-colors"
                     >
                       {currency.symbol}{adj}
                     </button>
@@ -795,7 +839,7 @@ export default function WithdrawalPage() {
                 value={accountDetail}
                 onChange={(e) => setAccountDetail(e.target.value)}
                 placeholder={selectedMethod.placeholder}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-gray-900 dark:text-white"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#14a800] text-gray-900 dark:text-white"
               />
             </div>
 
@@ -841,10 +885,10 @@ export default function WithdrawalPage() {
             {/* Submit */}
             <button
               type="submit"
-              disabled={!!amountError || !parsedAmount}
-              className="w-full bg-brand-600 hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+              disabled={!!amountError || !parsedAmount || withdrawMutation.isPending}
+              className="w-full bg-[#14a800] hover:bg-[#118a00] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
             >
-              <Send size={16} /> Withdraw {parsedAmount > 0 ? `${currency.symbol}${parsedAmount.toFixed(2)}` : ""}
+              <Send size={16} /> {withdrawMutation.isPending ? 'Processing...' : parsedAmount > 0 ? `Withdraw ${currency.symbol}${parsedAmount.toFixed(2)}` : "Withdraw"}
             </button>
           </form>
         </motion.div>
@@ -857,7 +901,7 @@ export default function WithdrawalPage() {
           className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6"
         >
           <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <Shield size={16} className="text-brand-600" /> Withdrawal Limits
+            <Shield size={16} className="text-[#14a800]" /> Withdrawal Limits
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* Daily */}
@@ -865,20 +909,20 @@ export default function WithdrawalPage() {
               <div className="flex justify-between text-sm mb-1.5">
                 <span className="text-gray-500 dark:text-gray-400">Daily Limit</span>
                 <span className="font-semibold text-gray-900 dark:text-white">
-                  {currency.symbol}{(REMAINING_TODAY * currency.rate).toFixed(0)} left
+                  {currency.symbol}{remainingToday.toFixed(0)} left
                 </span>
               </div>
               <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: `${((DAILY_LIMIT - REMAINING_TODAY) / DAILY_LIMIT) * 100}%` }}
+                  animate={{ width: `${(dailyUsed / dailyLimit) * 100}%` }}
                   transition={{ duration: 0.9, ease: "easeOut" }}
-                  className="h-full bg-brand-500 rounded-full"
+                  className="h-full bg-[#14a800] rounded-full"
                 />
               </div>
               <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-1">
-                <span>Used: {currency.symbol}{((DAILY_LIMIT - REMAINING_TODAY) * currency.rate).toFixed(0)}</span>
-                <span>Max: {currency.symbol}{(DAILY_LIMIT * currency.rate).toFixed(0)}</span>
+                <span>Used: {currency.symbol}{dailyUsed.toFixed(0)}</span>
+                <span>Max: {currency.symbol}{dailyLimit}</span>
               </div>
             </div>
 
@@ -887,20 +931,20 @@ export default function WithdrawalPage() {
               <div className="flex justify-between text-sm mb-1.5">
                 <span className="text-gray-500 dark:text-gray-400">Monthly Limit</span>
                 <span className="font-semibold text-gray-900 dark:text-white">
-                  {currency.symbol}{((MONTHLY_LIMIT - MONTHLY_USED) * currency.rate).toFixed(0)} left
+                  {currency.symbol}{monthlyRemaining.toFixed(0)} left
                 </span>
               </div>
               <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: `${(MONTHLY_USED / MONTHLY_LIMIT) * 100}%` }}
+                  animate={{ width: `${(monthlyUsed / monthlyLimit) * 100}%` }}
                   transition={{ duration: 0.9, ease: "easeOut", delay: 0.15 }}
-                  className="h-full bg-violet-500 rounded-full"
+                  className="h-full bg-#14a800] rounded-full"
                 />
               </div>
               <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-1">
-                <span>Used: {currency.symbol}{(MONTHLY_USED * currency.rate).toFixed(0)}</span>
-                <span>Max: {currency.symbol}{(MONTHLY_LIMIT * currency.rate).toFixed(0)}</span>
+                <span>Used: {currency.symbol}{monthlyUsed.toFixed(0)}</span>
+                <span>Max: {currency.symbol}{monthlyLimit}</span>
               </div>
             </div>
           </div>
@@ -988,7 +1032,7 @@ export default function WithdrawalPage() {
           {/* Pagination */}
           <div className="p-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Page {page} of {totalPages} · {MOCK_TRANSACTIONS.length} transactions
+              Page {page} of {totalPages} · {sortedTx.length} transactions
             </p>
             <div className="flex items-center gap-2">
               <button
@@ -1004,7 +1048,7 @@ export default function WithdrawalPage() {
                   onClick={() => setPage(p)}
                   className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                     page === p
-                      ? "bg-brand-600 text-white"
+                      ? "bg-[#14a800] text-white"
                       : "border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-surface dark:hover:bg-gray-800"
                   }`}
                 >
@@ -1038,7 +1082,7 @@ export default function WithdrawalPage() {
               key={text}
               className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-full text-xs text-gray-500 dark:text-gray-400 shadow-sm"
             >
-              <Icon size={13} className="text-brand-500 shrink-0" />
+              <Icon size={13} className="text-[#14a800] shrink-0" />
               {text}
             </div>
           ))}

@@ -70,11 +70,11 @@ export default function GigAnalyticsPage() {
       {/* Main KPI Row */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         {[
-          { label: 'Impressions', value: '18.4K', trend: '+12%', isUp: true, icon: Eye, color: 'text-brand-500', bg: 'bg-brand-50 dark:bg-brand-500/10' },
-          { label: 'Clicks', value: '1,240', trend: '+8%', isUp: true, icon: MousePointerClick, color: 'text-violet-500', bg: 'bg-violet-50 dark:bg-violet-500/10' },
+          { label: 'Impressions', value: '18.4K', trend: '+12%', isUp: true, icon: Eye, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/10' },
+          { label: 'Clicks', value: '1,240', trend: '+8%', isUp: true, icon: MousePointerClick, color: 'text-#14a800]', bg: 'bg-violet-50 dark:bg-#14a800]/10' },
           { label: 'Conv. Rate', value: '2.8%', trend: '-0.4%', isUp: false, icon: Filter, color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-500/10' },
           { label: 'Orders', value: '32', trend: '+24%', isUp: true, icon: ShoppingCart, color: 'text-success', bg: 'bg-emerald-50 dark:bg-success/10' },
-          { label: 'Revenue', value: '$8,450', trend: '+18%', isUp: true, icon: DollarSign, color: 'text-brand-500', bg: 'bg-brand-50 dark:bg-brand-500/10' },
+          { label: 'Revenue', value: '$8,450', trend: '+18%', isUp: true, icon: DollarSign, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/10' },
           { label: 'Repeat Buyers', value: '45%', trend: '+5%', isUp: true, icon: RefreshCw, color: 'text-sky-500', bg: 'bg-sky-50 dark:bg-sky-500/10' },
         ].map((stat, i) => (
           <div key={i} className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 p-4 shadow-sm flex flex-col justify-between">
@@ -133,11 +133,11 @@ export default function GigAnalyticsPage() {
             
             <div className="flex items-center justify-center gap-6 mt-4 border-t border-zinc-100 dark:border-zinc-800 pt-4">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-brand-500" />
+                <div className="w-3 h-3 rounded-full bg-[#14a800]" />
                 <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Impressions</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-violet-500" />
+                <div className="w-3 h-3 rounded-full bg-#14a800]" />
                 <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Clicks</span>
               </div>
             </div>
@@ -168,11 +168,11 @@ export default function GigAnalyticsPage() {
         <div className="space-y-8">
           
           {/* AI Recommendations */}
-          <div className="bg-gradient-to-br from-brand-600 to-violet-600 rounded-3xl p-6 text-white shadow-xl shadow-brand-500/20">
+          <div className="bg-gradient-to-br from-[#14a800] to-violet-600 rounded-3xl p-6 text-white shadow-xl shadow-[#14a800]/25/20">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-brand-200" />
-                <h3 className="font-bold text-brand-50">AI Recommendations</h3>
+                <Sparkles className="w-5 h-5 text-[#14a800]" />
+                <h3 className="font-bold text-[#14a800]">AI Recommendations</h3>
               </div>
               <span className="px-2 py-0.5 bg-white/20 rounded-md text-[10px] font-black uppercase tracking-wider">3 Insights</span>
             </div>
@@ -180,19 +180,19 @@ export default function GigAnalyticsPage() {
             <div className="space-y-3">
               <div className="bg-white/10 p-4 rounded-2xl border border-white/10 hover:bg-white/20 transition-colors cursor-pointer">
                 <h4 className="text-sm font-bold mb-1 flex items-center gap-2"><Filter className="w-4 h-4 text-amber-300" /> Improve Conversion</h4>
-                <p className="text-xs text-brand-100 leading-relaxed">
+                <p className="text-xs text-[#14a800] leading-relaxed">
                   Your conversion rate dropped to 2.8%. Adding a promotional video could increase it by up to 22%.
                 </p>
               </div>
               <div className="bg-white/10 p-4 rounded-2xl border border-white/10 hover:bg-white/20 transition-colors cursor-pointer">
                 <h4 className="text-sm font-bold mb-1 flex items-center gap-2"><DollarSign className="w-4 h-4 text-emerald-300" /> Upsell Opportunity</h4>
-                <p className="text-xs text-brand-100 leading-relaxed">
+                <p className="text-xs text-[#14a800] leading-relaxed">
                   35% of your buyers ask for 'Extra Fast Delivery'. Consider adding this as a $40 Premium Add-on.
                 </p>
               </div>
               <div className="bg-white/10 p-4 rounded-2xl border border-white/10 hover:bg-white/20 transition-colors cursor-pointer">
                 <h4 className="text-sm font-bold mb-1 flex items-center gap-2"><TrendingUp className="w-4 h-4 text-sky-300" /> Keyword Ranking</h4>
-                <p className="text-xs text-brand-100 leading-relaxed">
+                <p className="text-xs text-[#14a800] leading-relaxed">
                   You are ranking #4 for 'React JS'. Updating your description with 'TailwindCSS' could push you to #1.
                 </p>
               </div>
@@ -202,7 +202,7 @@ export default function GigAnalyticsPage() {
           {/* Demographics Pie Chart */}
           <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
             <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
-              <Users className="w-4 h-4 text-brand-500" /> Top Buyer Countries
+              <Users className="w-4 h-4 text-[#14a800]" /> Top Buyer Countries
             </h3>
             
             <div className="h-48 w-full relative mb-6">

@@ -13,8 +13,8 @@ const conversionData = [
 
 export default function ProposalAnalyticsPage() {
   const stats = [
-    { name: 'Proposals Sent (30d)', value: '69', change: '+12%', icon: FileText, color: 'text-brand-600' },
-    { name: 'View Rate', value: '75%', change: '+5%', icon: Eye, color: 'text-brand-600' },
+    { name: 'Proposals Sent (30d)', value: '69', change: '+12%', icon: FileText, color: 'text-[#14a800]' },
+    { name: 'View Rate', value: '75%', change: '+5%', icon: Eye, color: 'text-[#14a800]' },
     { name: 'Interview Rate', value: '28%', change: '+8%', icon: Award, color: 'text-yellow-600' },
     { name: 'Hired / Won', value: '6', change: '+2', icon: CheckCircle, color: 'text-green-600' },
   ];
@@ -22,11 +22,11 @@ export default function ProposalAnalyticsPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="mb-8">
-        <Link to="/freelancer/proposals" className="text-sm font-medium text-brand-600 hover:text-brand-500 mb-4 inline-flex items-center">
+        <Link to="/freelancer/proposals" className="text-sm font-medium text-[#14a800] hover:text-[#14a800] mb-4 inline-flex items-center">
           <ChevronLeft className="w-4 h-4 mr-1" /> Back to Bidding Dashboard
         </Link>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-          <TrendingUp className="w-8 h-8 mr-3 text-brand-600" /> Proposal Performance Analytics
+          <TrendingUp className="w-8 h-8 mr-3 text-[#14a800]" /> Proposal Performance Analytics
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Track your bidding efficiency, profile views, and interview conversion rates.</p>
       </div>
@@ -92,9 +92,9 @@ export default function ProposalAnalyticsPage() {
         </div>
       </div>
       
-      <div className="bg-brand-50 dark:bg-brand-900/10 border border-brand-200 dark:border-brand-800 rounded-2xl p-6">
-        <h3 className="text-lg font-bold text-brand-900 dark:text-brand-300 mb-2">AI Bidding Insights</h3>
-        <p className="text-sm text-brand-800 dark:text-brand-400">
+      <div className="bg-[#14a800]/5 dark:bg-[#14a800]/10 border border-[#14a800]/20 dark:border-[#14a800]/20 rounded-2xl p-6">
+        <h3 className="text-lg font-bold text-[#14a800] dark:text-[#14a800] mb-2">AI Bidding Insights</h3>
+        <p className="text-sm text-[#14a800] dark:text-[#14a800]">
           Your interview conversion rate is <strong>8% higher</strong> than the marketplace average. However, your match score on recent proposals has dropped slightly. Consider using the AI Optimizer on your next cover letter to boost your rank visibility.
         </p>
       </div>

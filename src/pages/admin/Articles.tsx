@@ -16,7 +16,7 @@ export const ArticlesPage = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-navy">My Articles</h1>
+          <h1 className="text-2xl font-bold text-[#222222]">My Articles</h1>
           <p className="text-text-secondary mt-1">Manage your blog posts and knowledge base articles.</p>
         </div>
         <Button variant="primary">Create Article</Button>
@@ -26,7 +26,7 @@ export const ArticlesPage = () => {
         {articles.map(article => (
           <Card key={article.id} hover className="flex flex-col md:flex-row justify-between items-start md:items-center p-6">
             <div className="mb-4 md:mb-0">
-              <h3 className="text-lg font-bold text-navy mb-2">{article.title || article.name}</h3>
+              <h3 className="text-lg font-bold text-[#222222] mb-2">{article.title || article.name}</h3>
               <div className="flex items-center space-x-4 text-sm text-text-secondary">
                 <Badge variant={article.status === 'Published' ? 'success' : 'default'}>
                   {article.status}

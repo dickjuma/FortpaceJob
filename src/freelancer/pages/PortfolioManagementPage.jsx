@@ -82,7 +82,7 @@ export default function PortfolioManagementPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-accent-purple/20 text-accent-purple rounded-xl shadow-sm border border-accent-purple/20">
+            <div className="p-2.5 bg-success/20 text-success rounded-xl shadow-sm border border-success/20">
               <FolderOpen size={24} />
             </div>
             <h1 className="text-3xl font-black text-text-primary tracking-tight">Portfolio Management</h1>
@@ -99,34 +99,34 @@ export default function PortfolioManagementPage() {
       </div>
 
       {/* Quick Add Actions */}
-      <div className="bg-navy border border-border rounded-[24px] p-8 shadow-sm relative overflow-hidden">
-        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-accent-purple/5 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="bg-[#222222] border border-border rounded-[24px] p-8 shadow-sm relative overflow-hidden">
+        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-success/5 blur-[100px] rounded-full pointer-events-none"></div>
         
         <h2 className="text-sm font-black text-white tracking-widest uppercase mb-6 relative z-10 flex items-center gap-1.5">
-          <Sparkles className="w-4 h-4 text-accent-purple animate-pulse" />
+          <Sparkles className="w-4 h-4 text-success animate-pulse" />
           Quick Add
         </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-          <button onClick={openAddModal} className="flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 border-dashed rounded-[20px] hover:border-accent-purple hover:bg-accent-purple/10 transition-colors group">
-            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-accent-purple/20 transition-all">
-              <ImageIcon className="w-5 h-5 text-white/50 group-hover:text-accent-purple" />
+          <button onClick={openAddModal} className="flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 border-dashed rounded-[20px] hover:border-success hover:bg-success/10 transition-colors group">
+            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-success/20 transition-all">
+              <ImageIcon className="w-5 h-5 text-white/50 group-hover:text-success" />
             </div>
-            <span className="text-sm font-bold text-white group-hover:text-accent-purple">Upload Images</span>
+            <span className="text-sm font-bold text-white group-hover:text-success">Upload Images</span>
           </button>
           
-          <button onClick={openAddModal} className="flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 border-dashed rounded-[20px] hover:border-accent-purple hover:bg-accent-purple/10 transition-colors group">
-            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-accent-purple/20 transition-all">
-              <Video className="w-5 h-5 text-white/50 group-hover:text-accent-purple" />
+          <button onClick={openAddModal} className="flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 border-dashed rounded-[20px] hover:border-success hover:bg-success/10 transition-colors group">
+            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-success/20 transition-all">
+              <Video className="w-5 h-5 text-white/50 group-hover:text-success" />
             </div>
-            <span className="text-sm font-bold text-white group-hover:text-accent-purple">Embed Video</span>
+            <span className="text-sm font-bold text-white group-hover:text-success">Embed Video</span>
           </button>
           
-          <button onClick={openAddModal} className="flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 border-dashed rounded-[20px] hover:border-accent-purple hover:bg-accent-purple/10 transition-colors group">
-            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-accent-purple/20 transition-all">
-              <LinkIcon className="w-5 h-5 text-white/50 group-hover:text-accent-purple" />
+          <button onClick={openAddModal} className="flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 border-dashed rounded-[20px] hover:border-success hover:bg-success/10 transition-colors group">
+            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-success/20 transition-all">
+              <LinkIcon className="w-5 h-5 text-white/50 group-hover:text-success" />
             </div>
-            <span className="text-sm font-bold text-white group-hover:text-accent-purple">Link External URL</span>
+            <span className="text-sm font-bold text-white group-hover:text-success">Link External URL</span>
           </button>
         </div>
       </div>
@@ -152,19 +152,19 @@ export default function PortfolioManagementPage() {
                 </div>
                 
                 <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity tranzinc-y-2 group-hover:tranzinc-y-0 duration-300">
-                  <button onClick={() => openEditModal(project)} className="p-2.5 text-white bg-navy/80 backdrop-blur-sm hover:bg-accent-purple rounded-xl transition-colors shadow-lg shadow-black/20"><Edit size={16} /></button>
-                  <button onClick={() => openDeleteModal(project)} className="p-2.5 text-white bg-navy/80 backdrop-blur-sm hover:bg-accent-red rounded-xl transition-colors shadow-lg shadow-black/20"><Trash2 size={16} /></button>
+                  <button onClick={() => openEditModal(project)} className="p-2.5 text-white bg-[#222222]/80 backdrop-blur-sm hover:bg-success rounded-xl transition-colors shadow-lg shadow-black/20"><Edit size={16} /></button>
+                  <button onClick={() => openDeleteModal(project)} className="p-2.5 text-white bg-[#222222]/80 backdrop-blur-sm hover:bg-[#e63946] rounded-xl transition-colors shadow-lg shadow-black/20"><Trash2 size={16} /></button>
                 </div>
               </div>
             </Card>
           ))}
           
           {/* Add New Placeholder Card */}
-          <div onClick={openAddModal} className="bg-light-gray/30 rounded-2xl border-2 border-dashed border-border overflow-hidden group hover:border-accent-purple hover:bg-light-gray/60 transition-all cursor-pointer min-h-[300px] flex flex-col items-center justify-center">
-            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-accent-purple/20 transition-all shadow-sm border border-border">
-              <Plus className="w-6 h-6 text-text-secondary group-hover:text-accent-purple" />
+          <div onClick={openAddModal} className="bg-light-gray/30 rounded-2xl border-2 border-dashed border-border overflow-hidden group hover:border-success hover:bg-light-gray/60 transition-all cursor-pointer min-h-[300px] flex flex-col items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-success/20 transition-all shadow-sm border border-border">
+              <Plus className="w-6 h-6 text-text-secondary group-hover:text-success" />
             </div>
-            <h3 className="font-black text-text-secondary group-hover:text-accent-purple transition-colors">Add New Project</h3>
+            <h3 className="font-black text-text-secondary group-hover:text-success transition-colors">Add New Project</h3>
           </div>
         </div>
       </div>
@@ -175,7 +175,7 @@ export default function PortfolioManagementPage() {
           <Card className="w-full max-w-lg shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-4 border-b border-border pb-3">
               <h3 className="text-lg font-black text-text-primary flex items-center gap-2">
-                {activeModal === 'add' ? <Plus className="w-5 h-5 text-accent-purple" /> : <Edit className="w-5 h-5 text-accent-purple" />}
+                {activeModal === 'add' ? <Plus className="w-5 h-5 text-success" /> : <Edit className="w-5 h-5 text-success" />}
                 {activeModal === 'add' ? 'Add Portfolio Project' : 'Edit Portfolio Project'}
               </h3>
               <button onClick={() => setActiveModal(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
@@ -188,7 +188,7 @@ export default function PortfolioManagementPage() {
                   type="text" 
                   value={projectForm.title} 
                   onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   required
                   placeholder="e.g. Enterprise SaaS Dashboard"
                 />
@@ -200,7 +200,7 @@ export default function PortfolioManagementPage() {
                   <select
                     value={projectForm.type}
                     onChange={(e) => setProjectForm({ ...projectForm, type: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary appearance-none"
+                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary appearance-none"
                   >
                     <option value="React/Node">React/Node</option>
                     <option value="Full Stack">Full Stack</option>
@@ -215,7 +215,7 @@ export default function PortfolioManagementPage() {
                     type="text" 
                     value={projectForm.date} 
                     onChange={(e) => setProjectForm({ ...projectForm, date: e.target.value })} 
-                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                     placeholder="e.g. Oct 2023"
                     required
                   />
@@ -228,7 +228,7 @@ export default function PortfolioManagementPage() {
                   type="text" 
                   value={projectForm.image} 
                   onChange={(e) => setProjectForm({ ...projectForm, image: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   required
                 />
               </div>
@@ -239,7 +239,7 @@ export default function PortfolioManagementPage() {
                   rows={3} 
                   value={projectForm.description} 
                   onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-accent-purple text-sm text-text-primary resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary resize-none"
                   placeholder="Describe your role and what technologies you used..."
                   required
                 />
@@ -258,7 +258,7 @@ export default function PortfolioManagementPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
           <Card className="w-full max-w-md shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
             <h3 className="text-lg font-black text-text-primary mb-2 flex items-center gap-2">
-              <Trash2 className="w-5 h-5 text-accent-red animate-bounce" />
+              <Trash2 className="w-5 h-5 text-[#e63946] animate-bounce" />
               Remove Project?
             </h3>
             <p className="text-sm text-text-secondary mb-6 font-medium">
@@ -266,7 +266,7 @@ export default function PortfolioManagementPage() {
             </p>
             <div className="flex gap-3 justify-end">
               <Button variant="outline" onClick={() => setActiveModal(null)}>Cancel</Button>
-              <button onClick={deleteProject} className="px-5 py-2.5 bg-accent-red hover:bg-red-600 text-white font-bold rounded-xl text-sm transition-colors shadow-sm">
+              <button onClick={deleteProject} className="px-5 py-2.5 bg-[#e63946] hover:bg-red-600 text-white font-bold rounded-xl text-sm transition-colors shadow-sm">
                 Remove Project
               </button>
             </div>

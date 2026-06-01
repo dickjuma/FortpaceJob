@@ -91,13 +91,13 @@ export const Sidebar = () => {
   return (
     <aside 
       className={twMerge(clsx(
-        "bg-navy text-light-gray flex flex-col transition-all duration-300 relative",
+        "bg-[#222222] text-light-gray flex flex-col transition-all duration-300 relative",
         isCollapsed ? "w-20" : "w-64"
       ))}
     >
       <button 
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-6 bg-accent-purple text-navy rounded-full p-1 border border-light-gray/20 hover:scale-110 transition-transform z-10"
+        className="absolute -right-3 top-6 bg-success text-[#222222] rounded-full p-1 border border-light-gray/20 hover:scale-110 transition-transform z-10"
       >
         <ChevronLeft className={twMerge(clsx("w-4 h-4 transition-transform", isCollapsed && "rotate-180"))} />
       </button>
@@ -106,8 +106,8 @@ export const Sidebar = () => {
         "p-6 flex items-center border-b border-light-gray/10",
         isCollapsed ? "justify-center px-4" : "justify-between"
       ))}>
-        {!isCollapsed && <h1 className="text-2xl font-bold text-accent-purple tracking-tight">Forte.</h1>}
-        {isCollapsed && <span className="text-2xl font-bold text-accent-purple">F.</span>}
+        {!isCollapsed && <h1 className="text-2xl font-bold text-success tracking-tight">Forte.</h1>}
+        {isCollapsed && <span className="text-2xl font-bold text-success">F.</span>}
       </div>
 
       <div className={twMerge(clsx(
@@ -142,7 +142,7 @@ export const Sidebar = () => {
                     title={isCollapsed ? item.name : undefined}
                   >
                     <div className="flex items-center space-x-3">
-                      <item.icon className="w-5 h-5 group-hover:text-accent-red transition-colors" />
+                      <item.icon className="w-5 h-5 group-hover:text-[#e63946] transition-colors" />
                       {!isCollapsed && <span className="font-medium">{item.name}</span>}
                     </div>
                     {!isCollapsed && (
@@ -162,7 +162,7 @@ export const Sidebar = () => {
                             className={({ isActive }) => twMerge(clsx(
                               "block py-2 px-3 rounded-lg text-sm transition-colors",
                               isActive 
-                                ? "text-accent-red font-medium bg-light-gray/5" 
+                                ? "text-[#e63946] font-medium bg-light-gray/5" 
                                 : "text-light-gray/60 hover:text-white hover:bg-light-gray/10"
                             ))}
                           >
@@ -179,7 +179,7 @@ export const Sidebar = () => {
                   className={({ isActive }) => twMerge(clsx(
                     "flex items-center justify-between p-3 rounded-lg transition-all group",
                     isActive 
-                      ? "bg-accent-red text-white font-medium shadow-lg shadow-accent-red/20" 
+                      ? "bg-[#e63946] text-white font-medium shadow-lg shadow-[#e63946]/20" 
                       : "text-light-gray/80 hover:bg-light-gray/10 hover:text-white",
                     isCollapsed && "justify-center"
                   ))}
@@ -188,12 +188,12 @@ export const Sidebar = () => {
                   <div className="flex items-center space-x-3">
                     <item.icon className={twMerge(clsx(
                       "w-5 h-5 transition-colors",
-                      !item.isActive && "group-hover:text-accent-red" 
+                      !item.isActive && "group-hover:text-[#e63946]" 
                     ))} />
                     {!isCollapsed && <span>{item.name}</span>}
                   </div>
                   {!isCollapsed && item.badge && (
-                    <span className="bg-accent-purple text-navy text-xs font-bold px-2 py-0.5 rounded-full">
+                    <span className="bg-success text-[#222222] text-xs font-bold px-2 py-0.5 rounded-full">
                       {item.badge}
                     </span>
                   )}

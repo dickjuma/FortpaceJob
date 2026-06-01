@@ -1,12 +1,10 @@
-import React from 'react';
-import { ChevronDown, Search, SlidersHorizontal, Zap } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ChevronDown, Search, SlidersHorizontal, Zap, Loader2 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import FilterSidebar from '../components/marketplace/FilterSidebar';
 import FreelancerCard from '../components/marketplace/FreelancerCard';
-import {
-  getMarketplaceTalent,
-  getTalentCategories,
-} from './find-talent/talentMarketplaceData';
+import { useMarketplaceTalent, useTalentCategories } from '../common/services/talentHooks';
+import { getTalentCategories, getMarketplaceTalent } from './find-talent/talentMarketplaceData';
 
 function toggleListValue(values, nextValue) {
   return values.includes(nextValue) ? values.filter((value) => value !== nextValue) : [...values, nextValue];
@@ -32,7 +30,8 @@ const OnlineFreelancers = () => {
   };
 
   const location = locationIds.length ? locationMap[locationIds[0]] || '' : '';
-  const talent = getMarketplaceTalent({
+
+  const { data: talent = [], isLoading } = useMarketplaceTalent({
     query,
     mode: 'online',
     categoryIds,
@@ -43,6 +42,10 @@ const OnlineFreelancers = () => {
     location,
     sortBy,
   });
+
+  useTalentCategories('online');
+
+  const categories = getTalentCategories('online');
 
   const setParamState = (next) => {
     const params = new URLSearchParams(searchParams);
@@ -84,7 +87,7 @@ const OnlineFreelancers = () => {
                   type="text"
                 />
               </div>
-              <button className="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap" type="submit">
+              <button className="bg-[#14a800] hover:bg-[#118a00] text-white px-6 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap" type="submit">
                 Find Freelancers
               </button>
             </form>
@@ -163,7 +166,7 @@ const OnlineFreelancers = () => {
 
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <button
-                  className="flex items-center gap-2 bg-brand-50 text-brand-700 px-3 py-1.5 rounded-lg border border-brand-100 mr-2"
+                  className="flex items-center gap-2 bg-[#14a800]/5 text-[#14a800] px-3 py-1.5 rounded-lg border border-[#14a800]/20 mr-2"
                   onClick={() => navigate('/recommended-talent')}
                   type="button"
                 >
@@ -173,7 +176,7 @@ const OnlineFreelancers = () => {
 
                 <div className="relative flex-1 sm:flex-none">
                   <select
-                    className="w-full sm:w-auto appearance-none bg-white border border-zinc-200 text-zinc-700 py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 font-medium text-sm cursor-pointer"
+                    className="w-full sm:w-auto appearance-none bg-white border border-zinc-200 text-zinc-700 py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#14a800]/20 focus:border-[#14a800]/20 font-medium text-sm cursor-pointer"
                     onChange={(event) => setParamState((params) => params.set('sort', event.target.value))}
                     value={sortBy}
                   >
@@ -193,12 +196,16 @@ const OnlineFreelancers = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
-              {talent.map((freelancer) => (
-                <FreelancerCard freelancer={freelancer} key={freelancer.id} />
-              ))}
+              {isLoading
+                ? Array.from({ length: 6 }).map((_, index) => (
+                    <div key={`skeleton-${index}`} className="bg-white border border-zinc-200 rounded-2xl p-6 animate-pulse h-72" />
+                  ))
+                : talent.map((freelancer) => (
+                    <FreelancerCard freelancer={freelancer} key={freelancer.id} />
+                  ))}
             </div>
 
-            {talent.length === 0 ? (
+            {!isLoading && talent.length === 0 ? (
               <div className="bg-white border border-dashed border-zinc-300 rounded-2xl p-10 text-center text-zinc-600">
                 No talent matched those filters. Try removing a trust badge, widening the rate band, or switching to hybrid talent.
               </div>

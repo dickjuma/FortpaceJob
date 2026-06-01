@@ -1,6 +1,7 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from './common/authStore';
+import { profileAPI } from './common/services/api';
 import ErrorBoundary from './common/components/ErrorBoundary';
 import AppShell from './admin/components/layout/AppShell';
 import DashboardPage from './admin/pages/DashboardPage';
@@ -14,6 +15,8 @@ import EscrowRoutes from './escrow/EscrowRoutes';
 import MarketplaceLayout from './layouts/MarketplaceLayout';
 import LandingPage from './pages/shared/LandingPage';
 import FindTalentLanding from './pages/FindTalentLanding';
+import PricingPage from './pages/PricingPage';
+import SubscriptionBootstrap from './common/components/SubscriptionBootstrap';
 import OnlineFreelancers from './pages/OnlineFreelancers';
 
 import { Layout } from "./components/Layout/Layout";
@@ -61,6 +64,7 @@ import SavedCollections from './pages/SavedCollections';
 import BookConsultation from './pages/BookConsultation';
 import PortfolioShowcase from './pages/PortfolioShowcase';
 import FreelancerVideoFeeds from './pages/FreelancerVideoFeeds';
+import MeetingsPage from './pages/MeetingsPage';
 import PublicProjectShowcase from './pages/PublicProjectShowcase';
 import TopRatedTalents from './pages/TopRatedTalents';
 import RisingTalents from './pages/RisingTalents';
@@ -92,6 +96,7 @@ import ClientReviewsDirectory from './pages/ClientReviewsDirectory';
 import FreelancerDiscoveryAi from './pages/FreelancerDiscoveryAi';
 import MobileFindTalent from './pages/MobileFindTalent';
 import HiringPipeline from './pages/HiringPipeline';
+import TalentRoutes from './client/pages/hire-talent';
 
 // Find Work Module (Freelancer Side)
 import FindWorkHub from './pages/find-work/FindWorkHub';
@@ -127,6 +132,7 @@ import WorkAnalytics from './pages/find-work/WorkAnalytics';
 import GigsHub from './pages/gigs/GigsHub';
 import GigsByCategory from './pages/gigs/GigsByCategory';
 import GigDetail from './pages/gigs/GigDetail';
+import GigCheckoutPage from './pages/gigs/GigCheckoutPage';
 import GigSearchResults from './pages/gigs/GigSearchResults';
 import MyGigs from './pages/gigs/MyGigs';
 import CreateEditGig from './pages/gigs/CreateEditGig';
@@ -138,6 +144,10 @@ import GigReviews from './pages/gigs/GigReviews';
 
 import GlobalHomepage from './public/pages/GlobalHomepage';
 import GlobalSearchPage from './public/pages/GlobalSearchPage';
+import StaticInfoPage from './public/pages/StaticInfoPage';
+import AboutPage from './public/pages/AboutPage';
+import ContactPage from './public/pages/ContactPage';
+import PublicClientProfilePage from './public/pages/PublicClientProfilePage';
 import GlobalJobsPage from './public/pages/GlobalJobsPage';
 import PublicFreelancerProfilePage from './public/pages/PublicFreelancerProfilePage';
 import PublicGigPage from './public/pages/PublicGigPage';
@@ -167,6 +177,7 @@ import Verify2FAPage from './auth/pages/Verify2FAPage';
 import AccountRecoveryPage from './auth/pages/AccountRecoveryPage';
 import AdminLoginPage from './auth/pages/AdminLoginPage';
 import AdminSecurityVerificationPage from './auth/pages/AdminSecurityVerificationPage';
+import OAuthCallbackPage from './auth/pages/OAuthCallbackPage';
 import RoleSelectionPage from './auth/pages/RoleSelectionPage';
 import ExperienceLevelPage from './auth/pages/ExperienceLevelPage';
 import SkillSelectionPage from './auth/pages/SkillSelectionPage';
@@ -185,9 +196,9 @@ import { getDashboardPathForRole } from './auth/utils/authRouting';
 import ClientAiAssistantPage from './client/pages/ClientAiAssistantPage';
 import ClientAnalyticsPage from './client/pages/ClientAnalyticsPage';
 import ClientCompanyProfilePage from './client/pages/ClientCompanyProfilePage';
+import ClientProfileRouter from './client/pages/ClientProfileRouter';
 import ClientInterviewManagementPage from './client/pages/ClientInterviewManagementPage';
 import ClientJobAnalyticsDashboard from './client/pages/ClientJobAnalyticsDashboard';
-import ClientJobPostingPage from './client/pages/ClientJobPostingPage';
 import ClientPricingPage from './client/pages/ClientPricingPage';
 import ClientProcurementDashboardPage from './client/pages/ClientProcurementDashboardPage';
 import ClientProjectFileManagerPage from './client/pages/ClientProjectFileManagerPage';
@@ -197,6 +208,7 @@ import ClientReviewApprovalPage from './client/pages/ClientReviewApprovalPage';
 import ClientSavedSearchesPage from './client/pages/ClientSavedSearchesPage';
 import ClientShortlistPage from './client/pages/ClientShortlistPage';
 import ClientTeamWorkspacePage from './client/pages/ClientTeamWorkspacePage';
+import ClientTeamManagementPage from './client/pages/ClientTeamManagementPage';
 import ClientWalletDashboard from './client/pages/ClientWalletDashboard';
 import ClientWorkspacePage from './client/pages/ClientWorkspacePage';
 import ClientContractDetailsPage from './client/pages/ContractDetailsPage';
@@ -204,7 +216,6 @@ import ClientContractsPage from './client/pages/ContractsPage';
 import ClientDashboardPage from './client/pages/DashboardPage';
 import ClientDisputesPage from './client/pages/DisputesPage';
 import ClientEnterpriseHiringDashboardPage from './client/pages/EnterpriseHiringDashboardPage';
-import ClientFavoritesPage from './client/pages/FavoritesPage';
 import ClientGigPurchaseScreen from './client/pages/GigPurchaseScreen';
 import ClientGigsPage from './client/pages/GigsPage';
 import ClientJobApplicantsScreen from './client/pages/JobApplicantsScreen';
@@ -260,6 +271,8 @@ import FreelancerCreateGigPage from './freelancer/pages/CreateGigPage';
 import FreelancerGigCreationWizardPage from './freelancer/pages/CreateGigWizardPage';
 import FreelancerSavedJobsPage from './freelancer/pages/SavedJobsPage';
 import FreelancerDashboardPage from './freelancer/pages/DashboardPage';
+import FreelancerRecommendationProfilePage from './freelancer/pages/RecommendationProfilePage';
+import ClientRecommendationProfilePage from './client/pages/RecommendationProfilePage';
 import FreelancerDisputeResponsePage from './freelancer/pages/DisputeResponsePage';
 import FreelancerDisputesPage from './freelancer/pages/DisputesPage';
 import FreelancerFeaturedGigShowcasePage from './freelancer/pages/FeaturedGigShowcasePage';
@@ -331,7 +344,7 @@ import FreelancerEscrowPage from './freelancer/pages/EscrowPage';
 import FreelancerMyGigsDashboardPage from './freelancer/pages/MyGigsDashboardPage';
 import FreelancerNotificationsPage from './freelancer/pages/NotificationsPage';
 import FreelancerPortfolioManagementPage from './freelancer/pages/PortfolioManagementPage';
-import FreelancerProfilePage from './freelancer/pages/ProfilePage';
+import FreelancerProfileRouter from './freelancer/pages/FreelancerProfileRouter';
 import FreelancerPersonalDetailsPage from './freelancer/pages/PersonalDetailsPage';
 import FreelancerProposalAnalyticsPage from './freelancer/pages/ProposalAnalyticsPage';
 import FreelancerProposalDetailsPage from './freelancer/pages/ProposalDetailsPage';
@@ -357,6 +370,106 @@ import FreelancerUploadCenterPage from './agency/pages/UploadCenterPage';
 import FreelancerSharedAssetsPage from './agency/pages/SharedAssetsPage';
 import FreelancerDownloadsPage from './agency/pages/DownloadsPage';
 
+const PROFILE_BYPASS_PATHS = [
+  '/auth/profile-completion',
+  '/auth/profile-setup',
+  '/auth/role-selection',
+  '/auth/skills',
+  '/auth/experience-level',
+  '/auth/availability',
+  '/auth/rate-setup',
+  '/client/profile',
+  '/client/company-profile',
+  '/client/setup-wizard',
+  '/freelancer/profile',
+  '/freelancer/personal-details',
+];
+
+const isPathBypassed = (pathname) =>
+  PROFILE_BYPASS_PATHS.some((allowedPath) => pathname === allowedPath || pathname.startsWith(`${allowedPath}/`));
+
+const GuardLoading = ({ label = 'Checking your profile' }) => (
+  <div className="flex min-h-screen items-center justify-center bg-surface dark:bg-surface-dark px-6">
+    <div className="rounded-3xl border border-zinc-200 bg-white px-6 py-5 text-sm font-semibold text-zinc-600 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
+      {label}...
+    </div>
+  </div>
+);
+
+const useProfileCompletionStatus = (enabled) => {
+  const user = useAuthStore((state) => state.user);
+  const [status, setStatus] = useState({
+    loading: Boolean(enabled),
+    complete: false,
+  });
+
+  useEffect(() => {
+    let active = true;
+
+    if (!enabled) {
+      setStatus({ loading: false, complete: true });
+      return () => {
+        active = false;
+      };
+    }
+
+    const explicitCompletion = user?.profileCompleted ?? user?.profile?.profileCompleted;
+    if (explicitCompletion === true) {
+      setStatus({ loading: false, complete: true });
+      return () => {
+        active = false;
+      };
+    }
+
+    setStatus({ loading: true, complete: false });
+
+    profileAPI
+      .getMissingFields()
+      .then((response) => {
+        if (!active) return;
+        const data = response?.data ?? response;
+        setStatus({
+          loading: false,
+          complete: Boolean(data?.isComplete),
+        });
+      })
+      .catch(() => {
+        if (!active) return;
+        const explicitCompletion = user?.profileCompleted ?? user?.profile?.profileCompleted;
+        setStatus({
+          loading: false,
+          complete: explicitCompletion === true,
+        });
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [enabled, user?.id, user?.role, user?.profileCompleted, user?.profile?.profileCompleted]);
+
+  return status;
+};
+
+const RoleProtectedRoute = ({ role, children }) => {
+  const location = useLocation();
+  const { isAuthenticated, user } = useAuthStore();
+  const profileStatus = useProfileCompletionStatus(isAuthenticated && String(user?.role || '').toUpperCase() === role);
+
+  if (!isAuthenticated || String(user?.role || '').toUpperCase() !== role) {
+    return <Navigate to="/auth/login" replace />;
+  }
+
+  if (profileStatus.loading) {
+    return <GuardLoading />;
+  }
+
+  if (!profileStatus.complete && !isPathBypassed(location.pathname)) {
+    return <Navigate to="/auth/profile-completion" replace state={{ from: location.pathname }} />;
+  }
+
+  return <>{children}</>;
+};
+
 const AdminProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
   if (!isAuthenticated) return <Navigate to="/admin/login" replace />;
@@ -364,19 +477,11 @@ const AdminProtectedRoute = ({ children }) => {
 };
 
 const ClientProtectedRoute = ({ children }) => {
-  const { isAuthenticated, user } = useAuthStore();
-  if (!isAuthenticated || user?.role !== 'CLIENT') {
-    return <Navigate to="/auth/login" replace />;
-  }
-  return <>{children}</>;
+  return <RoleProtectedRoute role="CLIENT">{children}</RoleProtectedRoute>;
 };
 
 const FreelancerProtectedRoute = ({ children }) => {
-  const { isAuthenticated, user } = useAuthStore();
-  if (!isAuthenticated || user?.role !== 'FREELANCER') {
-    return <Navigate to="/auth/login" replace />;
-  }
-  return <>{children}</>;
+  return <RoleProtectedRoute role="FREELANCER">{children}</RoleProtectedRoute>;
 };
 
 const AuthenticatedRoute = ({ children }) => {
@@ -388,18 +493,44 @@ const AuthenticatedRoute = ({ children }) => {
 };
 
 const RoleDashboardRedirect = () => {
+  const location = useLocation();
   const { isAuthenticated, user } = useAuthStore();
+  const profileStatus = useProfileCompletionStatus(isAuthenticated && Boolean(user?.role));
 
   if (!isAuthenticated) {
     return <Navigate to="/auth/login" replace />;
   }
 
+  if (!user?.role) {
+    return <Navigate to="/auth/login" replace />;
+  }
+
+  if (profileStatus.loading) {
+    return <GuardLoading />;
+  }
+
+  if (!profileStatus.complete) {
+    return <Navigate to="/auth/profile-completion" replace state={{ from: location.pathname }} />;
+  }
+
   return <Navigate to={getDashboardPathForRole(user?.role)} replace />;
 };
 
-// ... existing code ...
+function AuthBootstrap({ children }) {
+  useEffect(() => {
+    useAuthStore.getState().hydrateFromStorage();
+  }, []);
+  return (
+    <>
+      <SubscriptionBootstrap />
+      {children}
+    </>
+  );
+}
+
 function App() {
   return (
+    <AuthBootstrap>
     <Router>
       <Routes>
         <Route path="/admin/login" element={<LoginPage />} />
@@ -410,6 +541,13 @@ function App() {
           <Route path="/freelancer/:username" element={<PublicFreelancerProfilePage />} />
         <Route path="/agency/*" element={<AgencyRoutes />} />
         <Route path="/search" element={<GlobalSearchPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/careers" element={<StaticInfoPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/terms" element={<StaticInfoPage />} />
+        <Route path="/privacy" element={<StaticInfoPage />} />
+        <Route path="/accessibility" element={<StaticInfoPage />} />
+        <Route path="/clients/:clientId" element={<PublicClientProfilePage />} />
         <Route path="/jobs" element={<GlobalJobsPage />} />
         <Route path="/search/*" element={<SearchRoutes />} />
         <Route path="/verification/*" element={<VerificationRoutes />} />
@@ -426,6 +564,7 @@ function App() {
         <Route path="/auth/register" element={<RegisterPage />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/auth/oauth/callback" element={<OAuthCallbackPage />} />
         <Route path="/auth/verify-email" element={<AuthenticatedRoute><VerifyEmailPage /></AuthenticatedRoute>} />
         <Route path="/auth/verify-otp" element={<OTPVerificationPage />} />
         <Route path="/auth/verify-2fa" element={<Verify2FAPage />} />
@@ -463,7 +602,11 @@ function App() {
 
         <Route path="/marketplace" element={<LandingPage />} />
         <Route path="/" element={<GlobalHomepage />} />
+        <Route path="/pricing" element={<PricingPage />} />
         <Route path="/find-talent" element={<FindTalentLanding />} />
+        <Route path="/freelancers" element={<Navigate to="/find-talent" replace />} />
+        <Route path="/talent" element={<Navigate to="/find-talent" replace />} />
+        <Route path="/talent/*" element={<TalentRoutes />} />
         <Route path="/online" element={<OnlineFreelancers />} />
         <Route path="/onsite" element={<OnsiteProfessionals />} />
         <Route path="/hybrid" element={<HybridTalent />} />
@@ -509,6 +652,7 @@ function App() {
         {/* Advanced Portfolio & Feeds */}
         <Route path="/portfolios" element={<PortfolioShowcase />} />
         <Route path="/videos" element={<FreelancerVideoFeeds />} />
+        <Route path="/meetings" element={<MeetingsPage />} />
         <Route path="/delivered" element={<PublicProjectShowcase />} />
         
         {/* Curated Directories */}
@@ -586,6 +730,7 @@ function App() {
         <Route path="/gigs" element={<GigsHub />} />
         <Route path="/gigs/category/:categorySlug" element={<GigsByCategory />} />
         <Route path="/gigs/gig/:gigId" element={<GigDetail />} />
+        <Route path="/gigs/checkout/:gigId" element={<GigCheckoutPage />} />
         <Route path="/gigs/search" element={<GigSearchResults />} />
         <Route path="/gigs/my-gigs" element={<MyGigs />} />
         <Route path="/gigs/create" element={<CreateEditGig />} />
@@ -602,9 +747,14 @@ function App() {
         <Route path="/dashboard" element={<RoleDashboardRedirect />} />
         <Route path="/client-dashboard" element={<ClientHiringDashboard />} />
         <Route path="/client/dashboard" element={<ClientProtectedRoute><ClientLayout><ClientDashboardPage /></ClientLayout></ClientProtectedRoute>} />
+<Route path="/client/profile-intelligence" element={<ClientProtectedRoute><ClientLayout><ClientRecommendationProfilePage /></ClientLayout></ClientProtectedRoute>} />
+<Route path="/client/profile" element={<ClientProtectedRoute><ClientLayout><ClientProfileRouter /></ClientLayout></ClientProtectedRoute>} />
+<Route path="/client/company-profile" element={<ClientProtectedRoute><ClientLayout><ClientCompanyProfilePage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/verify-otp" element={<ClientVerifyOtpPage />} />
         <Route path="/client/setup-wizard" element={<ClientProtectedRoute><ClientSetupWizard /></ClientProtectedRoute>} />
         <Route path="/client/financial-dashboard" element={<ClientProtectedRoute><ClientLayout><ClientFinancialDashboard /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/wallet" element={<ClientProtectedRoute><ClientLayout><ClientWalletDashboard /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/messages" element={<ClientProtectedRoute><ClientLayout><ClientMessagesPage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/offline-map" element={<ClientProtectedRoute><ClientLayout><ClientOfflineMapPage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/mpesa-setup" element={<ClientProtectedRoute><ClientLayout><ClientMpesaSetupPage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/gps-tracking" element={<ClientProtectedRoute><ClientLayout><ClientGpsTrackingPage /></ClientLayout></ClientProtectedRoute>} />
@@ -616,6 +766,7 @@ function App() {
         <Route path="/client/workflows" element={<ClientProtectedRoute><ClientLayout><ClientWorkflowBuilderPage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/time-tracking" element={<ClientProtectedRoute><ClientLayout><ClientTimeTrackingPage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/invoices" element={<ClientProtectedRoute><ClientLayout><ClientInvoicesPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/interviews" element={<ClientProtectedRoute><ClientLayout><ClientInterviewManagementPage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/roi-analytics" element={<ClientProtectedRoute><ClientLayout><ClientRoiAnalyticsPage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/announcements" element={<ClientProtectedRoute><ClientLayout><ClientAnnouncementsPage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/talent-search" element={<ClientProtectedRoute><ClientLayout><ClientTalentSearchPage /></ClientLayout></ClientProtectedRoute>} />
@@ -627,11 +778,16 @@ function App() {
         <Route path="/client/agency-management" element={<ClientProtectedRoute><ClientLayout><ClientAgencyManagementPage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/erp-systems" element={<ClientProtectedRoute><ClientLayout><ClientErpSystemsPage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/task-workspace" element={<ClientProtectedRoute><ClientLayout><ClientTaskWorkspacePage /></ClientLayout></ClientProtectedRoute>} />
-        <Route path="/client/collaboration-hub" element={<ClientProtectedRoute><ClientLayout><ClientCollaborationHubPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/collaboration-hub" element={<ClientProtectedRoute><ClientLayout><ClientTeamWorkspacePage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/team" element={<ClientProtectedRoute><ClientLayout><ClientTeamManagementPage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client-services/create-job" element={<ClientProtectedRoute><ClientLayout><ClientCreateJob /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client-services/my-jobs" element={<ClientProtectedRoute><ClientLayout><ClientMyJobs /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/proposals" element={<ClientProtectedRoute><ClientLayout><ClientProposalsPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/contracts" element={<ClientProtectedRoute><ClientLayout><ClientContractsPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/reviews" element={<ClientProtectedRoute><ClientLayout><ClientReviewsPage /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/shortlist" element={<ClientProtectedRoute><ClientLayout><ClientShortlistPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/favorites" element={<ClientProtectedRoute><ClientLayout><ClientShortlistPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/post-job" element={<ClientProtectedRoute><ClientLayout><ClientPostJobPage /></ClientLayout></ClientProtectedRoute>} />
 
         {/* --- FREELANCER INDEPENDENT ROUTES --- */}
         <Route path="/freelancer-dashboard" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerDashboardPage /></FreelancerLayout></FreelancerProtectedRoute>} />
@@ -642,9 +798,11 @@ function App() {
         <Route path="/freelancer/jobs" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerJobsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/job/:id" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerJobDetailsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/proposals" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerProposalsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
-        <Route path="/freelancer/profile" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerProfilePage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/profile" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerProfileRouter /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/profile-intelligence" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerRecommendationProfilePage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/personal-details" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerPersonalDetailsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/contracts" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerContractsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/disputes" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerDisputesPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/orders" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerOrdersPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/calendar" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerCalendarPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/bookings" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerBookingsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
@@ -654,6 +812,12 @@ function App() {
         <Route path="/freelancer/reviews" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerReviewsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/create-gig" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerGigCreationWizardPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/gigs/create" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerGigCreationWizardPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/:gigId/edit" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerGigEditPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/:gigId" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerGigDetailPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/portfolio" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerPortfolioManagementPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/disputes/:id" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerDisputeResponsePage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/proposals/:id" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerProposalDetailsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/jobs/:jobId/propose" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerProposalSubmissionPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/saved-jobs" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerSavedJobsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/skill-tests" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerSkillTestsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/certifications-management" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerCertificationManagementPage /></FreelancerLayout></FreelancerProtectedRoute>} />
@@ -664,8 +828,9 @@ function App() {
         <Route path="/freelancer/goals-earnings" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerGoalsEarningsTrackerPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/activity-feed" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerActivityFeedPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/tax-invoices" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerTaxInvoicesPage /></FreelancerLayout></FreelancerProtectedRoute>} />
-        <Route path="/freelancer/messages" element={<FreelancerProtectedRoute><FreelancerMessagesPage /></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/messages" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerMessagesPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/wallet" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerWalletPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/withdrawal" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerWithdrawalPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/payment-setup" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerPaymentSetupPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/trust-score" element={<FreelancerProtectedRoute><FreelancerLayout><TrustScoreDashboardPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/notification-settings" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerNotificationSettingsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
@@ -718,6 +883,7 @@ function App() {
         <Route path="/freelancer/downloads" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerDownloadsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
       </Routes>
     </Router>
+    </AuthBootstrap>
   );
 }
 

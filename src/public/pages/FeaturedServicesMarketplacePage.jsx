@@ -6,13 +6,13 @@ import {
 } from 'lucide-react';
 
 const CATEGORIES = [
-  { id: 1, name: 'Development & IT', icon: Code, color: 'text-brand-600', bg: 'bg-brand-50 dark:bg-brand-900/20' },
-  { id: 2, name: 'Design & Creative', icon: Palette, color: 'text-brand-500', bg: 'bg-brand-50 dark:bg-brand-900/20' },
+  { id: 1, name: 'Development & IT', icon: Code, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/20' },
+  { id: 2, name: 'Design & Creative', icon: Palette, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/20' },
   { id: 3, name: 'Digital Marketing', icon: Globe, color: 'text-green-500', bg: 'bg-green-50 dark:bg-green-900/20' },
   { id: 4, name: 'Writing & Translation', icon: PenTool, color: 'text-orange-500', bg: 'bg-orange-50 dark:bg-orange-900/20' },
   { id: 5, name: 'Video & Animation', icon: Video, color: 'text-red-500', bg: 'bg-red-50 dark:bg-red-900/20' },
   { id: 6, name: 'Music & Audio', icon: Music, color: 'text-accent', bg: 'bg-pink-50 dark:bg-pink-900/20' },
-  { id: 7, name: 'Business', icon: Briefcase, color: 'text-brand-500', bg: 'bg-brand-50 dark:bg-brand-900/20' },
+  { id: 7, name: 'Business', icon: Briefcase, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/20' },
   { id: 8, name: 'AI Services', icon: Cpu, color: 'text-teal-500', bg: 'bg-teal-50 dark:bg-teal-900/20' },
 ];
 
@@ -61,7 +61,7 @@ function ServiceCard({ service, showMatch = false }) {
           <Heart className={`w-5 h-5 ${isLiked ? 'fill-red-500 text-red-500' : 'text-white'}`} />
         </button>
         {service.badge && (
-          <div className="absolute top-3 left-3 px-2.5 py-1 bg-brand-600 text-white text-xs font-medium rounded-full shadow-sm">
+          <div className="absolute top-3 left-3 px-2.5 py-1 bg-[#14a800] text-white text-xs font-medium rounded-full shadow-sm">
             {service.badge}
           </div>
         )}
@@ -81,7 +81,7 @@ function ServiceCard({ service, showMatch = false }) {
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{service.seller}</span>
           </div>
         </div>
-        <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-2 mb-3 group-hover:text-brand-600 transition-colors leading-snug">
+        <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-2 mb-3 group-hover:text-[#14a800] transition-colors leading-snug">
           {service.title}
         </h3>
         <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
@@ -104,7 +104,7 @@ export default function FeaturedServicesMarketplacePage() {
   return (
     <div className="min-h-screen bg-surface dark:bg-gray-950 pb-20 font-sans">
       {/* Hero Section */}
-      <div className="bg-brand-600 dark:bg-brand-900 text-white relative overflow-hidden">
+      <div className="bg-[#14a800] dark:bg-[#14a800] text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
         <div className="absolute top-0 right-0 p-12 opacity-20 pointer-events-none">
            <Sparkles className="w-48 h-48" />
@@ -121,7 +121,7 @@ export default function FeaturedServicesMarketplacePage() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-brand-100 text-lg md:text-xl mb-10 max-w-2xl"
+            className="text-[#14a800] text-lg md:text-xl mb-10 max-w-2xl"
           >
             Discover top-rated talent, AI-matched to your project needs. Get started today and bring your ideas to life.
           </motion.p>
@@ -131,7 +131,7 @@ export default function FeaturedServicesMarketplacePage() {
             transition={{ delay: 0.2 }}
             className="w-full max-w-3xl relative"
           >
-            <div className="relative flex items-center bg-white rounded-xl shadow-xl p-2 focus-within:ring-4 focus-within:ring-brand-500/30 transition-all">
+            <div className="relative flex items-center bg-white rounded-xl shadow-xl p-2 focus-within:ring-4 focus-within:ring-#14a800]/30 transition-all">
               <Search className="w-6 h-6 text-gray-400 ml-4 flex-shrink-0" />
               <input 
                 type="text"
@@ -140,11 +140,11 @@ export default function FeaturedServicesMarketplacePage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button className="bg-brand-600 hover:bg-brand-700 text-white px-8 py-3 rounded-lg font-medium transition-colors flex-shrink-0">
+              <button className="bg-[#14a800] hover:bg-[#118a00] text-white px-8 py-3 rounded-lg font-medium transition-colors flex-shrink-0">
                 Search
               </button>
             </div>
-            <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm text-brand-100">
+            <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm text-[#14a800]">
               <span className="font-medium mr-2 text-white/80">Popular:</span>
               {['Website Design', 'WordPress', 'Logo Design', 'AI Services', 'Video Editing'].map(term => (
                 <button key={term} className="px-3 py-1 rounded-full border border-white/20 hover:bg-white/10 hover:text-white transition-all">
@@ -178,7 +178,7 @@ export default function FeaturedServicesMarketplacePage() {
                   <div className={`w-14 h-14 rounded-full flex items-center justify-center ${cat.bg} ${cat.color} group-hover:scale-110 transition-transform`}>
                     <Icon className="w-7 h-7" />
                   </div>
-                  <span className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-brand-600 transition-colors">
+                  <span className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-[#14a800] transition-colors">
                     {cat.name}
                   </span>
                 </motion.div>
@@ -188,7 +188,7 @@ export default function FeaturedServicesMarketplacePage() {
         </section>
 
         {/* AI Recommendations */}
-        <section className="bg-gradient-to-br from-teal-50 to-brand-50 dark:from-teal-900/20 dark:to-brand-900/20 rounded-3xl p-8 md:p-10 border border-teal-100 dark:border-teal-900/30">
+        <section className="bg-gradient-to-br from-teal-50 to-[#118a00] dark:from-teal-900/20 dark:to-[#118a00]/20 rounded-3xl p-8 md:p-10 border border-teal-100 dark:border-teal-900/30">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-teal-100 dark:bg-teal-900/50 rounded-xl text-teal-600 dark:text-teal-400">
@@ -199,7 +199,7 @@ export default function FeaturedServicesMarketplacePage() {
                 <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Based on your recent activity and AI matching</p>
               </div>
             </div>
-            <button className="text-brand-600 dark:text-brand-400 font-medium flex items-center gap-1 hover:gap-2 transition-all self-start md:self-auto">
+            <button className="text-[#14a800] dark:text-[#14a800] font-medium flex items-center gap-1 hover:gap-2 transition-all self-start md:self-auto">
               View all matches <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -216,7 +216,7 @@ export default function FeaturedServicesMarketplacePage() {
         <section>
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
-              <TrendingUp className="w-6 h-6 text-brand-600" />
+              <TrendingUp className="w-6 h-6 text-[#14a800]" />
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Trending Services</h2>
             </div>
             <div className="flex gap-2">
@@ -242,7 +242,7 @@ export default function FeaturedServicesMarketplacePage() {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Sponsored Services</h2>
               <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Featured partners and top-rated professionals</p>
             </div>
-            <button className="text-brand-600 dark:text-brand-400 font-medium flex items-center gap-1 hover:gap-2 transition-all">
+            <button className="text-[#14a800] dark:text-[#14a800] font-medium flex items-center gap-1 hover:gap-2 transition-all">
               See all <ArrowRight className="w-4 h-4" />
             </button>
           </div>

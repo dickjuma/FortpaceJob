@@ -82,7 +82,7 @@ export default function TeamPermissionsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <ShieldAlert className="w-8 h-8 text-accent-purple" />
+            <ShieldAlert className="w-8 h-8 text-success" />
             Security & Permissions
           </h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -104,7 +104,7 @@ export default function TeamPermissionsPage() {
         <div className="lg:col-span-1 space-y-6">
           <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
             <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-              <Settings className="w-5 h-5 text-accent-purple" />
+              <Settings className="w-5 h-5 text-success" />
               Policy Guidelines
             </h3>
             <p className="text-xs text-text-secondary leading-relaxed font-medium">
@@ -150,7 +150,7 @@ export default function TeamPermissionsPage() {
                             className={cn(
                               "w-8 h-8 rounded-xl border flex items-center justify-center mx-auto transition-all hover:scale-105",
                               policies[role][policy.key]
-                                ? "bg-accent-purple/10 border-accent-purple text-accent-purple"
+                                ? "bg-success/10 border-success text-success"
                                 : "bg-light-gray border-border text-text-secondary hover:border-border-hover"
                             )}
                           >

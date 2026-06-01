@@ -28,12 +28,12 @@ const ROLES = [
     description:
       'Turn your expertise into income. Set your own rates, pick your clients, and work on projects you love.',
     icon: Briefcase,
-    gradient: 'from-violet-500 via-purple-500 to-indigo-600',
-    glow: 'shadow-violet-500/30',
-    border: 'border-violet-500',
-    ring: 'ring-violet-500/40',
+    gradient: 'from-#14a800] via-#14a800] to-[#118a00]',
+    glow: 'shadow-#14a800]/30',
+    border: 'border-#14a800]',
+    ring: 'ring-#14a800]/40',
     bg: 'bg-violet-50 dark:bg-violet-950/30',
-    iconBg: 'bg-gradient-to-br from-violet-500 to-indigo-600',
+    iconBg: 'bg-gradient-to-br from-#14a800] to-[#118a00]',
     checkBg: 'bg-violet-600',
     benefits: [
       { icon: Zap, text: 'Set your own rates & schedule' },
@@ -136,9 +136,9 @@ function ProgressIndicator({ currentStep = 1 }) {
               <span
                 className={`text-[10px] font-semibold tracking-wide uppercase hidden sm:block ${
                   isCurrent
-                    ? 'text-brand-600 dark:text-brand-400'
+                    ? 'text-[#14a800] dark:text-[#14a800]'
                     : isCompleted
-                    ? 'text-brand-500 dark:text-brand-500'
+                    ? 'text-[#14a800] dark:text-[#14a800]'
                     : 'text-gray-400'
                 }`}
               >
@@ -291,8 +291,6 @@ export default function RoleSelectionPage() {
     if (!selected || isSubmitting) return;
     setIsSubmitting(true);
 
-    await new Promise((r) => setTimeout(r, 600));
-
     const routes = {
       FREELANCER: '/auth/skills',
       CLIENT: '/client/dashboard',
@@ -308,10 +306,10 @@ export default function RoleSelectionPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-surface dark:bg-gray-950 font-sans selection:bg-brand-500 selection:text-white overflow-hidden">
+    <div className="relative min-h-screen bg-surface dark:bg-gray-950 font-sans selection:bg-[#14a800] selection:text-white overflow-hidden">
       {/* ── Floating Gradient Orbs ── */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-violet-500/10 dark:bg-violet-500/8 blur-[120px]" />
+        <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-#14a800]/10 dark:bg-#14a800]/8 blur-[120px]" />
         <div className="absolute top-1/2 -right-40 w-[500px] h-[500px] rounded-full bg-sky-400/10 dark:bg-sky-400/8 blur-[120px]" />
         <div className="absolute -bottom-40 left-1/3 w-[400px] h-[400px] rounded-full bg-orange-400/10 dark:bg-orange-400/8 blur-[100px]" />
       </div>
@@ -325,11 +323,11 @@ export default function RoleSelectionPage() {
           transition={{ duration: 0.45 }}
           className="flex items-center gap-2 mb-8"
         >
-          <div className="w-9 h-9 bg-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/30">
+          <div className="w-9 h-9 bg-[#14a800] rounded-xl flex items-center justify-center shadow-lg shadow-[#14a800]/25/30">
             <ShieldCheck className="text-white w-5 h-5" />
           </div>
           <span className="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-            Forte<span className="text-brand-600">.</span>
+            Forte<span className="text-[#14a800]">.</span>
           </span>
         </motion.div>
 
@@ -352,7 +350,7 @@ export default function RoleSelectionPage() {
         >
           <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-3">
             How will you use{' '}
-            <span className="bg-gradient-to-r from-brand-600 via-violet-500 to-cyan-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#14a800] via-#14a800] to-cyan-500 bg-clip-text text-transparent">
               Forte?
             </span>
           </h1>
@@ -420,7 +418,7 @@ export default function RoleSelectionPage() {
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="text-xs font-semibold text-brand-600 dark:text-brand-400 sm:absolute sm:left-1/2 sm:-tranzinc-x-1/2"
+                className="text-xs font-semibold text-[#14a800] dark:text-[#14a800] sm:absolute sm:left-1/2 sm:-tranzinc-x-1/2"
               >
                 ✓ {ROLES.find((r) => r.id === selected)?.label} selected
               </motion.p>
@@ -436,10 +434,10 @@ export default function RoleSelectionPage() {
             whileTap={selected ? { scale: 0.97 } : {}}
             className={`
               relative flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold
-              transition-all duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/40
+              transition-all duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-#14a800]/40
               ${
                 selected
-                  ? 'bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 hover:shadow-xl hover:shadow-brand-500/40'
+                  ? 'bg-[#14a800] hover:bg-[#118a00] text-white shadow-lg shadow-[#14a800]/25/30 hover:shadow-xl hover:shadow-[#14a800]/25/40'
                   : 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
               }
             `}
