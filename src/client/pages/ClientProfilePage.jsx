@@ -13,6 +13,7 @@ export default function ClientProfilePage() {
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState(null);
   const [clientType, setClientType] = useState('INDIVIDUAL');
+  const [formErrors, setFormErrors] = useState({});
 
   const { data: profile, isLoading, error } = useMyProfile();
   const updateProfile = useUpdateProfile();
@@ -40,9 +41,36 @@ export default function ClientProfilePage() {
     setEditing(true);
   };
 
-  const cancelEdit = () => { setEditing(false); setEditForm(null); };
+  const cancelEdit = () => { setEditing(false); setEditForm(null); setFormErrors({}); };
+
+  const validateForm = () => {
+    const errors = {};
+    if (!editForm?.firstName?.trim()) errors.firstName = 'First name is required.';
+    if (!editForm?.lastName?.trim()) errors.lastName = 'Last name is required.';
+    if (clientType !== 'INDIVIDUAL' && !editForm?.companyName?.trim()) errors.companyName = 'Company name is required for business accounts.';
+    if (editForm?.website && !/^https?:\/\/[\w\-]+(\.[\w\-]+)+([\w\-\._~:/?#[\]@!$&'()*+,;=.]+)?$/.test(editForm.website)) {
+      errors.website = 'Please enter a valid website URL (https://...).';
+    }
+    if (editForm?.phone && !/^\+?[0-9]{7,15}$/.test(editForm.phone)) {
+      errors.phone = 'Please enter a valid phone number with country code.';
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const inputClass = (field) =>
+    `w-full rounded-xl px-3 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2 ${
+      formErrors[field]
+        ? 'border-rose-400 bg-rose-50 text-rose-900 ring-rose-200'
+        : 'border-zinc-200 bg-zinc-50 text-zinc-900 focus:border-[#14a800] focus:ring-success/20'
+    }`;
 
   const handleSave = async () => {
+    if (!validateForm()) {
+      toast.error('Please fix the highlighted fields before saving.');
+      return;
+    }
+
     try {
       await updateProfile.mutateAsync({
         firstName: editForm.firstName,
@@ -52,7 +80,6 @@ export default function ClientProfilePage() {
         accountType: clientType,
         clientType,
       });
-      await profileAPI.updateMyProfile({ accountType: clientType, clientType }).catch(() => {});
       if (clientType !== 'INDIVIDUAL' || editForm.companyName) {
         await updateCompany.mutateAsync({
           companyName: editForm.companyName,
@@ -64,6 +91,7 @@ export default function ClientProfilePage() {
       }
       setEditing(false);
       setEditForm(null);
+      setFormErrors({});
       toast.success('Profile saved');
     } catch (err) {
       toast.error(err.message || 'Save failed');
@@ -187,51 +215,105 @@ export default function ClientProfilePage() {
 
           {editing ? (
             <div className="space-y-4">
+              {Object.keys(formErrors).length > 0 && (
+                <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
+                  Please fix the highlighted fields before saving.
+                </div>
+              )}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs text-zinc-400 mb-1.5 block">First Name</label>
-                  <input value={editForm.firstName} onChange={(e) => setEditForm(f => ({ ...f, firstName: e.target.value }))} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-success" />
+                  <input
+                    value={editForm.firstName}
+                    onChange={(e) => setEditForm(f => ({ ...f, firstName: e.target.value }))}
+                    className={inputClass('firstName')}
+                    aria-invalid={Boolean(formErrors.firstName)}
+                  />
+                  {formErrors.firstName && <p className="mt-1 text-xs text-rose-500">{formErrors.firstName}</p>}
                 </div>
                 <div>
                   <label className="text-xs text-zinc-400 mb-1.5 block">Last Name</label>
-                  <input value={editForm.lastName} onChange={(e) => setEditForm(f => ({ ...f, lastName: e.target.value }))} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-success" />
+                  <input
+                    value={editForm.lastName}
+                    onChange={(e) => setEditForm(f => ({ ...f, lastName: e.target.value }))}
+                    className={inputClass('lastName')}
+                    aria-invalid={Boolean(formErrors.lastName)}
+                  />
+                  {formErrors.lastName && <p className="mt-1 text-xs text-rose-500">{formErrors.lastName}</p>}
                 </div>
               </div>
               {(clientType === 'SME' || clientType === 'CORPORATE') && (
                 <>
                   <div>
                     <label className="text-xs text-zinc-500 mb-1.5 block">Company Name</label>
-                    <input value={editForm.companyName} onChange={(e) => setEditForm(f => ({ ...f, companyName: e.target.value }))} className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 text-sm text-zinc-900 focus:outline-none focus:border-[#14a800]" />
+                    <input
+                      value={editForm.companyName}
+                      onChange={(e) => setEditForm(f => ({ ...f, companyName: e.target.value }))}
+                      className={inputClass('companyName')}
+                      aria-invalid={Boolean(formErrors.companyName)}
+                    />
+                    {formErrors.companyName && <p className="mt-1 text-xs text-rose-500">{formErrors.companyName}</p>}
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-xs text-zinc-500 mb-1.5 block">Industry</label>
-                      <input value={editForm.industry} onChange={(e) => setEditForm(f => ({ ...f, industry: e.target.value }))} className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 text-sm text-zinc-900 focus:outline-none focus:border-[#14a800]" />
+                      <input
+                        value={editForm.industry}
+                        onChange={(e) => setEditForm(f => ({ ...f, industry: e.target.value }))}
+                        className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 text-sm text-zinc-900 focus:outline-none focus:border-[#14a800]"
+                      />
                     </div>
                     <div>
                       <label className="text-xs text-zinc-500 mb-1.5 block">Company size</label>
-                      <input value={editForm.companySize} onChange={(e) => setEditForm(f => ({ ...f, companySize: e.target.value }))} placeholder="e.g. 11-50" className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 text-sm text-zinc-900 focus:outline-none focus:border-[#14a800]" />
+                      <input
+                        value={editForm.companySize}
+                        onChange={(e) => setEditForm(f => ({ ...f, companySize: e.target.value }))}
+                        placeholder="e.g. 11-50"
+                        className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 text-sm text-zinc-900 focus:outline-none focus:border-[#14a800]"
+                      />
                     </div>
                   </div>
                 </>
               )}
               <div>
                 <label className="text-xs text-zinc-400 mb-1.5 block">Bio / About</label>
-                <textarea value={editForm.bio} onChange={(e) => setEditForm(f => ({ ...f, bio: e.target.value }))} rows={3} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-success resize-none" />
+                <textarea
+                  value={editForm.bio}
+                  onChange={(e) => setEditForm(f => ({ ...f, bio: e.target.value }))}
+                  rows={3}
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-success resize-none"
+                />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs text-zinc-400 mb-1.5 block">Phone</label>
-                  <input value={editForm.phone} onChange={(e) => setEditForm(f => ({ ...f, phone: e.target.value }))} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-success" />
+                  <input
+                    value={editForm.phone}
+                    onChange={(e) => setEditForm(f => ({ ...f, phone: e.target.value }))}
+                    className={inputClass('phone')}
+                    aria-invalid={Boolean(formErrors.phone)}
+                  />
+                  {formErrors.phone && <p className="mt-1 text-xs text-rose-500">{formErrors.phone}</p>}
                 </div>
                 <div>
                   <label className="text-xs text-zinc-400 mb-1.5 block">Location</label>
-                  <input value={editForm.location} onChange={(e) => setEditForm(f => ({ ...f, location: e.target.value }))} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-success" />
+                  <input
+                    value={editForm.location}
+                    onChange={(e) => setEditForm(f => ({ ...f, location: e.target.value }))}
+                    className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-success"
+                  />
                 </div>
               </div>
               <div>
                 <label className="text-xs text-zinc-400 mb-1.5 block">Website</label>
-                <input value={editForm.website} onChange={(e) => setEditForm(f => ({ ...f, website: e.target.value }))} placeholder="https://..." className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-success" />
+                <input
+                  value={editForm.website}
+                  onChange={(e) => setEditForm(f => ({ ...f, website: e.target.value }))}
+                  placeholder="https://..."
+                  className={inputClass('website')}
+                  aria-invalid={Boolean(formErrors.website)}
+                />
+                {formErrors.website && <p className="mt-1 text-xs text-rose-500">{formErrors.website}</p>}
               </div>
             </div>
           ) : (
@@ -274,15 +356,15 @@ export default function ClientProfilePage() {
             <DollarSign className="w-5 h-5 text-success" /> Wallet & Deposits
           </h2>
           <p className="text-sm text-zinc-400">Add funds to your escrow wallet via M-Pesa to hire talent.</p>
-          
-          <form 
+
+          <form
             onSubmit={async (e) => {
               e.preventDefault();
               const fd = new FormData(e.target);
               const amount = fd.get('amount');
               const phone = fd.get('phone');
               if (!amount || !phone) return toast.error('Enter amount and M-Pesa number');
-              
+
               const id = toast.loading('Initiating M-Pesa STK Push...');
               try {
                 // Call backend deposit endpoint

@@ -137,25 +137,21 @@ export default function SkillSelectionPage() {
   };
 
   const handleContinue = async () => {
-    if (!taxonomySelection?.roleSlug) {
-      toast.error('Choose your primary role from the Forte taxonomy.');
-      return;
-    }
-    if (selectedSkills.length === 0) {
-      toast.error('Add at least one skill.');
-      return;
-    }
     try {
-      await onboardingAPI.completeStep('category', {
-        roleSlug: taxonomySelection.roleSlug,
-        roleName: taxonomySelection.roleName,
-        sectionSlug: taxonomySelection.sectionSlug,
-        primaryCategoryId: taxonomySelection.primaryCategoryId,
-        workMode: taxonomySelection.workMode,
-        skills: selectedSkills.map((s) => s.name),
-        displayName: initialDraft.fullName,
-      });
-      await onboardingAPI.completeStep('skills', { skills: selectedSkills.map((s) => s.name) });
+      if (taxonomySelection?.roleSlug) {
+        await onboardingAPI.completeStep('category', {
+          roleSlug: taxonomySelection.roleSlug,
+          roleName: taxonomySelection.roleName,
+          sectionSlug: taxonomySelection.sectionSlug,
+          primaryCategoryId: taxonomySelection.primaryCategoryId,
+          workMode: taxonomySelection.workMode,
+          skills: selectedSkills.map((s) => s.name),
+          displayName: initialDraft.fullName,
+        });
+      }
+      if (selectedSkills.length > 0) {
+        await onboardingAPI.completeStep('skills', { skills: selectedSkills.map((s) => s.name) });
+      }
     } catch (err) {
       console.warn('[SkillSelection] onboarding sync', err);
     }
@@ -436,13 +432,12 @@ export default function SkillSelectionPage() {
               <span className="text-sm font-semibold text-zinc-500 hidden sm:block">
                 {selectedSkills.length} skills selected
               </span>
-              <button 
-                onClick={handleContinue}
-                disabled={selectedSkills.length === 0}
-                className="flex items-center gap-2 px-6 py-2.5 bg-[#14a800] hover:bg-[#118a00] disabled:bg-zinc-300 dark:disabled:bg-zinc-800 disabled:text-zinc-500 text-white text-sm font-bold rounded-xl shadow-sm transition-all"
-              >
-                Next Step <ChevronRight className="w-4 h-4" />
-              </button>
+               <button
+                 onClick={handleContinue}
+                 className="flex items-center gap-2 px-6 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white text-sm font-bold rounded-xl shadow-sm transition-all"
+               >
+                 Next Step <ChevronRight className="w-4 h-4" />
+               </button>
             </div>
           </div>
         </div>

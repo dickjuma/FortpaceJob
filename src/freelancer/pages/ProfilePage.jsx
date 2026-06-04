@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { 
-  MapPin, Clock, ShieldCheck, Star, 
+import {
+  MapPin, Clock, ShieldCheck, Star,
   Award, Edit, Languages, Users,
   X, Plus, Save, Settings, Link2, GraduationCap, DollarSign
 } from 'lucide-react';
@@ -104,6 +104,7 @@ export default function ProfilePage() {
     newLangName: '',
     newLangLevel: 'Fluent'
   });
+  const [fiverrFormErrors, setFiverrFormErrors] = useState({});
 
   const profileKey = accountType === 'CORPORATE' ? 'CORPORATE' : accountType === 'SME' ? 'SME' : 'INDIVIDUAL';
   const currentProfile = profileData[profileKey] || profileData.INDIVIDUAL;
@@ -146,11 +147,30 @@ export default function ProfilePage() {
       newLangName: '',
       newLangLevel: 'Fluent'
     });
+    setFiverrFormErrors({});
     setActiveTab('fiverr_edit');
+  };
+
+  const validateFiverrForm = () => {
+    const errors = {};
+    if (!fiverrForm.title?.trim()) errors.title = 'A professional title is required.';
+    if (!fiverrForm.bio?.trim() || fiverrForm.bio.trim().length < 20) errors.bio = 'Please add a detailed biography of at least 20 characters.';
+    if (!fiverrForm.hourlyRate?.toString().trim()) {
+      errors.hourlyRate = 'Hourly rate is required.';
+    } else if (Number.isNaN(Number(fiverrForm.hourlyRate)) || Number(fiverrForm.hourlyRate) <= 0) {
+      errors.hourlyRate = 'Enter a valid hourly rate greater than zero.';
+    }
+    if (!fiverrForm.availability) errors.availability = 'Choose an availability status.';
+    setFiverrFormErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSaveFiverrProfile = async (e) => {
     e.preventDefault();
+    if (!validateFiverrForm()) {
+      toast.error('Please correct the highlighted fields before saving.');
+      return;
+    }
     const key = profileKey;
     setProfileData((prev) => ({
       ...prev,
@@ -179,6 +199,7 @@ export default function ProfilePage() {
         teamSize: profileData[key]?.teamSize,
       });
       toast.success('Profile saved to your account');
+      setFiverrFormErrors({});
     } catch (err) {
       toast.error(err.message || 'Could not save profile');
     }
@@ -340,12 +361,12 @@ export default function ProfilePage() {
   return (
     <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500 pb-12 relative font-sans">
       <Toaster position="top-right" />
-      
+
       {/* Top Banner */}
       <div className="h-48 rounded-2xl bg-gradient-to-r from-[#222222] to-success/90 relative overflow-hidden shadow-lg border border-white/10">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent"></div>
         <div className="absolute top-4 right-4 flex gap-2 z-20">
-          <button 
+          <button
             onClick={handleOpenFiverrForm}
             className="px-4 py-2 bg-white text-[#222222] hover:bg-zinc-100 rounded-xl text-xs font-black shadow-lg transition-all flex items-center gap-1.5 border border-transparent"
           >
@@ -397,7 +418,7 @@ export default function ProfilePage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 -mt-20 relative z-10">
-        
+
         {/* Left Column: Freelancer Details */}
         <div className="lg:col-span-1 space-y-6">
           <Card className="text-center p-8 border-t-4 border-t-success relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-xl">
@@ -410,14 +431,14 @@ export default function ProfilePage() {
               </div>
               <div className="absolute bottom-2 right-2 w-5 h-5 bg-success border-2 border-white rounded-full z-10"></div>
             </div>
-            
+
             <h1 className="text-2xl font-black text-text-primary flex items-center justify-center gap-2">
               {currentProfile.firstName || currentProfile.companyName || 'Freelancer'} {currentProfile.lastName || ''}
               <ShieldCheck className="w-5 h-5 text-success" />
             </h1>
             <p className="text-sm font-bold text-text-secondary mt-1">{currentProfile.title}</p>
             <p className="text-[11px] font-semibold uppercase tracking-widest text-success mt-1">{liveSummary.persona} profile</p>
-            
+
             <div className="flex items-center justify-center gap-2 mt-3">
               <div className="flex text-[#e63946]">
                 {[1,2,3,4,5].map(i => <Star key={i} size={16} fill={i <= Math.floor(commonData.rating) ? 'currentColor' : 'none'} />)}
@@ -483,28 +504,28 @@ export default function ProfilePage() {
 
         {/* Right Column: Main Content Tabs / Fiverr Settings Form */}
         <div className="lg:col-span-2 space-y-8 mt-20 lg:mt-0">
-          
+
           <div className="flex gap-4 border-b border-border">
-            <button 
-              onClick={() => setActiveTab('gigs')} 
+            <button
+              onClick={() => setActiveTab('gigs')}
               className={cn("pb-4 text-sm font-bold transition-all border-b-2", activeTab === 'gigs' ? "border-success text-text-primary" : "border-transparent text-text-secondary hover:text-text-primary")}
             >
               Active Gigs
             </button>
-            <button 
-              onClick={() => setActiveTab('portfolio')} 
+            <button
+              onClick={() => setActiveTab('portfolio')}
               className={cn("pb-4 text-sm font-bold transition-all border-b-2", activeTab === 'portfolio' ? "border-success text-text-primary" : "border-transparent text-text-secondary hover:text-text-primary")}
             >
               Portfolio Showcase
             </button>
-            <button 
-              onClick={() => setActiveTab('reviews')} 
+            <button
+              onClick={() => setActiveTab('reviews')}
               className={cn("pb-4 text-sm font-bold transition-all border-b-2", activeTab === 'reviews' ? "border-success text-text-primary" : "border-transparent text-text-secondary hover:text-text-primary")}
             >
               Reviews ({commonData.reviews})
             </button>
             {activeTab === 'fiverr_edit' && (
-              <button 
+              <button
                 className="pb-4 text-sm font-black transition-all border-b-2 border-success text-success flex items-center gap-1.5"
               >
                 <Settings size={14} className="animate-spin-slow" />
@@ -603,7 +624,7 @@ export default function ProfilePage() {
           {activeTab === 'fiverr_edit' && (
             <form onSubmit={handleSaveFiverrProfile} className="bg-white/90 border border-border p-8 rounded-3xl shadow-xl space-y-8 animate-in fade-in duration-300 relative">
               <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-success/5 blur-[100px] rounded-full pointer-events-none"></div>
-              
+
               <div className="flex justify-between items-center border-b border-border pb-4 relative z-10">
                 <div>
                   <h2 className="text-xl font-black text-[#222222] flex items-center gap-2">
@@ -617,29 +638,36 @@ export default function ProfilePage() {
 
               {/* Step 1: General Professional Credentials */}
               <div className="space-y-4 relative z-10">
+                {Object.keys(fiverrFormErrors).length > 0 && (
+                  <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
+                    Please fix the highlighted fields before saving your profile.
+                  </div>
+                )}
                 <h3 className="text-xs font-black text-text-secondary uppercase tracking-widest border-l-2 border-success pl-2">1. Profile Overview Details</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-[10px] font-black uppercase text-text-secondary tracking-widest mb-1.5">Professional Tagline</label>
-                    <input 
+                    <input
                       type="text"
                       value={fiverrForm.title}
                       onChange={(e) => setFiverrForm({ ...fiverrForm, title: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-light-gray/50 border border-border rounded-xl text-sm font-semibold"
+                      className={`w-full px-4 py-2.5 bg-light-gray/50 border rounded-xl text-sm font-semibold ${fiverrFormErrors.title ? 'border-rose-400 bg-rose-50' : 'border-border'}`}
                       placeholder="e.g. Senior Fullstack Engineer"
-                      required
+                      aria-invalid={Boolean(fiverrFormErrors.title)}
                     />
+                    {fiverrFormErrors.title && <p className="mt-1 text-xs text-rose-500">{fiverrFormErrors.title}</p>}
                   </div>
                   <div>
                     <label className="block text-[10px] font-black uppercase text-text-secondary tracking-widest mb-1.5">Hourly Rate (KES)</label>
-                    <input 
+                    <input
                       type="number"
                       value={fiverrForm.hourlyRate}
                       onChange={(e) => setFiverrForm({ ...fiverrForm, hourlyRate: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-light-gray/50 border border-border rounded-xl text-sm font-semibold text-[#222222]"
+                      className={`w-full px-4 py-2.5 bg-light-gray/50 border rounded-xl text-sm font-semibold text-[#222222] ${fiverrFormErrors.hourlyRate ? 'border-rose-400 bg-rose-50' : 'border-border'}`}
                       placeholder="8500"
-                      required
+                      aria-invalid={Boolean(fiverrFormErrors.hourlyRate)}
                     />
+                    {fiverrFormErrors.hourlyRate && <p className="mt-1 text-xs text-rose-500">{fiverrFormErrors.hourlyRate}</p>}
                   </div>
                 </div>
 
@@ -648,11 +676,13 @@ export default function ProfilePage() {
                   <select
                     value={fiverrForm.availability}
                     onChange={(e) => setFiverrForm({ ...fiverrForm, availability: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-light-gray/50 border border-border rounded-xl text-sm font-semibold outline-none"
+                    className={`w-full px-4 py-2.5 bg-light-gray/50 border rounded-xl text-sm font-semibold outline-none ${fiverrFormErrors.availability ? 'border-rose-400 bg-rose-50' : 'border-border'}`}
+                    aria-invalid={Boolean(fiverrFormErrors.availability)}
                   >
                     <option value="Active">Active (Ready to take custom orders)</option>
                     <option value="Vacation">Vacation Mode (Temporary paused)</option>
                   </select>
+                  {fiverrFormErrors.availability && <p className="mt-1 text-xs text-rose-500">{fiverrFormErrors.availability}</p>}
                 </div>
 
                 <div>
@@ -661,10 +691,11 @@ export default function ProfilePage() {
                     rows={4}
                     value={fiverrForm.bio}
                     onChange={(e) => setFiverrForm({ ...fiverrForm, bio: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-light-gray/50 border border-border rounded-xl text-sm font-medium resize-none"
+                    className={`w-full px-4 py-2.5 bg-light-gray/50 border rounded-xl text-sm font-medium resize-none ${fiverrFormErrors.bio ? 'border-rose-400 bg-rose-50' : 'border-border'}`}
                     placeholder="Describe your credentials, industry experiences, and core competencies..."
-                    required
+                    aria-invalid={Boolean(fiverrFormErrors.bio)}
                   />
+                  {fiverrFormErrors.bio && <p className="mt-1 text-xs text-rose-500">{fiverrFormErrors.bio}</p>}
                 </div>
               </div>
 
@@ -673,7 +704,7 @@ export default function ProfilePage() {
                 <h3 className="text-xs font-black text-text-secondary uppercase tracking-widest border-l-2 border-success pl-2 flex items-center gap-1.5">
                   <GraduationCap size={16} /> 2. Academic Background
                 </h3>
-                
+
                 {/* Dynamic Edu List */}
                 {currentProfile.education && currentProfile.education.length > 0 ? (
                   <div className="space-y-2">
@@ -696,7 +727,7 @@ export default function ProfilePage() {
                 {/* Add Edu Inputs */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-light-gray/20 p-4 rounded-2xl border border-border/50">
                   <div>
-                    <input 
+                    <input
                       type="text"
                       value={fiverrForm.newEduSchool}
                       onChange={(e) => setFiverrForm({ ...fiverrForm, newEduSchool: e.target.value })}
@@ -705,7 +736,7 @@ export default function ProfilePage() {
                     />
                   </div>
                   <div>
-                    <input 
+                    <input
                       type="text"
                       value={fiverrForm.newEduDegree}
                       onChange={(e) => setFiverrForm({ ...fiverrForm, newEduDegree: e.target.value })}
@@ -714,15 +745,15 @@ export default function ProfilePage() {
                     />
                   </div>
                   <div className="flex gap-2">
-                    <input 
+                    <input
                       type="number"
                       value={fiverrForm.newEduYear}
                       onChange={(e) => setFiverrForm({ ...fiverrForm, newEduYear: e.target.value })}
                       className="flex-1 px-3 py-2 bg-white border border-border rounded-lg text-xs font-semibold"
                       placeholder="Graduation Year"
                     />
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={handleAddFiverrEdu}
                       className="px-3 bg-[#222222] text-white text-xs font-black rounded-lg hover:bg-[#222222]/90"
                     >
@@ -760,7 +791,7 @@ export default function ProfilePage() {
                 {/* Add Cert Inputs */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-light-gray/20 p-4 rounded-2xl border border-border/50">
                   <div>
-                    <input 
+                    <input
                       type="text"
                       value={fiverrForm.newCertTitle}
                       onChange={(e) => setFiverrForm({ ...fiverrForm, newCertTitle: e.target.value })}
@@ -769,7 +800,7 @@ export default function ProfilePage() {
                     />
                   </div>
                   <div>
-                    <input 
+                    <input
                       type="text"
                       value={fiverrForm.newCertAuth}
                       onChange={(e) => setFiverrForm({ ...fiverrForm, newCertAuth: e.target.value })}
@@ -778,15 +809,15 @@ export default function ProfilePage() {
                     />
                   </div>
                   <div className="flex gap-2">
-                    <input 
+                    <input
                       type="number"
                       value={fiverrForm.newCertYear}
                       onChange={(e) => setFiverrForm({ ...fiverrForm, newCertYear: e.target.value })}
                       className="flex-1 px-3 py-2 bg-white border border-border rounded-lg text-xs font-semibold"
                       placeholder="Year Awarded"
                     />
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={handleAddFiverrCert}
                       className="px-3 bg-[#222222] text-white text-xs font-black rounded-lg hover:bg-[#222222]/90"
                     >
@@ -818,20 +849,20 @@ export default function ProfilePage() {
             <form onSubmit={saveBio} className="space-y-4">
               <div>
                 <label className="block text-xs font-black uppercase text-text-secondary tracking-widest mb-1">Professional Title</label>
-                <input 
-                  type="text" 
-                  value={tempBioForm.title} 
-                  onChange={(e) => setTempBioForm({ ...tempBioForm, title: e.target.value })} 
+                <input
+                  type="text"
+                  value={tempBioForm.title}
+                  onChange={(e) => setTempBioForm({ ...tempBioForm, title: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   required
                 />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase text-text-secondary tracking-widest mb-1">Bio / Overview</label>
-                <textarea 
-                  rows={5} 
-                  value={tempBioForm.bio} 
-                  onChange={(e) => setTempBioForm({ ...tempBioForm, bio: e.target.value })} 
+                <textarea
+                  rows={5}
+                  value={tempBioForm.bio}
+                  onChange={(e) => setTempBioForm({ ...tempBioForm, bio: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary resize-none"
                   required
                 />
@@ -855,10 +886,10 @@ export default function ProfilePage() {
             <form onSubmit={saveLocation} className="space-y-4">
               <div>
                 <label className="block text-xs font-black uppercase text-text-secondary tracking-widest mb-1">City, Country</label>
-                <input 
-                  type="text" 
-                  value={tempLocation} 
-                  onChange={(e) => setTempLocation(e.target.value)} 
+                <input
+                  type="text"
+                  value={tempLocation}
+                  onChange={(e) => setTempLocation(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   placeholder="e.g. San Francisco, CA"
                   required
@@ -883,13 +914,13 @@ export default function ProfilePage() {
               </h3>
               <button onClick={() => setActiveModal(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
             </div>
-            
+
             <form onSubmit={addSkill} className="flex gap-2 mb-6">
-              <input 
-                type="text" 
-                value={tempSkill} 
-                onChange={(e) => setTempSkill(e.target.value)} 
-                placeholder="e.g. Next.js, Docker..." 
+              <input
+                type="text"
+                value={tempSkill}
+                onChange={(e) => setTempSkill(e.target.value)}
+                placeholder="e.g. Next.js, Docker..."
                 className="flex-1 px-4 py-2 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
               />
               <Button type="submit" variant="primary">Add</Button>
@@ -919,23 +950,23 @@ export default function ProfilePage() {
               </h3>
               <button onClick={() => setActiveModal(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
             </div>
-            
+
             <form onSubmit={addLanguage} className="space-y-4 mb-6">
               <div>
                 <label className="block text-xs font-black uppercase text-text-secondary tracking-widest mb-1">Language Name</label>
-                <input 
-                  type="text" 
-                  value={tempLanguage.name} 
-                  onChange={(e) => setTempLanguage({ ...tempLanguage, name: e.target.value })} 
-                  placeholder="e.g. French, German..." 
+                <input
+                  type="text"
+                  value={tempLanguage.name}
+                  onChange={(e) => setTempLanguage({ ...tempLanguage, name: e.target.value })}
+                  placeholder="e.g. French, German..."
                   className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
                   required
                 />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase text-text-secondary tracking-widest mb-1">Fluency Level</label>
-                <select 
-                  value={tempLanguage.level} 
+                <select
+                  value={tempLanguage.level}
                   onChange={(e) => setTempLanguage({ ...tempLanguage, level: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary appearance-none"
                 >

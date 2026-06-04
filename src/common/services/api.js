@@ -217,14 +217,12 @@ export const authAPI = {
     });
   },
 
-  login: async (identifier, password, options = {}) => {
-    const turnstileToken = options.turnstileToken || options.deviceMetadata?.turnstileToken;
+  login: async (identifier, password) => {
     const data = await apiClient("/auth/login", {
       method: "POST",
       body: JSON.stringify({
         email: identifier,
         password,
-        ...(turnstileToken ? { "cf-turnstile-response": turnstileToken } : {}),
       }),
     });
 
@@ -416,7 +414,8 @@ export const profileAPI = {
     }).then(res => res.json());
 
     const user = getUser();
-    const updatedUser = { ...user, avatar: data.url, profile: { ...user?.profile, avatar: data.url } };
+    const avatarUrl = data.url || data.avatar || '';
+    const updatedUser = { ...user, avatar: avatarUrl, profile: { ...user?.profile, avatar: avatarUrl } };
     setUser(updatedUser);
     return { success: true, user: updatedUser };
   },
@@ -431,7 +430,8 @@ export const profileAPI = {
     }).then(res => res.json());
 
     const user = getUser();
-    const updatedUser = { ...user, coverPhoto: data.url, profile: { ...user?.profile, coverPhoto: data.url } };
+    const coverUrl = data.url || data.coverPhoto || '';
+    const updatedUser = { ...user, coverPhoto: coverUrl, profile: { ...user?.profile, coverPhoto: coverUrl } };
     setUser(updatedUser);
     return { success: true, user: updatedUser };
   },
@@ -446,7 +446,8 @@ export const profileAPI = {
     }).then(res => res.json());
 
     const user = getUser();
-    const updatedUser = { ...user, companyLogo: data.url, profile: { ...user?.profile, companyLogo: data.url } };
+    const logoUrl = data.url || data.companyLogo || '';
+    const updatedUser = { ...user, companyLogo: logoUrl, profile: { ...user?.profile, companyLogo: logoUrl } };
     setUser(updatedUser);
     return { success: true, user: updatedUser };
   },

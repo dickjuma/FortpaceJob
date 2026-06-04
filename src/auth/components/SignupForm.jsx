@@ -10,7 +10,6 @@ import Button from './ui/Button';
 import Input from './ui/Input';
 import PasswordInput from './ui/PasswordInput';
 import SignupStepper from './SignupStepper';
-import TurnstileWidget from './TurnstileWidget';
 import { validateEmail, validatePassword } from '../../common/utils/validation';
 
 const SIGNUP_STEPS = [
@@ -51,14 +50,12 @@ export default function SignupForm() {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
   const store = useOnboardingStore();
-  const [turnstileToken, setTurnstileToken] = useState('');
   const [formError, setFormError] = useState('');
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
     confirmPassword: '',
-  });
-  const turnstileEnabled = Boolean(process.env.REACT_APP_TURNSTILE_SITE_KEY);
+  };
 
   const roleLabel = useMemo(() => {
     if (store.selectedRole === 'CLIENT') return 'Client account';
@@ -113,13 +110,6 @@ export default function SignupForm() {
       return;
     }
 
-    if (turnstileEnabled && !turnstileToken) {
-      const message = 'Complete the security check before creating your account.';
-      setFormError(message);
-      toast.error(message);
-      return;
-    }
-
     const email = credentials.email.trim().toLowerCase();
     const payload = {
       email,
@@ -128,7 +118,6 @@ export default function SignupForm() {
       accountType: 'INDIVIDUAL',
       name: makeFallbackName(email),
       fullName: makeFallbackName(email),
-      ...(turnstileToken ? { 'cf-turnstile-response': turnstileToken } : {}),
     };
 
     try {
@@ -261,14 +250,6 @@ export default function SignupForm() {
               Your profile details, company information, or freelancer portfolio can be completed from the profile page after sign-up.
             </div>
           </div>
-
-          {turnstileEnabled && (
-            <TurnstileWidget
-              onVerify={setTurnstileToken}
-              onExpire={() => setTurnstileToken('')}
-              onError={() => setTurnstileToken('')}
-            />
-          )}
 
           <div className="sticky bottom-4 z-20 flex flex-col-reverse gap-3 rounded-[1.75rem] border border-zinc-200/80 bg-white/90 p-4 shadow-xl backdrop-blur-xl dark:border-zinc-800/80 dark:bg-zinc-950/88 sm:flex-row">
               <Button type="button" variant="secondary" onClick={handleBack} icon={ArrowLeft} fullWidth={false}>

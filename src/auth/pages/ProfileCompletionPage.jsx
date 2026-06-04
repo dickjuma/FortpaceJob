@@ -406,11 +406,10 @@ export default function ProfileCompletionPage() {
         await persistProfileStory();
         await refreshBackendStatus();
         setActiveStep(4);
-      } else {
-        await persistBasicInfo();
-        await persistRoleSetup();
-        await persistProfileStory();
+      } else if (activeStep === 4) {
         await launchProfile();
+        await refreshBackendStatus();
+        return;
       }
     } catch (stepError) {
       setError(stepError.message || 'We could not save this step.');

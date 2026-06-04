@@ -10,6 +10,14 @@ import { gigAPI, publicAPI } from '../../common/services/api';
 import { useAuthRedirect } from '../../common/utils/authRedirect';
 
 function buildPackageMap(gig) {
+  const parseArr = (v) => {
+    if (Array.isArray(v)) return v;
+    if (typeof v === 'string') {
+      try { return JSON.parse(v); } catch (_) { return []; }
+    }
+    return [];
+  };
+
   if (Array.isArray(gig?.packages) && gig.packages.length > 0) {
     return gig.packages.reduce((acc, pkg, index) => {
       const key = ['Basic', 'Standard', 'Premium'][index] || pkg.name || `Tier ${index + 1}`;
@@ -18,7 +26,7 @@ function buildPackageMap(gig) {
         desc: pkg.description || gig.description || '',
         days: pkg.deliveryTime || gig.deliveryTime || 3,
         revisions: pkg.revisions ?? 1,
-        features: pkg.features || ['Source files', 'Revisions included'],
+        features: parseArr(pkg.features) || ['Source files', 'Revisions included'],
       };
       return acc;
     }, {});

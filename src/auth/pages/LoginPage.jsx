@@ -4,7 +4,6 @@ import { useNavigate, Link, useLocation, useSearchParams } from 'react-router-do
 import { useAuthStore } from '../../common/authStore';
 import AuthLayout from '../components/AuthLayout';
 import { Mail, Lock, LogIn, ArrowRight } from 'lucide-react';
-import TurnstileWidget from '../components/TurnstileWidget';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getDashboardPathForRole } from '../utils/authRouting';
 import SocialLoginButtons from '../components/SocialLoginButtons';
@@ -20,8 +19,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [formError, setFormError] = useState('');
-  const [turnstileToken, setTurnstileToken] = useState('');
-  const turnstileEnabled = Boolean(process.env.REACT_APP_TURNSTILE_SITE_KEY);
 
   const [focusedField, setFocusedField] = useState(null);
   const returnTo = useMemo(() => searchParams.get('returnTo') || resolveAuthReturnTo(location), [location, searchParams]);
@@ -49,13 +46,8 @@ export default function LoginPage() {
       return;
     }
 
-    if (turnstileEnabled && !turnstileToken) {
-      setFormError('Complete the security check before signing in');
-      return;
-    }
-
     try {
-      const result = await login(email, password, rememberMe, { turnstileToken });
+      const result = await login(email, password, rememberMe);
 
       if (result?.requiresTwoFactor && result?.userId) {
         navigate('/auth/admin/verify', {
@@ -74,7 +66,6 @@ export default function LoginPage() {
       // Error is handled by store
     }
   };
-
 
   return (
     <AuthLayout
@@ -116,8 +107,8 @@ export default function LoginPage() {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between ml-1">
               <label className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Password</label>
-              <Link 
-                to="/auth/forgot-password" 
+              <Link
+                to="/auth/forgot-password"
                 className="text-xs font-bold text-[#14a800] hover:text-[#14a800] dark:text-[#14a800] dark:hover:text-[#7bc67e] transition-colors"
               >
                 Forgot password?
@@ -159,13 +150,9 @@ export default function LoginPage() {
             </label>
           </div>
 
-          {turnstileEnabled && (
-            <TurnstileWidget onVerify={setTurnstileToken} />
-          )}
-
           <AnimatePresence>
             {(error || formError) && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
@@ -201,8 +188,8 @@ export default function LoginPage() {
 
         <div className="mt-8 text-center text-sm font-medium text-zinc-500 dark:text-zinc-400">
           Don't have an account?{' '}
-          <Link 
-            to="/auth/register" 
+          <Link
+            to="/auth/register"
             className="font-bold text-[#14a800] hover:text-[#14a800] dark:text-[#14a800] dark:hover:text-[#7bc67e] transition-colors"
           >
             Sign up for free

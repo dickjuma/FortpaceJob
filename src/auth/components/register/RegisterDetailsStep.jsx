@@ -4,7 +4,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { ArrowLeft, BadgeCheck, Building2, Mail, ShieldCheck, UserRound } from 'lucide-react';
 import toast from 'react-hot-toast';
-import TurnstileWidget from '../TurnstileWidget';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import PasswordInput from '../ui/PasswordInput';
@@ -31,8 +30,6 @@ export default function RegisterDetailsStep({
   onAutosave,
   onSubmit,
   accountTypeLabel,
-  turnstileEnabled = false,
-  onTurnstileVerify,
 }) {
   const schema = React.useMemo(() => buildRegisterSchema(role, accountType), [role, accountType]);
 
@@ -396,12 +393,6 @@ export default function RegisterDetailsStep({
                 )}
               />
             </div>
-
-            {turnstileEnabled && (
-              <div className="mt-5">
-                <TurnstileWidget onVerify={onTurnstileVerify} />
-              </div>
-            )}
 
             <Controller
               name="antiSpamWebsite"
