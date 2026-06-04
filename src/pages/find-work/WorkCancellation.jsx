@@ -97,7 +97,7 @@ const WorkCancellation = () => {
   if (loading) {
     return (
       <div className="bg-surface min-h-screen py-20 flex flex-col items-center justify-center text-zinc-500">
-        <Loader2 className="w-10 h-10 animate-spin text-[#14a800] mb-4" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#2bb75c] mb-4" />
         <p className="font-medium">Loading cancellation details…</p>
       </div>
     );
@@ -107,7 +107,7 @@ const WorkCancellation = () => {
     <>
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-3xl">
-          <Link to={`/find-work/orders/${workId}`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#14a800] transition-colors mb-6">
+          <Link to={`/find-work/orders/${workId}`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#2bb75c] transition-colors mb-6">
             <ArrowLeft className="w-4 h-4" /> Back to Order
           </Link>
 
@@ -184,3 +184,4 @@ const WorkCancellation = () => {
 };
 
 export default WorkCancellation;
+

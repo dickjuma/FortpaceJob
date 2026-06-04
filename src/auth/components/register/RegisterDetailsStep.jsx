@@ -91,7 +91,7 @@ export default function RegisterDetailsStep({
           className="rounded-[1.75rem] border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-950 sm:p-6"
         >
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center rounded-full bg-[#14a800]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#14a800] dark:text-[#14a800]">
+            <span className="inline-flex items-center rounded-full bg-[#2bb75c]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#2bb75c] dark:text-[#2bb75c]">
               {role === 'CLIENT' ? 'Client journey' : 'Freelancer journey'}
             </span>
             <span className="inline-flex items-center rounded-full bg-zinc-900 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white dark:bg-white dark:text-zinc-950">
@@ -143,7 +143,7 @@ export default function RegisterDetailsStep({
         <div className="space-y-6">
           <section className="rounded-[1.75rem] border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-6">
             <div className="mb-5 flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800]">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c]">
                 <UserRound className="h-5 w-5" />
               </div>
               <div>
@@ -448,3 +448,4 @@ export default function RegisterDetailsStep({
     </form>
   );
 }
+

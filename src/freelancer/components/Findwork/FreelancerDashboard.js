@@ -34,7 +34,7 @@ const NavLink = ({ to, icon: Icon, label }) => {
       to={to}
       className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${
         isActive
-          ? "bg-[#14a800]/5 text-[#14a800] font-medium"
+          ? "bg-[#2bb75c]/5 text-[#2bb75c] font-medium"
           : "text-gray-700 hover:bg-gray-100"
       }`}
     >
@@ -62,7 +62,7 @@ export default function FreelancerDashboard() {
       <div className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#14a800] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[#2bb75c] rounded-lg flex items-center justify-center">
               <User size={18} className="text-white" />
             </div>
             <span className="font-semibold text-gray-900">My Dashboard</span>
@@ -111,3 +111,4 @@ export default function FreelancerDashboard() {
     </div>
   );
 }
+

@@ -118,7 +118,7 @@ export default function GoalsEarningsTrackerPage() {
           <Button 
             variant="primary"
             onClick={() => navigate('/freelancer/withdrawal')}
-            className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success/90 text-white text-sm font-bold rounded-xl shadow-lg shadow-[#14a800]/20 transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success/90 text-white text-sm font-bold rounded-xl shadow-lg shadow-[#2bb75c]/20 transition-all"
           >
             <Wallet size={18} /> Withdraw Funds
           </Button>
@@ -186,9 +186,9 @@ export default function GoalsEarningsTrackerPage() {
         </div>
 
         <div className="bg-white dark:bg-[#222222] border border-zinc-200 dark:border-white/10 rounded-[24px] p-6 shadow-sm relative overflow-hidden group hover:scale-[1.02] transition-transform">
-          <div className="absolute top-[-50%] right-[-10%] w-32 h-32 bg-#14a800]/5 blur-[40px] rounded-full pointer-events-none group-hover:bg-#14a800]/10 transition-colors"></div>
+          <div className="absolute top-[-50%] right-[-10%] w-32 h-32 bg-#2bb75c]/5 blur-[40px] rounded-full pointer-events-none group-hover:bg-#2bb75c]/10 transition-colors"></div>
           <div className="flex justify-between items-start mb-4 relative z-10">
-            <div className="p-2.5 bg-#14a800]/20 border border-#14a800]/20 text-blue-400 rounded-xl">
+            <div className="p-2.5 bg-#2bb75c]/20 border border-#2bb75c]/20 text-blue-400 rounded-xl">
               <BarChart3 size={20} />
             </div>
           </div>
@@ -275,7 +275,7 @@ export default function GoalsEarningsTrackerPage() {
         {/* Revenue by Skill */}
         <div className="bg-white dark:bg-[#222222] rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm p-6 md:p-8">
           <div className="flex items-center gap-3 mb-8">
-            <div className="p-2.5 bg-#14a800]/20 border border-#14a800]/20 text-blue-400 rounded-xl">
+            <div className="p-2.5 bg-#2bb75c]/20 border border-#2bb75c]/20 text-blue-400 rounded-xl">
               <PieChart size={20} />
             </div>
             <h2 className="text-lg font-black text-zinc-900 dark:text-white tracking-tight">Revenue by Skill</h2>
@@ -402,7 +402,7 @@ export default function GoalsEarningsTrackerPage() {
             </div>
           )}
 
-          <div className="mt-6 p-6 md:p-8 bg-success rounded-2xl text-white shadow-xl shadow-[#14a800]/20 relative overflow-hidden group">
+          <div className="mt-6 p-6 md:p-8 bg-success rounded-2xl text-white shadow-xl shadow-[#2bb75c]/20 relative overflow-hidden group">
             <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none translate-x-1/4 translate-y-1/4 group-hover:scale-110 transition-transform duration-700">
               <Target size={120} />
             </div>
@@ -423,3 +423,4 @@ export default function GoalsEarningsTrackerPage() {
     </div>
   );
 }
+

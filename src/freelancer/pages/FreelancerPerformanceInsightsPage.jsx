@@ -16,7 +16,7 @@ export default function FreelancerPerformanceInsightsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2 flex items-center gap-3">
-              <TrendingUp className="w-8 h-8 text-[#14a800]" /> Performance Insights
+              <TrendingUp className="w-8 h-8 text-[#2bb75c]" /> Performance Insights
             </h1>
             <p className="text-zinc-500 font-medium">Advanced analytics and AI recommendations to grow your business.</p>
           </div>
@@ -35,12 +35,12 @@ export default function FreelancerPerformanceInsightsPage() {
         {/* KPI Overview */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'Profile Views', value: '3,240', trend: '+12%', icon: Eye, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/10' },
+            { label: 'Profile Views', value: '3,240', trend: '+12%', icon: Eye, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10' },
             { label: 'Proposal Success', value: '28%', trend: '+4%', icon: MousePointerClick, color: 'text-success', bg: 'bg-emerald-50 dark:bg-success/10' },
             { label: 'Response Time', value: '1.2 hr', trend: '-0.5h', icon: Clock, color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-500/10' },
-            { label: 'Client Satisfaction', value: '4.9/5', trend: 'Top 5%', icon: Star, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/10' }
+            { label: 'Client Satisfaction', value: '4.9/5', trend: 'Top 5%', icon: Star, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10' }
           ].map(kpi => (
-            <div key={kpi.label} className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm flex flex-col justify-between group hover:border-[#14a800]/50 transition-colors cursor-default">
+            <div key={kpi.label} className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm flex flex-col justify-between group hover:border-[#2bb75c]/50 transition-colors cursor-default">
               <div className="flex justify-between items-start mb-4">
                 <div className={cn("p-3 rounded-xl", kpi.bg)}>
                   <kpi.icon className={cn("w-6 h-6", kpi.color)} />
@@ -107,18 +107,18 @@ export default function FreelancerPerformanceInsightsPage() {
           <div className="space-y-8">
             
             {/* AI Insights */}
-            <div className="bg-gradient-to-br from-[#14a800] to-zinc-900 rounded-3xl p-8 shadow-lg text-white relative overflow-hidden">
+            <div className="bg-gradient-to-br from-[#2bb75c] to-zinc-900 rounded-3xl p-8 shadow-lg text-white relative overflow-hidden">
               <div className="absolute top-0 right-0 p-4 opacity-10">
                 <Sparkles className="w-32 h-32" />
               </div>
               <div className="relative z-10">
                 <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-[#14a800]" /> AI Recommendations
+                  <Sparkles className="w-5 h-5 text-[#2bb75c]" /> AI Recommendations
                 </h2>
                 
                 <div className="space-y-4">
                   <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4">
-                    <p className="text-xs font-bold text-[#14a800] uppercase tracking-wider mb-2">Pricing Strategy</p>
+                    <p className="text-xs font-bold text-[#2bb75c] uppercase tracking-wider mb-2">Pricing Strategy</p>
                     <p className="text-sm font-medium leading-relaxed">
                       Your current rate of <strong className="text-white">$45/hr</strong> is 15% below the top performers in your category. Consider raising your rate to <strong className="text-white">$55/hr</strong> for new clients.
                     </p>
@@ -177,3 +177,4 @@ export default function FreelancerPerformanceInsightsPage() {
     </div>
   );
 }
+

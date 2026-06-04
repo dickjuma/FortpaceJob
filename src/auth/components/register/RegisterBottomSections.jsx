@@ -55,7 +55,7 @@ export default function RegisterBottomSections() {
       <div className="mx-auto flex w-full max-w-[88rem] flex-col gap-12">
         <section className="grid gap-8 xl:grid-cols-[0.9fr_1.1fr] xl:items-start">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.28em] text-[#14a800]">
+            <p className="text-xs font-black uppercase tracking-[0.28em] text-[#2bb75c]">
               Why join us
             </p>
             <h2 className="mt-3 text-3xl font-black tracking-tight text-zinc-950 dark:text-white sm:text-4xl">
@@ -99,7 +99,7 @@ export default function RegisterBottomSections() {
               key={badge}
               className="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white px-4 py-4 text-sm font-semibold text-zinc-700 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
             >
-              <LockKeyhole className="h-4 w-4 text-[#14a800]" />
+              <LockKeyhole className="h-4 w-4 text-[#2bb75c]" />
               <span>{badge}</span>
             </div>
           ))}
@@ -107,7 +107,7 @@ export default function RegisterBottomSections() {
 
         <section className="grid gap-8 xl:grid-cols-[0.88fr_1.12fr]">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.28em] text-[#14a800]">
+            <p className="text-xs font-black uppercase tracking-[0.28em] text-[#2bb75c]">
               FAQ
             </p>
             <h2 className="mt-3 text-3xl font-black tracking-tight text-zinc-950 dark:text-white">
@@ -175,3 +175,4 @@ export default function RegisterBottomSections() {
     </div>
   );
 }
+

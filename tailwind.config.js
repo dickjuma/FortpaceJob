@@ -9,17 +9,17 @@ export default {
     extend: {
       colors: {
         navy: '#222222', // Upwork dark slate/charcoal
-        'dark-purple': '#118a00', // Upwork hover dark green
-        'vivid-lavender': '#14a800', // Upwork primary green
+        'dark-purple': '#1d8d38', // Upwork hover dark green
+        'vivid-lavender': '#2bb75c', // Upwork primary green
         'light-gray': '#f2f2f2',
         'pure-white': '#ffffff',
-        'vivid-green': '#14a800', // Upwork primary green
+        'vivid-green': '#2bb75c', // Upwork primary green
         'accent-red': '#e63946',
-        'accent-purple': '#14a800', // Upwork primary green
+        'accent-purple': '#2bb75c', // Upwork primary green
         'text-primary': '#222222',
         'text-secondary': '#5e6d55',
         border: '#e0e0e0',
-        success: '#14a800', // Upwork primary green
+        success: '#2bb75c', // Upwork primary green
         warning: '#ffc107',
         error: '#dc3545',
         info: '#17a2b8',

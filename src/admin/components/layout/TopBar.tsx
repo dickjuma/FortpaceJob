@@ -52,7 +52,7 @@ const TopBar: React.FC = () => {
           onClick={toggleCommandPalette}
           className="hidden md:flex items-center gap-3 px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-500 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all group"
         >
-          <Search size={16} className="group-hover:text-[#14a800] transition-colors" />
+          <Search size={16} className="group-hover:text-[#2bb75c] transition-colors" />
           <span className="text-xs">Quick Search...</span>
           <div className="flex items-center gap-1 ml-4 px-1.5 py-0.5 bg-white dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 rounded-md text-[10px] font-bold">
             <Command size={10} />
@@ -113,3 +113,4 @@ const TopBar: React.FC = () => {
 };
 
 export default TopBar;
+

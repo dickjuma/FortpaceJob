@@ -38,7 +38,7 @@ const HireFreelancer = () => {
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
           <div className="mb-8">
-            <Link className="text-sm font-medium text-[#14a800] hover:text-[#14a800] flex items-center gap-1 mb-4" to={`/talent/${talent.id}`}>
+            <Link className="text-sm font-medium text-[#2bb75c] hover:text-[#2bb75c] flex items-center gap-1 mb-4" to={`/talent/${talent.id}`}>
               <ChevronRight className="w-4 h-4 rotate-180" /> Back to Profile
             </Link>
             <h1 className="text-3xl font-bold text-zinc-900 mb-2">Hire {talent.name}</h1>
@@ -55,7 +55,7 @@ const HireFreelancer = () => {
                 />
                 <div className="flex-1">
                   <h3 className="font-bold text-zinc-900 flex items-center gap-2">
-                    {talent.name} <ShieldCheck className="w-4 h-4 text-[#14a800]" />
+                    {talent.name} <ShieldCheck className="w-4 h-4 text-[#2bb75c]" />
                   </h3>
                   <p className="text-sm text-zinc-600">{talent.title}</p>
                   <div className="flex items-center gap-4 mt-2 text-sm text-zinc-500">
@@ -116,7 +116,7 @@ const HireFreelancer = () => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-semibold text-zinc-800">Project milestones</h4>
-                      <button className="text-sm font-medium text-[#14a800] hover:text-[#14a800] flex items-center gap-1" onClick={addMilestone} type="button">
+                      <button className="text-sm font-medium text-[#2bb75c] hover:text-[#2bb75c] flex items-center gap-1" onClick={addMilestone} type="button">
                         <Plus className="w-4 h-4" /> Add milestone
                       </button>
                     </div>
@@ -147,7 +147,7 @@ const HireFreelancer = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-4 border border-[#14a800]/20 bg-[#14a800]/5 rounded-xl space-y-4">
+                  <div className="p-4 border border-[#2bb75c]/20 bg-[#2bb75c]/5 rounded-xl space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="font-semibold text-zinc-900">Hourly contract</div>
@@ -196,7 +196,7 @@ const HireFreelancer = () => {
                     <span className="text-2xl font-black text-zinc-900">${totalAmount + platformFee + estimatedTax}</span>
                   </div>
                   <button
-                    className="w-full mt-6 bg-[#14a800] hover:bg-[#118a00] text-white font-bold py-3 px-4 rounded-xl transition-colors"
+                    className="w-full mt-6 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold py-3 px-4 rounded-xl transition-colors"
                     onClick={() =>
                       requireAuth(() => {
                         navigate(`/talent/${talent.id}/invite`);
@@ -220,7 +220,7 @@ const HireFreelancer = () => {
                     <p>This screen now preserves the selected talent and selected job opening in one contract workflow.</p>
                     <p>It no longer drops the user into a generic hire page with hardcoded profile data.</p>
                   </div>
-                  <Link className="inline-flex items-center gap-2 text-[#14a800] font-bold mt-4" to={`/talent/${talent.id}/invite`}>
+                  <Link className="inline-flex items-center gap-2 text-[#2bb75c] font-bold mt-4" to={`/talent/${talent.id}/invite`}>
                     Invite instead <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -234,3 +234,4 @@ const HireFreelancer = () => {
 };
 
 export default HireFreelancer;
+

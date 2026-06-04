@@ -51,7 +51,7 @@ export default function GigEditPage() {
   if (isLoading) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
       </div>
     );
   }
@@ -60,7 +60,7 @@ export default function GigEditPage() {
     return (
       <div className="p-8 text-center">
         <p className="text-red-600 mb-4">Could not load this gig.</p>
-        <Link to="/freelancer/gigs" className="text-[#14a800] font-bold">Back to services</Link>
+        <Link to="/freelancer/gigs" className="text-[#2bb75c] font-bold">Back to services</Link>
       </div>
     );
   }
@@ -96,7 +96,7 @@ export default function GigEditPage() {
             type="button"
             onClick={handleSave}
             disabled={isSaving}
-            className="flex items-center gap-2 px-4 py-1.5 bg-[#14a800] hover:bg-[#118a00] text-white text-xs font-bold rounded-lg shadow-sm transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-1.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white text-xs font-bold rounded-lg shadow-sm transition-colors disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
             Save changes
@@ -123,7 +123,7 @@ export default function GigEditPage() {
                   activeTab === tab.id ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-surface dark:hover:bg-zinc-800/50"
                 )}
               >
-                <tab.icon className={cn("w-4 h-4", activeTab === tab.id ? "text-[#14a800]" : "text-zinc-400")} />
+                <tab.icon className={cn("w-4 h-4", activeTab === tab.id ? "text-[#2bb75c]" : "text-zinc-400")} />
                 {tab.label}
               </button>
             ))}
@@ -182,10 +182,11 @@ export default function GigEditPage() {
       
       {/* Floating Info */}
       <div className="fixed bottom-6 right-6 flex items-center gap-2 p-3 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-lg">
-        <Info className="w-4 h-4 text-[#14a800]" />
+        <Info className="w-4 h-4 text-[#2bb75c]" />
         <span className="text-xs font-bold text-zinc-600 dark:text-zinc-300">Click any text to edit instantly.</span>
       </div>
 
     </div>
   );
 }
+

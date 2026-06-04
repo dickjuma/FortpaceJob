@@ -65,7 +65,7 @@ export default function ClientTaskWorkspacePage() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-zinc-800 pb-6 mb-6 gap-4 shrink-0">
           <div>
             <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-              <KanbanSquare className="w-8 h-8 text-[#14a800]" />
+              <KanbanSquare className="w-8 h-8 text-[#2bb75c]" />
               Agile Task Workspace
             </h1>
             <p className="text-zinc-400 mt-2 text-sm">
@@ -74,11 +74,11 @@ export default function ClientTaskWorkspacePage() {
           </div>
           <div className="flex items-center gap-4">
             <div className="flex -space-x-3">
-              <div className="w-8 h-8 rounded-full border-2 border-zinc-950 bg-[#14a800] flex items-center justify-center text-xs font-bold text-white z-30">SJ</div>
+              <div className="w-8 h-8 rounded-full border-2 border-zinc-950 bg-[#2bb75c] flex items-center justify-center text-xs font-bold text-white z-30">SJ</div>
               <div className="w-8 h-8 rounded-full border-2 border-zinc-950 bg-emerald-500 flex items-center justify-center text-xs font-bold text-white z-20">HO</div>
               <div className="w-8 h-8 rounded-full border-2 border-zinc-950 bg-zinc-700 flex items-center justify-center text-xs font-bold text-zinc-300 z-10">+4</div>
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 bg-[#14a800] hover:bg-[#14a800] text-white rounded-lg text-sm font-medium transition-colors">
+            <button className="flex items-center gap-2 px-4 py-2 bg-[#2bb75c] hover:bg-[#2bb75c] text-white rounded-lg text-sm font-medium transition-colors">
               <Plus className="w-4 h-4" />
               New Task
             </button>
@@ -120,7 +120,7 @@ export default function ClientTaskWorkspacePage() {
                         </span>
                       </div>
                       
-                      <h4 className="font-medium text-white mb-3 group-hover:text-[#14a800] transition-colors">
+                      <h4 className="font-medium text-white mb-3 group-hover:text-[#2bb75c] transition-colors">
                         {task.title}
                       </h4>
                       
@@ -168,3 +168,4 @@ export default function ClientTaskWorkspacePage() {
     </div>
   );
 }
+

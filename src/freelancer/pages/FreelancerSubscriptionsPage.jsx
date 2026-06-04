@@ -23,8 +23,8 @@ const PLANS = [
     description: 'For growing independent professionals.',
     features: ['50 Proposals / month', 'Featured Profile Badge', 'Advanced Analytics', 'Priority Support', 'Custom Profile URL'],
     icon: Zap,
-    color: 'text-[#14a800]',
-    bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/10 border-[#14a800]/20 shadow-xl shadow-[#14a800]/25/10',
+    color: 'text-[#2bb75c]',
+    bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 border-[#2bb75c]/20 shadow-xl shadow-[#2bb75c]/25/10',
     isPopular: true
   },
   {
@@ -69,7 +69,7 @@ export default function FreelancerSubscriptionsPage() {
           <div>
             <p className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-2">Current Plan</p>
             <h2 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2 mb-2">
-              <Zap className="w-6 h-6 text-[#14a800] fill-#14a800]" /> Professional Plan
+              <Zap className="w-6 h-6 text-[#2bb75c] fill-#2bb75c]" /> Professional Plan
             </h2>
             <p className="text-zinc-500 font-medium">Your plan renews on <strong className="text-zinc-900 dark:text-white">June 1, 2026</strong> for $15.00.</p>
           </div>
@@ -77,10 +77,10 @@ export default function FreelancerSubscriptionsPage() {
           <div className="w-full md:w-80 bg-surface dark:bg-zinc-800/50 rounded-2xl p-4 border border-zinc-100 dark:border-zinc-800">
             <div className="flex justify-between items-end mb-2">
               <span className="text-sm font-bold text-zinc-900 dark:text-white">Proposals Used</span>
-              <span className="text-sm font-black text-[#14a800]">32 / 50</span>
+              <span className="text-sm font-black text-[#2bb75c]">32 / 50</span>
             </div>
             <div className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
-              <div className="h-full bg-[#14a800] rounded-full" style={{ width: '64%' }}></div>
+              <div className="h-full bg-[#2bb75c] rounded-full" style={{ width: '64%' }}></div>
             </div>
             <p className="text-xs font-bold text-zinc-500 mt-2 text-center">Resets in 12 days</p>
           </div>
@@ -115,7 +115,7 @@ export default function FreelancerSubscriptionsPage() {
               <div key={plan.name} className={cn("rounded-3xl border-2 p-8 relative flex flex-col transition-transform hover:-tranzinc-y-1", plan.bg || "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-surface-dark")}>
                 
                 {plan.isPopular && (
-                  <div className="absolute top-0 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 bg-[#14a800] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-full shadow-md">
+                  <div className="absolute top-0 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 bg-[#2bb75c] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-full shadow-md">
                     Most Popular
                   </div>
                 )}
@@ -150,7 +150,7 @@ export default function FreelancerSubscriptionsPage() {
                     "w-full py-4 font-bold rounded-xl transition-all shadow-sm",
                     isCurrent ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed" : 
                     plan.name === 'Enterprise Freelancer' ? "bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/20" :
-                    plan.isPopular ? "bg-[#14a800] hover:bg-[#118a00] text-white shadow-[#14a800]/25/20" : 
+                    plan.isPopular ? "bg-[#2bb75c] hover:bg-[#1d8d38] text-white shadow-[#2bb75c]/25/20" : 
                     "bg-surface-dark dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800"
                   )}
                 >
@@ -167,7 +167,7 @@ export default function FreelancerSubscriptionsPage() {
           {/* Payment Method */}
           <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
             <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
-              <CreditCard className="w-5 h-5 text-[#14a800]" /> Payment Methods
+              <CreditCard className="w-5 h-5 text-[#2bb75c]" /> Payment Methods
             </h3>
             
             <div className="p-4 border border-zinc-200 dark:border-zinc-700 rounded-2xl flex items-center justify-between mb-4 bg-surface dark:bg-zinc-800/50">
@@ -178,10 +178,10 @@ export default function FreelancerSubscriptionsPage() {
                   <p className="text-xs font-medium text-zinc-500">Expires 12/28</p>
                 </div>
               </div>
-              <span className="text-xs font-bold bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800] px-2 py-1 rounded-md">Default</span>
+              <span className="text-xs font-bold bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c] px-2 py-1 rounded-md">Default</span>
             </div>
 
-            <button className="text-sm font-bold text-[#14a800] hover:underline">
+            <button className="text-sm font-bold text-[#2bb75c] hover:underline">
               + Add Payment Method
             </button>
           </div>
@@ -189,7 +189,7 @@ export default function FreelancerSubscriptionsPage() {
           {/* Billing History */}
           <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
             <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
-              <Receipt className="w-5 h-5 text-[#14a800]" /> Billing History
+              <Receipt className="w-5 h-5 text-[#2bb75c]" /> Billing History
             </h3>
             
             <div className="space-y-4">
@@ -201,7 +201,7 @@ export default function FreelancerSubscriptionsPage() {
                   </div>
                   <div className="text-right">
                     <p className="font-black text-zinc-900 dark:text-white text-sm">{inv.amount}</p>
-                    <button className="text-[10px] font-bold text-[#14a800] hover:underline">Download PDF</button>
+                    <button className="text-[10px] font-bold text-[#2bb75c] hover:underline">Download PDF</button>
                   </div>
                 </div>
               ))}
@@ -214,3 +214,4 @@ export default function FreelancerSubscriptionsPage() {
     </div>
   );
 }
+

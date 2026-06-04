@@ -62,7 +62,7 @@ export default function GigDescriptionFaqPage() {
                 Briefly describe your Gig. Be as detailed as possible so buyers know exactly what to expect.
               </p>
             </div>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800] rounded-xl text-xs font-bold hover:bg-[#14a800]/10 transition-colors shrink-0">
+            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c] rounded-xl text-xs font-bold hover:bg-[#2bb75c]/10 transition-colors shrink-0">
               <Sparkles className="w-3.5 h-3.5" /> AI Rewrite
             </button>
           </div>
@@ -91,12 +91,12 @@ export default function GigDescriptionFaqPage() {
             value={description}
             onChange={handleDescriptionChange}
             placeholder="Welcome to my gig! Here's what I can do for you..."
-            className="w-full p-4 border-x border-b border-zinc-200 dark:border-zinc-700 rounded-b-xl bg-white dark:bg-surface-dark text-sm font-medium text-zinc-900 dark:text-white resize-none outline-none focus:ring-2 focus:ring-[#14a800] focus:border-[#14a800]/20 transition-all"
+            className="w-full p-4 border-x border-b border-zinc-200 dark:border-zinc-700 rounded-b-xl bg-white dark:bg-surface-dark text-sm font-medium text-zinc-900 dark:text-white resize-none outline-none focus:ring-2 focus:ring-[#2bb75c] focus:border-[#2bb75c]/20 transition-all"
           />
 
-          <div className="mt-4 flex items-start gap-2 p-3 bg-[#14a800]/5 dark:bg-[#14a800]/10 border border-[#14a800]/20 dark:border-[#14a800]/20/30 rounded-xl">
-            <Info className="w-4 h-4 text-[#14a800] shrink-0 mt-0.5" />
-            <p className="text-xs text-[#14a800] dark:text-[#14a800] leading-relaxed font-medium">
+          <div className="mt-4 flex items-start gap-2 p-3 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/30 rounded-xl">
+            <Info className="w-4 h-4 text-[#2bb75c] shrink-0 mt-0.5" />
+            <p className="text-xs text-[#2bb75c] dark:text-[#2bb75c] leading-relaxed font-medium">
               Don't include any contact info (email, skype, phone). All communication must be kept within the platform to protect you.
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function GigDescriptionFaqPage() {
                       value={newFaq.question}
                       onChange={(e) => setNewFaq({...newFaq, question: e.target.value})}
                       placeholder="e.g. Do you translate to English as well?"
-                      className="w-full p-3 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold outline-none focus:border-[#14a800]/20 focus:ring-1 focus:ring-[#14a800]"
+                      className="w-full p-3 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold outline-none focus:border-[#2bb75c]/20 focus:ring-1 focus:ring-[#2bb75c]"
                     />
                   </div>
                   <div>
@@ -146,7 +146,7 @@ export default function GigDescriptionFaqPage() {
                       value={newFaq.answer}
                       onChange={(e) => setNewFaq({...newFaq, answer: e.target.value})}
                       placeholder="e.g. Yes, I translate from French to English..."
-                      className="w-full p-3 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20 focus:ring-1 focus:ring-[#14a800] resize-none"
+                      className="w-full p-3 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20 focus:ring-1 focus:ring-[#2bb75c] resize-none"
                     />
                   </div>
                   <div className="flex justify-end gap-2 pt-2">
@@ -159,7 +159,7 @@ export default function GigDescriptionFaqPage() {
                     <button
                       onClick={addFaq}
                       disabled={!newFaq.question || !newFaq.answer}
-                      className="px-4 py-2 bg-[#14a800] disabled:bg-zinc-300 text-white text-sm font-bold rounded-xl transition-colors"
+                      className="px-4 py-2 bg-[#2bb75c] disabled:bg-zinc-300 text-white text-sm font-bold rounded-xl transition-colors"
                     >
                       Add
                     </button>
@@ -181,18 +181,18 @@ export default function GigDescriptionFaqPage() {
                     key={faq.id}
                     className={cn(
                       "border rounded-xl overflow-hidden transition-colors duration-200",
-                      isExpanded ? "border-[#14a800]/20 dark:border-[#14a800]/20/30 bg-white dark:bg-surface-dark" : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-surface-dark"
+                      isExpanded ? "border-[#2bb75c]/20 dark:border-[#2bb75c]/20/30 bg-white dark:bg-surface-dark" : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-surface-dark"
                     )}
                   >
                     <div
                       onClick={() => setExpandedFaq(isExpanded ? null : faq.id)}
                       className={cn(
                         "w-full flex items-center justify-between p-4 cursor-pointer",
-                        isExpanded ? "bg-[#14a800]/5 dark:bg-[#14a800]/5" : "hover:bg-surface dark:hover:bg-zinc-800/50"
+                        isExpanded ? "bg-[#2bb75c]/5 dark:bg-[#2bb75c]/5" : "hover:bg-surface dark:hover:bg-zinc-800/50"
                       )}
                     >
                       <h4 className="font-bold text-sm text-zinc-900 dark:text-white pr-4">{faq.question}</h4>
-                      {isExpanded ? <ChevronUp className="w-5 h-5 text-[#14a800] shrink-0" /> : <ChevronDown className="w-5 h-5 text-zinc-400 shrink-0" />}
+                      {isExpanded ? <ChevronUp className="w-5 h-5 text-[#2bb75c] shrink-0" /> : <ChevronDown className="w-5 h-5 text-zinc-400 shrink-0" />}
                     </div>
 
                     <AnimatePresence>
@@ -220,7 +220,7 @@ export default function GigDescriptionFaqPage() {
                 <HelpCircle className="w-8 h-8 text-zinc-300 dark:text-zinc-600 mx-auto mb-2" />
                 <p className="text-sm font-medium text-zinc-500">No FAQs added yet.</p>
                 <p className="text-xs text-zinc-400 mb-4">Adding FAQs saves time answering common messages.</p>
-                <button onClick={() => setIsFaqFormOpen(true)} className="text-sm font-bold text-[#14a800]">Add your first FAQ</button>
+                <button onClick={() => setIsFaqFormOpen(true)} className="text-sm font-bold text-[#2bb75c]">Add your first FAQ</button>
               </div>
             )}
           </div>
@@ -235,7 +235,7 @@ export default function GigDescriptionFaqPage() {
         <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-              <FileText className="w-4 h-4 text-[#14a800]" /> SEO Readability
+              <FileText className="w-4 h-4 text-[#2bb75c]" /> SEO Readability
             </h3>
             <span className={cn(
               "px-2.5 py-1 rounded-lg text-xs font-black",
@@ -273,28 +273,28 @@ export default function GigDescriptionFaqPage() {
         </div>
 
         {/* AI Writing Tips */}
-        <div className="bg-gradient-to-br from-[#14a800] to-violet-600 rounded-3xl p-6 text-white shadow-xl shadow-[#14a800]/25/20">
+        <div className="bg-gradient-to-br from-[#2bb75c] to-violet-600 rounded-3xl p-6 text-white shadow-xl shadow-[#2bb75c]/25/20">
           <div className="flex items-center gap-2 mb-4">
-            <Wand2 className="w-5 h-5 text-[#14a800]" />
-            <h3 className="font-bold text-[#14a800]">Conversion Tips</h3>
+            <Wand2 className="w-5 h-5 text-[#2bb75c]" />
+            <h3 className="font-bold text-[#2bb75c]">Conversion Tips</h3>
           </div>
 
           <div className="space-y-4">
             <div className="bg-white/10 p-3 rounded-xl border border-white/10">
               <h4 className="text-sm font-bold mb-1">State your value clearly</h4>
-              <p className="text-xs text-[#14a800] leading-relaxed">
+              <p className="text-xs text-[#2bb75c] leading-relaxed">
                 Start with a strong opening sentence summarizing what you offer and why you are the best choice.
               </p>
             </div>
             <div className="bg-white/10 p-3 rounded-xl border border-white/10">
               <h4 className="text-sm font-bold mb-1">Use Bullet Points</h4>
-              <p className="text-xs text-[#14a800] leading-relaxed">
+              <p className="text-xs text-[#2bb75c] leading-relaxed">
                 Buyers skim descriptions. Bullet points summarizing what's included significantly increase conversions.
               </p>
             </div>
             <div className="bg-white/10 p-3 rounded-xl border border-white/10">
               <h4 className="text-sm font-bold mb-1">End with a CTA</h4>
-              <p className="text-xs text-[#14a800] leading-relaxed">
+              <p className="text-xs text-[#2bb75c] leading-relaxed">
                 Encourage buyers to contact you before ordering to discuss project specifics.
               </p>
             </div>
@@ -306,3 +306,4 @@ export default function GigDescriptionFaqPage() {
     </div>
   );
 }
+

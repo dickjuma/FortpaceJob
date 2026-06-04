@@ -50,7 +50,7 @@ export default function ReviewsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-24">
-        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
       </div>
     );
   }
@@ -245,3 +245,4 @@ export default function ReviewsPage() {
     </div>
   );
 }
+

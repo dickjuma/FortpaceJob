@@ -160,7 +160,7 @@ const ModerationDashboard = () => {
       trend: kpiData?.pendingReviewsTrend,
       icon: Clock,
       color: 'info',
-      border: 'border-[#14a800]/20',
+      border: 'border-[#2bb75c]/20',
     },
   ];
 
@@ -185,7 +185,7 @@ const ModerationDashboard = () => {
                 'p-2 rounded-lg',
                 kpi.color === 'danger' ? 'bg-red-500/10 text-red-500' :
                 kpi.color === 'warning' ? 'bg-amber-500/10 text-amber-500' :
-                kpi.color === 'info' ? 'bg-[#14a800]/10 text-[#14a800]' : 'bg-zinc-500/10 text-zinc-500'
+                kpi.color === 'info' ? 'bg-[#2bb75c]/10 text-[#2bb75c]' : 'bg-zinc-500/10 text-zinc-500'
               )}>
                 <kpi.icon size={18} />
               </div>
@@ -216,7 +216,7 @@ const ModerationDashboard = () => {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-lg font-black text-zinc-900 dark:text-white flex items-center gap-2 tracking-tight">
-                  <Activity size={20} className="text-[#14a800]" />
+                  <Activity size={20} className="text-[#2bb75c]" />
                   Platform Risk Heatmap
                 </h3>
                 <p className="text-xs text-zinc-500 font-medium">Fraud enforcement trend — last 7 days</p>
@@ -251,7 +251,7 @@ const ModerationDashboard = () => {
             <div className="bg-white dark:bg-surface-dark p-6 rounded-3xl border border-zinc-100 dark:border-zinc-800 shadow-sm">
               <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-6 flex items-center justify-between">
                 Enforcement Trend
-                <TrendingUp size={14} className="text-[#14a800]" />
+                <TrendingUp size={14} className="text-[#2bb75c]" />
               </h4>
               {!fraudTrend || fraudTrend.length === 0 ? (
                 <div className="h-48 flex items-center justify-center text-zinc-400 text-xs">No data</div>
@@ -383,7 +383,7 @@ const ModerationDashboard = () => {
                         'text-[9px] font-black px-1.5 py-0.5 rounded',
                         decision === 'BLOCKED' || decision === 'BLOCK' ? 'bg-red-500/10 text-red-500' :
                         decision === 'FLAGGED' || decision === 'FLAG' ? 'bg-amber-500/10 text-amber-500' :
-                        decision === 'ESCALATE' ? 'bg-[#14a800]/10 text-[#14a800]' : 'bg-success/10 text-success'
+                        decision === 'ESCALATE' ? 'bg-[#2bb75c]/10 text-[#2bb75c]' : 'bg-success/10 text-success'
                       )}>
                         {decision}
                       </div>
@@ -409,7 +409,7 @@ const ModerationDashboard = () => {
           <div className="p-4 border-t border-zinc-100 dark:border-zinc-800 bg-surface dark:bg-surface-dark/50 rounded-b-3xl">
             <button
               onClick={() => navigate('/admin/fraud/alerts')}
-              className="w-full py-2 bg-[#14a800] hover:bg-[#14a800] text-white text-[10px] font-black uppercase rounded-lg shadow-lg shadow-[#14a800]/25 transition-all"
+              className="w-full py-2 bg-[#2bb75c] hover:bg-[#2bb75c] text-white text-[10px] font-black uppercase rounded-lg shadow-lg shadow-[#2bb75c]/25 transition-all"
             >
               View Full Queue
             </button>
@@ -431,7 +431,7 @@ const ModerationDashboard = () => {
             <h4 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
               {kpiLoading ? '…' : kpiData?.[stat.key] != null ? `${kpiData[stat.key]}${stat.suffix}` : '—'}
             </h4>
-            <p className="text-[9px] font-bold text-[#14a800]/80 mt-1 uppercase">{stat.sub}</p>
+            <p className="text-[9px] font-bold text-[#2bb75c]/80 mt-1 uppercase">{stat.sub}</p>
           </div>
         ))}
       </div>
@@ -440,3 +440,4 @@ const ModerationDashboard = () => {
 };
 
 export default ModerationDashboard;
+

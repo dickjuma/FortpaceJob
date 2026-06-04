@@ -56,7 +56,7 @@ export default function SubscriptionControlPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
       </div>
     );
   }
@@ -65,7 +65,7 @@ export default function SubscriptionControlPage() {
     <div className="space-y-8 max-w-5xl">
       <div>
         <h1 className="text-2xl font-black text-zinc-900 flex items-center gap-2">
-          <CreditCard className="text-[#14a800]" /> Subscription control
+          <CreditCard className="text-[#2bb75c]" /> Subscription control
         </h1>
         <p className="text-sm text-zinc-500 mt-1">
           Enable paid plan checkout (M-Pesa / wallet). When off, only Basic (KES 0) is available on the pricing page.
@@ -83,7 +83,7 @@ export default function SubscriptionControlPage() {
           type="button"
           disabled={saving}
           onClick={togglePayments}
-          className="flex items-center gap-2 text-[#14a800] font-bold"
+          className="flex items-center gap-2 text-[#2bb75c] font-bold"
         >
           {paymentsEnabled ? <ToggleRight size={36} /> : <ToggleLeft size={36} className="text-zinc-400" />}
           {paymentsEnabled ? 'ON' : 'OFF'}
@@ -121,7 +121,7 @@ export default function SubscriptionControlPage() {
                         key={pid}
                         type="button"
                         onClick={() => activatePlan(m.userId, pid)}
-                        className="px-2 py-1 text-xs font-bold rounded-lg bg-zinc-100 hover:bg-[#14a800]/10 text-zinc-700"
+                        className="px-2 py-1 text-xs font-bold rounded-lg bg-zinc-100 hover:bg-[#2bb75c]/10 text-zinc-700"
                       >
                         → {pid}
                       </button>
@@ -134,8 +134,8 @@ export default function SubscriptionControlPage() {
         </div>
       </div>
 
-      <div className="bg-[#14a800]/5 border border-[#14a800]/20 rounded-xl p-4 text-sm text-zinc-700 flex gap-2">
-        <Zap className="w-5 h-5 text-[#14a800] shrink-0" />
+      <div className="bg-[#2bb75c]/5 border border-[#2bb75c]/20 rounded-xl p-4 text-sm text-zinc-700 flex gap-2">
+        <Zap className="w-5 h-5 text-[#2bb75c] shrink-0" />
         <p>
           Higher tiers get more monthly gig recommendations and stronger ranking in Find Talent matching.
           Corporate subscribers are favoured in the recommendation engine.
@@ -144,3 +144,4 @@ export default function SubscriptionControlPage() {
     </div>
   );
 }
+

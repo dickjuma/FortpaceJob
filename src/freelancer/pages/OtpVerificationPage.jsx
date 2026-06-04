@@ -112,7 +112,7 @@ export default function OtpVerificationPage() {
             )}
           </div>
 
-          <button type="submit" className="w-full py-3.5 bg-success hover:bg-success/95 text-white font-black rounded-xl text-sm transition-all shadow-lg shadow-[#14a800]/20 flex items-center justify-center gap-1.5">
+          <button type="submit" className="w-full py-3.5 bg-success hover:bg-success/95 text-white font-black rounded-xl text-sm transition-all shadow-lg shadow-[#2bb75c]/20 flex items-center justify-center gap-1.5">
             <ShieldCheck size={18} /> Confirm Identity & Sign In
           </button>
         </form>
@@ -120,3 +120,4 @@ export default function OtpVerificationPage() {
     </div>
   );
 }
+

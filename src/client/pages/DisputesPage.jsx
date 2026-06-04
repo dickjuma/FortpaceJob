@@ -10,7 +10,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const STATUS_STYLES = {
   OPEN:      'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-  PENDING:   'bg-#14a800]/10 text-blue-400 border-#14a800]/20',
+  PENDING:   'bg-#2bb75c]/10 text-blue-400 border-#2bb75c]/20',
   RESOLVED:  'bg-success/10 text-success border-success/20',
   CLOSED:    'bg-zinc-500/10 text-zinc-400 border-zinc-600/20',
   ESCALATED: 'bg-red-500/10 text-red-400 border-red-500/20',
@@ -78,7 +78,7 @@ export default function DisputesPage() {
           </div>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#14a800]/20"
+            className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#2bb75c]/20"
           >
             <Plus className="w-4 h-4" /> Open New Dispute
           </button>
@@ -213,3 +213,4 @@ export default function DisputesPage() {
     </div>
   );
 }
+

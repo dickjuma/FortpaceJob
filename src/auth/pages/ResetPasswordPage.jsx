@@ -139,7 +139,7 @@ export default function ResetPasswordPage() {
                           type="button"
                           onClick={handleResend}
                           disabled={isResending}
-                          className="text-sm font-semibold text-[#14a800] hover:text-[#14a800] dark:text-[#14a800] disabled:opacity-60"
+                          className="text-sm font-semibold text-[#2bb75c] hover:text-[#2bb75c] dark:text-[#2bb75c] disabled:opacity-60"
                         >
                           {isResending ? 'Sending...' : 'Resend code'}
                         </button>
@@ -220,3 +220,4 @@ export default function ResetPasswordPage() {
     </AuthLayout>
   );
 }
+

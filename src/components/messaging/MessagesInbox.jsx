@@ -20,7 +20,7 @@ function Avatar({ name, src, online }) {
       <div className="w-10 h-10 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-xs font-bold text-zinc-600 overflow-hidden">
         {src ? <img src={src} alt="" className="w-full h-full object-cover" /> : initials}
       </div>
-      {online && <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#14a800] border-2 border-white" />}
+      {online && <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#2bb75c] border-2 border-white" />}
     </div>
   );
 }
@@ -86,7 +86,7 @@ export default function MessagesInbox({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search conversations"
-              className="w-full pl-9 pr-3 py-2 text-sm border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#14a800]/20 focus:border-[#14a800]"
+              className="w-full pl-9 pr-3 py-2 text-sm border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2bb75c]/20 focus:border-[#2bb75c]"
             />
           </div>
         </div>
@@ -94,14 +94,14 @@ export default function MessagesInbox({
         <div className="flex-1 overflow-y-auto">
           {conversationsLoading && (
             <div className="p-8 flex justify-center">
-              <Loader2 className="w-6 h-6 animate-spin text-[#14a800]" />
+              <Loader2 className="w-6 h-6 animate-spin text-[#2bb75c]" />
             </div>
           )}
           {conversationsError && (
             <div className="p-4 text-sm text-red-600">
               {conversationsError}
               {onRefreshConversations && (
-                <button type="button" onClick={onRefreshConversations} className="block mt-2 text-[#14a800] font-semibold">
+                <button type="button" onClick={onRefreshConversations} className="block mt-2 text-[#2bb75c] font-semibold">
                   Retry
                 </button>
               )}
@@ -124,7 +124,7 @@ export default function MessagesInbox({
                 }}
                 className={cn(
                   'w-full text-left px-4 py-3 flex gap-3 border-b border-zinc-100 hover:bg-white transition-colors',
-                  active && 'bg-white border-l-2 border-l-[#14a800]'
+                  active && 'bg-white border-l-2 border-l-[#2bb75c]'
                 )}
               >
                 <Avatar name={name} src={other.avatar} online={other.isOnline} />
@@ -136,7 +136,7 @@ export default function MessagesInbox({
                   <p className="text-xs text-zinc-500 truncate mt-0.5">{conv.lastMessage?.content || conv.preview || 'No messages yet'}</p>
                 </div>
                 {conv.unreadCount > 0 && (
-                  <span className="shrink-0 min-w-[1.25rem] h-5 px-1 rounded-full bg-[#14a800] text-white text-[10px] font-bold flex items-center justify-center">
+                  <span className="shrink-0 min-w-[1.25rem] h-5 px-1 rounded-full bg-[#2bb75c] text-white text-[10px] font-bold flex items-center justify-center">
                     {conv.unreadCount}
                   </span>
                 )}
@@ -170,7 +170,7 @@ export default function MessagesInbox({
                 <button
                   type="button"
                   onClick={onStartVideoCall}
-                  className="p-2 rounded-lg border border-zinc-200 text-[#14a800] hover:bg-[#14a800]/5"
+                  className="p-2 rounded-lg border border-zinc-200 text-[#2bb75c] hover:bg-[#2bb75c]/5"
                   title="Start video call"
                 >
                   <Video className="w-5 h-5" />
@@ -181,7 +181,7 @@ export default function MessagesInbox({
             <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-zinc-50/50">
               {messagesLoading && (
                 <div className="flex justify-center py-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-[#14a800]" />
+                  <Loader2 className="w-6 h-6 animate-spin text-[#2bb75c]" />
                 </div>
               )}
               {messages.map((msg) => {
@@ -192,7 +192,7 @@ export default function MessagesInbox({
                     <div
                       className={cn(
                         'max-w-[75%] px-4 py-2.5 rounded-2xl text-sm',
-                        isMe ? 'bg-[#14a800] text-white rounded-br-md' : 'bg-white border border-zinc-200 text-zinc-800 rounded-bl-md'
+                        isMe ? 'bg-[#2bb75c] text-white rounded-br-md' : 'bg-white border border-zinc-200 text-zinc-800 rounded-bl-md'
                       )}
                     >
                       <p>{msg.content || msg.message || msg.text}</p>
@@ -211,12 +211,12 @@ export default function MessagesInbox({
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder="Write a message…"
-                className="flex-1 px-4 py-2.5 text-sm border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#14a800]/20"
+                className="flex-1 px-4 py-2.5 text-sm border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2bb75c]/20"
               />
               <button
                 type="submit"
                 disabled={sending || !draft.trim()}
-                className="px-4 py-2.5 bg-[#14a800] text-white rounded-xl font-semibold disabled:opacity-50 flex items-center gap-2"
+                className="px-4 py-2.5 bg-[#2bb75c] text-white rounded-xl font-semibold disabled:opacity-50 flex items-center gap-2"
               >
                 {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               </button>
@@ -227,3 +227,4 @@ export default function MessagesInbox({
     </div>
   );
 }
+

@@ -24,7 +24,7 @@ export default function PublicClientProfilePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50 pt-20">
-        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
       </div>
     );
   }
@@ -33,7 +33,7 @@ export default function PublicClientProfilePage() {
     return (
       <div className="min-h-screen bg-zinc-50 pt-28 px-4 text-center">
         <p className="text-zinc-600 mb-4">Client profile is not available.</p>
-        <Link to="/find-talent" className="text-[#14a800] font-bold">
+        <Link to="/find-talent" className="text-[#2bb75c] font-bold">
           Browse talent
         </Link>
       </div>
@@ -43,13 +43,13 @@ export default function PublicClientProfilePage() {
   return (
     <div className="min-h-screen bg-zinc-50 pt-28 pb-16">
       <div className="max-w-3xl mx-auto px-4">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#14a800] mb-6">
+        <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#2bb75c] mb-6">
           <ArrowLeft className="w-4 h-4" /> Home
         </Link>
         <div className="bg-white border border-zinc-200 rounded-2xl p-8 shadow-sm">
           <div className="flex items-start gap-4">
-            <div className="w-16 h-16 rounded-xl bg-[#14a800]/10 flex items-center justify-center">
-              <Building2 className="w-8 h-8 text-[#14a800]" />
+            <div className="w-16 h-16 rounded-xl bg-[#2bb75c]/10 flex items-center justify-center">
+              <Building2 className="w-8 h-8 text-[#2bb75c]" />
             </div>
             <div>
               <h1 className="text-2xl font-black text-zinc-900">{name}</h1>
@@ -69,3 +69,4 @@ export default function PublicClientProfilePage() {
     </div>
   );
 }
+

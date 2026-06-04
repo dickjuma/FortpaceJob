@@ -106,7 +106,7 @@ export const Sidebar = () => {
         "p-6 flex items-center border-b border-light-gray/10",
         isCollapsed ? "justify-center px-4" : "justify-between"
       ))}>
-        {!isCollapsed && <h1 className="text-2xl font-bold text-success tracking-tight">Forte.</h1>}
+        {!isCollapsed && <h1 className="text-2xl font-bold text-success tracking-tight">ForteSpace</h1>}
         {isCollapsed && <span className="text-2xl font-bold text-success">F.</span>}
       </div>
 

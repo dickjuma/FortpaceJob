@@ -14,11 +14,11 @@ const FloatingInput = ({ label, type = "text", register, error, placeholder, ...
     <input
       type={type}
       placeholder={placeholder || " "}
-      className={`peer w-full h-16 px-5 pt-5 pb-1 rounded-2xl border-2 ${error ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : 'border-zinc-200 focus:border-[#14a800]/20 focus:ring-[#14a800] bg-surface hover:bg-zinc-100 focus:bg-white'} text-zinc-900 shadow-sm focus:outline-none focus:ring-1 transition-all placeholder-transparent text-lg`}
+      className={`peer w-full h-16 px-5 pt-5 pb-1 rounded-2xl border-2 ${error ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : 'border-zinc-200 focus:border-[#2bb75c]/20 focus:ring-[#2bb75c] bg-surface hover:bg-zinc-100 focus:bg-white'} text-zinc-900 shadow-sm focus:outline-none focus:ring-1 transition-all placeholder-transparent text-lg`}
       {...register}
       {...rest}
     />
-    <label className={`absolute left-5 top-2 text-sm transition-all pointer-events-none ${error ? 'text-red-500' : 'text-zinc-500'} peer-placeholder-shown:text-base peer-placeholder-shown:top-5 peer-focus:top-2 peer-focus:text-sm peer-focus:text-[#14a800] font-medium`}>
+    <label className={`absolute left-5 top-2 text-sm transition-all pointer-events-none ${error ? 'text-red-500' : 'text-zinc-500'} peer-placeholder-shown:text-base peer-placeholder-shown:top-5 peer-focus:top-2 peer-focus:text-sm peer-focus:text-[#2bb75c] font-medium`}>
       {label}
     </label>
     {error && (
@@ -119,7 +119,7 @@ export default function LoginForm() {
           />
           <button 
             type="button" 
-            className="absolute right-5 top-5 text-zinc-400 hover:text-[#14a800] focus:outline-none transition-colors"
+            className="absolute right-5 top-5 text-zinc-400 hover:text-[#2bb75c] focus:outline-none transition-colors"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
@@ -139,21 +139,21 @@ export default function LoginForm() {
         <div className="flex items-center justify-between mt-6 mb-8">
           <label className="flex items-center gap-3 cursor-pointer group">
             <div className="relative flex items-center justify-center">
-              <input type="checkbox" className="w-5 h-5 rounded border-2 border-zinc-300 text-[#14a800] focus:ring-[#14a800] cursor-pointer transition-all peer" {...register('rememberMe')} />
+              <input type="checkbox" className="w-5 h-5 rounded border-2 border-zinc-300 text-[#2bb75c] focus:ring-[#2bb75c] cursor-pointer transition-all peer" {...register('rememberMe')} />
             </div>
             <span className="text-zinc-600 font-medium group-hover:text-zinc-900 transition-colors">Remember me</span>
           </label>
 
-          <a href="/auth/forgot-password" className="text-sm font-bold text-[#14a800] hover:text-[#14a800] transition-colors relative group">
+          <a href="/auth/forgot-password" className="text-sm font-bold text-[#2bb75c] hover:text-[#2bb75c] transition-colors relative group">
             Forgot Password?
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#14a800] transition-all group-hover:w-full"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2bb75c] transition-all group-hover:w-full"></span>
           </a>
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="relative w-full h-16 rounded-2xl font-bold text-xl text-white overflow-hidden transition-all duration-300 transform hover:-tranzinc-y-1 shadow-xl hover:shadow-2xl shadow-[#14a800]/25 disabled:opacity-80 disabled:cursor-not-allowed disabled:transform-none bg-[#14a800] hover:bg-[#118a00]"
+          className="relative w-full h-16 rounded-2xl font-bold text-xl text-white overflow-hidden transition-all duration-300 transform hover:-tranzinc-y-1 shadow-xl hover:shadow-2xl shadow-[#2bb75c]/25 disabled:opacity-80 disabled:cursor-not-allowed disabled:transform-none bg-[#2bb75c] hover:bg-[#1d8d38]"
         >
           {isSubmitting ? (
             <span className="flex items-center justify-center gap-2">
@@ -167,3 +167,4 @@ export default function LoginForm() {
     </motion.div>
   );
 }
+

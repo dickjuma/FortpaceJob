@@ -71,7 +71,7 @@ export default function ReceiptPreview({ transaction }) {
             </div>
             <div className="flex justify-between items-center pt-3 border-t-2 border-zinc-900">
               <span className="text-base font-black text-zinc-900">Total Paid</span>
-              <span className="text-xl font-black text-[#14a800]">
+              <span className="text-xl font-black text-[#2bb75c]">
                 KES {transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </span>
             </div>
@@ -82,3 +82,4 @@ export default function ReceiptPreview({ transaction }) {
     </DocumentTemplate>
   );
 }
+

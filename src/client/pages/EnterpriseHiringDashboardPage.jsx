@@ -129,7 +129,7 @@ export default function EnterpriseHiringDashboardPage() {
               <Filter className="w-4 h-4" />
               <span>Filters</span>
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-[#14a800] hover:bg-[#118a00] text-white rounded-lg transition-colors shadow-sm">
+            <button className="flex items-center gap-2 px-4 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-lg transition-colors shadow-sm">
               <Plus className="w-4 h-4" />
               <span>New Request</span>
             </button>
@@ -138,13 +138,13 @@ export default function EnterpriseHiringDashboardPage() {
 
         {isLoading ? (
           <div className="flex items-center justify-center h-48">
-            <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
           </div>
         ) : hasError ? (
           <div className="flex flex-col items-center justify-center h-48 gap-3 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
             <AlertCircle className="w-10 h-10 text-red-400" />
             <p className="text-gray-500">Failed to load hiring data.</p>
-            <button onClick={() => { refetchAnalytics(); refetchPipeline(); }} className="text-sm text-[#14a800] hover:underline">Retry</button>
+            <button onClick={() => { refetchAnalytics(); refetchPipeline(); }} className="text-sm text-[#2bb75c] hover:underline">Retry</button>
           </div>
         ) : (
           <>
@@ -174,7 +174,7 @@ export default function EnterpriseHiringDashboardPage() {
                 <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
                   <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
                     <h2 className="text-lg font-semibold flex items-center gap-2">
-                      <Briefcase className="w-5 h-5 text-[#14a800]" />
+                      <Briefcase className="w-5 h-5 text-[#2bb75c]" />
                       Active Hiring Pipelines
                     </h2>
                     <span className="text-sm text-gray-500">{pipeline?.total ?? 0} candidates</span>
@@ -192,7 +192,7 @@ export default function EnterpriseHiringDashboardPage() {
                                 <Building className="w-4 h-4" /> {job.department}
                               </p>
                             </div>
-                            <span className="px-3 py-1 bg-[#14a800]/5 dark:bg-[#14a800]/30 text-[#14a800] dark:text-[#14a800] text-xs font-medium rounded-full">
+                            <span className="px-3 py-1 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/30 text-[#2bb75c] dark:text-[#2bb75c] text-xs font-medium rounded-full">
                               {job.stage}
                             </span>
                           </div>
@@ -219,7 +219,7 @@ export default function EnterpriseHiringDashboardPage() {
               <div className="space-y-6">
                 <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
                   <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <Building className="w-5 h-5 text-[#14a800]" />
+                    <Building className="w-5 h-5 text-[#2bb75c]" />
                     Pipeline Stages
                   </h2>
                   <div className="space-y-4">
@@ -253,3 +253,4 @@ export default function EnterpriseHiringDashboardPage() {
     </div>
   );
 }
+

@@ -37,7 +37,7 @@ const PasswordInput = forwardRef(({ showStrength = false, label = "Password", va
       case 0: return 'bg-zinc-200 dark:bg-zinc-700';
       case 1: return 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]';
       case 2: return 'bg-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.5)]';
-      case 3: return 'bg-[#14a800] shadow-[0_0_10px_rgba(37,99,235,0.5)]';
+      case 3: return 'bg-[#2bb75c] shadow-[0_0_10px_rgba(37,99,235,0.5)]';
       case 4: return 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]';
       default: return 'bg-zinc-200 dark:bg-zinc-700';
     }
@@ -138,3 +138,4 @@ const RequirementItem = ({ met, label }) => (
 
 PasswordInput.displayName = 'PasswordInput';
 export default PasswordInput;
+

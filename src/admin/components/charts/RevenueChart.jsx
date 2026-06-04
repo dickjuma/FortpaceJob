@@ -35,7 +35,7 @@ const RevenueChart = () => {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between gap-8">
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-[#14a800]" />
+                <div className="h-2 w-2 rounded-full bg-[#2bb75c]" />
                 <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Total Revenue</span>
               </div>
               <span className="text-sm font-black text-zinc-900 dark:text-white">{formatCurrency(payload[0].value)}</span>
@@ -70,7 +70,7 @@ const RevenueChart = () => {
               className={
                 "px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all " +
                 (period === p 
-                  ? "bg-white dark:bg-zinc-800 text-[#14a800] dark:text-[#14a800] shadow-sm" 
+                  ? "bg-white dark:bg-zinc-800 text-[#2bb75c] dark:text-[#2bb75c] shadow-sm" 
                   : "text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200")
               }
             >
@@ -142,3 +142,4 @@ const RevenueChart = () => {
 };
 
 export default RevenueChart;
+

@@ -70,7 +70,7 @@ const Sidebar = () => {
 
       <div className="flex h-[72px] shrink-0 items-center border-b border-white/10 px-5 transition-all">
         <Link to="/admin" className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-success text-[#222222] shadow-lg shadow-[#14a800]/20">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-success text-[#222222] shadow-lg shadow-[#2bb75c]/20">
             <ShieldCheck size={22} strokeWidth={2.5} />
           </div>
           {!isCollapsed && (
@@ -129,3 +129,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+

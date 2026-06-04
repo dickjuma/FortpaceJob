@@ -6,9 +6,9 @@ const CertificationShowcase = () => {
   return (
     <>
       <div className="bg-surface-dark text-white py-20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#14a800]/20 rounded-full blur-3xl -mr-40 -mt-40"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#2bb75c]/20 rounded-full blur-3xl -mr-40 -mt-40"></div>
         <div className="container mx-auto px-4 md:px-8 relative z-10 text-center max-w-4xl">
-          <Award className="w-16 h-16 text-[#14a800] mx-auto mb-6" />
+          <Award className="w-16 h-16 text-[#2bb75c] mx-auto mb-6" />
           <h1 className="text-4xl md:text-6xl font-black mb-6">Certified Experts</h1>
           <p className="text-xl text-zinc-300 mb-10">
             Hire talent possessing verified industry certifications from AWS, Google, Microsoft, Cisco, and more.
@@ -61,3 +61,4 @@ const CertificationShowcase = () => {
 };
 
 export default CertificationShowcase;
+

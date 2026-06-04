@@ -16,7 +16,7 @@ export default function UserProfileModal({ isOpen, onClose, user, onAction }) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Profile Header */}
-        <div className="relative h-40 bg-gradient-to-r from-[#14a800] to-[#118a00] p-8">
+        <div className="relative h-40 bg-gradient-to-r from-[#2bb75c] to-[#1d8d38] p-8">
           <button 
             onClick={onClose}
             className="absolute top-6 right-6 p-2 bg-black/20 hover:bg-black/40 text-white rounded-full transition-colors"
@@ -56,7 +56,7 @@ export default function UserProfileModal({ isOpen, onClose, user, onAction }) {
             <div className="p-4 bg-surface dark:bg-zinc-800 rounded-3xl border border-zinc-100 dark:border-zinc-700/50">
               <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Success Rate</p>
               <div className="flex items-center gap-2">
-                <Award size={18} className="text-[#14a800]" />
+                <Award size={18} className="text-[#2bb75c]" />
                 <span className="text-xl font-black text-zinc-900 dark:text-white">100%</span>
               </div>
             </div>
@@ -72,7 +72,7 @@ export default function UserProfileModal({ isOpen, onClose, user, onAction }) {
           <div className="grid grid-cols-2 gap-10">
             <div className="space-y-6">
               <h3 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-widest border-b border-zinc-100 dark:border-zinc-800 pb-2 flex items-center gap-2">
-                <Briefcase size={16} className="text-[#14a800]" />
+                <Briefcase size={16} className="text-[#2bb75c]" />
                 Marketplace Activity
               </h3>
               <div className="space-y-4">
@@ -93,7 +93,7 @@ export default function UserProfileModal({ isOpen, onClose, user, onAction }) {
 
             <div className="space-y-6">
               <h3 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-widest border-b border-zinc-100 dark:border-zinc-800 pb-2 flex items-center gap-2">
-                <User size={16} className="text-[#14a800]" />
+                <User size={16} className="text-[#2bb75c]" />
                 Account Info
               </h3>
               <div className="space-y-4">
@@ -142,3 +142,4 @@ export default function UserProfileModal({ isOpen, onClose, user, onAction }) {
     </div>
   );
 }
+

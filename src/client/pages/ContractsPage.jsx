@@ -13,7 +13,7 @@ import toast from 'react-hot-toast';
 const STATUS_STYLES = {
   ACTIVE:    'bg-success/10 text-success border-success/20',
   PENDING:   'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-  COMPLETED: 'bg-#14a800]/10 text-blue-400 border-#14a800]/20',
+  COMPLETED: 'bg-#2bb75c]/10 text-blue-400 border-#2bb75c]/20',
   CANCELLED: 'bg-red-500/10 text-red-400 border-red-500/20',
   DISPUTED:  'bg-orange-500/10 text-orange-400 border-orange-500/20',
   TERMINATED:'bg-zinc-500/10 text-zinc-400 border-zinc-600/20',

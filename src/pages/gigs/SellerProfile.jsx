@@ -50,7 +50,7 @@ const SellerProfile = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface">
-        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
       </div>
     );
   }
@@ -59,7 +59,7 @@ const SellerProfile = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-surface py-20">
         <p className="text-zinc-600 mb-4">Seller profile not found.</p>
-        <Link to="/gigs" className="text-[#14a800] font-bold hover:underline">Back to marketplace</Link>
+        <Link to="/gigs" className="text-[#2bb75c] font-bold hover:underline">Back to marketplace</Link>
       </div>
     );
   }
@@ -83,7 +83,7 @@ const SellerProfile = () => {
                 </div>
                 <h1 className="text-2xl font-black text-zinc-900 mb-1 flex items-center justify-center gap-2">
                   {seller.name}
-                  {seller.verified && <Verified className="w-5 h-5 text-[#14a800] fill-current bg-white rounded-full" />}
+                  {seller.verified && <Verified className="w-5 h-5 text-[#2bb75c] fill-current bg-white rounded-full" />}
                 </h1>
                 <p className="text-zinc-600 font-medium mb-3">{seller.title}</p>
                 <div className="flex items-center justify-center gap-2 mb-4 text-sm font-bold text-zinc-900">
@@ -187,3 +187,4 @@ const SellerProfile = () => {
 };
 
 export default SellerProfile;
+

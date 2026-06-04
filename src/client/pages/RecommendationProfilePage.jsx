@@ -141,7 +141,7 @@ export default function ClientRecommendationProfilePage() {
         
         {/* Left Column: AI Gauge & Tips */}
         <div className="space-y-6">
-          <Card className="bg-gradient-to-br from-[#14a800] to-[#118a00] text-white shadow-xl border-none relative overflow-hidden flex flex-col items-center text-center p-8">
+          <Card className="bg-gradient-to-br from-[#2bb75c] to-[#1d8d38] text-white shadow-xl border-none relative overflow-hidden flex flex-col items-center text-center p-8">
             <div className="absolute top-[-50%] right-[-10%] w-48 h-48 bg-white/5 blur-[50px] rounded-full pointer-events-none"></div>
             
             <h3 className="text-lg font-bold text-white/90 mb-6 flex items-center gap-2">
@@ -340,3 +340,4 @@ export default function ClientRecommendationProfilePage() {
     </div>
   );
 }
+

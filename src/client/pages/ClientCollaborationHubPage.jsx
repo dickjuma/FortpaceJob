@@ -130,7 +130,7 @@ export default function ClientCollaborationHubPage() {
               const isMe = msg.senderId === user?.id;
               return (
                 <div key={msg.id} className={`flex gap-4 ${isMe ? 'flex-row-reverse' : ''}`}>
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shrink-0 ${isMe ? 'bg-success' : 'bg-success'} shadow-lg shadow-[#14a800]/20`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shrink-0 ${isMe ? 'bg-success' : 'bg-success'} shadow-lg shadow-[#2bb75c]/20`}>
                     {isMe ? 'Me' : (msg.sender?.name?.charAt(0) || '?')}
                   </div>
                   <div className={`max-w-[80%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
@@ -147,7 +147,7 @@ export default function ClientCollaborationHubPage() {
                         </>
                       )}
                     </div>
-                    <div className={`${isMe ? 'bg-success text-white rounded-tr-sm' : 'bg-white border border-gray-200 text-gray-600 rounded-tl-sm'} rounded-2xl px-4 py-3 text-sm leading-relaxed ${isMe ? 'shadow-lg shadow-[#14a800]/20' : ''}`}>
+                    <div className={`${isMe ? 'bg-success text-white rounded-tr-sm' : 'bg-white border border-gray-200 text-gray-600 rounded-tl-sm'} rounded-2xl px-4 py-3 text-sm leading-relaxed ${isMe ? 'shadow-lg shadow-[#2bb75c]/20' : ''}`}>
                       {msg.content}
                     </div>
                   </div>
@@ -180,7 +180,7 @@ export default function ClientCollaborationHubPage() {
               <button 
                 onClick={handleSend}
                 disabled={!newMessage.trim() || sendMessageMutation.isPending}
-                className="bg-success hover:bg-success text-white px-4 py-2 rounded-xl flex items-center gap-2 text-sm font-bold transition-colors shadow-lg shadow-[#14a800]/20 disabled:opacity-50"
+                className="bg-success hover:bg-success text-white px-4 py-2 rounded-xl flex items-center gap-2 text-sm font-bold transition-colors shadow-lg shadow-[#2bb75c]/20 disabled:opacity-50"
               >
                 {sendMessageMutation.isPending ? 'Sending...' : 'Send'} <Send className="w-4 h-4" />
               </button>
@@ -273,3 +273,4 @@ export default function ClientCollaborationHubPage() {
     </div>
   );
 }
+

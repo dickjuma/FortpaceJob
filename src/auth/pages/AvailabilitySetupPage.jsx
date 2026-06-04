@@ -74,12 +74,12 @@ export default function AvailabilitySetupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans selection:bg-[#14a800]/30 overflow-x-hidden">
+    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans selection:bg-[#2bb75c]/30 overflow-x-hidden">
       
       {/* Background Gradients */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div className="absolute top-0 right-1/4 w-[600px] h-[600px] rounded-full bg-success/5 blur-[120px]" />
-        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] rounded-full bg-[#14a800]/5 blur-[120px]" />
+        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] rounded-full bg-[#2bb75c]/5 blur-[120px]" />
       </div>
 
       <div className="relative z-10 flex flex-col min-h-screen pb-24">
@@ -87,10 +87,10 @@ export default function AvailabilitySetupPage() {
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 max-w-7xl mx-auto w-full">
           <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-[#14a800] rounded-xl flex items-center justify-center shadow-lg shadow-[#14a800]/25/30">
+            <div className="w-9 h-9 bg-[#2bb75c] rounded-xl flex items-center justify-center shadow-lg shadow-[#2bb75c]/25/30">
               <Calendar className="text-white w-5 h-5" />
             </div>
-            <span className="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white">Forte.</span>
+            <span className="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white">ForteSpace</span>
           </motion.div>
         </div>
 
@@ -107,16 +107,16 @@ export default function AvailabilitySetupPage() {
                     <motion.div
                       className={cn(
                         "w-8 h-8 rounded-full flex items-center justify-center shadow-sm",
-                        isCompleted ? "bg-[#14a800] text-white" : isCurrent ? "bg-[#14a800] text-white ring-4 ring-#14a800]/20 scale-110" : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
+                        isCompleted ? "bg-[#2bb75c] text-white" : isCurrent ? "bg-[#2bb75c] text-white ring-4 ring-#2bb75c]/20 scale-110" : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
                       )}
                     >
                       {isCompleted ? <Check className="w-4 h-4" /> : <span className="text-xs font-bold">{idx + 1}</span>}
                     </motion.div>
-                    <span className={cn("text-[10px] font-bold uppercase tracking-wide hidden sm:block", isCurrent ? "text-[#14a800]" : isCompleted ? "text-zinc-500" : "text-zinc-400")}>
+                    <span className={cn("text-[10px] font-bold uppercase tracking-wide hidden sm:block", isCurrent ? "text-[#2bb75c]" : isCompleted ? "text-zinc-500" : "text-zinc-400")}>
                       {step}
                     </span>
                   </div>
-                  {!isLast && <div className={cn("h-[2px] w-4 sm:w-10 mx-1 rounded-full", isCompleted ? "bg-[#14a800]" : "bg-zinc-200 dark:bg-zinc-800")} />}
+                  {!isLast && <div className={cn("h-[2px] w-4 sm:w-10 mx-1 rounded-full", isCompleted ? "bg-[#2bb75c]" : "bg-zinc-200 dark:bg-zinc-800")} />}
                 </React.Fragment>
               );
             })}
@@ -127,7 +127,7 @@ export default function AvailabilitySetupPage() {
         <div className="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-3">
-              Set your <span className="bg-gradient-to-r from-emerald-500 to-[#118a00] bg-clip-text text-transparent">availability</span>
+              Set your <span className="bg-gradient-to-r from-emerald-500 to-[#1d8d38] bg-clip-text text-transparent">availability</span>
             </h1>
             <p className="text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto">
               Let clients know when you're working. You can easily adjust your hours or pause your profile at any time.
@@ -151,11 +151,11 @@ export default function AvailabilitySetupPage() {
                     className={cn(
                       "flex flex-col items-center text-center p-4 rounded-xl border-2 transition-all",
                       commitment === type.id 
-                        ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800]" 
+                        ? "border-[#2bb75c]/20 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c]" 
                         : "border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 hover:bg-surface dark:hover:bg-zinc-800/50"
                     )}
                   >
-                    <type.icon className={cn("w-6 h-6 mb-2", commitment === type.id ? "text-[#14a800]" : "text-zinc-400")} />
+                    <type.icon className={cn("w-6 h-6 mb-2", commitment === type.id ? "text-[#2bb75c]" : "text-zinc-400")} />
                     <span className="text-sm font-bold">{type.label}</span>
                     <span className="text-[10px] font-medium mt-1 opacity-80">{type.desc}</span>
                   </button>
@@ -167,7 +167,7 @@ export default function AvailabilitySetupPage() {
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-6 pt-6 border-t border-zinc-100 dark:border-zinc-800">
                   <div className="flex justify-between items-center mb-4">
                     <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Target Hours / Week</span>
-                    <span className="text-lg font-black text-[#14a800]">{hours} hrs</span>
+                    <span className="text-lg font-black text-[#2bb75c]">{hours} hrs</span>
                   </div>
                   <input 
                     type="range" 
@@ -200,7 +200,7 @@ export default function AvailabilitySetupPage() {
                         name="workType"
                         checked={workType === type}
                         onChange={() => setWorkType(type)}
-                        className="w-4 h-4 text-[#14a800] border-zinc-300 focus:ring-[#14a800]"
+                        className="w-4 h-4 text-[#2bb75c] border-zinc-300 focus:ring-[#2bb75c]"
                       />
                       <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 capitalize">{type} Work</span>
                     </label>
@@ -269,8 +269,8 @@ export default function AvailabilitySetupPage() {
                             className={cn(
                               "col-span-1 h-10 rounded-lg border transition-all duration-200",
                               isSelected 
-                                ? "bg-[#14a800] border-[#14a800]/20 shadow-sm shadow-[#14a800]/25/20" 
-                                : "bg-surface dark:bg-zinc-800/50 border-zinc-100 dark:border-zinc-700/50 hover:border-[#14a800]/50 dark:hover:border-[#14a800]/50"
+                                ? "bg-[#2bb75c] border-[#2bb75c]/20 shadow-sm shadow-[#2bb75c]/25/20" 
+                                : "bg-surface dark:bg-zinc-800/50 border-zinc-100 dark:border-zinc-700/50 hover:border-[#2bb75c]/50 dark:hover:border-[#2bb75c]/50"
                             )}
                           />
                         );
@@ -282,13 +282,13 @@ export default function AvailabilitySetupPage() {
               
               <div className="mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex justify-between items-center text-xs">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded bg-[#14a800]" /> <span className="text-zinc-500 font-medium">Available</span>
+                  <div className="w-3 h-3 rounded bg-[#2bb75c]" /> <span className="text-zinc-500 font-medium">Available</span>
                   <div className="w-3 h-3 rounded bg-zinc-100 dark:bg-zinc-800 ml-3" /> <span className="text-zinc-500 font-medium">Offline</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setSchedule(Object.fromEntries(DAYS.map((day) => [day, []])))}
-                  className="text-[#14a800] font-bold hover:text-[#14a800]"
+                  className="text-[#2bb75c] font-bold hover:text-[#2bb75c]"
                 >
                   Clear All
                 </button>
@@ -309,7 +309,7 @@ export default function AvailabilitySetupPage() {
             </button>
             <button 
               onClick={() => navigate('/auth/rate-setup')}
-              className="flex items-center gap-2 px-6 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white text-sm font-bold rounded-xl shadow-sm transition-all"
+              className="flex items-center gap-2 px-6 py-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white text-sm font-bold rounded-xl shadow-sm transition-all"
             >
               Next Step <ChevronRight className="w-4 h-4" />
             </button>
@@ -320,3 +320,4 @@ export default function AvailabilitySetupPage() {
     </div>
   );
 }
+

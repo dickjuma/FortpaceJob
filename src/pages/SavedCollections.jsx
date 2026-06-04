@@ -27,7 +27,7 @@ const SavedCollections = () => {
                 {folders.map((folder) => (
                   <button
                     className={`w-full text-left rounded-2xl border px-4 py-4 transition-colors ${
-                      activeFolder === folder.id ? 'border-[#14a800]/20 bg-[#14a800]/5/60' : 'border-zinc-200 bg-surface hover:bg-white'
+                      activeFolder === folder.id ? 'border-[#2bb75c]/20 bg-[#2bb75c]/5/60' : 'border-zinc-200 bg-surface hover:bg-white'
                     }`}
                     key={folder.id}
                     onClick={() => setActiveFolder(folder.id)}
@@ -35,7 +35,7 @@ const SavedCollections = () => {
                   >
                     <div className="flex items-center justify-between">
                       <div className="font-bold text-zinc-900">{folder.name}</div>
-                      <div className="text-xs font-semibold text-[#14a800]">{folder.count}</div>
+                      <div className="text-xs font-semibold text-[#2bb75c]">{folder.count}</div>
                     </div>
                     <div className="text-sm text-zinc-500 mt-2">{folder.description}</div>
                   </button>
@@ -52,10 +52,10 @@ const SavedCollections = () => {
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex bg-white border border-zinc-200 rounded-xl p-1">
-                  <button className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-zinc-100 text-[#14a800]' : 'text-zinc-500'}`} onClick={() => setViewMode('grid')} type="button">
+                  <button className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-zinc-100 text-[#2bb75c]' : 'text-zinc-500'}`} onClick={() => setViewMode('grid')} type="button">
                     <LayoutGrid className="w-4 h-4" />
                   </button>
-                  <button className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-zinc-100 text-[#14a800]' : 'text-zinc-500'}`} onClick={() => setViewMode('list')} type="button">
+                  <button className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-zinc-100 text-[#2bb75c]' : 'text-zinc-500'}`} onClick={() => setViewMode('list')} type="button">
                     <List className="w-4 h-4" />
                   </button>
                 </div>
@@ -68,7 +68,7 @@ const SavedCollections = () => {
             {viewMode === 'grid' ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {savedTalent.map((talent) => (
-                  <div className="bg-white border border-zinc-200 rounded-3xl p-5 hover:border-[#14a800]/50 hover:shadow-lg transition-all" key={talent.id}>
+                  <div className="bg-white border border-zinc-200 rounded-3xl p-5 hover:border-[#2bb75c]/50 hover:shadow-lg transition-all" key={talent.id}>
                     <div className="flex items-center gap-4 mb-4">
                       <img
                         alt={talent.name}
@@ -76,7 +76,7 @@ const SavedCollections = () => {
                         src={`https://ui-avatars.com/api/?name=${encodeURIComponent(talent.name)}&background=random`}
                       />
                       <div>
-                        <Link className="font-bold text-zinc-900 text-lg hover:text-[#14a800] transition-colors" to={`/talent/${talent.id}`}>
+                        <Link className="font-bold text-zinc-900 text-lg hover:text-[#2bb75c] transition-colors" to={`/talent/${talent.id}`}>
                           {talent.name}
                         </Link>
                         <p className="text-sm text-zinc-500">{talent.title}</p>
@@ -103,7 +103,7 @@ const SavedCollections = () => {
                 {savedTalent.map((talent) => (
                   <div className="bg-white border border-zinc-200 rounded-2xl p-5 flex flex-col md:flex-row gap-5 items-start md:items-center" key={talent.id}>
                     <div className="flex-1">
-                      <Link className="text-xl font-bold text-zinc-900 hover:text-[#14a800] transition-colors" to={`/talent/${talent.id}`}>
+                      <Link className="text-xl font-bold text-zinc-900 hover:text-[#2bb75c] transition-colors" to={`/talent/${talent.id}`}>
                         {talent.name}
                       </Link>
                       <div className="text-zinc-600 mt-1">{talent.title}</div>
@@ -124,3 +124,4 @@ const SavedCollections = () => {
 };
 
 export default SavedCollections;
+

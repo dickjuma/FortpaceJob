@@ -9,24 +9,24 @@ export default function SecurityDashboard() {
       description: "Manage devices and browsers currently signed in to your account.",
       icon: Smartphone,
       link: "/auth/sessions",
-      color: "text-[#14a800]",
-      bg: "bg-[#14a800]/5 dark:bg-[#14a800]/20"
+      color: "text-[#2bb75c]",
+      bg: "bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20"
     },
     {
       title: "Connected Accounts",
       description: "Manage Google and other third-party login providers.",
       icon: LinkIcon,
       link: "/auth/connected-accounts",
-      color: "text-[#14a800]",
-      bg: "bg-[#14a800]/5 dark:bg-[#14a800]/20"
+      color: "text-[#2bb75c]",
+      bg: "bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20"
     },
     {
       title: "Password & 2FA",
       description: "Update your password and manage two-factor authentication.",
       icon: Key,
       link: "/account-security",
-      color: "text-[#14a800]",
-      bg: "bg-[#14a800]/5 dark:bg-[#14a800]/20"
+      color: "text-[#2bb75c]",
+      bg: "bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20"
     },
     {
       title: "Suspicious Activity",
@@ -59,7 +59,7 @@ export default function SecurityDashboard() {
                   <card.icon className={`w-6 h-6 ${card.color}`} />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-[#14a800] transition-colors">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-[#2bb75c] transition-colors">
                     {card.title}
                   </h3>
                   <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
@@ -74,3 +74,4 @@ export default function SecurityDashboard() {
     </div>
   );
 }
+

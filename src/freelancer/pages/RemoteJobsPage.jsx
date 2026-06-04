@@ -71,7 +71,7 @@ export default function RemoteJobsPage() {
                 <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-success/10 text-success border-success/20">
                   {job.timezone}
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-[#14a800]/5 text-[#14a800] border-[#14a800]/20">
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-[#2bb75c]/5 text-[#2bb75c] border-[#2bb75c]/20">
                   Async: {job.async}
                 </span>
               </div>
@@ -87,7 +87,7 @@ export default function RemoteJobsPage() {
               </div>
               <button 
                 onClick={() => handleApplySimulate(job.title)}
-                className="px-4 py-2 bg-success hover:bg-success/95 text-white font-black rounded-xl text-xs transition-colors shadow-lg shadow-[#14a800]/15 flex items-center gap-1"
+                className="px-4 py-2 bg-success hover:bg-success/95 text-white font-black rounded-xl text-xs transition-colors shadow-lg shadow-[#2bb75c]/15 flex items-center gap-1"
               >
                 Apply Remote
               </button>
@@ -107,3 +107,4 @@ export default function RemoteJobsPage() {
     </div>
   );
 }
+

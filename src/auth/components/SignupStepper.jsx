@@ -34,7 +34,7 @@ export default function SignupStepper({ currentStep, steps = [] }) {
                   isCompleted
                     ? 'border-emerald-500 bg-emerald-500 text-white'
                     : isCurrent
-                      ? 'border-[#14a800]/20 bg-[#14a800] text-white'
+                      ? 'border-[#2bb75c]/20 bg-[#2bb75c] text-white'
                       : 'border-zinc-300 bg-white text-zinc-400 dark:border-zinc-700 dark:bg-zinc-900',
                 ].join(' ')}
               >
@@ -55,3 +55,4 @@ export default function SignupStepper({ currentStep, steps = [] }) {
     </div>
   );
 }
+

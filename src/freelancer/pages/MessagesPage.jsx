@@ -69,7 +69,7 @@ export default function MessagesPage() {
       )}
       <MessagesInbox
         backLink={
-          <Link to="/freelancer/dashboard" className="text-sm font-medium text-[#14a800] hover:underline">
+          <Link to="/freelancer/dashboard" className="text-sm font-medium text-[#2bb75c] hover:underline">
             ← Dashboard
           </Link>
         }
@@ -107,3 +107,4 @@ export default function MessagesPage() {
     </div>
   );
 }
+

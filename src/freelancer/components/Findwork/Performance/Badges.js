@@ -571,10 +571,10 @@ export default function Badges() {
               </p>
             </div>
             
-            <div className="p-4 bg-[#14a800]/5 rounded-lg border border-[#14a800]/50">
+            <div className="p-4 bg-[#2bb75c]/5 rounded-lg border border-[#2bb75c]/50">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-[#14a800]/10 rounded-md">
-                  <Users size={16} className="text-[#14a800]" />
+                <div className="p-2 bg-[#2bb75c]/10 rounded-md">
+                  <Users size={16} className="text-[#2bb75c]" />
                 </div>
                 <span className="font-medium text-[#2E2322]">Trust & Credibility</span>
               </div>
@@ -589,3 +589,4 @@ export default function Badges() {
     </div>
   );
 }
+

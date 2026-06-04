@@ -14,7 +14,7 @@ let updatedContent = content.replace(/^import\s+([\w{}]+)\s+from\s+['"](.*?)['"]
 updatedContent = updatedContent.replace(
   /<Routes>/,
   `<ErrorBoundary>
-        <React.Suspense fallback={<div className="h-screen w-full flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#14a800]"></div></div>}>
+        <React.Suspense fallback={<div className="h-screen w-full flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2bb75c]"></div></div>}>
           <Routes>`
 );
 
@@ -27,3 +27,4 @@ updatedContent = updatedContent.replace(
 
 fs.writeFileSync(file, updatedContent);
 console.log('App.jsx successfully refactored to Lazy Loading!');
+

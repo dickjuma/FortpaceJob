@@ -9,7 +9,7 @@ const SkillAssessment = () => {
         <div className="container mx-auto px-4 md:px-8 max-w-5xl">
           
           <div className="text-center mb-16">
-            <div className="w-16 h-16 bg-[#14a800]/10 text-[#14a800] rounded-2xl flex items-center justify-center mx-auto mb-6 transform rotate-3">
+            <div className="w-16 h-16 bg-[#2bb75c]/10 text-[#2bb75c] rounded-2xl flex items-center justify-center mx-auto mb-6 transform rotate-3">
               <Target className="w-8 h-8" />
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-zinc-900 mb-6">Skill Assessments</h1>
@@ -40,9 +40,9 @@ const SkillAssessment = () => {
                     <Award className="w-6 h-6 text-zinc-600" />
                   </div>
                   <span className={`px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-lg ${
-                    test.diff === 'Expert' ? 'bg-[#14a800]/10 text-[#14a800]' :
+                    test.diff === 'Expert' ? 'bg-[#2bb75c]/10 text-[#2bb75c]' :
                     test.diff === 'Advanced' ? 'bg-rose-100 text-rose-700' :
-                    'bg-[#14a800]/10 text-[#14a800]'
+                    'bg-[#2bb75c]/10 text-[#2bb75c]'
                   }`}>
                     {test.diff}
                   </span>
@@ -70,3 +70,4 @@ const SkillAssessment = () => {
 };
 
 export default SkillAssessment;
+

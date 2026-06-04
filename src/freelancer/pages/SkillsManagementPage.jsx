@@ -168,7 +168,7 @@ export default function SkillsManagementPage() {
                 </div>
               </div>
 
-              <button type="submit" className="w-full py-3 bg-success hover:bg-success/95 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-[#14a800]/20 mt-4 flex items-center justify-center gap-1.5">
+              <button type="submit" className="w-full py-3 bg-success hover:bg-success/95 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-[#2bb75c]/20 mt-4 flex items-center justify-center gap-1.5">
                 <Plus size={16} /> Add Skill Tag
               </button>
             </form>
@@ -385,3 +385,4 @@ export default function SkillsManagementPage() {
     </div>
   );
 }
+

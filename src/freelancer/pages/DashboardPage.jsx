@@ -153,7 +153,7 @@ export default function DashboardOverview() {
       <Toaster position="top-right" toastOptions={{ className: 'font-bold text-sm' }} />
       
       {/* Welcome Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#14a800] text-white p-8 rounded-2xl shadow-xl relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#2bb75c] text-white p-8 rounded-2xl shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 blur-[80px] rounded-full pointer-events-none" />
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-2">
@@ -175,7 +175,7 @@ export default function DashboardOverview() {
           </Button>
           <Button 
             variant="primary" 
-            className="bg-white text-[#14a800] hover:bg-zinc-100 border-none shadow-lg shadow-white/20 font-bold" 
+            className="bg-white text-[#2bb75c] hover:bg-zinc-100 border-none shadow-lg shadow-white/20 font-bold" 
             onClick={() => navigate('/freelancer/create-gig')}
           >
             <Zap size={16} className="mr-2" /> Create Service
@@ -256,7 +256,7 @@ export default function DashboardOverview() {
             title={
               <div className="flex justify-between items-center w-full">
                 <span className="flex items-center gap-2 text-text-primary font-bold">
-                  <Briefcase className="w-5 h-5 text-[#14a800]" /> Active Contracts
+                  <Briefcase className="w-5 h-5 text-[#2bb75c]" /> Active Contracts
                 </span>
                 <Button variant="outline" size="sm" onClick={() => navigate('/freelancer/contracts')}>
                   View All <ArrowRight size={14} className="ml-1" />
@@ -311,7 +311,7 @@ export default function DashboardOverview() {
                           </span>
                         </td>
                         <td className="px-6 py-4">
-                          <ExternalLink size={16} className="text-text-secondary group-hover:text-[#14a800]" />
+                          <ExternalLink size={16} className="text-text-secondary group-hover:text-[#2bb75c]" />
                         </td>
                       </tr>
                     ))
@@ -464,3 +464,4 @@ export default function DashboardOverview() {
     </div>
   );
 }
+

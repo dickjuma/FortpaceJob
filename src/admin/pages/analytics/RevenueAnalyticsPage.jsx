@@ -24,7 +24,7 @@ export default function RevenueAnalyticsPage() {
         <div className="flex gap-2">
            <button 
              onClick={() => toast.success('Exporting financial report...')}
-             className="px-4 py-2 bg-surface-dark text-white dark:bg-[#14a800] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+             className="px-4 py-2 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
            >
              <Download size={16} /> Export PDF
            </button>
@@ -67,10 +67,10 @@ export default function RevenueAnalyticsPage() {
             {[45, 52, 48, 70, 65, 85].map((h, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-4 group">
                 <div 
-                  className="w-full bg-[#14a800]/20 group-hover:bg-[#14a800]/40 rounded-t-xl transition-all relative overflow-hidden" 
+                  className="w-full bg-[#2bb75c]/20 group-hover:bg-[#2bb75c]/40 rounded-t-xl transition-all relative overflow-hidden" 
                   style={{ height: `${h}%` }}
                 >
-                  <div className="absolute top-0 left-0 w-full h-1 bg-[#14a800]" />
+                  <div className="absolute top-0 left-0 w-full h-1 bg-[#2bb75c]" />
                 </div>
                 <span className="text-[10px] font-black text-zinc-400 uppercase">Month {i+1}</span>
               </div>
@@ -80,13 +80,13 @@ export default function RevenueAnalyticsPage() {
 
         <div className="bg-surface-dark rounded-[32px] p-8 text-white relative overflow-hidden">
           <div className="relative z-10">
-            <PieChart className="text-[#14a800] mb-6" size={32} />
+            <PieChart className="text-[#2bb75c] mb-6" size={32} />
             <h3 className="text-xl font-bold mb-4">Revenue Breakdown</h3>
             <div className="space-y-4">
               {[
-                { label: 'Project Escrow Fees', percent: 45, color: 'bg-[#14a800]' },
+                { label: 'Project Escrow Fees', percent: 45, color: 'bg-[#2bb75c]' },
                 { label: 'Subscriptions', percent: 35, color: 'bg-success' },
-                { label: 'Withdrawal Charges', percent: 20, color: 'bg-[#14a800]' },
+                { label: 'Withdrawal Charges', percent: 20, color: 'bg-[#2bb75c]' },
               ].map((item, i) => (
                 <div key={i} className="space-y-2">
                   <div className="flex justify-between text-xs font-bold">
@@ -101,9 +101,10 @@ export default function RevenueAnalyticsPage() {
             </div>
           </div>
           {/* Decorative glow */}
-          <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-[#14a800]/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-[#2bb75c]/20 rounded-full blur-3xl" />
         </div>
       </div>
     </div>
   );
 }
+

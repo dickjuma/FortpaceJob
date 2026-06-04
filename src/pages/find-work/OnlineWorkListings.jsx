@@ -69,11 +69,11 @@ export default function OnlineWorkListings() {
 
   return (
     <>
-      <div className="bg-[#14a800] text-white py-12 border-b border-[#118a00]/30">
+      <div className="bg-[#2bb75c] text-white py-12 border-b border-[#1d8d38]/30">
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#14a800]/20 text-[#14a800] text-xs font-bold tracking-wide mb-3 border border-[#14a800]/20/30">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2bb75c]/20 text-[#2bb75c] text-xs font-bold tracking-wide mb-3 border border-[#2bb75c]/20/30">
                 <Monitor className="w-4 h-4" /> ONLINE WORK
               </div>
               <h1 className="text-3xl font-black mb-2">Remote Opportunities</h1>
@@ -88,10 +88,10 @@ export default function OnlineWorkListings() {
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder="Search by keyword, client, or skill..."
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:border-[#14a800]/20 text-sm font-medium shadow-inner"
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:border-[#2bb75c]/20 text-sm font-medium shadow-inner"
                 />
               </div>
-              <button type="submit" className="px-5 py-3 bg-[#14a800] hover:bg-[#118a00] rounded-xl text-sm font-bold">
+              <button type="submit" className="px-5 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] rounded-xl text-sm font-bold">
                 Search
               </button>
             </form>
@@ -105,7 +105,7 @@ export default function OnlineWorkListings() {
             <div className="bg-white border border-zinc-200 rounded-2xl p-5 shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold text-zinc-900">Filters</h3>
-                <button type="button" onClick={resetFilters} className="text-xs font-bold text-[#14a800] hover:underline">
+                <button type="button" onClick={resetFilters} className="text-xs font-bold text-[#2bb75c] hover:underline">
                   Clear All
                 </button>
               </div>
@@ -118,7 +118,7 @@ export default function OnlineWorkListings() {
                       <label key={category.id} className="flex items-center gap-2 text-sm text-zinc-600 cursor-pointer">
                         <input
                           type="checkbox"
-                          className="rounded border-zinc-300 text-[#14a800] focus:ring-[#14a800]"
+                          className="rounded border-zinc-300 text-[#2bb75c] focus:ring-[#2bb75c]"
                           checked={selectedCategories.includes(category.id)}
                           onChange={() => toggleCategory(category.id)}
                         />
@@ -137,7 +137,7 @@ export default function OnlineWorkListings() {
                       <label key={budgetType} className="flex items-center gap-2 text-sm text-zinc-600 cursor-pointer">
                         <input
                           type="checkbox"
-                          className="rounded border-zinc-300 text-[#14a800] focus:ring-[#14a800]"
+                          className="rounded border-zinc-300 text-[#2bb75c] focus:ring-[#2bb75c]"
                           checked={budgetTypes.includes(budgetType)}
                           onChange={() => toggleBudgetType(budgetType)}
                         />
@@ -155,7 +155,7 @@ export default function OnlineWorkListings() {
                     <label className="flex items-center gap-2 text-sm text-zinc-600 cursor-pointer">
                       <input
                         type="checkbox"
-                        className="rounded border-zinc-300 text-[#14a800] focus:ring-[#14a800]"
+                        className="rounded border-zinc-300 text-[#2bb75c] focus:ring-[#2bb75c]"
                         checked={verifiedOnly}
                         onChange={() => setVerifiedOnly((current) => !current)}
                       />
@@ -164,7 +164,7 @@ export default function OnlineWorkListings() {
                     <label className="flex items-center gap-2 text-sm text-zinc-600 cursor-pointer">
                       <input
                         type="checkbox"
-                        className="rounded border-zinc-300 text-[#14a800] focus:ring-[#14a800]"
+                        className="rounded border-zinc-300 text-[#2bb75c] focus:ring-[#2bb75c]"
                         checked={establishedOnly}
                         onChange={() => setEstablishedOnly((current) => !current)}
                       />
@@ -202,7 +202,7 @@ export default function OnlineWorkListings() {
                 <Monitor className="w-12 h-12 mx-auto text-zinc-300 mb-4" />
                 <h2 className="text-xl font-bold text-zinc-900 mb-2">No remote jobs match these filters yet.</h2>
                 <p className="text-zinc-600 mb-6">Try broadening your category selection or switching the sort and client filters.</p>
-                <button type="button" onClick={resetFilters} className="px-6 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl">
+                <button type="button" onClick={resetFilters} className="px-6 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl">
                   Reset Filters
                 </button>
               </div>
@@ -219,3 +219,4 @@ export default function OnlineWorkListings() {
     </>
   );
 }
+

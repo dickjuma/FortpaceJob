@@ -61,7 +61,7 @@ export default function MarketplaceEditModal({ isOpen, onClose, data, type = 'jo
           {/* Header */}
           <div className="p-8 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-[#14a800] text-white rounded-2xl shadow-lg shadow-[#14a800]/25/20">
+              <div className="p-3 bg-[#2bb75c] text-white rounded-2xl shadow-lg shadow-[#2bb75c]/25/20">
                 {getIcon()}
               </div>
               <div>
@@ -88,7 +88,7 @@ export default function MarketplaceEditModal({ isOpen, onClose, data, type = 'jo
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
-                className="w-full px-5 py-3.5 bg-surface dark:bg-zinc-800 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-[#14a800] outline-none transition-all"
+                className="w-full px-5 py-3.5 bg-surface dark:bg-zinc-800 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-[#2bb75c] outline-none transition-all"
                 placeholder="e.g. Mobile App Development"
                 required
               />
@@ -103,7 +103,7 @@ export default function MarketplaceEditModal({ isOpen, onClose, data, type = 'jo
                     type="number"
                     value={formData.amount}
                     onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                    className="w-full pl-12 pr-4 py-3.5 bg-surface dark:bg-zinc-800 border-none rounded-2xl text-sm font-black focus:ring-2 focus:ring-[#14a800] outline-none transition-all"
+                    className="w-full pl-12 pr-4 py-3.5 bg-surface dark:bg-zinc-800 border-none rounded-2xl text-sm font-black focus:ring-2 focus:ring-[#2bb75c] outline-none transition-all"
                     required
                   />
                 </div>
@@ -113,7 +113,7 @@ export default function MarketplaceEditModal({ isOpen, onClose, data, type = 'jo
                 <select 
                   value={formData.status}
                   onChange={(e) => setFormData({...formData, status: e.target.value})}
-                  className="w-full px-5 py-3.5 bg-surface dark:bg-zinc-800 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-[#14a800] outline-none cursor-pointer appearance-none transition-all"
+                  className="w-full px-5 py-3.5 bg-surface dark:bg-zinc-800 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-[#2bb75c] outline-none cursor-pointer appearance-none transition-all"
                 >
                   <option value="active">Active</option>
                   <option value="in_progress">In Progress</option>
@@ -130,7 +130,7 @@ export default function MarketplaceEditModal({ isOpen, onClose, data, type = 'jo
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 rows={3}
-                className="w-full px-5 py-3.5 bg-surface dark:bg-zinc-800 border-none rounded-2xl text-sm font-medium focus:ring-2 focus:ring-[#14a800] outline-none transition-all resize-none"
+                className="w-full px-5 py-3.5 bg-surface dark:bg-zinc-800 border-none rounded-2xl text-sm font-medium focus:ring-2 focus:ring-[#2bb75c] outline-none transition-all resize-none"
                 placeholder="Internal notes regarding this marketplace entry..."
               />
             </div>
@@ -169,3 +169,4 @@ export default function MarketplaceEditModal({ isOpen, onClose, data, type = 'jo
     </div>
   );
 }
+

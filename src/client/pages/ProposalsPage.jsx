@@ -12,7 +12,7 @@ import ConfirmModal from '../../components/ui/ConfirmModal';
 import toast, { Toaster } from 'react-hot-toast';
 
 const STATUS_STYLES = {
-  SUBMITTED: 'bg-#14a800]/10 text-blue-400 border-#14a800]/20',
+  SUBMITTED: 'bg-#2bb75c]/10 text-blue-400 border-#2bb75c]/20',
   ACCEPTED:  'bg-success/10 text-success border-success/20',
   REJECTED:  'bg-red-500/10 text-red-400 border-red-500/20',
   SHORTLISTED: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
@@ -98,7 +98,7 @@ export default function ProposalsPage() {
             <h1 className="text-3xl font-black text-white">Proposals</h1>
             <p className="text-sm font-semibold text-zinc-400 mt-1">{total} proposal{total !== 1 ? 's' : ''} received. Review and hire top talent.</p>
           </div>
-          <button onClick={() => navigate('/client-services/create-job')} className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-[#14a800]/20">
+          <button onClick={() => navigate('/client-services/create-job')} className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-[#2bb75c]/20">
             <Briefcase className="w-4 h-4" /> Post New Job
           </button>
         </div>

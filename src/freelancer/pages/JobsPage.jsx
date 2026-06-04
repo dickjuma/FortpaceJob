@@ -142,8 +142,8 @@ export default function JobsPage() {
       <SubscriptionUsageBanner />
 
       {/* Premium Header Banner */}
-      <div className="bg-[#14a800] rounded-2xl p-8 md:p-12 shadow-xl relative overflow-hidden group">
-        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-[#118a00] blur-[80px] rounded-full pointer-events-none transition-colors duration-700"></div>
+      <div className="bg-[#2bb75c] rounded-2xl p-8 md:p-12 shadow-xl relative overflow-hidden group">
+        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-[#1d8d38] blur-[80px] rounded-full pointer-events-none transition-colors duration-700"></div>
         <div className="absolute bottom-[-20%] left-[-10%] w-64 h-64 bg-white/10 blur-[60px] rounded-full pointer-events-none transition-colors duration-700"></div>
         
         <div className="relative z-10 max-w-3xl">
@@ -167,7 +167,7 @@ export default function JobsPage() {
                 onKeyDown={(e) => e.key === 'Enter' && toast.success('Searching...')}
               />
             </div>
-            <Button variant="primary" size="lg" className="bg-white text-[#14a800] hover:bg-zinc-100 rounded-lg shadow-lg font-bold" onClick={() => toast.success('Searching...')}>
+            <Button variant="primary" size="lg" className="bg-white text-[#2bb75c] hover:bg-zinc-100 rounded-lg shadow-lg font-bold" onClick={() => toast.success('Searching...')}>
               Search
             </Button>
           </div>
@@ -194,8 +194,8 @@ export default function JobsPage() {
                   <div className="space-y-3">
                     {['Remote Only', 'Hybrid', 'On-Site / Nearby'].map(type => (
                       <label key={type} className="flex items-center gap-3 cursor-pointer group">
-                        <div className="w-5 h-5 rounded-md border-2 border-border group-hover:border-[#14a800] flex items-center justify-center transition-colors">
-                          {type === 'Remote Only' && <div className="w-2.5 h-2.5 bg-[#14a800] rounded-sm" />}
+                        <div className="w-5 h-5 rounded-md border-2 border-border group-hover:border-[#2bb75c] flex items-center justify-center transition-colors">
+                          {type === 'Remote Only' && <div className="w-2.5 h-2.5 bg-[#2bb75c] rounded-sm" />}
                         </div>
                         <span className="text-sm font-semibold text-text-secondary group-hover:text-text-primary transition-colors">{type}</span>
                       </label>
@@ -209,8 +209,8 @@ export default function JobsPage() {
                 <div className="space-y-3">
                   {['Any Job Type', 'Hourly', 'Fixed Price'].map(type => (
                     <label key={type} className="flex items-center gap-3 cursor-pointer group">
-                      <div className="w-5 h-5 rounded-md border-2 border-border group-hover:border-[#14a800] flex items-center justify-center transition-colors">
-                        {type === 'Any Job Type' && <div className="w-2.5 h-2.5 bg-[#14a800] rounded-sm" />}
+                      <div className="w-5 h-5 rounded-md border-2 border-border group-hover:border-[#2bb75c] flex items-center justify-center transition-colors">
+                        {type === 'Any Job Type' && <div className="w-2.5 h-2.5 bg-[#2bb75c] rounded-sm" />}
                       </div>
                       <span className="text-sm font-semibold text-text-secondary group-hover:text-text-primary transition-colors">{type}</span>
                     </label>
@@ -221,8 +221,8 @@ export default function JobsPage() {
               <div>
                 <h4 className="font-bold text-text-primary text-xs tracking-widest uppercase mb-3">Client Info</h4>
                 <label className="flex items-center gap-3 cursor-pointer group">
-                  <div className="w-5 h-5 rounded-md border-2 border-border group-hover:border-[#14a800] flex items-center justify-center transition-colors">
-                    <div className="w-2.5 h-2.5 bg-[#14a800] rounded-sm" />
+                  <div className="w-5 h-5 rounded-md border-2 border-border group-hover:border-[#2bb75c] flex items-center justify-center transition-colors">
+                    <div className="w-2.5 h-2.5 bg-[#2bb75c] rounded-sm" />
                   </div>
                   <span className="text-sm font-semibold text-text-secondary group-hover:text-text-primary transition-colors">Payment Verified</span>
                 </label>
@@ -259,8 +259,8 @@ export default function JobsPage() {
                 <JobCardSkeleton />
               </>
             ) : quotaExhausted ? (
-              <Card className="text-center py-12 border-[#14a800]/30 bg-[#14a800]/5">
-                <Zap className="w-12 h-12 text-[#14a800] mx-auto mb-4" />
+              <Card className="text-center py-12 border-[#2bb75c]/30 bg-[#2bb75c]/5">
+                <Zap className="w-12 h-12 text-[#2bb75c] mx-auto mb-4" />
                 <h3 className="text-lg font-bold text-text-primary">Monthly recommendation limit reached</h3>
                 <p className="text-sm text-text-secondary mt-1 mb-4 max-w-md mx-auto">
                   Upgrade your plan to see more AI-matched jobs this month.
@@ -268,7 +268,7 @@ export default function JobsPage() {
                 <Button variant="primary" onClick={() => setPaywallOpen(true)}>
                   View upgrade options
                 </Button>
-                <Link to="/pricing" className="block mt-3 text-sm font-bold text-[#14a800] hover:underline">
+                <Link to="/pricing" className="block mt-3 text-sm font-bold text-[#2bb75c] hover:underline">
                   Go to pricing
                 </Link>
               </Card>
@@ -281,7 +281,7 @@ export default function JobsPage() {
             ) : (
               jobs.map(job => (
                 <Link to={`/freelancer/job/${job.id}`} key={job.id} className="block group">
-                  <Card hover className="bg-white border-border shadow-sm group-hover:border-[#14a800]/50 transition-colors">
+                  <Card hover className="bg-white border-border shadow-sm group-hover:border-[#2bb75c]/50 transition-colors">
                     <div className="flex justify-between items-start gap-4 mb-3">
                       <div>
                         {job.isUrgent && (
@@ -289,11 +289,11 @@ export default function JobsPage() {
                             Urgent Hiring
                           </span>
                         )}
-                        <h3 className="text-lg font-bold text-text-primary group-hover:text-[#14a800] transition-colors tracking-tight">{job.title}</h3>
+                        <h3 className="text-lg font-bold text-text-primary group-hover:text-[#2bb75c] transition-colors tracking-tight">{job.title}</h3>
                         <div className="flex items-center gap-1.5 mt-1 text-xs font-semibold text-text-secondary">
                           <span className={job.verified ? "text-[#222222] flex items-center gap-1" : ""}>
                             {job.client}
-                            {job.verified && <ShieldCheck size={12} className="text-[#14a800]" />}
+                            {job.verified && <ShieldCheck size={12} className="text-[#2bb75c]" />}
                           </span>
                           <span>•</span>
                           <span>Posted {job.postedAt}</span>
@@ -303,7 +303,7 @@ export default function JobsPage() {
                         onClick={(e) => toggleSaveJob(job.id, e)}
                         className={cn(
                           "p-2 rounded-full transition-colors",
-                          savedJobs.has(job.id) ? "bg-[#14a800]/10 text-[#14a800]" : "bg-light-gray text-text-secondary hover:bg-border hover:text-[#14a800]"
+                          savedJobs.has(job.id) ? "bg-[#2bb75c]/10 text-[#2bb75c]" : "bg-light-gray text-text-secondary hover:bg-border hover:text-[#2bb75c]"
                         )}
                       >
                         <Bookmark size={18} className={savedJobs.has(job.id) ? "fill-current" : ""} />
@@ -353,3 +353,4 @@ export default function JobsPage() {
     </div>
   );
 }
+

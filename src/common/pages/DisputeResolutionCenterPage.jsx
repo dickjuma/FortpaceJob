@@ -111,7 +111,7 @@ export default function DisputeResolutionCenterPage() {
               ))}
             </div>
 
-            <button className="w-full py-3 border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-xl font-bold text-[#14a800] hover:bg-surface dark:hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2 text-sm">
+            <button className="w-full py-3 border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-xl font-bold text-[#2bb75c] hover:bg-surface dark:hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2 text-sm">
               <UploadCloud className="w-4 h-4" /> Upload Evidence
             </button>
           </div>
@@ -163,11 +163,11 @@ export default function DisputeResolutionCenterPage() {
                   <p className="text-[10px] font-bold text-zinc-400 mb-1">{msg.sender} • {msg.time}</p>
                   <div className={cn(
                     "p-4 rounded-2xl text-sm font-medium shadow-sm",
-                    msg.role === 'mediator' ? "bg-[#14a800]/5 dark:bg-[#14a800]/10 border border-[#14a800]/20 dark:border-[#14a800]/20 text-[#14a800] dark:text-[#14a800]" :
+                    msg.role === 'mediator' ? "bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 border border-[#2bb75c]/20 dark:border-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c]" :
                     msg.role === 'client' ? "bg-surface-dark dark:bg-zinc-700 text-white rounded-tr-sm" : 
                     "bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-tl-sm"
                   )}>
-                    {msg.role === 'mediator' && <Scale className="w-4 h-4 text-[#14a800] mb-2" />}
+                    {msg.role === 'mediator' && <Scale className="w-4 h-4 text-[#2bb75c] mb-2" />}
                     {msg.text}
                   </div>
                 </div>
@@ -175,7 +175,7 @@ export default function DisputeResolutionCenterPage() {
             </div>
 
             <div className="p-4 bg-white dark:bg-surface-dark border-t border-zinc-200 dark:border-zinc-800 shrink-0">
-              <div className="flex items-end gap-2 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-3xl p-2 focus-within:border-[#14a800]/20 transition-colors">
+              <div className="flex items-end gap-2 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-3xl p-2 focus-within:border-[#2bb75c]/20 transition-colors">
                 <button className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors rounded-full shrink-0">
                   <Paperclip className="w-5 h-5" />
                 </button>
@@ -186,7 +186,7 @@ export default function DisputeResolutionCenterPage() {
                   value={message}
                   onChange={e => setMessage(e.target.value)}
                 />
-                <button className="p-2.5 bg-[#14a800] hover:bg-[#118a00] text-white rounded-full transition-colors shrink-0 shadow-md disabled:opacity-50" disabled={!message.trim()}>
+                <button className="p-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-full transition-colors shrink-0 shadow-md disabled:opacity-50" disabled={!message.trim()}>
                   <Send className="w-4 h-4 ml-0.5" />
                 </button>
               </div>
@@ -200,3 +200,4 @@ export default function DisputeResolutionCenterPage() {
     </div>
   );
 }
+

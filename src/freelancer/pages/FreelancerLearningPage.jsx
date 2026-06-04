@@ -13,7 +13,7 @@ const COURSES = [
 ];
 
 const CERTIFICATIONS = [
-  { id: 1, name: 'React Native Expert', date: 'May 10, 2026', score: '98%', icon: Award, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/10' },
+  { id: 1, name: 'React Native Expert', date: 'May 10, 2026', score: '98%', icon: Award, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10' },
   { id: 2, name: 'AWS Cloud Practitioner', date: 'Apr 22, 2026', score: '92%', icon: Trophy, color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-500/10' }
 ];
 
@@ -28,7 +28,7 @@ export default function FreelancerLearningPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2 flex items-center gap-3">
-              <GraduationCap className="w-8 h-8 text-[#14a800]" /> Learning & Certifications
+              <GraduationCap className="w-8 h-8 text-[#2bb75c]" /> Learning & Certifications
             </h1>
             <p className="text-zinc-500 font-medium">Improve your skills and earn marketplace verification badges.</p>
           </div>
@@ -60,14 +60,14 @@ export default function FreelancerLearningPage() {
             
             {/* Top Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-gradient-to-br from-[#14a800] to-[#118a00] rounded-3xl p-6 shadow-md text-white relative overflow-hidden">
+              <div className="bg-gradient-to-br from-[#2bb75c] to-[#1d8d38] rounded-3xl p-6 shadow-md text-white relative overflow-hidden">
                 <div className="absolute right-0 top-0 opacity-20 transform tranzinc-x-4 -tranzinc-y-4">
                   <Trophy className="w-32 h-32" />
                 </div>
                 <div className="relative z-10">
-                  <p className="text-xs font-bold text-[#14a800] uppercase tracking-wider mb-2">Learning Score</p>
+                  <p className="text-xs font-bold text-[#2bb75c] uppercase tracking-wider mb-2">Learning Score</p>
                   <h3 className="text-4xl font-black mb-1">Top 5%</h3>
-                  <p className="text-sm font-medium text-[#14a800]">You learn faster than 95% of freelancers.</p>
+                  <p className="text-sm font-medium text-[#2bb75c]">You learn faster than 95% of freelancers.</p>
                 </div>
               </div>
 
@@ -93,7 +93,7 @@ export default function FreelancerLearningPage() {
               <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4">Resume Learning</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {COURSES.map(course => (
-                  <div key={course.id} className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden group cursor-pointer hover:border-[#14a800]/50 transition-colors flex flex-col">
+                  <div key={course.id} className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden group cursor-pointer hover:border-[#2bb75c]/50 transition-colors flex flex-col">
                     <div className="h-40 overflow-hidden relative">
                       <img src={course.image} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       {course.progress > 0 && course.progress < 100 && (
@@ -105,7 +105,7 @@ export default function FreelancerLearningPage() {
                     
                     <div className="p-6 flex-1 flex flex-col">
                       <div className="flex justify-between items-start mb-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/10 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 px-2 py-0.5 rounded-md">
                           {course.level}
                         </span>
                         <span className="text-xs font-bold text-zinc-400 flex items-center gap-1"><Clock className="w-3 h-3" /> {course.duration}</span>
@@ -119,7 +119,7 @@ export default function FreelancerLearningPage() {
                           <span className="text-xs font-black text-zinc-900 dark:text-white">{course.progress}%</span>
                         </div>
                         <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
-                          <div className={cn("h-full rounded-full transition-all duration-1000", course.progress === 100 ? "bg-success" : "bg-[#14a800]")} style={{ width: `${course.progress}%` }}></div>
+                          <div className={cn("h-full rounded-full transition-all duration-1000", course.progress === 100 ? "bg-success" : "bg-[#2bb75c]")} style={{ width: `${course.progress}%` }}></div>
                         </div>
                       </div>
                     </div>
@@ -144,7 +144,7 @@ export default function FreelancerLearningPage() {
                     </div>
                     <div className="text-right">
                       <p className="text-xs font-bold text-zinc-400">{skill.diff}</p>
-                      <button className="mt-2 text-sm font-bold text-[#14a800] flex items-center gap-1 hover:underline">
+                      <button className="mt-2 text-sm font-bold text-[#2bb75c] flex items-center gap-1 hover:underline">
                         Start Course <ChevronRight className="w-4 h-4" />
                       </button>
                     </div>
@@ -161,7 +161,7 @@ export default function FreelancerLearningPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               
               {/* Add New */}
-              <div className="border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-3xl p-6 flex flex-col items-center justify-center min-h-[200px] hover:border-[#14a800]/20 hover:bg-[#14a800]/5 dark:hover:bg-[#14a800]/5 cursor-pointer transition-all text-center">
+              <div className="border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-3xl p-6 flex flex-col items-center justify-center min-h-[200px] hover:border-[#2bb75c]/20 hover:bg-[#2bb75c]/5 dark:hover:bg-[#2bb75c]/5 cursor-pointer transition-all text-center">
                 <div className="w-12 h-12 bg-zinc-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-zinc-400 mb-4">
                   <PlayCircle className="w-6 h-6" />
                 </div>
@@ -203,3 +203,4 @@ export default function FreelancerLearningPage() {
     </div>
   );
 }
+

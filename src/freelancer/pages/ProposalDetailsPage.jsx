@@ -13,7 +13,7 @@ export default function ProposalDetailsPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
       </div>
     );
   }
@@ -23,7 +23,7 @@ export default function ProposalDetailsPage() {
       <div className="max-w-5xl mx-auto py-8 px-4 text-center">
         <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
         <p className="text-zinc-600 mb-4">Proposal not found or unavailable.</p>
-        <Link to="/freelancer/proposals" className="text-[#14a800] font-bold">
+        <Link to="/freelancer/proposals" className="text-[#2bb75c] font-bold">
           Back to proposals
         </Link>
       </div>
@@ -43,7 +43,7 @@ export default function ProposalDetailsPage() {
     <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <Toaster position="top-center" />
       <div className="mb-8">
-        <Link to="/freelancer/proposals" className="text-sm font-medium text-[#14a800] hover:underline mb-4 inline-flex items-center">
+        <Link to="/freelancer/proposals" className="text-sm font-medium text-[#2bb75c] hover:underline mb-4 inline-flex items-center">
           <ChevronLeft className="w-4 h-4 mr-1" /> Back to proposals
         </Link>
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mt-2">
@@ -53,7 +53,7 @@ export default function ProposalDetailsPage() {
               <Building className="w-4 h-4" /> {clientName}
             </p>
           </div>
-          <span className="px-3 py-1 rounded-full bg-[#14a800]/10 text-[#14a800] text-xs font-bold uppercase">
+          <span className="px-3 py-1 rounded-full bg-[#2bb75c]/10 text-[#2bb75c] text-xs font-bold uppercase">
             {status}
           </span>
         </div>
@@ -82,7 +82,7 @@ export default function ProposalDetailsPage() {
           {proposal.jobId && (
             <Link
               to={`/freelancer/job/${proposal.jobId}`}
-              className="block text-center py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold hover:bg-[#14a800] transition-colors"
+              className="block text-center py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold hover:bg-[#2bb75c] transition-colors"
             >
               View job posting
             </Link>
@@ -92,3 +92,4 @@ export default function ProposalDetailsPage() {
     </div>
   );
 }
+

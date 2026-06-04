@@ -108,7 +108,7 @@ export default function ClientInterviewManagementPage() {
           </div>
           <button 
             onClick={() => setShowScheduleModal(true)}
-            className="px-6 py-3 bg-success hover:bg-success text-white font-bold rounded-xl shadow-lg shadow-[#14a800]/10 transition-all flex items-center gap-2"
+            className="px-6 py-3 bg-success hover:bg-success text-white font-bold rounded-xl shadow-lg shadow-[#2bb75c]/10 transition-all flex items-center gap-2"
           >
             <CalendarIcon className="w-5 h-5" /> Schedule New Interview
           </button>
@@ -159,7 +159,7 @@ export default function ClientInterviewManagementPage() {
               {Array.from({length: 31}).map((_, i) => (
                 <div key={i} className={cn(
                   "w-8 h-8 mx-auto flex items-center justify-center rounded-full text-xs font-bold transition-colors",
-                  i+1 === 30 ? "bg-success text-white shadow-lg shadow-[#14a800]/20" : "text-zinc-400 hover:bg-zinc-800"
+                  i+1 === 30 ? "bg-success text-white shadow-lg shadow-[#2bb75c]/20" : "text-zinc-400 hover:bg-zinc-800"
                 )}>
                   {i+1}
                 </div>
@@ -183,7 +183,7 @@ export default function ClientInterviewManagementPage() {
                   className={cn(
                     "p-4 rounded-2xl border transition-all cursor-pointer flex gap-4 bg-zinc-900",
                     selectedInterview?.id === interview.id 
-                      ? "border-success bg-success/5 shadow-lg shadow-[#14a800]/5" 
+                      ? "border-success bg-success/5 shadow-lg shadow-[#2bb75c]/5" 
                       : "border-zinc-800 hover:border-zinc-700"
                   )}
                 >
@@ -266,7 +266,7 @@ export default function ClientInterviewManagementPage() {
                           href={selectedInterview.link} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="inline-block px-8 py-3 bg-success hover:bg-success text-white font-bold rounded-xl shadow-lg shadow-[#14a800]/10 transition-all"
+                          className="inline-block px-8 py-3 bg-success hover:bg-success text-white font-bold rounded-xl shadow-lg shadow-[#2bb75c]/10 transition-all"
                         >
                           Join Meeting
                         </a>
@@ -330,7 +330,7 @@ export default function ClientInterviewManagementPage() {
                       </div>
 
                       <div className="flex justify-end pt-4">
-                        <button className="px-6 py-3 bg-success hover:bg-success text-white font-bold rounded-xl shadow-lg shadow-[#14a800]/10 transition-all">
+                        <button className="px-6 py-3 bg-success hover:bg-success text-white font-bold rounded-xl shadow-lg shadow-[#2bb75c]/10 transition-all">
                           Save Scorecard
                         </button>
                       </div>
@@ -431,7 +431,7 @@ export default function ClientInterviewManagementPage() {
                 <button 
                   type="submit"
                   disabled={scheduleMutation.isPending}
-                  className="w-full py-3 bg-success hover:bg-success text-white rounded-xl text-sm font-bold transition-colors shadow-lg shadow-[#14a800]/10 mt-4 disabled:opacity-50"
+                  className="w-full py-3 bg-success hover:bg-success text-white rounded-xl text-sm font-bold transition-colors shadow-lg shadow-[#2bb75c]/10 mt-4 disabled:opacity-50"
                 >
                   {scheduleMutation.isPending ? 'Scheduling Interview...' : 'Schedule Interview'}
                 </button>
@@ -444,3 +444,4 @@ export default function ClientInterviewManagementPage() {
     </div>
   );
 }
+

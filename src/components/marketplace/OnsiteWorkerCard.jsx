@@ -40,7 +40,7 @@ const OnsiteWorkerCard = ({ worker }) => {
         />
         
         <div className="flex items-center gap-1 mb-1">
-          <Link to={profilePath} className="text-lg font-bold text-zinc-900 leading-tight hover:text-[#14a800] transition-colors">
+          <Link to={profilePath} className="text-lg font-bold text-zinc-900 leading-tight hover:text-[#2bb75c] transition-colors">
             {worker.name}
           </Link>
           {worker.verified && (
@@ -86,3 +86,4 @@ const OnsiteWorkerCard = ({ worker }) => {
 };
 
 export default OnsiteWorkerCard;
+

@@ -90,7 +90,7 @@ const ShortlistedApplicants = () => {
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-5xl">
 
-          <Link to={`/find-work/work/${workId}/applications`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#14a800] transition-colors mb-6">
+          <Link to={`/find-work/work/${workId}/applications`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#2bb75c] transition-colors mb-6">
             <ArrowLeft className="w-4 h-4" /> Back to All Applications
           </Link>
 
@@ -107,14 +107,14 @@ const ShortlistedApplicants = () => {
           <div className="bg-white border border-zinc-200 rounded-3xl overflow-hidden shadow-sm p-6 md:p-8">
             {loading ? (
               <div className="py-20 text-center text-zinc-500">
-                <Loader2 className="w-10 h-10 mx-auto mb-4 animate-spin text-[#14a800]" />
+                <Loader2 className="w-10 h-10 mx-auto mb-4 animate-spin text-[#2bb75c]" />
                 <p className="font-medium">Loading shortlisted candidates...</p>
               </div>
             ) : applicants.length === 0 ? (
               <div className="py-20 text-center text-zinc-500">
                 <Bookmark className="w-12 h-12 mx-auto mb-4 opacity-20" />
                 <p className="font-medium">No candidates shortlisted yet.</p>
-                <Link to={`/find-work/work/${workId}/applications`} className="inline-block mt-4 text-[#14a800] font-bold hover:underline">
+                <Link to={`/find-work/work/${workId}/applications`} className="inline-block mt-4 text-[#2bb75c] font-bold hover:underline">
                   Review all applications
                 </Link>
               </div>
@@ -135,7 +135,7 @@ const ShortlistedApplicants = () => {
                       {applicant.avatar ? (
                         <img src={applicant.avatar} alt={applicant.provider} className="w-16 h-16 rounded-full border border-zinc-200 object-cover" />
                       ) : (
-                        <div className="w-16 h-16 rounded-full border border-zinc-200 bg-[#14a800]/10 text-[#14a800] flex items-center justify-center text-xl font-black">
+                        <div className="w-16 h-16 rounded-full border border-zinc-200 bg-[#2bb75c]/10 text-[#2bb75c] flex items-center justify-center text-xl font-black">
                           {applicant.provider.charAt(0)}
                         </div>
                       )}
@@ -158,7 +158,7 @@ const ShortlistedApplicants = () => {
                       <Link to="/messages" className="flex-1 px-4 py-2.5 bg-white border border-zinc-200 hover:bg-surface text-zinc-700 font-bold rounded-xl transition-colors flex items-center justify-center gap-2 text-sm">
                         <MessageSquare className="w-4 h-4" /> Message
                       </Link>
-                      <Link to={`/find-work/work/${workId}/hire`} className="flex-1 px-4 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl transition-colors text-sm text-center">
+                      <Link to={`/find-work/work/${workId}/hire`} className="flex-1 px-4 py-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl transition-colors text-sm text-center">
                         Hire
                       </Link>
                     </div>
@@ -174,3 +174,4 @@ const ShortlistedApplicants = () => {
 };
 
 export default ShortlistedApplicants;
+

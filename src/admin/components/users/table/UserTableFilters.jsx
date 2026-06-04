@@ -11,7 +11,7 @@ const FilterSelect = ({ label, value, options, onChange }) => (
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-10 pl-3 pr-8 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl text-xs font-bold appearance-none outline-none focus:border-[#14a800]/20 transition-all cursor-pointer"
+        className="w-full h-10 pl-3 pr-8 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl text-xs font-bold appearance-none outline-none focus:border-[#2bb75c]/20 transition-all cursor-pointer"
       >
         <option value="">All {label}s</option>
         {options.map(opt => (
@@ -56,16 +56,16 @@ const UserTableFilters = ({ section = 'all' }) => {
           <label className="text-[9px] font-black uppercase tracking-widest text-zinc-400 ml-1">Search Directory</label>
           <div className="relative group">
             {isDebouncing ? (
-              <Loader2 className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-[#14a800] animate-spin" size={18} />
+              <Loader2 className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-[#2bb75c] animate-spin" size={18} />
             ) : (
-              <Search className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-zinc-400 group-focus-within:text-[#14a800] transition-colors" size={18} />
+              <Search className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-zinc-400 group-focus-within:text-[#2bb75c] transition-colors" size={18} />
             )}
             <input
               type="text"
               placeholder="Search by name, email, phone or ID..."
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
-              className="w-full h-12 pl-12 pr-10 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-medium outline-none focus:border-[#14a800]/20 dark:focus:border-[#14a800]/20 focus:bg-white dark:focus:bg-surface-dark transition-all shadow-sm"
+              className="w-full h-12 pl-12 pr-10 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-medium outline-none focus:border-[#2bb75c]/20 dark:focus:border-[#2bb75c]/20 focus:bg-white dark:focus:bg-surface-dark transition-all shadow-sm"
             />
             {localSearch && (
               <button 
@@ -95,7 +95,7 @@ const UserTableFilters = ({ section = 'all' }) => {
               </select>
               <button
                 onClick={() => setFilter(section, 'sortOrder', currentFilters.sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="px-3 border-l border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-zinc-500 hover:text-[#14a800]"
+                className="px-3 border-l border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors text-zinc-500 hover:text-[#2bb75c]"
               >
                 {currentFilters.sortOrder === 'asc' ? <SortAsc size={16} /> : <SortDesc size={16} />}
               </button>
@@ -109,7 +109,7 @@ const UserTableFilters = ({ section = 'all' }) => {
            <SlidersHorizontal size={14} />
            <span className="text-[10px] font-black uppercase tracking-widest">Filters</span>
            {activeCount > 0 && (
-             <span className="h-4 min-w-[16px] px-1 flex items-center justify-center bg-[#14a800] text-white text-[9px] font-black rounded-full">
+             <span className="h-4 min-w-[16px] px-1 flex items-center justify-center bg-[#2bb75c] text-white text-[9px] font-black rounded-full">
                {activeCount}
              </span>
            )}
@@ -137,3 +137,4 @@ const UserTableFilters = ({ section = 'all' }) => {
 };
 
 export default UserTableFilters;
+

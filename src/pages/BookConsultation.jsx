@@ -27,13 +27,13 @@ const BookConsultation = () => {
                 <img src="https://ui-avatars.com/api/?name=Sarah+Wanjiku&background=0D8ABC&color=fff" className="w-16 h-16 rounded-full border-2 border-white/20" alt="Sarah" />
                 <div>
                   <div className="font-bold text-lg">Sarah Wanjiku</div>
-                  <div className="text-[#14a800] text-sm">Senior React Developer</div>
+                  <div className="text-[#2bb75c] text-sm">Senior React Developer</div>
                 </div>
               </div>
               
               <div className="space-y-6">
                 <div className="flex gap-3 text-zinc-300">
-                  <Clock className="w-5 h-5 text-[#14a800] flex-shrink-0" />
+                  <Clock className="w-5 h-5 text-[#2bb75c] flex-shrink-0" />
                   <div>
                     <div className="font-bold text-white mb-1">30 Minute Call</div>
                     <div className="text-sm">Brief intro and project scope review.</div>
@@ -41,7 +41,7 @@ const BookConsultation = () => {
                 </div>
                 
                 <div className="flex gap-3 text-zinc-300">
-                  <Video className="w-5 h-5 text-[#14a800] flex-shrink-0" />
+                  <Video className="w-5 h-5 text-[#2bb75c] flex-shrink-0" />
                   <div>
                     <div className="font-bold text-white mb-1">Video Meeting</div>
                     <div className="text-sm">Link provided upon confirmation.</div>
@@ -49,7 +49,7 @@ const BookConsultation = () => {
                 </div>
 
                 <div className="flex gap-3 text-zinc-300">
-                  <FileText className="w-5 h-5 text-[#14a800] flex-shrink-0" />
+                  <FileText className="w-5 h-5 text-[#2bb75c] flex-shrink-0" />
                   <div>
                     <div className="font-bold text-white mb-1">Cost: $45</div>
                     <div className="text-sm">Deducted from first milestone if hired.</div>
@@ -77,7 +77,7 @@ const BookConsultation = () => {
                       <button 
                         key={date}
                         onClick={() => setSelectedDate(date)}
-                        className={`flex-1 min-w-[80px] py-4 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${selectedDate === date ? 'border-[#14a800]/20 bg-[#14a800]/5 text-[#14a800] shadow-md ring-2 ring-#14a800]/20' : 'border-zinc-200 bg-white hover:border-[#14a800]/50'}`}
+                        className={`flex-1 min-w-[80px] py-4 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${selectedDate === date ? 'border-[#2bb75c]/20 bg-[#2bb75c]/5 text-[#2bb75c] shadow-md ring-2 ring-#2bb75c]/20' : 'border-zinc-200 bg-white hover:border-[#2bb75c]/50'}`}
                       >
                         <span className="text-xs uppercase font-bold">{date.split(' ')[0]}</span>
                         <span className="text-xl font-black">{date.split(' ')[1]}</span>
@@ -94,7 +94,7 @@ const BookConsultation = () => {
                       <button 
                         key={time}
                         onClick={() => setSelectedTime(time)}
-                        className={`py-3 rounded-lg border font-bold text-sm transition-all ${selectedTime === time ? 'border-[#14a800]/20 bg-[#14a800] text-white shadow-md' : 'border-zinc-200 bg-white text-zinc-700 hover:border-[#14a800]/50 hover:bg-surface'}`}
+                        className={`py-3 rounded-lg border font-bold text-sm transition-all ${selectedTime === time ? 'border-[#2bb75c]/20 bg-[#2bb75c] text-white shadow-md' : 'border-zinc-200 bg-white text-zinc-700 hover:border-[#2bb75c]/50 hover:bg-surface'}`}
                       >
                         {time}
                       </button>
@@ -117,8 +117,8 @@ const BookConsultation = () => {
                 <div>
                   <h3 className="text-2xl font-black text-zinc-900 mb-6">Confirm Details</h3>
                   
-                  <div className="bg-[#14a800]/5 border border-[#14a800]/20 p-4 rounded-xl mb-6 flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-[#14a800] font-bold border border-[#14a800]/20">
+                  <div className="bg-[#2bb75c]/5 border border-[#2bb75c]/20 p-4 rounded-xl mb-6 flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-[#2bb75c] font-bold border border-[#2bb75c]/20">
                       <CalendarIcon className="w-6 h-6" />
                     </div>
                     <div>
@@ -130,21 +130,21 @@ const BookConsultation = () => {
                   <div className="space-y-4 mb-8">
                     <div>
                       <label className="block text-sm font-bold text-zinc-700 mb-1">What do you want to discuss?</label>
-                      <input type="text" placeholder="e.g. E-commerce frontend rebuild" className="w-full border border-zinc-200 rounded-xl px-4 py-3 bg-surface focus:outline-none focus:border-[#14a800]/20 focus:bg-white" />
+                      <input type="text" placeholder="e.g. E-commerce frontend rebuild" className="w-full border border-zinc-200 rounded-xl px-4 py-3 bg-surface focus:outline-none focus:border-[#2bb75c]/20 focus:bg-white" />
                     </div>
                     <div>
                       <label className="block text-sm font-bold text-zinc-700 mb-1">Estimated Budget (Optional)</label>
-                      <input type="text" placeholder="$5k - $10k" className="w-full border border-zinc-200 rounded-xl px-4 py-3 bg-surface focus:outline-none focus:border-[#14a800]/20 focus:bg-white" />
+                      <input type="text" placeholder="$5k - $10k" className="w-full border border-zinc-200 rounded-xl px-4 py-3 bg-surface focus:outline-none focus:border-[#2bb75c]/20 focus:bg-white" />
                     </div>
                     <div>
                       <label className="block text-sm font-bold text-zinc-700 mb-1">Additional Notes</label>
-                      <textarea rows="3" placeholder="Any links or documents..." className="w-full border border-zinc-200 rounded-xl px-4 py-3 bg-surface focus:outline-none focus:border-[#14a800]/20 focus:bg-white"></textarea>
+                      <textarea rows="3" placeholder="Any links or documents..." className="w-full border border-zinc-200 rounded-xl px-4 py-3 bg-surface focus:outline-none focus:border-[#2bb75c]/20 focus:bg-white"></textarea>
                     </div>
                   </div>
 
                   <div className="flex gap-3 justify-end">
                     <button onClick={() => setStep(1)} className="px-6 py-3 border border-zinc-200 rounded-xl font-bold text-zinc-600 hover:bg-surface">Back</button>
-                    <button onClick={() => setStep(3)} className="px-8 py-3 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl font-bold transition-all shadow-lg">Confirm & Pay $45</button>
+                    <button onClick={() => setStep(3)} className="px-8 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-xl font-bold transition-all shadow-lg">Confirm & Pay $45</button>
                   </div>
                 </div>
               )}
@@ -173,3 +173,4 @@ const BookConsultation = () => {
 };
 
 export default BookConsultation;
+

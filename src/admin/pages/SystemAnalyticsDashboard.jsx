@@ -37,7 +37,7 @@ export default function SystemAnalyticsDashboard() {
         {stats.map((stat) => (
           <div key={stat.name} className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
             <div className="flex items-center justify-between">
-              <div className="w-10 h-10 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] rounded-lg flex items-center justify-center">
                 <stat.icon className="w-5 h-5" />
               </div>
               <span className="text-xs font-semibold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">
@@ -98,3 +98,4 @@ export default function SystemAnalyticsDashboard() {
     </div>
   );
 }
+

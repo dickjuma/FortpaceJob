@@ -24,7 +24,7 @@ export default function AuthHeroPanel({
             rotate: [0, 90, 0],
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] rounded-full bg-[#14a800]/20 blur-[120px]" 
+          className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] rounded-full bg-[#2bb75c]/20 blur-[120px]" 
         />
         <motion.div 
           animate={{ 
@@ -46,10 +46,10 @@ export default function AuthHeroPanel({
           transition={{ duration: 0.6 }}
           className={`flex items-center gap-3 ${stats ? 'mb-10' : 'mb-8'}`}
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#14a800] shadow-lg shadow-[#14a800]/25/30 xl:h-11 xl:w-11">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#2bb75c] shadow-lg shadow-[#2bb75c]/25/30 xl:h-11 xl:w-11">
             <ShieldCheck className="h-6 w-6 text-white" />
           </div>
-          <span className="text-xl font-bold tracking-tight xl:text-2xl">Forte<span className="text-[#14a800]">.</span></span>
+          <span className="text-xl font-bold tracking-tight xl:text-2xl">Forte<span className="text-[#2bb75c]">.</span></span>
         </motion.div>
 
         <motion.div
@@ -76,7 +76,7 @@ export default function AuthHeroPanel({
               transition={{ duration: 0.5, delay: 0.4 }}
               className="glass-card rounded-2xl border border-white/10 bg-white/5 p-4"
             >
-              <TrendingUp className="mb-3 h-6 w-6 text-[#14a800]" />
+              <TrendingUp className="mb-3 h-6 w-6 text-[#2bb75c]" />
               <div className="mb-1 text-xl font-bold xl:text-2xl">$2.4M+</div>
               <div className="text-sm text-zinc-400">Freelancer Earnings</div>
             </motion.div>
@@ -122,3 +122,4 @@ export default function AuthHeroPanel({
     </div>
   );
 }
+

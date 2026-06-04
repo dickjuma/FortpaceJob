@@ -94,7 +94,7 @@ export default function MarketplaceActionModal({ isOpen, onClose, data, type = '
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={3}
-              className="w-full px-5 py-4 bg-surface dark:bg-zinc-800 border-none rounded-2xl text-sm font-medium focus:ring-2 focus:ring-[#14a800] outline-none transition-all resize-none"
+              className="w-full px-5 py-4 bg-surface dark:bg-zinc-800 border-none rounded-2xl text-sm font-medium focus:ring-2 focus:ring-[#2bb75c] outline-none transition-all resize-none"
               placeholder="Provide a detailed explanation for this administrative action..."
             />
           </div>
@@ -131,3 +131,4 @@ export default function MarketplaceActionModal({ isOpen, onClose, data, type = '
     </div>
   );
 }
+

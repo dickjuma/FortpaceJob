@@ -11,16 +11,16 @@ export default function CategoryTile({
   count,
   countLabel = 'open',
   to,
-  accent = 'bg-[#14a800]/8 text-[#14a800]',
+  accent = 'bg-[#2bb75c]/8 text-[#2bb75c]',
   badge,
 }) {
   const content = (
-    <div className="group h-full min-h-[140px] p-5 rounded-xl border border-zinc-200 bg-white hover:border-[#14a800]/40 hover:shadow-md transition-all flex flex-col justify-between">
+    <div className="group h-full min-h-[140px] p-5 rounded-xl border border-zinc-200 bg-white hover:border-[#2bb75c]/40 hover:shadow-md transition-all flex flex-col justify-between">
       <div>
         {badge && (
           <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-2 block">{badge}</span>
         )}
-        <h3 className="text-base font-bold text-zinc-900 group-hover:text-[#14a800] transition-colors leading-snug">
+        <h3 className="text-base font-bold text-zinc-900 group-hover:text-[#2bb75c] transition-colors leading-snug">
           {title}
         </h3>
         {subtitle && <p className="text-sm text-zinc-500 mt-1 line-clamp-2">{subtitle}</p>}
@@ -29,7 +29,7 @@ export default function CategoryTile({
         <span className={`text-xs font-bold px-2 py-1 rounded-md ${accent}`}>
           {count != null ? `${count} ${countLabel}` : 'Explore'}
         </span>
-        <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-[#14a800] transition-colors" />
+        <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-[#2bb75c] transition-colors" />
       </div>
     </div>
   );
@@ -44,3 +44,4 @@ export default function CategoryTile({
 
   return content;
 }
+

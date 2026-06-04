@@ -25,7 +25,7 @@ export default function ClientProcurementDashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2 flex items-center gap-3">
-              <Building2 className="w-8 h-8 text-[#14a800]" /> Procurement Dashboard
+              <Building2 className="w-8 h-8 text-[#2bb75c]" /> Procurement Dashboard
             </h1>
             <p className="text-zinc-500 font-medium">Enterprise visibility into freelancer spending and budget allocation.</p>
           </div>
@@ -34,7 +34,7 @@ export default function ClientProcurementDashboardPage() {
             <button className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-bold rounded-lg shadow-sm transition-all flex items-center gap-2 border border-zinc-200 dark:border-zinc-700">
               <Filter className="w-4 h-4" /> Filter
             </button>
-            <button className="px-4 py-2 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-lg shadow-sm transition-all flex items-center gap-2">
+            <button className="px-4 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-lg shadow-sm transition-all flex items-center gap-2">
               <Download className="w-4 h-4" /> Export Report
             </button>
           </div>
@@ -47,7 +47,7 @@ export default function ClientProcurementDashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
             <div className="flex justify-between items-start mb-4">
-              <div className="p-2 bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] rounded-lg"><DollarSign className="w-5 h-5" /></div>
+              <div className="p-2 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] rounded-lg"><DollarSign className="w-5 h-5" /></div>
               <span className="text-xs font-bold text-success bg-emerald-50 dark:bg-success/10 px-2 py-1 rounded-md flex items-center gap-1"><ArrowDownRight className="w-3 h-3" /> 4.2%</span>
             </div>
             <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">YTD Spend</p>
@@ -57,7 +57,7 @@ export default function ClientProcurementDashboardPage() {
 
           <div className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
             <div className="flex justify-between items-start mb-4">
-              <div className="p-2 bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] rounded-lg"><Users className="w-5 h-5" /></div>
+              <div className="p-2 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] rounded-lg"><Users className="w-5 h-5" /></div>
               <span className="text-xs font-bold text-success bg-emerald-50 dark:bg-success/10 px-2 py-1 rounded-md flex items-center gap-1"><ArrowUpRight className="w-3 h-3" /> 12%</span>
             </div>
             <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Active Vendors</p>
@@ -73,7 +73,7 @@ export default function ClientProcurementDashboardPage() {
             <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Budget Utilization</p>
             <h3 className="text-3xl font-black text-zinc-900 dark:text-white">68%</h3>
             <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden mt-3">
-              <div className="bg-[#14a800] h-full w-[68%] rounded-full"></div>
+              <div className="bg-[#2bb75c] h-full w-[68%] rounded-full"></div>
             </div>
           </div>
 
@@ -83,7 +83,7 @@ export default function ClientProcurementDashboardPage() {
             </div>
             <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Cost Savings Opport.</p>
             <h3 className="text-3xl font-black text-zinc-900 dark:text-white">$14,200</h3>
-            <p className="text-xs text-[#14a800] dark:text-[#14a800] font-bold mt-2 cursor-pointer hover:underline">View Recommendations &rarr;</p>
+            <p className="text-xs text-[#2bb75c] dark:text-[#2bb75c] font-bold mt-2 cursor-pointer hover:underline">View Recommendations &rarr;</p>
           </div>
         </div>
 
@@ -96,7 +96,7 @@ export default function ClientProcurementDashboardPage() {
             <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-[#14a800]" /> Spend Forecast vs Actual
+                  <TrendingUp className="w-5 h-5 text-[#2bb75c]" /> Spend Forecast vs Actual
                 </h2>
                 <select className="bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-1.5 text-xs font-bold outline-none">
                   <option>2026 (YTD)</option>
@@ -115,7 +115,7 @@ export default function ClientProcurementDashboardPage() {
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white">Top Vendors</h2>
                 <div className="relative">
                   <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -tranzinc-y-1/2" />
-                  <input type="text" placeholder="Search vendors..." className="pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20 w-64 shadow-sm" />
+                  <input type="text" placeholder="Search vendors..." className="pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20 w-64 shadow-sm" />
                 </div>
               </div>
               <div className="overflow-x-auto">
@@ -166,11 +166,11 @@ export default function ClientProcurementDashboardPage() {
             {/* Department Allocation */}
             <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
               <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
-                <PieChart className="w-5 h-5 text-[#14a800]" /> Dept. Allocation
+                <PieChart className="w-5 h-5 text-[#2bb75c]" /> Dept. Allocation
               </h2>
               
               <div className="flex justify-center mb-8">
-                <div className="w-40 h-40 rounded-full border-[16px] border-zinc-100 dark:border-zinc-800 border-t-#14a800] border-r-#14a800] border-b-amber-500 relative">
+                <div className="w-40 h-40 rounded-full border-[16px] border-zinc-100 dark:border-zinc-800 border-t-#2bb75c] border-r-#2bb75c] border-b-amber-500 relative">
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <span className="text-[10px] font-bold text-zinc-400 uppercase">Total</span>
                     <span className="text-lg font-black text-zinc-900 dark:text-white">$248k</span>
@@ -180,8 +180,8 @@ export default function ClientProcurementDashboardPage() {
 
               <div className="space-y-4">
                 {[
-                  { name: 'Engineering', amount: 120000, color: 'bg-[#14a800]' },
-                  { name: 'Marketing', amount: 85000, color: 'bg-[#14a800]' },
+                  { name: 'Engineering', amount: 120000, color: 'bg-[#2bb75c]' },
+                  { name: 'Marketing', amount: 85000, color: 'bg-[#2bb75c]' },
                   { name: 'Design', amount: 43500, color: 'bg-amber-500' }
                 ].map(dept => (
                   <div key={dept.name} className="flex items-center justify-between">
@@ -223,3 +223,4 @@ export default function ClientProcurementDashboardPage() {
     </div>
   );
 }
+

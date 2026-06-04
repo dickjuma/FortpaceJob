@@ -45,7 +45,7 @@ const ClientRegisterPage = () => {
               <div key={s.num} className="flex flex-col items-center bg-surface dark:bg-surface-dark px-4">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-colors duration-300
                   ${step > s.num ? 'bg-green-500 text-white' : 
-                    step === s.num ? 'bg-[#14a800] text-white ring-4 ring-brand-600/20' : 
+                    step === s.num ? 'bg-[#2bb75c] text-white ring-4 ring-brand-600/20' : 
                     'bg-zinc-200 dark:bg-zinc-800 text-zinc-400'}`}>
                   {step > s.num ? <CheckCircle2 className="w-5 h-5" /> : s.num}
                 </div>
@@ -71,11 +71,11 @@ const ClientRegisterPage = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">First Name</label>
-                      <input type="text" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} className="w-full px-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none" />
+                      <input type="text" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} className="w-full px-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#2bb75c] outline-none" />
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Last Name</label>
-                      <input type="text" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} className="w-full px-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none" />
+                      <input type="text" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} className="w-full px-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#2bb75c] outline-none" />
                     </div>
                   </div>
                   
@@ -83,7 +83,7 @@ const ClientRegisterPage = () => {
                     <label className="block text-sm font-medium mb-1">Email</label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 w-5 h-5 text-zinc-400" />
-                      <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none" />
+                      <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#2bb75c] outline-none" />
                     </div>
                   </div>
 
@@ -91,7 +91,7 @@ const ClientRegisterPage = () => {
                     <label className="block text-sm font-medium mb-1">Phone Number</label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-3 w-5 h-5 text-zinc-400" />
-                      <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none" />
+                      <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#2bb75c] outline-none" />
                     </div>
                   </div>
 
@@ -99,12 +99,12 @@ const ClientRegisterPage = () => {
                     <label className="block text-sm font-medium mb-1">Password</label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-3 w-5 h-5 text-zinc-400" />
-                      <input type="password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none" />
+                      <input type="password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#2bb75c] outline-none" />
                     </div>
                     {/* Password Strength */}
                     <div className="mt-2 flex gap-1 h-1.5">
                       {[1, 2, 3, 4].map(level => (
-                        <div key={level} className={`flex-1 rounded-full ${formData.password.length === 0 ? 'bg-zinc-200 dark:bg-zinc-700' : level <= strength ? (strength <= 2 ? 'bg-amber-500' : strength === 3 ? 'bg-[#14a800]' : 'bg-green-500') : 'bg-zinc-200 dark:bg-zinc-700'}`} />
+                        <div key={level} className={`flex-1 rounded-full ${formData.password.length === 0 ? 'bg-zinc-200 dark:bg-zinc-700' : level <= strength ? (strength <= 2 ? 'bg-amber-500' : strength === 3 ? 'bg-[#2bb75c]' : 'bg-green-500') : 'bg-zinc-200 dark:bg-zinc-700'}`} />
                       ))}
                     </div>
                   </div>
@@ -125,7 +125,7 @@ const ClientRegisterPage = () => {
                     }
                     setFormError('');
                     setStep(2);
-                  }} disabled={strength < 3 || !formData.email} className="flex items-center gap-2 py-2.5 px-6 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl font-semibold transition-all disabled:opacity-50">
+                  }} disabled={strength < 3 || !formData.email} className="flex items-center gap-2 py-2.5 px-6 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-xl font-semibold transition-all disabled:opacity-50">
                     Next Step <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -144,14 +144,14 @@ const ClientRegisterPage = () => {
                     <label className="block text-sm font-medium mb-1">Company Name</label>
                     <div className="relative">
                       <Building2 className="absolute left-3 top-3 w-5 h-5 text-zinc-400" />
-                      <input type="text" value={formData.companyName} onChange={e => setFormData({...formData, companyName: e.target.value})} className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none" />
+                      <input type="text" value={formData.companyName} onChange={e => setFormData({...formData, companyName: e.target.value})} className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#2bb75c] outline-none" />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Industry</label>
-                      <select value={formData.industry} onChange={e => setFormData({...formData, industry: e.target.value})} className="w-full px-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none">
+                      <select value={formData.industry} onChange={e => setFormData({...formData, industry: e.target.value})} className="w-full px-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#2bb75c] outline-none">
                         <option value="">Select Industry</option>
                         <option value="tech">Technology</option>
                         <option value="finance">Finance</option>
@@ -160,7 +160,7 @@ const ClientRegisterPage = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Team Size</label>
-                      <select value={formData.teamSize} onChange={e => setFormData({...formData, teamSize: e.target.value})} className="w-full px-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none">
+                      <select value={formData.teamSize} onChange={e => setFormData({...formData, teamSize: e.target.value})} className="w-full px-4 py-2.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#2bb75c] outline-none">
                         <option value="">Select Size</option>
                         <option value="1-10">1-10 employees</option>
                         <option value="11-50">11-50 employees</option>
@@ -175,7 +175,7 @@ const ClientRegisterPage = () => {
                   <button onClick={() => setStep(1)} className="flex items-center gap-1 text-sm font-medium text-zinc-500 hover:text-zinc-800 dark:hover:text-white transition-colors">
                     <ArrowLeft className="w-4 h-4" /> Back
                   </button>
-                  <button onClick={() => setStep(3)} disabled={!formData.companyName} className="flex items-center gap-2 py-2.5 px-6 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl font-semibold transition-all disabled:opacity-50">
+                  <button onClick={() => setStep(3)} disabled={!formData.companyName} className="flex items-center gap-2 py-2.5 px-6 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-xl font-semibold transition-all disabled:opacity-50">
                     Next Step <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -189,12 +189,12 @@ const ClientRegisterPage = () => {
                  <p className="text-zinc-500 mb-6">We've sent a code to {formData.email}</p>
                  <div className="flex gap-2 justify-center mb-8">
                    {[1,2,3,4,5,6].map(i => (
-                     <input key={i} type="text" maxLength={1} className="w-12 h-14 text-center text-xl font-bold bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#14a800] outline-none" />
+                     <input key={i} type="text" maxLength={1} className="w-12 h-14 text-center text-xl font-bold bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-[#2bb75c] outline-none" />
                    ))}
                  </div>
                  <div className="flex justify-between items-center">
                   <button onClick={() => setStep(2)} className="flex items-center gap-1 text-sm font-medium text-zinc-500">Back</button>
-                  <button onClick={() => setStep(4)} className="flex items-center gap-2 py-2.5 px-6 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl font-semibold">Verify & Continue <ArrowRight className="w-4 h-4" /></button>
+                  <button onClick={() => setStep(4)} className="flex items-center gap-2 py-2.5 px-6 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-xl font-semibold">Verify & Continue <ArrowRight className="w-4 h-4" /></button>
                 </div>
               </motion.div>
             )}
@@ -209,7 +209,7 @@ const ClientRegisterPage = () => {
                      <label className="block text-sm font-medium mb-2">Hiring Categories</label>
                      <div className="flex flex-wrap gap-2">
                        {['Web Development', 'UI/UX Design', 'AI & Machine Learning', 'Mobile Apps', 'Marketing'].map(cat => (
-                         <div key={cat} className="px-4 py-2 border border-zinc-200 dark:border-zinc-700 rounded-full text-sm cursor-pointer hover:bg-[#14a800]/5 dark:hover:bg-[#14a800]/30 transition-colors">
+                         <div key={cat} className="px-4 py-2 border border-zinc-200 dark:border-zinc-700 rounded-full text-sm cursor-pointer hover:bg-[#2bb75c]/5 dark:hover:bg-[#2bb75c]/30 transition-colors">
                            {cat}
                          </div>
                        ))}
@@ -232,3 +232,4 @@ const ClientRegisterPage = () => {
 };
 
 export default ClientRegisterPage;
+

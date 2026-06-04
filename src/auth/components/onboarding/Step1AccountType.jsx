@@ -40,16 +40,16 @@ const Step1AccountType = () => {
           onClick={() => handleSelect('client')}
           className={`relative cursor-pointer overflow-hidden rounded-3xl p-8 transition-all duration-300 border-2 ${
             accountType === 'client' 
-              ? 'border-[#14a800] bg-[#14a800]/5/50 dark:bg-[#14a800]/10 shadow-xl shadow-[#14a800]/25' 
-              : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-[#14a800]/50 dark:hover:border-[#14a800] hover:shadow-lg'
+              ? 'border-[#2bb75c] bg-[#2bb75c]/5/50 dark:bg-[#2bb75c]/10 shadow-xl shadow-[#2bb75c]/25' 
+              : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-[#2bb75c]/50 dark:hover:border-[#2bb75c] hover:shadow-lg'
           }`}
         >
           {accountType === 'client' && (
-            <div className="absolute inset-0 bg-gradient-to-br from-[#14a800]/5 to-#14a800]/5 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#2bb75c]/5 to-#2bb75c]/5 pointer-events-none" />
           )}
           <div className="relative z-10 flex flex-col h-full">
             <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-colors ${
-              accountType === 'client' ? 'bg-[#14a800] text-white shadow-md' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300'
+              accountType === 'client' ? 'bg-[#2bb75c] text-white shadow-md' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300'
             }`}>
               <Building2 className="w-8 h-8" />
             </div>
@@ -60,7 +60,7 @@ const Step1AccountType = () => {
             <ul className="space-y-3 mt-auto">
               {['Post jobs', 'Hire talent', 'Manage contracts', 'Build teams'].map((feature, i) => (
                 <li key={i} className="flex items-center text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  <div className={`w-1.5 h-1.5 rounded-full mr-3 ${accountType === 'client' ? 'bg-[#14a800]' : 'bg-zinc-300 dark:bg-zinc-600'}`} />
+                  <div className={`w-1.5 h-1.5 rounded-full mr-3 ${accountType === 'client' ? 'bg-[#2bb75c]' : 'bg-zinc-300 dark:bg-zinc-600'}`} />
                   {feature}
                 </li>
               ))}
@@ -75,16 +75,16 @@ const Step1AccountType = () => {
           onClick={() => handleSelect('freelancer')}
           className={`relative cursor-pointer overflow-hidden rounded-3xl p-8 transition-all duration-300 border-2 ${
             accountType === 'freelancer' 
-              ? 'border-[#14a800] bg-[#14a800]/5/50 dark:bg-[#14a800]/10 shadow-xl shadow-[#14a800]/25' 
-              : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-[#14a800]/50 dark:hover:border-[#14a800] hover:shadow-lg'
+              ? 'border-[#2bb75c] bg-[#2bb75c]/5/50 dark:bg-[#2bb75c]/10 shadow-xl shadow-[#2bb75c]/25' 
+              : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-[#2bb75c]/50 dark:hover:border-[#2bb75c] hover:shadow-lg'
           }`}
         >
           {accountType === 'freelancer' && (
-            <div className="absolute inset-0 bg-gradient-to-br from-[#14a800]/5 to-#14a800]/5 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#2bb75c]/5 to-#2bb75c]/5 pointer-events-none" />
           )}
           <div className="relative z-10 flex flex-col h-full">
             <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-colors ${
-              accountType === 'freelancer' ? 'bg-[#14a800] text-white shadow-md' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300'
+              accountType === 'freelancer' ? 'bg-[#2bb75c] text-white shadow-md' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300'
             }`}>
               <User className="w-8 h-8" />
             </div>
@@ -95,7 +95,7 @@ const Step1AccountType = () => {
             <ul className="space-y-3 mt-auto">
               {['Find work', 'Create gigs', 'Get paid', 'Build portfolio'].map((feature, i) => (
                 <li key={i} className="flex items-center text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  <div className={`w-1.5 h-1.5 rounded-full mr-3 ${accountType === 'freelancer' ? 'bg-[#14a800]' : 'bg-zinc-300 dark:bg-zinc-600'}`} />
+                  <div className={`w-1.5 h-1.5 rounded-full mr-3 ${accountType === 'freelancer' ? 'bg-[#2bb75c]' : 'bg-zinc-300 dark:bg-zinc-600'}`} />
                   {feature}
                 </li>
               ))}
@@ -111,7 +111,7 @@ const Step1AccountType = () => {
           disabled={!accountType}
           className={`group flex items-center justify-center w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
             accountType 
-              ? 'bg-gradient-to-r from-[#14a800] to-blue-600 text-white shadow-lg shadow-[#14a800]/25 hover:shadow-[#14a800]/25 hover:-tranzinc-y-1' 
+              ? 'bg-gradient-to-r from-[#2bb75c] to-blue-600 text-white shadow-lg shadow-[#2bb75c]/25 hover:shadow-[#2bb75c]/25 hover:-tranzinc-y-1' 
               : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed'
           }`}
         >
@@ -124,3 +124,4 @@ const Step1AccountType = () => {
 };
 
 export default Step1AccountType;
+

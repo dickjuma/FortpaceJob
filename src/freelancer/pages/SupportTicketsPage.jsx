@@ -104,7 +104,7 @@ export default function SupportTicketsPage() {
                 <span className={cn(
                   "px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border shrink-0",
                   ticket.priority === 'High' ? 'bg-[#e63946]/10 text-[#e63946] border-[#e63946]/20' :
-                  ticket.priority === 'Medium' ? 'bg-[#14a800]/5 border-[#14a800]/20 text-[#14a800]' :
+                  ticket.priority === 'Medium' ? 'bg-[#2bb75c]/5 border-[#2bb75c]/20 text-[#2bb75c]' :
                   'bg-light-gray text-text-secondary border-border'
                 )}>
                   {ticket.priority} Priority
@@ -255,3 +255,4 @@ export default function SupportTicketsPage() {
     </div>
   );
 }
+

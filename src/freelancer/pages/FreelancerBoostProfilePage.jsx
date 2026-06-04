@@ -15,8 +15,8 @@ const PACKAGES = [
     basePrice: 5, // per day
     estImpressions: '2.5k',
     estClicks: '150',
-    color: 'bg-[#14a800]',
-    lightColor: 'bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800]'
+    color: 'bg-[#2bb75c]',
+    lightColor: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c]'
   },
   {
     id: 'category',
@@ -26,8 +26,8 @@ const PACKAGES = [
     basePrice: 8,
     estImpressions: '4k',
     estClicks: '280',
-    color: 'bg-[#14a800]',
-    lightColor: 'bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800]'
+    color: 'bg-[#2bb75c]',
+    lightColor: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c]'
   },
   {
     id: 'home',
@@ -70,7 +70,7 @@ export default function FreelancerBoostProfilePage() {
     return (
       <div className="min-h-screen bg-surface dark:bg-surface-dark flex flex-col items-center justify-center p-4">
         <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white dark:bg-surface-dark p-8 rounded-3xl shadow-xl text-center max-w-sm">
-          <div className="w-20 h-20 bg-[#14a800]/10 dark:bg-[#14a800]/20 text-[#14a800] rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-20 h-20 bg-[#2bb75c]/10 dark:bg-[#2bb75c]/20 text-[#2bb75c] rounded-full flex items-center justify-center mx-auto mb-6">
             <Rocket className="w-10 h-10" />
           </div>
           <h2 className="text-2xl font-bold mb-2 dark:text-white">Campaign Active!</h2>
@@ -90,7 +90,7 @@ export default function FreelancerBoostProfilePage() {
       <div className="bg-white dark:bg-surface-dark border-b border-zinc-200 dark:border-zinc-800 pt-12 pb-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2 flex items-center gap-3">
-            <Rocket className="w-8 h-8 text-[#14a800]" /> Boost Your Profile
+            <Rocket className="w-8 h-8 text-[#2bb75c]" /> Boost Your Profile
           </h1>
           <p className="text-zinc-500 font-medium">Get in front of more clients and multiply your earnings.</p>
         </div>
@@ -104,17 +104,17 @@ export default function FreelancerBoostProfilePage() {
           {/* Visibility Score */}
           <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white dark:bg-surface-dark rounded-3xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
-              <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#14a800]/5 dark:bg-[#14a800]/5 rounded-full blur-2xl"></div>
+              <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/5 rounded-full blur-2xl"></div>
               <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Visibility Score</p>
               <h3 className="text-4xl font-black text-zinc-900 dark:text-white mb-2">72<span className="text-lg text-zinc-400 font-bold">/100</span></h3>
-              <p className="text-sm font-medium text-[#14a800] dark:text-[#14a800] flex items-center gap-1">
+              <p className="text-sm font-medium text-[#2bb75c] dark:text-[#2bb75c] flex items-center gap-1">
                 <TrendingUp className="w-4 h-4" /> Top 15% in your category
               </p>
             </div>
             
             <div className="bg-white dark:bg-surface-dark rounded-3xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] flex items-center justify-center"><Eye className="w-4 h-4" /></div>
+                <div className="w-8 h-8 rounded-lg bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] flex items-center justify-center"><Eye className="w-4 h-4" /></div>
                 <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Weekly Views</p>
               </div>
               <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-1">1,204</h3>
@@ -123,7 +123,7 @@ export default function FreelancerBoostProfilePage() {
 
             <div className="bg-white dark:bg-surface-dark rounded-3xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] flex items-center justify-center"><MousePointerClick className="w-4 h-4" /></div>
+                <div className="w-8 h-8 rounded-lg bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] flex items-center justify-center"><MousePointerClick className="w-4 h-4" /></div>
                 <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Conversion Rate</p>
               </div>
               <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-1">4.8%</h3>
@@ -145,10 +145,10 @@ export default function FreelancerBoostProfilePage() {
                     onClick={() => setSelectedPkg(pkg)}
                     className={cn(
                       "rounded-3xl p-6 border-2 cursor-pointer transition-all relative overflow-hidden group",
-                      isSelected ? "border-[#14a800]/20 bg-white dark:bg-surface-dark shadow-lg shadow-[#14a800]/25/10" : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-surface-dark hover:border-[#14a800]/20"
+                      isSelected ? "border-[#2bb75c]/20 bg-white dark:bg-surface-dark shadow-lg shadow-[#2bb75c]/25/10" : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-surface-dark hover:border-[#2bb75c]/20"
                     )}
                   >
-                    {isSelected && <div className="absolute top-0 inset-x-0 h-1 bg-[#14a800]" />}
+                    {isSelected && <div className="absolute top-0 inset-x-0 h-1 bg-[#2bb75c]" />}
                     
                     <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center mb-6 transition-colors", pkg.lightColor)}>
                       <Icon className="w-6 h-6" />
@@ -174,7 +174,7 @@ export default function FreelancerBoostProfilePage() {
                     </div>
 
                     {isSelected && (
-                      <div className="absolute top-6 right-6 w-6 h-6 bg-[#14a800] rounded-full flex items-center justify-center text-white">
+                      <div className="absolute top-6 right-6 w-6 h-6 bg-[#2bb75c] rounded-full flex items-center justify-center text-white">
                         <CheckCircle2 className="w-4 h-4" />
                       </div>
                     )}
@@ -210,11 +210,11 @@ export default function FreelancerBoostProfilePage() {
               <div>
                 <div className="flex justify-between items-center mb-4">
                   <label className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Duration</label>
-                  <span className="text-sm font-black text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/10 px-2 py-1 rounded-lg">{duration} Days</span>
+                  <span className="text-sm font-black text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 px-2 py-1 rounded-lg">{duration} Days</span>
                 </div>
                 <input 
                   type="range" min="1" max="14" value={duration} onChange={(e) => setDuration(Number(e.target.value))}
-                  className="w-full accent-#14a800]"
+                  className="w-full accent-#2bb75c]"
                 />
                 <div className="flex justify-between text-xs font-bold text-zinc-400 mt-2">
                   <span>1d</span>
@@ -223,17 +223,17 @@ export default function FreelancerBoostProfilePage() {
               </div>
 
               {/* Forecast */}
-              <div className="bg-[#14a800]/5 dark:bg-[#14a800]/10 rounded-2xl p-4 border border-[#14a800]/20 dark:border-[#14a800]/20/20">
-                <h4 className="text-xs font-bold text-[#14a800] dark:text-[#14a800] uppercase tracking-wider mb-3">Total Forecast</h4>
+              <div className="bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 rounded-2xl p-4 border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/20">
+                <h4 className="text-xs font-bold text-[#2bb75c] dark:text-[#2bb75c] uppercase tracking-wider mb-3">Total Forecast</h4>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2"><Eye className="w-4 h-4 text-[#14a800]" /> Impressions</span>
+                    <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2"><Eye className="w-4 h-4 text-[#2bb75c]" /> Impressions</span>
                     <span className="text-sm font-black text-zinc-900 dark:text-white">
                       {(parseInt(selectedPkg.estImpressions) * duration)}{selectedPkg.estImpressions.includes('k') ? 'k' : ''}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2"><MousePointerClick className="w-4 h-4 text-[#14a800]" /> Clicks</span>
+                    <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2"><MousePointerClick className="w-4 h-4 text-[#2bb75c]" /> Clicks</span>
                     <span className="text-sm font-black text-zinc-900 dark:text-white">
                       {(parseInt(selectedPkg.estClicks) * duration)}
                     </span>
@@ -261,7 +261,7 @@ export default function FreelancerBoostProfilePage() {
               <button 
                 onClick={handlePromote}
                 disabled={isProcessing}
-                className="w-full py-4 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg shadow-[#14a800]/25/30 transition-all flex items-center justify-center gap-2 mt-4"
+                className="w-full py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-lg shadow-[#2bb75c]/25/30 transition-all flex items-center justify-center gap-2 mt-4"
               >
                 {isProcessing ? 'Processing...' : 'Pay & Launch Campaign'}
               </button>
@@ -276,3 +276,4 @@ export default function FreelancerBoostProfilePage() {
     </div>
   );
 }
+

@@ -9,7 +9,7 @@ const InstantBooking = () => {
         <div className="container mx-auto px-4 md:px-8 max-w-5xl">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="w-16 h-16 bg-[#14a800]/10 text-[#14a800] rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 bg-[#2bb75c]/10 text-[#2bb75c] rounded-full flex items-center justify-center mx-auto mb-6">
               <Zap className="w-8 h-8 fill-current" />
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-zinc-900 mb-6">Instant Booking</h1>
@@ -30,7 +30,7 @@ const InstantBooking = () => {
                   { title: 'UI/UX Mobile App Wireframes (5 Screens)', time: '3 Days', price: '$850', pro: 'Elena R.', rating: '5.0' },
                   { title: 'React Performance Optimization', time: '24 Hours', price: '$600', pro: 'David C.', rating: '4.8' }
                 ].map((pkg, i) => (
-                  <div key={i} className="bg-white border border-zinc-200 rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-sm hover:border-[#14a800]/50 transition-colors">
+                  <div key={i} className="bg-white border border-zinc-200 rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-sm hover:border-[#2bb75c]/50 transition-colors">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="px-2 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider rounded">Guaranteed Delivery</span>
@@ -38,7 +38,7 @@ const InstantBooking = () => {
                       </div>
                       <h3 className="text-xl font-bold text-zinc-900 mb-2">{pkg.title}</h3>
                       <div className="flex items-center gap-2 text-sm text-zinc-600">
-                        By <span className="font-bold text-zinc-900 flex items-center gap-1">{pkg.pro} <ShieldCheck className="w-3 h-3 text-[#14a800]" /></span> • ⭐ {pkg.rating}
+                        By <span className="font-bold text-zinc-900 flex items-center gap-1">{pkg.pro} <ShieldCheck className="w-3 h-3 text-[#2bb75c]" /></span> • ⭐ {pkg.rating}
                       </div>
                     </div>
                     <div className="text-right w-full sm:w-auto border-t sm:border-t-0 sm:border-l border-zinc-100 pt-4 sm:pt-0 sm:pl-6">
@@ -77,7 +77,7 @@ const InstantBooking = () => {
                   </div>
                 </div>
 
-                <button className="w-full py-4 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg shadow-blue-900/20 transition-all flex items-center justify-center gap-2 mb-4">
+                <button className="w-full py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-lg shadow-blue-900/20 transition-all flex items-center justify-center gap-2 mb-4">
                   <CreditCard className="w-5 h-5" /> Pay Securely & Start
                 </button>
                 <div className="text-center text-xs text-zinc-400 font-medium">
@@ -94,3 +94,4 @@ const InstantBooking = () => {
 };
 
 export default InstantBooking;
+

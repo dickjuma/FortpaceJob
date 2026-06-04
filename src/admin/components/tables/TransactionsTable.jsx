@@ -35,7 +35,7 @@ const TransactionsTable = () => {
       header: 'Transaction ID',
       width: '180px',
       render: (item) => (
-        <div className="flex items-center gap-2 font-mono text-[11px] font-bold text-zinc-400 group-hover:text-[#14a800] transition-colors">
+        <div className="flex items-center gap-2 font-mono text-[11px] font-bold text-zinc-400 group-hover:text-[#2bb75c] transition-colors">
           <span>{item.id}</span>
           <button 
             onClick={(e) => { e.stopPropagation(); copyToClipboard(item.id); }}

@@ -44,12 +44,12 @@ const Sidebar: React.FC = () => {
       {/* Header: Logo */}
       <div className="h-16 flex items-center px-5 shrink-0">
         <Link to="/admin" className="flex items-center gap-3">
-          <div className="h-9 w-9 bg-[#14a800] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#14a800]/25/20">
+          <div className="h-9 w-9 bg-[#2bb75c] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#2bb75c]/25/20">
             <ShieldCheck size={22} strokeWidth={2.5} />
           </div>
           {!sidebarCollapsed && (
             <span className="text-lg font-bold text-zinc-900 dark:text-white tracking-tight animate-in fade-in duration-300">
-              Forte<span className="text-[#14a800]">Admin</span>
+              Forte<span className="text-[#2bb75c]">Admin</span>
             </span>
           )}
         </Link>
@@ -100,13 +100,13 @@ const Sidebar: React.FC = () => {
               className={({ isActive }) => cn(
                 "group relative flex items-center gap-3 px-3 h-10 rounded-xl transition-all duration-200 no-underline",
                 isActive 
-                  ? "bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] font-bold" 
+                  ? "bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] font-bold" 
                   : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-200"
               )}
             >
               <Icon size={20} className={cn(
                 "shrink-0 transition-colors",
-                isActive ? "text-[#14a800] dark:text-[#14a800]" : "text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300"
+                isActive ? "text-[#2bb75c] dark:text-[#2bb75c]" : "text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300"
               )} />
               
               {!sidebarCollapsed && (
@@ -114,7 +114,7 @@ const Sidebar: React.FC = () => {
               )}
 
               {module.badge && !sidebarCollapsed && (
-                <span className="ml-auto bg-[#14a800]/10 dark:bg-[#14a800]/40 text-[#14a800] dark:text-[#14a800] text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                <span className="ml-auto bg-[#2bb75c]/10 dark:bg-[#2bb75c]/40 text-[#2bb75c] dark:text-[#2bb75c] text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                   {module.badge}
                 </span>
               )}
@@ -128,7 +128,7 @@ const Sidebar: React.FC = () => {
 
               {/* Active Indicator */}
               {isActive && (
-                <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#14a800] rounded-r-full" />
+                <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#2bb75c] rounded-r-full" />
               )}
             </NavLink>
           );
@@ -187,3 +187,4 @@ const Sidebar: React.FC = () => {
 };
 
 export default Sidebar;
+

@@ -15,7 +15,7 @@ const RecommendedTalent = () => {
     <>
       <div className="bg-surface-dark pt-16 pb-20 border-b border-zinc-800">
         <div className="container mx-auto px-4 md:px-8 text-center max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#14a800]/10 border border-[#14a800]/20/20 text-[#14a800] font-medium mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#2bb75c]/10 border border-[#2bb75c]/20/20 text-[#2bb75c] font-medium mb-6">
             <Zap className="w-4 h-4 fill-current" />
             Fortspace AI Match
           </div>
@@ -29,7 +29,7 @@ const RecommendedTalent = () => {
               Skill overlap scoring
             </div>
             <div className="flex items-center gap-2 text-zinc-300 bg-white/5 px-4 py-2 rounded-lg">
-              <ShieldCheck className="w-4 h-4 text-[#14a800]" />
+              <ShieldCheck className="w-4 h-4 text-[#2bb75c]" />
               Verified trust layer
             </div>
           </div>
@@ -40,7 +40,7 @@ const RecommendedTalent = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {recommended.map((entry) => (
             <div className="relative group" key={entry.id}>
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-#14a800] to-[#118a00] rounded-2xl opacity-50 group-hover:opacity-100 transition-opacity blur-sm" />
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-#2bb75c] to-[#1d8d38] rounded-2xl opacity-50 group-hover:opacity-100 transition-opacity blur-sm" />
               <div className="relative bg-white rounded-xl h-full flex flex-col">
                 <div className="p-4 border-b border-zinc-100 bg-surface/80 rounded-t-xl">
                   <div className="flex items-center justify-between mb-3">
@@ -81,3 +81,4 @@ const RecommendedTalent = () => {
 };
 
 export default RecommendedTalent;
+

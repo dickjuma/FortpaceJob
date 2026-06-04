@@ -132,7 +132,7 @@ export default function SkillTestsPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <button className="bg-success hover:bg-success/90 text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-[#14a800]/20 whitespace-nowrap">
+            <button className="bg-success hover:bg-success/90 text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-[#2bb75c]/20 whitespace-nowrap">
               Explore Tests
             </button>
           </div>
@@ -327,7 +327,7 @@ export default function SkillTestsPage() {
                   onClick={() => setCurrentQuestionIdx(idx)}
                   className={cn(
                     "w-3 h-3 rounded-full transition-all",
-                    idx === currentQuestionIdx ? 'bg-success scale-150 shadow-md shadow-[#14a800]/50' :
+                    idx === currentQuestionIdx ? 'bg-success scale-150 shadow-md shadow-[#2bb75c]/50' :
                     answers[idx] !== undefined ? 'bg-emerald-500' : 'bg-zinc-200 dark:bg-white/10 hover:bg-zinc-300 dark:hover:bg-white/20'
                   )}
                   title={`Question ${idx + 1}`}
@@ -345,7 +345,7 @@ export default function SkillTestsPage() {
             ) : (
               <button 
                 onClick={() => setCurrentQuestionIdx(prev => Math.min(QUESTIONS.length - 1, prev + 1))}
-                className="flex items-center gap-2 px-8 py-3 bg-success hover:bg-success/90 text-white font-bold rounded-xl transition-all shadow-lg shadow-[#14a800]/20 text-sm uppercase tracking-widest"
+                className="flex items-center gap-2 px-8 py-3 bg-success hover:bg-success/90 text-white font-bold rounded-xl transition-all shadow-lg shadow-[#2bb75c]/20 text-sm uppercase tracking-widest"
               >
                 Next <ChevronRight size={18} />
               </button>
@@ -425,13 +425,13 @@ export default function SkillTestsPage() {
                 Back to Tests
               </button>
               {passed ? (
-                <button className="flex-1 py-4 px-4 bg-success text-white font-bold rounded-2xl hover:bg-success/90 transition-all shadow-lg shadow-[#14a800]/20 text-sm uppercase tracking-widest">
+                <button className="flex-1 py-4 px-4 bg-success text-white font-bold rounded-2xl hover:bg-success/90 transition-all shadow-lg shadow-[#2bb75c]/20 text-sm uppercase tracking-widest">
                   View Certificate
                 </button>
               ) : (
                 <button 
                   onClick={() => startExam(activeTest)}
-                  className="flex-1 py-4 px-4 bg-success text-white font-bold rounded-2xl hover:bg-success/90 transition-all shadow-lg shadow-[#14a800]/20 flex items-center justify-center gap-2 text-sm uppercase tracking-widest"
+                  className="flex-1 py-4 px-4 bg-success text-white font-bold rounded-2xl hover:bg-success/90 transition-all shadow-lg shadow-[#2bb75c]/20 flex items-center justify-center gap-2 text-sm uppercase tracking-widest"
                 >
                   <RefreshCcw size={18} /> Retake Test
                 </button>
@@ -453,3 +453,4 @@ export default function SkillTestsPage() {
     </div>
   );
 }
+

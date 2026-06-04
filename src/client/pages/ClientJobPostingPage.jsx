@@ -40,10 +40,10 @@ export default function ClientJobPostingPage() {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-bold text-zinc-500">Step {currentStep} of {STEPS.length}: {STEPS.find(s=>s.id === currentStep)?.name}</span>
-            <span className="text-sm font-bold text-[#14a800] dark:text-[#14a800]">{Math.round((currentStep / STEPS.length) * 100)}% Completed</span>
+            <span className="text-sm font-bold text-[#2bb75c] dark:text-[#2bb75c]">{Math.round((currentStep / STEPS.length) * 100)}% Completed</span>
           </div>
           <div className="h-2 w-full bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
-            <div className="h-full bg-[#14a800] transition-all duration-300" style={{ width: `${(currentStep / STEPS.length) * 100}%` }}></div>
+            <div className="h-full bg-[#2bb75c] transition-all duration-300" style={{ width: `${(currentStep / STEPS.length) * 100}%` }}></div>
           </div>
         </div>
 
@@ -61,18 +61,18 @@ export default function ClientJobPostingPage() {
                   <input 
                     type="text" 
                     placeholder="e.g. Need a React Native developer to build a Fintech App"
-                    className="w-full px-4 py-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-lg font-medium outline-none focus:border-[#14a800]/20 transition-colors"
+                    className="w-full px-4 py-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-lg font-medium outline-none focus:border-[#2bb75c]/20 transition-colors"
                   />
                 </div>
 
-                <div className="bg-[#14a800]/5 dark:bg-[#14a800]/10 border border-[#14a800]/20 dark:border-[#14a800]/20/30 rounded-2xl p-6">
-                  <h3 className="font-bold text-[#14a800] dark:text-[#14a800] flex items-center gap-2 mb-3">
-                    <Sparkles className="w-5 h-5 text-[#14a800]" /> AI Suggestions
+                <div className="bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/30 rounded-2xl p-6">
+                  <h3 className="font-bold text-[#2bb75c] dark:text-[#2bb75c] flex items-center gap-2 mb-3">
+                    <Sparkles className="w-5 h-5 text-[#2bb75c]" /> AI Suggestions
                   </h3>
-                  <p className="text-sm font-medium text-[#14a800] dark:text-[#14a800] mb-4">Start typing to see optimized title variations based on successful marketplace posts.</p>
+                  <p className="text-sm font-medium text-[#2bb75c] dark:text-[#2bb75c] mb-4">Start typing to see optimized title variations based on successful marketplace posts.</p>
                   <div className="flex flex-wrap gap-2">
                     {['Senior React Native Developer for Fintech', 'React Native / iOS / Android App Dev', 'Fintech Mobile App using React Native'].map(s => (
-                      <button key={s} className="px-3 py-1.5 bg-white dark:bg-surface-dark border border-[#14a800]/20 dark:border-[#14a800]/20 text-[#14a800] dark:text-[#14a800] text-sm font-medium rounded-lg hover:bg-[#14a800]/10 dark:hover:bg-zinc-800 transition-colors">
+                      <button key={s} className="px-3 py-1.5 bg-white dark:bg-surface-dark border border-[#2bb75c]/20 dark:border-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] text-sm font-medium rounded-lg hover:bg-[#2bb75c]/10 dark:hover:bg-zinc-800 transition-colors">
                         {s}
                       </button>
                     ))}
@@ -88,21 +88,21 @@ export default function ClientJobPostingPage() {
 
                 <div className="flex gap-4 mb-8">
                   <label className={cn(
-                    "flex-1 border-2 rounded-2xl p-6 cursor-pointer hover:border-[#14a800]/50 transition-colors group",
-                    jobType === 'hourly' ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10" : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-surface-dark"
+                    "flex-1 border-2 rounded-2xl p-6 cursor-pointer hover:border-[#2bb75c]/50 transition-colors group",
+                    jobType === 'hourly' ? "border-[#2bb75c]/20 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10" : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-surface-dark"
                   )}>
                     <input type="radio" name="jobType" value="hourly" checked={jobType === 'hourly'} onChange={() => setJobType('hourly')} className="sr-only" />
-                    <Clock className={cn("w-8 h-8 mb-4", jobType === 'hourly' ? "text-[#14a800] dark:text-[#14a800]" : "text-zinc-400 group-hover:text-zinc-600")} />
+                    <Clock className={cn("w-8 h-8 mb-4", jobType === 'hourly' ? "text-[#2bb75c] dark:text-[#2bb75c]" : "text-zinc-400 group-hover:text-zinc-600")} />
                     <h3 className="font-bold text-zinc-900 dark:text-white mb-1">Hourly Rate</h3>
                     <p className="text-sm font-medium text-zinc-500">Pay by the hour for ongoing work.</p>
                   </label>
                   
                   <label className={cn(
-                    "flex-1 border-2 rounded-2xl p-6 cursor-pointer hover:border-[#14a800]/50 transition-colors group",
-                    jobType === 'fixed' ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10" : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-surface-dark"
+                    "flex-1 border-2 rounded-2xl p-6 cursor-pointer hover:border-[#2bb75c]/50 transition-colors group",
+                    jobType === 'fixed' ? "border-[#2bb75c]/20 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10" : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-surface-dark"
                   )}>
                     <input type="radio" name="jobType" value="fixed" checked={jobType === 'fixed'} onChange={() => setJobType('fixed')} className="sr-only" />
-                    <DollarSign className={cn("w-8 h-8 mb-4", jobType === 'fixed' ? "text-[#14a800] dark:text-[#14a800]" : "text-zinc-400 group-hover:text-zinc-600")} />
+                    <DollarSign className={cn("w-8 h-8 mb-4", jobType === 'fixed' ? "text-[#2bb75c] dark:text-[#2bb75c]" : "text-zinc-400 group-hover:text-zinc-600")} />
                     <h3 className="font-bold text-zinc-900 dark:text-white mb-1">Fixed Price</h3>
                     <p className="text-sm font-medium text-zinc-500">Pay a single flat fee for the project.</p>
                   </label>
@@ -114,7 +114,7 @@ export default function ClientJobPostingPage() {
                       <label className="block text-sm font-bold text-zinc-900 dark:text-white mb-2">From</label>
                       <div className="relative">
                         <DollarSign className="absolute left-4 top-1/2 -tranzinc-y-1/2 w-4 h-4 text-zinc-400" />
-                        <input type="number" placeholder="25.00" className="w-full pl-10 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium outline-none focus:border-[#14a800]/20" />
+                        <input type="number" placeholder="25.00" className="w-full pl-10 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium outline-none focus:border-[#2bb75c]/20" />
                         <span className="absolute right-4 top-1/2 -tranzinc-y-1/2 text-sm font-bold text-zinc-400">/hr</span>
                       </div>
                     </div>
@@ -122,7 +122,7 @@ export default function ClientJobPostingPage() {
                       <label className="block text-sm font-bold text-zinc-900 dark:text-white mb-2">To</label>
                       <div className="relative">
                         <DollarSign className="absolute left-4 top-1/2 -tranzinc-y-1/2 w-4 h-4 text-zinc-400" />
-                        <input type="number" placeholder="60.00" className="w-full pl-10 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium outline-none focus:border-[#14a800]/20" />
+                        <input type="number" placeholder="60.00" className="w-full pl-10 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium outline-none focus:border-[#2bb75c]/20" />
                         <span className="absolute right-4 top-1/2 -tranzinc-y-1/2 text-sm font-bold text-zinc-400">/hr</span>
                       </div>
                     </div>
@@ -131,7 +131,7 @@ export default function ClientJobPostingPage() {
 
                 {/* AI Insights Widget */}
                 <div className="bg-surface dark:bg-zinc-800 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-700 flex gap-4 items-start">
-                  <BarChart3 className="w-6 h-6 text-[#14a800] shrink-0" />
+                  <BarChart3 className="w-6 h-6 text-[#2bb75c] shrink-0" />
                   <div>
                     <h4 className="font-bold text-zinc-900 dark:text-white text-sm mb-1">Freelancer Demand Insights</h4>
                     <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">The average hourly rate for React Native developers with your required skills is <strong className="text-zinc-900 dark:text-white">$45 - $80/hr</strong>. Setting your budget too low may reduce the number of qualified proposals.</p>
@@ -160,7 +160,7 @@ export default function ClientJobPostingPage() {
               </button>
             ) : <div></div>}
             
-            <button onClick={nextStep} className="px-8 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg shadow-[#14a800]/25/20 transition-colors flex items-center gap-2">
+            <button onClick={nextStep} className="px-8 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-lg shadow-[#2bb75c]/25/20 transition-colors flex items-center gap-2">
               {currentStep === STEPS.length ? 'Review Job Post' : 'Next: ' + STEPS[currentStep]?.name}
               {currentStep !== STEPS.length && <ChevronRight className="w-4 h-4" />}
             </button>
@@ -171,3 +171,4 @@ export default function ClientJobPostingPage() {
     </div>
   );
 }
+

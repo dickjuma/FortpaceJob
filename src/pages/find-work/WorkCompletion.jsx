@@ -66,7 +66,7 @@ const WorkCompletion = () => {
   if (loading) {
     return (
       <div className="bg-surface min-h-screen py-20 flex flex-col items-center justify-center text-zinc-500">
-        <Loader2 className="w-10 h-10 animate-spin text-[#14a800] mb-4" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#2bb75c] mb-4" />
         <p className="font-medium">Loading delivery…</p>
       </div>
     );
@@ -94,7 +94,7 @@ const WorkCompletion = () => {
                 deliveryFiles.map((file, index) => (
                   <div key={file.id || index} className="flex items-center justify-between p-4 bg-surface border border-zinc-200 rounded-xl mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-[#14a800]/10 text-[#14a800] rounded-lg flex items-center justify-center font-black text-xs">FILE</div>
+                      <div className="w-10 h-10 bg-[#2bb75c]/10 text-[#2bb75c] rounded-lg flex items-center justify-center font-black text-xs">FILE</div>
                       <div>
                         <div className="font-bold text-zinc-900">{file.name || file.filename || `Deliverable ${index + 1}`}</div>
                         <div className="text-xs text-zinc-500 font-medium">{file.size || 'Uploaded recently'}</div>
@@ -110,9 +110,9 @@ const WorkCompletion = () => {
               )}
 
               {deliveryNote && (
-                <div className="bg-[#14a800]/5 border border-[#14a800]/20 rounded-xl p-4 mt-4">
-                  <h4 className="font-bold text-[#14a800] text-sm mb-1">Message from {providerName}:</h4>
-                  <p className="text-sm text-[#14a800]">{deliveryNote}</p>
+                <div className="bg-[#2bb75c]/5 border border-[#2bb75c]/20 rounded-xl p-4 mt-4">
+                  <h4 className="font-bold text-[#2bb75c] text-sm mb-1">Message from {providerName}:</h4>
+                  <p className="text-sm text-[#2bb75c]">{deliveryNote}</p>
                 </div>
               )}
             </div>
@@ -171,3 +171,4 @@ const WorkCompletion = () => {
 };
 
 export default WorkCompletion;
+

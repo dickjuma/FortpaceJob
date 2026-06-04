@@ -6,9 +6,9 @@ const StatCard = ({ title, value, icon: Icon, trend, trendValue, color = 'indigo
   const isPositive = trend === 'up';
   
   const colorMap = {
-    indigo: 'text-[#14a800] bg-[#14a800]/5 dark:text-[#14a800] dark:bg-[#14a800]/10',
+    indigo: 'text-[#2bb75c] bg-[#2bb75c]/5 dark:text-[#2bb75c] dark:bg-[#2bb75c]/10',
     emerald: 'text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-500/10',
-    blue: 'text-[#14a800] bg-blue-50 dark:text-blue-400 dark:bg-#14a800]/10',
+    blue: 'text-[#2bb75c] bg-blue-50 dark:text-blue-400 dark:bg-#2bb75c]/10',
     amber: 'text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-500/10',
   };
 
@@ -48,3 +48,4 @@ const StatCard = ({ title, value, icon: Icon, trend, trendValue, color = 'indigo
 };
 
 export default StatCard;
+

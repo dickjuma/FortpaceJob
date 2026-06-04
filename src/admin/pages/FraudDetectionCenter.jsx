@@ -53,13 +53,13 @@ export default function FraudDetectionCenter() {
 
   const maxVector = vectors.length > 0 ? Math.max(...vectors.map(v => v.count || 0)) : 1;
 
-  const VECTOR_COLORS = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-[#14a800]', 'bg-#14a800]'];
+  const VECTOR_COLORS = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-[#2bb75c]', 'bg-#2bb75c]'];
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <Link to="/admin/moderation" className="text-sm font-medium text-[#14a800] hover:text-[#14a800] mb-4 inline-flex items-center">
+          <Link to="/admin/moderation" className="text-sm font-medium text-[#2bb75c] hover:text-[#2bb75c] mb-4 inline-flex items-center">
             <ChevronLeft className="w-4 h-4 mr-1" /> Back to Moderation
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
@@ -103,7 +103,7 @@ export default function FraudDetectionCenter() {
           </div>
         </div>
         <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm flex items-center">
-          <div className="w-12 h-12 bg-[#14a800]/10 dark:bg-[#14a800]/30 text-[#14a800] rounded-xl flex items-center justify-center mr-4 shrink-0">
+          <div className="w-12 h-12 bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 text-[#2bb75c] rounded-xl flex items-center justify-center mr-4 shrink-0">
             <Users className="w-6 h-6" />
           </div>
           <div>
@@ -184,3 +184,4 @@ export default function FraudDetectionCenter() {
     </div>
   );
 }
+

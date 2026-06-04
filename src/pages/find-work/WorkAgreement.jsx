@@ -100,7 +100,7 @@ const WorkAgreement = () => {
   if (loading) {
     return (
       <div className="bg-surface min-h-screen py-20 flex flex-col items-center justify-center text-zinc-500">
-        <Loader2 className="w-10 h-10 animate-spin text-[#14a800] mb-4" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#2bb75c] mb-4" />
         <p className="font-medium">Loading contract details…</p>
       </div>
     );
@@ -110,7 +110,7 @@ const WorkAgreement = () => {
     <>
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-4xl">
-          <Link to={`/find-work/work/${workId}/applications`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#14a800] transition-colors mb-6">
+          <Link to={`/find-work/work/${workId}/applications`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#2bb75c] transition-colors mb-6">
             <ArrowLeft className="w-4 h-4" /> Back to Applications
           </Link>
 
@@ -139,7 +139,7 @@ const WorkAgreement = () => {
           {!selectedProposal ? (
             <div className="bg-white border border-zinc-200 rounded-3xl p-10 text-center shadow-sm">
               <p className="text-zinc-600 font-medium">No proposals available to hire.</p>
-              <Link to={`/find-work/work/${workId}/applications`} className="inline-block mt-4 text-[#14a800] font-bold hover:underline">
+              <Link to={`/find-work/work/${workId}/applications`} className="inline-block mt-4 text-[#2bb75c] font-bold hover:underline">
                 View applications
               </Link>
             </div>
@@ -189,7 +189,7 @@ const WorkAgreement = () => {
 
                 <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm">
                   <h3 className="font-bold text-zinc-900 mb-6 flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-[#14a800]" /> Timeline & Delivery
+                    <Calendar className="w-5 h-5 text-[#2bb75c]" /> Timeline & Delivery
                   </h3>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center border-b border-zinc-100 pb-3">
@@ -210,17 +210,17 @@ const WorkAgreement = () => {
 
               <div className="bg-white border border-zinc-200 rounded-3xl p-6 md:p-8 shadow-sm mb-8">
                 <h3 className="font-bold text-zinc-900 mb-4 flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-[#14a800]" /> Fortspace Protection
+                  <ShieldCheck className="w-5 h-5 text-[#2bb75c]" /> Fortspace Protection
                 </h3>
                 <div className="prose prose-sm prose-slate max-w-none mb-6">
                   <p>By clicking &quot;Fund & Hire&quot;, your payment will be securely held in Fortspace Escrow. The funds will only be released to the freelancer once you have reviewed and approved the completed work.</p>
                   <p>If the freelancer fails to deliver or the work does not meet the agreed requirements, you are protected by our Dispute Resolution process and may be entitled to a full refund.</p>
                 </div>
 
-                <label className="flex items-start gap-3 cursor-pointer p-4 bg-surface border border-zinc-200 rounded-xl hover:border-[#14a800]/50 transition-colors">
+                <label className="flex items-start gap-3 cursor-pointer p-4 bg-surface border border-zinc-200 rounded-xl hover:border-[#2bb75c]/50 transition-colors">
                   <input
                     type="checkbox"
-                    className="mt-1 w-5 h-5 rounded border-zinc-300 text-[#14a800] focus:ring-[#14a800] cursor-pointer"
+                    className="mt-1 w-5 h-5 rounded border-zinc-300 text-[#2bb75c] focus:ring-[#2bb75c] cursor-pointer"
                     checked={agreed}
                     onChange={(e) => setAgreed(e.target.checked)}
                   />
@@ -255,3 +255,4 @@ const WorkAgreement = () => {
 };
 
 export default WorkAgreement;
+

@@ -17,14 +17,14 @@ const FormInput = React.forwardRef(({ label, type = 'text', error, ...props }, r
           className={`block w-full px-4 pt-6 pb-2 text-zinc-900 dark:text-white bg-zinc-50 dark:bg-zinc-900 border rounded-xl appearance-none focus:outline-none focus:ring-0 transition-all peer ${
             error 
               ? 'border-red-500 focus:border-red-500' 
-              : 'border-zinc-200 dark:border-zinc-700 focus:border-[#14a800] hover:border-zinc-300 dark:hover:border-zinc-600'
+              : 'border-zinc-200 dark:border-zinc-700 focus:border-[#2bb75c] hover:border-zinc-300 dark:hover:border-zinc-600'
           }`}
           {...props}
         />
         <label
           htmlFor={props.name}
           className={`absolute text-sm duration-300 transform -tranzinc-y-3 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:tranzinc-y-0 peer-focus:scale-75 peer-focus:-tranzinc-y-3 ${
-            error ? 'text-red-500' : 'text-zinc-500 dark:text-zinc-400 peer-focus:text-[#14a800] dark:peer-focus:text-[#14a800]'
+            error ? 'text-red-500' : 'text-zinc-500 dark:text-zinc-400 peer-focus:text-[#2bb75c] dark:peer-focus:text-[#2bb75c]'
           }`}
         >
           {label}
@@ -53,3 +53,4 @@ const FormInput = React.forwardRef(({ label, type = 'text', error, ...props }, r
 FormInput.displayName = 'FormInput';
 
 export default FormInput;
+

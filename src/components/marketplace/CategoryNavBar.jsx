@@ -51,7 +51,7 @@ export default function CategoryNavBar({
             to={basePath}
             className={`shrink-0 px-4 py-2 rounded-full text-sm font-bold transition-colors ${
               !currentSection
-                ? 'bg-[#14a800] text-white'
+                ? 'bg-[#2bb75c] text-white'
                 : 'text-zinc-600 hover:bg-zinc-100'
             }`}
           >
@@ -67,7 +67,7 @@ export default function CategoryNavBar({
                 onClick={(e) => handleClick(cat, e)}
                 className={`shrink-0 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${
                   active
-                    ? 'bg-[#14a800] text-white'
+                    ? 'bg-[#2bb75c] text-white'
                     : 'text-zinc-700 hover:bg-zinc-100'
                 }`}
               >
@@ -80,3 +80,4 @@ export default function CategoryNavBar({
     </nav>
   );
 }
+

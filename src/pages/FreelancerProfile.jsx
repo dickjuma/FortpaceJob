@@ -58,7 +58,7 @@ const FreelancerProfile = () => {
                     <div>
                       <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 flex items-center gap-2 mb-1">
                         {talent.name}
-                        {talent.verified ? <ShieldCheck className="w-6 h-6 text-[#14a800]" title="Identity Verified" /> : null}
+                        {talent.verified ? <ShieldCheck className="w-6 h-6 text-[#2bb75c]" title="Identity Verified" /> : null}
                       </h1>
                       <h2 className="text-lg text-zinc-600 font-medium">{talent.title}</h2>
                       <p className="text-sm text-zinc-500 mt-2">{talent.headline}</p>
@@ -68,7 +68,7 @@ const FreelancerProfile = () => {
                       <button className="w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-500 hover:text-rose-500 hover:bg-rose-50 transition-colors" type="button">
                         <Heart className="w-5 h-5" />
                       </button>
-                      <button className="w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-500 hover:text-[#14a800] hover:bg-[#14a800]/5 transition-colors" type="button">
+                      <button className="w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-500 hover:text-[#2bb75c] hover:bg-[#2bb75c]/5 transition-colors" type="button">
                         <Share2 className="w-5 h-5" />
                       </button>
                     </div>
@@ -85,7 +85,7 @@ const FreelancerProfile = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Award className="w-5 h-5 text-[#14a800]" />
+                  <Award className="w-5 h-5 text-[#2bb75c]" />
                   <div>
                     <div className="font-bold text-zinc-900">{talent.jobSuccess}% Job Success</div>
                     <div className="text-zinc-500">{talent.completedJobs} jobs completed</div>
@@ -122,7 +122,7 @@ const FreelancerProfile = () => {
                 {tabs.map((tab) => (
                   <button
                     className={`px-6 py-4 font-medium text-sm whitespace-nowrap border-b-2 transition-colors ${
-                      activeTab === tab ? 'border-[#14a800]/20 text-[#14a800]' : 'border-transparent text-zinc-500 hover:text-zinc-700 hover:bg-surface'
+                      activeTab === tab ? 'border-[#2bb75c]/20 text-[#2bb75c]' : 'border-transparent text-zinc-500 hover:text-zinc-700 hover:bg-surface'
                     }`}
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -137,9 +137,9 @@ const FreelancerProfile = () => {
                 {activeTab === 'services' ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {talent.services.map((service) => (
-                      <div className="border border-zinc-200 rounded-xl p-5 hover:border-[#14a800]/50 transition-colors group" key={service.id}>
+                      <div className="border border-zinc-200 rounded-xl p-5 hover:border-[#2bb75c]/50 transition-colors group" key={service.id}>
                         <div className="flex justify-between items-start mb-3 gap-3">
-                          <h4 className="font-bold text-zinc-900 group-hover:text-[#14a800] transition-colors">{service.title}</h4>
+                          <h4 className="font-bold text-zinc-900 group-hover:text-[#2bb75c] transition-colors">{service.title}</h4>
                           <span className="font-bold text-zinc-900">From ${service.price}</span>
                         </div>
                         <p className="text-sm text-zinc-500 mb-4">{service.summary}</p>
@@ -196,7 +196,7 @@ const FreelancerProfile = () => {
             <div className="mb-6">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-2xl font-bold text-zinc-900">Related talent</h3>
-                <Link className="text-[#14a800] font-bold hover:text-[#14a800]" to="/search-results">
+                <Link className="text-[#2bb75c] font-bold hover:text-[#2bb75c]" to="/search-results">
                   Search more talent
                 </Link>
               </div>
@@ -220,7 +220,7 @@ const FreelancerProfile = () => {
                 </div>
 
                 <button
-                  className="w-full block text-center bg-[#14a800] hover:bg-[#118a00] text-white font-bold py-3 px-4 rounded-xl transition-colors mb-3"
+                  className="w-full block text-center bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold py-3 px-4 rounded-xl transition-colors mb-3"
                   onClick={() =>
                     requireAuth(() => navigate(`/talent/${talent.id}/hire`), {
                       returnTo: `/talent/${talent.id}/hire`,
@@ -295,3 +295,4 @@ const FreelancerProfile = () => {
 };
 
 export default FreelancerProfile;
+

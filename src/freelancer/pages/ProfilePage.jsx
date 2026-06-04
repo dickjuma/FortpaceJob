@@ -387,7 +387,7 @@ export default function ProfilePage() {
               <div
                 key={type.id}
                 className={`p-3 rounded-lg border text-left ${
-                  accountType === type.id ? 'border-[#14a800] bg-[#14a800]/5' : 'border-zinc-200 bg-zinc-50'
+                  accountType === type.id ? 'border-[#2bb75c] bg-[#2bb75c]/5' : 'border-zinc-200 bg-zinc-50'
                 }`}
               >
                 <p className="text-sm font-bold text-zinc-900">{type.label}</p>
@@ -405,8 +405,8 @@ export default function ProfilePage() {
                 onClick={() => setWorkMode(mode.id)}
                 className={`p-3 rounded-lg border text-left transition-colors ${
                   workMode === mode.id
-                    ? 'border-[#14a800] bg-[#14a800]/5'
-                    : 'border-zinc-200 hover:border-[#14a800]/30'
+                    ? 'border-[#2bb75c] bg-[#2bb75c]/5'
+                    : 'border-zinc-200 hover:border-[#2bb75c]/30'
                 }`}
               >
                 <p className="text-sm font-bold text-zinc-900">{mode.label}</p>
@@ -999,3 +999,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

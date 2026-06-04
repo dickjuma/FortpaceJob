@@ -48,7 +48,7 @@ export default function ClientInvoicesPage() {
           <p className="text-xs font-semibold text-zinc-400 mt-1">Audit billing history, reserve withholding tax allocations (VAT), and download print-ready receipts.</p>
         </div>
 
-        <Button onClick={() => toast.success('New invoice template initialized.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#14a800]/25">
+        <Button onClick={() => toast.success('New invoice template initialized.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#2bb75c]/25">
           <Plus className="w-4 h-4" /> Create Custom Invoice
         </Button>
       </div>
@@ -125,7 +125,7 @@ export default function ClientInvoicesPage() {
                             <Button 
                               disabled={payInvoiceMutation.isPending}
                               onClick={() => handlePayInvoice(inv.dbId, inv.amount)}
-                              className="bg-success hover:bg-success border-none font-bold text-[9px] py-1.5 px-3 rounded-lg shadow-md shadow-[#14a800]/10"
+                              className="bg-success hover:bg-success border-none font-bold text-[9px] py-1.5 px-3 rounded-lg shadow-md shadow-[#2bb75c]/10"
                             >
                               Pay with M-Pesa STK
                             </Button>
@@ -151,3 +151,4 @@ export default function ClientInvoicesPage() {
     </div>
   );
 }
+

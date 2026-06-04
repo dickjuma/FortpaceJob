@@ -41,7 +41,7 @@ const Reviews = () => {
 
         {loading ? (
           <div className="flex justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
           </div>
         ) : reviews.length === 0 ? (
           <p className="text-center text-zinc-500 font-medium py-16">No platform reviews yet.</p>
@@ -70,7 +70,7 @@ const Reviews = () => {
                 <div className="flex items-center gap-4 text-sm text-zinc-500 border-t border-zinc-100 pt-4">
                   {review.cost && <span>Project cost: {review.cost}</span>}
                   {review.duration && <span>Duration: {review.duration}</span>}
-                  <button type="button" className="ml-auto flex items-center gap-1 text-zinc-600 hover:text-[#14a800] font-medium transition-colors">
+                  <button type="button" className="ml-auto flex items-center gap-1 text-zinc-600 hover:text-[#2bb75c] font-medium transition-colors">
                     <ThumbsUp className="w-4 h-4" /> Helpful
                   </button>
                 </div>
@@ -84,3 +84,4 @@ const Reviews = () => {
 };
 
 export default Reviews;
+

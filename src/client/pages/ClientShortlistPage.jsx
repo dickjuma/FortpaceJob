@@ -75,7 +75,7 @@ export default function ClientShortlistPage() {
           </div>
           <button
             onClick={() => navigate('/client/talent-search')}
-            className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#14a800]/20"
+            className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#2bb75c]/20"
           >
             <Plus className="w-4 h-4" /> Find More Talent
           </button>
@@ -258,3 +258,4 @@ export default function ClientShortlistPage() {
     </div>
   );
 }
+

@@ -37,7 +37,7 @@ const ProfileAuditTab = ({ user }) => {
           <input 
             type="text" 
             placeholder="Search audit events..." 
-            className="w-full h-12 pl-12 pr-4 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-medium outline-none focus:border-[#14a800]/20 transition-all"
+            className="w-full h-12 pl-12 pr-4 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl text-sm font-medium outline-none focus:border-[#2bb75c]/20 transition-all"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -45,7 +45,7 @@ const ProfileAuditTab = ({ user }) => {
             <Filter size={16} />
             Filter Type
           </button>
-          <button className="flex items-center gap-2 px-6 h-12 bg-surface-dark text-white border border-transparent rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#14a800] transition-all shadow-lg shadow-zinc-900/10">
+          <button className="flex items-center gap-2 px-6 h-12 bg-surface-dark text-white border border-transparent rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#2bb75c] transition-all shadow-lg shadow-zinc-900/10">
             <Download size={16} />
             Export CSV
           </button>
@@ -129,3 +129,4 @@ const ProfileAuditTab = ({ user }) => {
 };
 
 export default ProfileAuditTab;
+

@@ -18,13 +18,13 @@ const TalentShortlist = () => {
       <div className="container mx-auto px-4 md:px-8 max-w-6xl">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <Link className="text-sm font-medium text-[#14a800] hover:text-[#14a800] mb-2 inline-block" to="/find-talent">
+            <Link className="text-sm font-medium text-[#2bb75c] hover:text-[#2bb75c] mb-2 inline-block" to="/find-talent">
               Back to talent hub
             </Link>
             <h1 className="text-3xl font-bold text-zinc-900 mb-2">Talent shortlist</h1>
             <p className="text-zinc-600">Candidates under consideration across your connected hiring pipeline.</p>
           </div>
-          <Link className="bg-[#14a800] hover:bg-[#118a00] text-white px-5 py-2.5 rounded-xl font-bold shadow-sm transition-colors" to="/search-results">
+          <Link className="bg-[#2bb75c] hover:bg-[#1d8d38] text-white px-5 py-2.5 rounded-xl font-bold shadow-sm transition-colors" to="/search-results">
             Invite more talent
           </Link>
         </div>
@@ -61,14 +61,14 @@ const TalentShortlist = () => {
                     src={`https://ui-avatars.com/api/?name=${encodeURIComponent(entry.talent.name)}&background=random`}
                   />
                   <div>
-                    <Link className="font-bold text-zinc-900 text-lg flex items-center gap-2 hover:text-[#14a800] transition-colors" to={`/talent/${entry.talent.id}`}>
+                    <Link className="font-bold text-zinc-900 text-lg flex items-center gap-2 hover:text-[#2bb75c] transition-colors" to={`/talent/${entry.talent.id}`}>
                       {entry.talent.name} <ShieldCheck className="w-4 h-4 text-success" title="Verified" />
                     </Link>
                     <p className="text-sm text-zinc-600 mb-1">{entry.talent.title}</p>
                     <div className="flex items-center gap-3 text-xs font-medium text-zinc-500 flex-wrap">
                       <span className="flex items-center gap-1"><Star className="w-3.5 h-3.5 text-amber-400 fill-current" /> {entry.talent.rating}</span>
                       <span>{entry.talent.hourlyRate}/hr</span>
-                      <span className="text-[#14a800] bg-[#14a800]/5 px-2 py-0.5 rounded">{entry.match}% AI Match</span>
+                      <span className="text-[#2bb75c] bg-[#2bb75c]/5 px-2 py-0.5 rounded">{entry.match}% AI Match</span>
                       <span>{entry.job?.title}</span>
                     </div>
                   </div>
@@ -77,7 +77,7 @@ const TalentShortlist = () => {
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
                   <div className="w-32">
                     {entry.status === 'interviewing' ? (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#14a800]/5 text-[#14a800] text-xs font-bold uppercase tracking-wider rounded-full border border-[#14a800]/50">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#2bb75c]/5 text-[#2bb75c] text-xs font-bold uppercase tracking-wider rounded-full border border-[#2bb75c]/50">
                         <MessageSquare className="w-3 h-3" /> Interviewing
                       </span>
                     ) : null}
@@ -95,7 +95,7 @@ const TalentShortlist = () => {
 
                   <div className="flex gap-2">
                     <button
-                      className="w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-600 hover:bg-white hover:text-[#14a800] transition-colors bg-surface"
+                      className="w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-600 hover:bg-white hover:text-[#2bb75c] transition-colors bg-surface"
                       title="Message"
                       type="button"
                       onClick={() =>
@@ -135,3 +135,4 @@ const TalentShortlist = () => {
 };
 
 export default TalentShortlist;
+

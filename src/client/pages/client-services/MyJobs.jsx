@@ -72,7 +72,7 @@ export default function MyJobs() {
         </div>
         <Link
           to="/client-services/create-job"
-          className="bg-success hover:bg-success text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-[#14a800]/20 flex items-center gap-2"
+          className="bg-success hover:bg-success text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-[#2bb75c]/20 flex items-center gap-2"
         >
           <Plus className="w-4 h-4" /> Post New Project
         </Link>
@@ -231,3 +231,4 @@ export default function MyJobs() {
     </div>
   );
 }
+

@@ -76,7 +76,7 @@ export default function GigTitleSeoPage() {
                 As your Gig storefront, your title is the most important place to include keywords that buyers would likely use to search for a service like yours.
               </p>
             </div>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800] rounded-xl text-xs font-bold hover:bg-[#14a800]/10 transition-colors shrink-0">
+            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c] rounded-xl text-xs font-bold hover:bg-[#2bb75c]/10 transition-colors shrink-0">
               <Sparkles className="w-3.5 h-3.5" /> Optimize Title
             </button>
           </div>
@@ -89,7 +89,7 @@ export default function GigTitleSeoPage() {
               placeholder="I will do something I'm really good at..."
               className={cn(
                 "w-full p-4 bg-surface dark:bg-zinc-800/50 border rounded-2xl text-2xl font-extrabold text-zinc-900 dark:text-white resize-none outline-none transition-all focus:ring-2",
-                title.length > 80 ? "border-rose-300 focus:ring-rose-500" : "border-zinc-200 dark:border-zinc-700 focus:border-[#14a800]/20 focus:ring-[#14a800]"
+                title.length > 80 ? "border-rose-300 focus:ring-rose-500" : "border-zinc-200 dark:border-zinc-700 focus:border-[#2bb75c]/20 focus:ring-[#2bb75c]"
               )}
             />
             <div className="absolute bottom-4 right-4 flex items-center gap-2">
@@ -133,7 +133,7 @@ export default function GigTitleSeoPage() {
               <select 
                 value={category}
                 onChange={(e) => { setCategory(e.target.value); setSubcategory(''); }}
-                className="w-full p-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-semibold text-zinc-900 dark:text-white outline-none focus:border-[#14a800]/20 focus:ring-1 focus:ring-[#14a800]"
+                className="w-full p-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-semibold text-zinc-900 dark:text-white outline-none focus:border-[#2bb75c]/20 focus:ring-1 focus:ring-[#2bb75c]"
               >
                 <option value="">Select a category</option>
                 {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
@@ -148,7 +148,7 @@ export default function GigTitleSeoPage() {
                 value={subcategory}
                 onChange={(e) => setSubcategory(e.target.value)}
                 disabled={!category}
-                className="w-full p-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-semibold text-zinc-900 dark:text-white outline-none focus:border-[#14a800]/20 focus:ring-1 focus:ring-[#14a800] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full p-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-semibold text-zinc-900 dark:text-white outline-none focus:border-[#2bb75c]/20 focus:ring-1 focus:ring-[#2bb75c] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <option value="">Select a subcategory</option>
                 {category && SUBCATEGORIES[category]?.map(sc => <option key={sc} value={sc}>{sc}</option>)}
@@ -174,7 +174,7 @@ export default function GigTitleSeoPage() {
                 <span className="text-xs font-bold text-zinc-400">{tags.length}/5 tags</span>
               </div>
               
-              <div className="p-2 bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl flex flex-wrap gap-2 items-center focus-within:border-[#14a800]/20 focus-within:ring-1 focus-within:ring-#14a800] transition-all">
+              <div className="p-2 bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl flex flex-wrap gap-2 items-center focus-within:border-[#2bb75c]/20 focus-within:ring-1 focus-within:ring-#2bb75c] transition-all">
                 <AnimatePresence>
                   {tags.map(tag => (
                     <motion.span 
@@ -211,7 +211,7 @@ export default function GigTitleSeoPage() {
                       key={tag}
                       onClick={() => addSuggestedTag(tag)}
                       disabled={tags.includes(tag.toLowerCase()) || tags.length >= 5}
-                      className="px-3 py-1 text-xs font-bold bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800] rounded-lg hover:bg-[#14a800]/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      className="px-3 py-1 text-xs font-bold bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c] rounded-lg hover:bg-[#2bb75c]/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     >
                       + {tag}
                     </button>
@@ -230,7 +230,7 @@ export default function GigTitleSeoPage() {
                 value={metaDesc}
                 onChange={(e) => setMetaDesc(e.target.value)}
                 placeholder="Briefly describe your gig for search engine results pages (Google, Bing)..."
-                className="w-full p-3 bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium text-zinc-900 dark:text-white resize-none outline-none focus:border-[#14a800]/20 focus:ring-1 focus:ring-[#14a800] transition-all"
+                className="w-full p-3 bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium text-zinc-900 dark:text-white resize-none outline-none focus:border-[#2bb75c]/20 focus:ring-1 focus:ring-[#2bb75c] transition-all"
               />
               <div className="flex justify-between items-center mt-2">
                 <span className="text-xs text-zinc-500 flex items-center gap-1">
@@ -255,10 +255,10 @@ export default function GigTitleSeoPage() {
         
         {/* Live SEO Score Widget */}
         <div className="bg-surface-dark rounded-3xl p-6 shadow-xl relative overflow-hidden">
-          <div className="absolute -right-8 -top-8 w-32 h-32 bg-[#14a800]/20 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -right-8 -top-8 w-32 h-32 bg-[#2bb75c]/20 rounded-full blur-2xl pointer-events-none" />
           
           <div className="flex items-center gap-2 mb-6">
-            <BarChart3 className="w-5 h-5 text-[#14a800]" />
+            <BarChart3 className="w-5 h-5 text-[#2bb75c]" />
             <h3 className="text-sm font-bold text-white">Live SEO Score</h3>
           </div>
 
@@ -306,7 +306,7 @@ export default function GigTitleSeoPage() {
         {/* Trending Keywords Box */}
         <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="w-4 h-4 text-[#14a800]" />
+            <TrendingUp className="w-4 h-4 text-[#2bb75c]" />
             <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Trending in Web Dev</h3>
           </div>
           
@@ -334,3 +334,4 @@ export default function GigTitleSeoPage() {
     </div>
   );
 }
+

@@ -25,7 +25,7 @@ const TopSellers = () => {
           <div className="bg-white border border-zinc-200 rounded-3xl shadow-sm overflow-hidden">
             {loading ? (
               <div className="flex justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
               </div>
             ) : sellers.length === 0 ? (
               <p className="text-center text-zinc-500 font-medium py-20">No top sellers to display yet.</p>
@@ -102,3 +102,4 @@ const TopSellers = () => {
 };
 
 export default TopSellers;
+

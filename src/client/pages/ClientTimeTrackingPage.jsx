@@ -43,7 +43,7 @@ export default function ClientTimeTrackingPage() {
           <p className="text-xs font-semibold text-light-gray/50 mt-1">Audit active hourly billing sheets, review geo-tagged screenshot proofs, and approve completed work logs.</p>
         </div>
 
-        <Button onClick={() => toast.success('Time log CSV spreadsheet downloaded.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20">
+        <Button onClick={() => toast.success('Time log CSV spreadsheet downloaded.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#2bb75c]/20">
           Export Timesheets
         </Button>
       </div>
@@ -128,3 +128,4 @@ export default function ClientTimeTrackingPage() {
     </div>
   );
 }
+

@@ -11,14 +11,14 @@
     --color-light-gray: #f2f2f2;
     --color-white: #ffffff;
     --color-accent-red: #e63946;
-    --color-primary: #14a800;
+    --color-primary: #2bb75c;
     --color-secondary: #5e6d55;
-    --color-cta: #14a800;
-    --color-success: #14a800;
+    --color-cta: #2bb75c;
+    --color-success: #2bb75c;
     --color-text-primary: #222222;
     --color-text-secondary: #5e6d55;
     --color-border: #e0e0e0;
-    --color-success: #14a800;
+    --color-success: #2bb75c;
     --color-warning: #ffc107;
     --color-error: #dc3545;
     --color-info: #17a2b8;
@@ -108,7 +108,7 @@
 }
 
 .recharts-tooltip-cursor {
-  fill: #14a800;
+  fill: #2bb75c;
   fill-opacity: 0.1;
 }
 
@@ -122,4 +122,5 @@
   from { width: 100%; }
   to { width: 0%; }
 }
+
 

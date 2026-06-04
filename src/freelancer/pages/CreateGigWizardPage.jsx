@@ -220,7 +220,7 @@ export default function CreateGigWizardPage() {
               <div key={step.id} className="relative z-10 flex flex-col items-center gap-2">
                 <div className={cn(
                   "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300",
-                  isActive ? "bg-success border-success text-white scale-110 shadow-lg shadow-[#14a800]/20" :
+                  isActive ? "bg-success border-success text-white scale-110 shadow-lg shadow-[#2bb75c]/20" :
                   isCompleted ? "bg-success border-success text-white" :
                   "bg-white border-border text-text-secondary"
                 )}>
@@ -516,7 +516,7 @@ export default function CreateGigWizardPage() {
             onClick={handleNext}
             disabled={loading}
             icon={currentStep === WIZARD_STEPS.length - 1 ? <Check size={16} /> : <ArrowRight size={16} />}
-            className={currentStep === WIZARD_STEPS.length - 1 ? "bg-success hover:bg-success/90 border-none shadow-lg shadow-[#14a800]/20" : ""}
+            className={currentStep === WIZARD_STEPS.length - 1 ? "bg-success hover:bg-success/90 border-none shadow-lg shadow-[#2bb75c]/20" : ""}
           >
             {loading ? 'Publishing...' : currentStep === WIZARD_STEPS.length - 1 ? 'Publish Gig' : 'Save & Continue'}
           </Button>
@@ -525,3 +525,4 @@ export default function CreateGigWizardPage() {
     </div>
   );
 }
+

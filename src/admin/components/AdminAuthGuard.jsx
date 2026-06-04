@@ -6,7 +6,7 @@ function GuardLoading() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-900">
       <div className="text-center">
-        <div className="w-10 h-10 border-4 border-[#14a800] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+        <div className="w-10 h-10 border-4 border-[#2bb75c] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
         <p className="text-sm font-medium text-zinc-500">Verifying admin session…</p>
       </div>
     </div>
@@ -41,3 +41,4 @@ export default function AdminAuthGuard() {
 
   return <Outlet />;
 }
+

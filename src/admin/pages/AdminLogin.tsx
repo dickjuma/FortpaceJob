@@ -41,7 +41,7 @@ const AdminLogin = () => {
     <div className="min-h-screen bg-surface-dark flex items-center justify-center p-6 relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-success/10 blur-[150px] rounded-full -tranzinc-y-1/2 tranzinc-x-1/2"></div>
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#14a800]/10 blur-[150px] rounded-full tranzinc-y-1/2 -tranzinc-x-1/2"></div>
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#2bb75c]/10 blur-[150px] rounded-full tranzinc-y-1/2 -tranzinc-x-1/2"></div>
 
       <div className="w-full max-w-md relative z-10">
         <div className="bg-surface-dark border border-zinc-800 p-10 rounded-[40px] shadow-2xl">
@@ -151,3 +151,4 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
+

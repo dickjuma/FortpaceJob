@@ -22,7 +22,7 @@ export default function WorkDetail() {
           <FileText className="w-12 h-12 mx-auto text-zinc-300 mb-4" />
           <h1 className="text-3xl font-black text-zinc-900 mb-2">Job not found</h1>
           <p className="text-zinc-600 mb-6">This opportunity no longer exists or the link is no longer valid.</p>
-          <Link to="/find-work" className="px-6 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl">
+          <Link to="/find-work" className="px-6 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl">
             Back to Find Work
           </Link>
         </div>
@@ -37,13 +37,13 @@ export default function WorkDetail() {
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-7xl">
           <div className="flex items-center gap-2 text-sm font-medium text-zinc-500 mb-6 flex-wrap">
-            <Link to="/find-work" className="hover:text-[#14a800]">Find Work</Link>
+            <Link to="/find-work" className="hover:text-[#2bb75c]">Find Work</Link>
             <ChevronRight className="w-4 h-4" />
-            <Link to={job.workMode === 'local' ? '/find-work/local' : '/find-work/online'} className="hover:text-[#14a800]">
+            <Link to={job.workMode === 'local' ? '/find-work/local' : '/find-work/online'} className="hover:text-[#2bb75c]">
               {job.workMode === 'local' ? 'Local' : 'Online'}
             </Link>
             <ChevronRight className="w-4 h-4" />
-            <Link to={job.categoryPath} className="hover:text-[#14a800]">{job.category.name}</Link>
+            <Link to={job.categoryPath} className="hover:text-[#2bb75c]">{job.category.name}</Link>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-8">
@@ -66,10 +66,10 @@ export default function WorkDetail() {
                     </div>
                   </div>
                   <div className="flex gap-2 w-full md:w-auto">
-                    <Link to="/find-work/saved" className="p-3 bg-white border border-zinc-200 text-zinc-600 hover:text-[#14a800] hover:border-[#14a800]/50 rounded-xl transition-colors shadow-sm">
+                    <Link to="/find-work/saved" className="p-3 bg-white border border-zinc-200 text-zinc-600 hover:text-[#2bb75c] hover:border-[#2bb75c]/50 rounded-xl transition-colors shadow-sm">
                       <Bookmark className="w-5 h-5" />
                     </Link>
-                    <button type="button" className="p-3 bg-white border border-zinc-200 text-zinc-600 hover:text-[#14a800] hover:border-[#14a800]/50 rounded-xl transition-colors shadow-sm">
+                    <button type="button" className="p-3 bg-white border border-zinc-200 text-zinc-600 hover:text-[#2bb75c] hover:border-[#2bb75c]/50 rounded-xl transition-colors shadow-sm">
                       <Share2 className="w-5 h-5" />
                     </button>
                   </div>
@@ -103,11 +103,11 @@ export default function WorkDetail() {
                   </div>
                 </div>
 
-                <div className="bg-[#14a800]/5 border border-[#14a800]/20 rounded-2xl p-6 flex items-start gap-4">
-                  <FileText className="w-6 h-6 text-[#14a800] shrink-0 mt-1" />
+                <div className="bg-[#2bb75c]/5 border border-[#2bb75c]/20 rounded-2xl p-6 flex items-start gap-4">
+                  <FileText className="w-6 h-6 text-[#2bb75c] shrink-0 mt-1" />
                   <div className="flex-1">
                     <h4 className="font-bold text-zinc-900 mb-1">Attachments (1)</h4>
-                    <button type="button" className="text-[#14a800] text-sm font-bold hover:underline text-left">
+                    <button type="button" className="text-[#2bb75c] text-sm font-bold hover:underline text-left">
                       {job.attachment.name}
                     </button>
                     <p className="text-xs text-zinc-500 mt-1">Attachment preview is represented here as structured job metadata.</p>
@@ -122,15 +122,15 @@ export default function WorkDetail() {
                       <h3 className="text-xl font-bold text-zinc-900">Related opportunities</h3>
                       <p className="text-zinc-500 text-sm">More work from the same classification.</p>
                     </div>
-                    <Link to={`/find-work/search?type=${job.workMode}&q=${encodeURIComponent(job.category.name)}`} className="text-[#14a800] font-bold text-sm hover:underline">
+                    <Link to={`/find-work/search?type=${job.workMode}&q=${encodeURIComponent(job.category.name)}`} className="text-[#2bb75c] font-bold text-sm hover:underline">
                       See all
                     </Link>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {relatedJobs.map((relatedJob) => (
-                      <Link key={relatedJob.id} to={relatedJob.detailPath} className="border border-zinc-200 rounded-2xl p-5 hover:border-[#14a800]/50 hover:shadow-sm transition-all group">
-                        <div className="text-xs font-bold uppercase tracking-wider text-[#14a800] mb-2">{relatedJob.specialization}</div>
-                        <h4 className="font-bold text-zinc-900 group-hover:text-[#14a800] transition-colors mb-2">{relatedJob.title}</h4>
+                      <Link key={relatedJob.id} to={relatedJob.detailPath} className="border border-zinc-200 rounded-2xl p-5 hover:border-[#2bb75c]/50 hover:shadow-sm transition-all group">
+                        <div className="text-xs font-bold uppercase tracking-wider text-[#2bb75c] mb-2">{relatedJob.specialization}</div>
+                        <h4 className="font-bold text-zinc-900 group-hover:text-[#2bb75c] transition-colors mb-2">{relatedJob.title}</h4>
                         <p className="text-sm text-zinc-500 mb-3">{relatedJob.summary}</p>
                         <div className="text-sm font-black text-zinc-900">{relatedJob.budgetLabel}</div>
                       </Link>
@@ -148,7 +148,7 @@ export default function WorkDetail() {
                   <div className="text-sm text-zinc-500 mt-2">Estimated timeline: {job.durationLabel}</div>
                 </div>
 
-                <Link to={job.proposalPath} className="w-full py-4 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-md transition-colors text-lg mb-4 block text-center">
+                <Link to={job.proposalPath} className="w-full py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-md transition-colors text-lg mb-4 block text-center">
                   Submit a Proposal
                 </Link>
                 <div className="text-center text-sm font-bold text-zinc-500">{job.applicants} proposals submitted so far</div>
@@ -178,7 +178,7 @@ export default function WorkDetail() {
                   </div>
                 </div>
 
-                <Link to="/client-profile" className="text-[#14a800] text-sm font-bold hover:underline block text-center pt-4 border-t border-zinc-100">
+                <Link to="/client-profile" className="text-[#2bb75c] text-sm font-bold hover:underline block text-center pt-4 border-t border-zinc-100">
                   View Full Client Profile
                 </Link>
               </div>
@@ -189,3 +189,4 @@ export default function WorkDetail() {
     </>
   );
 }
+

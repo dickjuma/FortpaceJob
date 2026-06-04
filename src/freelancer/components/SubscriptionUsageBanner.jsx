@@ -12,9 +12,9 @@ export default function SubscriptionUsageBanner() {
   const appsLeft = sub.remaining?.jobApplications;
 
   return (
-    <div className="mb-6 p-4 rounded-2xl border border-[#14a800]/30 bg-[#14a800]/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div className="mb-6 p-4 rounded-2xl border border-[#2bb75c]/30 bg-[#2bb75c]/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div className="flex items-start gap-3">
-        <Zap className="w-5 h-5 text-[#14a800] shrink-0 mt-0.5" />
+        <Zap className="w-5 h-5 text-[#2bb75c] shrink-0 mt-0.5" />
         <div>
           <p className="font-bold text-zinc-900 text-sm">{sub.plan?.name} plan</p>
           <p className="text-xs text-zinc-600 mt-0.5">
@@ -27,7 +27,7 @@ export default function SubscriptionUsageBanner() {
       {sub.planId !== 'corporate' && (
         <Link
           to="/pricing"
-          className="inline-flex items-center gap-1 text-sm font-bold text-[#14a800] hover:underline shrink-0"
+          className="inline-flex items-center gap-1 text-sm font-bold text-[#2bb75c] hover:underline shrink-0"
         >
           Upgrade <ArrowRight className="w-4 h-4" />
         </Link>
@@ -35,3 +35,4 @@ export default function SubscriptionUsageBanner() {
     </div>
   );
 }
+

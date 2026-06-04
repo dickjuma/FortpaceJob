@@ -37,7 +37,7 @@ export default function ReconciliationPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-[#14a800]/10 text-[#14a800] rounded-xl shadow-sm">
+            <div className="p-2.5 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl shadow-sm">
               <RefreshCw size={24} />
             </div>
             <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">External Reconciliation</h1>
@@ -51,7 +51,7 @@ export default function ReconciliationPage() {
             onClick={() => setActiveTab(activeTab === 'management' ? 'audit' : 'management')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#14a800]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#2bb75c]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={16} /> {activeTab === 'management' ? 'Audit Trail' : 'Back to Management'}
@@ -64,7 +64,7 @@ export default function ReconciliationPage() {
             confirmLabel="Start Sync"
             onConfirm={handleSync}
           >
-            <button className="px-4 py-2 bg-surface-dark text-white dark:bg-[#14a800] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2 h-full">
+            <button className="px-4 py-2 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2 h-full">
                <RefreshCw size={16} className={isLoading ? "animate-spin" : ""} /> Sync Gateway Data
             </button>
           </PopoverConfirm>
@@ -88,7 +88,7 @@ export default function ReconciliationPage() {
                 <input 
                   type="text" 
                   placeholder="Search by Provider ID or Internal Ref..." 
-                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#14a800] outline-none"
+                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#2bb75c] outline-none"
                 />
               </div>
             </div>
@@ -117,7 +117,7 @@ export default function ReconciliationPage() {
                     ))
                   ) : (
                     isLoading ? (
-                      <tr><td colSpan={6} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#14a800]" /></td></tr>
+                      <tr><td colSpan={6} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#2bb75c]" /></td></tr>
                     ) : reconciliation.length === 0 ? (
                       <tr><td colSpan={6} className="p-8 text-center text-zinc-500 font-medium">No reconciliation records found.</td></tr>
                     ) : reconciliation.map(rec => (
@@ -161,7 +161,7 @@ export default function ReconciliationPage() {
                           {rec.status !== 'matched' && (
                              <button 
                                onClick={() => triggerAction('resolve-dispute', rec)}
-                               className="px-3 py-1.5 bg-surface-dark text-white dark:bg-[#14a800] rounded-lg text-xs font-bold transition-all hover:shadow-lg active:scale-95"
+                               className="px-3 py-1.5 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-lg text-xs font-bold transition-all hover:shadow-lg active:scale-95"
                              >
                                Resolve
                              </button>
@@ -187,3 +187,4 @@ export default function ReconciliationPage() {
     </div>
   );
 }
+

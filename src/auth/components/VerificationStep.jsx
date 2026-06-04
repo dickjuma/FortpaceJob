@@ -60,7 +60,7 @@ export default function VerificationStep({ email, phone, onVerify, onResend }) {
             type="button"
             onClick={() => { setMethod('email'); setOtp(''); setError(null); }}
             className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-lg transition-all ${
-              method === 'email' ? 'bg-white dark:bg-zinc-700 shadow-sm text-[#14a800] dark:text-[#14a800]' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
+              method === 'email' ? 'bg-white dark:bg-zinc-700 shadow-sm text-[#2bb75c] dark:text-[#2bb75c]' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
             }`}
           >
             <Mail className="w-4 h-4" /> Email
@@ -69,7 +69,7 @@ export default function VerificationStep({ email, phone, onVerify, onResend }) {
             type="button"
             onClick={() => { setMethod('phone'); setOtp(''); setError(null); }}
             className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-lg transition-all ${
-              method === 'phone' ? 'bg-white dark:bg-zinc-700 shadow-sm text-[#14a800] dark:text-[#14a800]' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
+              method === 'phone' ? 'bg-white dark:bg-zinc-700 shadow-sm text-[#2bb75c] dark:text-[#2bb75c]' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
             }`}
           >
             <Smartphone className="w-4 h-4" /> Phone
@@ -113,7 +113,7 @@ export default function VerificationStep({ email, phone, onVerify, onResend }) {
             className={`flex items-center gap-1 font-medium transition-colors ${
               countdown > 0 
                 ? 'text-zinc-400 cursor-not-allowed' 
-                : 'text-[#14a800] hover:text-[#14a800] dark:text-[#14a800] dark:hover:text-[#14a800]'
+                : 'text-[#2bb75c] hover:text-[#2bb75c] dark:text-[#2bb75c] dark:hover:text-[#2bb75c]'
             }`}
           >
             <RefreshCw className={`w-3.5 h-3.5 ${countdown > 0 ? '' : ''}`} />
@@ -124,3 +124,4 @@ export default function VerificationStep({ email, phone, onVerify, onResend }) {
     </div>
   );
 }
+

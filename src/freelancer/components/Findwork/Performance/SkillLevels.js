@@ -84,7 +84,7 @@ const Requirement = ({ icon: Icon, label, current, target, unit = "", color = "b
   const colorClasses = {
     blue: "bg-[#FDECE7]",
     green: "bg-green-500",
-    purple: "bg-[#14a800]",
+    purple: "bg-[#2bb75c]",
     orange: "bg-orange-500"
   };
 
@@ -413,3 +413,4 @@ export default function SkillLevels() {
     </div>
   );
 }
+

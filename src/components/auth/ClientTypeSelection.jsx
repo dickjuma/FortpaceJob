@@ -67,7 +67,7 @@ export default function ClientTypeSelection() {
               onClick={() => setClientType(type.id)}
               className={`group relative overflow-hidden p-0 rounded-3xl border-2 cursor-pointer transition-all duration-300 flex flex-col md:flex-row min-h-[160px] ${
                 isSelected 
-                  ? 'border-[#14a800]/20 bg-white shadow-xl shadow-[#14a800]/25' 
+                  ? 'border-[#2bb75c]/20 bg-white shadow-xl shadow-[#2bb75c]/25' 
                   : 'border-zinc-200 bg-white hover:border-zinc-300 shadow-sm'
               }`}
             >
@@ -78,20 +78,20 @@ export default function ClientTypeSelection() {
                   alt={type.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-[#14a800]/40' : 'bg-surface-dark/20'}`} />
+                <div className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-[#2bb75c]/40' : 'bg-surface-dark/20'}`} />
               </div>
 
               {/* Content Right Side */}
               <div className="w-full md:w-2/3 p-8 flex flex-col justify-center relative">
                 {isSelected && (
-                  <div className="absolute top-8 right-8 text-[#14a800]">
+                  <div className="absolute top-8 right-8 text-[#2bb75c]">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                 )}
                 
                 <div className="flex items-center gap-4 mb-3">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                    isSelected ? 'bg-[#14a800]/10 text-[#14a800]' : 'bg-zinc-100 text-zinc-600'
+                    isSelected ? 'bg-[#2bb75c]/10 text-[#2bb75c]' : 'bg-zinc-100 text-zinc-600'
                   }`}>
                     <Icon className="w-6 h-6" />
                   </div>
@@ -123,3 +123,4 @@ export default function ClientTypeSelection() {
     </motion.div>
   );
 }
+

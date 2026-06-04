@@ -14,7 +14,7 @@ export default function AdminContractControlPanel() {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-            <Shield className="w-6 h-6 text-[#14a800]" /> Contract Control Panel
+            <Shield className="w-6 h-6 text-[#2bb75c]" /> Contract Control Panel
           </h1>
           <p className="text-sm text-gray-500 mt-1">Supervise marketplace contracts, handle overrides, and monitor escrow health.</p>
         </div>
@@ -27,7 +27,7 @@ export default function AdminContractControlPanel() {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {[
-          { label: 'Active Contracts', value: '1,284', change: '+12%', color: 'text-[#14a800]' },
+          { label: 'Active Contracts', value: '1,284', change: '+12%', color: 'text-[#2bb75c]' },
           { label: 'Funds in Escrow', value: '$4.2M', change: '+5%', color: 'text-success' },
           { label: 'Active Disputes', value: '24', change: '-2', color: 'text-warning' },
           { label: 'High Risk Flags', value: '3', change: '+1', color: 'text-danger' },
@@ -50,7 +50,7 @@ export default function AdminContractControlPanel() {
               <input 
                 type="text" 
                 placeholder="Search CON-ID, Client, or Freelancer..." 
-                className="w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-surface-dark-border rounded-lg bg-white dark:bg-surface-dark text-sm focus:ring-2 focus:ring-[#14a800] outline-none"
+                className="w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-surface-dark-border rounded-lg bg-white dark:bg-surface-dark text-sm focus:ring-2 focus:ring-[#2bb75c] outline-none"
               />
             </div>
             <button className="px-4 py-2 border border-gray-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark rounded-lg text-sm font-medium hover:bg-surface dark:hover:bg-surface-dark-tertiary">
@@ -74,7 +74,7 @@ export default function AdminContractControlPanel() {
             <tbody className="divide-y divide-gray-200 dark:divide-surface-dark-border">
               {contracts.map((contract) => (
                 <tr key={contract.id} className="hover:bg-surface dark:hover:bg-surface-dark-secondary transition-colors">
-                  <td className="px-6 py-4 font-mono font-bold text-[#14a800] dark:text-[#14a800]">
+                  <td className="px-6 py-4 font-mono font-bold text-[#2bb75c] dark:text-[#2bb75c]">
                     {contract.id}
                     <div className="text-xs text-gray-500 font-sans mt-1">{contract.date}</div>
                   </td>
@@ -96,7 +96,7 @@ export default function AdminContractControlPanel() {
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button className="p-2 text-gray-400 hover:text-[#14a800] transition-colors mr-2"><Eye className="w-4 h-4" /></button>
+                    <button className="p-2 text-gray-400 hover:text-[#2bb75c] transition-colors mr-2"><Eye className="w-4 h-4" /></button>
                     <button className="p-2 text-gray-400 hover:text-surface-dark dark:hover:text-white transition-colors"><MoreVertical className="w-4 h-4" /></button>
                   </td>
                 </tr>
@@ -108,3 +108,4 @@ export default function AdminContractControlPanel() {
     </div>
   );
 }
+

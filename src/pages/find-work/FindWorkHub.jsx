@@ -48,9 +48,9 @@ export default function FindWorkHub() {
 
   return (
     <>
-      <div className="bg-[#14a800] text-white pt-24 pb-20 relative overflow-hidden">
+      <div className="bg-[#2bb75c] text-white pt-24 pb-20 relative overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#118a00] via-[#14a800] to-[#0d7a00]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1d8d38] via-[#2bb75c] to-[#0d7a00]" />
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/10 rounded-full blur-3xl -mr-40 -mt-40" />
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-black/10 rounded-full blur-3xl -ml-20 -mb-20" />
         </div>
@@ -90,7 +90,7 @@ export default function FindWorkHub() {
                   onClick={() => setWorkType(id)}
                   className={`flex-1 md:flex-none px-5 py-2.5 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-2 ${
                     workType === id
-                      ? 'bg-white shadow-sm text-[#14a800] border border-zinc-200'
+                      ? 'bg-white shadow-sm text-[#2bb75c] border border-zinc-200'
                       : 'text-zinc-500 hover:text-zinc-900'
                   }`}
                 >
@@ -98,7 +98,7 @@ export default function FindWorkHub() {
                 </button>
               ))}
             </div>
-            <button type="submit" className="px-8 py-4 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl transition-colors md:ml-2 text-center">
+            <button type="submit" className="px-8 py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl transition-colors md:ml-2 text-center">
               Find Work
             </button>
           </form>
@@ -138,7 +138,7 @@ export default function FindWorkHub() {
                 <h2 className="text-2xl font-bold text-zinc-900 mb-2">Browse Categories</h2>
                 <p className="text-zinc-600">Real categories, consistent counts, and working detail pages.</p>
               </div>
-              <Link to="/find-work/categories" className="text-[#14a800] font-bold text-sm hover:underline">
+              <Link to="/find-work/categories" className="text-[#2bb75c] font-bold text-sm hover:underline">
                 View All
               </Link>
             </div>
@@ -169,7 +169,7 @@ export default function FindWorkHub() {
                 <h2 className="text-2xl font-bold text-zinc-900 mb-2">Featured Opportunities</h2>
                 <p className="text-zinc-600">Prioritized by verified clients, urgency, and current hiring momentum.</p>
               </div>
-              <Link to="/find-work/search?type=all" className="text-[#14a800] font-bold text-sm hover:underline">
+              <Link to="/find-work/search?type=all" className="text-[#2bb75c] font-bold text-sm hover:underline">
                 Explore All Results
               </Link>
             </div>
@@ -191,3 +191,4 @@ export default function FindWorkHub() {
     </>
   );
 }
+

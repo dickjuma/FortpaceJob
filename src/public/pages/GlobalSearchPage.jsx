@@ -90,7 +90,7 @@ export default function GlobalSearchPage() {
                 className="w-full pl-12 pr-4 py-3.5 text-sm font-medium text-zinc-900 outline-none"
               />
             </div>
-            <button type="submit" className="px-8 bg-[#14a800] hover:bg-[#118a00] text-white font-bold text-sm">
+            <button type="submit" className="px-8 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold text-sm">
               Search
             </button>
           </form>
@@ -103,7 +103,7 @@ export default function GlobalSearchPage() {
                 className={cn(
                   'pb-2 text-sm font-bold border-b-2 whitespace-nowrap transition-colors',
                   activeTab === tab.id
-                    ? 'border-[#14a800] text-[#14a800]'
+                    ? 'border-[#2bb75c] text-[#2bb75c]'
                     : 'border-transparent text-zinc-500 hover:text-zinc-900'
                 )}
               >
@@ -123,7 +123,7 @@ export default function GlobalSearchPage() {
 
         {hasQuery && isLoading && (
           <div className="flex justify-center py-16">
-            <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
           </div>
         )}
 
@@ -153,7 +153,7 @@ export default function GlobalSearchPage() {
                     <Link
                       key={g.id}
                       to={`/gigs/gig/${g.slug || g.id}`}
-                      className="block bg-white border border-zinc-200 rounded-xl p-4 hover:border-[#14a800]/40 hover:shadow-sm transition-all"
+                      className="block bg-white border border-zinc-200 rounded-xl p-4 hover:border-[#2bb75c]/40 hover:shadow-sm transition-all"
                     >
                       {g.image && (
                         <img src={g.image} alt="" className="w-full h-36 object-cover rounded-lg mb-3" />
@@ -182,7 +182,7 @@ export default function GlobalSearchPage() {
                     <Link
                       key={id}
                       to={`/find-work/work/${id}`}
-                      className="block bg-white border border-zinc-200 rounded-xl p-5 hover:border-[#14a800]/40"
+                      className="block bg-white border border-zinc-200 rounded-xl p-5 hover:border-[#2bb75c]/40"
                     >
                       <h3 className="font-bold text-zinc-900">{row.title}</h3>
                       {row.description && (
@@ -204,14 +204,15 @@ function EmptyState({ label }) {
   return (
     <p className="text-center text-zinc-500 py-16">
       No {label} matched your search. Try different keywords or browse{' '}
-      <Link to="/find-talent" className="text-[#14a800] font-bold">
+      <Link to="/find-talent" className="text-[#2bb75c] font-bold">
         Find Talent
       </Link>{' '}
       /{' '}
-      <Link to="/find-work" className="text-[#14a800] font-bold">
+      <Link to="/find-work" className="text-[#2bb75c] font-bold">
         Find Work
       </Link>
       .
     </p>
   );
 }
+

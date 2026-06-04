@@ -15,7 +15,7 @@ export const INVOICE_STATUSES = {
 };
 
 export const ESCROW_STATUSES = {
-  funded: { label: 'Funded', bg: 'bg-[#14a800]/10 dark:bg-[#14a800]/30', color: 'text-[#14a800] dark:text-[#14a800]' },
+  funded: { label: 'Funded', bg: 'bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30', color: 'text-[#2bb75c] dark:text-[#2bb75c]' },
   released: { label: 'Released', bg: 'bg-emerald-100 dark:bg-emerald-900/30', color: 'text-success dark:text-success' },
   disputed: { label: 'Disputed', bg: 'bg-red-100 dark:bg-red-900/30', color: 'text-red-600 dark:text-red-400' },
   refunded: { label: 'Refunded', bg: 'bg-zinc-100 dark:bg-zinc-800', color: 'text-zinc-600 dark:text-zinc-400' },
@@ -33,3 +33,4 @@ export const FEE_STRUCTURES = {
   withdrawal_fee_fixed: 50.0, // KES
   escrow_fee_percent: 2.5,
 };
+

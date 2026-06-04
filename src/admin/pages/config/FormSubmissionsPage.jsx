@@ -47,14 +47,14 @@ export default function FormSubmissionsPage() {
         <button
           type="button"
           onClick={() => { setTab('contact'); setPage(1); }}
-          className={`px-4 py-2 rounded-xl text-sm font-bold ${tab === 'contact' ? 'bg-[#14a800] text-white' : 'bg-zinc-100'}`}
+          className={`px-4 py-2 rounded-xl text-sm font-bold ${tab === 'contact' ? 'bg-[#2bb75c] text-white' : 'bg-zinc-100'}`}
         >
           Contact
         </button>
         <button
           type="button"
           onClick={() => { setTab('chatbot'); setPage(1); }}
-          className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 ${tab === 'chatbot' ? 'bg-[#14a800] text-white' : 'bg-zinc-100'}`}
+          className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 ${tab === 'chatbot' ? 'bg-[#2bb75c] text-white' : 'bg-zinc-100'}`}
         >
           <MessageSquare size={16} /> Chatbot
         </button>
@@ -82,7 +82,7 @@ export default function FormSubmissionsPage() {
                   <button
                     type="button"
                     onClick={() => markRead.mutate(row.id)}
-                    className="mt-3 text-xs font-bold text-[#14a800] hover:underline"
+                    className="mt-3 text-xs font-bold text-[#2bb75c] hover:underline"
                   >
                     Mark as read
                   </button>
@@ -103,3 +103,4 @@ export default function FormSubmissionsPage() {
     </div>
   );
 }
+

@@ -33,12 +33,12 @@ const ClientOnboardingLanding = () => {
 
               <div className="flex items-center gap-6 text-sm font-bold text-zinc-500">
                 <span className="flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-success" /> Vetted Talent</span>
-                <span className="flex items-center gap-2"><Zap className="w-5 h-5 text-[#14a800]" /> Instant Matching</span>
+                <span className="flex items-center gap-2"><Zap className="w-5 h-5 text-[#2bb75c]" /> Instant Matching</span>
               </div>
             </div>
 
             <div className="flex-1 w-full max-w-lg relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-[#118a00] rounded-[3rem] rotate-3 opacity-20 blur-xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-[#1d8d38] rounded-[3rem] rotate-3 opacity-20 blur-xl"></div>
               <div className="bg-white rounded-[3rem] border border-zinc-200 shadow-2xl p-10 relative z-10">
                 <h3 className="text-2xl font-black text-zinc-900 mb-8">What are you looking for?</h3>
                 
@@ -49,9 +49,9 @@ const ClientOnboardingLanding = () => {
                     'AWS Cloud Architect',
                     'B2B Content Marketer'
                   ].map((role, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 border border-zinc-200 rounded-2xl hover:border-[#14a800]/20 cursor-pointer transition-colors group">
-                      <span className="font-bold text-zinc-700 group-hover:text-[#14a800]">{role}</span>
-                      <Search className="w-5 h-5 text-zinc-400 group-hover:text-[#14a800]" />
+                    <div key={i} className="flex items-center justify-between p-4 border border-zinc-200 rounded-2xl hover:border-[#2bb75c]/20 cursor-pointer transition-colors group">
+                      <span className="font-bold text-zinc-700 group-hover:text-[#2bb75c]">{role}</span>
+                      <Search className="w-5 h-5 text-zinc-400 group-hover:text-[#2bb75c]" />
                     </div>
                   ))}
                 </div>
@@ -70,3 +70,4 @@ const ClientOnboardingLanding = () => {
 };
 
 export default ClientOnboardingLanding;
+

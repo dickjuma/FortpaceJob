@@ -65,17 +65,17 @@ export default function GigOrderTrackingPage() {
               <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2">Order {ORDER.id}</h1>
               <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium line-clamp-1">{ORDER.title}</p>
             </div>
-            <div className="px-4 py-1.5 bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800] rounded-lg text-sm font-black uppercase tracking-wider hidden sm:block">
+            <div className="px-4 py-1.5 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c] rounded-lg text-sm font-black uppercase tracking-wider hidden sm:block">
               In Progress
             </div>
           </div>
 
           {/* Countdown Timer */}
           <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 dark:from-zinc-800 dark:to-zinc-900 rounded-3xl p-8 sm:p-10 shadow-2xl relative overflow-hidden text-center">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#14a800]/20 rounded-full blur-[80px] pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#2bb75c]/20 rounded-full blur-[80px] pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-success/20 rounded-full blur-[80px] pointer-events-none" />
             
-            <Clock className="w-8 h-8 text-[#14a800] mx-auto mb-4 relative z-10" />
+            <Clock className="w-8 h-8 text-[#2bb75c] mx-auto mb-4 relative z-10" />
             <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-widest mb-6 relative z-10">Time Left to Delivery</h2>
             
             <div className="flex justify-center gap-4 sm:gap-8 relative z-10">
@@ -136,8 +136,8 @@ export default function GigOrderTrackingPage() {
                     )}
 
                     {!isCompleted && isLast && (
-                      <div className="mt-4 p-4 bg-[#14a800]/5 dark:bg-[#14a800]/10 rounded-xl border border-[#14a800]/20 dark:border-[#14a800]/20/20">
-                        <p className="text-sm font-bold text-[#14a800] dark:text-[#14a800] flex items-center gap-2">
+                      <div className="mt-4 p-4 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 rounded-xl border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/20">
+                        <p className="text-sm font-bold text-[#2bb75c] dark:text-[#2bb75c] flex items-center gap-2">
                           <Package className="w-4 h-4" /> Waiting for delivery
                         </p>
                       </div>
@@ -158,7 +158,7 @@ export default function GigOrderTrackingPage() {
             <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-6">Need help with this order?</h3>
             
             <div className="space-y-3">
-              <button className="w-full py-3.5 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+              <button className="w-full py-3.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
                 <MessageSquare className="w-4 h-4" /> Message Seller
               </button>
               
@@ -202,3 +202,4 @@ export default function GigOrderTrackingPage() {
     </div>
   );
 }
+

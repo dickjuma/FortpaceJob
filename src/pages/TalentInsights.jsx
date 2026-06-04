@@ -8,7 +8,7 @@ const TalentInsights = () => {
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
           
           <div className="flex items-center gap-4 mb-10 border-b border-zinc-200 pb-6">
-            <div className="w-14 h-14 bg-[#14a800]/10 text-[#14a800] rounded-2xl flex items-center justify-center shadow-sm">
+            <div className="w-14 h-14 bg-[#2bb75c]/10 text-[#2bb75c] rounded-2xl flex items-center justify-center shadow-sm">
               <LineChart className="w-7 h-7" />
             </div>
             <div>
@@ -25,12 +25,12 @@ const TalentInsights = () => {
               { label: 'Active React Devs', value: '14,200', trend: '+5%', icon: Users },
               { label: 'Jobs Posted Today', value: '1,432', trend: '+22%', icon: Briefcase }
             ].map((metric, i) => (
-              <div key={i} className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm hover:border-[#14a800]/50 transition-colors">
+              <div key={i} className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm hover:border-[#2bb75c]/50 transition-colors">
                 <div className="flex justify-between items-start mb-4">
                   <div className="w-10 h-10 bg-surface rounded-lg flex items-center justify-center">
                     <metric.icon className="w-5 h-5 text-zinc-500" />
                   </div>
-                  <span className={`text-xs font-bold px-2 py-1 rounded-full ${metric.trend.startsWith('+') ? 'bg-emerald-100 text-emerald-700' : 'bg-[#14a800]/10 text-[#14a800]'}`}>
+                  <span className={`text-xs font-bold px-2 py-1 rounded-full ${metric.trend.startsWith('+') ? 'bg-emerald-100 text-emerald-700' : 'bg-[#2bb75c]/10 text-[#2bb75c]'}`}>
                     {metric.trend}
                   </span>
                 </div>
@@ -77,3 +77,4 @@ const TalentInsights = () => {
 const Clock = ({className}) => <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6l4 2"/></svg>;
 
 export default TalentInsights;
+

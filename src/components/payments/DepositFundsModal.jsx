@@ -41,10 +41,10 @@ export default function DepositFundsModal({ isOpen, onClose }) {
                       <div 
                         key={m.id} 
                         onClick={() => setMethod(m.id)}
-                        className={`p-4 border-2 rounded-xl cursor-pointer flex items-center justify-between transition-colors ${method === m.id ? 'border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/20' : 'border-gray-200 dark:border-surface-dark-border hover:border-[#14a800]/50'}`}
+                        className={`p-4 border-2 rounded-xl cursor-pointer flex items-center justify-between transition-colors ${method === m.id ? 'border-[#2bb75c]/20 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20' : 'border-gray-200 dark:border-surface-dark-border hover:border-[#2bb75c]/50'}`}
                       >
                         <div className="flex items-center gap-4">
-                          <div className={`p-2 rounded-lg ${method === m.id ? 'bg-[#14a800] text-white' : 'bg-gray-100 dark:bg-surface-dark-secondary text-gray-500'}`}>
+                          <div className={`p-2 rounded-lg ${method === m.id ? 'bg-[#2bb75c] text-white' : 'bg-gray-100 dark:bg-surface-dark-secondary text-gray-500'}`}>
                             <m.icon className="w-5 h-5" />
                           </div>
                           <div>
@@ -63,7 +63,7 @@ export default function DepositFundsModal({ isOpen, onClose }) {
                 <button 
                   onClick={() => setStep(2)}
                   disabled={!method}
-                  className="w-full py-4 bg-[#14a800] hover:bg-[#118a00] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-button font-bold flex justify-center items-center transition-colors shadow-lg shadow-[#14a800]/25/25"
+                  className="w-full py-4 bg-[#2bb75c] hover:bg-[#1d8d38] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-button font-bold flex justify-center items-center transition-colors shadow-lg shadow-[#2bb75c]/25/25"
                 >
                   Continue <ArrowRight className="w-5 h-5 ml-2" />
                 </button>
@@ -81,7 +81,7 @@ export default function DepositFundsModal({ isOpen, onClose }) {
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder="0.00"
-                      className="w-full pl-9 pr-4 py-4 text-2xl font-bold bg-surface-secondary dark:bg-surface-dark-secondary border-2 border-transparent focus:border-[#14a800]/20 rounded-xl text-surface-dark dark:text-white outline-none transition-colors"
+                      className="w-full pl-9 pr-4 py-4 text-2xl font-bold bg-surface-secondary dark:bg-surface-dark-secondary border-2 border-transparent focus:border-[#2bb75c]/20 rounded-xl text-surface-dark dark:text-white outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -93,14 +93,14 @@ export default function DepositFundsModal({ isOpen, onClose }) {
                   </div>
                   <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-700">
                     <span className="font-bold text-surface-dark dark:text-white">Total to Pay</span>
-                    <span className="font-bold text-[#14a800] dark:text-[#14a800]">${amount || '0.00'}</span>
+                    <span className="font-bold text-[#2bb75c] dark:text-[#2bb75c]">${amount || '0.00'}</span>
                   </div>
                 </div>
 
                 <button 
                   onClick={() => setStep(3)}
                   disabled={!amount || Number(amount) <= 0}
-                  className="w-full py-4 bg-[#14a800] hover:bg-[#118a00] disabled:opacity-50 text-white rounded-button font-bold transition-colors shadow-lg shadow-[#14a800]/25/25"
+                  className="w-full py-4 bg-[#2bb75c] hover:bg-[#1d8d38] disabled:opacity-50 text-white rounded-button font-bold transition-colors shadow-lg shadow-[#2bb75c]/25/25"
                 >
                   Confirm & Pay
                 </button>
@@ -140,3 +140,4 @@ export default function DepositFundsModal({ isOpen, onClose }) {
     </AnimatePresence>
   );
 }
+

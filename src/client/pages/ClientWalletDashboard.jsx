@@ -156,7 +156,7 @@ export default function ClientWalletDashboard() {
 
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-3">
-          <button onClick={() => setDepositModal(true)} className="flex items-center gap-2 px-6 py-3 bg-success hover:bg-green-600 text-black rounded-xl text-sm font-black transition-all shadow-lg shadow-[#14a800]/20">
+          <button onClick={() => setDepositModal(true)} className="flex items-center gap-2 px-6 py-3 bg-success hover:bg-green-600 text-black rounded-xl text-sm font-black transition-all shadow-lg shadow-[#2bb75c]/20">
             <ArrowDownLeft className="w-4 h-4" /> Deposit via M-Pesa
           </button>
           <button onClick={() => setWithdrawModal(true)} className="flex items-center gap-2 px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700 rounded-xl text-sm font-bold transition-colors">

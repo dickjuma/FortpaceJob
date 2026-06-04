@@ -53,7 +53,7 @@ export default function FreelancerProposalSubmissionPage() {
                 </div>
                 <div className="relative w-full sm:w-48 shrink-0">
                   <DollarSign className="absolute left-4 top-1/2 -tranzinc-y-1/2 w-4 h-4 text-zinc-400" />
-                  <input type="number" defaultValue={4500} className="w-full pl-10 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:border-[#14a800]/20 text-right" />
+                  <input type="number" defaultValue={4500} className="w-full pl-10 pr-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:border-[#2bb75c]/20 text-right" />
                 </div>
               </div>
 
@@ -80,7 +80,7 @@ export default function FreelancerProposalSubmissionPage() {
 
               <div className="pt-6 border-t border-zinc-100 dark:border-zinc-800">
                 <h3 className="font-bold text-zinc-900 dark:text-white mb-4">How long will this project take?</h3>
-                <select className="w-full sm:w-1/2 px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20">
+                <select className="w-full sm:w-1/2 px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20">
                   <option>Less than 1 month</option>
                   <option>1 to 3 months</option>
                   <option>3 to 6 months</option>
@@ -94,7 +94,7 @@ export default function FreelancerProposalSubmissionPage() {
           <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-zinc-900 dark:text-white">Cover Letter</h2>
-              <button className="flex items-center gap-2 text-sm font-bold text-[#14a800] dark:text-[#14a800] hover:bg-[#14a800]/5 dark:hover:bg-[#14a800]/10 px-3 py-1.5 rounded-lg transition-colors">
+              <button className="flex items-center gap-2 text-sm font-bold text-[#2bb75c] dark:text-[#2bb75c] hover:bg-[#2bb75c]/5 dark:hover:bg-[#2bb75c]/10 px-3 py-1.5 rounded-lg transition-colors">
                 <Sparkles className="w-4 h-4" /> AI Enhance
               </button>
             </div>
@@ -105,7 +105,7 @@ export default function FreelancerProposalSubmissionPage() {
                 value={coverLetter}
                 onChange={e => setCoverLetter(e.target.value)}
                 placeholder="Hi! I am a senior React Native developer..."
-                className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20 resize-y text-zinc-900 dark:text-white"
+                className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20 resize-y text-zinc-900 dark:text-white"
               ></textarea>
             </div>
 
@@ -113,7 +113,7 @@ export default function FreelancerProposalSubmissionPage() {
               <h3 className="font-bold text-zinc-900 dark:text-white mb-4">Attachments</h3>
               <div className="border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer hover:bg-surface dark:hover:bg-zinc-800/50 transition-colors">
                 <UploadCloud className="w-8 h-8 text-zinc-400 mb-2" />
-                <p className="text-sm font-bold text-[#14a800] mb-1">Upload files or drag and drop</p>
+                <p className="text-sm font-bold text-[#2bb75c] mb-1">Upload files or drag and drop</p>
                 <p className="text-xs font-medium text-zinc-500">PDF, JPG, PNG, DOCX up to 25MB</p>
               </div>
             </div>
@@ -122,7 +122,7 @@ export default function FreelancerProposalSubmissionPage() {
           {/* Submit Action */}
           <div className="flex items-center justify-between">
             <button className="px-6 py-3 font-bold text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">Cancel</button>
-            <button className="px-8 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg shadow-[#14a800]/25/20 transition-colors">
+            <button className="px-8 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-lg shadow-[#2bb75c]/25/20 transition-colors">
               Submit Proposal
             </button>
           </div>
@@ -146,15 +146,15 @@ export default function FreelancerProposalSubmissionPage() {
             <h3 className="font-bold text-zinc-900 dark:text-white mb-4">Proposal Tips</h3>
             <ul className="space-y-3 text-sm font-medium text-zinc-600 dark:text-zinc-400">
               <li className="flex items-start gap-2">
-                <CheckSquare className="w-4 h-4 text-[#14a800] shrink-0 mt-0.5" />
+                <CheckSquare className="w-4 h-4 text-[#2bb75c] shrink-0 mt-0.5" />
                 <span>Read the job description carefully and reference specific details in your cover letter.</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckSquare className="w-4 h-4 text-[#14a800] shrink-0 mt-0.5" />
+                <CheckSquare className="w-4 h-4 text-[#2bb75c] shrink-0 mt-0.5" />
                 <span>Attach relevant portfolio items that match the client's industry or tech stack.</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckSquare className="w-4 h-4 text-[#14a800] shrink-0 mt-0.5" />
+                <CheckSquare className="w-4 h-4 text-[#2bb75c] shrink-0 mt-0.5" />
                 <span>End with a call to action or a question to encourage a response.</span>
               </li>
             </ul>
@@ -166,3 +166,4 @@ export default function FreelancerProposalSubmissionPage() {
     </div>
   );
 }
+

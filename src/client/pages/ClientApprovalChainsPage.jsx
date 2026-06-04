@@ -44,7 +44,7 @@ export default function ClientApprovalChainsPage() {
           <p className="text-xs font-semibold text-light-gray/50 mt-1">Configure automated budget limits, define tiered department hierarchy rules, and approve pending payroll runs.</p>
         </div>
 
-        <Button onClick={() => toast.success('New threshold rule initialized.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20">
+        <Button onClick={() => toast.success('New threshold rule initialized.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#2bb75c]/20">
           <Plus className="w-4 h-4" /> Add Custom Rule
         </Button>
       </div>
@@ -114,3 +114,4 @@ export default function ClientApprovalChainsPage() {
     </div>
   );
 }
+

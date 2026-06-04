@@ -12,7 +12,7 @@ const Badge = ({
     success: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-success',
     warning: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
     danger: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
-    info: 'bg-[#14a800]/10 text-[#14a800] dark:bg-[#14a800]/30 dark:text-[#14a800]',
+    info: 'bg-[#2bb75c]/10 text-[#2bb75c] dark:bg-[#2bb75c]/30 dark:text-[#2bb75c]',
     outline: 'border border-surface-border dark:border-surface-dark-border text-zinc-600 dark:text-zinc-400',
   };
 
@@ -34,3 +34,4 @@ const Badge = ({
 };
 
 export default Badge;
+

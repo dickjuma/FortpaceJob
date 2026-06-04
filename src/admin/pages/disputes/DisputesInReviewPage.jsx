@@ -49,7 +49,7 @@ export default function DisputesInReviewPage() {
               placeholder="Search Case ID or Contract..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#14a800] outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#2bb75c] outline-none"
             />
           </div>
         </div>
@@ -88,8 +88,8 @@ export default function DisputesInReviewPage() {
                      <span className={cn(
                        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-widest",
                        caseItem.phase === 'evidence_gathering' ? 'bg-amber-50 text-amber-600 dark:bg-amber-900/20' :
-                       caseItem.phase === 'arbitrator_review' ? 'bg-[#14a800]/5 text-[#14a800] dark:bg-[#14a800]/20' :
-                       'bg-[#14a800]/5 text-[#14a800] dark:bg-[#14a800]/20'
+                       caseItem.phase === 'arbitrator_review' ? 'bg-[#2bb75c]/5 text-[#2bb75c] dark:bg-[#2bb75c]/20' :
+                       'bg-[#2bb75c]/5 text-[#2bb75c] dark:bg-[#2bb75c]/20'
                      )}>
                        {(caseItem.status || caseItem.phase)?.replace('_', ' ') || 'in review'}
                      </span>
@@ -111,7 +111,7 @@ export default function DisputesInReviewPage() {
                             resolveDispute.mutate({ disputeId, outcome: 'approve', splitPercentage: 85 });
                           }}
                           disabled={resolveDispute.isPending}
-                          className="px-3 py-1.5 bg-surface-dark text-white dark:bg-[#14a800] hover:bg-zinc-800 rounded-lg text-xs font-bold transition-colors"
+                          className="px-3 py-1.5 bg-surface-dark text-white dark:bg-[#2bb75c] hover:bg-zinc-800 rounded-lg text-xs font-bold transition-colors"
                         >
                           {resolveDispute.isPending ? 'Processing...' : 'Issue Ruling'}
                         </button>
@@ -126,3 +126,4 @@ export default function DisputesInReviewPage() {
     </div>
   );
 }
+

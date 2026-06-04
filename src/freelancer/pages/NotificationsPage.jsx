@@ -22,7 +22,7 @@ export default function NotificationsPage() {
             {notifications.map(notif => (
               <li key={notif.id} className="p-6 hover:bg-surface dark:hover:bg-surface-dark transition-colors">
                 <div className="flex items-start">
-                  <div className={`w-2 h-2 mt-2 rounded-full mr-4 ${notif.type === 'success' ? 'bg-green-500' : 'bg-[#14a800]'}`} />
+                  <div className={`w-2 h-2 mt-2 rounded-full mr-4 ${notif.type === 'success' ? 'bg-green-500' : 'bg-[#2bb75c]'}`} />
                   <div className="flex-1">
                     <p className="text-gray-900 dark:text-white">{notif.message}</p>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -38,3 +38,4 @@ export default function NotificationsPage() {
     </div>
   );
 }
+

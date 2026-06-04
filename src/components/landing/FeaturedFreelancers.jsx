@@ -26,7 +26,7 @@ const FeaturedFreelancers = () => {
 
         {loading ? (
           <div className="flex justify-center py-16">
-            <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
           </div>
         ) : talent.length === 0 ? (
           <p className="text-center text-zinc-500 font-medium py-12">No featured freelancers available right now.</p>
@@ -56,9 +56,9 @@ const FeaturedFreelancers = () => {
                       </div>
                     )}
                     <div className={`px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${
-                      freelancer.type === 'online' ? 'bg-[#14a800]/10 text-[#14a800]' :
+                      freelancer.type === 'online' ? 'bg-[#2bb75c]/10 text-[#2bb75c]' :
                       freelancer.type === 'onsite' ? 'bg-emerald-100 text-emerald-700' :
-                      'bg-[#14a800]/10 text-[#14a800]'
+                      'bg-[#2bb75c]/10 text-[#2bb75c]'
                     }`}>
                       {freelancer.type}
                     </div>
@@ -66,7 +66,7 @@ const FeaturedFreelancers = () => {
 
                   <h3 className="text-lg font-bold text-zinc-900 mb-1 flex items-center gap-1">
                     {freelancer.name}
-                    {freelancer.verified && <ShieldCheck className="w-4 h-4 text-[#14a800]" />}
+                    {freelancer.verified && <ShieldCheck className="w-4 h-4 text-[#2bb75c]" />}
                   </h3>
                   <p className="text-sm text-zinc-500 mb-4 line-clamp-1">{freelancer.title}</p>
 
@@ -115,3 +115,4 @@ const FeaturedFreelancers = () => {
 };
 
 export default FeaturedFreelancers;
+

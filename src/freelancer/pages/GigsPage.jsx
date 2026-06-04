@@ -32,7 +32,7 @@ export default function GigsPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold dark:text-white">My Services (Gigs)</h1>
         <Link to="/freelancer/gigs/create">
-          <button className="bg-[#14a800] hover:bg-[#14a800] text-white px-4 py-2 rounded-md transition-colors">
+          <button className="bg-[#2bb75c] hover:bg-[#2bb75c] text-white px-4 py-2 rounded-md transition-colors">
             Create New Gig
           </button>
         </Link>
@@ -62,7 +62,7 @@ export default function GigsPage() {
                   </span>
                   <button 
                     onClick={() => toast('Opening editor...', { icon: '✏️' })}
-                    className="text-[#14a800] hover:text-[#14a800] text-sm font-medium"
+                    className="text-[#2bb75c] hover:text-[#2bb75c] text-sm font-medium"
                   >
                     Edit Gig
                   </button>
@@ -75,3 +75,4 @@ export default function GigsPage() {
     </div>
   );
 }
+

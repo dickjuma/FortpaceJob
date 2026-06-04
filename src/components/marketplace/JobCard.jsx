@@ -8,9 +8,9 @@ export default function JobCard({ job }) {
   const isLocal = job.workMode === 'local';
 
   return (
-    <article className="group flex flex-col h-full bg-white border border-zinc-200 rounded-xl p-5 hover:border-[#14a800]/40 hover:shadow-sm transition-all">
+    <article className="group flex flex-col h-full bg-white border border-zinc-200 rounded-xl p-5 hover:border-[#2bb75c]/40 hover:shadow-sm transition-all">
       <div className="flex items-center justify-between gap-2 mb-3">
-        <span className="text-[10px] font-bold uppercase tracking-wide text-[#14a800]">
+        <span className="text-[10px] font-bold uppercase tracking-wide text-[#2bb75c]">
           {job.category?.name || 'General'}
         </span>
         <span
@@ -22,7 +22,7 @@ export default function JobCard({ job }) {
         </span>
       </div>
 
-      <h3 className="font-semibold text-zinc-900 text-base leading-snug line-clamp-2 group-hover:text-[#118a00] mb-2">
+      <h3 className="font-semibold text-zinc-900 text-base leading-snug line-clamp-2 group-hover:text-[#1d8d38] mb-2">
         {job.title}
       </h3>
 
@@ -53,10 +53,11 @@ export default function JobCard({ job }) {
 
       <Link
         to={job.detailPath || `/find-work/work/${job.id}`}
-        className="mt-4 block text-center py-2.5 rounded-lg bg-zinc-900 text-white text-sm font-bold group-hover:bg-[#14a800] transition-colors"
+        className="mt-4 block text-center py-2.5 rounded-lg bg-zinc-900 text-white text-sm font-bold group-hover:bg-[#2bb75c] transition-colors"
       >
         View job
       </Link>
     </article>
   );
 }
+

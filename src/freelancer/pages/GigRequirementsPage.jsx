@@ -156,7 +156,7 @@ export default function GigRequirementsPage() {
               <FileQuestion className="w-10 h-10 text-zinc-300 dark:text-zinc-600 mx-auto mb-3" />
               <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-1">No requirements added</h3>
               <p className="text-xs text-zinc-500 mb-6 max-w-sm mx-auto">Orders will start immediately without collecting any specific information from the buyer.</p>
-              <button onClick={() => setIsAdding(true)} className="px-6 py-2.5 bg-[#14a800] text-white font-bold text-sm rounded-xl">Add First Requirement</button>
+              <button onClick={() => setIsAdding(true)} className="px-6 py-2.5 bg-[#2bb75c] text-white font-bold text-sm rounded-xl">Add First Requirement</button>
             </div>
           )}
 
@@ -165,7 +165,7 @@ export default function GigRequirementsPage() {
             {isAdding && (
               <motion.div 
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, height: 0 }}
-                className="bg-white dark:bg-surface-dark border-2 border-[#14a800]/20 shadow-lg shadow-[#14a800]/25/10 rounded-2xl p-6 relative"
+                className="bg-white dark:bg-surface-dark border-2 border-[#2bb75c]/20 shadow-lg shadow-[#2bb75c]/25/10 rounded-2xl p-6 relative"
               >
                 <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-6">Build Requirement</h3>
                 
@@ -179,10 +179,10 @@ export default function GigRequirementsPage() {
                           onClick={() => setNewReqType(type.id)}
                           className={cn(
                             "flex flex-col items-center justify-center p-3 rounded-xl border transition-all text-center",
-                            newReqType === type.id ? "bg-[#14a800]/5 dark:bg-[#14a800]/10 border-[#14a800]/20 text-[#14a800] dark:text-[#14a800]" : "bg-surface dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300"
+                            newReqType === type.id ? "bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 border-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c]" : "bg-surface dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300"
                           )}
                         >
-                          <type.icon className={cn("w-5 h-5 mb-1.5", newReqType === type.id ? "text-[#14a800]" : "text-zinc-400")} />
+                          <type.icon className={cn("w-5 h-5 mb-1.5", newReqType === type.id ? "text-[#2bb75c]" : "text-zinc-400")} />
                           <span className="text-[10px] font-bold uppercase tracking-wider">{type.label}</span>
                         </button>
                       ))}
@@ -196,7 +196,7 @@ export default function GigRequirementsPage() {
                       value={newQuestion}
                       onChange={(e) => setNewQuestion(e.target.value)}
                       placeholder="What exactly do you need the buyer to provide?"
-                      className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#14a800]/20 focus:ring-1 focus:ring-[#14a800] transition-all"
+                      className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#2bb75c]/20 focus:ring-1 focus:ring-[#2bb75c] transition-all"
                     />
                   </div>
 
@@ -214,7 +214,7 @@ export default function GigRequirementsPage() {
                                 newOpts[i] = e.target.value;
                                 setNewOptions(newOpts);
                               }}
-                              className="flex-1 p-2 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-medium outline-none focus:border-[#14a800]/20"
+                              className="flex-1 p-2 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-medium outline-none focus:border-[#2bb75c]/20"
                             />
                             <button onClick={() => setNewOptions(newOptions.filter((_, idx) => idx !== i))} className="p-2 text-zinc-400 hover:text-rose-500">
                               <Trash2 className="w-4 h-4" />
@@ -222,7 +222,7 @@ export default function GigRequirementsPage() {
                           </div>
                         ))}
                       </div>
-                      <button onClick={() => setNewOptions([...newOptions, `Option ${newOptions.length + 1}`])} className="text-xs font-bold text-[#14a800] flex items-center gap-1 hover:underline">
+                      <button onClick={() => setNewOptions([...newOptions, `Option ${newOptions.length + 1}`])} className="text-xs font-bold text-[#2bb75c] flex items-center gap-1 hover:underline">
                         <Plus className="w-3 h-3" /> Add Option
                       </button>
                     </div>
@@ -232,7 +232,7 @@ export default function GigRequirementsPage() {
                     <label className="flex items-center gap-2 cursor-pointer">
                       <div className={cn(
                         "w-10 h-5 rounded-full transition-colors relative flex items-center p-0.5",
-                        newRequired ? "bg-[#14a800]" : "bg-zinc-200 dark:bg-zinc-700"
+                        newRequired ? "bg-[#2bb75c]" : "bg-zinc-200 dark:bg-zinc-700"
                       )}>
                         <motion.div layout className="w-4 h-4 bg-white rounded-full shadow-sm" animate={{ x: newRequired ? 20 : 0 }} />
                       </div>
@@ -241,7 +241,7 @@ export default function GigRequirementsPage() {
 
                     <div className="flex items-center gap-2">
                       <button onClick={() => setIsAdding(false)} className="px-4 py-2 text-sm font-bold text-zinc-500 hover:text-zinc-900 dark:hover:text-white">Cancel</button>
-                      <button onClick={addRequirement} disabled={!newQuestion} className="px-6 py-2 bg-[#14a800] disabled:bg-zinc-300 text-white text-sm font-bold rounded-xl transition-colors">Add</button>
+                      <button onClick={addRequirement} disabled={!newQuestion} className="px-6 py-2 bg-[#2bb75c] disabled:bg-zinc-300 text-white text-sm font-bold rounded-xl transition-colors">Add</button>
                     </div>
                   </div>
                 </div>
@@ -264,10 +264,10 @@ export default function GigRequirementsPage() {
           
           <div className="space-y-3">
             {TEMPLATES.map(temp => (
-              <div key={temp.id} className="p-3 bg-surface dark:bg-zinc-800/50 rounded-xl border border-zinc-100 dark:border-zinc-700/50 group cursor-pointer hover:border-[#14a800]/50 transition-colors" onClick={loadTemplate}>
+              <div key={temp.id} className="p-3 bg-surface dark:bg-zinc-800/50 rounded-xl border border-zinc-100 dark:border-zinc-700/50 group cursor-pointer hover:border-[#2bb75c]/50 transition-colors" onClick={loadTemplate}>
                 <div className="flex justify-between items-start mb-1">
                   <h4 className="text-xs font-bold text-zinc-900 dark:text-white">{temp.title}</h4>
-                  <Plus className="w-3.5 h-3.5 text-zinc-400 group-hover:text-[#14a800] transition-colors" />
+                  <Plus className="w-3.5 h-3.5 text-zinc-400 group-hover:text-[#2bb75c] transition-colors" />
                 </div>
                 <p className="text-[10px] text-zinc-500 leading-relaxed">{temp.desc}</p>
               </div>
@@ -276,10 +276,10 @@ export default function GigRequirementsPage() {
         </div>
 
         {/* Tips Box */}
-        <div className="bg-gradient-to-br from-[#14a800] to-violet-600 rounded-3xl p-6 text-white shadow-xl shadow-[#14a800]/25/20">
+        <div className="bg-gradient-to-br from-[#2bb75c] to-violet-600 rounded-3xl p-6 text-white shadow-xl shadow-[#2bb75c]/25/20">
           <div className="flex items-center gap-2 mb-4">
-            <Info className="w-5 h-5 text-[#14a800]" />
-            <h3 className="font-bold text-[#14a800]">Conversion Tip</h3>
+            <Info className="w-5 h-5 text-[#2bb75c]" />
+            <h3 className="font-bold text-[#2bb75c]">Conversion Tip</h3>
           </div>
           
           <div className="space-y-4">
@@ -287,7 +287,7 @@ export default function GigRequirementsPage() {
               <CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0" />
               <div>
                 <h4 className="text-sm font-bold mb-1">Keep it simple</h4>
-                <p className="text-xs text-[#14a800] leading-relaxed">
+                <p className="text-xs text-[#2bb75c] leading-relaxed">
                   Too many requirements can overwhelm buyers and cause them to abandon the order. Ask only for what is absolutely necessary to start.
                 </p>
               </div>
@@ -296,7 +296,7 @@ export default function GigRequirementsPage() {
               <CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0" />
               <div>
                 <h4 className="text-sm font-bold mb-1">Use Multiple Choice</h4>
-                <p className="text-xs text-[#14a800] leading-relaxed">
+                <p className="text-xs text-[#2bb75c] leading-relaxed">
                   Multiple choice questions are 3x more likely to be answered quickly than open-ended text fields.
                 </p>
               </div>
@@ -309,3 +309,4 @@ export default function GigRequirementsPage() {
     </div>
   );
 }
+

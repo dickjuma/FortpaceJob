@@ -24,13 +24,13 @@ export default function DocumentTemplate({
     )}>
       
       {/* Marketing & Legal Header */}
-      <header className="bg-surface-dark text-white p-6 sm:p-8 border-b-4 border-[#14a800]/20">
+      <header className="bg-surface-dark text-white p-6 sm:p-8 border-b-4 border-[#2bb75c]/20">
         <div className="flex flex-col sm:flex-row justify-between items-start gap-6">
           
           {/* Logo & Company Branding */}
           <div className="space-y-4 w-full sm:w-auto">
             <div className="flex items-center justify-center sm:justify-start gap-3">
-              <div className="p-2 bg-[#14a800] rounded-lg">
+              <div className="p-2 bg-[#2bb75c] rounded-lg">
                 <Layers className="text-white" size={20} />
               </div>
               <h1 className="text-xl sm:text-2xl font-black tracking-tight">{companyDetails.name}</h1>
@@ -77,3 +77,4 @@ export default function DocumentTemplate({
     </div>
   );
 }
+

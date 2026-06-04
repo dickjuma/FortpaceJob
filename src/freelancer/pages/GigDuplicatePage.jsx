@@ -51,7 +51,7 @@ export default function GigDuplicatePage() {
         
         {/* Minimal Utility Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-[#14a800]/10 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-[#2bb75c]/10 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Copy className="w-8 h-8" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">Duplicate Gig</h1>
@@ -71,7 +71,7 @@ export default function GigDuplicatePage() {
               <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">Gig Duplicated Successfully!</h2>
               <p className="text-zinc-500 mb-8">Your new gig has been saved as a draft. You can now edit it before publishing.</p>
               <div className="flex items-center justify-center gap-4">
-                <button className="px-6 py-2.5 bg-[#14a800] text-white text-sm font-bold rounded-xl shadow-sm hover:bg-[#118a00] transition-colors">
+                <button className="px-6 py-2.5 bg-[#2bb75c] text-white text-sm font-bold rounded-xl shadow-sm hover:bg-[#1d8d38] transition-colors">
                   Edit New Gig
                 </button>
                 <button className="px-6 py-2.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-bold rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors">
@@ -101,7 +101,7 @@ export default function GigDuplicatePage() {
                   type="text" 
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full p-4 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#14a800] transition-all"
+                  className="w-full p-4 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c] transition-all"
                 />
               </div>
 
@@ -109,7 +109,7 @@ export default function GigDuplicatePage() {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider">What to copy</h3>
-                  <button onClick={() => setSelectedOptions(CLONE_OPTIONS.map(o => o.id))} className="text-xs font-bold text-[#14a800] hover:text-[#14a800]">Select All</button>
+                  <button onClick={() => setSelectedOptions(CLONE_OPTIONS.map(o => o.id))} className="text-xs font-bold text-[#2bb75c] hover:text-[#2bb75c]">Select All</button>
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -121,17 +121,17 @@ export default function GigDuplicatePage() {
                         onClick={() => toggleOption(option.id)}
                         className={cn(
                           "flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors",
-                          isSelected ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10" : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-surface-dark hover:border-zinc-300 dark:hover:border-zinc-600"
+                          isSelected ? "border-[#2bb75c]/20 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10" : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-surface-dark hover:border-zinc-300 dark:hover:border-zinc-600"
                         )}
                       >
                         <div className={cn(
                           "w-5 h-5 rounded border flex items-center justify-center transition-colors shrink-0",
-                          isSelected ? "bg-[#14a800] border-[#14a800]/20" : "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800"
+                          isSelected ? "bg-[#2bb75c] border-[#2bb75c]/20" : "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800"
                         )}>
                           {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
                         </div>
-                        <option.icon className={cn("w-5 h-5", isSelected ? "text-[#14a800]" : "text-zinc-400")} />
-                        <span className={cn("text-sm font-bold", isSelected ? "text-[#14a800] dark:text-[#14a800]" : "text-zinc-600 dark:text-zinc-400")}>
+                        <option.icon className={cn("w-5 h-5", isSelected ? "text-[#2bb75c]" : "text-zinc-400")} />
+                        <span className={cn("text-sm font-bold", isSelected ? "text-[#2bb75c] dark:text-[#2bb75c]" : "text-zinc-600 dark:text-zinc-400")}>
                           {option.label}
                         </span>
                       </div>
@@ -174,3 +174,4 @@ export default function GigDuplicatePage() {
     </div>
   );
 }
+

@@ -10,7 +10,6 @@ const NAV_LINKS = [
   { name: 'Find Talent', href: '/search' },
   { name: 'Find Work', href: '/jobs' },
   { name: 'Enterprise', href: '/client/enterprise' },
-  { name: 'Explore', href: '/marketplace' },
 ];
 
 export default function Navbar() {
@@ -41,7 +40,7 @@ export default function Navbar() {
                 <span className="text-white font-bold text-lg leading-none">F</span>
               </div>
               <span className="text-xl font-bold tracking-tight text-zinc-900">
-                Forte<span className="text-emerald-600">.</span>
+                ForteSpace
               </span>
             </Link>
 

@@ -156,7 +156,7 @@ export default function OfflineJobsMapPage() {
               <div className="pt-4 border-t border-border mt-6">
                 <button 
                   onClick={() => handleApplySimulate(selectedPin.title)}
-                  className="w-full py-3 bg-success hover:bg-success/95 text-white font-black rounded-xl text-sm transition-all shadow-lg shadow-[#14a800]/20 flex items-center justify-center gap-1.5"
+                  className="w-full py-3 bg-success hover:bg-success/95 text-white font-black rounded-xl text-sm transition-all shadow-lg shadow-[#2bb75c]/20 flex items-center justify-center gap-1.5"
                 >
                   Apply On-site Contract
                 </button>
@@ -178,3 +178,4 @@ export default function OfflineJobsMapPage() {
     </div>
   );
 }
+

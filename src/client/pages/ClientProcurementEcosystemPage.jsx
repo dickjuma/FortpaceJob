@@ -46,7 +46,7 @@ export default function ClientProcurementEcosystemPage() {
           <p className="text-xs font-semibold text-light-gray/50 mt-1">Audit active requests for quotes (RFQs), analyze multi-vendor compliance matrices, and authorize purchase orders.</p>
         </div>
 
-        <Button onClick={() => toast.success('New RFQ template generated.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20">
+        <Button onClick={() => toast.success('New RFQ template generated.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#2bb75c]/20">
           Create New RFQ
         </Button>
       </div>
@@ -138,3 +138,4 @@ export default function ClientProcurementEcosystemPage() {
     </div>
   );
 }
+

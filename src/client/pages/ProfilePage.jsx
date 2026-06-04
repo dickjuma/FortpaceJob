@@ -102,7 +102,7 @@ export default function ProfilePage() {
             <Link to="/client/recommendation-profile" className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 dark:border-zinc-800 px-4 py-2.5 text-sm font-bold text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-900">
               <Settings className="h-4 w-4" /> Recommendation profile
             </Link>
-            <Link to="/client/profile-intelligence" className="inline-flex items-center gap-2 rounded-xl bg-success px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-[#14a800]/20 hover:bg-success">
+            <Link to="/client/profile-intelligence" className="inline-flex items-center gap-2 rounded-xl bg-success px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-[#2bb75c]/20 hover:bg-success">
               <Workflow className="h-4 w-4" /> Company profile
             </Link>
           </div>
@@ -207,3 +207,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

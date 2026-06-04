@@ -26,8 +26,8 @@ export default function QuotaPaywallModal({ open, onClose, title, message, quota
         >
           <X className="w-5 h-5" />
         </button>
-        <div className="w-14 h-14 rounded-2xl bg-[#14a800]/10 flex items-center justify-center mb-5">
-          <Zap className="w-7 h-7 text-[#14a800]" />
+        <div className="w-14 h-14 rounded-2xl bg-[#2bb75c]/10 flex items-center justify-center mb-5">
+          <Zap className="w-7 h-7 text-[#2bb75c]" />
         </div>
         <h2 className="text-xl font-black text-zinc-900 mb-2">{title || 'Monthly limit reached'}</h2>
         <p className="text-sm text-zinc-600 mb-2">{message}</p>
@@ -35,7 +35,7 @@ export default function QuotaPaywallModal({ open, onClose, title, message, quota
         <Link
           to="/pricing"
           onClick={onClose}
-          className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl transition-colors"
+          className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl transition-colors"
         >
           View plans <ArrowRight className="w-4 h-4" />
         </Link>
@@ -50,3 +50,4 @@ export default function QuotaPaywallModal({ open, onClose, title, message, quota
     </div>
   );
 }
+

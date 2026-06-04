@@ -45,11 +45,11 @@ const METHODS = [
     color: "blue",
     accountLabel: "PayPal Email",
     placeholder: "you@email.com",
-    gradient: "from-#14a800] to-blue-700",
-    bgLight: "bg-[#14a800]/5",
-    bgDark: "dark:bg-[#14a800]/20",
-    border: "border-[#14a800]/20 dark:border-[#14a800]/20",
-    text: "text-[#14a800] dark:text-[#14a800]",
+    gradient: "from-#2bb75c] to-blue-700",
+    bgLight: "bg-[#2bb75c]/5",
+    bgDark: "dark:bg-[#2bb75c]/20",
+    border: "border-[#2bb75c]/20 dark:border-[#2bb75c]/20",
+    text: "text-[#2bb75c] dark:text-[#2bb75c]",
   },
   {
     id: "bank",
@@ -105,11 +105,11 @@ const METHODS = [
     color: "purple",
     accountLabel: "Wallet Address",
     placeholder: "0x… or bc1…",
-    gradient: "from-[#14a800] to-[#118a00]",
-    bgLight: "bg-[#14a800]/5",
-    bgDark: "dark:bg-[#14a800]/20",
-    border: "border-[#14a800]/50 dark:border-[#14a800]/50",
-    text: "text-[#14a800] dark:text-[#14a800]",
+    gradient: "from-[#2bb75c] to-[#1d8d38]",
+    bgLight: "bg-[#2bb75c]/5",
+    bgDark: "dark:bg-[#2bb75c]/20",
+    border: "border-[#2bb75c]/50 dark:border-[#2bb75c]/50",
+    text: "text-[#2bb75c] dark:text-[#2bb75c]",
   },
 ];
 
@@ -229,8 +229,8 @@ function OTPModal({ onClose, onSuccess }) {
         </button>
 
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-[#14a800]/5 dark:bg-[#14a800]/20 rounded-2xl mb-4">
-            <Lock size={24} className="text-[#14a800] dark:text-[#14a800]" />
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 rounded-2xl mb-4">
+            <Lock size={24} className="text-[#2bb75c] dark:text-[#2bb75c]" />
           </div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
             Verify Withdrawal
@@ -258,10 +258,10 @@ function OTPModal({ onClose, onSuccess }) {
                   error
                     ? "border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20"
                     : digit
-                    ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800]"
+                    ? "border-[#2bb75c]/20 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c]"
                     : "border-gray-200 dark:border-gray-700 bg-surface dark:bg-gray-800 text-gray-900 dark:text-white"
                 }
-                focus:border-[#14a800]/20 dark:focus:border-[#14a800]/20`}
+                focus:border-[#2bb75c]/20 dark:focus:border-[#2bb75c]/20`}
             />
           ))}
         </div>
@@ -277,7 +277,7 @@ function OTPModal({ onClose, onSuccess }) {
 
         <button
           onClick={handleVerify}
-          className="w-full bg-[#14a800] hover:bg-[#118a00] text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 mb-4"
+          className="w-full bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 mb-4"
         >
           <CheckCircle size={16} /> Verify & Withdraw
         </button>
@@ -293,7 +293,7 @@ function OTPModal({ onClose, onSuccess }) {
           ) : (
             <button
               onClick={handleResend}
-              className="text-[#14a800] dark:text-[#14a800] font-medium hover:underline flex items-center gap-1 mx-auto"
+              className="text-[#2bb75c] dark:text-[#2bb75c] font-medium hover:underline flex items-center gap-1 mx-auto"
             >
               <RefreshCw size={12} /> Resend code
             </button>
@@ -591,7 +591,7 @@ export default function WithdrawalPage() {
         >
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <div className="p-2 bg-[#14a800] rounded-xl">
+              <div className="p-2 bg-[#2bb75c] rounded-xl">
                 <Wallet size={20} className="text-white" />
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
@@ -629,7 +629,7 @@ export default function WithdrawalPage() {
                       onClick={() => { setCurrency(c); setShowCurrencyMenu(false); setAmount(""); }}
                       className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${
                         currency.code === c.code
-                          ? "bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] font-semibold"
+                          ? "bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] font-semibold"
                           : "text-gray-700 dark:text-gray-300 hover:bg-surface dark:hover:bg-gray-800"
                       }`}
                     >
@@ -648,7 +648,7 @@ export default function WithdrawalPage() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, delay: 0.05 }}
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#14a800] via-blue-600 to-violet-700 text-white p-6 sm:p-8 shadow-xl"
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#2bb75c] via-blue-600 to-violet-700 text-white p-6 sm:p-8 shadow-xl"
         >
           {/* Background decoration */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none" />
@@ -790,7 +790,7 @@ export default function WithdrawalPage() {
                   value={amount}
                   onChange={(e) => handleAmountChange(e.target.value)}
                   placeholder={`Min ${currency.symbol}${minAmount.toFixed(2)}`}
-                  className={`w-full pl-8 pr-4 py-3 rounded-xl border text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#14a800] transition-colors text-gray-900 dark:text-white bg-surface dark:bg-gray-800 ${
+                  className={`w-full pl-8 pr-4 py-3 rounded-xl border text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#2bb75c] transition-colors text-gray-900 dark:text-white bg-surface dark:bg-gray-800 ${
                     amountError
                       ? "border-red-400 dark:border-red-500"
                       : "border-gray-200 dark:border-gray-700"
@@ -800,7 +800,7 @@ export default function WithdrawalPage() {
                   <button
                     type="button"
                     onClick={() => handleAmountChange(maxAmount.toFixed(2))}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#14a800] dark:text-[#14a800] font-semibold hover:underline"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#2bb75c] dark:text-[#2bb75c] font-semibold hover:underline"
                   >
                     MAX
                   </button>
@@ -820,7 +820,7 @@ export default function WithdrawalPage() {
                       key={q}
                       type="button"
                       onClick={() => handleAmountChange(adj)}
-                      className="text-xs px-2.5 py-1 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-[#14a800]/20 hover:text-[#14a800] dark:hover:text-[#14a800] transition-colors"
+                      className="text-xs px-2.5 py-1 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-[#2bb75c]/20 hover:text-[#2bb75c] dark:hover:text-[#2bb75c] transition-colors"
                     >
                       {currency.symbol}{adj}
                     </button>
@@ -839,7 +839,7 @@ export default function WithdrawalPage() {
                 value={accountDetail}
                 onChange={(e) => setAccountDetail(e.target.value)}
                 placeholder={selectedMethod.placeholder}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#14a800] text-gray-900 dark:text-white"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#2bb75c] text-gray-900 dark:text-white"
               />
             </div>
 
@@ -886,7 +886,7 @@ export default function WithdrawalPage() {
             <button
               type="submit"
               disabled={!!amountError || !parsedAmount || withdrawMutation.isPending}
-              className="w-full bg-[#14a800] hover:bg-[#118a00] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-[#2bb75c] hover:bg-[#1d8d38] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
             >
               <Send size={16} /> {withdrawMutation.isPending ? 'Processing...' : parsedAmount > 0 ? `Withdraw ${currency.symbol}${parsedAmount.toFixed(2)}` : "Withdraw"}
             </button>
@@ -901,7 +901,7 @@ export default function WithdrawalPage() {
           className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6"
         >
           <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <Shield size={16} className="text-[#14a800]" /> Withdrawal Limits
+            <Shield size={16} className="text-[#2bb75c]" /> Withdrawal Limits
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* Daily */}
@@ -917,7 +917,7 @@ export default function WithdrawalPage() {
                   initial={{ width: 0 }}
                   animate={{ width: `${(dailyUsed / dailyLimit) * 100}%` }}
                   transition={{ duration: 0.9, ease: "easeOut" }}
-                  className="h-full bg-[#14a800] rounded-full"
+                  className="h-full bg-[#2bb75c] rounded-full"
                 />
               </div>
               <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-1">
@@ -939,7 +939,7 @@ export default function WithdrawalPage() {
                   initial={{ width: 0 }}
                   animate={{ width: `${(monthlyUsed / monthlyLimit) * 100}%` }}
                   transition={{ duration: 0.9, ease: "easeOut", delay: 0.15 }}
-                  className="h-full bg-#14a800] rounded-full"
+                  className="h-full bg-#2bb75c] rounded-full"
                 />
               </div>
               <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-1">
@@ -1048,7 +1048,7 @@ export default function WithdrawalPage() {
                   onClick={() => setPage(p)}
                   className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                     page === p
-                      ? "bg-[#14a800] text-white"
+                      ? "bg-[#2bb75c] text-white"
                       : "border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-surface dark:hover:bg-gray-800"
                   }`}
                 >
@@ -1082,7 +1082,7 @@ export default function WithdrawalPage() {
               key={text}
               className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-full text-xs text-gray-500 dark:text-gray-400 shadow-sm"
             >
-              <Icon size={13} className="text-[#14a800] shrink-0" />
+              <Icon size={13} className="text-[#2bb75c] shrink-0" />
               {text}
             </div>
           ))}
@@ -1112,3 +1112,4 @@ export default function WithdrawalPage() {
     </div>
   );
 }
+

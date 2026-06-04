@@ -118,7 +118,7 @@ export default function ClientFinancialDashboard() {
 
         {/* Action Strip */}
         <div className="flex flex-wrap gap-3">
-          <button onClick={() => navigate('/client/wallet')} className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#14a800]/20">
+          <button onClick={() => navigate('/client/wallet')} className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#2bb75c]/20">
             <ArrowDownLeft className="w-4 h-4" /> Deposit Funds
           </button>
           <button onClick={() => navigate('/client/contracts')} className="flex items-center gap-2 px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700 rounded-full text-sm font-bold transition-colors">
@@ -199,3 +199,4 @@ export default function ClientFinancialDashboard() {
     </div>
   );
 }
+

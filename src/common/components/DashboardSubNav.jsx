@@ -35,13 +35,13 @@ const DashboardSubNav = ({ role = 'FREELANCER' }) => {
                 to={link.path}
                 className={`relative px-3 py-4 text-sm font-semibold transition-colors duration-200 whitespace-nowrap ${
                   isActive
-                    ? 'text-[#14a800] dark:text-[#14a800]'
+                    ? 'text-[#2bb75c] dark:text-[#2bb75c]'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
                 }`}
               >
                 {link.label}
                 {isActive && (
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#14a800] dark:bg-#14a800] rounded-t-full"></span>
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#2bb75c] dark:bg-#2bb75c] rounded-t-full"></span>
                 )}
               </Link>
             );
@@ -53,3 +53,4 @@ const DashboardSubNav = ({ role = 'FREELANCER' }) => {
 };
 
 export default DashboardSubNav;
+

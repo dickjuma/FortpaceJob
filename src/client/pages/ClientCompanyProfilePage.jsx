@@ -107,15 +107,15 @@ export default function ClientCompanyProfilePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="text-sm font-bold text-zinc-900 dark:text-white mb-2 block">Company Name</label>
-                  <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-[#14a800]/20" />
+                  <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-[#2bb75c]/20" />
                 </div>
                 <div>
                   <label className="text-sm font-bold text-zinc-900 dark:text-white mb-2 block">Industry</label>
-                  <input type="text" value={formData.industry} onChange={(e) => setFormData({...formData, industry: e.target.value})} className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-[#14a800]/20" />
+                  <input type="text" value={formData.industry} onChange={(e) => setFormData({...formData, industry: e.target.value})} className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-[#2bb75c]/20" />
                 </div>
                 <div>
                   <label className="text-sm font-bold text-zinc-900 dark:text-white mb-2 block">Company Size</label>
-                  <select value={formData.size} onChange={(e) => setFormData({...formData, size: e.target.value})} className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-[#14a800]/20">
+                  <select value={formData.size} onChange={(e) => setFormData({...formData, size: e.target.value})} className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-[#2bb75c]/20">
                     <option>1-10 employees</option>
                     <option>11-50 employees</option>
                     <option>50-200 employees</option>
@@ -125,20 +125,20 @@ export default function ClientCompanyProfilePage() {
                 </div>
                 <div>
                   <label className="text-sm font-bold text-zinc-900 dark:text-white mb-2 block">Location</label>
-                  <input type="text" value={formData.location} onChange={(e) => setFormData({...formData, location: e.target.value})} className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-[#14a800]/20" />
+                  <input type="text" value={formData.location} onChange={(e) => setFormData({...formData, location: e.target.value})} className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-[#2bb75c]/20" />
                 </div>
                 <div className="md:col-span-2">
                   <label className="text-sm font-bold text-zinc-900 dark:text-white mb-2 block">About Us</label>
-                  <textarea rows={4} value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-[#14a800]/20 resize-none" />
+                  <textarea rows={4} value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-[#2bb75c]/20 resize-none" />
                 </div>
                 <div className="md:col-span-2">
                   <label className="text-sm font-bold text-zinc-900 dark:text-white mb-2 block">Website URL</label>
-                  <input type="url" value={formData.website} onChange={(e) => setFormData({...formData, website: e.target.value})} className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-[#14a800]/20" />
+                  <input type="url" value={formData.website} onChange={(e) => setFormData({...formData, website: e.target.value})} className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-[#2bb75c]/20" />
                 </div>
               </div>
 
               <div className="mt-8 pt-6 border-t border-zinc-100 dark:border-zinc-800 flex justify-end">
-                <button className="px-8 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-sm transition-all">
+                <button className="px-8 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-sm transition-all">
                   Save Profile Info
                 </button>
               </div>
@@ -170,7 +170,7 @@ export default function ClientCompanyProfilePage() {
                     </div>
                     <p className="text-xs text-zinc-500 mb-4">Upload your VAT/Tax certificate to get the Verified Business badge.</p>
                   </div>
-                  <button className="text-sm font-bold text-[#14a800] dark:text-[#14a800] hover:text-[#14a800] transition-colors text-left flex items-center gap-1">
+                  <button className="text-sm font-bold text-[#2bb75c] dark:text-[#2bb75c] hover:text-[#2bb75c] transition-colors text-left flex items-center gap-1">
                     <UploadCloud className="w-4 h-4" /> Upload PDF
                   </button>
                 </div>
@@ -195,7 +195,7 @@ export default function ClientCompanyProfilePage() {
                     <button className="px-6 py-2 bg-surface-dark dark:bg-white text-white dark:text-zinc-900 font-bold rounded-xl shadow-sm transition-all text-sm">
                       Follow
                     </button>
-                    <button className="px-6 py-2 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-sm transition-all text-sm">
+                    <button className="px-6 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-sm transition-all text-sm">
                       View Open Jobs
                     </button>
                   </div>
@@ -203,14 +203,14 @@ export default function ClientCompanyProfilePage() {
 
                 <div>
                   <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white flex items-center gap-2">
-                    {formData.name} <CheckCircle2 className="w-6 h-6 text-[#14a800]" />
+                    {formData.name} <CheckCircle2 className="w-6 h-6 text-[#2bb75c]" />
                   </h1>
                   <p className="text-lg font-medium text-zinc-600 dark:text-zinc-400 mt-1">{formData.industry}</p>
                   
                   <div className="flex flex-wrap items-center gap-4 text-sm font-bold text-zinc-500 mt-4">
                     <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {formData.location}</span>
                     <span className="flex items-center gap-1"><Users className="w-4 h-4" /> {formData.size}</span>
-                    <a href={formData.website} className="flex items-center gap-1 text-[#14a800] hover:underline"><LinkIcon className="w-4 h-4" /> Website</a>
+                    <a href={formData.website} className="flex items-center gap-1 text-[#2bb75c] hover:underline"><LinkIcon className="w-4 h-4" /> Website</a>
                   </div>
                 </div>
               </div>
@@ -225,11 +225,11 @@ export default function ClientCompanyProfilePage() {
                 </div>
 
                 <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
-                  <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2"><Briefcase className="w-5 h-5 text-[#14a800]" /> Open Roles (3)</h2>
+                  <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2"><Briefcase className="w-5 h-5 text-[#2bb75c]" /> Open Roles (3)</h2>
                   <div className="space-y-4">
                     {[1,2,3].map(i => (
-                      <div key={i} className="p-4 border border-zinc-100 dark:border-zinc-800 rounded-xl hover:border-[#14a800]/20 transition-colors cursor-pointer group">
-                        <h3 className="font-bold text-zinc-900 dark:text-white group-hover:text-[#14a800] transition-colors">Senior React Developer</h3>
+                      <div key={i} className="p-4 border border-zinc-100 dark:border-zinc-800 rounded-xl hover:border-[#2bb75c]/20 transition-colors cursor-pointer group">
+                        <h3 className="font-bold text-zinc-900 dark:text-white group-hover:text-[#2bb75c] transition-colors">Senior React Developer</h3>
                         <p className="text-sm font-medium text-zinc-500 mt-1">Full-time contract • $50-$80/hr</p>
                       </div>
                     ))}
@@ -249,7 +249,7 @@ export default function ClientCompanyProfilePage() {
                         <span className="text-sm font-black text-zinc-900 dark:text-white">$45k+</span>
                       </div>
                       <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
-                        <div className="w-[80%] bg-[#14a800] h-full rounded-full"></div>
+                        <div className="w-[80%] bg-[#2bb75c] h-full rounded-full"></div>
                       </div>
                     </div>
                     
@@ -283,3 +283,4 @@ export default function ClientCompanyProfilePage() {
     </div>
   );
 }
+

@@ -57,7 +57,7 @@ const WorkRevision = () => {
   if (loading) {
     return (
       <div className="bg-surface min-h-screen py-20 flex flex-col items-center justify-center text-zinc-500">
-        <Loader2 className="w-10 h-10 animate-spin text-[#14a800] mb-4" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#2bb75c] mb-4" />
         <p className="font-medium">Loading contract…</p>
       </div>
     );
@@ -67,7 +67,7 @@ const WorkRevision = () => {
     <>
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-3xl">
-          <Link to={`/find-work/orders/${orderId}`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#14a800] transition-colors mb-6">
+          <Link to={`/find-work/orders/${orderId}`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#2bb75c] transition-colors mb-6">
             <ArrowLeft className="w-4 h-4" /> Back to Order
           </Link>
 
@@ -93,7 +93,7 @@ const WorkRevision = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="E.g., The color on the hero section should be darker, and please fix the typo on page 3..."
-                className="w-full p-4 bg-surface border border-zinc-200 rounded-xl focus:border-[#14a800]/20 focus:outline-none focus:ring-4 focus:ring-[#14a800]/10 font-medium text-zinc-900 resize-y"
+                className="w-full p-4 bg-surface border border-zinc-200 rounded-xl focus:border-[#2bb75c]/20 focus:outline-none focus:ring-4 focus:ring-[#2bb75c]/10 font-medium text-zinc-900 resize-y"
               />
             </div>
 
@@ -112,7 +112,7 @@ const WorkRevision = () => {
               <button
                 type="submit"
                 disabled={!description || submitting}
-                className={`px-8 py-3 font-bold rounded-xl shadow-sm transition-all flex items-center gap-2 ${description && !submitting ? 'bg-[#14a800] hover:bg-[#118a00] text-white' : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'}`}
+                className={`px-8 py-3 font-bold rounded-xl shadow-sm transition-all flex items-center gap-2 ${description && !submitting ? 'bg-[#2bb75c] hover:bg-[#1d8d38] text-white' : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'}`}
               >
                 {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 Send Request
@@ -126,3 +126,4 @@ const WorkRevision = () => {
 };
 
 export default WorkRevision;
+

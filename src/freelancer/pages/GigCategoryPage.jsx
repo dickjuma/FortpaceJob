@@ -98,12 +98,12 @@ export default function GigCategoryPage() {
               <motion.div 
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}
                 key={sub.name}
-                className="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 text-center cursor-pointer group hover:border-[#14a800]/20 hover:shadow-lg hover:shadow-[#14a800]/25/10 transition-all"
+                className="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 text-center cursor-pointer group hover:border-[#2bb75c]/20 hover:shadow-lg hover:shadow-[#2bb75c]/25/10 transition-all"
               >
-                <div className="w-12 h-12 bg-surface dark:bg-zinc-800 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-[#14a800]/5 dark:group-hover:bg-[#14a800]/10 transition-colors">
-                  <sub.icon className="w-6 h-6 text-zinc-400 group-hover:text-[#14a800] transition-colors" />
+                <div className="w-12 h-12 bg-surface dark:bg-zinc-800 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-[#2bb75c]/5 dark:group-hover:bg-[#2bb75c]/10 transition-colors">
+                  <sub.icon className="w-6 h-6 text-zinc-400 group-hover:text-[#2bb75c] transition-colors" />
                 </div>
-                <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-1 group-hover:text-[#14a800] dark:group-hover:text-[#14a800] transition-colors">{sub.name}</h3>
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-1 group-hover:text-[#2bb75c] dark:group-hover:text-[#2bb75c] transition-colors">{sub.name}</h3>
                 <span className="text-xs font-semibold text-zinc-500">{sub.count} services</span>
               </motion.div>
             ))}
@@ -117,7 +117,7 @@ export default function GigCategoryPage() {
               <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">Popular in {CATEGORY.name}</h2>
               <p className="text-zinc-500 text-sm mt-1">Highly rated services chosen by businesses.</p>
             </div>
-            <button className="hidden sm:flex items-center gap-1 text-sm font-bold text-[#14a800] hover:text-[#14a800] transition-colors">
+            <button className="hidden sm:flex items-center gap-1 text-sm font-bold text-[#2bb75c] hover:text-[#2bb75c] transition-colors">
               View All <ChevronRight className="w-4 h-4" />
             </button>
           </div>
@@ -142,7 +142,7 @@ export default function GigCategoryPage() {
                       <span className="text-xs font-bold text-zinc-900 dark:text-white">{gig.seller.name}</span>
                     </div>
                   </div>
-                  <h3 className="text-sm font-bold text-zinc-700 dark:text-zinc-300 leading-snug mb-3 line-clamp-2 hover:text-[#14a800]">
+                  <h3 className="text-sm font-bold text-zinc-700 dark:text-zinc-300 leading-snug mb-3 line-clamp-2 hover:text-[#2bb75c]">
                     {gig.title}
                   </h3>
                   <div className="flex items-center gap-1.5 mb-4">
@@ -172,7 +172,7 @@ export default function GigCategoryPage() {
           </p>
           <div className="flex flex-wrap gap-2">
             {['React JS', 'Python', 'WordPress', 'Shopify', 'iOS Apps', 'Android', 'Machine Learning'].map(tag => (
-              <span key={tag} className="px-3 py-1.5 bg-white dark:bg-zinc-800 rounded-lg text-xs font-bold text-zinc-500 border border-zinc-200 dark:border-zinc-700 cursor-pointer hover:border-[#14a800]/20 transition-colors">
+              <span key={tag} className="px-3 py-1.5 bg-white dark:bg-zinc-800 rounded-lg text-xs font-bold text-zinc-500 border border-zinc-200 dark:border-zinc-700 cursor-pointer hover:border-[#2bb75c]/20 transition-colors">
                 {tag}
               </span>
             ))}
@@ -183,3 +183,4 @@ export default function GigCategoryPage() {
     </div>
   );
 }
+

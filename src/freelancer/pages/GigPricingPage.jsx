@@ -74,7 +74,7 @@ export default function GigPricingPage() {
             onClick={() => setPackagesEnabled(!packagesEnabled)}
             className={cn(
               "w-12 h-6 rounded-full transition-colors relative flex items-center p-1 cursor-pointer shrink-0",
-              packagesEnabled ? "bg-[#14a800]" : "bg-zinc-200 dark:bg-zinc-700"
+              packagesEnabled ? "bg-[#2bb75c]" : "bg-zinc-200 dark:bg-zinc-700"
             )}
           >
             <motion.div layout className="w-4 h-4 bg-white rounded-full shadow-sm" animate={{ x: packagesEnabled ? 24 : 0 }} />
@@ -94,17 +94,17 @@ export default function GigPricingPage() {
               <div key={pkgType} className={cn(
                 "col-span-1 p-6 text-center relative transition-all",
                 idx !== 2 && "border-r border-zinc-200 dark:border-zinc-800",
-                pkgType === 'standard' && packagesEnabled ? "bg-[#14a800]/5/50 dark:bg-[#14a800]/5" : "",
+                pkgType === 'standard' && packagesEnabled ? "bg-[#2bb75c]/5/50 dark:bg-[#2bb75c]/5" : "",
                 !packagesEnabled && pkgType !== 'basic' ? "opacity-30 pointer-events-none grayscale" : ""
               )}>
                 {pkgType === 'standard' && packagesEnabled && (
-                  <div className="absolute top-0 left-1/2 -tranzinc-x-1/2 bg-[#14a800] text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-b-lg">
+                  <div className="absolute top-0 left-1/2 -tranzinc-x-1/2 bg-[#2bb75c] text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-b-lg">
                     Recommended
                   </div>
                 )}
                 <h4 className={cn(
                   "text-lg font-black uppercase tracking-wide mb-1",
-                  pkgType === 'basic' ? "text-zinc-700 dark:text-zinc-300" : pkgType === 'standard' ? "text-[#14a800] dark:text-[#14a800]" : "text-violet-600 dark:text-violet-400"
+                  pkgType === 'basic' ? "text-zinc-700 dark:text-zinc-300" : pkgType === 'standard' ? "text-[#2bb75c] dark:text-[#2bb75c]" : "text-violet-600 dark:text-violet-400"
                 )}>
                   {packages[pkgType].name}
                 </h4>
@@ -130,7 +130,7 @@ export default function GigPricingPage() {
               <div key={pkgType} className={cn(
                 "col-span-1 p-4 space-y-3",
                 idx !== 2 && "border-r border-zinc-200 dark:border-zinc-800",
-                pkgType === 'standard' && packagesEnabled ? "bg-[#14a800]/5/30 dark:bg-[#14a800]/5" : "",
+                pkgType === 'standard' && packagesEnabled ? "bg-[#2bb75c]/5/30 dark:bg-[#2bb75c]/5" : "",
                 !packagesEnabled && pkgType !== 'basic' ? "opacity-30 pointer-events-none" : ""
               )}>
                 <input 
@@ -138,14 +138,14 @@ export default function GigPricingPage() {
                   placeholder="Name your package"
                   value={packages[pkgType].title}
                   onChange={(e) => handlePackageChange(pkgType, 'title', e.target.value)}
-                  className="w-full text-sm font-bold bg-zinc-100 dark:bg-zinc-800 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-[#14a800] text-zinc-900 dark:text-white placeholder:text-zinc-400"
+                  className="w-full text-sm font-bold bg-zinc-100 dark:bg-zinc-800 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-[#2bb75c] text-zinc-900 dark:text-white placeholder:text-zinc-400"
                 />
                 <textarea 
                   rows="4"
                   placeholder="Describe the details of your offering..."
                   value={packages[pkgType].desc}
                   onChange={(e) => handlePackageChange(pkgType, 'desc', e.target.value)}
-                  className="w-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-[#14a800] resize-none text-zinc-700 dark:text-zinc-300 placeholder:text-zinc-400"
+                  className="w-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-[#2bb75c] resize-none text-zinc-700 dark:text-zinc-300 placeholder:text-zinc-400"
                 />
               </div>
             ))}
@@ -165,7 +165,7 @@ export default function GigPricingPage() {
               <div key={pkgType} className={cn(
                 "col-span-1",
                 idx !== 2 && "border-r border-zinc-200 dark:border-zinc-800",
-                pkgType === 'standard' && packagesEnabled ? "bg-[#14a800]/5/30 dark:bg-[#14a800]/5" : "",
+                pkgType === 'standard' && packagesEnabled ? "bg-[#2bb75c]/5/30 dark:bg-[#2bb75c]/5" : "",
                 !packagesEnabled && pkgType !== 'basic' ? "opacity-30 pointer-events-none" : ""
               )}>
                 {packages[pkgType].features.map((feature, fIdx) => (
@@ -174,7 +174,7 @@ export default function GigPricingPage() {
                       type="checkbox" 
                       checked={feature}
                       onChange={() => handleFeatureToggle(pkgType, fIdx)}
-                      className="w-5 h-5 text-[#14a800] rounded border-zinc-300 focus:ring-[#14a800] cursor-pointer"
+                      className="w-5 h-5 text-[#2bb75c] rounded border-zinc-300 focus:ring-[#2bb75c] cursor-pointer"
                     />
                   </div>
                 ))}
@@ -192,13 +192,13 @@ export default function GigPricingPage() {
               <div key={pkgType} className={cn(
                 "col-span-1 p-6 space-y-6",
                 idx !== 2 && "border-r border-zinc-200 dark:border-zinc-800",
-                pkgType === 'standard' && packagesEnabled ? "bg-[#14a800]/5/50 dark:bg-[#14a800]/10" : "",
+                pkgType === 'standard' && packagesEnabled ? "bg-[#2bb75c]/5/50 dark:bg-[#2bb75c]/10" : "",
                 !packagesEnabled && pkgType !== 'basic' ? "opacity-30 pointer-events-none" : ""
               )}>
                 <select 
                   value={packages[pkgType].delivery}
                   onChange={(e) => handlePackageChange(pkgType, 'delivery', parseInt(e.target.value))}
-                  className="w-full p-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#14a800]/20"
+                  className="w-full p-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#2bb75c]/20"
                 >
                   <option value={1}>1 Day Delivery</option>
                   <option value={2}>2 Days Delivery</option>
@@ -211,7 +211,7 @@ export default function GigPricingPage() {
                 <select 
                   value={packages[pkgType].revisions}
                   onChange={(e) => handlePackageChange(pkgType, 'revisions', parseInt(e.target.value))}
-                  className="w-full p-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#14a800]/20 mt-2"
+                  className="w-full p-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#2bb75c]/20 mt-2"
                 >
                   <option value={0}>0 Revisions</option>
                   <option value={1}>1 Revision</option>
@@ -287,7 +287,7 @@ export default function GigPricingPage() {
                     key={sug.id}
                     onClick={() => addAddon(sug)}
                     disabled={isAdded}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border transition-all disabled:opacity-50 disabled:cursor-not-allowed border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-[#14a800]/20 hover:text-[#14a800]"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border transition-all disabled:opacity-50 disabled:cursor-not-allowed border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-[#2bb75c]/20 hover:text-[#2bb75c]"
                   >
                     <Plus className="w-4 h-4" /> {sug.title} (+KES {sug.price})
                   </button>
@@ -303,23 +303,23 @@ export default function GigPricingPage() {
       <div className="w-full lg:w-80 shrink-0 space-y-6">
         
         {/* Pricing Recommendation Widget */}
-        <div className="bg-gradient-to-br from-[#14a800] to-violet-600 rounded-3xl p-6 text-white shadow-xl shadow-[#14a800]/25/20">
+        <div className="bg-gradient-to-br from-[#2bb75c] to-violet-600 rounded-3xl p-6 text-white shadow-xl shadow-[#2bb75c]/25/20">
           <div className="flex items-center gap-2 mb-4">
-            <Target className="w-5 h-5 text-[#14a800]" />
-            <h3 className="font-bold text-[#14a800]">Pricing Insights</h3>
+            <Target className="w-5 h-5 text-[#2bb75c]" />
+            <h3 className="font-bold text-[#2bb75c]">Pricing Insights</h3>
           </div>
           
           <h4 className="text-3xl font-black mb-1">KES 8,500</h4>
-          <p className="text-sm text-[#14a800] font-semibold mb-6">Average order value in your category</p>
+          <p className="text-sm text-[#2bb75c] font-semibold mb-6">Average order value in your category</p>
           
           <div className="space-y-4">
             <div className="bg-white/10 p-3 rounded-xl border border-white/10 flex items-start gap-3">
               <Check className="w-4 h-4 text-emerald-300 shrink-0 mt-0.5" />
-              <p className="text-xs leading-relaxed text-[#14a800] font-medium">Your <span className="font-bold text-white">Basic (KES 5000)</span> package is competitively priced to attract new buyers.</p>
+              <p className="text-xs leading-relaxed text-[#2bb75c] font-medium">Your <span className="font-bold text-white">Basic (KES 5000)</span> package is competitively priced to attract new buyers.</p>
             </div>
             <div className="bg-white/10 p-3 rounded-xl border border-white/10 flex items-start gap-3">
               <TrendingUp className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
-              <p className="text-xs leading-relaxed text-[#14a800] font-medium">Consider raising your <span className="font-bold text-white">Premium (KES 25000)</span> package. Top sellers average KES 40000 for full solutions.</p>
+              <p className="text-xs leading-relaxed text-[#2bb75c] font-medium">Consider raising your <span className="font-bold text-white">Premium (KES 25000)</span> package. Top sellers average KES 40000 for full solutions.</p>
             </div>
           </div>
         </div>
@@ -328,7 +328,7 @@ export default function GigPricingPage() {
         <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-[#14a800]" /> Market Standard
+              <BarChart3 className="w-4 h-4 text-[#2bb75c]" /> Market Standard
             </h3>
             <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Web Dev</span>
           </div>
@@ -350,12 +350,12 @@ export default function GigPricingPage() {
         </div>
 
         {/* Tips Box */}
-        <div className="bg-[#14a800]/5 dark:bg-[#14a800]/10 rounded-3xl border border-[#14a800]/20 dark:border-[#14a800]/20/30 p-6">
+        <div className="bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 rounded-3xl border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/30 p-6">
           <div className="flex items-center gap-2 mb-2">
-            <Info className="w-4 h-4 text-[#14a800]" />
-            <h3 className="text-sm font-bold text-[#14a800] dark:text-[#14a800]">Upselling Strategy</h3>
+            <Info className="w-4 h-4 text-[#2bb75c]" />
+            <h3 className="text-sm font-bold text-[#2bb75c] dark:text-[#2bb75c]">Upselling Strategy</h3>
           </div>
-          <p className="text-xs text-[#14a800] dark:text-[#14a800] leading-relaxed">
+          <p className="text-xs text-[#2bb75c] dark:text-[#2bb75c] leading-relaxed">
             Name your packages creatively (e.g. "Silver, Gold, Platinum" or "Starter, Growth, Scale"). It builds brand value and increases Standard/Premium tier selections.
           </p>
         </div>
@@ -365,3 +365,4 @@ export default function GigPricingPage() {
     </div>
   );
 }
+

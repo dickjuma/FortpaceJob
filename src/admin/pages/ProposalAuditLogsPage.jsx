@@ -14,11 +14,11 @@ export default function ProposalAuditLogsPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="mb-8">
-        <Link to="/admin/moderation" className="text-sm font-medium text-[#14a800] hover:text-[#14a800] mb-4 inline-flex items-center">
+        <Link to="/admin/moderation" className="text-sm font-medium text-[#2bb75c] hover:text-[#2bb75c] mb-4 inline-flex items-center">
           <ChevronLeft className="w-4 h-4 mr-1" /> Back to Moderation
         </Link>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-          <History className="w-8 h-8 mr-3 text-[#14a800]" /> Proposal Audit Logs
+          <History className="w-8 h-8 mr-3 text-[#2bb75c]" /> Proposal Audit Logs
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Immutable, time-stamped records of all proposal creation, modification, and evaluation events.</p>
       </div>
@@ -30,11 +30,11 @@ export default function ProposalAuditLogsPage() {
             <input 
               type="text" 
               placeholder="Search by Event ID, User, or IP Address..." 
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 focus:ring-[#14a800] focus:border-[#14a800]/20 text-sm"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 focus:ring-[#2bb75c] focus:border-[#2bb75c]/20 text-sm"
             />
           </div>
           <div className="flex gap-2">
-            <select className="border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm rounded-xl focus:ring-[#14a800] focus:border-[#14a800]/20">
+            <select className="border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm rounded-xl focus:ring-[#2bb75c] focus:border-[#2bb75c]/20">
               <option>All Actions</option>
               <option>Status Changes</option>
               <option>Submissions</option>
@@ -68,7 +68,7 @@ export default function ProposalAuditLogsPage() {
                   <td className="p-4">
                     <span className={`px-2 py-1 rounded-md text-xs font-bold ${
                       log.action.includes('ADMIN') || log.action.includes('SYSTEM') ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
-                      log.action.includes('STATUS') ? 'bg-[#14a800]/10 text-[#14a800] dark:bg-[#14a800]/30 dark:text-[#14a800]' :
+                      log.action.includes('STATUS') ? 'bg-[#2bb75c]/10 text-[#2bb75c] dark:bg-[#2bb75c]/30 dark:text-[#2bb75c]' :
                       'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                     }`}>
                       {log.action}
@@ -81,7 +81,7 @@ export default function ProposalAuditLogsPage() {
                     </div>
                     <p className="text-xs text-gray-500 mt-0.5 ml-5">IP: {log.ip}</p>
                   </td>
-                  <td className="p-4 text-[#14a800] dark:text-[#14a800] hover:underline cursor-pointer">
+                  <td className="p-4 text-[#2bb75c] dark:text-[#2bb75c] hover:underline cursor-pointer">
                     {log.target}
                   </td>
                   <td className="p-4 text-gray-600 dark:text-gray-400">
@@ -93,7 +93,7 @@ export default function ProposalAuditLogsPage() {
           </table>
         </div>
         <div className="p-4 border-t border-gray-100 dark:border-gray-800 flex justify-end">
-           <button className="text-sm font-medium text-[#14a800] hover:text-[#14a800] flex items-center">
+           <button className="text-sm font-medium text-[#2bb75c] hover:text-[#2bb75c] flex items-center">
              Download CSV Export <ArrowRight className="w-4 h-4 ml-1" />
            </button>
         </div>
@@ -101,3 +101,4 @@ export default function ProposalAuditLogsPage() {
     </div>
   );
 }
+

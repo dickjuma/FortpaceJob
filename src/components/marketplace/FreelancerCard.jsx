@@ -29,11 +29,11 @@ const FreelancerCard = ({ freelancer }) => {
     `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=14a800&color=fff`;
 
   return (
-    <article className="flex flex-col h-full bg-white border border-zinc-200 rounded-xl p-5 hover:border-[#14a800]/40 hover:shadow-sm transition-all">
+    <article className="flex flex-col h-full bg-white border border-zinc-200 rounded-xl p-5 hover:border-[#2bb75c]/40 hover:shadow-sm transition-all">
       <div className="flex items-start gap-3 mb-3">
         <img src={avatar} alt="" className="w-12 h-12 rounded-full object-cover border border-zinc-100 shrink-0" />
         <div className="min-w-0 flex-1">
-          <Link to={profilePath} className="font-bold text-zinc-900 text-sm hover:text-[#14a800] line-clamp-1 block">
+          <Link to={profilePath} className="font-bold text-zinc-900 text-sm hover:text-[#2bb75c] line-clamp-1 block">
             {name}
           </Link>
           {title && <p className="text-xs text-zinc-500 mt-0.5 line-clamp-2">{title}</p>}
@@ -47,7 +47,7 @@ const FreelancerCard = ({ freelancer }) => {
       <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-500 mb-3">
         {rating != null && (
           <span className="flex items-center gap-1 font-semibold text-zinc-800">
-            <Star className="w-3.5 h-3.5 text-[#14a800] fill-[#14a800]" />
+            <Star className="w-3.5 h-3.5 text-[#2bb75c] fill-[#2bb75c]" />
             {Number(rating).toFixed(1)}
             {reviews != null && <span className="text-zinc-400 font-normal">({reviews})</span>}
           </span>
@@ -83,7 +83,7 @@ const FreelancerCard = ({ freelancer }) => {
         )}
         <Link
           to={profilePath}
-          className="px-3 py-1.5 bg-zinc-900 hover:bg-[#14a800] text-white text-xs font-bold rounded-lg transition-colors"
+          className="px-3 py-1.5 bg-zinc-900 hover:bg-[#2bb75c] text-white text-xs font-bold rounded-lg transition-colors"
         >
           View
         </Link>
@@ -93,3 +93,4 @@ const FreelancerCard = ({ freelancer }) => {
 };
 
 export default FreelancerCard;
+

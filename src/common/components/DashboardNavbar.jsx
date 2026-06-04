@@ -15,7 +15,7 @@ const DashboardNavbar = ({ role = 'FREELANCER' }) => {
         {/* Left Side: Logo & Primary Nav */}
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#14a800] to-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:shadow-[#14a800]/25 transition-all duration-300">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#2bb75c] to-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:shadow-[#2bb75c]/25 transition-all duration-300">
               F
             </div>
             <span className="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white hidden sm:block">Forte</span>
@@ -24,12 +24,12 @@ const DashboardNavbar = ({ role = 'FREELANCER' }) => {
           <div className="hidden md:flex items-center">
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-zinc-400 group-focus-within:text-[#14a800] transition-colors" />
+                <Search className="h-4 w-4 text-zinc-400 group-focus-within:text-[#2bb75c] transition-colors" />
               </div>
               <input
                 type="text"
                 placeholder={isFreelancer ? "Find jobs & projects..." : "Find freelancers & services..."}
-                className="block w-full sm:w-64 md:w-80 lg:w-96 pl-10 pr-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-full leading-5 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#14a800] focus:border-[#14a800] sm:text-sm transition-all"
+                className="block w-full sm:w-64 md:w-80 lg:w-96 pl-10 pr-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-full leading-5 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#2bb75c] focus:border-[#2bb75c] sm:text-sm transition-all"
               />
             </div>
           </div>
@@ -41,7 +41,7 @@ const DashboardNavbar = ({ role = 'FREELANCER' }) => {
           {/* Mode Switcher */}
           <Link
             to={isFreelancer ? '/client/dashboard' : '/freelancer/dashboard'}
-            className="hidden lg:flex items-center text-sm font-semibold text-[#14a800] dark:text-[#14a800] hover:text-#118a00] dark:hover:text-[#7bc67e] transition-colors px-3 py-2 rounded-lg hover:bg-[#14a800]/5 dark:hover:bg-[#14a800]/10"
+            className="hidden lg:flex items-center text-sm font-semibold text-[#2bb75c] dark:text-[#2bb75c] hover:text-#1d8d38] dark:hover:text-[#7bc67e] transition-colors px-3 py-2 rounded-lg hover:bg-[#2bb75c]/5 dark:hover:bg-[#2bb75c]/10"
           >
             Switch to {isFreelancer ? 'Buying' : 'Selling'}
           </Link>
@@ -49,14 +49,14 @@ const DashboardNavbar = ({ role = 'FREELANCER' }) => {
           <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-800 hidden lg:block mx-2"></div>
 
           {/* Notifications & Messages */}
-          <button className="relative p-2 rounded-full text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#14a800]">
+          <button className="relative p-2 rounded-full text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#2bb75c]">
             <Bell className="w-5 h-5" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-zinc-950"></span>
           </button>
           
-          <button className="relative p-2 rounded-full text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#14a800]">
+          <button className="relative p-2 rounded-full text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#2bb75c]">
             <MessageSquare className="w-5 h-5" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-[#14a800] rounded-full border-2 border-white dark:border-zinc-950"></span>
+            <span className="absolute top-1 right-1 w-2 h-2 bg-[#2bb75c] rounded-full border-2 border-white dark:border-zinc-950"></span>
           </button>
 
           {/* User Menu */}
@@ -82,3 +82,4 @@ const DashboardNavbar = ({ role = 'FREELANCER' }) => {
 };
 
 export default DashboardNavbar;
+

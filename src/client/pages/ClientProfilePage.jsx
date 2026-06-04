@@ -62,7 +62,7 @@ export default function ClientProfilePage() {
     `w-full rounded-xl px-3 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2 ${
       formErrors[field]
         ? 'border-rose-400 bg-rose-50 text-rose-900 ring-rose-200'
-        : 'border-zinc-200 bg-zinc-50 text-zinc-900 focus:border-[#14a800] focus:ring-success/20'
+        : 'border-zinc-200 bg-zinc-50 text-zinc-900 focus:border-[#2bb75c] focus:ring-success/20'
     }`;
 
   const handleSave = async () => {
@@ -141,9 +141,9 @@ export default function ClientProfilePage() {
                 onClick={() => editing && setClientType(type.id)}
                 className={`text-left p-4 rounded-xl border-2 transition-all ${
                   clientType === type.id
-                    ? 'border-[#14a800] bg-[#14a800]/5'
+                    ? 'border-[#2bb75c] bg-[#2bb75c]/5'
                     : 'border-zinc-200 bg-zinc-50 opacity-80'
-                } ${editing ? 'cursor-pointer hover:border-[#14a800]/40' : 'cursor-default'}`}
+                } ${editing ? 'cursor-pointer hover:border-[#2bb75c]/40' : 'cursor-default'}`}
               >
                 <p className="font-bold text-zinc-900 text-sm">{type.label}</p>
                 <p className="text-xs text-zinc-500 mt-1">{type.description}</p>
@@ -260,7 +260,7 @@ export default function ClientProfilePage() {
                       <input
                         value={editForm.industry}
                         onChange={(e) => setEditForm(f => ({ ...f, industry: e.target.value }))}
-                        className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 text-sm text-zinc-900 focus:outline-none focus:border-[#14a800]"
+                        className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 text-sm text-zinc-900 focus:outline-none focus:border-[#2bb75c]"
                       />
                     </div>
                     <div>
@@ -269,7 +269,7 @@ export default function ClientProfilePage() {
                         value={editForm.companySize}
                         onChange={(e) => setEditForm(f => ({ ...f, companySize: e.target.value }))}
                         placeholder="e.g. 11-50"
-                        className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 text-sm text-zinc-900 focus:outline-none focus:border-[#14a800]"
+                        className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 text-sm text-zinc-900 focus:outline-none focus:border-[#2bb75c]"
                       />
                     </div>
                   </div>
@@ -406,3 +406,4 @@ export default function ClientProfilePage() {
     </div>
   );
 }
+

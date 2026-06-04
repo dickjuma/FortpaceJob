@@ -36,7 +36,7 @@ export default class ErrorBoundary extends React.Component {
             <div className="flex flex-col space-y-3">
               <button 
                 onClick={() => window.location.reload()}
-                className="w-full flex items-center justify-center px-4 py-2.5 bg-[#14a800] text-white font-bold rounded-xl hover:bg-[#118a00] transition-colors shadow-sm"
+                className="w-full flex items-center justify-center px-4 py-2.5 bg-[#2bb75c] text-white font-bold rounded-xl hover:bg-[#1d8d38] transition-colors shadow-sm"
               >
                 <RefreshCw className="w-4 h-4 mr-2" /> Reload Page
               </button>
@@ -61,3 +61,4 @@ export default class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+

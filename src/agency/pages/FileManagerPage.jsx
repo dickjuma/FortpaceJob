@@ -236,7 +236,7 @@ export default function FileManagerPage() {
           <Button 
             onClick={() => setActiveModal('upload')}
             variant="primary" 
-            className="bg-success hover:bg-success/95 font-bold text-xs rounded-xl border-none shadow-lg shadow-[#14a800]/10"
+            className="bg-success hover:bg-success/95 font-bold text-xs rounded-xl border-none shadow-lg shadow-[#2bb75c]/10"
             icon={<Plus size={16} />}
           >
             Quick Upload
@@ -736,3 +736,4 @@ const XIcon = ({ className }) => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
   </svg>
 );
+

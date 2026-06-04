@@ -93,7 +93,7 @@ export default function FeeStructurePage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
       </div>
     );
   }
@@ -103,7 +103,7 @@ export default function FeeStructurePage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-[#14a800]/10 text-[#14a800] rounded-xl">
+            <div className="p-2.5 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl">
               <Settings size={24} />
             </div>
             <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
@@ -118,7 +118,7 @@ export default function FeeStructurePage() {
           type="button"
           onClick={handleSaveSettings}
           disabled={saving}
-          className="px-4 py-2 bg-[#14a800] text-white rounded-xl text-sm font-bold shadow-sm hover:bg-[#118a00] transition-colors flex items-center gap-2 disabled:opacity-50"
+          className="px-4 py-2 bg-[#2bb75c] text-white rounded-xl text-sm font-bold shadow-sm hover:bg-[#1d8d38] transition-colors flex items-center gap-2 disabled:opacity-50"
         >
           {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
           Save global settings
@@ -144,7 +144,7 @@ export default function FeeStructurePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm p-6">
           <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
-            <Percent size={18} className="text-[#14a800]" /> Platform commission
+            <Percent size={18} className="text-[#2bb75c]" /> Platform commission
           </h2>
           <div className="space-y-4">
             <label className="block">
@@ -246,7 +246,7 @@ export default function FeeStructurePage() {
                   {rule.appliesTo} · {rule.type === 'PERCENTAGE' ? `${(rule.value * 100).toFixed(2)}%` : `KES ${rule.value}`}
                 </p>
               </div>
-              <button type="button" onClick={() => handleToggleRule(rule.id)} className="text-[#14a800]">
+              <button type="button" onClick={() => handleToggleRule(rule.id)} className="text-[#2bb75c]">
                 {rule.active ? <ToggleRight size={28} /> : <ToggleLeft size={28} className="text-zinc-400" />}
               </button>
             </div>
@@ -290,3 +290,4 @@ export default function FeeStructurePage() {
     </div>
   );
 }
+

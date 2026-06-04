@@ -26,15 +26,15 @@ function getCategoryIcon(categoryName) {
 function getCategoryColor(categoryName) {
   const colorMap = {
     'Graphics & Design': 'bg-emerald-50 text-success',
-    'Programming & Tech': 'bg-[#14a800]/5 text-[#14a800]',
+    'Programming & Tech': 'bg-[#2bb75c]/5 text-[#2bb75c]',
     'Digital Marketing': 'bg-rose-50 text-rose-600',
-    'Video & Animation': 'bg-[#14a800]/5 text-[#14a800]',
+    'Video & Animation': 'bg-[#2bb75c]/5 text-[#2bb75c]',
     'Writing & Translation': 'bg-amber-50 text-amber-600',
     'Music & Audio': 'bg-cyan-50 text-cyan-600',
-    'Business': 'bg-[#14a800]/5 text-[#14a800]',
+    'Business': 'bg-[#2bb75c]/5 text-[#2bb75c]',
     'AI Services': 'bg-fuchsia-50 text-fuchsia-600'
   };
-  return colorMap[categoryName] || 'bg-[#14a800]/5 text-[#14a800]';
+  return colorMap[categoryName] || 'bg-[#2bb75c]/5 text-[#2bb75c]';
 }
 
 export default function GlobalHomepage() {
@@ -80,7 +80,7 @@ export default function GlobalHomepage() {
   return (
     <>
       {/* Hero Section - Upwork/Fiverr Style */}
-      <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 px-4 bg-[#14a800] text-white overflow-hidden">
+      <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 px-4 bg-[#2bb75c] text-white overflow-hidden">
         {/* Background Image Overlay */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -88,7 +88,7 @@ export default function GlobalHomepage() {
             alt="Freelancer working" 
             className="w-full h-full object-cover opacity-30 mix-blend-overlay"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#14a800] via-[#14a800]/80 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2bb75c] via-[#2bb75c]/80 to-transparent"></div>
         </div>
         
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col justify-center min-h-[450px]">
@@ -105,7 +105,7 @@ export default function GlobalHomepage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button type="submit" className="bg-[#14a800] hover:bg-[#118a00] text-white px-8 py-4 rounded-md font-bold transition-all shrink-0 flex items-center gap-2">
+              <button type="submit" className="bg-[#2bb75c] hover:bg-[#1d8d38] text-white px-8 py-4 rounded-md font-bold transition-all shrink-0 flex items-center gap-2">
                 <Search className="w-5 h-5" />
                 <span className="hidden sm:inline">Search</span>
               </button>
@@ -118,7 +118,7 @@ export default function GlobalHomepage() {
                   key={term}
                   type="button"
                   onClick={() => navigate(`/search?q=${encodeURIComponent(term)}&tab=freelancers`)}
-                  className="px-4 py-1.5 rounded-full border border-white/40 hover:bg-white hover:text-[#14a800] transition-colors backdrop-blur-sm"
+                  className="px-4 py-1.5 rounded-full border border-white/40 hover:bg-white hover:text-[#2bb75c] transition-colors backdrop-blur-sm"
                 >
                   {term}
                 </button>
@@ -141,8 +141,8 @@ export default function GlobalHomepage() {
               { step: '2', title: 'Connect securely', desc: 'Proposals, contracts, and escrow keep every deal protected.' },
               { step: '3', title: 'Deliver & get paid', desc: 'Milestones, reviews, and payouts when work is approved.' },
             ].map((item) => (
-              <div key={item.step} className="text-center p-6 rounded-xl border border-zinc-200 hover:border-[#14a800]/40 transition-colors">
-                <div className="w-12 h-12 rounded-full bg-[#14a800]/10 text-[#14a800] font-black text-lg flex items-center justify-center mx-auto mb-4">
+              <div key={item.step} className="text-center p-6 rounded-xl border border-zinc-200 hover:border-[#2bb75c]/40 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-[#2bb75c]/10 text-[#2bb75c] font-black text-lg flex items-center justify-center mx-auto mb-4">
                   {item.step}
                 </div>
                 <h3 className="font-bold text-lg text-zinc-900 mb-2">{item.title}</h3>
@@ -158,15 +158,15 @@ export default function GlobalHomepage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-6">
           <Link
             to="/find-talent"
-            className="group bg-white rounded-2xl p-8 border border-zinc-200 shadow-sm hover:shadow-lg hover:border-[#14a800]/30 transition-all"
+            className="group bg-white rounded-2xl p-8 border border-zinc-200 shadow-sm hover:shadow-lg hover:border-[#2bb75c]/30 transition-all"
           >
-            <h3 className="text-2xl font-bold text-zinc-900 mb-2 group-hover:text-[#14a800]">I need to hire</h3>
+            <h3 className="text-2xl font-bold text-zinc-900 mb-2 group-hover:text-[#2bb75c]">I need to hire</h3>
             <p className="text-zinc-600 mb-4">Find vetted freelancers, agencies, and ready-made gigs for your next project.</p>
-            <span className="text-[#14a800] font-bold text-sm">Browse talent →</span>
+            <span className="text-[#2bb75c] font-bold text-sm">Browse talent →</span>
           </Link>
           <Link
             to="/find-work"
-            className="group bg-[#14a800] rounded-2xl p-8 text-white shadow-lg hover:bg-[#118a00] transition-colors"
+            className="group bg-[#2bb75c] rounded-2xl p-8 text-white shadow-lg hover:bg-[#1d8d38] transition-colors"
           >
             <h3 className="text-2xl font-bold mb-2">I want to earn</h3>
             <p className="text-white/90 mb-4">Discover remote contracts, local gigs, and sell services on the marketplace.</p>
@@ -180,7 +180,7 @@ export default function GlobalHomepage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="flex justify-between items-end mb-8 gap-4">
               <h2 className="text-2xl font-bold text-zinc-900">Top freelancers</h2>
-              <Link to="/find-talent" className="text-[#14a800] font-bold text-sm hover:underline">
+              <Link to="/find-talent" className="text-[#2bb75c] font-bold text-sm hover:underline">
                 View all
               </Link>
             </div>
@@ -216,7 +216,7 @@ export default function GlobalHomepage() {
             { title: 'WordPress', subtitle: 'Customize your site', img: 'https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=400&q=80', color: 'bg-orange-900' },
             { title: 'Voice Over', subtitle: 'Share your message', img: 'https://images.unsplash.com/photo-1593697821252-0c9137d9fc45?w=400&q=80', color: 'bg-surface-dark' },
             { title: 'Video Explainer', subtitle: 'Engage your audience', img: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?w=400&q=80', color: 'bg-rose-900' },
-            { title: 'SEO', subtitle: 'Unlock growth online', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80', color: 'bg-[#14a800]' },
+            { title: 'SEO', subtitle: 'Unlock growth online', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80', color: 'bg-[#2bb75c]' },
           ].map((service, i) => (
             <motion.div 
               initial={{ opacity: 0, x: 20 }}
@@ -291,12 +291,12 @@ export default function GlobalHomepage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12">
           {CATEGORIES.map((cat, i) => (
             <Link key={cat.name} to={cat.link} className="group flex flex-col items-center text-center">
-              <div className="w-20 h-20 rounded-full bg-surface flex items-center justify-center mb-4 group-hover:bg-[#14a800]/10 transition-colors border border-surface-border shadow-sm group-hover:shadow-md">
-                <cat.icon className="w-8 h-8 text-zinc-700 group-hover:text-[#14a800] transition-colors" />
+              <div className="w-20 h-20 rounded-full bg-surface flex items-center justify-center mb-4 group-hover:bg-[#2bb75c]/10 transition-colors border border-surface-border shadow-sm group-hover:shadow-md">
+                <cat.icon className="w-8 h-8 text-zinc-700 group-hover:text-[#2bb75c] transition-colors" />
               </div>
-              <h3 className="font-medium text-zinc-800 group-hover:text-[#14a800] transition-colors relative">
+              <h3 className="font-medium text-zinc-800 group-hover:text-[#2bb75c] transition-colors relative">
                 {cat.name}
-                <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#14a800] group-hover:w-8 transition-all duration-300"></span>
+                <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#2bb75c] group-hover:w-8 transition-all duration-300"></span>
               </h3>
             </Link>
           ))}
@@ -329,7 +329,7 @@ export default function GlobalHomepage() {
               </li>
             </ul>
             
-            <button className="px-8 py-3 bg-success hover:bg-[#118a00] text-white font-bold rounded-md shadow-lg transition-colors text-lg">
+            <button className="px-8 py-3 bg-success hover:bg-[#1d8d38] text-white font-bold rounded-md shadow-lg transition-colors text-lg">
               Explore Fortspace Enterprise
             </button>
           </div>
@@ -413,3 +413,4 @@ function BriefcaseIcon(props) {
     </svg>
   );
 }
+

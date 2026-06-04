@@ -41,7 +41,7 @@ export default function ClientWorkflowBuilderPage() {
           <p className="text-xs font-semibold text-light-gray/50 mt-1">Design drag-n-drop automation sequences, connect field worker telemetry to fintech releases, and configure notification rules.</p>
         </div>
 
-        <Button onClick={() => toast.success('New workflow node instantiated.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20">
+        <Button onClick={() => toast.success('New workflow node instantiated.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#2bb75c]/20">
           <Plus className="w-4 h-4" /> Create Automation
         </Button>
       </div>
@@ -128,3 +128,4 @@ export default function ClientWorkflowBuilderPage() {
     </div>
   );
 }
+

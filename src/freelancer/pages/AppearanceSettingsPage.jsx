@@ -35,7 +35,7 @@ export default function AppearanceSettingsPage() {
 
   const accentColors = [
     { key: 'purple', label: 'Royal Purple', class: 'bg-success border-success' },
-    { key: 'blue', label: 'Deep Blue', class: 'bg-[#14a800] border-[#14a800]/20' },
+    { key: 'blue', label: 'Deep Blue', class: 'bg-[#2bb75c] border-[#2bb75c]/20' },
     { key: 'green', label: 'Emerald Green', class: 'bg-success border-success' },
     { key: 'red', label: 'Sunset Red', class: 'bg-[#e63946] border-[#e63946]' }
   ];
@@ -166,3 +166,4 @@ export default function AppearanceSettingsPage() {
     </div>
   );
 }
+

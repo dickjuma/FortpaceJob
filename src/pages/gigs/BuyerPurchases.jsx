@@ -35,7 +35,7 @@ const BuyerPurchases = () => {
         <div className="container mx-auto px-4 md:px-8 max-w-5xl">
 
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-12 bg-[#14a800]/10 text-[#14a800] rounded-xl flex items-center justify-center shadow-sm">
+            <div className="w-12 h-12 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl flex items-center justify-center shadow-sm">
               <ShoppingBag className="w-6 h-6 fill-current" />
             </div>
             <div>
@@ -50,7 +50,7 @@ const BuyerPurchases = () => {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex-1 sm:flex-none px-8 py-4 font-bold text-sm transition-colors border-b-2 capitalize ${activeTab === tab ? 'border-[#14a800]/20 text-[#14a800] bg-white' : 'border-transparent text-zinc-500 hover:text-zinc-900 hover:bg-surface'}`}
+                  className={`flex-1 sm:flex-none px-8 py-4 font-bold text-sm transition-colors border-b-2 capitalize ${activeTab === tab ? 'border-[#2bb75c]/20 text-[#2bb75c] bg-white' : 'border-transparent text-zinc-500 hover:text-zinc-900 hover:bg-surface'}`}
                 >
                   {tab} Orders
                 </button>
@@ -60,7 +60,7 @@ const BuyerPurchases = () => {
             <div className="p-6 md:p-8">
               {loading ? (
                 <div className="flex justify-center py-20">
-                  <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+                  <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
                 </div>
               ) : filtered.length === 0 ? (
                 <div className="py-20 text-center text-zinc-500">
@@ -74,7 +74,7 @@ const BuyerPurchases = () => {
                       <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-4">
                         <div>
                           <div className="text-xs font-bold text-zinc-400 mb-1">{order.id} • Purchased {order.date}</div>
-                          <Link to={`/gigs/gig/${order.gigId || ''}`} className="text-lg font-bold text-zinc-900 hover:text-[#14a800] transition-colors block mb-1">
+                          <Link to={`/gigs/gig/${order.gigId || ''}`} className="text-lg font-bold text-zinc-900 hover:text-[#2bb75c] transition-colors block mb-1">
                             {order.gig}
                           </Link>
                           <div className="text-sm font-medium text-zinc-500">
@@ -86,7 +86,7 @@ const BuyerPurchases = () => {
 
                       <div className="bg-surface border border-zinc-100 rounded-xl p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
                         <div className="flex items-center gap-2">
-                          <span className={`w-2 h-2 rounded-full ${order.status === 'delivered' ? 'bg-[#14a800]' : order.status === 'completed' ? 'bg-success' : 'bg-amber-500'}`}></span>
+                          <span className={`w-2 h-2 rounded-full ${order.status === 'delivered' ? 'bg-[#2bb75c]' : order.status === 'completed' ? 'bg-success' : 'bg-amber-500'}`}></span>
                           <span className="font-bold text-sm text-zinc-700 capitalize">{order.status.replace('_', ' ')}</span>
                         </div>
                         <div className="flex w-full sm:w-auto gap-2">
@@ -95,7 +95,7 @@ const BuyerPurchases = () => {
                           </button>
                           {order.status === 'delivered' && (
                             <>
-                              <button type="button" className="flex-1 sm:flex-none px-4 py-2.5 bg-[#14a800]/10 text-[#14a800] font-bold rounded-lg flex items-center justify-center gap-2">
+                              <button type="button" className="flex-1 sm:flex-none px-4 py-2.5 bg-[#2bb75c]/10 text-[#2bb75c] font-bold rounded-lg flex items-center justify-center gap-2">
                                 <Download className="w-4 h-4" /> Files
                               </button>
                               <button type="button" className="flex-1 sm:flex-none px-4 py-2.5 bg-success text-white font-bold rounded-lg shadow-sm text-sm">
@@ -124,3 +124,4 @@ const BuyerPurchases = () => {
 };
 
 export default BuyerPurchases;
+

@@ -91,7 +91,7 @@ export default function StaticInfoPage() {
   return (
     <div className="min-h-screen bg-zinc-50 pt-28 pb-16">
       <div className="max-w-3xl mx-auto px-4">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#14a800] mb-8 hover:underline">
+        <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#2bb75c] mb-8 hover:underline">
           <ArrowLeft className="w-4 h-4" /> Back home
         </Link>
 
@@ -113,7 +113,7 @@ export default function StaticInfoPage() {
             {slug === 'contact' && (
               <a
                 href="mailto:hello@fortspace.com"
-                className="inline-flex items-center gap-2 px-5 py-3 bg-[#14a800] text-white font-bold rounded-lg hover:bg-[#118a00]"
+                className="inline-flex items-center gap-2 px-5 py-3 bg-[#2bb75c] text-white font-bold rounded-lg hover:bg-[#1d8d38]"
               >
                 <Mail className="w-4 h-4" /> hello@fortspace.com
               </a>
@@ -124,3 +124,4 @@ export default function StaticInfoPage() {
     </div>
   );
 }
+

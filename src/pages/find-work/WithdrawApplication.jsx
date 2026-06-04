@@ -47,7 +47,7 @@ const WithdrawApplication = () => {
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-3xl">
 
-          <Link to="/find-work/my-applications" className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#14a800] transition-colors mb-6">
+          <Link to="/find-work/my-applications" className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#2bb75c] transition-colors mb-6">
             <ArrowLeft className="w-4 h-4" /> Back to Applications
           </Link>
 
@@ -58,7 +58,7 @@ const WithdrawApplication = () => {
 
           {loading ? (
             <div className="bg-white border border-zinc-200 rounded-3xl p-12 text-center text-zinc-500">
-              <Loader2 className="w-10 h-10 mx-auto mb-3 animate-spin text-[#14a800]" />
+              <Loader2 className="w-10 h-10 mx-auto mb-3 animate-spin text-[#2bb75c]" />
               Loading proposal details...
             </div>
           ) : (
@@ -99,7 +99,7 @@ const WithdrawApplication = () => {
                     type="checkbox"
                     checked={agreed}
                     onChange={(e) => setAgreed(e.target.checked)}
-                    className="mt-1 w-4 h-4 rounded border-zinc-300 text-[#14a800] focus:ring-[#14a800]/20"
+                    className="mt-1 w-4 h-4 rounded border-zinc-300 text-[#2bb75c] focus:ring-[#2bb75c]/20"
                   />
                   <span className="text-sm font-medium text-zinc-700">I understand this action is permanent and cannot be reversed.</span>
                 </label>
@@ -122,3 +122,4 @@ const WithdrawApplication = () => {
 };
 
 export default WithdrawApplication;
+

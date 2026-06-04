@@ -24,7 +24,7 @@ export default function JobDetailsPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="mb-6">
-        <Link to="/client/jobs" className="text-sm font-medium text-[#14a800] hover:text-[#14a800] mb-4 inline-flex items-center">
+        <Link to="/client/jobs" className="text-sm font-medium text-[#2bb75c] hover:text-[#2bb75c] mb-4 inline-flex items-center">
           <ChevronLeft className="w-4 h-4 mr-1" /> Back to Jobs
         </Link>
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
@@ -52,7 +52,7 @@ export default function JobDetailsPage() {
           <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
             <div className="p-6 border-b border-gray-100 dark:border-gray-800">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
-                <Users className="w-5 h-5 mr-2 text-[#14a800]" /> Review Proposals ({proposals.length})
+                <Users className="w-5 h-5 mr-2 text-[#2bb75c]" /> Review Proposals ({proposals.length})
               </h2>
             </div>
             <ul className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -60,7 +60,7 @@ export default function JobDetailsPage() {
                 <li key={proposal.id} className="p-6 hover:bg-surface dark:hover:bg-gray-800/50 transition-colors">
                   <div className="flex flex-col sm:flex-row justify-between">
                     <div className="flex items-start mb-4 sm:mb-0">
-                      <div className="w-12 h-12 rounded-full bg-[#14a800]/10 dark:bg-[#14a800]/30 text-[#14a800] flex items-center justify-center font-bold text-xl mr-4 border border-[#14a800]/20 dark:border-[#14a800]/20">
+                      <div className="w-12 h-12 rounded-full bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 text-[#2bb75c] flex items-center justify-center font-bold text-xl mr-4 border border-[#2bb75c]/20 dark:border-[#2bb75c]/20">
                         {proposal.name[0]}
                       </div>
                       <div>
@@ -77,12 +77,12 @@ export default function JobDetailsPage() {
                     </div>
                     <div className="text-left sm:text-right">
                       <p className="text-sm text-gray-500 mb-1">Bid Amount</p>
-                      <p className="text-xl font-bold text-[#14a800] dark:text-[#14a800]">{proposal.bid}</p>
+                      <p className="text-xl font-bold text-[#2bb75c] dark:text-[#2bb75c]">{proposal.bid}</p>
                       <p className="text-xs text-gray-500 mt-1">{proposal.time}</p>
                     </div>
                   </div>
                   <div className="mt-6 flex flex-wrap gap-3">
-                    <button className="flex items-center px-4 py-2 bg-[#14a800] text-white text-sm font-medium rounded-lg hover:bg-[#118a00] shadow-sm">
+                    <button className="flex items-center px-4 py-2 bg-[#2bb75c] text-white text-sm font-medium rounded-lg hover:bg-[#1d8d38] shadow-sm">
                       <MessageSquare className="w-4 h-4 mr-2" /> Message
                     </button>
                     <button className="flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-surface">
@@ -140,3 +140,4 @@ export default function JobDetailsPage() {
     </div>
   );
 }
+

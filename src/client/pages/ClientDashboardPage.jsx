@@ -98,7 +98,7 @@ export default function ClientDashboardPage() {
           </div>
           
           <div className="flex flex-wrap gap-3 relative z-10">
-            <Link to="/client-services/create-job" className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#14a800]/20">
+            <Link to="/client-services/create-job" className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#2bb75c]/20">
               <PlusCircle className="w-4 h-4" />
               Post New Project
             </Link>
@@ -151,11 +151,11 @@ export default function ClientDashboardPage() {
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border ${
                           contract.status === 'ACTIVE' ? 'bg-success/10 text-success border-success/20' : 
                           contract.status === 'PENDING' ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' : 
-                          'bg-#14a800]/10 text-blue-400 border-#14a800]/20'
+                          'bg-#2bb75c]/10 text-blue-400 border-#2bb75c]/20'
                         }`}>
                           <span className={`w-1.5 h-1.5 rounded-full ${
                             contract.status === 'ACTIVE' ? 'bg-success' : 
-                            contract.status === 'PENDING' ? 'bg-yellow-500' : 'bg-#14a800]'
+                            contract.status === 'PENDING' ? 'bg-yellow-500' : 'bg-#2bb75c]'
                           }`}></span> {contract.status}
                         </span>
                       </td>

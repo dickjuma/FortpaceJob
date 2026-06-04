@@ -114,7 +114,7 @@ export default function ClientVerifyOtpPage() {
         <Card className="w-full max-w-md p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-[32px] shadow-2xl relative z-10">
           {verified ? (
             <div className="text-center py-8 space-y-6 animate-in zoom-in-95 duration-300">
-              <div className="w-20 h-20 bg-success/20 text-success rounded-full flex items-center justify-center mx-auto shadow-lg shadow-[#14a800]/10 border border-success/30">
+              <div className="w-20 h-20 bg-success/20 text-success rounded-full flex items-center justify-center mx-auto shadow-lg shadow-[#2bb75c]/10 border border-success/30">
                 <CheckCircle className="w-10 h-10 animate-bounce" />
               </div>
               <div className="space-y-2">
@@ -179,7 +179,7 @@ export default function ClientVerifyOtpPage() {
                 <Button
                   type="submit"
                   disabled={isVerifying}
-                  className="w-full bg-success hover:bg-success/95 border-none font-bold text-xs py-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-[#14a800]/20 transition-all"
+                  className="w-full bg-success hover:bg-success/95 border-none font-bold text-xs py-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-[#2bb75c]/20 transition-all"
                 >
                   {isVerifying ? 'Verifying Payload...' : 'Decrypt Command Portal'}
                   <ArrowRight className="w-4 h-4" />
@@ -192,3 +192,4 @@ export default function ClientVerifyOtpPage() {
     </div>
   );
 }
+

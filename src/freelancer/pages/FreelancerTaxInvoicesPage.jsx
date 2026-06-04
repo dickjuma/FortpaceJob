@@ -128,7 +128,7 @@ export default function FreelancerTaxInvoicesPage() {
                   <button className="px-5 py-3 bg-white dark:bg-[#222222] border border-zinc-200 dark:border-white/10 rounded-xl text-xs font-black uppercase tracking-widest text-zinc-700 dark:text-white shadow-sm flex items-center gap-2 flex-1 md:flex-none justify-center hover:bg-zinc-50 dark:hover:bg-white/5 transition-colors">
                     <Filter size={16} /> Filter
                   </button>
-                  <button className="px-5 py-3 bg-success hover:bg-success/90 text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-[#14a800]/20 flex items-center gap-2 flex-1 md:flex-none justify-center transition-all">
+                  <button className="px-5 py-3 bg-success hover:bg-success/90 text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-[#2bb75c]/20 flex items-center gap-2 flex-1 md:flex-none justify-center transition-all">
                     <FileText size={16} /> New Invoice
                   </button>
                 </div>
@@ -204,3 +204,4 @@ export default function FreelancerTaxInvoicesPage() {
     </div>
   );
 }
+

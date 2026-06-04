@@ -44,7 +44,7 @@ export default function ClientCompliancePage() {
           <p className="text-xs font-semibold text-light-gray/50 mt-1">Audit company registrations, manage automated NDA contracts, and inspect KRA tax clearance certificates.</p>
         </div>
 
-        <Button onClick={() => toast.success('New compliance template initialized.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20">
+        <Button onClick={() => toast.success('New compliance template initialized.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#2bb75c]/20">
           <Plus className="w-4 h-4" /> Add Compliance Doc
         </Button>
       </div>
@@ -147,3 +147,4 @@ export default function ClientCompliancePage() {
     </div>
   );
 }
+

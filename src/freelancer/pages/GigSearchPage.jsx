@@ -35,10 +35,10 @@ export default function GigSearchPage() {
                 placeholder="What service are you looking for today?"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-zinc-100 dark:bg-zinc-800 border-none rounded-xl pl-12 pr-4 py-3 text-sm font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#14a800] transition-all placeholder:text-zinc-400"
+                className="w-full bg-zinc-100 dark:bg-zinc-800 border-none rounded-xl pl-12 pr-4 py-3 text-sm font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c] transition-all placeholder:text-zinc-400"
               />
               <Search className="absolute left-4 top-1/2 -tranzinc-y-1/2 w-5 h-5 text-zinc-400" />
-              <button className="absolute right-2 top-1/2 -tranzinc-y-1/2 bg-[#14a800] text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-[#118a00] transition-colors">
+              <button className="absolute right-2 top-1/2 -tranzinc-y-1/2 bg-[#2bb75c] text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-[#1d8d38] transition-colors">
                 Search
               </button>
             </div>
@@ -49,7 +49,7 @@ export default function GigSearchPage() {
                 onClick={() => setIsFiltersOpen(!isFiltersOpen)}
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border transition-colors shrink-0",
-                  isFiltersOpen ? "border-[#14a800]/20 bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800]" : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-surface dark:hover:bg-zinc-800/50"
+                  isFiltersOpen ? "border-[#2bb75c]/20 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c]" : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-surface dark:hover:bg-zinc-800/50"
                 )}
               >
                 <SlidersHorizontal className="w-4 h-4" /> Filters
@@ -57,7 +57,7 @@ export default function GigSearchPage() {
               
               <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-700 shrink-0 mx-1" />
               
-              <select className="px-4 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold text-zinc-700 dark:text-zinc-300 outline-none focus:ring-2 focus:ring-[#14a800] cursor-pointer shrink-0">
+              <select className="px-4 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold text-zinc-700 dark:text-zinc-300 outline-none focus:ring-2 focus:ring-[#2bb75c] cursor-pointer shrink-0">
                 <option>Sort by: Recommended</option>
                 <option>Sort by: Best Selling</option>
                 <option>Sort by: Newest Arrivals</option>
@@ -109,7 +109,7 @@ export default function GigSearchPage() {
                     <label key={time} className="flex items-center gap-3 cursor-pointer group">
                       <div className={cn(
                         "w-5 h-5 rounded border flex items-center justify-center transition-colors",
-                        deliveryFilter === time ? "bg-[#14a800] border-[#14a800]/20" : "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-surface-dark group-hover:border-[#14a800]/20"
+                        deliveryFilter === time ? "bg-[#2bb75c] border-[#2bb75c]/20" : "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-surface-dark group-hover:border-[#2bb75c]/20"
                       )}>
                         {deliveryFilter === time && <Check className="w-3.5 h-3.5 text-white" />}
                       </div>
@@ -124,9 +124,9 @@ export default function GigSearchPage() {
               <div className="pb-6 border-b border-zinc-200 dark:border-zinc-800">
                 <h3 className="font-bold text-zinc-900 dark:text-white mb-4">Budget ($)</h3>
                 <div className="flex items-center gap-2">
-                  <input type="number" placeholder="Min" className="w-full bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#14a800]/20" />
+                  <input type="number" placeholder="Min" className="w-full bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#2bb75c]/20" />
                   <span className="text-zinc-400">-</span>
-                  <input type="number" placeholder="Max" className="w-full bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#14a800]/20" />
+                  <input type="number" placeholder="Max" className="w-full bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#2bb75c]/20" />
                 </div>
               </div>
 
@@ -140,7 +140,7 @@ export default function GigSearchPage() {
                       <label key={level} className="flex items-center gap-3 cursor-pointer group">
                         <div className={cn(
                           "w-5 h-5 rounded border flex items-center justify-center transition-colors",
-                          isChecked ? "bg-[#14a800] border-[#14a800]/20" : "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-surface-dark group-hover:border-[#14a800]/20"
+                          isChecked ? "bg-[#2bb75c] border-[#2bb75c]/20" : "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-surface-dark group-hover:border-[#2bb75c]/20"
                         )}>
                           {isChecked && <Check className="w-3.5 h-3.5 text-white" />}
                         </div>
@@ -177,14 +177,14 @@ export default function GigSearchPage() {
 
           {loading ? (
             <div className="flex justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+              <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
             </div>
           ) : gigs.length === 0 ? (
             <p className="text-center text-zinc-500 font-medium py-16">No gigs match your search.</p>
           ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {gigs.map(gig => (
-              <div key={gig.id} className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden group hover:shadow-xl hover:shadow-zinc-200/50 dark:hover:shadow-[#14a800]/25/5 transition-all hover:-tranzinc-y-1 flex flex-col cursor-pointer">
+              <div key={gig.id} className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden group hover:shadow-xl hover:shadow-zinc-200/50 dark:hover:shadow-[#2bb75c]/25/5 transition-all hover:-tranzinc-y-1 flex flex-col cursor-pointer">
                 
                 {/* Thumbnail */}
                 <div className="aspect-[4/3] w-full relative overflow-hidden bg-zinc-100 dark:bg-zinc-800">
@@ -207,7 +207,7 @@ export default function GigSearchPage() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-sm font-bold text-zinc-700 dark:text-zinc-300 leading-snug mb-3 line-clamp-2 hover:text-[#14a800] dark:hover:text-[#14a800] transition-colors flex-1">
+                  <h3 className="text-sm font-bold text-zinc-700 dark:text-zinc-300 leading-snug mb-3 line-clamp-2 hover:text-[#2bb75c] dark:hover:text-[#2bb75c] transition-colors flex-1">
                     {gig.title}
                   </h3>
 
@@ -236,3 +236,4 @@ export default function GigSearchPage() {
     </div>
   );
 }
+

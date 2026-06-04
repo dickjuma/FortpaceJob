@@ -99,7 +99,7 @@ export default function OTPInput({
                   ? 'border-red-300 text-red-600 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200' 
                   : isComplete
                     ? 'border-green-300 text-green-700 bg-green-50/50 focus:border-green-500 focus:ring-2 focus:ring-green-200'
-                    : 'border-zinc-200 bg-white/50 dark:bg-surface-dark/50 backdrop-blur-sm focus:border-[#14a800]/20 focus:ring-2 focus:ring-[#14a800]/20 dark:border-zinc-700 dark:text-white dark:focus:border-[#14a800]/20'
+                    : 'border-zinc-200 bg-white/50 dark:bg-surface-dark/50 backdrop-blur-sm focus:border-[#2bb75c]/20 focus:ring-2 focus:ring-[#2bb75c]/20 dark:border-zinc-700 dark:text-white dark:focus:border-[#2bb75c]/20'
                 }
                 border shadow-sm
                 disabled:opacity-50 disabled:bg-surface
@@ -109,7 +109,7 @@ export default function OTPInput({
             {focusedIndex === index && !isComplete && !error && (
               <motion.div 
                 layoutId="otp-focus"
-                className="absolute -bottom-2 left-1/2 -tranzinc-x-1/2 w-1.5 h-1.5 rounded-full bg-[#14a800]"
+                className="absolute -bottom-2 left-1/2 -tranzinc-x-1/2 w-1.5 h-1.5 rounded-full bg-[#2bb75c]"
               />
             )}
           </motion.div>
@@ -128,3 +128,4 @@ export default function OTPInput({
     </div>
   );
 }
+

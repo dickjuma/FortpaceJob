@@ -97,7 +97,7 @@ const CreateAdminModal = () => {
       <div className="relative w-full max-w-4xl max-h-[90vh] bg-white dark:bg-surface-dark rounded-[32px] shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300">
         <div className="p-8 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
-             <div className="h-10 w-10 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] rounded-xl flex items-center justify-center">
+             <div className="h-10 w-10 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 text-[#2bb75c] rounded-xl flex items-center justify-center">
                 <Shield size={24} />
              </div>
              <h2 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Onboard Administrator</h2>
@@ -110,8 +110,8 @@ const CreateAdminModal = () => {
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
           {/* Section: Basic Info */}
           <div className="space-y-6">
-            <h3 className="text-xs font-black uppercase tracking-widest text-[#14a800] flex items-center gap-2">
-               <div className="h-1 w-4 bg-[#14a800] rounded-full" />
+            <h3 className="text-xs font-black uppercase tracking-widest text-[#2bb75c] flex items-center gap-2">
+               <div className="h-1 w-4 bg-[#2bb75c] rounded-full" />
                Basic Identification
             </h3>
             
@@ -129,7 +129,7 @@ const CreateAdminModal = () => {
                      )}
                   </div>
                   
-                  <label className="absolute -bottom-2 -right-2 h-10 w-10 bg-[#14a800] text-white rounded-2xl flex items-center justify-center shadow-lg cursor-pointer hover:bg-[#118a00] transition-all">
+                  <label className="absolute -bottom-2 -right-2 h-10 w-10 bg-[#2bb75c] text-white rounded-2xl flex items-center justify-center shadow-lg cursor-pointer hover:bg-[#1d8d38] transition-all">
                      <UploadCloud size={18} />
                      <input type="file" className="hidden" accept="image/*" onChange={handleAvatarChange} disabled={isUploading} />
                   </label>
@@ -153,19 +153,19 @@ const CreateAdminModal = () => {
                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">First Name</label>
-                    <input required type="text" className="w-full h-12 px-4 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl text-sm font-bold outline-none focus:border-[#14a800]/20 transition-all" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} />
+                    <input required type="text" className="w-full h-12 px-4 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl text-sm font-bold outline-none focus:border-[#2bb75c]/20 transition-all" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Last Name</label>
-                    <input required type="text" className="w-full h-12 px-4 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl text-sm font-bold outline-none focus:border-[#14a800]/20 transition-all" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} />
+                    <input required type="text" className="w-full h-12 px-4 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl text-sm font-bold outline-none focus:border-[#2bb75c]/20 transition-all" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Corporate Email</label>
-                    <input required type="email" className="w-full h-12 px-4 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl text-sm font-bold outline-none focus:border-[#14a800]/20 transition-all" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                    <input required type="email" className="w-full h-12 px-4 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl text-sm font-bold outline-none focus:border-[#2bb75c]/20 transition-all" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Phone Number</label>
-                    <input required type="tel" className="w-full h-12 px-4 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl text-sm font-bold outline-none focus:border-[#14a800]/20 transition-all" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+                    <input required type="tel" className="w-full h-12 px-4 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl text-sm font-bold outline-none focus:border-[#2bb75c]/20 transition-all" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
                   </div>
                </div>
             </div>
@@ -173,8 +173,8 @@ const CreateAdminModal = () => {
 
           {/* Section: Security */}
           <div className="space-y-6">
-            <h3 className="text-xs font-black uppercase tracking-widest text-[#14a800] flex items-center gap-2">
-               <div className="h-1 w-4 bg-[#14a800] rounded-full" />
+            <h3 className="text-xs font-black uppercase tracking-widest text-[#2bb75c] flex items-center gap-2">
+               <div className="h-1 w-4 bg-[#2bb75c] rounded-full" />
                Security Credentials
             </h3>
             <div className="p-6 bg-surface-dark rounded-2xl border border-white/5 shadow-inner relative overflow-hidden group">
@@ -214,8 +214,8 @@ const CreateAdminModal = () => {
 
           {/* Section: Roles & Permissions */}
           <div className="space-y-8">
-            <h3 className="text-xs font-black uppercase tracking-widest text-[#14a800] flex items-center gap-2">
-               <div className="h-1 w-4 bg-[#14a800] rounded-full" />
+            <h3 className="text-xs font-black uppercase tracking-widest text-[#2bb75c] flex items-center gap-2">
+               <div className="h-1 w-4 bg-[#2bb75c] rounded-full" />
                Governance Roles & Access
             </h3>
             
@@ -228,11 +228,11 @@ const CreateAdminModal = () => {
                     className={cn(
                       "p-4 rounded-2xl border-2 transition-all text-left group",
                       formData.role === id 
-                        ? "border-[#14a800]/20 bg-[#14a800]/5/50 dark:bg-[#14a800]/10" 
-                        : "border-zinc-100 dark:border-zinc-800 hover:border-[#14a800]/20"
+                        ? "border-[#2bb75c]/20 bg-[#2bb75c]/5/50 dark:bg-[#2bb75c]/10" 
+                        : "border-zinc-100 dark:border-zinc-800 hover:border-[#2bb75c]/20"
                     )}
                  >
-                    <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110", formData.role === id ? "bg-[#14a800] text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400")}>
+                    <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110", formData.role === id ? "bg-[#2bb75c] text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400")}>
                        <role.icon size={20} />
                     </div>
                     <p className="text-xs font-black text-zinc-900 dark:text-white leading-none mb-1">{role.label}</p>
@@ -253,7 +253,7 @@ const CreateAdminModal = () => {
                                <div 
                                   className={cn(
                                     "h-5 w-5 rounded-md flex items-center justify-center border-2 transition-all",
-                                    formData.permissions.includes(p.id) ? "bg-[#14a800] border-[#14a800]/20 text-white" : "border-zinc-200 dark:border-zinc-700"
+                                    formData.permissions.includes(p.id) ? "bg-[#2bb75c] border-[#2bb75c]/20 text-white" : "border-zinc-200 dark:border-zinc-700"
                                   )}
                                   onClick={() => togglePermission(p.id)}
                                >
@@ -289,3 +289,4 @@ const CreateAdminModal = () => {
 };
 
 export default CreateAdminModal;
+

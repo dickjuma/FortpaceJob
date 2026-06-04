@@ -34,7 +34,7 @@ export default function DirectOfferModal({ isOpen, onClose, freelancerName = "Sa
               <input 
                 type="text" 
                 placeholder="e.g. Frontend Development for Dashboard"
-                className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#14a800] outline-none"
+                className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#2bb75c] outline-none"
               />
             </div>
 
@@ -43,7 +43,7 @@ export default function DirectOfferModal({ isOpen, onClose, freelancerName = "Sa
               <textarea 
                 rows={4}
                 placeholder="Describe the deliverables..."
-                className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#14a800] outline-none resize-none"
+                className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#2bb75c] outline-none resize-none"
               />
             </div>
 
@@ -55,7 +55,7 @@ export default function DirectOfferModal({ isOpen, onClose, freelancerName = "Sa
                   <input 
                     type="number" 
                     placeholder="5000"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#14a800] outline-none"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#2bb75c] outline-none"
                   />
                 </div>
               </div>
@@ -65,14 +65,14 @@ export default function DirectOfferModal({ isOpen, onClose, freelancerName = "Sa
                   <Calendar className="w-5 h-5 absolute left-3 top-1/2 -tranzinc-y-1/2 text-gray-400" />
                   <input 
                     type="date" 
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#14a800] outline-none"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#2bb75c] outline-none"
                   />
                 </div>
               </div>
             </div>
 
             <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-              <button className="flex items-center text-sm font-medium text-[#14a800] dark:text-[#14a800] hover:text-[#14a800]">
+              <button className="flex items-center text-sm font-medium text-[#2bb75c] dark:text-[#2bb75c] hover:text-[#2bb75c]">
                 <Paperclip className="w-4 h-4 mr-2" /> Attach Files or Brief
               </button>
             </div>
@@ -82,7 +82,7 @@ export default function DirectOfferModal({ isOpen, onClose, freelancerName = "Sa
             <button onClick={onClose} className="px-5 py-2.5 border border-gray-300 dark:border-gray-700 rounded-xl text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
               Cancel
             </button>
-            <button className="px-5 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl text-sm font-medium transition-colors flex items-center shadow-lg shadow-[#14a800]/25/25">
+            <button className="px-5 py-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-xl text-sm font-medium transition-colors flex items-center shadow-lg shadow-[#2bb75c]/25/25">
               <Send className="w-4 h-4 mr-2" /> Send Offer
             </button>
           </div>
@@ -91,3 +91,4 @@ export default function DirectOfferModal({ isOpen, onClose, freelancerName = "Sa
     </AnimatePresence>
   );
 }
+

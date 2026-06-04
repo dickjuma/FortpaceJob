@@ -22,7 +22,7 @@ export default function MeetingsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Video className="w-6 h-6 text-[#14a800]" /> Meetings & Interviews
+              <Video className="w-6 h-6 text-[#2bb75c]" /> Meetings & Interviews
             </h1>
             <p className="text-sm text-zinc-400 mt-1">Scheduled video calls and interview sessions</p>
           </div>
@@ -37,13 +37,13 @@ export default function MeetingsPage() {
 
         {isLoading ? (
           <div className="flex items-center justify-center h-48">
-            <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center h-48 gap-3 bg-zinc-900/40 rounded-2xl border border-zinc-800">
             <AlertCircle className="w-10 h-10 text-red-400 opacity-60" />
             <p className="text-zinc-400 text-sm">Failed to load meetings.</p>
-            <button onClick={() => refetch()} className="text-xs text-[#14a800] hover:underline">Retry</button>
+            <button onClick={() => refetch()} className="text-xs text-[#2bb75c] hover:underline">Retry</button>
           </div>
         ) : interviews.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-48 gap-3 bg-zinc-900/40 rounded-2xl border border-zinc-800">
@@ -62,7 +62,7 @@ export default function MeetingsPage() {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-[#14a800]/10 text-[#14a800] border border-[#14a800]/20">
+                        <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-[#2bb75c]/10 text-[#2bb75c] border border-[#2bb75c]/20">
                           {item.status || 'SCHEDULED'}
                         </span>
                         {item.jobId && (
@@ -94,7 +94,7 @@ export default function MeetingsPage() {
                         href={item.videoLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl text-sm font-bold transition-colors shrink-0"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-xl text-sm font-bold transition-colors shrink-0"
                       >
                         <Video className="w-4 h-4" /> Join Meeting
                       </a>
@@ -109,3 +109,4 @@ export default function MeetingsPage() {
     </div>
   );
 }
+

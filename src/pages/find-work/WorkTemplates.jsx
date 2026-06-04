@@ -136,7 +136,7 @@ const WorkTemplates = () => {
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-6 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl transition-colors flex items-center gap-2 disabled:opacity-60"
+                className="px-6 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl transition-colors flex items-center gap-2 disabled:opacity-60"
               >
                 {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Plus className="w-5 h-5" />}
                 Save Template
@@ -147,7 +147,7 @@ const WorkTemplates = () => {
           <div className="bg-white border border-zinc-200 rounded-3xl overflow-hidden shadow-sm">
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
-                <Loader2 className="w-10 h-10 animate-spin text-[#14a800] mb-4" />
+                <Loader2 className="w-10 h-10 animate-spin text-[#2bb75c] mb-4" />
                 <p className="font-medium">Loading templates…</p>
               </div>
             ) : templates.length === 0 ? (
@@ -179,7 +179,7 @@ const WorkTemplates = () => {
                       </td>
                       <td className="p-6 text-right">
                         <div className="flex justify-end items-center gap-2">
-                          <Link to={`/post-job?template=${template.id}`} className="px-4 py-2 bg-[#14a800]/5 text-[#14a800] hover:bg-[#14a800]/10 font-bold rounded-lg transition-colors text-sm flex items-center gap-2">
+                          <Link to={`/post-job?template=${template.id}`} className="px-4 py-2 bg-[#2bb75c]/5 text-[#2bb75c] hover:bg-[#2bb75c]/10 font-bold rounded-lg transition-colors text-sm flex items-center gap-2">
                             <Copy className="w-4 h-4" /> Use
                           </Link>
                           <button
@@ -206,3 +206,4 @@ const WorkTemplates = () => {
 };
 
 export default WorkTemplates;
+

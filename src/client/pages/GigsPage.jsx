@@ -31,9 +31,9 @@ export default function GigsPage() {
           <input 
             type="text" 
             placeholder="Search services..." 
-            className="rounded-md border-gray-300 dark:border-gray-600 bg-surface-white dark:bg-surface-dark focus:border-[#14a800]/20 focus:ring-[#14a800]"
+            className="rounded-md border-gray-300 dark:border-gray-600 bg-surface-white dark:bg-surface-dark focus:border-[#2bb75c]/20 focus:ring-[#2bb75c]"
           />
-          <button className="bg-[#14a800] hover:bg-[#14a800] text-white px-4 py-2 rounded-md transition-colors">
+          <button className="bg-[#2bb75c] hover:bg-[#2bb75c] text-white px-4 py-2 rounded-md transition-colors">
             Search
           </button>
         </div>
@@ -65,7 +65,7 @@ export default function GigsPage() {
                   <span className="text-lg font-bold text-gray-900 dark:text-white">
                     ${gig.price}
                   </span>
-                  <button className="text-[#14a800] hover:text-[#14a800] text-sm font-medium">
+                  <button className="text-[#2bb75c] hover:text-[#2bb75c] text-sm font-medium">
                     Order Now
                   </button>
                 </div>
@@ -77,3 +77,4 @@ export default function GigsPage() {
     </div>
   );
 }
+

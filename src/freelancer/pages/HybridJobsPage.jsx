@@ -85,7 +85,7 @@ export default function HybridJobsPage() {
               </div>
               <button 
                 onClick={() => handleApplySimulate(job.title)}
-                className="px-4 py-2 bg-success hover:bg-success/95 text-white font-black rounded-xl text-xs transition-colors shadow-lg shadow-[#14a800]/15 flex items-center gap-1"
+                className="px-4 py-2 bg-success hover:bg-success/95 text-white font-black rounded-xl text-xs transition-colors shadow-lg shadow-[#2bb75c]/15 flex items-center gap-1"
               >
                 Apply Hybrid
               </button>
@@ -105,3 +105,4 @@ export default function HybridJobsPage() {
     </div>
   );
 }
+

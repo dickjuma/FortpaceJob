@@ -139,7 +139,7 @@ export default function GigDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
       </div>
     );
   }
@@ -148,7 +148,7 @@ export default function GigDetailPage() {
     return (
       <div className="p-8 text-center">
         <p className="text-red-600 mb-4">Could not load this service.</p>
-        <Link to="/freelancer/gigs" className="text-[#14a800] font-bold">Back to my services</Link>
+        <Link to="/freelancer/gigs" className="text-[#2bb75c] font-bold">Back to my services</Link>
       </div>
     );
   }
@@ -202,7 +202,7 @@ export default function GigDetailPage() {
               <div className="flex items-center gap-2">
                 <img src={GIG.seller.avatar} alt="Seller" className="w-8 h-8 rounded-full" />
                 <span className="font-bold text-zinc-900 dark:text-white">{GIG.seller.name}</span>
-                <span className="text-xs font-bold text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/10 px-2 py-0.5 rounded-md">{GIG.seller.level}</span>
+                <span className="text-xs font-bold text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 px-2 py-0.5 rounded-md">{GIG.seller.level}</span>
               </div>
               <div className="w-1 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
               <div className="flex items-center text-amber-500 font-bold gap-1">
@@ -247,7 +247,7 @@ export default function GigDetailPage() {
                 <img src={GIG.seller.avatar} alt="Seller" className="w-24 h-24 rounded-full border-4 border-white dark:border-zinc-800 shadow-lg object-cover" />
                 <div>
                   <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{GIG.seller.name}</h3>
-                  <p className="text-[#14a800] font-bold text-sm mb-2">{GIG.seller.level}</p>
+                  <p className="text-[#2bb75c] font-bold text-sm mb-2">{GIG.seller.level}</p>
                   <div className="flex items-center justify-center sm:justify-start gap-1 text-amber-500 font-bold text-sm mb-4">
                     <Star className="w-4 h-4 fill-amber-500" /> {GIG.rating} <span className="text-zinc-500">({GIG.reviews} reviews)</span>
                   </div>
@@ -316,7 +316,7 @@ export default function GigDetailPage() {
               {GIG.reviewsList.map((review, i) => (
                 <div key={i} className="pb-6 border-b border-zinc-100 dark:border-zinc-800 last:border-0">
                   <div className="flex items-start gap-4 mb-3">
-                    <div className="w-10 h-10 rounded-full bg-[#14a800]/10 dark:bg-[#14a800] text-[#14a800] dark:text-[#14a800] flex items-center justify-center font-bold">
+                    <div className="w-10 h-10 rounded-full bg-[#2bb75c]/10 dark:bg-[#2bb75c] text-[#2bb75c] dark:text-[#2bb75c] flex items-center justify-center font-bold">
                       {review.name.charAt(0)}
                     </div>
                     <div>
@@ -354,12 +354,12 @@ export default function GigDetailPage() {
                   onClick={() => setActiveTab(tab)}
                   className={cn(
                     "flex-1 py-4 text-xs font-bold uppercase tracking-wider transition-colors relative",
-                    activeTab === tab ? "text-[#14a800]" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white bg-surface dark:bg-zinc-800/50"
+                    activeTab === tab ? "text-[#2bb75c]" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white bg-surface dark:bg-zinc-800/50"
                   )}
                 >
                   {tab}
                   {activeTab === tab && (
-                    <motion.div layoutId="detail-tab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#14a800]" />
+                    <motion.div layoutId="detail-tab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2bb75c]" />
                   )}
                 </button>
               ))}
@@ -395,7 +395,7 @@ export default function GigDetailPage() {
                   ))}
                 </div>
 
-                <button onClick={() => toast('Proceeding to secure checkout...', { icon: '🔒' })} className="w-full py-4 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg shadow-[#14a800]/25/25 transition-all flex items-center justify-center gap-2 mb-4">
+                <button onClick={() => toast('Proceeding to secure checkout...', { icon: '🔒' })} className="w-full py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-lg shadow-[#2bb75c]/25/25 transition-all flex items-center justify-center gap-2 mb-4">
                   Continue (KES {GIG.packages[activeTab].price.toLocaleString()}) <ChevronRight className="w-4 h-4" />
                 </button>
                 <button onClick={() => toast('Opening comparison matrix...', { icon: '📊' })} className="w-full py-3 bg-transparent border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 font-bold rounded-xl hover:bg-surface dark:hover:bg-zinc-800 transition-colors">
@@ -410,7 +410,7 @@ export default function GigDetailPage() {
                 <ShieldCheck className="w-4 h-4 text-success" /> Forte Payment Protection
               </div>
               <div className="flex items-center gap-3 text-xs font-bold text-zinc-500">
-                <MessageSquare className="w-4 h-4 text-[#14a800]" /> Secure Communications
+                <MessageSquare className="w-4 h-4 text-[#2bb75c]" /> Secure Communications
               </div>
             </div>
 
@@ -425,7 +425,7 @@ export default function GigDetailPage() {
           <span className="block text-xs font-bold text-zinc-500 uppercase tracking-wider">Starting at</span>
           <span className="block text-lg font-black text-zinc-900 dark:text-white">KES {GIG.packages.basic.price.toLocaleString()}</span>
         </div>
-        <button onClick={() => toast('Proceeding to secure checkout...', { icon: '🔒' })} className="flex-1 py-3 bg-[#14a800] text-white font-bold rounded-xl shadow-sm">
+        <button onClick={() => toast('Proceeding to secure checkout...', { icon: '🔒' })} className="flex-1 py-3 bg-[#2bb75c] text-white font-bold rounded-xl shadow-sm">
           Continue
         </button>
       </div>
@@ -433,3 +433,4 @@ export default function GigDetailPage() {
     </div>
   );
 }
+

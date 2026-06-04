@@ -72,9 +72,9 @@ export default function UserRankingModal({ isOpen, onClose, user }) {
               </button>
             </div>
 
-            <div className="p-5 bg-[#14a800]/5 dark:bg-[#14a800]/20 rounded-[2rem] border border-[#14a800]/20 dark:border-[#14a800]/20/50 flex gap-4">
-              <Zap size={24} className="text-[#14a800] shrink-0" />
-              <p className="text-[10px] text-[#14a800] dark:text-[#14a800] font-bold leading-relaxed uppercase tracking-tight">
+            <div className="p-5 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 rounded-[2rem] border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/50 flex gap-4">
+              <Zap size={24} className="text-[#2bb75c] shrink-0" />
+              <p className="text-[10px] text-[#2bb75c] dark:text-[#2bb75c] font-bold leading-relaxed uppercase tracking-tight">
                 Ranking changes affect search visibility and trust badges. Boosted users appear 2.5x more often in searches.
               </p>
             </div>
@@ -95,3 +95,4 @@ export default function UserRankingModal({ isOpen, onClose, user }) {
     </div>
   );
 }
+

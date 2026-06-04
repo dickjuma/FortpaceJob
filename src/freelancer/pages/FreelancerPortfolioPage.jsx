@@ -35,7 +35,7 @@ export default function FreelancerPortfolioPage() {
           </div>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="px-6 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-sm transition-all flex items-center gap-2"
+            className="px-6 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-sm transition-all flex items-center gap-2"
           >
             <Plus className="w-5 h-5" /> Add New Project
           </button>
@@ -131,7 +131,7 @@ export default function FreelancerPortfolioPage() {
                   <label className="block text-sm font-bold text-zinc-900 dark:text-white mb-3">Project Thumbnail & Media</label>
                   <div className="w-full bg-surface dark:bg-zinc-800 border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-2xl p-12 flex flex-col items-center justify-center cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors group">
                     <div className="w-16 h-16 bg-white dark:bg-surface-dark shadow-sm rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <UploadCloud className="w-8 h-8 text-[#14a800]" />
+                      <UploadCloud className="w-8 h-8 text-[#2bb75c]" />
                     </div>
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">Drag & Drop Media</h3>
                     <p className="text-sm font-medium text-zinc-500 mb-6 text-center max-w-xs">Upload images, videos, or PDFs. The first image will be your project cover.</p>
@@ -145,22 +145,22 @@ export default function FreelancerPortfolioPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-bold text-zinc-900 dark:text-white mb-2">Project Title</label>
-                    <input type="text" placeholder="e.g. Fintech Mobile App UI" className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20" />
+                    <input type="text" placeholder="e.g. Fintech Mobile App UI" className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20" />
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-zinc-900 dark:text-white mb-2">Category</label>
-                    <select className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20">
+                    <select className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20">
                       <option>Select Category</option>
                       {categories.filter(c=>c!=='All').map(c => <option key={c}>{c}</option>)}
                     </select>
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-zinc-900 dark:text-white mb-2">Completion Date</label>
-                    <input type="month" className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20 text-zinc-500" />
+                    <input type="month" className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20 text-zinc-500" />
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-sm font-bold text-zinc-900 dark:text-white mb-2">Case Study / Description</label>
-                    <div className="border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden focus-within:border-[#14a800]/20 transition-colors">
+                    <div className="border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden focus-within:border-[#2bb75c]/20 transition-colors">
                       <div className="bg-surface dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 p-2 flex gap-2">
                         <button className="p-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded text-zinc-500 font-bold">B</button>
                         <button className="p-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded text-zinc-500 italic">I</button>
@@ -175,7 +175,7 @@ export default function FreelancerPortfolioPage() {
 
               <div className="sticky bottom-0 bg-white/90 dark:bg-surface-dark/90 backdrop-blur-md border-t border-zinc-200 dark:border-zinc-800 p-6 flex justify-end gap-4 z-20 rounded-b-3xl">
                 <button onClick={() => setIsModalOpen(false)} className="px-6 py-3 font-bold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors">Cancel</button>
-                <button className="px-8 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-sm transition-all">Publish Project</button>
+                <button className="px-8 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-sm transition-all">Publish Project</button>
               </div>
 
             </motion.div>
@@ -185,3 +185,4 @@ export default function FreelancerPortfolioPage() {
     </div>
   );
 }
+

@@ -118,7 +118,7 @@ export default function ClientTeamManagementPage() {
           </div>
           <button
             onClick={() => setShowInviteModal(true)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#14a800]/20"
+            className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#2bb75c]/20"
           >
             <Mail className="w-4 h-4" /> Invite Member
           </button>
@@ -365,3 +365,4 @@ export default function ClientTeamManagementPage() {
     </div>
   );
 }
+

@@ -40,7 +40,7 @@ export default function FreelancerGigCreationWizardPage() {
           
           <div className="py-6 flex justify-between relative">
             <div className="absolute top-1/2 left-0 w-full h-1 bg-zinc-100 dark:bg-zinc-800 -tranzinc-y-1/2 z-0"></div>
-            <div className="absolute top-1/2 left-0 h-1 bg-[#14a800] -tranzinc-y-1/2 z-0 transition-all duration-500" style={{ width: `${((currentStep - 1) / (STEPS.length - 1)) * 100}%` }}></div>
+            <div className="absolute top-1/2 left-0 h-1 bg-[#2bb75c] -tranzinc-y-1/2 z-0 transition-all duration-500" style={{ width: `${((currentStep - 1) / (STEPS.length - 1)) * 100}%` }}></div>
             
             {STEPS.map((step, idx) => {
               const isCompleted = step.id < currentStep;
@@ -49,13 +49,13 @@ export default function FreelancerGigCreationWizardPage() {
                 <div key={step.id} className="relative z-10 flex flex-col items-center gap-2">
                   <div className={cn(
                     "w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border-2 transition-colors",
-                    isActive ? "bg-white dark:bg-surface-dark border-[#14a800]/20 text-[#14a800] dark:text-[#14a800] shadow-lg" : 
-                    isCompleted ? "bg-[#14a800] border-[#14a800]/20 text-white" : 
+                    isActive ? "bg-white dark:bg-surface-dark border-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] shadow-lg" : 
+                    isCompleted ? "bg-[#2bb75c] border-[#2bb75c]/20 text-white" : 
                     "bg-white dark:bg-surface-dark border-zinc-200 dark:border-zinc-700 text-zinc-400"
                   )}>
                     {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : <step.icon className="w-4 h-4" />}
                   </div>
-                  <span className={cn("text-xs font-bold uppercase tracking-wider absolute -bottom-6 w-32 text-center", isActive ? "text-[#14a800] dark:text-[#14a800]" : isCompleted ? "text-zinc-900 dark:text-white" : "text-zinc-400")}>
+                  <span className={cn("text-xs font-bold uppercase tracking-wider absolute -bottom-6 w-32 text-center", isActive ? "text-[#2bb75c] dark:text-[#2bb75c]" : isCompleted ? "text-zinc-900 dark:text-white" : "text-zinc-400")}>
                     {step.name}
                   </span>
                 </div>
@@ -85,7 +85,7 @@ export default function FreelancerGigCreationWizardPage() {
                     <div className="flex relative">
                       <span className="absolute left-4 top-1/2 -tranzinc-y-1/2 text-zinc-900 dark:text-white font-bold text-lg">I will</span>
                       <textarea 
-                        className="w-full pl-16 pr-4 py-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-lg font-medium text-zinc-900 dark:text-white focus:border-[#14a800]/20 outline-none resize-none"
+                        className="w-full pl-16 pr-4 py-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-lg font-medium text-zinc-900 dark:text-white focus:border-[#2bb75c]/20 outline-none resize-none"
                         rows="2"
                         placeholder="do something I'm really good at"
                         value={title}
@@ -97,7 +97,7 @@ export default function FreelancerGigCreationWizardPage() {
                   <div className="grid grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-bold text-zinc-900 dark:text-white mb-2">Category</label>
-                      <select className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20">
+                      <select className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20">
                         <option>Select a category</option>
                         <option>Programming & Tech</option>
                         <option>Graphics & Design</option>
@@ -105,7 +105,7 @@ export default function FreelancerGigCreationWizardPage() {
                     </div>
                     <div>
                       <label className="block text-sm font-bold text-zinc-900 dark:text-white mb-2">Subcategory</label>
-                      <select className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20">
+                      <select className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20">
                         <option>Select a subcategory</option>
                         <option>Web Development</option>
                         <option>Mobile Apps</option>
@@ -119,7 +119,7 @@ export default function FreelancerGigCreationWizardPage() {
                     <input 
                       type="text" 
                       placeholder="e.g. react, nextjs, frontend" 
-                      className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#14a800]/20"
+                      className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20"
                     />
                   </div>
                 </div>
@@ -139,8 +139,8 @@ export default function FreelancerGigCreationWizardPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {[1,2,3].map(i => (
                         <div key={i} className="aspect-video bg-surface dark:bg-zinc-800 border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors group">
-                          <UploadCloud className="w-8 h-8 text-zinc-400 group-hover:text-[#14a800] transition-colors mb-2" />
-                          <span className="text-xs font-bold text-zinc-500 group-hover:text-[#14a800]">Drag & drop a Photo</span>
+                          <UploadCloud className="w-8 h-8 text-zinc-400 group-hover:text-[#2bb75c] transition-colors mb-2" />
+                          <span className="text-xs font-bold text-zinc-500 group-hover:text-[#2bb75c]">Drag & drop a Photo</span>
                         </div>
                       ))}
                     </div>
@@ -150,8 +150,8 @@ export default function FreelancerGigCreationWizardPage() {
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">Video (one only)</h3>
                     <p className="text-xs font-medium text-zinc-500 mb-4">Capture buyers' attention with a video that showcases your service.</p>
                     <div className="aspect-video md:w-2/3 bg-surface dark:bg-zinc-800 border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors group">
-                      <UploadCloud className="w-8 h-8 text-zinc-400 group-hover:text-[#14a800] transition-colors mb-2" />
-                      <span className="text-xs font-bold text-zinc-500 group-hover:text-[#14a800]">Drag & drop a Video</span>
+                      <UploadCloud className="w-8 h-8 text-zinc-400 group-hover:text-[#2bb75c] transition-colors mb-2" />
+                      <span className="text-xs font-bold text-zinc-500 group-hover:text-[#2bb75c]">Drag & drop a Video</span>
                     </div>
                   </div>
                 </div>
@@ -180,7 +180,7 @@ export default function FreelancerGigCreationWizardPage() {
             </button>
             <button 
               onClick={nextStep}
-              className="px-8 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg shadow-[#14a800]/25/20 transition-all flex items-center gap-2"
+              className="px-8 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-lg shadow-[#2bb75c]/25/20 transition-all flex items-center gap-2"
             >
               {currentStep === STEPS.length ? 'Publish Gig' : 'Save & Continue'} {currentStep !== STEPS.length && <ChevronRight className="w-4 h-4" />}
             </button>
@@ -189,18 +189,18 @@ export default function FreelancerGigCreationWizardPage() {
 
         {/* Right Column: AI Assistant & Tips */}
         <div className="w-80 shrink-0 hidden lg:block space-y-6">
-          <div className="bg-gradient-to-br from-[#14a800] to-[#118a00] rounded-3xl p-6 shadow-md text-white">
+          <div className="bg-gradient-to-br from-[#2bb75c] to-[#1d8d38] rounded-3xl p-6 shadow-md text-white">
             <div className="flex items-center gap-2 mb-4">
               <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm"><Sparkles className="w-5 h-5" /></div>
               <h3 className="font-bold">Forte AI Assistant</h3>
             </div>
-            <p className="text-sm font-medium text-[#14a800] mb-4 leading-relaxed">Need help writing your title? Provide a brief description of what you do, and I'll suggest SEO-optimized titles.</p>
+            <p className="text-sm font-medium text-[#2bb75c] mb-4 leading-relaxed">Need help writing your title? Provide a brief description of what you do, and I'll suggest SEO-optimized titles.</p>
             <textarea 
-              className="w-full bg-white/10 border border-white/20 rounded-xl p-3 text-sm font-medium placeholder:text-[#14a800] outline-none focus:border-white mb-3"
+              className="w-full bg-white/10 border border-white/20 rounded-xl p-3 text-sm font-medium placeholder:text-[#2bb75c] outline-none focus:border-white mb-3"
               rows="3"
               placeholder="E.g. I build react websites..."
             />
-            <button className="w-full py-2 bg-white text-[#14a800] font-bold rounded-lg shadow-sm">Generate Titles</button>
+            <button className="w-full py-2 bg-white text-[#2bb75c] font-bold rounded-lg shadow-sm">Generate Titles</button>
           </div>
 
           <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-900/30 rounded-3xl p-6">
@@ -219,3 +219,4 @@ export default function FreelancerGigCreationWizardPage() {
     </div>
   );
 }
+

@@ -104,7 +104,7 @@ export default function ContractsPage() {
             onClick={() => setActiveTab(activeTab === 'contracts' ? 'audit' : 'contracts')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#14a800]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#2bb75c]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={18} /> {activeTab === 'contracts' ? 'Audit Trail' : 'Back to Contracts'}
@@ -133,7 +133,7 @@ export default function ContractsPage() {
               placeholder="Search contracts..." 
               value={filters.contracts.search}
               onChange={(e) => setFilter('contracts', 'search', e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-surface dark:bg-zinc-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-[#14a800] outline-none"
+              className="w-full pl-10 pr-4 py-2 bg-surface dark:bg-zinc-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-[#2bb75c] outline-none"
             />
           </div>
           <select 
@@ -157,7 +157,7 @@ export default function ContractsPage() {
                     type="checkbox" 
                     checked={selectedIds.length === (contractsData?.data?.length || 0) && selectedIds.length > 0}
                     onChange={toggleAll}
-                    className="rounded border-zinc-300 dark:border-zinc-600 text-[#14a800] focus:ring-[#14a800]"
+                    className="rounded border-zinc-300 dark:border-zinc-600 text-[#2bb75c] focus:ring-[#2bb75c]"
                   />
                 </th>
                 <th className="p-4">Contract ID & Job</th>
@@ -191,7 +191,7 @@ export default function ContractsPage() {
                         type="checkbox" 
                         checked={selectedIds.includes(contract.id)}
                         onChange={() => toggleSelect(contract.id)}
-                        className="rounded border-zinc-300 dark:border-zinc-600 text-[#14a800]"
+                        className="rounded border-zinc-300 dark:border-zinc-600 text-[#2bb75c]"
                       />
                     </td>
                     <td className="p-4">
@@ -206,7 +206,7 @@ export default function ContractsPage() {
                         onClick={() => handleUserAction('profile', { name: contract.freelancerName, id: contract.freelancerId })}
                       >
                         <Avatar name={contract.freelancerName} size="sm" />
-                        <span className="text-sm font-medium text-zinc-900 dark:text-white group-hover:text-[#14a800] transition-colors">{contract.freelancerName}</span>
+                        <span className="text-sm font-medium text-zinc-900 dark:text-white group-hover:text-[#2bb75c] transition-colors">{contract.freelancerName}</span>
                       </div>
                     </td>
                     <td className="p-4">
@@ -215,7 +215,7 @@ export default function ContractsPage() {
                         onClick={() => handleUserAction('profile', { name: contract.clientName, id: contract.clientId })}
                       >
                         <Avatar name={contract.clientName} size="sm" />
-                        <span className="text-sm font-medium text-zinc-900 dark:text-white group-hover:text-[#14a800] transition-colors">{contract.clientName}</span>
+                        <span className="text-sm font-medium text-zinc-900 dark:text-white group-hover:text-[#2bb75c] transition-colors">{contract.clientName}</span>
                       </div>
                     </td>
                     <td className="p-4">
@@ -227,11 +227,11 @@ export default function ContractsPage() {
                     <td className="p-4">
                       <div className="flex flex-col gap-1 w-24">
                         <div className="flex justify-between text-[10px] font-bold">
-                          <span className="text-[#14a800]">{contract.progress}%</span>
+                          <span className="text-[#2bb75c]">{contract.progress}%</span>
                           <span className="text-zinc-400">{contract.completedMilestones}/{contract.milestones}</span>
                         </div>
                         <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                          <div className="h-full bg-[#14a800] rounded-full" style={{ width: `${contract.progress}%` }} />
+                          <div className="h-full bg-[#2bb75c] rounded-full" style={{ width: `${contract.progress}%` }} />
                         </div>
                       </div>
                     </td>
@@ -242,7 +242,7 @@ export default function ContractsPage() {
                       <div className="flex items-center justify-end gap-2 pr-2">
                         <button 
                           onClick={() => handleAction('View', contract.id)}
-                          className="p-2 text-[#14a800] bg-[#14a800]/5 hover:bg-[#14a800]/10 dark:bg-[#14a800]/40 dark:text-[#14a800] rounded-xl transition-all shadow-sm border border-[#14a800]/20 dark:border-[#14a800]/20" title="View Details"
+                          className="p-2 text-[#2bb75c] bg-[#2bb75c]/5 hover:bg-[#2bb75c]/10 dark:bg-[#2bb75c]/40 dark:text-[#2bb75c] rounded-xl transition-all shadow-sm border border-[#2bb75c]/20 dark:border-[#2bb75c]/20" title="View Details"
                         >
                           <Eye size={18} />
                         </button>
@@ -344,3 +344,4 @@ export default function ContractsPage() {
     </div>
   );
 }
+

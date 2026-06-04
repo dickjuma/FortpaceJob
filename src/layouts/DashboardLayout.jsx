@@ -49,7 +49,7 @@ const DashboardLayout = ({ children }) => {
       >
         <div className="h-20 flex items-center justify-between px-6 border-b border-zinc-200 dark:border-zinc-800">
           <div className={`flex items-center gap-2 overflow-hidden ${!sidebarOpen && 'justify-center'}`}>
-            <div className="w-8 h-8 rounded-lg bg-[#14a800] flex items-center justify-center shrink-0 shadow-lg shadow-#14a800]/20">
+            <div className="w-8 h-8 rounded-lg bg-[#2bb75c] flex items-center justify-center shrink-0 shadow-lg shadow-#2bb75c]/20">
               <Zap className="w-5 h-5 text-white" />
             </div>
             {sidebarOpen && <span className="text-xl font-bold tracking-tight whitespace-nowrap">Forte</span>}
@@ -65,17 +65,17 @@ const DashboardLayout = ({ children }) => {
                 href={item.path}
                 className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all group relative ${
                   isActive 
-                    ? 'bg-[#14a800]/5 dark:bg-[#14a800]/10 text-[#14a800] dark:text-[#14a800] font-semibold' 
+                    ? 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c] font-semibold' 
                     : 'text-zinc-500 hover:bg-surface dark:hover:bg-zinc-800/50 hover:text-zinc-900 dark:hover:text-white font-medium'
                 }`}
                 title={!sidebarOpen ? item.name : ""}
               >
-                <item.icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-[#14a800] dark:text-[#14a800]' : 'text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300'}`} />
+                <item.icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-[#2bb75c] dark:text-[#2bb75c]' : 'text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300'}`} />
                 {sidebarOpen && <span className="whitespace-nowrap">{item.name}</span>}
                 
                 {/* Notification indicator logic could go here */}
                 {sidebarOpen && item.name === 'Messages' && (
-                  <span className="ml-auto w-5 h-5 flex items-center justify-center bg-[#14a800] text-white text-[10px] font-bold rounded-full">3</span>
+                  <span className="ml-auto w-5 h-5 flex items-center justify-center bg-[#2bb75c] text-white text-[10px] font-bold rounded-full">3</span>
                 )}
               </a>
             );
@@ -109,14 +109,14 @@ const DashboardLayout = ({ children }) => {
               <input 
                 type="text" 
                 placeholder="Search command palette (Cmd + K)"
-                className="w-full pl-10 pr-4 py-2 bg-zinc-100 dark:bg-surface-dark border border-transparent focus:border-[#14a800]/20 focus:bg-white dark:focus:bg-zinc-800 rounded-xl outline-none text-sm transition-all"
+                className="w-full pl-10 pr-4 py-2 bg-zinc-100 dark:bg-surface-dark border border-transparent focus:border-[#2bb75c]/20 focus:bg-white dark:focus:bg-zinc-800 rounded-xl outline-none text-sm transition-all"
               />
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             {userRole === 'client' && (
-              <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#14a800] hover:bg-[#118a00] text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-#14a800]/20">
+              <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-#2bb75c]/20">
                 Post Job
               </button>
             )}
@@ -129,7 +129,7 @@ const DashboardLayout = ({ children }) => {
             <div className="relative">
               <button onClick={() => setNotificationsOpen(!notificationsOpen)} className="relative p-2 text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors">
                 <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#14a800] rounded-full border-2 border-white dark:border-zinc-950 animate-pulse" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#2bb75c] rounded-full border-2 border-white dark:border-zinc-950 animate-pulse" />
               </button>
             </div>
 
@@ -168,7 +168,7 @@ const DashboardLayout = ({ children }) => {
             >
                <div className="h-20 flex items-center justify-between px-6 border-b border-zinc-200 dark:border-zinc-800">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-[#14a800] flex items-center justify-center"><Zap className="w-5 h-5 text-white" /></div>
+                  <div className="w-8 h-8 rounded-lg bg-[#2bb75c] flex items-center justify-center"><Zap className="w-5 h-5 text-white" /></div>
                   <span className="text-xl font-bold">Forte</span>
                 </div>
                 <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-zinc-400"><X className="w-5 h-5" /></button>
@@ -189,3 +189,4 @@ const DashboardLayout = ({ children }) => {
 };
 
 export default DashboardLayout;
+

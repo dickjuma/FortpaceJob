@@ -75,7 +75,7 @@ export default function CertificationManagementPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <BadgeCheck className="w-8 h-8 text-[#14a800]" />
+            <BadgeCheck className="w-8 h-8 text-[#2bb75c]" />
             Certifications
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
@@ -84,7 +84,7 @@ export default function CertificationManagementPage() {
         </div>
         <button 
           onClick={handleUploadClick}
-          className="flex items-center justify-center gap-2 bg-[#14a800] hover:bg-[#118a00] text-white px-5 py-2.5 rounded-xl font-medium transition-colors shadow-sm"
+          className="flex items-center justify-center gap-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white px-5 py-2.5 rounded-xl font-medium transition-colors shadow-sm"
         >
           {isUploading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -105,7 +105,7 @@ export default function CertificationManagementPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {[
-          { label: 'Active Certifications', value: certifications.length, icon: FileText, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/20' },
+          { label: 'Active Certifications', value: certifications.length, icon: FileText, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20' },
           { label: 'Verified Credentials', value: certifications.filter(c => c.status === 'verified').length, icon: Shield, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-900/20' },
           { label: 'Pending Verification', value: certifications.filter(c => c.status === 'pending').length, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-900/20' },
         ].map((stat, idx) => (
@@ -138,7 +138,7 @@ export default function CertificationManagementPage() {
                 placeholder="Search certificates..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-surface dark:bg-gray-800 text-sm focus:ring-2 focus:ring-[#14a800] focus:border-[#14a800]/20 outline-none text-gray-900 dark:text-white w-full sm:w-64 transition-all"
+                className="pl-9 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-surface dark:bg-gray-800 text-sm focus:ring-2 focus:ring-[#2bb75c] focus:border-[#2bb75c]/20 outline-none text-gray-900 dark:text-white w-full sm:w-64 transition-all"
               />
             </div>
             <button className="p-2 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-surface dark:hover:bg-gray-800 transition-colors">
@@ -171,7 +171,7 @@ export default function CertificationManagementPage() {
                     >
                       <td className="px-6 py-5">
                         <div className="flex items-start gap-3">
-                          <div className="p-2 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] rounded-lg shrink-0 mt-0.5">
+                          <div className="p-2 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 text-[#2bb75c] rounded-lg shrink-0 mt-0.5">
                             <FileText className="w-5 h-5" />
                           </div>
                           <div>
@@ -243,3 +243,4 @@ export default function CertificationManagementPage() {
     </div>
   );
 }
+

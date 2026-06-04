@@ -42,7 +42,7 @@ const activityData = [
 
 const performanceMetrics = [
   { label: 'Conversion Rate', value: '24.8%', trend: '+2.4%', color: 'text-green-500' },
-  { label: 'Avg Contract Size', value: '$4,250', trend: '+12.5%', color: 'text-[#14a800]' },
+  { label: 'Avg Contract Size', value: '$4,250', trend: '+12.5%', color: 'text-[#2bb75c]' },
   { label: 'Client Retention', value: '85%', trend: 'Stable', color: 'text-zinc-500' },
   { label: 'Profile Views', value: '1,240', trend: '+45%', color: 'text-green-500' }
 ];
@@ -57,7 +57,7 @@ const AnalyticsDashboard = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-1 flex items-center gap-3">
-            <BarChart2 className="w-8 h-8 text-[#14a800]" /> Intelligence & Analytics
+            <BarChart2 className="w-8 h-8 text-[#2bb75c]" /> Intelligence & Analytics
           </h1>
           <p className="text-zinc-500 dark:text-zinc-400">Deep-dive BI reporting on your marketplace performance.</p>
         </div>
@@ -67,7 +67,7 @@ const AnalyticsDashboard = () => {
             <select 
               value={timeframe}
               onChange={(e) => setTimeframe(e.target.value)}
-              className="pl-9 pr-8 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-[#14a800] outline-none appearance-none"
+              className="pl-9 pr-8 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-[#2bb75c] outline-none appearance-none"
             >
               <option>Last 30 Days</option>
               <option>Last 6 Months</option>
@@ -75,7 +75,7 @@ const AnalyticsDashboard = () => {
               <option>All Time</option>
             </select>
           </div>
-          <button className="px-5 py-2 bg-[#14a800] hover:bg-[#118a00] text-white rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center gap-2">
+          <button className="px-5 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center gap-2">
             <Download className="w-4 h-4" /> Export CSV
           </button>
         </div>
@@ -136,7 +136,7 @@ const AnalyticsDashboard = () => {
         <div className="bg-white dark:bg-zinc-800 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-700 shadow-sm flex flex-col">
           <div className="flex justify-between items-center mb-2">
             <h2 className="font-bold text-lg text-zinc-900 dark:text-white flex items-center gap-2">
-              <PieChartIcon className="w-5 h-5 text-[#14a800]" /> Revenue by Category
+              <PieChartIcon className="w-5 h-5 text-[#2bb75c]" /> Revenue by Category
             </h2>
           </div>
           <p className="text-xs text-zinc-500 mb-4">Distribution of your earnings across service types.</p>
@@ -208,7 +208,7 @@ const AnalyticsDashboard = () => {
         <div className="bg-white dark:bg-zinc-800 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-700 shadow-sm flex flex-col">
            <div className="flex justify-between items-center mb-4">
             <h2 className="font-bold text-lg text-zinc-900 dark:text-white flex items-center gap-2">
-              <Target className="w-5 h-5 text-[#14a800]" /> Weekly Productivity Heatmap
+              <Target className="w-5 h-5 text-[#2bb75c]" /> Weekly Productivity Heatmap
             </h2>
           </div>
           <p className="text-xs text-zinc-500 mb-6">Darker blocks indicate higher billable hours and commits logged.</p>
@@ -223,20 +223,20 @@ const AnalyticsDashboard = () => {
                      // Generate pseudo-random intensity for mock
                      const intensity = Math.random();
                      let bgClass = 'bg-zinc-100 dark:bg-zinc-700/50'; // level 0
-                     if (intensity > 0.8) bgClass = 'bg-[#14a800]'; // level 4
-                     else if (intensity > 0.6) bgClass = 'bg-[#14a800]'; // level 3
-                     else if (intensity > 0.4) bgClass = 'bg-[#14a800]'; // level 2
-                     else if (intensity > 0.2) bgClass = 'bg-[#14a800]'; // level 1
+                     if (intensity > 0.8) bgClass = 'bg-[#2bb75c]'; // level 4
+                     else if (intensity > 0.6) bgClass = 'bg-[#2bb75c]'; // level 3
+                     else if (intensity > 0.4) bgClass = 'bg-[#2bb75c]'; // level 2
+                     else if (intensity > 0.2) bgClass = 'bg-[#2bb75c]'; // level 1
 
                      return (
-                       <div key={i} className={`h-6 flex-1 rounded-sm ${bgClass} transition-colors hover:ring-2 hover:ring-[#14a800] cursor-pointer`} title={`Hour: ${i}:00`} />
+                       <div key={i} className={`h-6 flex-1 rounded-sm ${bgClass} transition-colors hover:ring-2 hover:ring-[#2bb75c] cursor-pointer`} title={`Hour: ${i}:00`} />
                      );
                    })}
                  </div>
                </div>
              ))}
              <div className="flex items-center justify-end gap-2 mt-4 text-[10px] font-bold text-zinc-500">
-               Less <div className="flex gap-1"><span className="w-3 h-3 rounded-sm bg-zinc-100 dark:bg-zinc-700/50" /><span className="w-3 h-3 rounded-sm bg-[#14a800]" /><span className="w-3 h-3 rounded-sm bg-[#14a800]" /><span className="w-3 h-3 rounded-sm bg-[#14a800]" /></div> More
+               Less <div className="flex gap-1"><span className="w-3 h-3 rounded-sm bg-zinc-100 dark:bg-zinc-700/50" /><span className="w-3 h-3 rounded-sm bg-[#2bb75c]" /><span className="w-3 h-3 rounded-sm bg-[#2bb75c]" /><span className="w-3 h-3 rounded-sm bg-[#2bb75c]" /></div> More
              </div>
           </div>
         </div>
@@ -248,3 +248,4 @@ const AnalyticsDashboard = () => {
 };
 
 export default AnalyticsDashboard;
+

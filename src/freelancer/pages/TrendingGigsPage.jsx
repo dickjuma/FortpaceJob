@@ -81,7 +81,7 @@ export default function TrendingGigsPage() {
         
         {loading ? (
           <div className="flex justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
           </div>
         ) : gigs.length === 0 ? (
           <p className="text-center text-zinc-500 font-medium py-16">No trending gigs right now.</p>
@@ -125,7 +125,7 @@ export default function TrendingGigsPage() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200 leading-snug mb-4 line-clamp-2 hover:text-[#14a800] dark:hover:text-[#14a800] transition-colors flex-1">
+                  <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200 leading-snug mb-4 line-clamp-2 hover:text-[#2bb75c] dark:hover:text-[#2bb75c] transition-colors flex-1">
                     {gig.title}
                   </h3>
 
@@ -154,3 +154,4 @@ export default function TrendingGigsPage() {
     </div>
   );
 }
+

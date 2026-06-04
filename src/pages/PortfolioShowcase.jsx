@@ -32,7 +32,7 @@ const PortfolioShowcase = () => {
           <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
             <div className="relative w-full max-w-md">
               <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 w-4 h-4 text-zinc-400" />
-              <input type="text" placeholder="Search portfolios..." className="w-full bg-surface border border-zinc-200 rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-[#14a800]/20 text-sm font-medium" />
+              <input type="text" placeholder="Search portfolios..." className="w-full bg-surface border border-zinc-200 rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-[#2bb75c]/20 text-sm font-medium" />
             </div>
             <button type="button" className="flex items-center gap-2 px-4 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm font-bold text-zinc-700 hover:bg-surface transition-colors w-full md:w-auto">
               <Filter className="w-4 h-4" /> Filters
@@ -54,7 +54,7 @@ const PortfolioShowcase = () => {
 
           {loading ? (
             <div className="flex justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+              <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
             </div>
           ) : filtered.length === 0 ? (
             <p className="text-center text-zinc-500 font-medium py-16">No portfolio items to show yet.</p>
@@ -70,7 +70,7 @@ const PortfolioShowcase = () => {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
                       <h3 className="text-white font-bold text-lg leading-tight truncate pr-4">{item.title}</h3>
-                      <Link to={`/portfolio/case-study/${item.id}`} className="text-sm font-bold text-[#14a800] hover:text-white transition-colors mt-2">
+                      <Link to={`/portfolio/case-study/${item.id}`} className="text-sm font-bold text-[#2bb75c] hover:text-white transition-colors mt-2">
                         View Case Study &rarr;
                       </Link>
                     </div>
@@ -105,3 +105,4 @@ const PortfolioShowcase = () => {
 };
 
 export default PortfolioShowcase;
+

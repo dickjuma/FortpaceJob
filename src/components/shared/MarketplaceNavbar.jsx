@@ -7,7 +7,6 @@ import {
   Users,
   Briefcase,
   Store,
-  LayoutGrid,
   User,
   LogOut,
   Sparkles,
@@ -21,7 +20,6 @@ const NAV_LINKS = [
   { name: 'Find Work', path: '/find-work', icon: Briefcase },
   { name: 'Gigs', path: '/gigs', icon: Store },
   { name: 'Pricing', path: '/pricing', icon: Sparkles },
-  { name: 'Marketplace', path: '/marketplace', icon: LayoutGrid },
 ];
 
 const MarketplaceNavbar = () => {
@@ -71,11 +69,11 @@ const MarketplaceNavbar = () => {
       <div className="container mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-8 flex-1">
-            <Link to="/" className="flex items-center gap-2 shrink-0">
+<Link to="/" className="flex items-center gap-2 shrink-0">
               <div
                 className={`font-bold text-2xl tracking-tighter ${isGreenHero ? 'text-white' : 'text-zinc-900'}`}
               >
-                Fortspace<span className="text-[#14a800]">.</span>
+                ForteSpace
               </div>
             </Link>
 
@@ -84,7 +82,7 @@ const MarketplaceNavbar = () => {
               className={`hidden lg:flex items-center flex-1 max-w-md rounded-full border px-4 py-2 transition-colors ${
                 isGreenHero
                   ? 'border-white/20 bg-white/10 focus-within:bg-white/15'
-                  : 'border-zinc-200 bg-white hover:border-[#14a800]/30 focus-within:ring-2 focus-within:ring-[#14a800]/20'
+                  : 'border-zinc-200 bg-white hover:border-[#2bb75c]/30 focus-within:ring-2 focus-within:ring-[#2bb75c]/20'
               }`}
             >
               <Search className={`w-4 h-4 shrink-0 ${isGreenHero ? 'text-white/70' : 'text-zinc-400'}`} />
@@ -107,9 +105,9 @@ const MarketplaceNavbar = () => {
                   <li key={link.name}>
                     <Link
                       to={link.path}
-                      className={`text-sm font-medium transition-colors flex items-center gap-1.5 hover:text-[#14a800] ${
+                      className={`text-sm font-medium transition-colors flex items-center gap-1.5 hover:text-[#2bb75c] ${
                         isGreenHero ? 'text-white/90 hover:text-white' : 'text-zinc-600'
-                      } ${location.pathname.startsWith(link.path) ? 'text-[#14a800]' : ''}`}
+                      } ${location.pathname.startsWith(link.path) ? 'text-[#2bb75c]' : ''}`}
                     >
                       <Icon className="w-4 h-4 shrink-0" />
                       {link.name}
@@ -125,7 +123,7 @@ const MarketplaceNavbar = () => {
               <div className="flex items-center gap-3">
                 <Link
                   to={dashboardPath}
-                  className={`text-sm font-medium flex items-center gap-1.5 hover:text-[#14a800] ${
+                  className={`text-sm font-medium flex items-center gap-1.5 hover:text-[#2bb75c] ${
                     isGreenHero ? 'text-white' : 'text-zinc-700'
                   }`}
                 >
@@ -134,7 +132,7 @@ const MarketplaceNavbar = () => {
                 </Link>
                 <Link
                   to={profilePath}
-                  className={`text-sm font-medium hover:text-[#14a800] ${isGreenHero ? 'text-white/90' : 'text-zinc-600'}`}
+                  className={`text-sm font-medium hover:text-[#2bb75c] ${isGreenHero ? 'text-white/90' : 'text-zinc-600'}`}
                 >
                   Profile
                 </Link>
@@ -153,7 +151,7 @@ const MarketplaceNavbar = () => {
               <div className="flex items-center gap-3">
                 <Link
                   to="/auth/login"
-                  className={`text-sm font-medium hover:text-[#14a800] ${isGreenHero ? 'text-white' : 'text-zinc-700'}`}
+                  className={`text-sm font-medium hover:text-[#2bb75c] ${isGreenHero ? 'text-white' : 'text-zinc-700'}`}
                 >
                   Sign In
                 </Link>
@@ -161,7 +159,7 @@ const MarketplaceNavbar = () => {
                   to="/auth/register"
                   className={`text-sm font-semibold px-5 py-2 rounded-full transition-all ${
                     isGreenHero
-                      ? 'bg-white text-[#14a800] hover:bg-white/90'
+                      ? 'bg-white text-[#2bb75c] hover:bg-white/90'
                       : 'bg-[#222222] text-white hover:bg-zinc-800'
                   }`}
                 >
@@ -197,7 +195,7 @@ const MarketplaceNavbar = () => {
                   type="search"
                   name="search"
                   placeholder="Search..."
-                  className="w-full bg-zinc-50 border border-zinc-200 rounded-lg py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#14a800]/20"
+                  className="w-full bg-zinc-50 border border-zinc-200 rounded-lg py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2bb75c]/20"
                 />
               </form>
 
@@ -209,7 +207,7 @@ const MarketplaceNavbar = () => {
                       <Link
                         to={link.path}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="text-base font-medium text-zinc-700 hover:text-[#14a800] flex items-center gap-2"
+                        className="text-base font-medium text-zinc-700 hover:text-[#2bb75c] flex items-center gap-2"
                       >
                         <Icon className="w-5 h-5" />
                         {link.name}
@@ -260,9 +258,9 @@ const MarketplaceNavbar = () => {
                   <Link
                     to="/auth/register"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-center font-medium text-white bg-[#14a800] py-2 rounded-lg hover:bg-[#118a00]"
+                    className="text-center font-medium text-white bg-[#2bb75c] py-2 rounded-lg hover:bg-[#1d8d38]"
                   >
-                    Join Fortspace
+                    Join ForteSpace
                   </Link>
                 </div>
               )}
@@ -275,3 +273,4 @@ const MarketplaceNavbar = () => {
 };
 
 export default MarketplaceNavbar;
+

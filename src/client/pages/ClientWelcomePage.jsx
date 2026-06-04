@@ -72,7 +72,7 @@ export default function ClientWelcomePage() {
                   onClick={() => setSelectedRole(r.id)}
                   className={`p-6 rounded-3xl border cursor-pointer text-left flex flex-col justify-between h-48 transition-all ${
                     isSelected 
-                      ? 'border-success bg-success/10 shadow-lg shadow-[#14a800]/5' 
+                      ? 'border-success bg-success/10 shadow-lg shadow-[#2bb75c]/5' 
                       : 'border-white/5 bg-white/5 hover:border-white/10 hover:bg-white/[0.07]'
                   }`}
                 >
@@ -102,7 +102,7 @@ export default function ClientWelcomePage() {
 
           <Button 
             onClick={handleContinue}
-            className="bg-success border-none font-bold text-xs py-3 px-8 rounded-2xl flex items-center gap-1.5 shadow-lg shadow-[#14a800]/20 transition-all hover:scale-105"
+            className="bg-success border-none font-bold text-xs py-3 px-8 rounded-2xl flex items-center gap-1.5 shadow-lg shadow-[#2bb75c]/20 transition-all hover:scale-105"
           >
             Configure Selected Tier
             <ArrowRight className="w-4 h-4" />
@@ -113,3 +113,4 @@ export default function ClientWelcomePage() {
     </div>
   );
 }
+

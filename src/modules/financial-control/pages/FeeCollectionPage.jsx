@@ -25,7 +25,7 @@ export default function FeeCollectionPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-#14a800]/10 text-violet-600 rounded-xl shadow-sm">
+            <div className="p-2.5 bg-#2bb75c]/10 text-violet-600 rounded-xl shadow-sm">
               <PiggyBank size={24} />
             </div>
             <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Fee Collection Log</h1>
@@ -37,7 +37,7 @@ export default function FeeCollectionPage() {
         <div className="flex gap-2">
            <button 
              onClick={() => toast.success('Exporting Revenue Log to CSV...')}
-             className="px-4 py-2 bg-surface-dark text-white dark:bg-[#14a800] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+             className="px-4 py-2 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
            >
              <Download size={16} /> Export Revenue
            </button>
@@ -53,7 +53,7 @@ export default function FeeCollectionPage() {
               placeholder="Search Fee ID or Source Ref..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#14a800] outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#2bb75c] outline-none"
             />
           </div>
           <select 
@@ -80,7 +80,7 @@ export default function FeeCollectionPage() {
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/50">
               {isLoading ? (
-                <tr><td colSpan={5} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#14a800]" /></td></tr>
+                <tr><td colSpan={5} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#2bb75c]" /></td></tr>
               ) : fees.filter(f => !type || f.type === type).length === 0 ? (
                 <tr><td colSpan={5} className="p-8 text-center text-zinc-500 font-medium">No fee records found.</td></tr>
               ) : fees.filter(f => !type || f.type === type).map(fee => (
@@ -104,7 +104,7 @@ export default function FeeCollectionPage() {
                   </td>
                   <td className="p-4 text-right">
                     <span className="text-sm font-black text-zinc-900 dark:text-white flex items-center justify-end gap-1">
-                      <TrendingUp size={14} className="text-[#14a800]" />
+                      <TrendingUp size={14} className="text-[#2bb75c]" />
                       +{fee.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </span>
                   </td>
@@ -122,3 +122,4 @@ export default function FeeCollectionPage() {
     </div>
   );
 }
+

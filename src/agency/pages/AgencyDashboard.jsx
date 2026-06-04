@@ -9,9 +9,9 @@ import {
 export default function AgencyDashboard() {
   const stats = [
     { label: 'Total Agency Revenue', value: '$1.2M', icon: DollarSign, color: 'text-green-500', bg: 'bg-green-50 dark:bg-green-900/20' },
-    { label: 'Active Contracts', value: '14', icon: Briefcase, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/20' },
-    { label: 'Billed Hours (This Week)', value: '340h', icon: Activity, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/20' },
-    { label: 'Available Capacity', value: '25%', icon: Users, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/20' },
+    { label: 'Active Contracts', value: '14', icon: Briefcase, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20' },
+    { label: 'Billed Hours (This Week)', value: '340h', icon: Activity, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20' },
+    { label: 'Available Capacity', value: '25%', icon: Users, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20' },
   ];
 
   return (
@@ -28,7 +28,7 @@ export default function AgencyDashboard() {
             </button>
           </Link>
           <Link to="/freelancer/jobs">
-            <button className="px-4 py-2 bg-[#14a800] border border-transparent rounded-lg text-sm font-medium text-white shadow-sm shadow-[#14a800]/25/30 hover:bg-[#118a00] transition-all flex items-center">
+            <button className="px-4 py-2 bg-[#2bb75c] border border-transparent rounded-lg text-sm font-medium text-white shadow-sm shadow-[#2bb75c]/25/30 hover:bg-[#1d8d38] transition-all flex items-center">
               Find Agency Work <ChevronRight className="w-4 h-4 ml-1" />
             </button>
           </Link>
@@ -65,7 +65,7 @@ export default function AgencyDashboard() {
           <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
             <div className="px-6 py-5 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                <Briefcase className="w-5 h-5 mr-2 text-[#14a800]" /> High-Value Contracts
+                <Briefcase className="w-5 h-5 mr-2 text-[#2bb75c]" /> High-Value Contracts
               </h2>
             </div>
             <ul className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -77,16 +77,16 @@ export default function AgencyDashboard() {
                       <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Assigned to: Team Alpha (4 members)</p>
                       <div className="mt-3 flex items-center">
                         <div className="flex -space-x-2 mr-3">
-                          <div className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-900 bg-[#14a800] flex items-center justify-center text-xs text-white font-bold">JD</div>
-                          <div className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-900 bg-[#14a800] flex items-center justify-center text-xs text-white font-bold">AS</div>
+                          <div className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-900 bg-[#2bb75c] flex items-center justify-center text-xs text-white font-bold">JD</div>
+                          <div className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-900 bg-[#2bb75c] flex items-center justify-center text-xs text-white font-bold">AS</div>
                           <div className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-900 bg-gray-500 flex items-center justify-center text-xs text-white font-bold">+2</div>
                         </div>
-                        <span className="text-xs font-medium text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/30 px-2 py-1 rounded">On Track</span>
+                        <span className="text-xs font-medium text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/30 px-2 py-1 rounded">On Track</span>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-gray-900 dark:text-white">$45,000</p>
-                      <button className="mt-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#14a800]">View Timesheets</button>
+                      <button className="mt-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#2bb75c]">View Timesheets</button>
                     </div>
                   </div>
                 </li>
@@ -96,12 +96,12 @@ export default function AgencyDashboard() {
         </div>
 
         <div className="space-y-8">
-          <div className="bg-gradient-to-br from-[#14a800] to-[#118a00] rounded-2xl p-6 shadow-sm text-white">
+          <div className="bg-gradient-to-br from-[#2bb75c] to-[#1d8d38] rounded-2xl p-6 shadow-sm text-white">
             <h2 className="text-lg font-bold flex items-center mb-2">
               <Zap className="w-5 h-5 mr-2 text-yellow-300" /> Dispatch Center
             </h2>
-            <p className="text-sm text-[#14a800] mb-6">You have 3 team members currently on the bench. We found 8 enterprise jobs matching their exact skills.</p>
-            <button className="w-full py-2.5 bg-white text-[#14a800] rounded-lg text-sm font-bold shadow-sm hover:bg-surface transition-all">
+            <p className="text-sm text-[#2bb75c] mb-6">You have 3 team members currently on the bench. We found 8 enterprise jobs matching their exact skills.</p>
+            <button className="w-full py-2.5 bg-white text-[#2bb75c] rounded-lg text-sm font-bold shadow-sm hover:bg-surface transition-all">
               Review Matches for Bench
             </button>
           </div>
@@ -110,3 +110,4 @@ export default function AgencyDashboard() {
     </div>
   );
 }
+

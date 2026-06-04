@@ -80,10 +80,10 @@ const Step3RegistrationDetails = () => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-2xl shadow-[#14a800]/25 overflow-hidden border border-zinc-200/50 dark:border-zinc-800/50 mt-4"
+      className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-2xl shadow-[#2bb75c]/25 overflow-hidden border border-zinc-200/50 dark:border-zinc-800/50 mt-4"
     >
       {/* Left Panel - Branding & Social Proof */}
-      <div className="hidden lg:flex lg:w-5/12 bg-gradient-to-br from-[#14a800] to-blue-700 p-12 flex-col justify-between relative overflow-hidden text-white">
+      <div className="hidden lg:flex lg:w-5/12 bg-gradient-to-br from-[#2bb75c] to-blue-700 p-12 flex-col justify-between relative overflow-hidden text-white">
         {/* Abstract Background Shapes */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -tranzinc-y-1/2 tranzinc-x-1/2" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl tranzinc-y-1/3 -tranzinc-x-1/4" />
@@ -123,16 +123,16 @@ const Step3RegistrationDetails = () => {
           <div className="flex gap-1 text-yellow-400 mb-3">
             {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
           </div>
-          <p className="text-sm text-#14a800]/5 italic mb-4">
+          <p className="text-sm text-#2bb75c]/5 italic mb-4">
             "Forte completely transformed how we build our remote engineering team. The quality of talent is unmatched."
           </p>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-#14a800]/50 rounded-full flex items-center justify-center text-#118a00] font-bold">
+            <div className="w-10 h-10 bg-#2bb75c]/50 rounded-full flex items-center justify-center text-#1d8d38] font-bold">
               JD
             </div>
             <div>
               <p className="text-sm font-bold">John Doe</p>
-              <p className="text-xs text-#14a800]/30">CTO, TechCorp</p>
+              <p className="text-xs text-#2bb75c]/30">CTO, TechCorp</p>
             </div>
           </div>
         </div>
@@ -150,7 +150,7 @@ const Step3RegistrationDetails = () => {
 
         <h3 className="text-3xl font-bold text-zinc-900 dark:text-white mb-2">Create your account</h3>
         <p className="text-zinc-500 mb-8">
-          Setting up as a <strong className="text-[#14a800] dark:text-[#14a800] capitalize">{accountType}</strong> ({businessStructure}).
+          Setting up as a <strong className="text-[#2bb75c] dark:text-[#2bb75c] capitalize">{accountType}</strong> ({businessStructure}).
         </p>
 
         <SocialLoginButtons />
@@ -207,11 +207,11 @@ const Step3RegistrationDetails = () => {
                 id="terms"
                 type="checkbox"
                 required
-                className="w-4 h-4 border border-zinc-300 rounded bg-zinc-50 focus:ring-3 focus:ring-[#14a800] dark:bg-zinc-700 dark:border-zinc-600 dark:focus:ring-[#14a800] dark:ring-offset-zinc-800"
+                className="w-4 h-4 border border-zinc-300 rounded bg-zinc-50 focus:ring-3 focus:ring-[#2bb75c] dark:bg-zinc-700 dark:border-zinc-600 dark:focus:ring-[#2bb75c] dark:ring-offset-zinc-800"
               />
             </div>
             <label htmlFor="terms" className="text-sm text-zinc-500 dark:text-zinc-400">
-              I agree to the <a href="/terms" className="font-semibold text-[#14a800] hover:underline dark:text-[#14a800]">Terms and Conditions</a> and <a href="/privacy" className="font-semibold text-[#14a800] hover:underline dark:text-[#14a800]">Privacy Policy</a>.
+              I agree to the <a href="/terms" className="font-semibold text-[#2bb75c] hover:underline dark:text-[#2bb75c]">Terms and Conditions</a> and <a href="/privacy" className="font-semibold text-[#2bb75c] hover:underline dark:text-[#2bb75c]">Privacy Policy</a>.
             </label>
           </div>
 
@@ -221,7 +221,7 @@ const Step3RegistrationDetails = () => {
             className={`mt-8 w-full flex items-center justify-center px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
               isSubmitting 
                 ? 'bg-zinc-400 cursor-wait' 
-                : 'bg-[#14a800] hover:bg-[#118a00] text-white shadow-lg shadow-[#14a800]/25 hover:shadow-[#14a800]/25 hover:-tranzinc-y-0.5'
+                : 'bg-[#2bb75c] hover:bg-[#1d8d38] text-white shadow-lg shadow-[#2bb75c]/25 hover:shadow-[#2bb75c]/25 hover:-tranzinc-y-0.5'
             }`}
           >
             {isSubmitting ? 'Creating account...' : 'Create Account'}
@@ -233,3 +233,4 @@ const Step3RegistrationDetails = () => {
 };
 
 export default Step3RegistrationDetails;
+

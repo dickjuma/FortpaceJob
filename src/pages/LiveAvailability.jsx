@@ -7,7 +7,7 @@ const LiveAvailability = () => {
 
   return (
     <>
-      <div className="bg-[#14a800] text-white py-16">
+      <div className="bg-[#2bb75c] text-white py-16">
         <div className="container mx-auto px-4 md:px-8 text-center">
           <Zap className="w-12 h-12 mx-auto mb-4 text-amber-300" />
           <h1 className="text-4xl font-black mb-4">Available Now</h1>
@@ -18,7 +18,7 @@ const LiveAvailability = () => {
       <div className="container mx-auto px-4 md:px-8 py-12">
         {loading ? (
           <div className="flex justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
           </div>
         ) : talent.length === 0 ? (
           <p className="text-center text-zinc-500 font-medium py-16">No professionals are marked available right now.</p>
@@ -54,3 +54,4 @@ const LiveAvailability = () => {
 };
 
 export default LiveAvailability;
+

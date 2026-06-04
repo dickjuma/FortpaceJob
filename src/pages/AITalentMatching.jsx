@@ -39,7 +39,7 @@ const AITalentMatching = () => {
     <div className="bg-surface min-h-screen py-12">
       <div className="container mx-auto px-4 md:px-8 max-w-6xl">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#14a800]/10 text-[#14a800] text-sm font-bold tracking-wide mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#2bb75c]/10 text-[#2bb75c] text-sm font-bold tracking-wide mb-4">
             <Bot className="w-5 h-5" /> FORTSPACE AI MATCHER
           </div>
           <h1 className="text-3xl md:text-5xl font-black text-zinc-900 mb-4">Generate marketplace matches from a hiring brief</h1>
@@ -51,7 +51,7 @@ const AITalentMatching = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-5/12">
             <div className="bg-white rounded-3xl border border-zinc-200 shadow-xl p-6 md:p-8 relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-#14a800] via-#14a800] to-[#118a00]" />
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-#2bb75c] via-#2bb75c] to-[#1d8d38]" />
               <h2 className="text-xl font-bold text-zinc-900 mb-6">Project requirements</h2>
 
               <form className="space-y-5" onSubmit={handleSubmit}>
@@ -127,9 +127,9 @@ const AITalentMatching = () => {
                 </div>
 
                 {matches.map((match, index) => (
-                  <div className={`bg-white rounded-2xl border ${index === 0 ? 'border-[#14a800]/20 shadow-xl shadow-blue-900/10' : 'border-zinc-200 shadow-sm'} p-6 relative overflow-hidden transition-all hover:border-[#14a800]/20`} key={match.id}>
+                  <div className={`bg-white rounded-2xl border ${index === 0 ? 'border-[#2bb75c]/20 shadow-xl shadow-blue-900/10' : 'border-zinc-200 shadow-sm'} p-6 relative overflow-hidden transition-all hover:border-[#2bb75c]/20`} key={match.id}>
                     {index === 0 ? (
-                      <div className="absolute top-0 right-0 bg-[#14a800] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-bl-lg">
+                      <div className="absolute top-0 right-0 bg-[#2bb75c] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-bl-lg">
                         Best overall match
                       </div>
                     ) : null}
@@ -138,10 +138,10 @@ const AITalentMatching = () => {
                       <div className="flex-shrink-0 text-center">
                         <img
                           alt={match.name}
-                          className={`w-20 h-20 rounded-full border-4 mx-auto mb-2 ${index === 0 ? 'border-[#14a800]/20' : 'border-zinc-100'}`}
+                          className={`w-20 h-20 rounded-full border-4 mx-auto mb-2 ${index === 0 ? 'border-[#2bb75c]/20' : 'border-zinc-100'}`}
                           src={`https://ui-avatars.com/api/?name=${encodeURIComponent(match.name)}&background=random`}
                         />
-                        <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${match.matchScore > 90 ? 'bg-emerald-100 text-emerald-700' : 'bg-[#14a800]/10 text-[#14a800]'}`}>
+                        <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${match.matchScore > 90 ? 'bg-emerald-100 text-emerald-700' : 'bg-[#2bb75c]/10 text-[#2bb75c]'}`}>
                           {match.matchScore}% Match
                         </div>
                       </div>
@@ -150,7 +150,7 @@ const AITalentMatching = () => {
                         <div className="flex justify-between items-start mb-1 gap-4">
                           <div>
                             <h4 className="font-bold text-xl text-zinc-900 flex items-center gap-1.5">
-                              {match.name} {match.verified ? <ShieldCheck className="w-4 h-4 text-[#14a800]" /> : null}
+                              {match.name} {match.verified ? <ShieldCheck className="w-4 h-4 text-[#2bb75c]" /> : null}
                             </h4>
                             <p className="text-sm font-medium text-zinc-600">{match.title}</p>
                           </div>
@@ -162,10 +162,10 @@ const AITalentMatching = () => {
                           </div>
                         </div>
 
-                        <div className="bg-[#14a800]/5/50 border border-[#14a800]/20 rounded-xl p-3 my-4 flex items-start gap-2">
-                          <Sparkles className="w-4 h-4 text-[#14a800] flex-shrink-0 mt-0.5" />
+                        <div className="bg-[#2bb75c]/5/50 border border-[#2bb75c]/20 rounded-xl p-3 my-4 flex items-start gap-2">
+                          <Sparkles className="w-4 h-4 text-[#2bb75c] flex-shrink-0 mt-0.5" />
                           <p className="text-sm text-zinc-700 leading-relaxed">
-                            <span className="font-bold text-[#14a800]">Why this match: </span>
+                            <span className="font-bold text-[#2bb75c]">Why this match: </span>
                             {match.reason}
                           </p>
                         </div>
@@ -192,3 +192,4 @@ const AITalentMatching = () => {
 };
 
 export default AITalentMatching;
+

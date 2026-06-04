@@ -173,13 +173,13 @@ export default function PersonalDetailsPage() {
                 {[
                   { id: 'mpesa', name: 'M-Pesa', icon: Smartphone, color: 'text-green-600' },
                   { id: 'airtel', name: 'Airtel Money', icon: Smartphone, color: 'text-red-600' },
-                  { id: 'bank', name: 'Bank Account', icon: Building2, color: 'text-[#14a800]' }
+                  { id: 'bank', name: 'Bank Account', icon: Building2, color: 'text-[#2bb75c]' }
                 ].map(method => (
                   <div 
                     key={method.id}
                     onClick={() => setFormData({...formData, preferredPaymentMethod: method.id})}
                     className={`p-3 border-2 rounded-xl cursor-pointer transition-all flex items-center gap-2 ${
-                      formData.preferredPaymentMethod === method.id ? 'border-[#14a800]/20 bg-[#14a800]/5' : 'border-border hover:border-zinc-300'
+                      formData.preferredPaymentMethod === method.id ? 'border-[#2bb75c]/20 bg-[#2bb75c]/5' : 'border-border hover:border-zinc-300'
                     }`}
                   >
                     <method.icon size={18} className={method.color} />
@@ -211,7 +211,7 @@ export default function PersonalDetailsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-text-secondary uppercase tracking-widest flex items-center gap-1">
-                      <Building2 size={14} className="text-[#14a800]" /> Select Bank
+                      <Building2 size={14} className="text-[#2bb75c]" /> Select Bank
                     </label>
                     <select 
                       name="bankName"
@@ -229,7 +229,7 @@ export default function PersonalDetailsPage() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-text-secondary uppercase tracking-widest flex items-center gap-1">
-                      <CreditCard size={14} className="text-[#14a800]" /> Account Number
+                      <CreditCard size={14} className="text-[#2bb75c]" /> Account Number
                     </label>
                     <input 
                       type="text" 
@@ -262,3 +262,4 @@ export default function PersonalDetailsPage() {
     </div>
   );
 }
+

@@ -7,7 +7,7 @@ import { useConfirm } from "../../../common/context/ConfirmContext";
 
 const statusPill = {
   open: "bg-success/10 text-success border border-success/20",
-  in_progress: "bg-#14a800]/10 text-blue-400 border border-#14a800]/20",
+  in_progress: "bg-#2bb75c]/10 text-blue-400 border border-#2bb75c]/20",
   closed: "bg-zinc-800 text-zinc-400 border border-zinc-700",
   expired: "bg-red-500/10 text-red-400 border border-red-500/20",
 };
@@ -398,3 +398,4 @@ export default function ClientJobDetail() {
     </div>
   );
 }
+

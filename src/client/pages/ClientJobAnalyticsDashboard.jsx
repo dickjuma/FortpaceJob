@@ -23,7 +23,7 @@ export default function ClientJobAnalyticsDashboard() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="mb-8">
-        <Link to="/client/jobs" className="text-sm font-medium text-[#14a800] hover:text-[#14a800] mb-4 inline-flex items-center">
+        <Link to="/client/jobs" className="text-sm font-medium text-[#2bb75c] hover:text-[#2bb75c] mb-4 inline-flex items-center">
           <ChevronLeft className="w-4 h-4 mr-1" /> Back to Jobs
         </Link>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Job & Hiring Analytics</h1>
@@ -34,7 +34,7 @@ export default function ClientJobAnalyticsDashboard() {
         {stats.map((stat) => (
           <div key={stat.name} className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
             <div className="flex items-center justify-between">
-              <div className="w-10 h-10 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] rounded-lg flex items-center justify-center">
                 <stat.icon className="w-5 h-5" />
               </div>
               <span className={`text-xs font-semibold px-2 py-1 rounded-full ${stat.change.startsWith('+') || stat.change.includes('-') && stat.name.includes('Time') ? 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20' : 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20'}`}>
@@ -92,3 +92,4 @@ export default function ClientJobAnalyticsDashboard() {
     </div>
   );
 }
+

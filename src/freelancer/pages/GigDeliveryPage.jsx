@@ -73,7 +73,7 @@ export default function GigDeliveryPage() {
 
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 mb-2 text-sm font-bold text-[#14a800]">
+          <div className="flex items-center gap-2 mb-2 text-sm font-bold text-[#2bb75c]">
             <span>Order {ORDER.id}</span>
           </div>
           <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2">Deliver Your Work</h1>
@@ -95,7 +95,7 @@ export default function GigDeliveryPage() {
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full min-h-[150px] bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4 text-sm font-medium text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#14a800] transition-all resize-none placeholder:text-zinc-400"
+                  className="w-full min-h-[150px] bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4 text-sm font-medium text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c] transition-all resize-none placeholder:text-zinc-400"
                   placeholder="Describe what you have delivered..."
                 />
               </div>
@@ -103,8 +103,8 @@ export default function GigDeliveryPage() {
               {/* File Upload */}
               <div>
                 <label className="text-sm font-bold text-zinc-900 dark:text-white mb-3 block">Delivery Files</label>
-                <div className="w-full border-2 border-dashed border-zinc-300 dark:border-zinc-700 bg-surface dark:bg-zinc-800/30 rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer hover:border-[#14a800]/20 transition-all text-center group">
-                  <UploadCloud className="w-10 h-10 text-zinc-300 dark:text-zinc-600 mb-3 group-hover:text-[#14a800] transition-colors" />
+                <div className="w-full border-2 border-dashed border-zinc-300 dark:border-zinc-700 bg-surface dark:bg-zinc-800/30 rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer hover:border-[#2bb75c]/20 transition-all text-center group">
+                  <UploadCloud className="w-10 h-10 text-zinc-300 dark:text-zinc-600 mb-3 group-hover:text-[#2bb75c] transition-colors" />
                   <h4 className="text-sm font-bold text-zinc-900 dark:text-white mb-1">Upload Delivery Source Files</h4>
                   <p className="text-xs font-medium text-zinc-500 max-w-sm">
                     Upload the final deliverables. ZIP files are recommended for multiple files. Max size: 5GB.
@@ -114,25 +114,25 @@ export default function GigDeliveryPage() {
 
               {/* Portfolio Sample Selection */}
               <div className="pt-8 border-t border-zinc-100 dark:border-zinc-800">
-                <div className="flex items-start gap-4 p-4 bg-[#14a800]/5 dark:bg-[#14a800]/5 border border-[#14a800]/20 dark:border-[#14a800]/20/20 rounded-2xl cursor-pointer" onClick={() => setPortfolioSample(!portfolioSample)}>
+                <div className="flex items-start gap-4 p-4 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/5 border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/20 rounded-2xl cursor-pointer" onClick={() => setPortfolioSample(!portfolioSample)}>
                   <div className={cn(
                     "w-6 h-6 rounded flex items-center justify-center shrink-0 mt-0.5 transition-colors border-2",
-                    portfolioSample ? "bg-[#14a800] border-[#14a800]/20" : "border-[#14a800]/20 dark:border-[#14a800]/20 bg-white dark:bg-surface-dark"
+                    portfolioSample ? "bg-[#2bb75c] border-[#2bb75c]/20" : "border-[#2bb75c]/20 dark:border-[#2bb75c]/20 bg-white dark:bg-surface-dark"
                   )}>
                     {portfolioSample && <CheckCircle2 className="w-4 h-4 text-white" />}
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-[#14a800] dark:text-[#14a800] mb-1 flex items-center gap-2">
+                    <h4 className="text-sm font-bold text-[#2bb75c] dark:text-[#2bb75c] mb-1 flex items-center gap-2">
                       <ImageIcon className="w-4 h-4" /> Add a sample to your Gig Gallery
                     </h4>
-                    <p className="text-xs font-medium text-[#14a800]/70 dark:text-[#14a800]/70 leading-relaxed">
+                    <p className="text-xs font-medium text-[#2bb75c]/70 dark:text-[#2bb75c]/70 leading-relaxed">
                       If the buyer leaves a positive review, they will have the option to showcase this delivery sample on your public gig page to help you get more orders.
                     </p>
 
                     <AnimatePresence>
                       {portfolioSample && (
-                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-4 pt-4 border-t border-[#14a800]/20/50 dark:border-[#14a800]/20/50">
-                           <div className="w-full h-24 border-2 border-dashed border-[#14a800]/20 dark:border-[#14a800]/20 bg-white/50 dark:bg-surface-dark/50 rounded-xl flex items-center justify-center text-[#14a800] dark:text-[#14a800] text-xs font-bold hover:border-[#14a800]/20 transition-colors">
+                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-4 pt-4 border-t border-[#2bb75c]/20/50 dark:border-[#2bb75c]/20/50">
+                           <div className="w-full h-24 border-2 border-dashed border-[#2bb75c]/20 dark:border-[#2bb75c]/20 bg-white/50 dark:bg-surface-dark/50 rounded-xl flex items-center justify-center text-[#2bb75c] dark:text-[#2bb75c] text-xs font-bold hover:border-[#2bb75c]/20 transition-colors">
                               <UploadCloud className="w-4 h-4 mr-2" /> Upload Portfolio Watermarked Image
                            </div>
                         </motion.div>
@@ -177,7 +177,7 @@ export default function GigDeliveryPage() {
             <button
               type="submit"
               disabled={checklist.length !== CHECKLIST.length || isDelivering}
-              className="w-full py-4 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isDelivering ? (
                 <>Delivering <span className="animate-pulse">...</span></>
@@ -193,3 +193,4 @@ export default function GigDeliveryPage() {
     </div>
   );
 }
+

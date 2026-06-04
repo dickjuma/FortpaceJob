@@ -134,13 +134,13 @@ export default function TeamManagementPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Users className="w-6 h-6 text-[#14a800]" /> Team Management
+              <Users className="w-6 h-6 text-[#2bb75c]" /> Team Management
             </h1>
             <p className="text-sm text-zinc-400 mt-1">Invite and manage agency team members</p>
           </div>
           <button
             onClick={() => setShowInviteModal(true)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white rounded-full text-sm font-bold transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-full text-sm font-bold transition-all"
           >
             <Mail className="w-4 h-4" /> Invite Member
           </button>
@@ -153,7 +153,7 @@ export default function TeamManagementPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search members..."
-              className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-9 pr-4 py-2 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-[#14a800]"
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-9 pr-4 py-2 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-[#2bb75c]"
             />
           </div>
           <button onClick={refetch} className="p-2 text-zinc-400 hover:text-white transition-colors">
@@ -163,19 +163,19 @@ export default function TeamManagementPage() {
 
         {isLoading ? (
           <div className="flex items-center justify-center h-48">
-            <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center h-48 gap-3 bg-zinc-900/30 rounded-2xl border border-zinc-800">
             <AlertCircle className="w-10 h-10 text-red-400 opacity-60" />
             <p className="text-zinc-400 text-sm">Failed to load team members.</p>
-            <button onClick={refetch} className="text-xs text-[#14a800] hover:underline">Retry</button>
+            <button onClick={refetch} className="text-xs text-[#2bb75c] hover:underline">Retry</button>
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-48 gap-4 bg-zinc-900/30 rounded-2xl border border-zinc-800">
             <Users className="w-12 h-12 text-zinc-600" />
             <p className="text-zinc-300 font-bold">No team members yet</p>
-            <button onClick={() => setShowInviteModal(true)} className="px-5 py-2 bg-[#14a800] text-white rounded-full text-sm font-bold">
+            <button onClick={() => setShowInviteModal(true)} className="px-5 py-2 bg-[#2bb75c] text-white rounded-full text-sm font-bold">
               Invite First Member
             </button>
           </div>
@@ -235,7 +235,7 @@ export default function TeamManagementPage() {
                       </td>
                       <td className="px-5 py-4">
                         {status === 'Active' || status === 'ACTIVE' ? (
-                          <span className="flex items-center gap-1 text-[#14a800] font-bold text-xs">
+                          <span className="flex items-center gap-1 text-[#2bb75c] font-bold text-xs">
                             <CheckCircle className="w-3.5 h-3.5" /> Active
                           </span>
                         ) : (
@@ -266,13 +266,13 @@ export default function TeamManagementPage() {
           {ROLES.map((role) => (
             <div key={role.name} className="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-3">
-                <Shield className="w-5 h-5 text-[#14a800]" />
+                <Shield className="w-5 h-5 text-[#2bb75c]" />
                 <h3 className="font-bold text-white">{role.name}</h3>
               </div>
               <div className="space-y-1.5">
                 {role.permissions.map((perm) => (
                   <div key={perm} className="flex items-center gap-2 text-xs text-zinc-400">
-                    <Briefcase className="w-3 h-3 text-[#14a800]" /> {perm}
+                    <Briefcase className="w-3 h-3 text-[#2bb75c]" /> {perm}
                   </div>
                 ))}
               </div>
@@ -322,7 +322,7 @@ export default function TeamManagementPage() {
                   inviteMutation.mutate(inviteForm);
                 }}
                 disabled={inviteMutation.isPending}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[#14a800] text-white rounded-xl text-sm font-bold disabled:opacity-50"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[#2bb75c] text-white rounded-xl text-sm font-bold disabled:opacity-50"
               >
                 {inviteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 Send Invite
@@ -345,3 +345,4 @@ export default function TeamManagementPage() {
     </div>
   );
 }
+

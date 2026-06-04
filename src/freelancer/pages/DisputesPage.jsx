@@ -137,7 +137,7 @@ export default function DisputesPage() {
             <Card className="p-6 border border-border bg-white shadow-sm space-y-6 animate-in slide-in-from-right-4 duration-200">
               <Link
                 to={`/freelancer/disputes/${selectedCase.id}`}
-                className="inline-flex items-center gap-2 text-sm font-bold text-[#14a800] hover:underline"
+                className="inline-flex items-center gap-2 text-sm font-bold text-[#2bb75c] hover:underline"
               >
                 Open full dispute workspace <ArrowRight className="w-4 h-4" />
               </Link>
@@ -249,3 +249,4 @@ export default function DisputesPage() {
     </div>
   );
 }
+

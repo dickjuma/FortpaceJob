@@ -44,7 +44,7 @@ export default function FeaturedGigShowcasePage() {
       {/* Top Navbar Minimal */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-4 bg-black/50 backdrop-blur-md border-b border-white/10">
         <div className="flex items-center gap-2">
-          <span className="text-xl font-extrabold tracking-tight">Forte<span className="text-[#14a800]">PRO</span></span>
+          <span className="text-xl font-extrabold tracking-tight">Forte<span className="text-[#2bb75c]">PRO</span></span>
         </div>
         <button className="px-5 py-2 bg-white text-black text-xs font-bold rounded-full hover:bg-zinc-200 transition-colors">
           Apply as Pro
@@ -55,14 +55,14 @@ export default function FeaturedGigShowcasePage() {
       <div className="relative pt-32 pb-20 px-4 sm:px-6 flex flex-col items-center justify-center text-center min-h-[70vh]">
         
         {/* Glow Effects */}
-        <div className="absolute top-1/2 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 w-[600px] h-[600px] bg-[#14a800]/20 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 w-[600px] h-[600px] bg-[#2bb75c]/20 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 w-[800px] h-[400px] bg-violet-600/20 rounded-full blur-[120px] pointer-events-none" />
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8 relative z-10"
         >
-          <Sparkles className="w-4 h-4 text-[#14a800]" />
+          <Sparkles className="w-4 h-4 text-[#2bb75c]" />
           <span className="text-xs font-bold uppercase tracking-widest text-zinc-300">Editor's Picks</span>
         </motion.div>
 
@@ -71,7 +71,7 @@ export default function FeaturedGigShowcasePage() {
           className="text-5xl sm:text-7xl font-black tracking-tighter mb-6 relative z-10 max-w-4xl leading-[1.1]"
         >
           World-class talent.<br />
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#14a800] via-violet-400 to-sky-400">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#2bb75c] via-violet-400 to-sky-400">
             Unrivaled quality.
           </span>
         </motion.h1>
@@ -111,7 +111,7 @@ export default function FeaturedGigShowcasePage() {
                 
                 {/* Pro Badge */}
                 <div className="absolute top-6 left-6 flex items-center gap-2 px-3 py-1.5 bg-black/50 backdrop-blur-md rounded-full border border-white/10">
-                  <Zap className="w-3.5 h-3.5 text-[#14a800] fill-brand-400" />
+                  <Zap className="w-3.5 h-3.5 text-[#2bb75c] fill-brand-400" />
                   <span className="text-[10px] font-black uppercase tracking-wider text-white">Pro Verified</span>
                 </div>
 
@@ -121,7 +121,7 @@ export default function FeaturedGigShowcasePage() {
                     <img src={gig.seller.avatar} alt={gig.seller.name} className="w-12 h-12 rounded-full border-2 border-black object-cover" />
                     <div>
                       <h4 className="text-white font-bold">{gig.seller.name}</h4>
-                      <p className="text-xs text-[#14a800] font-bold">{gig.seller.title}</p>
+                      <p className="text-xs text-[#2bb75c] font-bold">{gig.seller.title}</p>
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -136,7 +136,7 @@ export default function FeaturedGigShowcasePage() {
 
               {/* Title & Price */}
               <div className="px-2">
-                <h3 className="text-xl font-bold text-white mb-3 leading-snug group-hover:text-[#14a800] transition-colors">
+                <h3 className="text-xl font-bold text-white mb-3 leading-snug group-hover:text-[#2bb75c] transition-colors">
                   {gig.title}
                 </h3>
                 <div className="flex items-center justify-between">
@@ -193,3 +193,4 @@ export default function FeaturedGigShowcasePage() {
     </div>
   );
 }
+

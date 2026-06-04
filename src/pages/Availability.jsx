@@ -37,13 +37,13 @@ const Availability = () => {
               </div>
             </div>
 
-            <div className="bg-[#14a800]/5 rounded-2xl p-6 border border-[#14a800]/20">
-              <h4 className="font-bold text-[#14a800] mb-2">Current Status</h4>
-              <div className="flex items-center gap-2 text-[#14a800] font-medium mb-4">
+            <div className="bg-[#2bb75c]/5 rounded-2xl p-6 border border-[#2bb75c]/20">
+              <h4 className="font-bold text-[#2bb75c] mb-2">Current Status</h4>
+              <div className="flex items-center gap-2 text-[#2bb75c] font-medium mb-4">
                 <div className="w-2.5 h-2.5 bg-success rounded-full animate-pulse"></div>
                 Taking new clients
               </div>
-              <p className="text-sm text-[#14a800]">Sarah has capacity for ~20 hrs/week starting next Monday.</p>
+              <p className="text-sm text-[#2bb75c]">Sarah has capacity for ~20 hrs/week starting next Monday.</p>
             </div>
             
             <div className="bg-amber-50 rounded-2xl p-6 border border-amber-100 flex items-start gap-3">
@@ -85,7 +85,7 @@ const Availability = () => {
 
                 return (
                   <div key={i} className={`h-24 p-2 flex flex-col ${isCurrentMonth ? 'bg-white hover:bg-surface' : 'bg-surface text-zinc-300'} ${isVacation ? 'bg-amber-50/50' : ''} transition-colors cursor-pointer relative`}>
-                    <span className={`font-medium w-7 h-7 flex items-center justify-center rounded-full mx-auto ${isToday ? 'bg-[#14a800] text-white' : ''}`}>
+                    <span className={`font-medium w-7 h-7 flex items-center justify-center rounded-full mx-auto ${isToday ? 'bg-[#2bb75c] text-white' : ''}`}>
                       {isCurrentMonth ? day : ''}
                     </span>
                     
@@ -116,3 +116,4 @@ const Availability = () => {
 };
 
 export default Availability;
+

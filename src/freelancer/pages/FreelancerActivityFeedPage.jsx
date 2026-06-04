@@ -52,10 +52,10 @@ export default function FreelancerActivityFeedPage() {
 
   const getActivityIcon = (type) => {
     switch(type) {
-      case 'rank_up': return <div className="p-2 bg-[#14a800]/5 dark:bg-[#14a800]/30 rounded-full"><TrendingUp className="w-5 h-5 text-[#14a800] dark:text-[#14a800]" /></div>;
+      case 'rank_up': return <div className="p-2 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/30 rounded-full"><TrendingUp className="w-5 h-5 text-[#2bb75c] dark:text-[#2bb75c]" /></div>;
       case 'job_completed': return <div className="p-2 bg-green-50 dark:bg-green-900/30 rounded-full"><Briefcase className="w-5 h-5 text-green-600 dark:text-green-400" /></div>;
       case 'review_received': return <div className="p-2 bg-yellow-50 dark:bg-yellow-900/30 rounded-full"><Star className="w-5 h-5 text-yellow-600 dark:text-yellow-400" /></div>;
-      case 'badge_earned': return <div className="p-2 bg-[#14a800]/5 dark:bg-[#14a800]/30 rounded-full"><Award className="w-5 h-5 text-[#14a800] dark:text-[#14a800]" /></div>;
+      case 'badge_earned': return <div className="p-2 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/30 rounded-full"><Award className="w-5 h-5 text-[#2bb75c] dark:text-[#2bb75c]" /></div>;
       default: return <div className="p-2 bg-surface dark:bg-gray-800 rounded-full"><CheckCircle2 className="w-5 h-5 text-gray-600 dark:text-gray-400" /></div>;
     }
   };
@@ -87,7 +87,7 @@ export default function FreelancerActivityFeedPage() {
         >
           {isLoading ? (
             <div className="flex justify-center py-16">
-              <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+              <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
             </div>
           ) : activities.length === 0 ? (
             <p className="text-center text-gray-500 py-16">No recent activity yet.</p>
@@ -166,7 +166,7 @@ export default function FreelancerActivityFeedPage() {
                       <button 
                         onClick={() => toggleLike(activity.id)}
                         className={`flex items-center space-x-2 text-sm font-medium transition-colors ${
-                          isLiked ? 'text-[#14a800] dark:text-[#14a800]' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                          isLiked ? 'text-[#2bb75c] dark:text-[#2bb75c]' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                         }`}
                       >
                         <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
@@ -207,9 +207,9 @@ export default function FreelancerActivityFeedPage() {
                               placeholder="Write a comment..."
                               value={commentTexts[activity.id] || ''}
                               onChange={(e) => handleCommentChange(activity.id, e.target.value)}
-                              className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full py-2 pl-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-[#14a800] dark:text-white"
+                              className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full py-2 pl-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-[#2bb75c] dark:text-white"
                             />
-                            <button className="absolute right-2 top-1/2 -tranzinc-y-1/2 text-[#14a800] dark:text-[#14a800] p-1 rounded-full hover:bg-[#14a800]/5 dark:hover:bg-gray-800">
+                            <button className="absolute right-2 top-1/2 -tranzinc-y-1/2 text-[#2bb75c] dark:text-[#2bb75c] p-1 rounded-full hover:bg-[#2bb75c]/5 dark:hover:bg-gray-800">
                               <Send className="w-4 h-4" />
                             </button>
                           </div>
@@ -229,3 +229,4 @@ export default function FreelancerActivityFeedPage() {
     </div>
   );
 }
+

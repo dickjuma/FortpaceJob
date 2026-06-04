@@ -143,7 +143,7 @@ export default function WalletPage() {
       
       <div className="flex justify-between items-center mb-8 pb-4 border-b border-zinc-200 dark:border-zinc-700">
         <h1 className="text-3xl font-black dark:text-white tracking-tight flex items-center gap-2">
-          <Wallet className="w-8 h-8 text-[#14a800]" /> Client Financial Wallet
+          <Wallet className="w-8 h-8 text-[#2bb75c]" /> Client Financial Wallet
         </h1>
         <Button 
           onClick={loadWalletData}
@@ -160,9 +160,9 @@ export default function WalletPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         
         {/* Available Balance */}
-        <div className="bg-gradient-to-br from-[#14a800] to-[#118a00] rounded-2xl shadow-xl p-6 text-white relative overflow-hidden">
+        <div className="bg-gradient-to-br from-[#2bb75c] to-[#1d8d38] rounded-2xl shadow-xl p-6 text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-success/20 blur-[50px] rounded-full"></div>
-          <h2 className="text-xs font-bold text-[#14a800] uppercase tracking-widest flex items-center gap-1.5">
+          <h2 className="text-xs font-bold text-[#2bb75c] uppercase tracking-widest flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-success" /> Available Balance
           </h2>
           <p className="text-4xl font-black mt-3">KES {(wallet?.availableBalance || 0).toLocaleString()}</p>
@@ -190,7 +190,7 @@ export default function WalletPage() {
                 placeholder="Safaricom number (e.g. 0712345678)" 
                 value={depositPhone}
                 onChange={(e) => setDepositPhone(e.target.value)}
-                className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-xs font-bold focus:outline-none focus:border-[#14a800]/20"
+                className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-xs font-bold focus:outline-none focus:border-[#2bb75c]/20"
               />
             </div>
             <div>
@@ -199,7 +199,7 @@ export default function WalletPage() {
                 placeholder="Amount in KES" 
                 value={depositAmount}
                 onChange={(e) => setDepositAmount(e.target.value)}
-                className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-xs font-bold focus:outline-none focus:border-[#14a800]/20"
+                className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-xs font-bold focus:outline-none focus:border-[#2bb75c]/20"
               />
             </div>
             <button 
@@ -256,3 +256,4 @@ export default function WalletPage() {
     </div>
   );
 }
+

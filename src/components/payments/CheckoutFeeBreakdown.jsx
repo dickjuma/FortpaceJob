@@ -31,16 +31,17 @@ export default function CheckoutFeeBreakdown({
           {isLoading ? <Loader2 className="w-4 h-4 animate-spin inline" /> : formatKes(breakdown.platformFee)}
         </span>
       </div>
-      <div className="flex justify-between text-[#14a800] font-bold border-t border-zinc-100 pt-2">
+      <div className="flex justify-between text-[#2bb75c] font-bold border-t border-zinc-100 pt-2">
         <span>Provider receives (after release)</span>
         <span>{formatKes(breakdown.providerNet)}</span>
       </div>
       {showVaultNote && (
         <p className="text-xs text-zinc-500 flex items-start gap-1.5 pt-2">
-          <ShieldCheck className="w-3.5 h-3.5 text-[#14a800] shrink-0 mt-0.5" />
+          <ShieldCheck className="w-3.5 h-3.5 text-[#2bb75c] shrink-0 mt-0.5" />
           Funds are purpose-bound escrow only (not a bank deposit). M-Pesa B2C fees apply on withdrawal.
         </p>
       )}
     </div>
   );
 }
+

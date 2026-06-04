@@ -129,7 +129,7 @@ export default function FreelancerDisputeHistoryPage() {
                   </div>
 
                   <div className="flex gap-4">
-                    <button className="flex-1 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-sm transition-all text-sm">
+                    <button className="flex-1 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-sm transition-all text-sm">
                       Respond & Upload Evidence
                     </button>
                     <button className="px-6 py-3 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 font-bold rounded-xl shadow-sm transition-all text-sm">
@@ -148,7 +148,7 @@ export default function FreelancerDisputeHistoryPage() {
                     <div>
                       <h4 className="text-sm font-bold text-zinc-900 dark:text-white">Ruling Summary</h4>
                       <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">Based on the evidence provided (commit logs and delivery timestamp), the mediator found that all milestone requirements were met. Full funds of $1,200 have been released to your wallet.</p>
-                      <button className="mt-4 text-xs font-bold text-[#14a800] hover:underline flex items-center gap-1">
+                      <button className="mt-4 text-xs font-bold text-[#2bb75c] hover:underline flex items-center gap-1">
                         Download Official Ruling PDF <ChevronRight className="w-4 h-4" />
                       </button>
                     </div>
@@ -192,14 +192,14 @@ export default function FreelancerDisputeHistoryPage() {
             <h3 className="font-bold text-zinc-900 dark:text-white mb-4">Need Help?</h3>
             <div className="space-y-3">
               <button className="w-full p-3 rounded-xl border border-zinc-100 dark:border-zinc-800 flex items-center gap-3 hover:bg-surface dark:hover:bg-zinc-800/50 transition-colors text-left">
-                <FileText className="w-5 h-5 text-[#14a800] shrink-0" />
+                <FileText className="w-5 h-5 text-[#2bb75c] shrink-0" />
                 <div>
                   <div className="text-sm font-bold text-zinc-900 dark:text-white">Dispute Guidelines</div>
                   <div className="text-[10px] font-medium text-zinc-500">What evidence to submit</div>
                 </div>
               </button>
               <button className="w-full p-3 rounded-xl border border-zinc-100 dark:border-zinc-800 flex items-center gap-3 hover:bg-surface dark:hover:bg-zinc-800/50 transition-colors text-left">
-                <MessageSquare className="w-5 h-5 text-[#14a800] shrink-0" />
+                <MessageSquare className="w-5 h-5 text-[#2bb75c] shrink-0" />
                 <div>
                   <div className="text-sm font-bold text-zinc-900 dark:text-white">Contact Mediation</div>
                   <div className="text-[10px] font-medium text-zinc-500">Average response: 24hrs</div>
@@ -213,3 +213,4 @@ export default function FreelancerDisputeHistoryPage() {
     </div>
   );
 }
+

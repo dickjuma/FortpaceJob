@@ -61,11 +61,11 @@ export default function ClientSavedSearchesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2 flex items-center gap-3">
-              <Bookmark className="w-8 h-8 text-[#14a800]" /> Saved Searches & Alerts
+              <Bookmark className="w-8 h-8 text-[#2bb75c]" /> Saved Searches & Alerts
             </h1>
             <p className="text-zinc-500 font-medium">Automate your sourcing and get notified when new talent matches your criteria.</p>
           </div>
-          <button className="px-6 py-3 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl shadow-sm transition-all flex items-center gap-2">
+          <button className="px-6 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-sm transition-all flex items-center gap-2">
             <Search className="w-5 h-5" /> New Search
           </button>
         </div>
@@ -91,7 +91,7 @@ export default function ClientSavedSearchesPage() {
                 key={search.id}
                 className={cn(
                   "bg-white dark:bg-surface-dark rounded-2xl border shadow-sm p-6 transition-colors flex flex-col sm:flex-row gap-6 justify-between",
-                  search.isActive ? "border-[#14a800]/20 dark:border-[#14a800]/20/50" : "border-zinc-200 dark:border-zinc-800 opacity-75"
+                  search.isActive ? "border-[#2bb75c]/20 dark:border-[#2bb75c]/20/50" : "border-zinc-200 dark:border-zinc-800 opacity-75"
                 )}
               >
                 
@@ -99,7 +99,7 @@ export default function ClientSavedSearchesPage() {
                   <div className="flex items-center gap-3 mb-3">
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-white">{search.name}</h3>
                     {search.newMatches > 0 && search.isActive && (
-                      <span className="bg-[#14a800] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm animate-pulse">
+                      <span className="bg-[#2bb75c] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm animate-pulse">
                         {search.newMatches} New Matches
                       </span>
                     )}
@@ -131,7 +131,7 @@ export default function ClientSavedSearchesPage() {
                     {search.isActive ? 'Pause Alerts' : 'Resume Alerts'}
                   </button>
                   <div className="flex gap-2">
-                    <button className="p-2 text-zinc-400 hover:text-[#14a800] transition-colors bg-surface dark:bg-zinc-800/50 rounded-lg"><Settings className="w-4 h-4" /></button>
+                    <button className="p-2 text-zinc-400 hover:text-[#2bb75c] transition-colors bg-surface dark:bg-zinc-800/50 rounded-lg"><Settings className="w-4 h-4" /></button>
                     <button className="p-2 text-zinc-400 hover:text-rose-600 transition-colors bg-surface dark:bg-zinc-800/50 rounded-lg"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>
@@ -146,11 +146,11 @@ export default function ClientSavedSearchesPage() {
         <div className="w-full lg:w-96 shrink-0 space-y-6">
           
           {/* New Matches Preview */}
-          <div className="bg-gradient-to-br from-[#14a800] to-[#118a00] rounded-3xl p-6 shadow-md text-white relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#2bb75c] to-[#1d8d38] rounded-3xl p-6 shadow-md text-white relative overflow-hidden">
             <div className="absolute -right-4 -top-4 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
             <h3 className="font-bold mb-4 flex items-center gap-2 relative z-10"><Users className="w-5 h-5" /> Fresh Candidates</h3>
             
-            <p className="text-sm font-medium text-[#14a800] mb-6 relative z-10">We found 4 new freelancers matching your "Senior React Devs" search criteria in the last 24 hours.</p>
+            <p className="text-sm font-medium text-[#2bb75c] mb-6 relative z-10">We found 4 new freelancers matching your "Senior React Devs" search criteria in the last 24 hours.</p>
 
             <div className="space-y-3 relative z-10">
               {SUGGESTED.map(s => (
@@ -159,7 +159,7 @@ export default function ClientSavedSearchesPage() {
                     <img src={s.avatar} alt="Avatar" className="w-8 h-8 rounded-full" />
                     <div>
                       <p className="text-sm font-bold">{s.name}</p>
-                      <p className="text-[10px] font-medium text-[#14a800]">{s.title}</p>
+                      <p className="text-[10px] font-medium text-[#2bb75c]">{s.title}</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -169,7 +169,7 @@ export default function ClientSavedSearchesPage() {
               ))}
             </div>
 
-            <button className="w-full mt-4 py-3 bg-white text-[#14a800] font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+            <button className="w-full mt-4 py-3 bg-white text-[#2bb75c] font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
               View All Matches <ChevronRight className="w-4 h-4" />
             </button>
           </div>
@@ -202,3 +202,4 @@ export default function ClientSavedSearchesPage() {
     </div>
   );
 }
+

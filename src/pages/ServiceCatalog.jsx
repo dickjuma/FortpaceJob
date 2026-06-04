@@ -37,7 +37,7 @@ const ServiceCatalog = () => {
     <>
       <div className="bg-surface-dark text-white py-16 text-center">
         <div className="container mx-auto px-4 md:px-8 max-w-3xl">
-          <Package className="w-12 h-12 text-[#14a800] mx-auto mb-6" />
+          <Package className="w-12 h-12 text-[#2bb75c] mx-auto mb-6" />
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Sarah's Service Catalog</h1>
           <p className="text-zinc-400 text-lg">
             Choose a pre-defined service package for clear deliverables, timeline, and pricing.
@@ -48,9 +48,9 @@ const ServiceCatalog = () => {
       <div className="container mx-auto px-4 md:px-8 py-16 -mt-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {PACKAGES.map((pkg) => (
-            <div key={pkg.id} className={`bg-white rounded-2xl border ${pkg.isPopular ? 'border-[#14a800]/20 shadow-xl shadow-#14a800]/10 relative' : 'border-zinc-200 shadow-sm'} flex flex-col overflow-hidden`}>
+            <div key={pkg.id} className={`bg-white rounded-2xl border ${pkg.isPopular ? 'border-[#2bb75c]/20 shadow-xl shadow-#2bb75c]/10 relative' : 'border-zinc-200 shadow-sm'} flex flex-col overflow-hidden`}>
               {pkg.isPopular && (
-                <div className="bg-[#14a800] text-white text-xs font-bold uppercase tracking-wider text-center py-1.5">
+                <div className="bg-[#2bb75c] text-white text-xs font-bold uppercase tracking-wider text-center py-1.5">
                   Most Popular
                 </div>
               )}
@@ -81,7 +81,7 @@ const ServiceCatalog = () => {
                 
                 <button className={`w-full py-3.5 rounded-xl font-bold transition-colors ${
                   pkg.isPopular 
-                    ? 'bg-[#14a800] hover:bg-[#118a00] text-white' 
+                    ? 'bg-[#2bb75c] hover:bg-[#1d8d38] text-white' 
                     : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-900'
                 }`}>
                   Select {pkg.name}
@@ -106,3 +106,4 @@ const ServiceCatalog = () => {
 };
 
 export default ServiceCatalog;
+

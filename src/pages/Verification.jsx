@@ -32,8 +32,8 @@ const Verification = () => {
             {/* Identity Column */}
             <div className="p-8 md:p-12 border-b md:border-b-0 md:border-r border-zinc-100">
               <div className="flex items-center gap-4 mb-8">
-                <div className="w-16 h-16 bg-[#14a800]/10 rounded-full flex items-center justify-center">
-                  <Lock className="w-8 h-8 text-[#14a800]" />
+                <div className="w-16 h-16 bg-[#2bb75c]/10 rounded-full flex items-center justify-center">
+                  <Lock className="w-8 h-8 text-[#2bb75c]" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold text-zinc-900">Identity & Contact</h2>
@@ -76,8 +76,8 @@ const Verification = () => {
             {/* Professional Column */}
             <div className="p-8 md:p-12 bg-surface/50">
               <div className="flex items-center gap-4 mb-8">
-                <div className="w-16 h-16 bg-[#14a800]/10 rounded-full flex items-center justify-center">
-                  <Building className="w-8 h-8 text-[#14a800]" />
+                <div className="w-16 h-16 bg-[#2bb75c]/10 rounded-full flex items-center justify-center">
+                  <Building className="w-8 h-8 text-[#2bb75c]" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold text-zinc-900">Professional</h2>
@@ -135,3 +135,4 @@ const Verification = () => {
 };
 
 export default Verification;
+

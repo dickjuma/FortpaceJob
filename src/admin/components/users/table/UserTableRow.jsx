@@ -34,7 +34,7 @@ const UserTableRow = ({ user, isSelected }) => {
       onClick={handleRowClick}
       className={cn(
         "group h-16 border-b border-zinc-50 dark:border-zinc-800/50 hover:bg-surface/80 dark:hover:bg-zinc-800/30 transition-all cursor-pointer",
-        isSelected && "bg-[#14a800]/5/30 dark:bg-[#14a800]/10"
+        isSelected && "bg-[#2bb75c]/5/30 dark:bg-[#2bb75c]/10"
       )}
     >
       {/* Checkbox */}
@@ -44,7 +44,7 @@ const UserTableRow = ({ user, isSelected }) => {
             type="checkbox" 
             checked={isSelected}
             onChange={() => toggleSelectUser(user.id)}
-            className="w-4 h-4 rounded border-zinc-300 text-[#14a800] focus:ring-[#14a800] cursor-pointer"
+            className="w-4 h-4 rounded border-zinc-300 text-[#2bb75c] focus:ring-[#2bb75c] cursor-pointer"
           />
         </div>
       </td>
@@ -54,7 +54,7 @@ const UserTableRow = ({ user, isSelected }) => {
         <div className="flex items-center gap-3">
           <UserAvatar src={user.avatar} name={user.fullName} isOnline={user.isOnline} size="md" />
           <div className="flex flex-col min-w-0">
-            <span className="text-sm font-black text-zinc-900 dark:text-white truncate group-hover:text-[#14a800] transition-colors">
+            <span className="text-sm font-black text-zinc-900 dark:text-white truncate group-hover:text-[#2bb75c] transition-colors">
               {user.fullName}
             </span>
             <span className="text-[10px] font-medium text-zinc-500 truncate tracking-tight">
@@ -120,18 +120,18 @@ const UserTableRow = ({ user, isSelected }) => {
         ) : (
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black uppercase text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/30 dark:text-[#14a800] px-2 py-0.5 rounded">
+              <span className="text-[10px] font-black uppercase text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/30 dark:text-[#2bb75c] px-2 py-0.5 rounded">
                 Level {user.level || Math.floor((user.id.length || 10) % 5) + 1}
               </span>
               <div className="flex -space-x-1">
                  {user.userGroup === 'freelancer' && (
                    <div className="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-500 border border-white dark:border-zinc-900 flex items-center justify-center text-[10px]" title="Top Rated">⭐</div>
                  )}
-                 <div className="w-5 h-5 rounded-full bg-[#14a800]/10 dark:bg-[#14a800]/30 text-[#14a800] border border-white dark:border-zinc-900 flex items-center justify-center text-[10px]" title="Fast Responder">⚡</div>
+                 <div className="w-5 h-5 rounded-full bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 text-[#2bb75c] border border-white dark:border-zinc-900 flex items-center justify-center text-[10px]" title="Fast Responder">⚡</div>
               </div>
             </div>
             <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-              <div className="h-full bg-[#14a800] rounded-full" style={{ width: `${(Math.floor((user.id.length || 10) % 10) + 1) * 10}%` }} />
+              <div className="h-full bg-[#2bb75c] rounded-full" style={{ width: `${(Math.floor((user.id.length || 10) % 10) + 1) * 10}%` }} />
             </div>
           </div>
         )}
@@ -158,3 +158,4 @@ const UserTableRow = ({ user, isSelected }) => {
 };
 
 export default UserTableRow;
+

@@ -25,7 +25,7 @@ const COMPARE_FIELDS = [
 
 function StatusBadge({ status }) {
   const styles = {
-    SUBMITTED: 'bg-#14a800]/10 text-blue-400 border-#14a800]/20',
+    SUBMITTED: 'bg-#2bb75c]/10 text-blue-400 border-#2bb75c]/20',
     SHORTLISTED: 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20',
     ACCEPTED: 'bg-success/10 text-success border-success/20',
     REJECTED: 'bg-red-400/10 text-red-400 border-red-400/20',
@@ -288,3 +288,4 @@ export default function ProposalComparisonPage() {
     </div>
   );
 }
+

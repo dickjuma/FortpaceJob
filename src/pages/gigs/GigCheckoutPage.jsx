@@ -97,7 +97,7 @@ export default function GigCheckoutPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-        <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
       </div>
     );
   }
@@ -106,7 +106,7 @@ export default function GigCheckoutPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50 px-4 pt-24">
         <div className="max-w-md w-full bg-white rounded-2xl border border-zinc-200 p-8 text-center shadow-lg">
-          <div className="w-16 h-16 rounded-full bg-[#14a800]/10 text-[#14a800] flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 rounded-full bg-[#2bb75c]/10 text-[#2bb75c] flex items-center justify-center mx-auto mb-4">
             <Check className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-bold text-zinc-900 mb-2">Order confirmed</h1>
@@ -115,7 +115,7 @@ export default function GigCheckoutPage() {
           </p>
           <Link
             to="/gigs/purchases"
-            className="block w-full py-3 bg-[#14a800] text-white font-bold rounded-xl hover:bg-[#118a00]"
+            className="block w-full py-3 bg-[#2bb75c] text-white font-bold rounded-xl hover:bg-[#1d8d38]"
           >
             View purchases
           </Link>
@@ -127,7 +127,7 @@ export default function GigCheckoutPage() {
   return (
     <div className="min-h-screen bg-zinc-50 pt-24 pb-16">
       <div className="max-w-5xl mx-auto px-4">
-        <Link to={`/gigs/gig/${gigId}`} className="text-sm font-medium text-zinc-500 hover:text-[#14a800] mb-6 inline-block">
+        <Link to={`/gigs/gig/${gigId}`} className="text-sm font-medium text-zinc-500 hover:text-[#2bb75c] mb-6 inline-block">
           ← Back to gig
         </Link>
 
@@ -142,7 +142,7 @@ export default function GigCheckoutPage() {
                 type="button"
                 onClick={() => setSelectedTier(key)}
                 className={`w-full text-left p-5 rounded-xl border-2 transition-all ${
-                  selectedTier === key ? 'border-[#14a800] bg-[#14a800]/5' : 'border-zinc-200 bg-white hover:border-zinc-300'
+                  selectedTier === key ? 'border-[#2bb75c] bg-[#2bb75c]/5' : 'border-zinc-200 bg-white hover:border-zinc-300'
                 }`}
               >
                 <div className="flex justify-between items-start">
@@ -170,14 +170,14 @@ export default function GigCheckoutPage() {
               className="mb-4"
             />
             <div className="flex items-start gap-2 text-xs text-zinc-500 mb-6 p-3 bg-zinc-50 rounded-lg">
-              <ShieldCheck className="w-4 h-4 text-[#14a800] shrink-0 mt-0.5" />
+              <ShieldCheck className="w-4 h-4 text-[#2bb75c] shrink-0 mt-0.5" />
               Payment is held in the Forte Vault (escrow) until you approve delivery. Third-party escrow agent — not a bank.
             </div>
             <button
               type="button"
               onClick={handleCheckout}
               disabled={processing}
-              className="w-full py-3.5 bg-[#14a800] hover:bg-[#118a00] text-white font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full py-3.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-60"
             >
               {processing ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Place order <ChevronRight className="w-5 h-5" /></>}
             </button>
@@ -187,3 +187,4 @@ export default function GigCheckoutPage() {
     </div>
   );
 }
+

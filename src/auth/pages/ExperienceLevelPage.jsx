@@ -60,13 +60,13 @@ const EXPERIENCE_LEVELS = [
     tagline: 'Growing your craft',
     description: 'You have solid experience and a portfolio. You can handle complex projects and work independently with clients.',
     icon: Layers,
-    gradient: 'from-#14a800] to-violet-600',
-    glow: 'shadow-#14a800]/25',
-    border: 'border-[#14a800]/20',
-    ring: 'ring-#14a800]/30',
-    bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/25',
-    iconBg: 'bg-gradient-to-br from-#14a800] to-violet-600',
-    checkBg: 'bg-[#14a800]',
+    gradient: 'from-#2bb75c] to-violet-600',
+    glow: 'shadow-#2bb75c]/25',
+    border: 'border-[#2bb75c]/20',
+    ring: 'ring-#2bb75c]/30',
+    bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/25',
+    iconBg: 'bg-gradient-to-br from-#2bb75c] to-violet-600',
+    checkBg: 'bg-[#2bb75c]',
     earning: { min: 45, max: 95, avg: 65 },
     demand: 85,
     demandLabel: 'Very high demand — most sought-after tier',
@@ -145,15 +145,15 @@ const DEFAULT_SKILLS = [
 ];
 
 const SIDEBAR_STATS = [
-  { icon: Users, label: 'Active freelancers', value: '150K+', color: 'text-[#14a800]' },
+  { icon: Users, label: 'Active freelancers', value: '150K+', color: 'text-[#2bb75c]' },
   { icon: DollarSign, label: 'Avg. monthly earnings', value: '$4,200', color: 'text-success' },
-  { icon: Clock, label: 'Avg. time to first hire', value: '< 48 hrs', color: 'text-#14a800]' },
+  { icon: Clock, label: 'Avg. time to first hire', value: '< 48 hrs', color: 'text-#2bb75c]' },
   { icon: Star, label: 'Client satisfaction', value: '99.8%', color: 'text-amber-500' },
 ];
 
 const DEMAND_DATA = [
   { level: 'Beginner', pct: 68, color: 'bg-success' },
-  { level: 'Intermediate', pct: 85, color: 'bg-[#14a800]' },
+  { level: 'Intermediate', pct: 85, color: 'bg-[#2bb75c]' },
   { level: 'Expert', pct: 94, color: 'bg-amber-400' },
   { level: 'Agency', pct: 78, color: 'bg-rose-500' },
 ];
@@ -188,8 +188,8 @@ function ProgressStepper({ currentStep = 2 }) {
               </motion.div>
               <span className={cn(
                 'text-[10px] font-semibold tracking-wide uppercase hidden sm:block',
-                isCurrent ? 'text-[#14a800] dark:text-[#14a800]'
-                  : isCompleted ? 'text-[#14a800]' : 'text-gray-400'
+                isCurrent ? 'text-[#2bb75c] dark:text-[#2bb75c]'
+                  : isCompleted ? 'text-[#2bb75c]' : 'text-gray-400'
               )}>{step}</span>
             </div>
             {!isLast && (
@@ -211,7 +211,7 @@ function ProgressStepper({ currentStep = 2 }) {
 function SkillSlider({ skill, onChange, accentColor }) {
   const colorMap = {
     emerald: { track: 'bg-success', thumb: 'accent-emerald-500' },
-    blue: { track: 'bg-[#14a800]', thumb: 'accent-blue-600' },
+    blue: { track: 'bg-[#2bb75c]', thumb: 'accent-blue-600' },
     amber: { track: 'bg-amber-500', thumb: 'accent-amber-500' },
     rose: { track: 'bg-rose-500', thumb: 'accent-rose-500' },
   };
@@ -378,7 +378,7 @@ function Sidebar({ selectedLevel }) {
         className="bg-white dark:bg-zinc-800 rounded-2xl border border-zinc-200 dark:border-zinc-700 p-5 shadow-card"
       >
         <div className="flex items-center gap-2 mb-4">
-          <BarChart3 className="w-4 h-4 text-[#14a800]" />
+          <BarChart3 className="w-4 h-4 text-[#2bb75c]" />
           <h3 className="text-sm font-extrabold text-zinc-900 dark:text-white">Marketplace Demand</h3>
         </div>
         <p className="text-xs text-zinc-400 dark:text-zinc-500 mb-4">Demand score by experience level (current market)</p>
@@ -486,20 +486,20 @@ function Sidebar({ selectedLevel }) {
         initial={{ opacity: 0, x: 24 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, delay: 0.55 }}
-        className="bg-gradient-to-br from-blue-600 to-violet-600 rounded-2xl p-5 shadow-lg shadow-#14a800]/20"
+        className="bg-gradient-to-br from-blue-600 to-violet-600 rounded-2xl p-5 shadow-lg shadow-#2bb75c]/20"
       >
         <div className="flex items-center gap-2 mb-3">
           <Star className="w-4 h-4 text-amber-300 fill-amber-300" />
           <span className="text-xs font-extrabold text-white/90 uppercase tracking-wide">Success Story</span>
         </div>
-        <p className="text-sm text-[#14a800] leading-relaxed mb-3 italic">
+        <p className="text-sm text-[#2bb75c] leading-relaxed mb-3 italic">
           "I joined as a Beginner with zero clients. Within 6 months I levelled up to Expert and now earn $140/hr."
         </p>
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-extrabold">AR</div>
           <div>
             <div className="text-xs font-bold text-white">Alex R.</div>
-            <div className="text-[10px] text-[#14a800]">Full Stack Developer · Expert</div>
+            <div className="text-[10px] text-[#2bb75c]">Full Stack Developer · Expert</div>
           </div>
           <div className="ml-auto flex items-center gap-1 text-emerald-300">
             <ArrowUp className="w-3 h-3" />
@@ -571,7 +571,7 @@ function IndustrySelector({ selected, onToggle, level }) {
                 isSelected
                   ? level
                     ? `border-transparent text-white bg-gradient-to-r ${level.gradient} shadow-sm`
-                    : 'border-[#14a800]/20 text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/20'
+                    : 'border-[#2bb75c]/20 text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20'
                   : atMax
                   ? 'border-zinc-100 dark:border-zinc-700 text-zinc-300 dark:text-zinc-600 cursor-not-allowed'
                   : 'border-zinc-200 dark:border-zinc-600 text-zinc-600 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-500 hover:bg-surface dark:hover:bg-zinc-700/50'
@@ -643,11 +643,11 @@ export default function ExperienceLevelPage() {
   const canContinue = !!selectedLevel && industries.length > 0;
 
   return (
-    <div className="relative min-h-screen bg-surface dark:bg-surface-dark font-sans selection:bg-[#14a800]/30 overflow-x-hidden">
+    <div className="relative min-h-screen bg-surface dark:bg-surface-dark font-sans selection:bg-[#2bb75c]/30 overflow-x-hidden">
       {/* Floating orbs */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-[#14a800]/8 blur-[130px]" />
-        <div className="absolute top-1/3 -right-40 w-[500px] h-[500px] rounded-full bg-#14a800]/8 blur-[130px]" />
+        <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-[#2bb75c]/8 blur-[130px]" />
+        <div className="absolute top-1/3 -right-40 w-[500px] h-[500px] rounded-full bg-#2bb75c]/8 blur-[130px]" />
         <div className="absolute -bottom-20 left-1/3 w-[400px] h-[400px] rounded-full bg-amber-400/8 blur-[110px]" />
       </div>
 
@@ -660,11 +660,11 @@ export default function ExperienceLevelPage() {
             transition={{ duration: 0.4 }}
             className="flex items-center gap-2.5"
           >
-            <div className="w-9 h-9 bg-[#14a800] rounded-xl flex items-center justify-center shadow-lg shadow-[#14a800]/25/30">
+            <div className="w-9 h-9 bg-[#2bb75c] rounded-xl flex items-center justify-center shadow-lg shadow-[#2bb75c]/25/30">
               <ShieldCheck className="text-white w-5 h-5" />
             </div>
             <span className="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-              Forte<span className="text-[#14a800]">.</span>
+              Forte<span className="text-[#2bb75c]">.</span>
             </span>
           </motion.div>
 
@@ -698,7 +698,7 @@ export default function ExperienceLevelPage() {
         >
           <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-3">
             What's your{' '}
-            <span className="bg-gradient-to-r from-blue-600 via-#14a800] to-amber-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 via-#2bb75c] to-amber-500 bg-clip-text text-transparent">
               experience level?
             </span>
           </h1>
@@ -814,9 +814,9 @@ export default function ExperienceLevelPage() {
                   whileTap={canContinue ? { scale: 0.97 } : {}}
                   className={cn(
                     'flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold transition-all duration-300',
-                    'focus:outline-none focus-visible:ring-4 focus-visible:ring-#14a800]/40',
+                    'focus:outline-none focus-visible:ring-4 focus-visible:ring-#2bb75c]/40',
                     canContinue
-                      ? 'bg-gradient-to-r from-blue-600 to-violet-600 text-white shadow-lg shadow-#14a800]/25 hover:shadow-xl hover:shadow-#14a800]/35'
+                      ? 'bg-gradient-to-r from-blue-600 to-violet-600 text-white shadow-lg shadow-#2bb75c]/25 hover:shadow-xl hover:shadow-#2bb75c]/35'
                       : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed'
                   )}
                 >
@@ -853,3 +853,4 @@ export default function ExperienceLevelPage() {
     </div>
   );
 }
+

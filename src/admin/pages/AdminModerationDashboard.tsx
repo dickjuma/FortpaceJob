@@ -30,8 +30,8 @@ export default function AdminModerationDashboard() {
           <div className="flex items-center text-yellow-600 mb-2"><Flag className="w-5 h-5 mr-2" /> <span className="font-semibold text-gray-900 dark:text-white">Pending Disputes</span></div>
           <div className="text-3xl font-bold text-gray-900 dark:text-white">45</div>
         </div>
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#14a800]/20 dark:border-[#14a800]/20/30 shadow-sm border-l-4 border-l-#14a800]">
-          <div className="flex items-center text-[#14a800] mb-2"><Users className="w-5 h-5 mr-2" /> <span className="font-semibold text-gray-900 dark:text-white">KYC Queue</span></div>
+        <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/30 shadow-sm border-l-4 border-l-#2bb75c]">
+          <div className="flex items-center text-[#2bb75c] mb-2"><Users className="w-5 h-5 mr-2" /> <span className="font-semibold text-gray-900 dark:text-white">KYC Queue</span></div>
           <div className="text-3xl font-bold text-gray-900 dark:text-white">128</div>
         </div>
       </div>
@@ -72,3 +72,4 @@ export default function AdminModerationDashboard() {
     </div>
   );
 }
+

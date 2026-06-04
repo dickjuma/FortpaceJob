@@ -44,7 +44,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-zinc-50 pt-28 pb-20">
       <div className="max-w-3xl mx-auto px-4">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#14a800] mb-8 hover:underline">
+        <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#2bb75c] mb-8 hover:underline">
           <ArrowLeft className="w-4 h-4" /> Back home
         </Link>
 
@@ -55,7 +55,7 @@ export default function ContactPage() {
 
         <a
           href={`mailto:${company.email || 'hello@fortespace.com'}`}
-          className="inline-flex items-center gap-2 text-[#14a800] font-bold mb-10 hover:underline"
+          className="inline-flex items-center gap-2 text-[#2bb75c] font-bold mb-10 hover:underline"
         >
           <Mail className="w-4 h-4" />
           {company.email || 'hello@fortespace.com'}
@@ -89,7 +89,7 @@ export default function ContactPage() {
           <button
             type="submit"
             disabled={sending}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#14a800] text-white font-bold rounded-xl hover:bg-[#118a00] disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#2bb75c] text-white font-bold rounded-xl hover:bg-[#1d8d38] disabled:opacity-50"
           >
             <Send className="w-4 h-4" />
             {sending ? 'Sending…' : 'Send message'}
@@ -99,3 +99,4 @@ export default function ContactPage() {
     </div>
   );
 }
+

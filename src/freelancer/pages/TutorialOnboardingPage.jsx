@@ -106,7 +106,7 @@ export default function TutorialOnboardingPage() {
               </div>
               <button 
                 onClick={handleNextStep}
-                className="px-5 py-2.5 bg-success hover:bg-success/95 text-white font-black rounded-xl text-xs transition-colors shadow-lg shadow-[#14a800]/20 flex items-center gap-1"
+                className="px-5 py-2.5 bg-success hover:bg-success/95 text-white font-black rounded-xl text-xs transition-colors shadow-lg shadow-[#2bb75c]/20 flex items-center gap-1"
               >
                 {activeStep === onboardingSteps.length - 1 ? 'Finalize Tour' : 'Next Step'} <ChevronRight size={14} />
               </button>
@@ -119,3 +119,4 @@ export default function TutorialOnboardingPage() {
     </div>
   );
 }
+

@@ -11,8 +11,8 @@ export default function MarketplaceDetailModal({ isOpen, onClose, data, type = '
 
   const getIcon = () => {
     switch (type) {
-      case 'job': return <Briefcase className="text-[#14a800]" />;
-      case 'gig': return <ShoppingBag className="text-[#14a800]" />;
+      case 'job': return <Briefcase className="text-[#2bb75c]" />;
+      case 'gig': return <ShoppingBag className="text-[#2bb75c]" />;
       case 'contract': return <FileText className="text-success" />;
       default: return <Activity className="text-zinc-500" />;
     }
@@ -38,7 +38,7 @@ export default function MarketplaceDetailModal({ isOpen, onClose, data, type = '
                   {type} Details
                 </span>
                 <span className="h-1 w-1 bg-zinc-300 rounded-full" />
-                <span className="text-[10px] font-mono text-[#14a800] font-bold">{data.id}</span>
+                <span className="text-[10px] font-mono text-[#2bb75c] font-bold">{data.id}</span>
               </div>
               <h2 className="text-xl font-black text-zinc-900 dark:text-white tracking-tight">
                 {getTitle()}
@@ -86,7 +86,7 @@ export default function MarketplaceDetailModal({ isOpen, onClose, data, type = '
           {/* Details Section */}
           <div className="space-y-4">
             <h3 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-widest flex items-center gap-2">
-              <Activity size={14} className="text-[#14a800]" />
+              <Activity size={14} className="text-[#2bb75c]" />
               Description & Summary
             </h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-medium">
@@ -99,7 +99,7 @@ export default function MarketplaceDetailModal({ isOpen, onClose, data, type = '
             <div className="space-y-3">
               <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Client Details</h4>
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 bg-[#14a800]/10 dark:bg-[#14a800]/30 rounded-xl flex items-center justify-center text-[#14a800] font-bold">
+                <div className="h-10 w-10 bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 rounded-xl flex items-center justify-center text-[#2bb75c] font-bold">
                   {data.clientName?.charAt(0) || data.client?.charAt(0) || 'C'}
                 </div>
                 <div>
@@ -111,7 +111,7 @@ export default function MarketplaceDetailModal({ isOpen, onClose, data, type = '
             <div className="space-y-3">
               <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Freelancer Details</h4>
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 bg-[#14a800]/10 dark:bg-[#14a800]/30 rounded-xl flex items-center justify-center text-[#14a800] font-bold">
+                <div className="h-10 w-10 bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 rounded-xl flex items-center justify-center text-[#2bb75c] font-bold">
                   {data.freelancerName?.charAt(0) || data.freelancer?.charAt(0) || 'F'}
                 </div>
                 <div>
@@ -138,7 +138,7 @@ export default function MarketplaceDetailModal({ isOpen, onClose, data, type = '
             >
               Close
             </button>
-            <button className="px-6 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white rounded-xl text-sm font-black shadow-lg shadow-[#14a800]/25/20 transition-all active:scale-95">
+            <button className="px-6 py-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-xl text-sm font-black shadow-lg shadow-[#2bb75c]/25/20 transition-all active:scale-95">
               Edit {type}
             </button>
           </div>
@@ -147,3 +147,4 @@ export default function MarketplaceDetailModal({ isOpen, onClose, data, type = '
     </div>
   );
 }
+

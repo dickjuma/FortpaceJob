@@ -20,12 +20,12 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-zinc-50 pt-28 pb-20">
       <div className="max-w-5xl mx-auto px-4 md:px-8">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#14a800] mb-8 hover:underline">
+        <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#2bb75c] mb-8 hover:underline">
           <ArrowLeft className="w-4 h-4" /> Back home
         </Link>
 
         <header className="mb-14">
-          <span className="text-xs font-black uppercase tracking-widest text-[#14a800]">About Fortespace</span>
+          <span className="text-xs font-black uppercase tracking-widest text-[#2bb75c]">About Fortespace</span>
           <h1 className="text-4xl md:text-5xl font-black text-zinc-900 mt-3 mb-4">
             {about.headline || 'Building East Africa\'s trusted freelance marketplace'}
           </h1>
@@ -94,7 +94,7 @@ export default function AboutPage() {
 
         <section>
           <div className="flex items-center gap-2 mb-8">
-            <Users className="w-6 h-6 text-[#14a800]" />
+            <Users className="w-6 h-6 text-[#2bb75c]" />
             <h2 className="text-2xl font-black text-zinc-900">Our team</h2>
           </div>
           {isLoading ? (
@@ -104,7 +104,7 @@ export default function AboutPage() {
               {team.map((member) => (
                 <article key={member.id || member.name} className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
                   <h3 className="font-black text-zinc-900">{member.name}</h3>
-                  <p className="text-sm font-bold text-[#14a800] mt-1">{member.role}</p>
+                  <p className="text-sm font-bold text-[#2bb75c] mt-1">{member.role}</p>
                   <p className="text-sm text-zinc-600 mt-3 leading-relaxed">{member.bio}</p>
                 </article>
               ))}
@@ -115,7 +115,7 @@ export default function AboutPage() {
         <div className="mt-14 text-center">
           <Link
             to="/contact"
-            className="inline-flex px-6 py-3 bg-[#14a800] text-white font-bold rounded-xl hover:bg-[#118a00]"
+            className="inline-flex px-6 py-3 bg-[#2bb75c] text-white font-bold rounded-xl hover:bg-[#1d8d38]"
           >
             Get in touch
           </Link>
@@ -124,3 +124,4 @@ export default function AboutPage() {
     </div>
   );
 }
+

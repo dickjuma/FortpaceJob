@@ -42,13 +42,13 @@ export default function PopoverConfirm({
   const colors = {
     danger: "text-red-500 bg-red-50 dark:bg-red-900/20",
     warning: "text-amber-500 bg-amber-50 dark:bg-amber-900/20",
-    info: "text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/20"
+    info: "text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20"
   };
 
   const btnColors = {
     danger: "bg-red-600 hover:bg-red-700 shadow-red-500/20",
     warning: "bg-amber-600 hover:bg-amber-700 shadow-amber-500/20",
-    info: "bg-[#14a800] hover:bg-[#118a00] shadow-#14a800]/20"
+    info: "bg-[#2bb75c] hover:bg-[#1d8d38] shadow-#2bb75c]/20"
   };
 
   return (
@@ -94,3 +94,4 @@ export default function PopoverConfirm({
     </div>
   );
 }
+

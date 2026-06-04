@@ -58,7 +58,7 @@ const MyGigs = () => {
             </div>
             <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
               <div className="text-sm font-bold text-zinc-500 mb-1">Total Orders</div>
-              <div className="text-3xl font-black text-[#14a800]">{totalOrders}</div>
+              <div className="text-3xl font-black text-[#2bb75c]">{totalOrders}</div>
             </div>
             <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
               <div className="text-sm font-bold text-zinc-500 mb-1">Avg Rating</div>
@@ -81,7 +81,7 @@ const MyGigs = () => {
 
             {loading ? (
               <div className="flex justify-center py-16">
-                <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
               </div>
             ) : (
               <div className="p-0">
@@ -163,3 +163,4 @@ const MyGigs = () => {
 };
 
 export default MyGigs;
+

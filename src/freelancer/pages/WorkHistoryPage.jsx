@@ -23,7 +23,7 @@ const PROJECTS = [
       { label: 'Design System Handoff', done: true },
     ],
     feedback: '"Priya delivered exceptional work. The new design increased our conversion rate by 32%. Highly recommend!"',
-    color: 'from-[#14a800] to-pink-500',
+    color: 'from-[#2bb75c] to-pink-500',
   },
   {
     id: 2, title: 'Mobile App Development (iOS)', client: 'HealthTrack', category: 'Development',
@@ -37,7 +37,7 @@ const PROJECTS = [
       { label: 'App Store Submission', done: true },
     ],
     feedback: '"Outstanding iOS developer. The app launched on time and has 4.8 stars on the App Store. Will hire again."',
-    color: 'from-#14a800] to-cyan-500',
+    color: 'from-#2bb75c] to-cyan-500',
   },
   {
     id: 3, title: 'SEO Content Campaign', client: 'GrowthPulse', category: 'Marketing',
@@ -79,7 +79,7 @@ const PROJECTS = [
       { label: 'QA & Launch', done: true },
     ],
     feedback: '"One of the best developers I\'ve worked with. Clean code, great communication, delivered ahead of schedule."',
-    color: 'from-[#14a800] to-#14a800]',
+    color: 'from-[#2bb75c] to-#2bb75c]',
   },
   {
     id: 6, title: 'Legal Document Review', client: 'LegalEase Corp.', category: 'Legal',
@@ -143,8 +143,8 @@ const earningsData = [
 const CATEGORIES = ['All', 'Development', 'Design', 'Marketing', 'Writing', 'Legal'];
 
 const CATEGORY_COLORS = {
-  Development: 'bg-[#14a800]/10 dark:bg-[#14a800]/30 text-[#14a800] dark:text-[#14a800]',
-  Design: 'bg-[#14a800]/10 dark:bg-[#14a800]/30 text-[#14a800] dark:text-[#14a800]',
+  Development: 'bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 text-[#2bb75c] dark:text-[#2bb75c]',
+  Design: 'bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 text-[#2bb75c] dark:text-[#2bb75c]',
   Marketing: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300',
   Writing: 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300',
   Legal: 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300',
@@ -164,7 +164,7 @@ const EarningsTooltip = ({ active, payload, label }) => {
     return (
       <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-3 shadow-xl text-sm">
         <p className="font-semibold text-gray-700 dark:text-gray-200">{label}</p>
-        <p className="text-[#14a800] font-bold">${payload[0].value.toLocaleString()}</p>
+        <p className="text-[#2bb75c] font-bold">${payload[0].value.toLocaleString()}</p>
       </div>
     );
   }
@@ -178,11 +178,11 @@ const InvoiceModal = ({ project, onClose }) => (
     <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
       className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-2xl w-full max-w-md overflow-hidden">
       {/* Invoice header */}
-      <div className="bg-gradient-to-r from-[#14a800] to-violet-600 p-6 text-white">
+      <div className="bg-gradient-to-r from-[#2bb75c] to-violet-600 p-6 text-white">
         <div className="flex justify-between items-start">
           <div>
             <h2 className="text-xl font-bold">INVOICE</h2>
-            <p className="text-[#14a800] text-sm mt-0.5">#{String(project.id).padStart(5, '0')}</p>
+            <p className="text-[#2bb75c] text-sm mt-0.5">#{String(project.id).padStart(5, '0')}</p>
           </div>
           <button onClick={onClose} className="p-1.5 bg-white/20 hover:bg-white/30 rounded-lg transition-colors">
             <X size={16} />
@@ -190,11 +190,11 @@ const InvoiceModal = ({ project, onClose }) => (
         </div>
         <div className="mt-4 flex justify-between items-end">
           <div>
-            <p className="text-[#14a800] text-xs">Billed to</p>
+            <p className="text-[#2bb75c] text-xs">Billed to</p>
             <p className="font-semibold">{project.client}</p>
           </div>
           <div className="text-right">
-            <p className="text-[#14a800] text-xs">Date</p>
+            <p className="text-[#2bb75c] text-xs">Date</p>
             <p className="font-semibold">{new Date(project.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
           </div>
         </div>
@@ -216,7 +216,7 @@ const InvoiceModal = ({ project, onClose }) => (
         </div>
         <div className="flex justify-between items-center border-t border-gray-100 dark:border-gray-800 pt-3">
           <span className="font-bold text-gray-900 dark:text-white">Total Paid</span>
-          <span className="text-xl font-bold text-[#14a800]">${(project.budget * 0.95).toLocaleString()}</span>
+          <span className="text-xl font-bold text-[#2bb75c]">${(project.budget * 0.95).toLocaleString()}</span>
         </div>
         <div className="flex items-center justify-center py-2">
           <span className="border-2 border-green-500 text-green-600 dark:text-green-400 font-bold text-lg px-6 py-1.5 rounded-lg rotate-[-5deg] tracking-widest">PAID</span>
@@ -227,7 +227,7 @@ const InvoiceModal = ({ project, onClose }) => (
             Close
           </button>
           <button onClick={onClose}
-            className="py-2.5 px-4 bg-[#14a800] hover:bg-[#118a00] text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+            className="py-2.5 px-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
             <Download size={15} /> Download PDF
           </button>
         </div>
@@ -246,7 +246,7 @@ const ProjectCard = ({ project, onExpand, expanded, onInvoice }) => (
     <div className={`h-1.5 bg-gradient-to-r ${project.color}`} />
     <div className="p-5" onClick={() => onExpand(project.id)}>
       <div className="flex items-start justify-between gap-2 mb-3">
-        <h3 className="font-semibold text-gray-900 dark:text-white text-sm leading-snug group-hover:text-[#14a800] dark:group-hover:text-[#14a800] transition-colors">{project.title}</h3>
+        <h3 className="font-semibold text-gray-900 dark:text-white text-sm leading-snug group-hover:text-[#2bb75c] dark:group-hover:text-[#2bb75c] transition-colors">{project.title}</h3>
         <span className={`px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${CATEGORY_COLORS[project.category]}`}>{project.category}</span>
       </div>
       <div className="flex items-center gap-2 mb-3">
@@ -269,7 +269,7 @@ const ProjectCard = ({ project, onExpand, expanded, onInvoice }) => (
       </div>
       <div className="flex items-center justify-between">
         <button onClick={e => { e.stopPropagation(); onInvoice(project); }}
-          className="text-xs text-[#14a800] hover:text-[#14a800] dark:text-[#14a800] font-medium flex items-center gap-1 hover:underline">
+          className="text-xs text-[#2bb75c] hover:text-[#2bb75c] dark:text-[#2bb75c] font-medium flex items-center gap-1 hover:underline">
           <Download size={12} /> Invoice
         </button>
         <button className="text-xs text-gray-400 flex items-center gap-1">
@@ -338,7 +338,7 @@ const ListRow = ({ project, onExpand, expanded, onInvoice, index }) => (
       <div className="font-semibold text-gray-900 dark:text-white text-sm w-20 text-right">${project.budget.toLocaleString()}</div>
       <button onClick={e => { e.stopPropagation(); onInvoice(project); }}
         className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors ml-1">
-        <Download size={14} className="text-gray-400 hover:text-[#14a800]" />
+        <Download size={14} className="text-gray-400 hover:text-[#2bb75c]" />
       </button>
       {expanded ? <ChevronUp size={14} className="text-gray-400 flex-shrink-0" /> : <ChevronDown size={14} className="text-gray-400 flex-shrink-0" />}
     </div>
@@ -390,9 +390,9 @@ const TimelineView = ({ projects, onExpand, expandedId, onInvoice }) => {
         <div key={month} className="mb-8">
           <div className="sticky top-16 z-10 flex items-center gap-3 mb-4 bg-surface dark:bg-gray-950 py-1">
             <div className="w-12 flex justify-center z-10">
-              <div className="w-3 h-3 rounded-full bg-[#14a800] ring-4 ring-white dark:ring-gray-950" />
+              <div className="w-3 h-3 rounded-full bg-[#2bb75c] ring-4 ring-white dark:ring-gray-950" />
             </div>
-            <span className="text-sm font-semibold text-[#14a800] dark:text-[#14a800] bg-[#14a800]/5 dark:bg-[#14a800]/20 px-3 py-1 rounded-full">{month}</span>
+            <span className="text-sm font-semibold text-[#2bb75c] dark:text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 px-3 py-1 rounded-full">{month}</span>
           </div>
           <div className="space-y-4">
             {items.map((project, i) => (
@@ -423,7 +423,7 @@ const TimelineView = ({ projects, onExpand, expandedId, onInvoice }) => {
                       </div>
                       <div className="flex items-center gap-2">
                         <button onClick={e => { e.stopPropagation(); onInvoice(project); }}
-                          className="text-xs text-[#14a800] dark:text-[#14a800] flex items-center gap-1 hover:underline">
+                          className="text-xs text-[#2bb75c] dark:text-[#2bb75c] flex items-center gap-1 hover:underline">
                           <Download size={11} /> Invoice
                         </button>
                         {expandedId === project.id ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
@@ -498,7 +498,7 @@ export default function WorkHistoryPage() {
 
   const SortIcon = ({ col }) => {
     if (sortCol !== col) return <ChevronDown size={12} className="text-gray-300" />;
-    return sortDir === 'desc' ? <ChevronDown size={12} className="text-[#14a800]" /> : <ChevronUp size={12} className="text-[#14a800]" />;
+    return sortDir === 'desc' ? <ChevronDown size={12} className="text-[#2bb75c]" /> : <ChevronUp size={12} className="text-[#2bb75c]" />;
   };
 
   const clearFilters = () => {
@@ -527,13 +527,13 @@ export default function WorkHistoryPage() {
               { v: 'timeline', icon: Clock3 },
             ].map(({ v, icon: Icon }) => (
               <button key={v} onClick={() => setView(v)}
-                className={`p-2 rounded-lg transition-all duration-200 ${view === v ? 'bg-[#14a800] text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'}`}>
+                className={`p-2 rounded-lg transition-all duration-200 ${view === v ? 'bg-[#2bb75c] text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'}`}>
                 <Icon size={16} />
               </button>
             ))}
           </div>
           {/* Export */}
-          <button className="flex items-center gap-2 px-4 py-2 bg-[#14a800] hover:bg-[#118a00] text-white rounded-lg text-sm font-medium transition-colors shadow-sm">
+          <button className="flex items-center gap-2 px-4 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-lg text-sm font-medium transition-colors shadow-sm">
             <Download size={15} /> Export
           </button>
         </div>
@@ -543,10 +543,10 @@ export default function WorkHistoryPage() {
       <motion.div variants={containerVariants} initial="hidden" animate="show"
         className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Total Projects', value: '47', icon: FileText, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/20' },
+          { label: 'Total Projects', value: '47', icon: FileText, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20' },
           { label: 'Total Earnings', value: `$${totalEarnings.toLocaleString()}`, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-900/20' },
           { label: 'Avg Rating', value: `${avgRating}★`, icon: Star, color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-900/20' },
-          { label: 'Repeat Clients', value: '62%', icon: Users, color: 'text-[#14a800]', bg: 'bg-[#14a800]/5 dark:bg-[#14a800]/20' },
+          { label: 'Repeat Clients', value: '62%', icon: Users, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20' },
         ].map((stat) => {
           const Icon = stat.icon;
           return (
@@ -598,17 +598,17 @@ export default function WorkHistoryPage() {
           <div className="relative flex-1 min-w-48">
             <Search size={16} className="absolute left-3 top-1/2 -tranzinc-y-1/2 text-gray-400" />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search projects..."
-              className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#14a800]/30 focus:border-[#14a800]/20" />
+              className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2bb75c]/30 focus:border-[#2bb75c]/20" />
           </div>
           <button onClick={() => setShowFilters(v => !v)}
-            className={`flex items-center gap-2 px-4 py-2.5 border rounded-xl text-sm font-medium transition-colors ${showFilters ? 'bg-[#14a800] border-[#14a800]/20 text-white' : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-[#14a800]/20'}`}>
+            className={`flex items-center gap-2 px-4 py-2.5 border rounded-xl text-sm font-medium transition-colors ${showFilters ? 'bg-[#2bb75c] border-[#2bb75c]/20 text-white' : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-[#2bb75c]/20'}`}>
             <SlidersHorizontal size={15} /> Filters
           </button>
           {/* Category pills */}
           <div className="flex gap-1.5 flex-wrap">
             {CATEGORIES.map(cat => (
               <button key={cat} onClick={() => setCategory(cat)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${category === cat ? 'bg-[#14a800] text-white border-[#14a800]/20' : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-[#14a800]/20'}`}>
+                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${category === cat ? 'bg-[#2bb75c] text-white border-[#2bb75c]/20' : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-[#2bb75c]/20'}`}>
                 {cat}
               </button>
             ))}
@@ -625,7 +625,7 @@ export default function WorkHistoryPage() {
                 <div>
                   <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider block mb-2">Client Name</label>
                   <input value={clientSearch} onChange={e => setClientSearch(e.target.value)} placeholder="Search client..."
-                    className="w-full px-3 py-2 bg-surface dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#14a800]/30 focus:border-[#14a800]/20 text-gray-900 dark:text-white" />
+                    className="w-full px-3 py-2 bg-surface dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2bb75c]/30 focus:border-[#2bb75c]/20 text-gray-900 dark:text-white" />
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider block mb-2">
@@ -678,7 +678,7 @@ export default function WorkHistoryPage() {
               No work history matches your current filters. Try adjusting your search criteria.
             </p>
             <button onClick={clearFilters}
-              className="px-5 py-2.5 bg-[#14a800] hover:bg-[#118a00] text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+              className="px-5 py-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
               <X size={15} /> Clear filters
             </button>
           </motion.div>
@@ -730,3 +730,4 @@ export default function WorkHistoryPage() {
     </div>
   );
 }
+

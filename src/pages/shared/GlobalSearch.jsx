@@ -63,20 +63,20 @@ const GlobalSearch = () => {
     <div className="max-w-7xl mx-auto space-y-6 pb-12">
       
       {/* 1. Massive Search Header Hero */}
-      <div className="bg-gradient-to-r from-blue-900 via-[#14a800] to-zinc-900 rounded-[2rem] p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-blue-900 via-[#2bb75c] to-zinc-900 rounded-[2rem] p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#14a800]/20 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#2bb75c]/20 rounded-full blur-[100px] pointer-events-none" />
         
         <div className="relative z-10 max-w-3xl mx-auto text-center mb-8">
           <h1 className="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight">
             Find the world's best talent.
           </h1>
-          <p className="text-[#14a800]/80 text-lg">AI-powered matchmaking connecting you to elite professionals.</p>
+          <p className="text-[#2bb75c]/80 text-lg">AI-powered matchmaking connecting you to elite professionals.</p>
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto">
           {/* Main Search Bar */}
-          <div className={`relative bg-white dark:bg-surface-dark rounded-2xl flex items-center p-2 shadow-2xl transition-all duration-300 ${isFocused ? 'ring-4 ring-#14a800]/30 shadow-blue-900/50' : ''}`}>
+          <div className={`relative bg-white dark:bg-surface-dark rounded-2xl flex items-center p-2 shadow-2xl transition-all duration-300 ${isFocused ? 'ring-4 ring-#2bb75c]/30 shadow-blue-900/50' : ''}`}>
             <Search className="w-6 h-6 text-zinc-400 ml-4 shrink-0" />
             <input 
               type="text" 
@@ -89,11 +89,11 @@ const GlobalSearch = () => {
             />
             <button 
               onClick={() => setFiltersOpen(!filtersOpen)}
-              className={`hidden sm:flex items-center gap-2 px-4 py-2 mx-2 rounded-xl text-sm font-bold transition-colors ${filtersOpen ? 'bg-[#14a800]/10 dark:bg-[#14a800]/50 text-[#14a800] dark:text-[#14a800]' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700'}`}
+              className={`hidden sm:flex items-center gap-2 px-4 py-2 mx-2 rounded-xl text-sm font-bold transition-colors ${filtersOpen ? 'bg-[#2bb75c]/10 dark:bg-[#2bb75c]/50 text-[#2bb75c] dark:text-[#2bb75c]' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700'}`}
             >
               <SlidersHorizontal className="w-4 h-4" /> Filters
             </button>
-            <button className="bg-[#14a800] hover:bg-[#118a00] text-white px-8 py-3 rounded-xl font-bold transition-colors flex items-center gap-2 shadow-lg shadow-#14a800]/20 shrink-0">
+            <button className="bg-[#2bb75c] hover:bg-[#1d8d38] text-white px-8 py-3 rounded-xl font-bold transition-colors flex items-center gap-2 shadow-lg shadow-#2bb75c]/20 shrink-0">
               <Sparkles className="w-4 h-4" /> Search
             </button>
           </div>
@@ -110,7 +110,7 @@ const GlobalSearch = () => {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {suggestions.map(s => (
-                    <button key={s} onClick={() => setSearchQuery(s)} className="px-3 py-1.5 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 text-sm font-medium rounded-lg hover:border-[#14a800]/20 hover:text-[#14a800] dark:hover:text-[#14a800] transition-colors">
+                    <button key={s} onClick={() => setSearchQuery(s)} className="px-3 py-1.5 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 text-sm font-medium rounded-lg hover:border-[#2bb75c]/20 hover:text-[#2bb75c] dark:hover:text-[#2bb75c] transition-colors">
                       {s}
                     </button>
                   ))}
@@ -129,7 +129,7 @@ const GlobalSearch = () => {
             onClick={() => setActiveTab(tab)}
             className={`px-8 py-4 text-sm font-bold border-b-2 transition-colors whitespace-nowrap ${
               activeTab === tab 
-                ? 'border-[#14a800]/20 text-[#14a800] dark:text-[#14a800]' 
+                ? 'border-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c]' 
                 : 'border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
             }`}
           >
@@ -153,7 +153,7 @@ const GlobalSearch = () => {
                 <h3 className="font-bold flex items-center gap-2">
                   <Filter className="w-4 h-4" /> Filters
                 </h3>
-                <button className="text-xs font-bold text-[#14a800] hover:underline">Clear All</button>
+                <button className="text-xs font-bold text-[#2bb75c] hover:underline">Clear All</button>
               </div>
 
               <div className="p-5 space-y-6">
@@ -166,7 +166,7 @@ const GlobalSearch = () => {
                   <div className="space-y-2">
                     {['Any amount', '$10 - $30/hr', '$30 - $60/hr', '$60 & above'].map((rate, i) => (
                       <label key={rate} className="flex items-center gap-3 cursor-pointer group">
-                        <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${i === 2 ? 'bg-[#14a800] border-[#14a800]/20' : 'border-zinc-300 dark:border-zinc-600 group-hover:border-[#14a800]/20'}`}>
+                        <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${i === 2 ? 'bg-[#2bb75c] border-[#2bb75c]/20' : 'border-zinc-300 dark:border-zinc-600 group-hover:border-[#2bb75c]/20'}`}>
                           {i === 2 && <CheckCircle2 className="w-3 h-3 text-white" />}
                         </div>
                         <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{rate}</span>
@@ -185,8 +185,8 @@ const GlobalSearch = () => {
                   <div className="space-y-2">
                     {['Any Job Success', '80% & up', '90% & up'].map((score, i) => (
                       <label key={score} className="flex items-center gap-3 cursor-pointer group">
-                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${i === 2 ? 'border-[#14a800]/20' : 'border-zinc-300 dark:border-zinc-600 group-hover:border-[#14a800]/20'}`}>
-                          {i === 2 && <div className="w-2 h-2 rounded-full bg-[#14a800]" />}
+                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${i === 2 ? 'border-[#2bb75c]/20' : 'border-zinc-300 dark:border-zinc-600 group-hover:border-[#2bb75c]/20'}`}>
+                          {i === 2 && <div className="w-2 h-2 rounded-full bg-[#2bb75c]" />}
                         </div>
                         <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{score}</span>
                       </label>
@@ -203,7 +203,7 @@ const GlobalSearch = () => {
                   </h4>
                   <div className="relative">
                     <MapPin className="w-4 h-4 absolute left-3 top-2.5 text-zinc-400" />
-                    <input type="text" placeholder="Type a country..." className="w-full pl-9 pr-3 py-2 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#14a800]" />
+                    <input type="text" placeholder="Type a country..." className="w-full pl-9 pr-3 py-2 bg-surface dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#2bb75c]" />
                   </div>
                 </div>
 
@@ -228,18 +228,18 @@ const GlobalSearch = () => {
 
           <div className="space-y-4">
             {mockResults.map((result) => (
-              <div key={result.id} className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-3xl p-6 shadow-sm hover:border-[#14a800]/50 dark:hover:border-[#14a800]/50 hover:shadow-md transition-all group">
+              <div key={result.id} className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-3xl p-6 shadow-sm hover:border-[#2bb75c]/50 dark:hover:border-[#2bb75c]/50 hover:shadow-md transition-all group">
                 <div className="flex flex-col sm:flex-row gap-6">
                   
                   {/* Avatar */}
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-#14a800] to-[#118a00] flex items-center justify-center text-white font-bold text-2xl shadow-lg shrink-0">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-#2bb75c] to-[#1d8d38] flex items-center justify-center text-white font-bold text-2xl shadow-lg shrink-0">
                     {result.name[0]}
                   </div>
                   
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <h2 className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-[#14a800] transition-colors flex items-center gap-2">
+                        <h2 className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-[#2bb75c] transition-colors flex items-center gap-2">
                           {result.name}
                         </h2>
                         <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">{result.title}</p>
@@ -273,7 +273,7 @@ const GlobalSearch = () => {
                     <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-zinc-100 dark:border-zinc-700/50">
                       <div className="flex gap-2">
                         {result.tags.map(tag => (
-                          <span key={tag} className="px-2 py-1 bg-[#14a800]/5 dark:bg-[#14a800]/20 text-[#14a800] dark:text-[#14a800] text-[10px] font-bold uppercase tracking-wider rounded">
+                          <span key={tag} className="px-2 py-1 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] text-[10px] font-bold uppercase tracking-wider rounded">
                             {tag}
                           </span>
                         ))}
@@ -282,7 +282,7 @@ const GlobalSearch = () => {
                         <button className="flex-1 sm:flex-none px-4 py-2 border border-zinc-200 dark:border-zinc-700 hover:bg-surface dark:hover:bg-zinc-700 text-sm font-bold rounded-xl transition-colors">
                           Save
                         </button>
-                        <button className="flex-1 sm:flex-none px-6 py-2 bg-[#14a800] hover:bg-[#118a00] text-white text-sm font-bold rounded-xl transition-colors">
+                        <button className="flex-1 sm:flex-none px-6 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white text-sm font-bold rounded-xl transition-colors">
                           Hire Now
                         </button>
                       </div>
@@ -308,3 +308,4 @@ const GlobalSearch = () => {
 };
 
 export default GlobalSearch;
+

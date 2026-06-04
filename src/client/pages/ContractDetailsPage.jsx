@@ -15,7 +15,7 @@ import toast from 'react-hot-toast';
 const STATUS_STYLES = {
   ACTIVE:    'bg-success/10 text-success border-success/20',
   PENDING:   'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-  COMPLETED: 'bg-#14a800]/10 text-blue-400 border-#14a800]/20',
+  COMPLETED: 'bg-#2bb75c]/10 text-blue-400 border-#2bb75c]/20',
   CANCELLED: 'bg-red-500/10 text-red-400 border-red-500/20',
   TERMINATED:'bg-zinc-500/10 text-zinc-400 border-zinc-600/20',
 };
@@ -23,7 +23,7 @@ const STATUS_STYLES = {
 const MS_STATUS = {
   APPROVED:    { label: 'Approved & Paid', icon: CheckCircle, color: 'text-success', bg: 'bg-success/10' },
   SUBMITTED:   { label: 'In Review',       icon: Clock,       color: 'text-yellow-400',  bg: 'bg-yellow-500/10' },
-  IN_PROGRESS: { label: 'In Progress',     icon: TrendingUp,  color: 'text-blue-400',    bg: 'bg-#14a800]/10' },
+  IN_PROGRESS: { label: 'In Progress',     icon: TrendingUp,  color: 'text-blue-400',    bg: 'bg-#2bb75c]/10' },
   PENDING:     { label: 'Pending',         icon: Clock,       color: 'text-zinc-400',    bg: 'bg-zinc-800' },
   REJECTED:    { label: 'Revisions Requested', icon: AlertCircle, color: 'text-red-400', bg: 'bg-red-500/10' },
   DISPUTED:    { label: 'Disputed',        icon: Flag,        color: 'text-orange-400',  bg: 'bg-orange-500/10' },
@@ -147,13 +147,13 @@ export default function ContractDetailsPage() {
             <div className="flex flex-wrap gap-3">
               {contract.status === 'PENDING' && (
                 <button onClick={() => setConfirmModal({ type: 'sign' })}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-green-600 text-black rounded-xl text-sm font-black transition-colors shadow-lg shadow-[#14a800]/20">
+                  className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-green-600 text-black rounded-xl text-sm font-black transition-colors shadow-lg shadow-[#2bb75c]/20">
                   <CheckCircle className="w-4 h-4" /> Sign & Fund
                 </button>
               )}
               {contract.freelancer && (
                 <button onClick={() => navigate(`/client/messages`)}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-xl text-sm font-black transition-colors shadow-lg shadow-[#14a800]/20">
+                  className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-xl text-sm font-black transition-colors shadow-lg shadow-[#2bb75c]/20">
                   <MessageSquare className="w-4 h-4" /> Message
                 </button>
               )}
@@ -322,7 +322,7 @@ export default function ContractDetailsPage() {
                               <button
                                 onClick={() => setConfirmModal({ type: 'approve', milestoneId: ms.id, amount: ms.amount, title: ms.title })}
                                 disabled={approveMilestone.isPending}
-                                className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-green-600 text-black rounded-xl text-sm font-black transition-colors shadow-lg shadow-[#14a800]/20 disabled:opacity-50"
+                                className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-green-600 text-black rounded-xl text-sm font-black transition-colors shadow-lg shadow-[#2bb75c]/20 disabled:opacity-50"
                               >
                                 <Unlock className="w-4 h-4" /> Approve & Release KES {Number(ms.amount).toLocaleString()}
                               </button>
@@ -338,7 +338,7 @@ export default function ContractDetailsPage() {
                           {/* Info for pending/active */}
                           {normalizedStatus === 'IN_PROGRESS' && (
                             <div className="pt-2">
-                              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 bg-#14a800]/10 px-3 py-1.5 rounded-lg">
+                              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 bg-#2bb75c]/10 px-3 py-1.5 rounded-lg">
                                 <Clock className="w-3.5 h-3.5" /> Freelancer is currently working on this milestone.
                               </span>
                             </div>
@@ -361,7 +361,7 @@ export default function ContractDetailsPage() {
               <p className="text-sm font-semibold text-zinc-400">Share your experience working with {contract.freelancer?.name || 'this freelancer'}. This helps other clients on Fortspace.</p>
             </div>
             <button onClick={() => navigate(`/client/reviews/new?contractId=${contract.id}`)}
-              className="px-6 py-3 bg-success text-white rounded-xl text-sm font-black hover:bg-success transition-all shadow-lg shadow-[#14a800]/20 shrink-0 w-full sm:w-auto">
+              className="px-6 py-3 bg-success text-white rounded-xl text-sm font-black hover:bg-success transition-all shadow-lg shadow-[#2bb75c]/20 shrink-0 w-full sm:w-auto">
               Write Review
             </button>
           </div>
@@ -435,3 +435,4 @@ export default function ContractDetailsPage() {
     </div>
   );
 }
+

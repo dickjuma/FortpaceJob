@@ -137,7 +137,7 @@ export default function UpgradePlanPage() {
                   "w-full py-3.5 mt-8 font-black rounded-xl text-xs transition-all shadow-sm border",
                   isActive 
                     ? "bg-light-gray border-border text-text-secondary cursor-default" 
-                    : "bg-success hover:bg-success/95 text-white shadow-lg shadow-[#14a800]/20"
+                    : "bg-success hover:bg-success/95 text-white shadow-lg shadow-[#2bb75c]/20"
                 )}
                 disabled={isActive}
               >
@@ -151,3 +151,4 @@ export default function UpgradePlanPage() {
     </div>
   );
 }
+

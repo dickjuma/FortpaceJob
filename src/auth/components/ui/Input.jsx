@@ -36,7 +36,7 @@ const Input = forwardRef(({
     <div className="w-full relative pb-1">
       <div className={cn(
         "relative rounded-xl transition-all duration-300",
-        isFocused && !error ? "glow-border ring-2 ring-#14a800]/20" : "",
+        isFocused && !error ? "glow-border ring-2 ring-#2bb75c]/20" : "",
         error ? "ring-2 ring-red-500/20" : ""
       )}>
         {Icon && (
@@ -44,7 +44,7 @@ const Input = forwardRef(({
             <Icon className={cn(
               "h-5 w-5 transition-colors duration-300",
               error ? "text-red-400" : 
-              isFocused ? "text-[#14a800]" : "text-zinc-400"
+              isFocused ? "text-[#2bb75c]" : "text-zinc-400"
             )} />
           </div>
         )}
@@ -62,7 +62,7 @@ const Input = forwardRef(({
             "pt-6 pb-2", // space for floating label
             error
               ? "border-red-300 text-red-900 focus:border-red-500 dark:border-red-500/50 dark:text-red-400 dark:bg-red-500/5"
-              : "border-zinc-200 text-zinc-900 focus:border-[#14a800]/20 dark:border-zinc-700 dark:text-white dark:focus:border-[#14a800]/20",
+              : "border-zinc-200 text-zinc-900 focus:border-[#2bb75c]/20 dark:border-zinc-700 dark:text-white dark:focus:border-[#2bb75c]/20",
             className
           )}
           {...props}
@@ -99,3 +99,4 @@ const Input = forwardRef(({
 
 Input.displayName = 'Input';
 export default Input;
+

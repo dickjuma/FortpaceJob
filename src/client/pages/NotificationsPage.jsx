@@ -8,7 +8,7 @@ const TYPE_ICONS = {
   JOB:       { icon: Briefcase,  color: 'text-success bg-success/10' },
   CONTRACT:  { icon: CheckCircle,color: 'text-blue-400 bg-blue-400/10' },
   REVIEW:    { icon: Star,       color: 'text-orange-400 bg-orange-400/10' },
-  PROPOSAL:  { icon: Briefcase,  color: 'text-#14a800] bg-#14a800]/10' },
+  PROPOSAL:  { icon: Briefcase,  color: 'text-#2bb75c] bg-#2bb75c]/10' },
   DISPUTE:   { icon: AlertCircle,color: 'text-red-400 bg-red-400/10' },
   MILESTONE: { icon: CheckCircle,color: 'text-success bg-success/10' },
   MESSAGE:   { icon: MessageSquare, color: 'text-blue-400 bg-blue-400/10' },
@@ -161,3 +161,4 @@ export default function NotificationsPage() {
     </div>
   );
 }
+

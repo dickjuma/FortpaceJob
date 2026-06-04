@@ -40,7 +40,7 @@ const FreelancerSuccessScore = () => {
             
             <div className="bg-white border border-zinc-200 rounded-3xl p-8 shadow-sm">
               <h3 className="text-xl font-bold text-zinc-900 mb-6 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-[#14a800]" /> Score Breakdown
+                <TrendingUp className="w-5 h-5 text-[#2bb75c]" /> Score Breakdown
               </h3>
               
               <div className="space-y-6">
@@ -56,10 +56,10 @@ const FreelancerSuccessScore = () => {
                 <div>
                   <div className="flex justify-between text-sm font-bold text-zinc-700 mb-2">
                     <span>Long-term Contracts</span>
-                    <span className="text-[#14a800]">Great</span>
+                    <span className="text-[#2bb75c]">Great</span>
                   </div>
                   <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
-                    <div className="w-[85%] h-full bg-[#14a800] rounded-full"></div>
+                    <div className="w-[85%] h-full bg-[#2bb75c] rounded-full"></div>
                   </div>
                 </div>
                 <div>
@@ -103,3 +103,4 @@ const FreelancerSuccessScore = () => {
 };
 
 export default FreelancerSuccessScore;
+

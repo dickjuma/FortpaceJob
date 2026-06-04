@@ -50,7 +50,7 @@ export default function SavedTalentPipelinePage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-3">
-              <Bookmark className="w-8 h-8 text-[#14a800]" />
+              <Bookmark className="w-8 h-8 text-[#2bb75c]" />
               Talent Pipeline
             </h1>
             <p className="text-gray-500 dark:text-gray-400 mt-1">
@@ -73,19 +73,19 @@ export default function SavedTalentPipelinePage() {
                 placeholder="Search candidates..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-4 py-2 w-full sm:w-64 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#14a800] dark:text-white"
+                className="pl-9 pr-4 py-2 w-full sm:w-64 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2bb75c] dark:text-white"
               />
             </div>
             <div className="flex bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
               <button
                 onClick={() => setViewMode('kanban')}
-                className={`p-2 ${viewMode === 'kanban' ? 'bg-gray-100 dark:bg-gray-800 text-[#14a800]' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
+                className={`p-2 ${viewMode === 'kanban' ? 'bg-gray-100 dark:bg-gray-800 text-[#2bb75c]' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
               >
                 <LayoutGrid className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 ${viewMode === 'list' ? 'bg-gray-100 dark:bg-gray-800 text-[#14a800]' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
+                className={`p-2 ${viewMode === 'list' ? 'bg-gray-100 dark:bg-gray-800 text-[#2bb75c]' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
               >
                 <List className="w-5 h-5" />
               </button>
@@ -95,13 +95,13 @@ export default function SavedTalentPipelinePage() {
 
         {isLoading ? (
           <div className="flex items-center justify-center h-48">
-            <Loader2 className="w-8 h-8 animate-spin text-[#14a800]" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center h-48 gap-3 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
             <AlertCircle className="w-10 h-10 text-red-400" />
             <p className="text-gray-500">Failed to load pipeline.</p>
-            <button onClick={() => refetch()} className="text-sm text-[#14a800] hover:underline">Retry</button>
+            <button onClick={() => refetch()} className="text-sm text-[#2bb75c] hover:underline">Retry</button>
           </div>
         ) : viewMode === 'kanban' ? (
           <div className="flex gap-6 overflow-x-auto pb-4 custom-scrollbar">
@@ -127,7 +127,7 @@ export default function SavedTalentPipelinePage() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, scale: 0.95 }}
                           transition={{ duration: 0.2, delay: idx * 0.05 }}
-                          className="bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm cursor-pointer hover:border-[#14a800]/20 transition-colors group"
+                          className="bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm cursor-pointer hover:border-[#2bb75c]/20 transition-colors group"
                         >
                           <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
@@ -197,7 +197,7 @@ export default function SavedTalentPipelinePage() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="px-3 py-1 bg-[#14a800]/5 dark:bg-[#14a800]/30 text-[#14a800] dark:text-[#14a800] text-xs font-medium rounded-full">
+                        <span className="px-3 py-1 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/30 text-[#2bb75c] dark:text-[#2bb75c] text-xs font-medium rounded-full">
                           {candidate.stage}
                         </span>
                       </td>
@@ -208,7 +208,7 @@ export default function SavedTalentPipelinePage() {
                       </td>
                       <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{candidate.hourlyRate}</td>
                       <td className="px-6 py-4 text-right">
-                        <button className="text-gray-400 hover:text-[#14a800] transition-colors p-2 rounded-lg hover:bg-[#14a800]/5 dark:hover:bg-[#14a800]/20">
+                        <button className="text-gray-400 hover:text-[#2bb75c] transition-colors p-2 rounded-lg hover:bg-[#2bb75c]/5 dark:hover:bg-[#2bb75c]/20">
                           <ChevronRight className="w-5 h-5" />
                         </button>
                       </td>
@@ -230,3 +230,4 @@ export default function SavedTalentPipelinePage() {
     </div>
   );
 }
+
