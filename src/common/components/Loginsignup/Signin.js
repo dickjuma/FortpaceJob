@@ -111,13 +111,7 @@ const Signin = () => {
 
   const redirectByRole = () => {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (user?.role === 'freelancer') {
-      navigate('/my-profile/overview');
-    } else if (user?.role === 'client') {
-      navigate('/client-services/overview');
-    } else {
-      navigate('/');
-    }
+    navigate(getDashboardPathForRole(user?.role), { replace: true });
   };
 
   const handleLogin = async (e) => {
@@ -212,7 +206,7 @@ const Signin = () => {
         localStorage.setItem("accessToken", res.accessToken);
         localStorage.setItem("refreshToken", res.refreshToken);
         if (res.user) localStorage.setItem("user", JSON.stringify(res.user));
-        navigate(res.user?.role === 'client' ? '/client-services/overview' : '/my-profile/overview');
+        navigate(getDashboardPathForRole(res.user?.role), { replace: true });
       } else {
         setNotice(`${channel === "email" ? "Email" : "Phone"} verified successfully.`);
       }
@@ -595,3 +589,4 @@ const Signin = () => {
 
 export default Signin;
 
+import { getDashboardPathForRole } from '../../../auth/utils/authRouting';

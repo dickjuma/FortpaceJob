@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { authAPI } from "../../services/api";
+import { getDashboardPathForRole } from "../../../auth/utils/authRouting";
 
 const OAuthCallback = () => {
   const [searchParams] = useSearchParams();
@@ -37,13 +38,7 @@ const OAuthCallback = () => {
       }
 
       const user = JSON.parse(localStorage.getItem("user"));
-      if (user?.role === "freelancer") {
-        navigate("/my-profile/overview");
-      } else if (user?.role === "client") {
-        navigate("/client-services/overview");
-      } else {
-        navigate("/");
-      }
+      navigate(getDashboardPathForRole(user?.role), { replace: true });
     };
 
     run();
