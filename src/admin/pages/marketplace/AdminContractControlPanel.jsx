@@ -52,7 +52,7 @@ export default function AdminContractControlPanel() {
       <div className="flex justify-between items-center mb-8 gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-            <Shield className="w-6 h-6 text-[#2bb75c]" /> Contract Control Panel
+            <Shield className="w-6 h-6 text-[#4C1D95]" /> Contract Control Panel
           </h1>
           <p className="text-sm text-gray-500 mt-1">Supervise marketplace contracts, review status flows, and monitor escalation risk.</p>
         </div>
@@ -63,7 +63,7 @@ export default function AdminContractControlPanel() {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {[
-          { label: 'Active Contracts', value: summary.active, color: 'text-[#2bb75c]' },
+          { label: 'Active Contracts', value: summary.active, color: 'text-[#4C1D95]' },
           { label: 'Funds in Escrow', value: `$${summary.escrowTotal.toLocaleString()}`, color: 'text-success' },
           { label: 'Pending Signatures', value: summary.pending, color: 'text-warning' },
           { label: 'High Risk Flags', value: summary.highRisk, color: 'text-danger' },
@@ -87,7 +87,7 @@ export default function AdminContractControlPanel() {
                 placeholder="Search contract ID, client, or freelancer"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-surface-dark-border rounded-lg bg-white dark:bg-surface-dark text-sm focus:ring-2 focus:ring-[#2bb75c] outline-none"
+                className="w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-surface-dark-border rounded-lg bg-white dark:bg-surface-dark text-sm focus:ring-2 focus:ring-[#4C1D95] outline-none"
               />
             </div>
             <button className="px-4 py-2 border border-gray-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark rounded-lg text-sm font-medium hover:bg-surface dark:hover:bg-surface-dark-tertiary">
@@ -159,7 +159,7 @@ export default function AdminContractControlPanel() {
                         <span className={cn('font-bold', riskClass)}>{riskLabel || 'low'}</span>
                       </td>
                       <td className="px-6 py-4 text-right flex justify-end gap-2">
-                        <button className="p-2 text-gray-400 hover:text-[#2bb75c] transition-colors" title="View contract"><Eye className="w-4 h-4" /></button>
+                        <button className="p-2 text-gray-400 hover:text-[#4C1D95] transition-colors" title="View contract"><Eye className="w-4 h-4" /></button>
                         <button className="p-2 text-gray-400 hover:text-zinc-900 dark:hover:text-white transition-colors" title="More options"><MoreVertical className="w-4 h-4" /></button>
                       </td>
                     </tr>
@@ -173,4 +173,5 @@ export default function AdminContractControlPanel() {
     </div>
   );
 }
+
 

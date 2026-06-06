@@ -20,7 +20,7 @@ export default function PhoneField({
         className={`flex items-center gap-3 rounded-2xl border bg-white px-4 py-3.5 transition-colors dark:bg-zinc-950/50 ${
           error
             ? 'border-red-300 dark:border-red-500/60'
-            : 'border-zinc-200 focus-within:border-[#2bb75c]/20 dark:border-zinc-700 dark:focus-within:border-[#2bb75c]/20'
+            : 'border-zinc-200 focus-within:border-[#4C1D95]/20 dark:border-zinc-700 dark:focus-within:border-[#4C1D95]/20'
         }`}
       >
         <Phone className={`h-4 w-4 shrink-0 ${error ? 'text-red-400' : 'text-zinc-400'}`} />
@@ -44,4 +44,5 @@ export default function PhoneField({
     </div>
   );
 }
+
 

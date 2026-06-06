@@ -72,11 +72,11 @@ export default function LoginPage() {
       heroTitle="Welcome back to Forte."
       heroSubtitle="Log in to access your enterprise dashboard, manage active contracts, and collaborate with your team."
       showStats={false}
-      cardClassName="!p-8 sm:!p-10 !shadow-2xl !shadow-[#2bb75c]/25"
+      cardClassName="!p-8 sm:!p-10 !shadow-2xl !shadow-[#4C1D95]/25"
     >
       <div className="w-full">
         <div className="flex flex-col items-center mb-8 text-center">
-          <div className="w-14 h-14 bg-gradient-to-br from-[#2bb75c] to-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-[#2bb75c]/25">
+          <div className="w-14 h-14 bg-gradient-to-br from-[#4C1D95] to-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-[#4C1D95]/25">
             <LogIn className="w-7 h-7 text-white" />
           </div>
           <h2 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-2">Welcome Back</h2>
@@ -88,9 +88,9 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-zinc-700 dark:text-zinc-300 ml-1">Email Address</label>
-            <div className={`relative flex items-center transition-all rounded-xl border ${focusedField === 'email' ? 'border-[#2bb75c] ring-4 ring-[#2bb75c]/10' : 'border-zinc-300 dark:border-zinc-700'} bg-white dark:bg-zinc-900 overflow-hidden shadow-sm`}>
+            <div className={`relative flex items-center transition-all rounded-xl border ${focusedField === 'email' ? 'border-[#4C1D95] ring-4 ring-[#4C1D95]/10' : 'border-zinc-300 dark:border-zinc-700'} bg-white dark:bg-zinc-900 overflow-hidden shadow-sm`}>
               <div className="pl-4">
-                <Mail className={`w-5 h-5 transition-colors ${focusedField === 'email' ? 'text-[#2bb75c]' : 'text-zinc-400'}`} />
+                <Mail className={`w-5 h-5 transition-colors ${focusedField === 'email' ? 'text-[#4C1D95]' : 'text-zinc-400'}`} />
               </div>
               <input
                 type="email"
@@ -109,14 +109,14 @@ export default function LoginPage() {
               <label className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Password</label>
               <Link
                 to="/auth/forgot-password"
-                className="text-xs font-bold text-[#2bb75c] hover:text-[#2bb75c] dark:text-[#2bb75c] dark:hover:text-[#7bc67e] transition-colors"
+                className="text-xs font-bold text-[#4C1D95] hover:text-[#4C1D95] dark:text-[#4C1D95] dark:hover:text-[#7bc67e] transition-colors"
               >
                 Forgot password?
               </Link>
             </div>
-            <div className={`relative flex items-center transition-all rounded-xl border ${focusedField === 'password' ? 'border-[#2bb75c] ring-4 ring-[#2bb75c]/10' : 'border-zinc-300 dark:border-zinc-700'} bg-white dark:bg-zinc-900 overflow-hidden shadow-sm`}>
+            <div className={`relative flex items-center transition-all rounded-xl border ${focusedField === 'password' ? 'border-[#4C1D95] ring-4 ring-[#4C1D95]/10' : 'border-zinc-300 dark:border-zinc-700'} bg-white dark:bg-zinc-900 overflow-hidden shadow-sm`}>
               <div className="pl-4">
-                <Lock className={`w-5 h-5 transition-colors ${focusedField === 'password' ? 'text-[#2bb75c]' : 'text-zinc-400'}`} />
+                <Lock className={`w-5 h-5 transition-colors ${focusedField === 'password' ? 'text-[#4C1D95]' : 'text-zinc-400'}`} />
               </div>
               <input
                 type="password"
@@ -139,7 +139,7 @@ export default function LoginPage() {
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
                 />
-                <div className="w-5 h-5 border-2 rounded-md border-zinc-300 dark:border-zinc-600 peer-checked:bg-[#2bb75c] peer-checked:border-[#2bb75c] transition-all group-hover:border-[#2bb75c]"></div>
+                <div className="w-5 h-5 border-2 rounded-md border-zinc-300 dark:border-zinc-600 peer-checked:bg-[#4C1D95] peer-checked:border-[#4C1D95] transition-all group-hover:border-[#4C1D95]"></div>
                 <svg className="absolute w-3 h-3 text-white scale-0 peer-checked:scale-100 transition-transform pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
@@ -169,7 +169,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-gradient-to-r from-[#2bb75c] to-[#1d8d38] hover:from-[#1d8d38] hover:to-[#0f7000] text-white font-bold text-[15px] shadow-lg shadow-[#2bb75c]/25 hover:shadow-[#2bb75c]/25 transition-all group mt-6"
+            className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-gradient-to-r from-[#4C1D95] to-[#22C55E] hover:from-[#22C55E] hover:to-[#0f7000] text-white font-bold text-[15px] shadow-lg shadow-[#4C1D95]/25 hover:shadow-[#4C1D95]/25 transition-all group mt-6"
           >
             {isLoading ? (
               <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
@@ -190,7 +190,7 @@ export default function LoginPage() {
           Don't have an account?{' '}
           <Link
             to="/auth/register"
-            className="font-bold text-[#2bb75c] hover:text-[#2bb75c] dark:text-[#2bb75c] dark:hover:text-[#7bc67e] transition-colors"
+            className="font-bold text-[#4C1D95] hover:text-[#4C1D95] dark:text-[#4C1D95] dark:hover:text-[#7bc67e] transition-colors"
           >
             Sign up for free
           </Link>
@@ -199,4 +199,5 @@ export default function LoginPage() {
     </AuthLayout>
   );
 }
+
 

@@ -50,7 +50,7 @@ export default function DepositsPage() {
               placeholder="Search Deposit ID or Client..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#2bb75c] outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#4C1D95] outline-none"
             />
           </div>
           <select 
@@ -79,7 +79,7 @@ export default function DepositsPage() {
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/50">
               {isLoading ? (
-                <tr><td colSpan={6} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#2bb75c]" /></td></tr>
+                <tr><td colSpan={6} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#4C1D95]" /></td></tr>
               ) : deposits.filter(d => !status || d.status === status).length === 0 ? (
                 <tr><td colSpan={6} className="p-8 text-center text-zinc-500 font-medium">No deposits found.</td></tr>
               ) : deposits.filter(d => !status || d.status === status).map(dep => (
@@ -133,4 +133,5 @@ export default function DepositsPage() {
     </div>
   );
 }
+
 

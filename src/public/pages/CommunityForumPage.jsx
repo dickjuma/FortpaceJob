@@ -44,7 +44,7 @@ export default function CommunityForumPage() {
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-[#2bb75c] rounded-3xl p-8 mb-8 text-white relative overflow-hidden">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-[#4C1D95] rounded-3xl p-8 mb-8 text-white relative overflow-hidden">
         <h1 className="text-3xl md:text-4xl font-black mb-2">Community Forum</h1>
         <p className="text-white/80 font-medium max-w-2xl">Discuss freelancing, share portfolios, and get platform updates from the Fort Space community.</p>
       </motion.div>
@@ -57,7 +57,7 @@ export default function CommunityForumPage() {
               type="button"
               onClick={() => setActiveCategory(cat.id)}
               className={`w-full text-left px-4 py-3 rounded-xl font-bold text-sm transition-colors ${
-                activeCategory === cat.id ? 'bg-[#2bb75c]/10 text-[#2bb75c]' : 'text-zinc-600 hover:bg-surface'
+                activeCategory === cat.id ? 'bg-[#4C1D95]/10 text-[#4C1D95]' : 'text-zinc-600 hover:bg-surface'
               }`}
             >
               {cat.name}
@@ -72,13 +72,13 @@ export default function CommunityForumPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search discussions..."
-              className="w-full pl-12 pr-4 py-3 border border-zinc-200 rounded-xl outline-none focus:border-[#2bb75c]/30"
+              className="w-full pl-12 pr-4 py-3 border border-zinc-200 rounded-xl outline-none focus:border-[#4C1D95]/30"
             />
           </div>
 
           {loading ? (
             <div className="py-20 text-center text-zinc-500">
-              <Loader2 className="w-10 h-10 mx-auto mb-3 animate-spin text-[#2bb75c]" />
+              <Loader2 className="w-10 h-10 mx-auto mb-3 animate-spin text-[#4C1D95]" />
               Loading discussions...
             </div>
           ) : filtered.length === 0 ? (
@@ -93,7 +93,7 @@ export default function CommunityForumPage() {
                 <article key={post.id} className="bg-white border border-zinc-200 rounded-2xl p-6 hover:shadow-md transition-shadow">
                   <div className="flex gap-4">
                     <div className="text-center shrink-0">
-                      <button type="button" className="flex flex-col items-center text-zinc-500 hover:text-[#2bb75c]">
+                      <button type="button" className="flex flex-col items-center text-zinc-500 hover:text-[#4C1D95]">
                         <ArrowBigUp className="w-6 h-6" />
                         <span className="font-bold text-sm">{post.upvotes || 0}</span>
                       </button>
@@ -102,7 +102,7 @@ export default function CommunityForumPage() {
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
                         {post.isPinned ? <Pin className="w-4 h-4 text-amber-500" /> : null}
                         {post.isResolved ? <CheckCircle2 className="w-4 h-4 text-success" /> : null}
-                        <span className="text-xs font-bold text-[#2bb75c] bg-[#2bb75c]/5 px-2 py-0.5 rounded">{post.category}</span>
+                        <span className="text-xs font-bold text-[#4C1D95] bg-[#4C1D95]/5 px-2 py-0.5 rounded">{post.category}</span>
                         <span className="text-xs text-zinc-400">{post.timeAgo || post.createdAt}</span>
                       </div>
                       <h2 className="text-xl font-bold text-zinc-900 mb-2">{post.title}</h2>
@@ -125,4 +125,5 @@ export default function CommunityForumPage() {
     </div>
   );
 }
+
 

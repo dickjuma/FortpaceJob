@@ -1,9 +1,9 @@
 :root {
-  --primary: #4A312F;
-  --secondary: #F7F9FB;
-  --cta: #D34079;
-  --accent1: #FBB9C2;
-  --accent2: #B7E2BF;
+  --primary: #4C1D95;
+  --secondary: #F2F2F2;
+  --cta: #A855F7;
+  --accent1: #C084FC;
+  --accent2: #E5E7EB;
 }
 
 body {
@@ -25,7 +25,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
   gap: 36px;
-  background: #F7F9FB;
+  background: #F2F2F2;
   border-radius: 22px;
   padding: 20px;
 }
@@ -211,7 +211,7 @@ body {
 }
 
 .btn-login:hover {
-  background: #b12f65;
+  background: #7C3AED;
 }
 
 .divider {
@@ -257,8 +257,8 @@ body {
 }
 
 .alt-btn.google {
-  background: #fbb9c2;
-  color: #4A312F;
+  background: #C084FC;
+  color: #4C1D95;
 }
 
 .alt-btn.google:hover {
@@ -266,8 +266,8 @@ body {
 }
 
 .alt-btn.apple {
-  background: #f7f9fb;
-  color: #4A312F;
+  background: #F2F2F2;
+  color: #4C1D95;
 }
 
 .alt-btn.apple:hover {
@@ -275,8 +275,8 @@ body {
 }
 
 .alt-btn.facebook {
-  background: #b7e2bf;
-  color: #4A312F;
+  background: #E5E7EB;
+  color: #4C1D95;
 }
 
 .alt-btn.facebook:hover {
@@ -285,7 +285,7 @@ body {
 
 .alt-btn.linkedin {
   background: #fde9c5;
-  color: #4A312F;
+  color: #4C1D95;
 }
 
 .alt-btn.linkedin:hover {
@@ -305,7 +305,7 @@ body {
 }
 
 .signup-link a:hover {
-  color: #b12f65;
+  color: #7C3AED;
 }
 
 @media (max-width: 900px) {
@@ -354,7 +354,7 @@ body {
 
 /* Required field indicator */
 .required {
-  color: #d34079;
+  color: #A855F7;
   font-weight: 700;
   margin-left: 2px;
 }
@@ -380,9 +380,9 @@ body {
 .resend-btn {
   padding: 8px 16px;
   margin: 0 6px;
-  border: 1px solid #d34079;
+  border: 1px solid #A855F7;
   background: #fff;
-  color: #d34079;
+  color: #A855F7;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
@@ -391,7 +391,7 @@ body {
 }
 
 .resend-btn:hover:not(:disabled) {
-  background: #d34079;
+  background: #A855F7;
   color: #fff;
   box-shadow: 0 2px 6px rgba(211, 64, 121, 0.2);
 }
@@ -400,4 +400,5 @@ body {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
 

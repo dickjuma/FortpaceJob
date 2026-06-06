@@ -116,7 +116,7 @@ const CounterOffer = () => {
   if (loading) {
     return (
       <div className="bg-surface min-h-screen py-20 flex flex-col items-center justify-center text-zinc-500">
-        <Loader2 className="w-10 h-10 animate-spin text-[#2bb75c] mb-4" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#4C1D95] mb-4" />
         <p className="font-medium">Loading proposal…</p>
       </div>
     );
@@ -126,7 +126,7 @@ const CounterOffer = () => {
     <>
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-4xl">
-          <Link to={`/find-work/work/${workId}/applications`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#2bb75c] transition-colors mb-6">
+          <Link to={`/find-work/work/${workId}/applications`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#4C1D95] transition-colors mb-6">
             <ArrowLeft className="w-4 h-4" /> Back to Applications
           </Link>
 
@@ -192,7 +192,7 @@ const CounterOffer = () => {
                         required
                         value={budget}
                         onChange={(e) => setBudget(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 bg-surface border border-zinc-200 rounded-xl focus:border-[#2bb75c]/20 focus:outline-none focus:ring-4 focus:ring-[#2bb75c]/10 font-bold text-zinc-900 text-lg"
+                        className="w-full pl-12 pr-4 py-3 bg-surface border border-zinc-200 rounded-xl focus:border-[#4C1D95]/20 focus:outline-none focus:ring-4 focus:ring-[#4C1D95]/10 font-bold text-zinc-900 text-lg"
                       />
                     </div>
                   </div>
@@ -207,7 +207,7 @@ const CounterOffer = () => {
                         value={deliveryDays}
                         onChange={(e) => setDeliveryDays(e.target.value)}
                         placeholder={proposal.deliveryDays ? String(proposal.deliveryDays) : 'Days'}
-                        className="w-full pl-12 pr-4 py-3 bg-surface border border-zinc-200 rounded-xl focus:border-[#2bb75c]/20 focus:outline-none focus:ring-4 focus:ring-[#2bb75c]/10 font-bold text-zinc-900"
+                        className="w-full pl-12 pr-4 py-3 bg-surface border border-zinc-200 rounded-xl focus:border-[#4C1D95]/20 focus:outline-none focus:ring-4 focus:ring-[#4C1D95]/10 font-bold text-zinc-900"
                       />
                     </div>
                   </div>
@@ -221,7 +221,7 @@ const CounterOffer = () => {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Explain why you are proposing these new terms..."
-                    className="w-full p-4 bg-surface border border-zinc-200 rounded-xl focus:border-[#2bb75c]/20 focus:outline-none focus:ring-4 focus:ring-[#2bb75c]/10 font-medium text-zinc-900 resize-y"
+                    className="w-full p-4 bg-surface border border-zinc-200 rounded-xl focus:border-[#4C1D95]/20 focus:outline-none focus:ring-4 focus:ring-[#4C1D95]/10 font-medium text-zinc-900 resize-y"
                   />
                 </div>
               </div>
@@ -233,7 +233,7 @@ const CounterOffer = () => {
                 <button
                   type="submit"
                   disabled={!budget || !message || submitting}
-                  className={`px-8 py-3 font-bold rounded-xl shadow-sm transition-all flex items-center gap-2 ${budget && message && !submitting ? 'bg-[#2bb75c] hover:bg-[#1d8d38] text-white' : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'}`}
+                  className={`px-8 py-3 font-bold rounded-xl shadow-sm transition-all flex items-center gap-2 ${budget && message && !submitting ? 'bg-[#4C1D95] hover:bg-[#22C55E] text-white' : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'}`}
                 >
                   {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Handshake className="w-5 h-5" />}
                   Send Counter Offer
@@ -248,4 +248,5 @@ const CounterOffer = () => {
 };
 
 export default CounterOffer;
+
 

@@ -97,7 +97,7 @@ export default function PublicGigPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" />
       </div>
     );
   }
@@ -106,7 +106,7 @@ export default function PublicGigPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 px-4">
         <p className="text-zinc-600 mb-4">{error || 'Gig not found'}</p>
-        <Link to="/gigs" className="text-[#2bb75c] font-bold hover:underline">Browse gigs</Link>
+        <Link to="/gigs" className="text-[#4C1D95] font-bold hover:underline">Browse gigs</Link>
       </div>
     );
   }
@@ -118,9 +118,9 @@ export default function PublicGigPage() {
     <div className="min-h-screen bg-zinc-50 font-sans pb-24 pt-20">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
         <div className="flex items-center gap-2 text-xs font-bold text-zinc-500 mb-6">
-          <Link to="/" className="hover:text-[#2bb75c]">Home</Link>
+          <Link to="/" className="hover:text-[#4C1D95]">Home</Link>
           <ChevronRight className="w-3 h-3" />
-          <Link to="/gigs" className="hover:text-[#2bb75c]">Gigs</Link>
+          <Link to="/gigs" className="hover:text-[#4C1D95]">Gigs</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-zinc-800 truncate">{gig.title}</span>
         </div>
@@ -221,7 +221,7 @@ export default function PublicGigPage() {
                 <ul className="space-y-3 mb-8">
                   {(active?.features || []).map((feat) => (
                     <li key={feat} className="flex items-center gap-3 text-sm text-zinc-600">
-                      <CheckCircle2 className="w-5 h-5 text-[#2bb75c]" /> {feat}
+                      <CheckCircle2 className="w-5 h-5 text-[#4C1D95]" /> {feat}
                     </li>
                   ))}
                 </ul>
@@ -232,7 +232,7 @@ export default function PublicGigPage() {
                       returnTo: `/gig/${slug}`,
                     })
                   }
-                  className="w-full py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl mb-3"
+                  className="w-full py-4 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl mb-3"
                 >
                   Continue (${active?.price})
                 </button>
@@ -250,4 +250,5 @@ export default function PublicGigPage() {
     </div>
   );
 }
+
 

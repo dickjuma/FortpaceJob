@@ -31,14 +31,14 @@ const VerificationCodeInput = ({ value, onChange, onPaste, inputRefs, resendTime
     <div className="space-y-3">
       {/* Label and resend button inline */}
       <div className="flex items-center justify-between">
-        <label className="block text-sm font-medium text-[#4A312F]">
-          Verification Code <span className="text-[#D34079]">*</span>
+        <label className="block text-sm font-medium text-[#4C1D95]">
+          Verification Code <span className="text-[#A855F7]">*</span>
         </label>
         <button
           type="button"
           onClick={onResend}
           disabled={loading || resendTimer > 0}
-          className="text-sm text-[#D34079] hover:underline disabled:opacity-50 disabled:no-underline"
+          className="text-sm text-[#A855F7] hover:underline disabled:opacity-50 disabled:no-underline"
         >
           {resendTimer > 0 ? `Resend in ${resendTimer}s` : "Resend code"}
         </button>
@@ -56,7 +56,7 @@ const VerificationCodeInput = ({ value, onChange, onPaste, inputRefs, resendTime
             value={value[i] || ""}
             onChange={(e) => handleChange(i, e)}
             onKeyDown={(e) => handleKeyDown(i, e)}
-            className="w-full aspect-square text-center text-xl font-semibold bg-surface border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D34079]/30 focus:border-[#D34079] focus:bg-white transition shadow-sm"
+            className="w-full aspect-square text-center text-xl font-semibold bg-surface border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#A855F7]/30 focus:border-[#A855F7] focus:bg-white transition shadow-sm"
             aria-label={`Digit ${i + 1}`}
           />
         ))}
@@ -69,7 +69,7 @@ const VerificationCodeInput = ({ value, onChange, onPaste, inputRefs, resendTime
           type="button"
           onClick={onResend}
           disabled={loading || resendTimer > 0}
-          className="text-[#D34079] underline disabled:opacity-50"
+          className="text-[#A855F7] underline disabled:opacity-50"
         >
           request a new code
         </button>
@@ -204,10 +204,10 @@ const ResetPassword = () => {
   const dismissMessage = () => setMessage({ type: "", text: "" });
 
   return (
-    <div className="min-h-screen bg-[#F7F9FB] flex items-center justify-center p-4 font-sans antialiased">
+    <div className="min-h-screen bg-[#F2F2F2] flex items-center justify-center p-4 font-sans antialiased">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-[#4A312F]">Reset Password</h2>
+          <h2 className="text-3xl font-bold text-[#4C1D95]">Reset Password</h2>
           <p className="text-gray-500 mt-2">
             {token
               ? "Enter your new password below."
@@ -221,8 +221,8 @@ const ResetPassword = () => {
             <>
               {/* Email field */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-[#4A312F] mb-1.5">
-                  Email <span className="text-[#D34079]">*</span>
+                <label htmlFor="email" className="block text-sm font-medium text-[#4C1D95] mb-1.5">
+                  Email <span className="text-[#A855F7]">*</span>
                 </label>
                 <input
                   id="email"
@@ -231,7 +231,7 @@ const ResetPassword = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
+                  className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#A855F7]/20 focus:border-[#A855F7] focus:shadow-sm transition"
                 />
               </div>
 
@@ -250,8 +250,8 @@ const ResetPassword = () => {
 
           {/* Password fields (always shown) */}
           <div>
-            <label htmlFor="new-password" className="block text-sm font-medium text-[#4A312F] mb-1.5">
-              New Password <span className="text-[#D34079]">*</span>
+            <label htmlFor="new-password" className="block text-sm font-medium text-[#4C1D95] mb-1.5">
+              New Password <span className="text-[#A855F7]">*</span>
             </label>
             <input
               id="new-password"
@@ -260,13 +260,13 @@ const ResetPassword = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
+              className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#A855F7]/20 focus:border-[#A855F7] focus:shadow-sm transition"
             />
           </div>
 
           <div>
-            <label htmlFor="confirm-password" className="block text-sm font-medium text-[#4A312F] mb-1.5">
-              Confirm Password <span className="text-[#D34079]">*</span>
+            <label htmlFor="confirm-password" className="block text-sm font-medium text-[#4C1D95] mb-1.5">
+              Confirm Password <span className="text-[#A855F7]">*</span>
             </label>
             <input
               id="confirm-password"
@@ -275,7 +275,7 @@ const ResetPassword = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition"
+              className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#A855F7]/20 focus:border-[#A855F7] focus:shadow-sm transition"
             />
           </div>
 
@@ -305,15 +305,15 @@ const ResetPassword = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 bg-[#D34079] text-white font-semibold rounded-xl shadow-sm hover:bg-[#b12f65] transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-4 bg-[#A855F7] text-white font-semibold rounded-xl shadow-sm hover:bg-[#7C3AED] transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Resetting..." : "Reset Password"}
           </button>
 
           {/* Sign-in link */}
-          <p className="text-center text-[#4A312F] text-sm">
+          <p className="text-center text-[#4C1D95] text-sm">
             Remember your password?{" "}
-            <Link to="/auth/login" className="text-[#D34079] font-semibold hover:underline">
+            <Link to="/auth/login" className="text-[#A855F7] font-semibold hover:underline">
               Sign In
             </Link>
           </p>
@@ -324,3 +324,4 @@ const ResetPassword = () => {
 };
 
 export default ResetPassword;
+

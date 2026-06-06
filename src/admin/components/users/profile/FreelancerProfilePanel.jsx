@@ -27,7 +27,7 @@ const SectionHeader = ({ title, icon: Icon, action }) => (
       <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900 dark:text-white">{title}</h3>
     </div>
     {action && (
-      <button className="text-[10px] font-black uppercase tracking-widest text-[#2bb75c] hover:text-[#2bb75c] transition-colors">
+      <button className="text-[10px] font-black uppercase tracking-widest text-[#4C1D95] hover:text-[#4C1D95] transition-colors">
         {action}
       </button>
     )}
@@ -52,7 +52,7 @@ const FreelancerProfilePanel = ({ user, activeTab }) => {
             to={publicUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-bold text-[#2bb75c] hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-bold text-[#4C1D95] hover:underline"
           >
             <ExternalLink size={14} /> View public freelancer profile
           </Link>
@@ -80,8 +80,8 @@ const FreelancerProfilePanel = ({ user, activeTab }) => {
              <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-4">Primary Categories</h4>
              <div className="flex gap-4">
                 {categories.map(cat => (
-                  <div key={cat} className="flex items-center gap-3 p-3 rounded-2xl bg-[#2bb75c]/5/50 dark:bg-[#2bb75c]/10 border border-[#2bb75c]/20/50 dark:border-[#2bb75c]/20/50 flex-1">
-                    <div className="h-10 w-10 bg-[#2bb75c] text-white rounded-xl flex items-center justify-center">
+                  <div key={cat} className="flex items-center gap-3 p-3 rounded-2xl bg-[#4C1D95]/5/50 dark:bg-[#4C1D95]/10 border border-[#4C1D95]/20/50 dark:border-[#4C1D95]/20/50 flex-1">
+                    <div className="h-10 w-10 bg-[#4C1D95] text-white rounded-xl flex items-center justify-center">
                       <Briefcase size={20} />
                     </div>
                     <span className="font-black text-zinc-900 dark:text-white text-sm">{cat}</span>
@@ -117,9 +117,9 @@ const FreelancerProfilePanel = ({ user, activeTab }) => {
             <SectionHeader title="Certifications" icon={CheckCircle2} />
             <div className="space-y-3">
               {[1, 2].map(i => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-xl border border-zinc-50 dark:border-zinc-800 group hover:border-[#2bb75c]/20 transition-all cursor-pointer">
+                <div key={i} className="flex items-center justify-between p-3 rounded-xl border border-zinc-50 dark:border-zinc-800 group hover:border-[#4C1D95]/20 transition-all cursor-pointer">
                   <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 bg-zinc-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-zinc-400 group-hover:text-[#2bb75c]">
+                    <div className="h-8 w-8 bg-zinc-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-zinc-400 group-hover:text-[#4C1D95]">
                       <AwardIcon size={18} />
                     </div>
                     <div>
@@ -127,7 +127,7 @@ const FreelancerProfilePanel = ({ user, activeTab }) => {
                       <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-tighter">Verified 2024</p>
                     </div>
                   </div>
-                  <ExternalLink size={14} className="text-zinc-300 group-hover:text-[#2bb75c]" />
+                  <ExternalLink size={14} className="text-zinc-300 group-hover:text-[#4C1D95]" />
                 </div>
               ))}
             </div>
@@ -194,7 +194,7 @@ const FreelancerProfilePanel = ({ user, activeTab }) => {
               <span className="text-xs font-black text-zinc-900 dark:text-white">{user.profileCompletion}%</span>
             </div>
             <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-               <div className="h-full bg-[#2bb75c] rounded-full" style={{ width: `${user.profileCompletion}%` }} />
+               <div className="h-full bg-[#4C1D95] rounded-full" style={{ width: `${user.profileCompletion}%` }} />
             </div>
           </div>
         </Card>
@@ -230,4 +230,5 @@ const FreelancerProfilePanel = ({ user, activeTab }) => {
 const AwardIcon = ({ size, className }) => <CheckCircle2 size={size} className={className} />;
 
 export default FreelancerProfilePanel;
+
 

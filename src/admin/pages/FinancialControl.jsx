@@ -43,7 +43,7 @@ const FinancialControl = () => {
 
   if (isLoading) return (
     <div className="p-8 flex items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2bb75c]/20" />
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4C1D95]/20" />
     </div>
   );
 
@@ -154,7 +154,7 @@ const FinancialControl = () => {
             <h2 className="text-xl font-black text-zinc-900 dark:text-white tracking-tight">Platform Fee Engine</h2>
             <p className="text-sm text-zinc-500 font-medium">Manage dynamic commission rates applied during wallet and escrow operations.</p>
           </div>
-          <button className="flex items-center gap-2 bg-success text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-[#2bb75c]/20">
+          <button className="flex items-center gap-2 bg-success text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-[#4C1D95]/20">
             <Percent size={16} />
             New Rule
           </button>
@@ -307,3 +307,4 @@ const FinancialControl = () => {
 };
 
 export default FinancialControl;
+

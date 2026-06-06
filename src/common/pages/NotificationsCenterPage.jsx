@@ -9,11 +9,11 @@ import { cn } from '../../admin/utils/cn';
 
 const NOTIFICATIONS = [
   { id: 1, type: 'Payments', title: 'Payment Released', message: 'Funds for Milestone 1 ($1,200) have been released to your wallet.', time: '10 mins ago', isRead: false, icon: DollarSign, color: 'text-success', bg: 'bg-emerald-50 dark:bg-success/10' },
-  { id: 2, type: 'Messages', title: 'New Message from Sarah', message: 'Great work! Let\'s proceed with the next milestone.', time: '1 hour ago', isRead: false, icon: MessageSquare, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10' },
-  { id: 3, type: 'Contracts', title: 'Contract Started', message: 'You have a new active contract: React Native E-Commerce App.', time: 'Yesterday', isRead: true, icon: FileText, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10' },
+  { id: 2, type: 'Messages', title: 'New Message from Sarah', message: 'Great work! Let\'s proceed with the next milestone.', time: '1 hour ago', isRead: false, icon: MessageSquare, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10' },
+  { id: 3, type: 'Contracts', title: 'Contract Started', message: 'You have a new active contract: React Native E-Commerce App.', time: 'Yesterday', isRead: true, icon: FileText, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10' },
   { id: 4, type: 'Reviews', title: 'New Review Received', message: 'Alex Rivera left you a 5-star review on your recent project.', time: 'Yesterday', isRead: true, icon: Star, color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-500/10' },
   { id: 5, type: 'Security', title: 'New Login Detected', message: 'We noticed a new login from Mac OS, Chrome in San Francisco.', time: 'May 18', isRead: true, icon: Shield, color: 'text-rose-500', bg: 'bg-rose-50 dark:bg-rose-500/10' },
-  { id: 6, type: 'Jobs', title: 'Job Match', message: 'A new job matching your skills was just posted: Senior Next.js Developer.', time: 'May 17', isRead: true, icon: Briefcase, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10' },
+  { id: 6, type: 'Jobs', title: 'Job Match', message: 'A new job matching your skills was just posted: Senior Next.js Developer.', time: 'May 17', isRead: true, icon: Briefcase, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10' },
 ];
 
 export default function NotificationsCenterPage() {
@@ -47,7 +47,7 @@ export default function NotificationsCenterPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight flex items-center gap-3">
-              <Bell className="w-8 h-8 text-[#2bb75c]" /> Notifications
+              <Bell className="w-8 h-8 text-[#4C1D95]" /> Notifications
             </h1>
             <div className="flex items-center gap-3">
               <button 
@@ -95,7 +95,7 @@ export default function NotificationsCenterPage() {
                 key={notif.id} 
                 className={cn(
                   "p-5 sm:p-6 border-b border-zinc-100 dark:border-zinc-800 last:border-0 hover:bg-surface dark:hover:bg-zinc-800/50 transition-colors cursor-pointer flex gap-4",
-                  !notif.isRead ? "bg-[#2bb75c]/5/30 dark:bg-[#2bb75c]/10" : ""
+                  !notif.isRead ? "bg-[#4C1D95]/5/30 dark:bg-[#4C1D95]/10" : ""
                 )}
                 onClick={() => toggleRead(notif.id)}
               >
@@ -106,7 +106,7 @@ export default function NotificationsCenterPage() {
                     <notif.icon className={cn("w-6 h-6", notif.color)} />
                   </div>
                   {!notif.isRead && (
-                    <div className="absolute top-0 right-0 w-3 h-3 bg-[#2bb75c] rounded-full border-2 border-white dark:border-zinc-900"></div>
+                    <div className="absolute top-0 right-0 w-3 h-3 bg-[#4C1D95] rounded-full border-2 border-white dark:border-zinc-900"></div>
                   )}
                 </div>
 
@@ -150,4 +150,5 @@ export default function NotificationsCenterPage() {
     </div>
   );
 }
+
 

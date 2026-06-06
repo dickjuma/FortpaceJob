@@ -55,7 +55,7 @@ const Navbar = () => {
     return [
       { label: "My Dashboard", icon: LayoutDashboard, to: "/my-profile/overview" },
       { label: "My Profile", icon: UserCircle2, to: "/my-profile/overview" },
-      { label: "Find Work", icon: Search, to: "/find-work/overview" },
+      { label: "Find Work", icon: Search, to: "/find-work/search?type=all" },
       { label: "Messages", icon: MessageSquare, to: "/messages" },
       { label: "Buyer Requests", icon: ShieldCheck, to: "/buyer-requests" },
       { label: "Wallet", icon: Wallet, to: "/wallet" },
@@ -105,7 +105,7 @@ const Navbar = () => {
 
       <ul className="nav-links">
         <li><NavLink to="/talent" className="nav-item">Hire Talent</NavLink></li>
-        <li><NavLink to="/find-work/" className="nav-item">Find Work</NavLink></li>
+        <li><NavLink to="/find-work/search?type=all" className="nav-item">Find Work</NavLink></li>
 
         <li
           className="nav-item dropdown"
@@ -182,7 +182,7 @@ const Navbar = () => {
         <div className="mobile-menu">
           <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
           <NavLink to="/talent" onClick={() => setMenuOpen(false)}>Hire Talent</NavLink>
-          <NavLink to="/find-work/" onClick={() => setMenuOpen(false)}>Find Work</NavLink>
+          <NavLink to="/find-work/search?type=all" onClick={() => setMenuOpen(false)}>Find Work</NavLink>
           <NavLink to="/categories" onClick={() => setMenuOpen(false)}>Categories</NavLink>
           <NavLink to="/insights" onClick={() => setMenuOpen(false)}>Insights</NavLink>
 

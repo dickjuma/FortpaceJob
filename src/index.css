@@ -7,21 +7,28 @@
 @layer base {
   :root {
     /* Colors */
-    --color-dark-navy: #222222;
+    --color-dark-navy: #2B124C;
+    --color-dark-purple: #4C1D95;
+    --color-vivid-lavender: #A855F7;
     --color-light-gray: #f2f2f2;
     --color-white: #ffffff;
     --color-accent-red: #e63946;
-    --color-primary: #2bb75c;
-    --color-secondary: #5e6d55;
-    --color-cta: #2bb75c;
-    --color-success: #2bb75c;
+    --color-primary: #4C1D95;
+    --color-secondary: #ffffff;
+    --color-cta: #22C55E;
+    --color-success: #22C55E;
     --color-text-primary: #222222;
-    --color-text-secondary: #5e6d55;
-    --color-border: #e0e0e0;
-    --color-success: #2bb75c;
+    --color-text-secondary: #6b7280;
+    --color-border: #e5e7eb;
     --color-warning: #ffc107;
     --color-error: #dc3545;
     --color-info: #17a2b8;
+    --accent-pink: #A855F7;
+    --accent-mint: #F2F2F2;
+    --accent1: #F2F2F2;
+    --cta: #22C55E;
+    --cta-dark: #16A34A;
+    --secondary: #F2F2F2;
 
     /* Typography */
     --font-family-body: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -107,10 +114,10 @@
   stroke-opacity: 0.5;
 }
 
-.recharts-tooltip-cursor {
-  fill: #2bb75c;
-  fill-opacity: 0.1;
-}
+  .recharts-tooltip-cursor {
+    fill: #22C55E;
+    fill-opacity: 0.1;
+  }
 
 /* iOS Safe Areas */
 .pb-safe {
@@ -122,5 +129,6 @@
   from { width: 100%; }
   to { width: 0%; }
 }
+
 
 

@@ -81,7 +81,7 @@ const TeamCollaborators = () => {
     <>
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-4xl">
-          <Link to={`/find-work/work/${workId}/applications`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#2bb75c] transition-colors mb-6">
+          <Link to={`/find-work/work/${workId}/applications`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#4C1D95] transition-colors mb-6">
             <ArrowLeft className="w-4 h-4" /> Back to Job Dashboard
           </Link>
 
@@ -99,12 +99,12 @@ const TeamCollaborators = () => {
                 placeholder="colleague@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-4 py-3 bg-surface border border-zinc-200 rounded-xl focus:border-[#2bb75c]/20 focus:outline-none font-medium text-zinc-900"
+                className="flex-1 px-4 py-3 bg-surface border border-zinc-200 rounded-xl focus:border-[#4C1D95]/20 focus:outline-none font-medium text-zinc-900"
               />
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="px-4 py-3 bg-surface border border-zinc-200 rounded-xl focus:border-[#2bb75c]/20 focus:outline-none font-bold text-zinc-700 cursor-pointer w-full sm:w-auto"
+                className="px-4 py-3 bg-surface border border-zinc-200 rounded-xl focus:border-[#4C1D95]/20 focus:outline-none font-bold text-zinc-700 cursor-pointer w-full sm:w-auto"
               >
                 <option value="Editor">Editor</option>
                 <option value="Viewer">Viewer</option>
@@ -113,7 +113,7 @@ const TeamCollaborators = () => {
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-6 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+                className="px-6 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <UserPlus className="w-5 h-5" />}
                 Invite
@@ -124,7 +124,7 @@ const TeamCollaborators = () => {
           <div className="bg-white border border-zinc-200 rounded-3xl overflow-hidden shadow-sm">
             {loading ? (
               <div className="flex flex-col items-center justify-center py-16 text-zinc-500">
-                <Loader2 className="w-10 h-10 animate-spin text-[#2bb75c] mb-4" />
+                <Loader2 className="w-10 h-10 animate-spin text-[#4C1D95] mb-4" />
                 <p className="font-medium">Loading team…</p>
               </div>
             ) : team.length === 0 ? (
@@ -154,7 +154,7 @@ const TeamCollaborators = () => {
                       </td>
                       <td className="p-6 hidden sm:table-cell">
                         <div className="flex items-center gap-2">
-                          <Shield className={`w-4 h-4 ${member.role === 'Owner' ? 'text-rose-500' : 'text-[#2bb75c]'}`} />
+                          <Shield className={`w-4 h-4 ${member.role === 'Owner' ? 'text-rose-500' : 'text-[#4C1D95]'}`} />
                           <div>
                             <div className="font-bold text-zinc-700 text-sm">{member.role}</div>
                             <div className="text-xs text-zinc-500">{ROLE_ACCESS[member.role] || 'Team access'}</div>
@@ -187,4 +187,5 @@ const TeamCollaborators = () => {
 };
 
 export default TeamCollaborators;
+
 

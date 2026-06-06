@@ -95,18 +95,18 @@ export default function SearchResults() {
                   type="text"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-transparent focus:outline-none focus:border-[#2bb75c]/20 border border-transparent rounded-2xl font-medium text-lg"
+                  className="w-full pl-12 pr-4 py-4 bg-transparent focus:outline-none focus:border-[#4C1D95]/20 border border-transparent rounded-2xl font-medium text-lg"
                   placeholder="Search jobs, clients, skills, or categories..."
                 />
               </div>
-              <button type="submit" className="px-8 py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-2xl transition-colors shadow-lg">
+              <button type="submit" className="px-8 py-4 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-2xl transition-colors shadow-lg">
                 Search
               </button>
             </form>
             <div className="mt-4 rounded-3xl bg-[#effaf3] border border-[#d7f9e3] p-4 text-sm text-zinc-700 flex flex-col sm:flex-row items-center gap-3">
-              <span className="font-semibold text-[#2bb75c]">Smart work search</span>
+              <span className="font-semibold text-[#4C1D95]">Smart work search</span>
               <span>Use a role, brief, or category to surface prioritized job matches with richer client signals.</span>
-              <span className="inline-flex items-center gap-2 text-[#1d8d38] font-bold">
+              <span className="inline-flex items-center gap-2 text-[#22C55E] font-bold">
                 <CheckCircle2 className="w-4 h-4" /> Verified taxonomy-backed results
               </span>
             </div>
@@ -127,7 +127,7 @@ export default function SearchResults() {
                 }}
                 className={`px-6 py-3 font-bold text-sm border-b-2 whitespace-nowrap transition-colors ${
                   activeTab === tab.id
-                    ? 'border-[#2bb75c]/20 text-[#2bb75c]'
+                    ? 'border-[#4C1D95]/20 text-[#4C1D95]'
                     : 'border-transparent text-zinc-500 hover:text-zinc-900'
                 }`}
               >
@@ -143,7 +143,7 @@ export default function SearchResults() {
                   <h3 className="font-bold text-zinc-900 flex items-center gap-2">
                     <Filter className="w-4 h-4" /> Filters
                   </h3>
-                  <button type="button" onClick={resetFilters} className="text-xs font-semibold text-[#2bb75c] hover:underline">
+                  <button type="button" onClick={resetFilters} className="text-xs font-semibold text-[#4C1D95] hover:underline">
                     Clear
                   </button>
                 </div>
@@ -168,7 +168,7 @@ export default function SearchResults() {
                         <label key={budgetType} className="flex items-center gap-2 text-sm text-zinc-600 cursor-pointer">
                           <input
                             type="checkbox"
-                            className="rounded border-zinc-300 text-[#2bb75c] focus:ring-[#2bb75c]"
+                            className="rounded border-zinc-300 text-[#4C1D95] focus:ring-[#4C1D95]"
                             checked={budgetTypes.includes(budgetType)}
                             onChange={() => toggleBudgetType(budgetType)}
                           />
@@ -186,7 +186,7 @@ export default function SearchResults() {
                         <label className="flex items-center gap-2 text-sm text-zinc-600 cursor-pointer">
                           <input
                             type="checkbox"
-                            className="rounded border-zinc-300 text-[#2bb75c]"
+                            className="rounded border-zinc-300 text-[#4C1D95]"
                             checked={urgentOnly}
                             onChange={() => setUrgentOnly((current) => !current)}
                           />
@@ -205,7 +205,7 @@ export default function SearchResults() {
                         <label key={experienceLevel} className="flex items-center gap-2 text-sm text-zinc-600 cursor-pointer">
                           <input
                             type="checkbox"
-                            className="rounded border-zinc-300 text-[#2bb75c]"
+                            className="rounded border-zinc-300 text-[#4C1D95]"
                             checked={experienceLevels.includes(experienceLevel)}
                             onChange={() => toggleExperience(experienceLevel)}
                           />
@@ -240,17 +240,17 @@ export default function SearchResults() {
                   <Search className="w-12 h-12 text-zinc-300 mx-auto mb-4" />
                   <h2 className="text-xl font-bold text-zinc-900 mb-2">No results matched this search.</h2>
                   <p className="text-zinc-600 mb-6">Try a broader keyword, another tab, or fewer active filters.</p>
-                  <button type="button" onClick={resetFilters} className="px-6 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl">
+                  <button type="button" onClick={resetFilters} className="px-6 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl">
                     Reset Filters
                   </button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                   {results.map((job) => (
-                    <Link key={job.id} to={job.detailPath} className="group block bg-white rounded-3xl border border-zinc-200 overflow-hidden hover:shadow-2xl hover:border-[#2bb75c]/50 transition-all duration-200 h-full">
+                    <Link key={job.id} to={job.detailPath} className="group block bg-white rounded-3xl border border-zinc-200 overflow-hidden hover:shadow-2xl hover:border-[#4C1D95]/50 transition-all duration-200 h-full">
                       <div className="p-6 flex flex-col h-full">
                         <div className="flex items-center justify-between mb-4 gap-3">
-                          <span className="text-xs font-bold uppercase tracking-[0.24em] text-[#2bb75c]">{job.category.name}</span>
+                          <span className="text-xs font-bold uppercase tracking-[0.24em] text-[#4C1D95]">{job.category.name}</span>
                           {job.urgent && (
                             <span className="px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.18em] rounded-full bg-rose-50 text-rose-700 border border-rose-200">
                               Urgent
@@ -258,7 +258,7 @@ export default function SearchResults() {
                           )}
                         </div>
 
-                        <h3 className="font-bold text-xl text-zinc-900 mb-3 leading-snug transition-colors group-hover:text-[#1d8d38]">{job.title}</h3>
+                        <h3 className="font-bold text-xl text-zinc-900 mb-3 leading-snug transition-colors group-hover:text-[#22C55E]">{job.title}</h3>
 
                         <p className="text-sm text-zinc-600 mb-5 line-clamp-3 leading-relaxed flex-1">{job.summary}</p>
 
@@ -288,4 +288,5 @@ export default function SearchResults() {
     </>
   );
 }
+
 

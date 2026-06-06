@@ -62,8 +62,8 @@ export const KYC_STATUSES = {
 
 export const USER_ROLE_CONFIG = {
   freelancer: { label: 'Freelancer', color: 'text-success', bg: 'bg-success/10' },
-  client: { label: 'Client', color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/10' },
-  admin: { label: 'Admin', color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/10' },
+  client: { label: 'Client', color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/10' },
+  admin: { label: 'Admin', color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/10' },
 };
 
 export const USER_STATUSES = {
@@ -80,4 +80,5 @@ export const USER_GROUPS = {
   client:     { label: 'Client' },
   admin:      { label: 'Admin' },
 };
+
 

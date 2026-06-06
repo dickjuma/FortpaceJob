@@ -29,7 +29,7 @@ const LevelStep = ({ level, index, currentLevelIndex, benefits }) => {
           isCompleted
             ? 'bg-green-500 border-green-500 text-white'
             : isCurrent
-            ? 'bg-[#C9452F] border-[#C9452F] text-white shadow-md'
+            ? 'bg-[#22C55E] border-[#22C55E] text-white shadow-md'
             : 'bg-white border-[#E7E1DE] text-[#A38F85]'
         }`}
       >
@@ -45,12 +45,12 @@ const LevelStep = ({ level, index, currentLevelIndex, benefits }) => {
       {/* Level Label */}
       <div className="mt-3 text-center">
         <p className={`text-xs font-medium ${
-          isCurrent ? 'text-[#C9452F]' : isCompleted ? 'text-[#2E2322]' : 'text-[#7A5A4C]'
+          isCurrent ? 'text-[#22C55E]' : isCompleted ? 'text-[#2E2322]' : 'text-[#7A5A4C]'
         }`}>
           {level}
         </p>
         {isCurrent && (
-          <div className="mt-1 px-2 py-0.5 bg-[#FDECE7] text-[#C9452F] text-xs rounded-full">
+          <div className="mt-1 px-2 py-0.5 bg-[#FDECE7] text-[#22C55E] text-xs rounded-full">
             Current
           </div>
         )}
@@ -58,19 +58,19 @@ const LevelStep = ({ level, index, currentLevelIndex, benefits }) => {
 
       {/* Benefits Preview */}
       {isCurrent && benefits && (
-        <div className="mt-3 p-2 bg-[#FDECE7] rounded-lg border border-[#F4C7A1]">
+        <div className="mt-3 p-2 bg-[#FDECE7] rounded-lg border border-[#E5E7EB]">
           <div className="flex items-center gap-2 mb-1">
-            <Zap size={12} className="text-[#C9452F]" />
+            <Zap size={12} className="text-[#22C55E]" />
             <span className="text-xs font-medium text-[#B53A27]">Current Benefits</span>
           </div>
           <div className="flex items-center gap-1">
             {benefits.slice(0, 2).map((benefit, i) => (
-              <div key={i} className="text-xs text-[#C9452F] px-1.5 py-0.5 bg-[#FDECE7] rounded">
+              <div key={i} className="text-xs text-[#22C55E] px-1.5 py-0.5 bg-[#FDECE7] rounded">
                 {benefit}
               </div>
             ))}
             {benefits.length > 2 && (
-              <span className="text-xs text-[#C9452F]">+{benefits.length - 2}</span>
+              <span className="text-xs text-[#22C55E]">+{benefits.length - 2}</span>
             )}
           </div>
         </div>
@@ -84,7 +84,7 @@ const Requirement = ({ icon: Icon, label, current, target, unit = "", color = "b
   const colorClasses = {
     blue: "bg-[#FDECE7]",
     green: "bg-green-500",
-    purple: "bg-[#2bb75c]",
+    purple: "bg-[#4C1D95]",
     orange: "bg-orange-500"
   };
 
@@ -93,14 +93,14 @@ const Requirement = ({ icon: Icon, label, current, target, unit = "", color = "b
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
           <div className={`p-2 ${color === 'blue' ? 'bg-[#FDECE7]' : color === 'green' ? 'bg-green-50' : 'bg-[#F8F4F1]'} rounded-lg`}>
-            <Icon size={16} className={`${color === 'blue' ? 'text-[#C9452F]' : color === 'green' ? 'text-green-600' : 'text-[#6B5B50]'}`} />
+            <Icon size={16} className={`${color === 'blue' ? 'text-[#22C55E]' : color === 'green' ? 'text-green-600' : 'text-[#6B5B50]'}`} />
           </div>
           <div>
             <p className="text-sm font-medium text-[#2E2322]">{label}</p>
             <p className="text-xs text-[#7A5A4C]">Target: {unit}{target}</p>
           </div>
         </div>
-        <span className={`text-sm font-semibold ${progress === 100 ? 'text-green-600' : 'text-[#4A312F]'}`}>
+        <span className={`text-sm font-semibold ${progress === 100 ? 'text-green-600' : 'text-[#4C1D95]'}`}>
           {unit}{current}
         </span>
       </div>
@@ -197,8 +197,8 @@ export default function SkillLevels() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <Award size={20} className="text-[#C9452F]" />
-              <span className="text-sm font-medium text-[#C9452F]">Seller Levels</span>
+              <Award size={20} className="text-[#22C55E]" />
+              <span className="text-sm font-medium text-[#22C55E]">Seller Levels</span>
             </div>
             <h1 className="text-2xl font-semibold text-[#2E2322]">Level Progress</h1>
             <p className="text-[#6B5B50] mt-1">Track your progress and unlock new features</p>
@@ -212,7 +212,7 @@ export default function SkillLevels() {
               </div>
               <p className="font-medium text-[#2E2322]">Jan 15, 2024</p>
             </div>
-            <button className="px-4 py-2 text-[#C9452F] hover:text-[#B53A27] font-medium flex items-center gap-2">
+            <button className="px-4 py-2 text-[#22C55E] hover:text-[#B53A27] font-medium flex items-center gap-2">
               Learn More
               <ExternalLink size={16} />
             </button>
@@ -221,15 +221,15 @@ export default function SkillLevels() {
       </div>
 
       {/* Current Status */}
-      <div className="p-6 bg-[#FDECE7] border-b border-[#F4C7A1]">
+      <div className="p-6 bg-[#FDECE7] border-b border-[#E5E7EB]">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-[#FDECE7] rounded-lg">
-              <TrendingUp size={24} className="text-[#C9452F]" />
+              <TrendingUp size={24} className="text-[#22C55E]" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-[#2E2322]">You are currently</h2>
-              <p className="text-2xl font-bold text-[#C9452F]">{levels[currentLevelIndex]}</p>
+              <p className="text-2xl font-bold text-[#22C55E]">{levels[currentLevelIndex]}</p>
             </div>
           </div>
           
@@ -239,7 +239,7 @@ export default function SkillLevels() {
               <div className="text-2xl font-bold text-[#2E2322]">65%</div>
             </div>
             <div className="w-24 h-2 bg-[#EFE7E2] rounded-full overflow-hidden">
-              <div className="h-full bg-[#C9452F] rounded-full" style={{ width: '65%' }}></div>
+              <div className="h-full bg-[#22C55E] rounded-full" style={{ width: '65%' }}></div>
             </div>
           </div>
         </div>
@@ -252,8 +252,8 @@ export default function SkillLevels() {
             onClick={() => setActiveTab("requirements")}
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
               activeTab === "requirements"
-                ? "border-[#C9452F] text-[#C9452F]"
-                : "border-transparent text-[#7A5A4C] hover:text-[#4A312F]"
+                ? "border-[#22C55E] text-[#22C55E]"
+                : "border-transparent text-[#7A5A4C] hover:text-[#4C1D95]"
             }`}
           >
             Requirements
@@ -262,8 +262,8 @@ export default function SkillLevels() {
             onClick={() => setActiveTab("perks")}
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
               activeTab === "perks"
-                ? "border-[#C9452F] text-[#C9452F]"
-                : "border-transparent text-[#7A5A4C] hover:text-[#4A312F]"
+                ? "border-[#22C55E] text-[#22C55E]"
+                : "border-transparent text-[#7A5A4C] hover:text-[#4C1D95]"
             }`}
           >
             Perks & Benefits
@@ -272,8 +272,8 @@ export default function SkillLevels() {
             onClick={() => setActiveTab("timeline")}
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
               activeTab === "timeline"
-                ? "border-[#C9452F] text-[#C9452F]"
-                : "border-transparent text-[#7A5A4C] hover:text-[#4A312F]"
+                ? "border-[#22C55E] text-[#22C55E]"
+                : "border-transparent text-[#7A5A4C] hover:text-[#4C1D95]"
             }`}
           >
             Timeline
@@ -369,12 +369,12 @@ export default function SkillLevels() {
               ].map((item, i) => (
                 <div key={i} className="relative">
                   <div className={`absolute -left-10 w-6 h-6 rounded-full flex items-center justify-center ${
-                    i === 2 ? 'bg-[#C9452F] text-white' : i < 2 ? 'bg-green-500 text-white' : 'bg-[#C1B1A8]'
+                    i === 2 ? 'bg-[#22C55E] text-white' : i < 2 ? 'bg-green-500 text-white' : 'bg-[#C1B1A8]'
                   }`}>
                     {i < 2 ? <Check size={12} /> : i === 2 ? <Award size={12} /> : <Target size={12} />}
                   </div>
                   <div className={`p-4 rounded-lg border ${
-                    i === 2 ? 'border-[#F4C7A1] bg-[#FDECE7]' : i < 2 ? 'border-green-200 bg-green-50' : 'border-[#E7E1DE]'
+                    i === 2 ? 'border-[#E5E7EB] bg-[#FDECE7]' : i < 2 ? 'border-green-200 bg-green-50' : 'border-[#E7E1DE]'
                   }`}>
                     <div className="flex items-center justify-between mb-1">
                       <h4 className="font-medium text-[#2E2322]">{item.title}</h4>
@@ -413,4 +413,6 @@ export default function SkillLevels() {
     </div>
   );
 }
+
+
 

@@ -166,7 +166,7 @@ function BadgeCard({ badge, isSelected, onClick }) {
         badge.isActive
           ? 'bg-white border-[#E7E1DE] hover:border-[#E7E1DE] hover:shadow-sm'
           : 'bg-[#F8F4F1] border-[#E7E1DE] hover:border-[#E7E1DE]'
-      } ${isSelected ? 'border-[#C9452F] ring-2 ring-[#F4C7A1] bg-[#FDECE7]' : ''}`}
+      } ${isSelected ? 'border-[#22C55E] ring-2 ring-[#E5E7EB] bg-[#FDECE7]' : ''}`}
     >
       {/* Status Indicator */}
       <div className="absolute top-3 right-3">
@@ -278,7 +278,7 @@ function RequirementsPanel({ badge }) {
       {!badge.isActive && (
         <div className="mb-6 p-4 bg-[#F8F4F1] rounded-lg border border-[#E7E1DE]">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-[#4A312F]">Progress to unlock</span>
+            <span className="text-sm font-medium text-[#4C1D95]">Progress to unlock</span>
             <span className="text-sm font-semibold" style={{ color: badge.color }}>
               {completedCount}/{totalCount} complete
             </span>
@@ -316,7 +316,7 @@ function RequirementsPanel({ badge }) {
             </div>
             
             <div className="flex-1 min-w-0">
-              <p className={`text-sm ${criterion.completed ? 'text-[#2E2322] font-medium' : 'text-[#4A312F]'}`}>
+              <p className={`text-sm ${criterion.completed ? 'text-[#2E2322] font-medium' : 'text-[#4C1D95]'}`}>
                 {criterion.label}
               </p>
               
@@ -348,9 +348,9 @@ function RequirementsPanel({ badge }) {
 
       {/* Next Steps */}
       {!badge.isActive && (
-        <div className="mt-6 p-3 bg-[#FDECE7] rounded-lg border border-[#F4C7A1]">
+        <div className="mt-6 p-3 bg-[#FDECE7] rounded-lg border border-[#E5E7EB]">
           <div className="flex items-start gap-3">
-            <Info size={16} className="text-[#C9452F] flex-shrink-0 mt-0.5" />
+            <Info size={16} className="text-[#22C55E] flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-medium text-[#2E2322] mb-1">Keep Going!</p>
               <p className="text-xs text-[#6B5B50]">
@@ -435,8 +435,8 @@ export default function Badges() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <Trophy size={20} className="text-[#C9452F]" />
-                <span className="text-sm font-medium text-[#C9452F]">Achievements</span>
+                <Trophy size={20} className="text-[#22C55E]" />
+                <span className="text-sm font-medium text-[#22C55E]">Achievements</span>
               </div>
               <h1 className="text-2xl font-semibold text-[#2E2322] mb-2">Seller Badges</h1>
               <p className="text-[#6B5B50]">Track your progress and unlock achievements</p>
@@ -495,7 +495,7 @@ export default function Badges() {
               onClick={() => setFilter(tab.key)}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 filter === tab.key
-                  ? "bg-[#C9452F] text-white"
+                  ? "bg-[#22C55E] text-white"
                   : "text-[#6B5B50] hover:bg-[#F8F4F1]"
               }`}
             >
@@ -547,10 +547,10 @@ export default function Badges() {
         <div className="bg-white rounded-lg border border-[#E7E1DE] p-6">
           <h3 className="text-lg font-semibold text-[#2E2322] mb-4">Badge Benefits</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-[#FDECE7] rounded-lg border border-[#F4C7A1]">
+            <div className="p-4 bg-[#FDECE7] rounded-lg border border-[#E5E7EB]">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-[#FDECE7] rounded-md">
-                  <TrendingUp size={16} className="text-[#C9452F]" />
+                  <TrendingUp size={16} className="text-[#22C55E]" />
                 </div>
                 <span className="font-medium text-[#2E2322]">Increased Visibility</span>
               </div>
@@ -571,10 +571,10 @@ export default function Badges() {
               </p>
             </div>
             
-            <div className="p-4 bg-[#2bb75c]/5 rounded-lg border border-[#2bb75c]/50">
+            <div className="p-4 bg-[#4C1D95]/5 rounded-lg border border-[#4C1D95]/50">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-[#2bb75c]/10 rounded-md">
-                  <Users size={16} className="text-[#2bb75c]" />
+                <div className="p-2 bg-[#4C1D95]/10 rounded-md">
+                  <Users size={16} className="text-[#4C1D95]" />
                 </div>
                 <span className="font-medium text-[#2E2322]">Trust & Credibility</span>
               </div>
@@ -589,4 +589,6 @@ export default function Badges() {
     </div>
   );
 }
+
+
 

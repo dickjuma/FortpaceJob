@@ -44,7 +44,7 @@ const PortfolioGallery = () => {
                   )}
                 </div>
               </div>
-              <h3 className="font-bold text-zinc-900 group-hover:text-[#2bb75c] transition-colors">{item.title}</h3>
+              <h3 className="font-bold text-zinc-900 group-hover:text-[#4C1D95] transition-colors">{item.title}</h3>
               <p className="text-sm text-zinc-500">{item.category}</p>
             </div>
           ))}
@@ -61,4 +61,5 @@ const PortfolioGallery = () => {
 };
 
 export default PortfolioGallery;
+
 

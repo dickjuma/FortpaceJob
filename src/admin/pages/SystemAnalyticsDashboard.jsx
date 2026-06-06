@@ -56,7 +56,7 @@ export default function SystemAnalyticsDashboard() {
           return (
             <div key={stat.field} className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
               <div className="flex items-center justify-between">
-                <div className="w-10 h-10 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20 text-[#4C1D95] dark:text-[#4C1D95] rounded-lg flex items-center justify-center">
                   <stat.icon className="w-5 h-5" />
                 </div>
                 <span className="text-xs font-semibold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">Live</span>
@@ -135,4 +135,5 @@ export default function SystemAnalyticsDashboard() {
     </div>
   );
 }
+
 

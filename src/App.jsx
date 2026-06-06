@@ -601,7 +601,7 @@ function App() {
         <Route path="/pipeline" element={<HiringPipeline />} />
 
         {/* Find Work Module (Freelancer Portal) */}
-        <Route path="/find-work" element={<FindWorkHub />} />
+        <Route path="/find-work" element={<Navigate to="/find-work/search?type=all" replace />} />
         <Route path="/find-work/online" element={<OnlineWorkListings />} />
         <Route path="/find-work/local" element={<LocalWorkListings />} />
         <Route path="/find-work/work/:id" element={<WorkDetail />} />

@@ -17,8 +17,8 @@ const initialNotifications = [
     unread: true,
     action: 'View Contract',
     icon: Briefcase,
-    color: 'text-[#2bb75c]',
-    bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10'
+    color: 'text-[#4C1D95]',
+    bg: 'bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10'
   },
   {
     id: 2,
@@ -41,8 +41,8 @@ const initialNotifications = [
     unread: true,
     action: 'Reply',
     icon: MessageSquare,
-    color: 'text-[#2bb75c]',
-    bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10'
+    color: 'text-[#4C1D95]',
+    bg: 'bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10'
   },
   {
     id: 4,
@@ -77,8 +77,8 @@ const initialNotifications = [
     unread: false,
     action: 'Review Proposal',
     icon: Briefcase,
-    color: 'text-[#2bb75c]',
-    bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10'
+    color: 'text-[#4C1D95]',
+    bg: 'bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10'
   }
 ];
 
@@ -125,7 +125,7 @@ const Notifications = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Bell className="w-8 h-8 text-[#2bb75c]" />
+            <Bell className="w-8 h-8 text-[#4C1D95]" />
             {unreadCount > 0 && (
               <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-red-500 border-2 border-zinc-50 dark:border-zinc-900 rounded-full animate-pulse" />
             )}
@@ -139,7 +139,7 @@ const Notifications = () => {
           {unreadCount > 0 && (
             <button 
               onClick={markAllAsRead}
-              className="px-4 py-2 text-sm font-semibold text-[#2bb75c] dark:text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 hover:bg-[#2bb75c]/10 dark:hover:bg-[#2bb75c]/20 rounded-lg transition-colors flex items-center gap-2"
+              className="px-4 py-2 text-sm font-semibold text-[#4C1D95] dark:text-[#4C1D95] bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10 hover:bg-[#4C1D95]/10 dark:hover:bg-[#4C1D95]/20 rounded-lg transition-colors flex items-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4" /> Mark all read
             </button>
@@ -189,11 +189,11 @@ const Notifications = () => {
                       exit={{ opacity: 0, height: 0 }}
                       onClick={() => markAsRead(notification.id)}
                       className={`p-6 flex gap-4 transition-colors cursor-pointer relative group ${
-                        notification.unread ? 'bg-[#2bb75c]/5/30 dark:bg-[#2bb75c]/10' : 'hover:bg-surface dark:hover:bg-zinc-800/50'
+                        notification.unread ? 'bg-[#4C1D95]/5/30 dark:bg-[#4C1D95]/10' : 'hover:bg-surface dark:hover:bg-zinc-800/50'
                       }`}
                     >
                       {notification.unread && (
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#2bb75c]" />
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#4C1D95]" />
                       )}
                       
                       <div className={`w-12 h-12 rounded-full shrink-0 flex items-center justify-center ${notification.bg}`}>
@@ -212,14 +212,14 @@ const Notifications = () => {
                           {notification.message}
                         </p>
                         
-                        <button className="text-sm font-bold text-[#2bb75c] dark:text-[#2bb75c] flex items-center gap-1 group-hover:gap-2 transition-all">
+                        <button className="text-sm font-bold text-[#4C1D95] dark:text-[#4C1D95] flex items-center gap-1 group-hover:gap-2 transition-all">
                           {notification.action} <ArrowRight className="w-4 h-4" />
                         </button>
                       </div>
 
                       <div className="shrink-0 pt-1">
                         {notification.unread ? (
-                          <div className="w-3 h-3 bg-[#2bb75c] rounded-full" />
+                          <div className="w-3 h-3 bg-[#4C1D95] rounded-full" />
                         ) : (
                           <Circle className="w-3 h-3 text-zinc-300 dark:text-zinc-600" />
                         )}
@@ -250,7 +250,7 @@ const Notifications = () => {
             className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-sm font-bold rounded-xl hover:bg-surface dark:hover:bg-zinc-700 transition-colors shadow-sm disabled:opacity-70"
           >
             {isLoadingMore ? (
-              <><Loader2 className="w-4 h-4 animate-spin text-[#2bb75c]" /> Loading older alerts...</>
+              <><Loader2 className="w-4 h-4 animate-spin text-[#4C1D95]" /> Loading older alerts...</>
             ) : (
               'Load More'
             )}
@@ -263,4 +263,5 @@ const Notifications = () => {
 };
 
 export default Notifications;
+
 

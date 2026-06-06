@@ -10,7 +10,7 @@ const RecentlyViewedTalent = () => {
     <div className="bg-surface min-h-screen py-16">
       <div className="container mx-auto px-4 md:px-8">
         <div className="flex items-center gap-3 mb-8 border-b border-zinc-200 pb-6">
-          <div className="w-12 h-12 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl flex items-center justify-center">
+          <div className="w-12 h-12 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl flex items-center justify-center">
             <Eye className="w-6 h-6" />
           </div>
           <div>
@@ -35,4 +35,5 @@ const RecentlyViewedTalent = () => {
 };
 
 export default RecentlyViewedTalent;
+
 

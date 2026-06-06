@@ -101,7 +101,7 @@ export default function SharedProjectsPage() {
         {[
           { label: 'Active Projects', value: projects.length, icon: Briefcase, color: 'text-success', bg: 'bg-success/10' },
           { label: 'Total Allocated Budget', value: `$${projects.reduce((acc, p) => acc + p.budget, 0).toLocaleString()}`, icon: DollarSign, color: 'text-success', bg: 'bg-success/15' },
-          { label: 'Average Progress', value: `${Math.round(projects.reduce((acc, p) => acc + p.progress, 0) / projects.length)}%`, icon: Clock, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5' },
+          { label: 'Average Progress', value: `${Math.round(projects.reduce((acc, p) => acc + p.progress, 0) / projects.length)}%`, icon: Clock, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
           { label: 'Risk Flags', value: projects.filter(p => p.health !== 'On Track').length, icon: AlertTriangle, color: 'text-[#e63946]', bg: 'bg-[#e63946]/10' }
         ].map((stat, idx) => (
           <Card key={idx} className="p-6 bg-white border border-border shadow-sm flex items-center gap-4">
@@ -263,4 +263,5 @@ export default function SharedProjectsPage() {
     </div>
   );
 }
+
 

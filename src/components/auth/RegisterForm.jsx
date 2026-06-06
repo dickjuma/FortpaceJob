@@ -146,9 +146,9 @@ export default function RegisterForm() {
         <PasswordStrength password={passwordValue} />
 
         {clientType === 'corporate' && (
-          <div className="bg-[#2bb75c]/5 border border-[#2bb75c]/20 rounded-2xl p-6 mt-6 mb-8">
-            <h4 className="font-bold text-[#2bb75c] mb-2">Enterprise Compliance</h4>
-            <p className="text-sm text-[#2bb75c] leading-relaxed">
+          <div className="bg-[#4C1D95]/5 border border-[#4C1D95]/20 rounded-2xl p-6 mt-6 mb-8">
+            <h4 className="font-bold text-[#4C1D95] mb-2">Enterprise Compliance</h4>
+            <p className="text-sm text-[#4C1D95] leading-relaxed">
               By proceeding, you acknowledge that this account will be subject to Forte's Enterprise Vendor Master Agreement and automated worker classification compliance checks.
             </p>
           </div>
@@ -170,7 +170,7 @@ export default function RegisterForm() {
           type="submit"
           disabled={isSubmitting}
           className={`w-full py-5 rounded-2xl font-bold text-xl text-white transition-all duration-300 transform hover:-tranzinc-y-1 hover:shadow-2xl disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none ${
-            role === 'client' ? 'bg-[#2bb75c] hover:bg-[#1d8d38] shadow-[#2bb75c]/25' : 'bg-success hover:bg-emerald-700 shadow-emerald-600/30'
+            role === 'client' ? 'bg-[#4C1D95] hover:bg-[#22C55E] shadow-[#4C1D95]/25' : 'bg-success hover:bg-emerald-700 shadow-emerald-600/30'
           }`}
         >
           {isSubmitting ? 'Provisioning Account...' : 'Complete Account Setup'}
@@ -179,4 +179,5 @@ export default function RegisterForm() {
     </motion.div>
   );
 }
+
 

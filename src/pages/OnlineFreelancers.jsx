@@ -87,7 +87,7 @@ const OnlineFreelancers = () => {
                   type="text"
                 />
               </div>
-              <button className="bg-[#2bb75c] hover:bg-[#1d8d38] text-white px-6 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap" type="submit">
+              <button className="bg-[#4C1D95] hover:bg-[#22C55E] text-white px-6 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap" type="submit">
                 Find Freelancers
               </button>
             </form>
@@ -166,7 +166,7 @@ const OnlineFreelancers = () => {
 
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <button
-                  className="flex items-center gap-2 bg-[#2bb75c]/5 text-[#2bb75c] px-3 py-1.5 rounded-lg border border-[#2bb75c]/20 mr-2"
+                  className="flex items-center gap-2 bg-[#4C1D95]/5 text-[#4C1D95] px-3 py-1.5 rounded-lg border border-[#4C1D95]/20 mr-2"
                   onClick={() => navigate('/recommended-talent')}
                   type="button"
                 >
@@ -176,7 +176,7 @@ const OnlineFreelancers = () => {
 
                 <div className="relative flex-1 sm:flex-none">
                   <select
-                    className="w-full sm:w-auto appearance-none bg-white border border-zinc-200 text-zinc-700 py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2bb75c]/20 focus:border-[#2bb75c]/20 font-medium text-sm cursor-pointer"
+                    className="w-full sm:w-auto appearance-none bg-white border border-zinc-200 text-zinc-700 py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4C1D95]/20 focus:border-[#4C1D95]/20 font-medium text-sm cursor-pointer"
                     onChange={(event) => setParamState((params) => params.set('sort', event.target.value))}
                     value={sortBy}
                   >
@@ -218,4 +218,5 @@ const OnlineFreelancers = () => {
 };
 
 export default OnlineFreelancers;
+
 

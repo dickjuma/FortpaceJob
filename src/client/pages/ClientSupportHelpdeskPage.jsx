@@ -10,7 +10,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const STATUS_STYLES = {
   OPEN:       'bg-success/10 text-success border-success/20',
-  IN_PROGRESS:'bg-#2bb75c]/10 text-blue-400 border-#2bb75c]/20',
+  IN_PROGRESS:'bg-#4C1D95]/10 text-blue-400 border-#4C1D95]/20',
   RESOLVED:   'bg-zinc-500/10 text-zinc-400 border-zinc-600/20',
   CLOSED:     'bg-zinc-500/10 text-zinc-500 border-zinc-700/20',
 };
@@ -99,7 +99,7 @@ export default function ClientSupportHelpdeskPage() {
             <h1 className="text-2xl font-bold text-white flex items-center gap-2"><Headphones className="w-6 h-6 text-success" />Help & Support</h1>
             <p className="text-sm text-zinc-400 mt-1">We typically respond within 24 hours</p>
           </div>
-          <button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#2bb75c]/20">
+          <button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-[#4C1D95]/20">
             <Plus className="w-4 h-4" /> New Ticket
           </button>
         </div>
@@ -269,4 +269,5 @@ export default function ClientSupportHelpdeskPage() {
     </div>
   );
 }
+
 

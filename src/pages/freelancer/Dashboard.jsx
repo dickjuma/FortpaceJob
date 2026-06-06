@@ -85,17 +85,17 @@ const FreelancerDashboard = () => {
              <Award className="w-32 h-32" />
            </div>
            <h2 className="font-bold text-lg mb-6 relative z-10 flex items-center gap-2">
-             <ShieldCheck className="w-5 h-5 text-[#2bb75c] dark:text-[#2bb75c]" /> Rank & Reputation
+             <ShieldCheck className="w-5 h-5 text-[#4C1D95] dark:text-[#4C1D95]" /> Rank & Reputation
            </h2>
            
            <div className="space-y-5 relative z-10">
              <div>
                <div className="flex justify-between text-sm mb-1 font-semibold">
                  <span>Marketplace Position</span>
-                 <span className="text-[#2bb75c] dark:text-[#2bb75c]">Top 3%</span>
+                 <span className="text-[#4C1D95] dark:text-[#4C1D95]">Top 3%</span>
                </div>
                <div className="w-full h-1.5 bg-zinc-100 dark:bg-zinc-700 rounded-full overflow-hidden">
-                 <div className="h-full bg-[#2bb75c] rounded-full w-[97%]" />
+                 <div className="h-full bg-[#4C1D95] rounded-full w-[97%]" />
                </div>
              </div>
              
@@ -160,19 +160,19 @@ const FreelancerDashboard = () => {
              <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-3xl shadow-sm p-6">
                <div className="flex justify-between items-center mb-4">
                  <h2 className="font-bold text-lg">Active Contracts</h2>
-                 <button className="text-sm text-[#2bb75c] font-medium">View All</button>
+                 <button className="text-sm text-[#4C1D95] font-medium">View All</button>
                </div>
                <div className="space-y-4">
                  {[1, 2].map(i => (
-                   <div key={i} className="p-4 border border-zinc-100 dark:border-zinc-700 rounded-2xl bg-surface dark:bg-surface-dark/50 hover:border-[#2bb75c]/20 dark:hover:border-[#2bb75c]/20 transition-colors">
+                   <div key={i} className="p-4 border border-zinc-100 dark:border-zinc-700 rounded-2xl bg-surface dark:bg-surface-dark/50 hover:border-[#4C1D95]/20 dark:hover:border-[#4C1D95]/20 transition-colors">
                      <h4 className="font-semibold text-sm mb-1 text-zinc-900 dark:text-white line-clamp-1">Frontend Dashboard Build</h4>
                      <p className="text-xs text-zinc-500 mb-3">Client: Enterprise Corp</p>
                      <div className="w-full h-1.5 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden mb-2">
-                       <div className="h-full bg-[#2bb75c] w-2/3" />
+                       <div className="h-full bg-[#4C1D95] w-2/3" />
                      </div>
                      <div className="flex justify-between text-xs font-semibold">
                        <span className="text-zinc-500">Milestone 2/3</span>
-                       <span className="text-[#2bb75c]">$1,500</span>
+                       <span className="text-[#4C1D95]">$1,500</span>
                      </div>
                    </div>
                  ))}
@@ -213,7 +213,7 @@ const FreelancerDashboard = () => {
         <div className="space-y-6">
           
           {/* 3. Recommended Jobs */}
-          <div className="bg-gradient-to-b from-blue-50 to-white dark:from-zinc-800 dark:to-zinc-900 border border-[#2bb75c]/20 dark:border-zinc-700 rounded-3xl shadow-sm p-6 flex flex-col h-full max-h-[500px]">
+          <div className="bg-gradient-to-b from-blue-50 to-white dark:from-zinc-800 dark:to-zinc-900 border border-[#4C1D95]/20 dark:border-zinc-700 rounded-3xl shadow-sm p-6 flex flex-col h-full max-h-[500px]">
             <div className="flex justify-between items-center mb-6">
               <h2 className="font-bold text-xl text-zinc-900 dark:text-white flex items-center gap-2">
                 <Zap className="w-5 h-5 text-amber-500" /> Matches For You
@@ -222,9 +222,9 @@ const FreelancerDashboard = () => {
             
             <div className="space-y-4 overflow-y-auto flex-1 pr-2">
               {recommendedJobs.map((job) => (
-                <div key={job.id} className="p-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl hover:border-[#2bb75c]/50 dark:hover:border-[#2bb75c]/50 hover:shadow-md transition-all group">
+                <div key={job.id} className="p-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl hover:border-[#4C1D95]/50 dark:hover:border-[#4C1D95]/50 hover:shadow-md transition-all group">
                   <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-bold text-sm text-zinc-900 dark:text-white group-hover:text-[#2bb75c] transition-colors line-clamp-2 pr-2">{job.title}</h4>
+                    <h4 className="font-bold text-sm text-zinc-900 dark:text-white group-hover:text-[#4C1D95] transition-colors line-clamp-2 pr-2">{job.title}</h4>
                     <div className="text-xs font-extrabold text-green-600 bg-green-50 dark:bg-green-500/10 px-2 py-0.5 rounded shrink-0">{job.match}%</div>
                   </div>
                   
@@ -237,7 +237,7 @@ const FreelancerDashboard = () => {
                     {job.skills.map(s => <span key={s} className="px-2 py-1 bg-surface dark:bg-surface-dark text-[10px] font-semibold text-zinc-600 dark:text-zinc-300 rounded-md border border-zinc-200 dark:border-zinc-700">{s}</span>)}
                   </div>
                   
-                  <button className="w-full py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white text-sm font-bold rounded-xl transition-colors">
+                  <button className="w-full py-2 bg-[#4C1D95] hover:bg-[#22C55E] text-white text-sm font-bold rounded-xl transition-colors">
                     Apply Now
                   </button>
                 </div>
@@ -265,7 +265,7 @@ const FreelancerDashboard = () => {
             <div className="space-y-3">
               {[
                 { title: 'Payment Released', time: '2 hours ago', icon: CheckCircle2, color: 'text-green-500' },
-                { title: 'New message from Enterprise Corp', time: '5 hours ago', icon: Bell, color: 'text-[#2bb75c]' }
+                { title: 'New message from Enterprise Corp', time: '5 hours ago', icon: Bell, color: 'text-[#4C1D95]' }
               ].map((n, i) => (
                 <div key={i} className="flex gap-3 items-center">
                   <div className={`w-8 h-8 rounded-full bg-surface dark:bg-surface-dark flex items-center justify-center shrink-0`}>
@@ -287,4 +287,5 @@ const FreelancerDashboard = () => {
 };
 
 export default FreelancerDashboard;
+
 

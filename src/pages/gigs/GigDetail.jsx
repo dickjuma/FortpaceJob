@@ -77,7 +77,7 @@ const GigDetail = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white pt-24">
-        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" />
       </div>
     );
   }
@@ -86,7 +86,7 @@ const GigDetail = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white pt-24 px-4">
         <p className="text-zinc-600 mb-4">{loadError || 'Gig not found'}</p>
-        <Link to="/gigs" className="text-[#2bb75c] font-bold hover:underline">Back to marketplace</Link>
+        <Link to="/gigs" className="text-[#4C1D95] font-bold hover:underline">Back to marketplace</Link>
       </div>
     );
   }
@@ -266,7 +266,7 @@ const GigDetail = () => {
                   <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />{' '}
                   {isSaved ? 'Saved' : 'Save'}
                 </button>
-                <button className="flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#2bb75c] transition-colors">
+                <button className="flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#4C1D95] transition-colors">
                   <Share2 className="w-4 h-4" /> Share
                 </button>
               </div>
@@ -282,4 +282,5 @@ const GigDetail = () => {
 };
 
 export default GigDetail;
+
 

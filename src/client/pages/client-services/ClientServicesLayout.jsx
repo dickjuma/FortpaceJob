@@ -3,14 +3,14 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { BriefcaseBusiness, ChevronRight, FilePlus2, LayoutDashboard, Layers3, UserCircle2 } from "lucide-react";
 
 const shell = {
-  bg: "bg-[#F5EFEA]",
+  bg: "bg-[#F2F2F2]",
   card: "bg-white",
-  border: "border-[#E5D9D0]",
-  ink: "text-[#2B211F]",
-  muted: "text-[#726058]",
-  accent: "bg-[#C9452F]",
-  accentSoft: "bg-[#FDECE7]",
-  accentText: "text-[#B53A27]",
+  border: "border-[#E5E7EB]",
+  ink: "text-[#222222]",
+  muted: "text-[#6B7280]",
+  accent: "bg-[#4C1D95]",
+  accentSoft: "bg-[#F3E8FF]",
+  accentText: "text-[#4C1D95]",
 };
 
 const navItems = [
@@ -85,3 +85,4 @@ export default function ClientServicesLayout() {
     </div>
   );
 }
+

@@ -29,7 +29,7 @@ export default function GigDetailsPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="flex text-sm text-gray-500 mb-6 font-medium">
-        <Link to="/search/gigs" className="hover:text-[#2bb75c] transition-colors">Gig Marketplace</Link>
+        <Link to="/search/gigs" className="hover:text-[#4C1D95] transition-colors">Gig Marketplace</Link>
         <span className="mx-2">/</span>
         <span className="text-gray-900 dark:text-white">Programming & Tech</span>
       </div>
@@ -40,7 +40,7 @@ export default function GigDetailsPage() {
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">{gig.title}</h1>
             <div className="flex flex-wrap items-center gap-4 text-sm">
               <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-[#2bb75c]/10 dark:bg-[#2bb75c]/50 text-[#2bb75c] flex items-center justify-center font-bold mr-2">{gig.seller.name[0]}</div>
+                <div className="w-8 h-8 rounded-full bg-[#4C1D95]/10 dark:bg-[#4C1D95]/50 text-[#4C1D95] flex items-center justify-center font-bold mr-2">{gig.seller.name[0]}</div>
                 <span className="font-bold text-gray-900 dark:text-white">{gig.seller.name}</span>
                 <span className="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 text-xs font-bold rounded flex items-center">
                   <Award className="w-3 h-3 mr-1" /> {gig.seller.level}
@@ -94,7 +94,7 @@ export default function GigDetailsPage() {
                   <button 
                     key={key} 
                     onClick={() => setActiveTier(key)}
-                    className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider text-center transition-colors ${activeTier === key ? 'text-[#2bb75c] border-b-2 border-[#2bb75c]/20 bg-[#2bb75c]/5/50 dark:bg-[#2bb75c]/10' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
+                    className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider text-center transition-colors ${activeTier === key ? 'text-[#4C1D95] border-b-2 border-[#4C1D95]/20 bg-[#4C1D95]/5/50 dark:bg-[#4C1D95]/10' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
                   >
                     {key}
                   </button>
@@ -122,7 +122,7 @@ export default function GigDetailsPage() {
                   ))}
                 </ul>
 
-                <button className="w-full flex items-center justify-center px-6 py-3.5 bg-[#2bb75c] text-white font-bold text-lg rounded-xl hover:bg-[#1d8d38] transition-colors shadow-sm shadow-[#2bb75c]/25/30">
+                <button className="w-full flex items-center justify-center px-6 py-3.5 bg-[#4C1D95] text-white font-bold text-lg rounded-xl hover:bg-[#22C55E] transition-colors shadow-sm shadow-[#4C1D95]/25/30">
                   Continue (${tier.price}) <ChevronRight className="w-5 h-5 ml-2" />
                 </button>
                 <div className="mt-4 flex items-center justify-center text-xs text-gray-500 font-medium">
@@ -136,4 +136,5 @@ export default function GigDetailsPage() {
     </div>
   );
 }
+
 

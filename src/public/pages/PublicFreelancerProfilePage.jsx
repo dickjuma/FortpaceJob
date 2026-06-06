@@ -22,7 +22,7 @@ export default function PublicFreelancerProfilePage() {
       
       {/* Header Profile Hero */}
       <div className="bg-surface-dark dark:bg-surface-dark text-white pt-24 pb-32 px-4 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[#2bb75c]/20 to-transparent"></div>
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[#4C1D95]/20 to-transparent"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 flex flex-col md:flex-row gap-8 items-start md:items-end">
           
           <div className="relative shrink-0">
@@ -39,7 +39,7 @@ export default function PublicFreelancerProfilePage() {
               <div className="flex items-center gap-3 shrink-0">
                 <button className="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"><Share2 className="w-5 h-5" /></button>
                 <button className="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"><Heart className="w-5 h-5" /></button>
-                <button className="px-8 py-3 bg-[#2bb75c] hover:bg-[#2bb75c] font-bold rounded-xl shadow-lg shadow-[#2bb75c]/25/20 transition-all flex items-center gap-2">
+                <button className="px-8 py-3 bg-[#4C1D95] hover:bg-[#4C1D95] font-bold rounded-xl shadow-lg shadow-[#4C1D95]/25/20 transition-all flex items-center gap-2">
                   <MessageCircle className="w-5 h-5" /> Contact Me
                 </button>
               </div>
@@ -104,7 +104,7 @@ export default function PublicFreelancerProfilePage() {
           <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-zinc-900 dark:text-white">Portfolio Showcase</h2>
-              <button className="text-sm font-bold text-[#2bb75c] hover:underline">View All</button>
+              <button className="text-sm font-bold text-[#4C1D95] hover:underline">View All</button>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -116,7 +116,7 @@ export default function PublicFreelancerProfilePage() {
                       <item.icon className="w-4 h-4 text-zinc-700 dark:text-zinc-300" />
                     </div>
                   </div>
-                  <h3 className="font-bold text-zinc-900 dark:text-white text-sm group-hover:text-[#2bb75c] transition-colors">{item.title}</h3>
+                  <h3 className="font-bold text-zinc-900 dark:text-white text-sm group-hover:text-[#4C1D95] transition-colors">{item.title}</h3>
                 </div>
               ))}
             </div>
@@ -130,7 +130,7 @@ export default function PublicFreelancerProfilePage() {
               {REVIEWS.map(review => (
                 <div key={review.id} className="border-b border-zinc-100 dark:border-zinc-800 last:border-0 pb-6 last:pb-0">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-zinc-900 dark:text-white text-lg hover:text-[#2bb75c] transition-colors cursor-pointer">Frontend Dashboard Build (React)</h3>
+                    <h3 className="font-bold text-zinc-900 dark:text-white text-lg hover:text-[#4C1D95] transition-colors cursor-pointer">Frontend Dashboard Build (React)</h3>
                     <div className="text-right">
                       <p className="font-black text-zinc-900 dark:text-white">$3,200</p>
                       <p className="text-xs font-bold text-zinc-400">Fixed Price</p>
@@ -166,7 +166,7 @@ export default function PublicFreelancerProfilePage() {
           <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
             <h3 className="font-bold text-zinc-900 dark:text-white mb-4">Hire Alex for your project</h3>
             <div className="space-y-3">
-              <button className="w-full py-3.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-sm transition-all text-sm">
+              <button className="w-full py-3.5 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl shadow-sm transition-all text-sm">
                 Invite to Job
               </button>
               <button className="w-full py-3.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-bold rounded-xl transition-all text-sm">
@@ -197,7 +197,7 @@ export default function PublicFreelancerProfilePage() {
             <h3 className="font-bold text-zinc-900 dark:text-white mb-4">Certifications</h3>
             <div className="space-y-4">
               <div className="flex gap-4 items-start">
-                <div className="w-10 h-10 rounded-full bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10 text-[#4C1D95] flex items-center justify-center shrink-0">
                   <Award className="w-5 h-5" />
                 </div>
                 <div>
@@ -223,4 +223,5 @@ export default function PublicFreelancerProfilePage() {
     </div>
   );
 }
+
 

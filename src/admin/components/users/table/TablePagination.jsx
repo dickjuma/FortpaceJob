@@ -25,7 +25,7 @@ const TablePagination = ({ section, totalCount }) => {
         <select 
           value={limit}
           onChange={(e) => setLimit(section, Number(e.target.value))}
-          className="bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-1.5 text-xs font-bold text-zinc-700 dark:text-zinc-300 outline-none cursor-pointer hover:border-[#2bb75c]/20 transition-colors"
+          className="bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-1.5 text-xs font-bold text-zinc-700 dark:text-zinc-300 outline-none cursor-pointer hover:border-[#4C1D95]/20 transition-colors"
         >
           <option value={10}>10 / page</option>
           <option value={20}>20 / page</option>
@@ -61,7 +61,7 @@ const TablePagination = ({ section, totalCount }) => {
                 className={cn(
                   "h-9 w-9 rounded-xl text-sm font-black transition-all",
                   isActive 
-                    ? "bg-[#2bb75c] text-white shadow-lg shadow-[#2bb75c]/25/30 scale-105" 
+                    ? "bg-[#4C1D95] text-white shadow-lg shadow-[#4C1D95]/25/30 scale-105" 
                     : "text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white"
                 )}
               >
@@ -94,4 +94,5 @@ const TablePagination = ({ section, totalCount }) => {
 };
 
 export default TablePagination;
+
 

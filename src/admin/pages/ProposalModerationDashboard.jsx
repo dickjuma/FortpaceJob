@@ -80,7 +80,7 @@ export default function ProposalModerationDashboard() {
               placeholder="Search proposals, events, or users..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 focus:ring-[#2bb75c] focus:border-[#2bb75c]/20 text-sm"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 focus:ring-[#4C1D95] focus:border-[#4C1D95]/20 text-sm"
             />
           </div>
           <button className="flex items-center px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-surface transition-colors text-sm font-medium">
@@ -142,7 +142,7 @@ export default function ProposalModerationDashboard() {
                       <td className="p-4 text-sm text-gray-700 dark:text-gray-300">{status}</td>
                       <td className="p-4 text-sm text-gray-500 dark:text-gray-400">{createdAt}</td>
                       <td className="p-4 text-right space-x-2 flex justify-end">
-                        <button className="p-2 text-gray-400 hover:text-[#2bb75c] rounded-md transition-colors" title="Review details"><Eye className="w-4 h-4" /></button>
+                        <button className="p-2 text-gray-400 hover:text-[#4C1D95] rounded-md transition-colors" title="Review details"><Eye className="w-4 h-4" /></button>
                         <button className="p-2 text-gray-400 hover:text-green-600 rounded-md transition-colors" title="Approve"><CheckCircle className="w-4 h-4" /></button>
                         <button className="p-2 text-gray-400 hover:text-red-600 rounded-md transition-colors" title="Reject"><XCircle className="w-4 h-4" /></button>
                       </td>
@@ -157,4 +157,5 @@ export default function ProposalModerationDashboard() {
     </div>
   );
 }
+
 

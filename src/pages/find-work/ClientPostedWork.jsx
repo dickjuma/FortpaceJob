@@ -10,7 +10,7 @@ import {
 function getStatusColor(status) {
   switch (status) {
     case 'open':
-      return 'bg-[#2bb75c]/10 text-[#2bb75c] border-[#2bb75c]/20';
+      return 'bg-[#4C1D95]/10 text-[#4C1D95] border-[#4C1D95]/20';
     case 'in_progress':
       return 'bg-amber-100 text-amber-700 border-amber-200';
     case 'completed':
@@ -73,7 +73,7 @@ export default function ClientPostedWork() {
               <h1 className="text-3xl font-black text-zinc-900 mb-1">My Job Postings</h1>
               <p className="text-zinc-600 font-medium">Manage open jobs, review applications, and track active contracts from the shared marketplace model.</p>
             </div>
-            <Link to="/post-job" className="px-6 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-sm transition-colors">
+            <Link to="/post-job" className="px-6 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl shadow-sm transition-colors">
               Post a New Job
             </Link>
           </div>
@@ -85,7 +85,7 @@ export default function ClientPostedWork() {
             </div>
             <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
               <div className="text-sm font-bold text-zinc-500 mb-1">Total Applications</div>
-              <div className="text-3xl font-black text-[#2bb75c]">{stats.totalApplications}</div>
+              <div className="text-3xl font-black text-[#4C1D95]">{stats.totalApplications}</div>
             </div>
             <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
               <div className="text-sm font-bold text-zinc-500 mb-1">Avg Budget</div>
@@ -93,7 +93,7 @@ export default function ClientPostedWork() {
             </div>
             <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
               <div className="text-sm font-bold text-zinc-500 mb-1">Hire Rate</div>
-              <div className="text-3xl font-black text-[#2bb75c]">{stats.hireRate}%</div>
+              <div className="text-3xl font-black text-[#4C1D95]">{stats.hireRate}%</div>
             </div>
           </div>
 
@@ -105,7 +105,7 @@ export default function ClientPostedWork() {
                   type="button"
                   onClick={() => setActiveTab(tab)}
                   className={`px-8 py-4 font-bold text-sm whitespace-nowrap transition-colors border-b-2 ${
-                    activeTab === tab ? 'border-[#2bb75c]/20 text-[#2bb75c] bg-white' : 'border-transparent text-zinc-500 hover:text-zinc-900 hover:bg-surface'
+                    activeTab === tab ? 'border-[#4C1D95]/20 text-[#4C1D95] bg-white' : 'border-transparent text-zinc-500 hover:text-zinc-900 hover:bg-surface'
                   }`}
                 >
                   {getStatusLabel(tab)} ({postings.filter((posting) => posting.status === tab).length})
@@ -116,7 +116,7 @@ export default function ClientPostedWork() {
             <div className="p-0">
               {loading ? (
                 <div className="py-16 text-center text-zinc-500">
-                  <Loader2 className="w-10 h-10 mx-auto mb-3 animate-spin text-[#2bb75c]" />
+                  <Loader2 className="w-10 h-10 mx-auto mb-3 animate-spin text-[#4C1D95]" />
                   Loading your posted jobs...
                 </div>
               ) : (
@@ -134,7 +134,7 @@ export default function ClientPostedWork() {
                     {visibleJobs.map((posting) => (
                       <tr key={posting.job.id} className="hover:bg-surface transition-colors block md:table-row border-b md:border-b-0 border-zinc-100 last:border-0 p-4 md:p-0">
                         <td className="p-2 md:p-6 block md:table-cell">
-                          <Link to={posting.job.detailPath} className="font-bold text-lg text-zinc-900 hover:text-[#2bb75c] transition-colors mb-1 block">
+                          <Link to={posting.job.detailPath} className="font-bold text-lg text-zinc-900 hover:text-[#4C1D95] transition-colors mb-1 block">
                             {posting.job.title}
                           </Link>
                           <div className="text-sm text-zinc-500 font-medium">
@@ -149,7 +149,7 @@ export default function ClientPostedWork() {
 
                         <td className="p-2 md:p-6 md:text-center block md:table-cell">
                           <div className="md:hidden text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Applicants</div>
-                          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#2bb75c]/5 text-[#2bb75c] font-bold rounded-lg border border-[#2bb75c]/20">
+                          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#4C1D95]/5 text-[#4C1D95] font-bold rounded-lg border border-[#4C1D95]/20">
                             <Users className="w-4 h-4" /> {posting.job.applicants}
                           </div>
                         </td>
@@ -170,7 +170,7 @@ export default function ClientPostedWork() {
                         <td className="p-2 md:p-6 md:text-right block md:table-cell">
                           <div className="flex items-center md:justify-end gap-2 mt-2 md:mt-0">
                             {posting.status === 'open' ? (
-                              <Link to={`/find-work/work/${posting.job.id}/applications`} className="px-4 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white text-sm font-bold rounded-lg transition-colors shadow-sm">
+                              <Link to={`/find-work/work/${posting.job.id}/applications`} className="px-4 py-2 bg-[#4C1D95] hover:bg-[#22C55E] text-white text-sm font-bold rounded-lg transition-colors shadow-sm">
                                 Review
                               </Link>
                             ) : null}
@@ -205,4 +205,5 @@ export default function ClientPostedWork() {
     </>
   );
 }
+
 

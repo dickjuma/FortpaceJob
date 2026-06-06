@@ -21,7 +21,7 @@ export default function SuccessAnimation({ name, accountType, onComplete }) {
            {Array.from({ length: 50 }).map((_, i) => (
              <motion.div
                 key={i}
-                className={`absolute w-2 h-2 ${['bg-[#2bb75c]', 'bg-cyan-500', 'bg-success', 'bg-amber-500', 'bg-[#2bb75c]'][i % 5]}`}
+                className={`absolute w-2 h-2 ${['bg-[#4C1D95]', 'bg-cyan-500', 'bg-success', 'bg-amber-500', 'bg-[#4C1D95]'][i % 5]}`}
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: '-5%',
@@ -89,7 +89,7 @@ export default function SuccessAnimation({ name, accountType, onComplete }) {
               accountType === 'freelancer' ? "Apply for your first gig" : "Post your first job"
             ].map((step, i) => (
               <li key={i} className="flex items-center gap-3 text-sm">
-                <div className="w-6 h-6 rounded-full bg-[#2bb75c]/10 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-full bg-[#4C1D95]/10 dark:bg-[#4C1D95]/20 text-[#4C1D95] dark:text-[#4C1D95] flex items-center justify-center shrink-0">
                   {i + 1}
                 </div>
                 <span>{step}</span>
@@ -111,4 +111,5 @@ export default function SuccessAnimation({ name, accountType, onComplete }) {
     </div>
   );
 }
+
 

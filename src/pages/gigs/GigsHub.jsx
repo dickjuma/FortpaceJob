@@ -18,10 +18,10 @@ const GigsHub = () => {
 
   return (
     <>
-      <div className="bg-[#2bb75c] text-white pt-24 pb-20 relative overflow-hidden">
+      <div className="bg-[#4C1D95] text-white pt-24 pb-20 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-full h-full opacity-20 pointer-events-none">
           <div className="absolute top-10 left-10 w-64 h-64 bg-success rounded-full blur-[100px]"></div>
-          <div className="absolute bottom-10 right-10 w-64 h-64 bg-[#2bb75c] rounded-full blur-[100px]"></div>
+          <div className="absolute bottom-10 right-10 w-64 h-64 bg-[#4C1D95] rounded-full blur-[100px]"></div>
         </div>
 
         <div className="container mx-auto px-4 md:px-8 relative z-10 max-w-5xl text-center">
@@ -61,7 +61,7 @@ const GigsHub = () => {
             </h2>
             {isLoadingCategories ? (
               <div className="flex justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" />
               </div>
             ) : categories.length === 0 ? (
               <p className="text-center text-zinc-500 font-medium py-8">No categories available yet.</p>
@@ -86,14 +86,14 @@ const GigsHub = () => {
           <div>
             <div className="flex justify-between items-end mb-8">
               <h2 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
-                <TrendingUp className="w-6 h-6 text-[#2bb75c]" /> Trending Services
+                <TrendingUp className="w-6 h-6 text-[#4C1D95]" /> Trending Services
               </h2>
               <Link to="/gigs/search?trending=true" className="text-success font-bold hover:underline text-sm">See All</Link>
             </div>
 
             {isLoadingGigs ? (
               <div className="flex justify-center py-16">
-                <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" />
               </div>
             ) : featuredGigs.length === 0 ? (
               <p className="text-center text-zinc-500 font-medium py-12">No featured gigs available right now.</p>
@@ -151,4 +151,5 @@ const GigsHub = () => {
 };
 
 export default GigsHub;
+
 

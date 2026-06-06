@@ -271,10 +271,10 @@ export default function Messages() {
               placeholder="Search conversations"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-2xl border border-[#E7E1DE] bg-[#FCFAF8] py-3 pl-10 pr-3 text-sm focus:border-[#C9452F] focus:outline-none focus:ring-2 focus:ring-[#FADDD4]"
+              className="w-full rounded-2xl border border-[#E7E1DE] bg-[#FCFAF8] py-3 pl-10 pr-3 text-sm focus:border-[#22C55E] focus:outline-none focus:ring-2 focus:ring-[#FADDD4]"
             />
           </div>
-          <button className="rounded-2xl bg-[#C9452F] px-4 py-3 text-sm font-medium text-white hover:bg-[#B53A27]">
+          <button className="rounded-2xl bg-[#22C55E] px-4 py-3 text-sm font-medium text-white hover:bg-[#B53A27]">
             New
           </button>
         </div>
@@ -293,7 +293,7 @@ export default function Messages() {
                 onClick={() => handleSelectConversation(item.id)}
                 className={`w-full rounded-[24px] border p-4 text-left transition ${
                   activeId === item.id
-                    ? 'border-[#C9452F] bg-[#FDECE7] shadow-sm'
+                    ? 'border-[#22C55E] bg-[#FDECE7] shadow-sm'
                     : 'border-[#E7E1DE] bg-white hover:bg-[#F9F4F1]'
                 }`}
               >
@@ -304,12 +304,12 @@ export default function Messages() {
                   </div>
                   <span className="shrink-0 text-xs text-[#8E7A72]">{formatDate(item.updatedAt)}</span>
                 </div>
-                <div className="mt-3 text-sm font-medium text-[#4A312F]">{item.subject}</div>
+                <div className="mt-3 text-sm font-medium text-[#4C1D95]">{item.subject}</div>
                 <div className="mt-1 line-clamp-1 text-sm text-[#7A5A4C]">{item.lastMessage}</div>
                 <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
                   {item.status && <span className="rounded-full bg-white px-2.5 py-1 text-[#B53A27]">{item.status}</span>}
                   {item.unreadCount > 0 && (
-                    <span className="rounded-full bg-[#C9452F] px-2.5 py-1 text-white">{item.unreadCount} unread</span>
+                    <span className="rounded-full bg-[#22C55E] px-2.5 py-1 text-white">{item.unreadCount} unread</span>
                   )}
                 </div>
               </button>
@@ -403,7 +403,7 @@ export default function Messages() {
                       <div
                         className={`max-w-[88%] rounded-[24px] px-4 py-3 text-sm md:max-w-[72%] ${
                           isMe
-                            ? 'bg-[#C9452F] text-white'
+                            ? 'bg-[#22C55E] text-white'
                             : 'border border-[#E7E1DE] bg-[#F8F4F1] text-[#2E2322]'
                         }`}
                       >
@@ -450,7 +450,7 @@ export default function Messages() {
                   type="button"
                   onClick={handleSend}
                   disabled={sending}
-                  className="inline-flex items-center gap-2 rounded-2xl bg-[#C9452F] px-4 py-3 text-sm font-medium text-white hover:bg-[#B53A27] disabled:opacity-60"
+                  className="inline-flex items-center gap-2 rounded-2xl bg-[#22C55E] px-4 py-3 text-sm font-medium text-white hover:bg-[#B53A27] disabled:opacity-60"
                 >
                   <Send size={14} />
                   <span className="hidden sm:inline">{sending ? 'Sending' : 'Send'}</span>
@@ -463,3 +463,5 @@ export default function Messages() {
     </div>
   );
 }
+
+

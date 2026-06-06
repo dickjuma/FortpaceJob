@@ -15,9 +15,9 @@ const FOLDERS = [
 ];
 
 const FILES = [
-  { id: 1, name: 'logo-final-v2.svg', type: 'image', size: '1.2 MB', date: 'May 18', uploader: 'Alex R.', version: 'v2', icon: ImageIcon, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5' },
+  { id: 1, name: 'logo-final-v2.svg', type: 'image', size: '1.2 MB', date: 'May 18', uploader: 'Alex R.', version: 'v2', icon: ImageIcon, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
   { id: 2, name: 'homepage-wireframe.pdf', type: 'pdf', size: '4.5 MB', date: 'May 17', uploader: 'Sarah M.', version: 'v1', icon: FileText, color: 'text-rose-500', bg: 'bg-rose-50' },
-  { id: 3, name: 'promo-animation.mp4', type: 'video', size: '24.8 MB', date: 'May 16', uploader: 'Alex R.', version: 'v3', icon: Video, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5' },
+  { id: 3, name: 'promo-animation.mp4', type: 'video', size: '24.8 MB', date: 'May 16', uploader: 'Alex R.', version: 'v3', icon: Video, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
   { id: 4, name: 'brand-guidelines.pdf', type: 'pdf', size: '8.1 MB', date: 'May 10', uploader: 'Sarah M.', version: 'v1', icon: FileText, color: 'text-rose-500', bg: 'bg-rose-50' },
 ];
 
@@ -34,8 +34,8 @@ export default function ClientProjectFileManagerPage() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
             <div>
               <div className="flex items-center gap-2 text-xs font-bold text-zinc-500 mb-2">
-                <a href="#" className="hover:text-[#2bb75c] transition-colors">Projects</a> <ChevronRight className="w-3 h-3" />
-                <a href="#" className="hover:text-[#2bb75c] transition-colors">E-Commerce App</a>
+                <a href="#" className="hover:text-[#4C1D95] transition-colors">Projects</a> <ChevronRight className="w-3 h-3" />
+                <a href="#" className="hover:text-[#4C1D95] transition-colors">E-Commerce App</a>
               </div>
               <h1 className="text-2xl font-black text-zinc-900 dark:text-white">Project Files</h1>
             </div>
@@ -44,7 +44,7 @@ export default function ClientProjectFileManagerPage() {
               <button className="px-4 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 font-bold rounded-xl shadow-sm hover:bg-surface dark:hover:bg-zinc-700 transition-colors flex items-center gap-2">
                 <Plus className="w-4 h-4" /> New Folder
               </button>
-              <button className="px-5 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-sm transition-colors flex items-center gap-2">
+              <button className="px-5 py-2 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl shadow-sm transition-colors flex items-center gap-2">
                 <UploadCloud className="w-4 h-4" /> Upload
               </button>
             </div>
@@ -56,17 +56,17 @@ export default function ClientProjectFileManagerPage() {
               <input 
                 type="text" 
                 placeholder="Search files and folders..." 
-                className="w-full pl-10 pr-4 py-2.5 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20 transition-colors"
+                className="w-full pl-10 pr-4 py-2.5 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#4C1D95]/20 transition-colors"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             
             <div className="flex items-center gap-2 w-full sm:w-auto bg-zinc-100 dark:bg-zinc-800 p-1 rounded-xl">
-              <button onClick={() => setViewMode('grid')} className={cn("p-2 rounded-lg transition-colors", viewMode === 'grid' ? "bg-white dark:bg-surface-dark shadow-sm text-[#2bb75c]" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white")}>
+              <button onClick={() => setViewMode('grid')} className={cn("p-2 rounded-lg transition-colors", viewMode === 'grid' ? "bg-white dark:bg-surface-dark shadow-sm text-[#4C1D95]" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white")}>
                 <Grid className="w-4 h-4" />
               </button>
-              <button onClick={() => setViewMode('list')} className={cn("p-2 rounded-lg transition-colors", viewMode === 'list' ? "bg-white dark:bg-surface-dark shadow-sm text-[#2bb75c]" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white")}>
+              <button onClick={() => setViewMode('list')} className={cn("p-2 rounded-lg transition-colors", viewMode === 'list' ? "bg-white dark:bg-surface-dark shadow-sm text-[#4C1D95]" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white")}>
                 <ListIcon className="w-4 h-4" />
               </button>
             </div>
@@ -84,10 +84,10 @@ export default function ClientProjectFileManagerPage() {
             <h2 className="text-sm font-bold text-zinc-500 uppercase tracking-wider mb-4">Folders</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {FOLDERS.map(folder => (
-                <div key={folder.id} className="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 shadow-sm hover:shadow-md hover:border-[#2bb75c]/50 dark:hover:border-[#2bb75c]/50 transition-all cursor-pointer group">
+                <div key={folder.id} className="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 shadow-sm hover:shadow-md hover:border-[#4C1D95]/50 dark:hover:border-[#4C1D95]/50 transition-all cursor-pointer group">
                   <div className="flex justify-between items-start mb-4">
-                    <div className="w-10 h-10 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 rounded-xl flex items-center justify-center">
-                      <Folder className="w-5 h-5 text-[#2bb75c]" />
+                    <div className="w-10 h-10 bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10 rounded-xl flex items-center justify-center">
+                      <Folder className="w-5 h-5 text-[#4C1D95]" />
                     </div>
                     <button className="p-1.5 text-zinc-400 hover:text-zinc-900 dark:hover:text-white opacity-0 group-hover:opacity-100 transition-all rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800">
                       <MoreVertical className="w-4 h-4" />
@@ -115,7 +115,7 @@ export default function ClientProjectFileManagerPage() {
                       <file.icon className={cn("w-10 h-10", file.color)} />
                     </div>
                     <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-1.5 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm text-zinc-700 hover:text-[#2bb75c]">
+                      <button className="p-1.5 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm text-zinc-700 hover:text-[#4C1D95]">
                         <MoreVertical className="w-4 h-4" />
                       </button>
                     </div>
@@ -154,7 +154,7 @@ export default function ClientProjectFileManagerPage() {
                         <td className="px-6 py-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">{file.date}</td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button className="p-2 text-zinc-400 hover:text-[#2bb75c] transition-colors rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"><Download className="w-4 h-4" /></button>
+                            <button className="p-2 text-zinc-400 hover:text-[#4C1D95] transition-colors rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"><Download className="w-4 h-4" /></button>
                             <button className="p-2 text-zinc-400 hover:text-rose-600 transition-colors rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"><Trash2 className="w-4 h-4" /></button>
                           </div>
                         </td>
@@ -173,7 +173,7 @@ export default function ClientProjectFileManagerPage() {
           {/* Storage Analytics */}
           <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
             <h3 className="font-bold text-zinc-900 dark:text-white flex items-center gap-2 mb-6">
-              <PieChart className="w-5 h-5 text-[#2bb75c]" /> Storage Usage
+              <PieChart className="w-5 h-5 text-[#4C1D95]" /> Storage Usage
             </h3>
             
             <div className="flex items-center justify-center mb-6">
@@ -181,7 +181,7 @@ export default function ClientProjectFileManagerPage() {
                 {/* SVG Circle for progress */}
                 <svg className="w-full h-full transform -rotate-90">
                   <circle cx="64" cy="64" r="56" className="stroke-zinc-100 dark:stroke-zinc-800" strokeWidth="12" fill="none" />
-                  <circle cx="64" cy="64" r="56" className="stroke-#2bb75c]" strokeWidth="12" fill="none" strokeDasharray="351.8" strokeDashoffset="140.7" strokeLinecap="round" />
+                  <circle cx="64" cy="64" r="56" className="stroke-#4C1D95]" strokeWidth="12" fill="none" strokeDasharray="351.8" strokeDashoffset="140.7" strokeLinecap="round" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                   <span className="text-xl font-black text-zinc-900 dark:text-white leading-none">60%</span>
@@ -197,7 +197,7 @@ export default function ClientProjectFileManagerPage() {
                   <span className="font-bold text-zinc-900 dark:text-white">12.4 GB</span>
                 </div>
                 <div className="h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-[#2bb75c] w-[60%]"></div>
+                  <div className="h-full bg-[#4C1D95] w-[60%]"></div>
                 </div>
               </div>
               <p className="text-xs font-medium text-zinc-400 text-center">7.6 GB remaining of 20 GB total</p>
@@ -205,12 +205,12 @@ export default function ClientProjectFileManagerPage() {
           </div>
 
           {/* Quick Dropzone */}
-          <div className="bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 border-2 border-dashed border-[#2bb75c]/20 dark:border-[#2bb75c]/20/30 rounded-3xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-[#2bb75c]/10 dark:hover:bg-[#2bb75c]/20 transition-colors group">
+          <div className="bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10 border-2 border-dashed border-[#4C1D95]/20 dark:border-[#4C1D95]/20/30 rounded-3xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-[#4C1D95]/10 dark:hover:bg-[#4C1D95]/20 transition-colors group">
             <div className="w-16 h-16 bg-white dark:bg-surface-dark shadow-sm rounded-full flex items-center justify-center mb-4 group-hover:-tranzinc-y-1 transition-transform">
-              <UploadCloud className="w-8 h-8 text-[#2bb75c]" />
+              <UploadCloud className="w-8 h-8 text-[#4C1D95]" />
             </div>
-            <h3 className="font-bold text-[#2bb75c] dark:text-[#2bb75c] mb-1">Upload Files</h3>
-            <p className="text-xs font-medium text-[#2bb75c] dark:text-[#2bb75c]">Drag & drop or click to browse</p>
+            <h3 className="font-bold text-[#4C1D95] dark:text-[#4C1D95] mb-1">Upload Files</h3>
+            <p className="text-xs font-medium text-[#4C1D95] dark:text-[#4C1D95]">Drag & drop or click to browse</p>
           </div>
 
           {/* Collaboration Activity */}
@@ -246,4 +246,5 @@ export default function ClientProjectFileManagerPage() {
     </div>
   );
 }
+
 

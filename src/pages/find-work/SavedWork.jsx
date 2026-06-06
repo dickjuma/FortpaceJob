@@ -63,7 +63,7 @@ export default function SavedWork() {
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-5xl">
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-12 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl flex items-center justify-center shadow-sm">
+            <div className="w-12 h-12 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl flex items-center justify-center shadow-sm">
               <Bookmark className="w-6 h-6 fill-current" />
             </div>
             <div>
@@ -75,27 +75,27 @@ export default function SavedWork() {
           <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm min-h-[400px]">
             {loading ? (
               <div className="flex flex-col items-center justify-center h-full text-zinc-400 py-20">
-                <Loader2 className="w-10 h-10 mb-4 animate-spin text-[#2bb75c]" />
+                <Loader2 className="w-10 h-10 mb-4 animate-spin text-[#4C1D95]" />
                 <p className="font-medium text-zinc-500">Loading saved jobs...</p>
               </div>
             ) : savedJobs.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-zinc-400 py-20">
                 <Bookmark className="w-16 h-16 mb-4 opacity-20" />
                 <p className="text-lg font-bold text-zinc-500 mb-4">No saved jobs yet.</p>
-                <Link to="/find-work" className="px-6 py-2.5 bg-[#2bb75c] text-white font-bold rounded-xl hover:bg-[#1d8d38] transition-colors">
+                <Link to="/find-work" className="px-6 py-2.5 bg-[#4C1D95] text-white font-bold rounded-xl hover:bg-[#22C55E] transition-colors">
                   Browse Jobs
                 </Link>
               </div>
             ) : (
               <div className="space-y-4">
                 {savedJobs.map((job) => (
-                  <div key={job.id} className="border border-zinc-100 rounded-2xl p-5 hover:border-[#2bb75c]/20 hover:shadow-sm transition-all flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group">
+                  <div key={job.id} className="border border-zinc-100 rounded-2xl p-5 hover:border-[#4C1D95]/20 hover:shadow-sm transition-all flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group">
                     <div className="flex-1">
-                      <Link to={job.detailPath} className="text-lg font-bold text-zinc-900 hover:text-[#2bb75c] transition-colors mb-1 block">
+                      <Link to={job.detailPath} className="text-lg font-bold text-zinc-900 hover:text-[#4C1D95] transition-colors mb-1 block">
                         {job.title}
                       </Link>
                       <div className="flex items-center gap-3 text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 flex-wrap">
-                        <span className={job.workMode === 'local' ? 'text-success' : 'text-[#2bb75c]'}>{job.workModeLabel}</span>
+                        <span className={job.workMode === 'local' ? 'text-success' : 'text-[#4C1D95]'}>{job.workModeLabel}</span>
                         <span className="text-zinc-300">/</span>
                         <span className="text-zinc-900">{job.budgetLabel}</span>
                         <span className="text-zinc-300">/</span>
@@ -118,7 +118,7 @@ export default function SavedWork() {
                       </button>
                       <Link
                         to={job.proposalPath || `${job.detailPath}/apply`}
-                        className="px-5 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl transition-colors text-sm text-center flex-1 sm:flex-none"
+                        className="px-5 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl transition-colors text-sm text-center flex-1 sm:flex-none"
                       >
                         Apply Now
                       </Link>
@@ -133,4 +133,5 @@ export default function SavedWork() {
     </>
   );
 }
+
 

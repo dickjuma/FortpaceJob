@@ -69,7 +69,7 @@ function CheckboxOption({ id, label, count, checked, onChange }) {
       <span className="flex items-center gap-2">
         <input
           checked={checked}
-          className="w-4 h-4 rounded border-zinc-300 text-[#2bb75c] focus:ring-[#2bb75c]/20 cursor-pointer"
+          className="w-4 h-4 rounded border-zinc-300 text-[#4C1D95] focus:ring-[#4C1D95]/20 cursor-pointer"
           id={id}
           onChange={onChange}
           type="checkbox"
@@ -86,7 +86,7 @@ function RadioOption({ id, label, checked, onChange }) {
     <label className="flex items-center gap-2 cursor-pointer">
       <input
         checked={checked}
-        className="w-4 h-4 border-zinc-300 text-[#2bb75c] focus:ring-[#2bb75c]/20"
+        className="w-4 h-4 border-zinc-300 text-[#4C1D95] focus:ring-[#4C1D95]/20"
         name={id}
         onChange={onChange}
         type="radio"
@@ -140,7 +140,7 @@ const FilterSidebar = ({
           Filters
         </h2>
         <button
-          className="text-sm text-[#2bb75c] hover:text-[#2bb75c] font-medium"
+          className="text-sm text-[#4C1D95] hover:text-[#4C1D95] font-medium"
           onClick={onClear}
           type="button"
         >
@@ -152,7 +152,7 @@ const FilterSidebar = ({
         <div className="relative mb-3">
           <Search className="absolute left-2.5 top-1/2 -tranzinc-y-1/2 w-3.5 h-3.5 text-zinc-400" />
           <input
-            className="w-full bg-surface border border-zinc-200 rounded-md py-1.5 pl-8 pr-3 text-xs focus:outline-none focus:border-[#2bb75c]/20 focus:ring-1 focus:ring-[#2bb75c]"
+            className="w-full bg-surface border border-zinc-200 rounded-md py-1.5 pl-8 pr-3 text-xs focus:outline-none focus:border-[#4C1D95]/20 focus:ring-1 focus:ring-[#4C1D95]"
             placeholder="Browse categories"
             readOnly
             type="text"
@@ -271,4 +271,5 @@ const FilterSidebar = ({
 };
 
 export default FilterSidebar;
+
 

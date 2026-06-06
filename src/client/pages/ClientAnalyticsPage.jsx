@@ -316,7 +316,7 @@ export default function ClientAnalyticsPage() {
                       <td className="px-5 py-3.5">
                         <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold border ${
                           c.status === 'ACTIVE' ? 'bg-success/10 text-success border-success/20' :
-                          c.status === 'COMPLETED' ? 'bg-#2bb75c]/10 text-blue-400 border-#2bb75c]/20' :
+                          c.status === 'COMPLETED' ? 'bg-#4C1D95]/10 text-blue-400 border-#4C1D95]/20' :
                           c.status === 'PENDING' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
                           'bg-zinc-500/10 text-zinc-400 border-zinc-600/20'
                         }`}>
@@ -340,4 +340,5 @@ export default function ClientAnalyticsPage() {
     </div>
   );
 }
+
 

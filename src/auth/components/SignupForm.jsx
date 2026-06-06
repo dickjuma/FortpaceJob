@@ -10,7 +10,7 @@ import Button from './ui/Button';
 import Input from './ui/Input';
 import PasswordInput from './ui/PasswordInput';
 import SignupStepper from './SignupStepper';
-import { validateConfirmPassword, validateEmail, validatePassword } from '../../common/utils/validation';
+import { validateEmail, validatePassword } from '../../common/utils/validation';
 
 const SIGNUP_STEPS = [
   { num: 1, label: 'Choose role' },
@@ -32,20 +32,6 @@ const ROLE_CHOICES = [
   },
 ];
 
-const makeFallbackName = (email) => {
-  const localPart = String(email || '')
-    .split('@')[0]
-    .trim();
-
-  if (!localPart) return 'User';
-
-  return localPart
-    .replace(/[._-]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .replace(/\b\w/g, (char) => char.toUpperCase())
-    .trim() || 'User';
-};
-
 export default function SignupForm() {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
@@ -54,8 +40,7 @@ export default function SignupForm() {
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
-    confirmPassword: '',
-  };
+  });
 
   const roleLabel = useMemo(() => {
     if (store.selectedRole === 'CLIENT') return 'Client account';
@@ -103,21 +88,12 @@ export default function SignupForm() {
       return;
     }
 
-    const confirmError = validateConfirmPassword(credentials.password, credentials.confirmPassword);
-    if (confirmError) {
-      setFormError(confirmError);
-      toast.error(confirmError);
-      return;
-    }
-
     const email = credentials.email.trim().toLowerCase();
     const payload = {
       email,
       password: credentials.password,
       role: store.selectedRole,
       accountType: 'INDIVIDUAL',
-      name: makeFallbackName(email),
-      fullName: makeFallbackName(email),
     };
 
     try {
@@ -171,7 +147,7 @@ export default function SignupForm() {
                   onClick={() => handleRoleSelect(choice.id)}
                   className={`rounded-[1.6rem] border p-5 text-left transition-all ${
                     isSelected
-                      ? 'border-[#2bb75c] bg-[#2bb75c]/5 shadow-[0_18px_40px_rgba(20,168,0,0.12)]'
+                      ? 'border-[#4C1D95] bg-[#4C1D95]/5 shadow-[0_18px_40px_rgba(20,168,0,0.12)]'
                       : 'border-zinc-200 bg-white hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900'
                   }`}
                 >
@@ -179,7 +155,7 @@ export default function SignupForm() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-white">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <span className={`rounded-full px-3 py-1 text-[11px] font-black uppercase tracking-[0.22em] ${isSelected ? 'bg-[#2bb75c] text-white' : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'}`}>
+                    <span className={`rounded-full px-3 py-1 text-[11px] font-black uppercase tracking-[0.22em] ${isSelected ? 'bg-[#4C1D95] text-white' : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'}`}>
                       Select
                     </span>
                   </div>
@@ -193,7 +169,7 @@ export default function SignupForm() {
 
           <div className="rounded-[1.6rem] border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-950/60">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2bb75c]/10 text-[#2bb75c]">
+              <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#4C1D95]/10 text-[#4C1D95]">
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div>
@@ -210,7 +186,7 @@ export default function SignupForm() {
           <div className="rounded-[1.75rem] border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-6">
             <div className="mb-5 flex items-center justify-between gap-4">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.28em] text-[#2bb75c]">{roleLabel}</p>
+                <p className="text-xs font-black uppercase tracking-[0.28em] text-[#4C1D95]">{roleLabel}</p>
                 <h2 className="mt-2 text-2xl font-black tracking-tight text-zinc-950 dark:text-white">Create your account</h2>
               </div>
               <div className="hidden rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2 text-xs font-semibold text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 sm:flex">
@@ -238,12 +214,6 @@ export default function SignupForm() {
                 required
               />
 
-              <PasswordInput
-                label="Confirm password"
-                value={credentials.confirmPassword}
-                onChange={(e) => setCredentials((current) => ({ ...current, confirmPassword: e.target.value }))}
-                required
-              />
             </div>
 
             <div className="mt-5 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-4 text-sm text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
@@ -272,4 +242,5 @@ export default function SignupForm() {
     </div>
   );
 }
+
 

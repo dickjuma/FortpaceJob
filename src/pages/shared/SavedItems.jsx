@@ -45,7 +45,7 @@ const SavedItems = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-1 flex items-center gap-3">
-            <Bookmark className="w-8 h-8 text-[#2bb75c] fill-blue-600" /> Saved Items
+            <Bookmark className="w-8 h-8 text-[#4C1D95] fill-blue-600" /> Saved Items
           </h1>
           <p className="text-zinc-500 dark:text-zinc-400">Manage your bookmarked opportunities and top talent.</p>
         </div>
@@ -63,12 +63,12 @@ const SavedItems = () => {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-8 py-4 text-sm font-bold border-b-2 transition-colors whitespace-nowrap ${
               activeTab === tab.id 
-                ? 'border-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c]' 
+                ? 'border-[#4C1D95]/20 text-[#4C1D95] dark:text-[#4C1D95]' 
                 : 'border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
             }`}
           >
             <tab.icon className="w-4 h-4" /> {tab.id} 
-            <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === tab.id ? 'bg-[#2bb75c]/10 text-[#2bb75c] dark:bg-[#2bb75c]/30' : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800'}`}>
+            <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === tab.id ? 'bg-[#4C1D95]/10 text-[#4C1D95] dark:bg-[#4C1D95]/30' : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800'}`}>
               {tab.count}
             </span>
           </button>
@@ -86,14 +86,14 @@ const SavedItems = () => {
               <motion.div 
                 layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
                 key={job.id} 
-                className="bg-white dark:bg-zinc-800 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-700 shadow-sm hover:border-[#2bb75c]/50 dark:hover:border-[#2bb75c]/50 transition-colors"
+                className="bg-white dark:bg-zinc-800 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-700 shadow-sm hover:border-[#4C1D95]/50 dark:hover:border-[#4C1D95]/50 transition-colors"
               >
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <h3 className="font-bold text-lg text-zinc-900 dark:text-white hover:text-[#2bb75c] cursor-pointer transition-colors mb-1">{job.title}</h3>
+                    <h3 className="font-bold text-lg text-zinc-900 dark:text-white hover:text-[#4C1D95] cursor-pointer transition-colors mb-1">{job.title}</h3>
                     <p className="text-sm font-semibold text-zinc-500">{job.company}</p>
                   </div>
-                  <button onClick={() => removeJob(job.id)} className="p-2 text-[#2bb75c] hover:bg-[#2bb75c]/5 dark:hover:bg-[#2bb75c]/20 rounded-full transition-colors">
+                  <button onClick={() => removeJob(job.id)} className="p-2 text-[#4C1D95] hover:bg-[#4C1D95]/5 dark:hover:bg-[#4C1D95]/20 rounded-full transition-colors">
                     <Bookmark className="w-5 h-5 fill-blue-600" />
                   </button>
                 </div>
@@ -110,7 +110,7 @@ const SavedItems = () => {
                 </div>
 
                 <div className="pt-4 border-t border-zinc-100 dark:border-zinc-700/50">
-                  <button className="w-full sm:w-auto px-6 py-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white text-sm font-bold rounded-xl transition-colors shadow-lg shadow-#2bb75c]/20">
+                  <button className="w-full sm:w-auto px-6 py-2.5 bg-[#4C1D95] hover:bg-[#22C55E] text-white text-sm font-bold rounded-xl transition-colors shadow-lg shadow-#4C1D95]/20">
                     Apply Now
                   </button>
                 </div>
@@ -122,18 +122,18 @@ const SavedItems = () => {
                <motion.div 
                  layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
                  key={f.id} 
-                 className="bg-white dark:bg-zinc-800 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-700 shadow-sm hover:border-[#2bb75c]/50 dark:hover:border-[#2bb75c]/50 transition-colors flex flex-col sm:flex-row gap-6"
+                 className="bg-white dark:bg-zinc-800 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-700 shadow-sm hover:border-[#4C1D95]/50 dark:hover:border-[#4C1D95]/50 transition-colors flex flex-col sm:flex-row gap-6"
                >
-                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-#2bb75c] to-[#1d8d38] flex items-center justify-center text-white font-bold text-2xl shadow-lg shrink-0">
+                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-#4C1D95] to-[#22C55E] flex items-center justify-center text-white font-bold text-2xl shadow-lg shrink-0">
                     {f.name[0]}
                  </div>
                  <div className="flex-1">
                    <div className="flex justify-between items-start mb-2">
                      <div>
-                       <h3 className="font-bold text-lg text-zinc-900 dark:text-white hover:text-[#2bb75c] cursor-pointer transition-colors mb-1">{f.name}</h3>
+                       <h3 className="font-bold text-lg text-zinc-900 dark:text-white hover:text-[#4C1D95] cursor-pointer transition-colors mb-1">{f.name}</h3>
                        <p className="text-sm font-semibold text-zinc-500">{f.title}</p>
                      </div>
-                     <button onClick={() => removeFreelancer(f.id)} className="p-2 text-[#2bb75c] hover:bg-[#2bb75c]/5 dark:hover:bg-[#2bb75c]/20 rounded-full transition-colors shrink-0">
+                     <button onClick={() => removeFreelancer(f.id)} className="p-2 text-[#4C1D95] hover:bg-[#4C1D95]/5 dark:hover:bg-[#4C1D95]/20 rounded-full transition-colors shrink-0">
                        <Bookmark className="w-5 h-5 fill-blue-600" />
                      </button>
                    </div>
@@ -168,11 +168,11 @@ const SavedItems = () => {
                    <h3 className="font-bold text-lg text-zinc-900 dark:text-white flex items-center gap-2">
                      <Search className="w-4 h-4 text-zinc-400" /> {s.query}
                    </h3>
-                   <button className="text-[#2bb75c] hover:text-[#2bb75c] text-sm font-bold">Run Search</button>
+                   <button className="text-[#4C1D95] hover:text-[#4C1D95] text-sm font-bold">Run Search</button>
                  </div>
                  <div className="flex flex-wrap items-center gap-2 mb-4">
                    <span className="text-xs font-semibold text-zinc-500">Filters Applied:</span>
-                   {s.filters.map(f => <span key={f} className="px-2 py-0.5 bg-[#2bb75c]/5 text-[#2bb75c] dark:bg-[#2bb75c]/30 dark:text-[#2bb75c] text-[10px] font-bold rounded uppercase">{f}</span>)}
+                   {s.filters.map(f => <span key={f} className="px-2 py-0.5 bg-[#4C1D95]/5 text-[#4C1D95] dark:bg-[#4C1D95]/30 dark:text-[#4C1D95] text-[10px] font-bold rounded uppercase">{f}</span>)}
                  </div>
                  <div className="text-xs text-green-600 font-bold">{s.count} new results since last viewed</div>
                </motion.div>
@@ -192,7 +192,7 @@ const SavedItems = () => {
 
         {/* Sidebar: AI Recommendations */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-br from-[#2bb75c] to-zinc-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#4C1D95] to-zinc-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl" />
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2 relative z-10">
               <Sparkles className="w-5 h-5 text-amber-400" /> Suggested for you
@@ -229,4 +229,5 @@ const SavedItems = () => {
 };
 
 export default SavedItems;
+
 

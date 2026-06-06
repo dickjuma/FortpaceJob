@@ -18,7 +18,7 @@ const FOOTER_LINKS = {
     { label: 'Browse Gigs', to: '/gigs' },
   ],
   talent: [
-    { label: 'Find Work', to: '/find-work' },
+    { label: 'Find Work', to: '/find-work/search?type=all' },
     { label: 'Create Profile', to: '/auth/register' },
     { label: 'Sell a Gig', to: '/freelancer/gigs/create' },
   ],
@@ -45,7 +45,7 @@ const MarketplaceFooter = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 md:gap-10">
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
             <Link to="/" className="text-xl font-black text-white tracking-tight block mb-3">
-              Fortspace<span className="text-[#2bb75c]">.</span>
+              Fortspace<span className="text-[#4C1D95]">.</span>
             </Link>
             <p className="text-sm text-zinc-500 leading-relaxed max-w-xs">
               {company.footerMessage ||
@@ -62,7 +62,7 @@ const MarketplaceFooter = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={link.label || link.id}
-                      className="p-2 rounded-lg bg-zinc-800 text-zinc-400 hover:text-[#2bb75c] hover:bg-zinc-700 transition-colors"
+                      className="p-2 rounded-lg bg-zinc-800 text-zinc-400 hover:text-[#4C1D95] hover:bg-zinc-700 transition-colors"
                     >
                       <Icon className="w-4 h-4" />
                     </a>
@@ -77,7 +77,7 @@ const MarketplaceFooter = () => {
             <ul className="space-y-2.5">
               {FOOTER_LINKS.clients.map((item) => (
                 <li key={item.to}>
-                  <Link to={item.to} className="text-sm hover:text-[#2bb75c] transition-colors">
+                  <Link to={item.to} className="text-sm hover:text-[#4C1D95] transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -90,7 +90,7 @@ const MarketplaceFooter = () => {
             <ul className="space-y-2.5">
               {FOOTER_LINKS.talent.map((item) => (
                 <li key={item.to}>
-                  <Link to={item.to} className="text-sm hover:text-[#2bb75c] transition-colors">
+                  <Link to={item.to} className="text-sm hover:text-[#4C1D95] transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -103,7 +103,7 @@ const MarketplaceFooter = () => {
             <ul className="space-y-2.5">
               {FOOTER_LINKS.company.map((item) => (
                 <li key={item.to}>
-                  <Link to={item.to} className="text-sm hover:text-[#2bb75c] transition-colors">
+                  <Link to={item.to} className="text-sm hover:text-[#4C1D95] transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -116,7 +116,7 @@ const MarketplaceFooter = () => {
             <ul className="space-y-2.5">
               {FOOTER_LINKS.legal.map((item) => (
                 <li key={item.to}>
-                  <Link to={item.to} className="text-sm hover:text-[#2bb75c] transition-colors">
+                  <Link to={item.to} className="text-sm hover:text-[#4C1D95] transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -135,4 +135,5 @@ const MarketplaceFooter = () => {
 };
 
 export default MarketplaceFooter;
+
 

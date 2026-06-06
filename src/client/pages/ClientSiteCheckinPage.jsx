@@ -161,7 +161,7 @@ export default function ClientSiteCheckinPage() {
       <div className="mt-8 flex justify-center">
         <Button 
           onClick={handleSubmit}
-          className="bg-success hover:bg-success/90 border-none font-bold text-sm py-3.5 px-12 rounded-2xl flex items-center gap-2 shadow-lg shadow-[#2bb75c]/15"
+          className="bg-success hover:bg-success/90 border-none font-bold text-sm py-3.5 px-12 rounded-2xl flex items-center gap-2 shadow-lg shadow-[#4C1D95]/15"
         >
           <CheckCircle className="w-5 h-5" /> Authenticate Site Entry
         </Button>
@@ -169,4 +169,5 @@ export default function ClientSiteCheckinPage() {
     </div>
   );
 }
+
 

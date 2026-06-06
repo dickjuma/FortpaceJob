@@ -29,7 +29,7 @@ const SectionHeader = ({ title, icon: Icon, action }) => (
       <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900 dark:text-white">{title}</h3>
     </div>
     {action && (
-      <button className="text-[10px] font-black uppercase tracking-widest text-[#2bb75c] hover:text-[#2bb75c] transition-colors">
+      <button className="text-[10px] font-black uppercase tracking-widest text-[#4C1D95] hover:text-[#4C1D95] transition-colors">
         {action}
       </button>
     )}
@@ -52,7 +52,7 @@ const ClientProfilePanel = ({ user, activeTab }) => {
             to={publicUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-bold text-[#2bb75c] hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-bold text-[#4C1D95] hover:underline"
           >
             <ExternalLink size={14} /> View public client profile
           </Link>
@@ -67,7 +67,7 @@ const ClientProfilePanel = ({ user, activeTab }) => {
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Entity Name</p>
                 <p className="text-lg font-black text-zinc-900 dark:text-white">{user.companyName || user.fullName}</p>
-                <p className="text-xs font-bold text-[#2bb75c] capitalize">{user.clientType} Account</p>
+                <p className="text-xs font-bold text-[#4C1D95] capitalize">{user.clientType} Account</p>
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Industry Vertical</p>
@@ -120,7 +120,7 @@ const ClientProfilePanel = ({ user, activeTab }) => {
                      <span className="text-[10px] font-black text-zinc-900 dark:text-white">KES 240k / {formatCurrency(user.creditLimit)}</span>
                   </div>
                   <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                     <div className="h-full bg-[#2bb75c] w-[45%] rounded-full" />
+                     <div className="h-full bg-[#4C1D95] w-[45%] rounded-full" />
                   </div>
                </div>
                <div className="flex items-center justify-between pt-2">
@@ -135,8 +135,8 @@ const ClientProfilePanel = ({ user, activeTab }) => {
            <SectionHeader title="Active Operations" icon={Briefcase} />
            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
               {[
-                { label: 'Jobs Posted', value: user.totalJobsPosted, color: 'text-[#2bb75c]' },
-                { label: 'Active Jobs', value: user.activeJobs, color: 'text-[#2bb75c]' },
+                { label: 'Jobs Posted', value: user.totalJobsPosted, color: 'text-[#4C1D95]' },
+                { label: 'Active Jobs', value: user.activeJobs, color: 'text-[#4C1D95]' },
                 { label: 'Contracts', value: user.activeContracts, color: 'text-success' },
                 { label: 'Completed', value: user.completedContracts, color: 'text-zinc-400' }
               ].map(stat => (
@@ -222,4 +222,5 @@ const ClientProfilePanel = ({ user, activeTab }) => {
 };
 
 export default ClientProfilePanel;
+
 

@@ -40,7 +40,7 @@ const QuickActions: React.FC = () => {
                 onClick={() => handleAction(item.action, item.label)}
                 className={cn(
                   "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm",
-                  item.variant === 'primary' && "bg-[#2bb75c] text-white hover:bg-[#1d8d38]",
+                  item.variant === 'primary' && "bg-[#4C1D95] text-white hover:bg-[#22C55E]",
                   item.variant === 'danger' && "bg-rose-600 text-white hover:bg-rose-700",
                   item.variant === 'warning' && "bg-amber-500 text-white hover:bg-amber-600",
                   item.variant === 'secondary' && "bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"
@@ -58,4 +58,5 @@ const QuickActions: React.FC = () => {
 };
 
 export default QuickActions;
+
 

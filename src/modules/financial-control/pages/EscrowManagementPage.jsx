@@ -43,7 +43,7 @@ export default function EscrowManagementPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl shadow-sm">
+            <div className="p-2.5 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl shadow-sm">
               <ShieldCheck size={24} />
             </div>
             <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Escrow Management</h1>
@@ -57,7 +57,7 @@ export default function EscrowManagementPage() {
             onClick={() => setActiveTab(activeTab === 'management' ? 'audit' : 'management')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#2bb75c]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#4C1D95]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={16} /> {activeTab === 'management' ? 'Audit Trail' : 'Back to Management'}
@@ -70,7 +70,7 @@ export default function EscrowManagementPage() {
             confirmLabel="Generate"
             onConfirm={() => toast.success('Escrow Report generated successfully')}
           >
-            <button className="px-4 py-2 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2 h-full">
+            <button className="px-4 py-2 bg-surface-dark text-white dark:bg-[#4C1D95] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2 h-full">
                Generate Escrow Report
             </button>
           </PopoverConfirm>
@@ -96,7 +96,7 @@ export default function EscrowManagementPage() {
                   placeholder="Search Escrow ID or Contract..." 
                   value={filters.escrow.search}
                   onChange={(e) => setFilter('escrow', 'search', e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#2bb75c] outline-none"
+                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#4C1D95] outline-none"
                 />
               </div>
               <select 
@@ -165,7 +165,7 @@ export default function EscrowManagementPage() {
                         <td className="p-4">
                           <span className={cn(
                             "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-widest",
-                            escrow.status === 'funded' ? 'bg-[#2bb75c]/5 text-[#2bb75c] dark:bg-[#2bb75c]/20' :
+                            escrow.status === 'funded' ? 'bg-[#4C1D95]/5 text-[#4C1D95] dark:bg-[#4C1D95]/20' :
                             escrow.status === 'disputed' ? 'bg-red-50 text-red-600 dark:bg-red-900/20' :
                             'bg-emerald-50 text-success dark:bg-emerald-900/20'
                           )}>
@@ -218,4 +218,5 @@ export default function EscrowManagementPage() {
     </div>
   );
 }
+
 

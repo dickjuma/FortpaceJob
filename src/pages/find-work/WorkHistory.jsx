@@ -83,7 +83,7 @@ const WorkHistory = () => {
                 placeholder="Search history..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2.5 bg-white border border-zinc-200 rounded-xl focus:border-[#2bb75c]/20 focus:outline-none font-medium text-sm text-zinc-900"
+                className="w-full pl-9 pr-4 py-2.5 bg-white border border-zinc-200 rounded-xl focus:border-[#4C1D95]/20 focus:outline-none font-medium text-sm text-zinc-900"
               />
             </div>
           </div>
@@ -91,7 +91,7 @@ const WorkHistory = () => {
           <div className="bg-white border border-zinc-200 rounded-3xl overflow-hidden shadow-sm">
             {loading ? (
               <div className="py-16 text-center text-zinc-500">
-                <Loader2 className="w-10 h-10 mx-auto mb-3 animate-spin text-[#2bb75c]" />
+                <Loader2 className="w-10 h-10 mx-auto mb-3 animate-spin text-[#4C1D95]" />
                 Loading contract history...
               </div>
             ) : filtered.length === 0 ? (
@@ -132,4 +132,5 @@ const WorkHistory = () => {
 };
 
 export default WorkHistory;
+
 

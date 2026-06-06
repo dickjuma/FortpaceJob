@@ -36,7 +36,7 @@ export default function WorkProposal() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" />
       </div>
     );
   }
@@ -48,7 +48,7 @@ export default function WorkProposal() {
           <Briefcase className="w-12 h-12 mx-auto text-zinc-300 mb-4" />
           <h1 className="text-3xl font-black text-zinc-900 mb-2">This job is no longer available</h1>
           <p className="text-zinc-600 mb-6">We could not load the job details required to submit a proposal.</p>
-          <Link to="/find-work" className="px-6 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl">
+          <Link to="/find-work" className="px-6 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl">
             Back to Find Work
           </Link>
         </div>
@@ -118,7 +118,7 @@ export default function WorkProposal() {
       />
       <div className="bg-zinc-50 min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-4xl">
-          <Link to={job.detailPath} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#2bb75c] transition-colors mb-6">
+          <Link to={job.detailPath} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#4C1D95] transition-colors mb-6">
             <ArrowLeft className="w-4 h-4" /> Back to Job Details
           </Link>
 
@@ -144,7 +144,7 @@ export default function WorkProposal() {
                   required
                   value={bidAmount}
                   onChange={(e) => setBidAmount(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2bb75c]/20 focus:border-[#2bb75c]"
+                  className="w-full pl-12 pr-4 py-3 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-[#4C1D95]/20 focus:border-[#4C1D95]"
                   placeholder="e.g. 500"
                 />
               </div>
@@ -157,7 +157,7 @@ export default function WorkProposal() {
                 <select
                   value={deliveryEstimate}
                   onChange={(e) => setDeliveryEstimate(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2bb75c]/20"
+                  className="w-full pl-12 pr-4 py-3 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-[#4C1D95]/20"
                 >
                   <option>Less than 1 week</option>
                   <option>1 - 2 weeks</option>
@@ -175,7 +175,7 @@ export default function WorkProposal() {
                 rows={8}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full p-4 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2bb75c]/20 resize-none"
+                className="w-full p-4 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-[#4C1D95]/20 resize-none"
                 placeholder="Explain why you're the best fit for this job (min. 50 characters)..."
               />
               <p className="text-xs text-zinc-400 mt-2 flex items-center gap-1">
@@ -183,8 +183,8 @@ export default function WorkProposal() {
               </p>
             </div>
 
-            <div className="bg-[#2bb75c]/5 border border-[#2bb75c]/20 rounded-2xl p-5 flex gap-3">
-              <AlertCircle className="w-5 h-5 text-[#2bb75c] shrink-0" />
+            <div className="bg-[#4C1D95]/5 border border-[#4C1D95]/20 rounded-2xl p-5 flex gap-3">
+              <AlertCircle className="w-5 h-5 text-[#4C1D95] shrink-0" />
               <div className="text-sm">
                 <p className="font-bold text-zinc-900">You'll receive ${payout.toFixed(2)} after fees</p>
                 <p className="text-zinc-600">
@@ -196,7 +196,7 @@ export default function WorkProposal() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full py-4 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-60"
             >
               {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Submit Proposal <Send className="w-5 h-5" /></>}
             </button>
@@ -206,4 +206,5 @@ export default function WorkProposal() {
     </>
   );
 }
+
 

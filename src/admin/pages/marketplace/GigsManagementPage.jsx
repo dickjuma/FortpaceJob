@@ -99,7 +99,7 @@ export default function GigsManagementPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl">
+            <div className="p-2.5 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl">
               <ShoppingBag size={24} />
             </div>
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Gig Management</h1>
@@ -145,7 +145,7 @@ export default function GigsManagementPage() {
         <div className="p-5 bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-semibold text-zinc-500">Total Revenue</h3>
-            <Activity size={18} className="text-#2bb75c]" />
+            <Activity size={18} className="text-#4C1D95]" />
           </div>
           <div className="text-2xl font-black text-zinc-900 dark:text-white">KES 4.2M</div>
         </div>
@@ -162,7 +162,7 @@ export default function GigsManagementPage() {
               placeholder="Search gigs, freelancers..." 
               value={filters.gigs.search}
               onChange={(e) => setFilter('gigs', 'search', e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-surface dark:bg-zinc-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-[#2bb75c] outline-none"
+              className="w-full pl-10 pr-4 py-2 bg-surface dark:bg-zinc-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-[#4C1D95] outline-none"
             />
           </div>
           <select 
@@ -179,8 +179,8 @@ export default function GigsManagementPage() {
 
         {/* Bulk Actions */}
         {selectedIds.length > 0 && (
-          <div className="bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 border-b border-[#2bb75c]/20 dark:border-[#2bb75c]/20/20 p-3 flex items-center justify-between px-6">
-            <span className="text-sm font-medium text-[#2bb75c] dark:text-[#2bb75c]">
+          <div className="bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10 border-b border-[#4C1D95]/20 dark:border-[#4C1D95]/20/20 p-3 flex items-center justify-between px-6">
+            <span className="text-sm font-medium text-[#4C1D95] dark:text-[#4C1D95]">
               {selectedIds.length} gigs selected
             </span>
             <div className="flex gap-2">
@@ -210,7 +210,7 @@ export default function GigsManagementPage() {
                     type="checkbox" 
                     checked={selectedIds.length === (gigsData?.data?.length || 0) && selectedIds.length > 0}
                     onChange={toggleAll}
-                    className="rounded border-zinc-300 dark:border-zinc-600 text-[#2bb75c] focus:ring-[#2bb75c]"
+                    className="rounded border-zinc-300 dark:border-zinc-600 text-[#4C1D95] focus:ring-[#4C1D95]"
                   />
                 </th>
                 <th className="p-4 cursor-pointer hover:text-zinc-700 dark:hover:text-zinc-300">Gig Detail <ArrowUpDown size={12} className="inline ml-1" /></th>
@@ -248,12 +248,12 @@ export default function GigsManagementPage() {
                         type="checkbox" 
                         checked={selectedIds.includes(gig.id)}
                         onChange={() => toggleSelect(gig.id)}
-                        className="rounded border-zinc-300 dark:border-zinc-600 text-[#2bb75c] focus:ring-[#2bb75c]"
+                        className="rounded border-zinc-300 dark:border-zinc-600 text-[#4C1D95] focus:ring-[#4C1D95]"
                       />
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 flex items-center justify-center text-[#2bb75c] dark:text-[#2bb75c]">
+                        <div className="w-10 h-10 rounded-lg bg-[#4C1D95]/10 dark:bg-[#4C1D95]/30 flex items-center justify-center text-[#4C1D95] dark:text-[#4C1D95]">
                           <ShoppingBag size={18} />
                         </div>
                         <div>
@@ -276,7 +276,7 @@ export default function GigsManagementPage() {
                       >
                         <Avatar name={gig.freelancerName} size="sm" />
                         <div>
-                          <p className="text-sm font-semibold text-zinc-900 dark:text-white truncate max-w-[120px] group-hover:text-[#2bb75c] transition-colors">
+                          <p className="text-sm font-semibold text-zinc-900 dark:text-white truncate max-w-[120px] group-hover:text-[#4C1D95] transition-colors">
                             {gig.freelancerName}
                           </p>
                           <div 
@@ -327,7 +327,7 @@ export default function GigsManagementPage() {
                       <div className="flex items-center justify-end gap-2 pr-2">
                         <button 
                           onClick={() => handleAction('View', gig.id)}
-                          className="p-2 text-[#2bb75c] bg-[#2bb75c]/5 hover:bg-[#2bb75c]/10 dark:bg-[#2bb75c]/40 dark:text-[#2bb75c] rounded-xl transition-all shadow-sm border border-[#2bb75c]/20 dark:border-[#2bb75c]/20" title="View Gig"
+                          className="p-2 text-[#4C1D95] bg-[#4C1D95]/5 hover:bg-[#4C1D95]/10 dark:bg-[#4C1D95]/40 dark:text-[#4C1D95] rounded-xl transition-all shadow-sm border border-[#4C1D95]/20 dark:border-[#4C1D95]/20" title="View Gig"
                         >
                           <Eye size={18} />
                         </button>
@@ -421,4 +421,5 @@ export default function GigsManagementPage() {
     </div>
   );
 }
+
 

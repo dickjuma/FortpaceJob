@@ -144,7 +144,7 @@ const ReviewsPage = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-[#2bb75c] to-zinc-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden"
+            className="bg-gradient-to-br from-[#4C1D95] to-zinc-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/20 rounded-full blur-[60px] pointer-events-none" />
             <div className="relative z-10 flex flex-col items-center text-center">
@@ -220,7 +220,7 @@ const ReviewsPage = () => {
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white dark:bg-zinc-800 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-700 shadow-sm">
             <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-[#2bb75c]" /> Rating Trends
+              <TrendingUp className="w-5 h-5 text-[#4C1D95]" /> Rating Trends
             </h3>
             <div className="h-48">
               {trendData.length ? (
@@ -254,7 +254,7 @@ const ReviewsPage = () => {
                 <div key={review.id} className="p-6 hover:bg-surface dark:hover:bg-zinc-800/30 transition-colors">
                   <div className="flex flex-col sm:flex-row justify-between gap-4 mb-4">
                     <div className="flex gap-4">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#2bb75c] to-[#1d8d38] flex items-center justify-center text-white font-bold text-lg shadow-md shrink-0">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#4C1D95] to-[#22C55E] flex items-center justify-center text-white font-bold text-lg shadow-md shrink-0">
                         {review.author?.[0] || 'C'}
                       </div>
                       <div>
@@ -292,7 +292,7 @@ const ReviewsPage = () => {
                       {review.skills.map((skill) => (
                         <span
                           key={skill}
-                          className="px-2 py-1 text-[10px] font-bold text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 dark:text-[#2bb75c] border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/50 rounded"
+                          className="px-2 py-1 text-[10px] font-bold text-[#4C1D95] bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20 dark:text-[#4C1D95] border border-[#4C1D95]/20 dark:border-[#4C1D95]/20/50 rounded"
                         >
                           {skill}
                         </span>
@@ -304,7 +304,7 @@ const ReviewsPage = () => {
             </div>
 
             <div className="p-4 bg-surface dark:bg-surface-dark/50 border-t border-zinc-200 dark:border-zinc-700 text-center">
-              <button className="text-sm font-bold text-[#2bb75c] hover:text-[#2bb75c] transition-colors">
+              <button className="text-sm font-bold text-[#4C1D95] hover:text-[#4C1D95] transition-colors">
                 Load More Reviews
               </button>
             </div>
@@ -316,4 +316,5 @@ const ReviewsPage = () => {
 };
 
 export default ReviewsPage;
+
 

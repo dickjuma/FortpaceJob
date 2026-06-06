@@ -5,7 +5,7 @@ import MarketplaceFooter from '../components/shared/MarketplaceFooter';
 
 const MarketplaceLayout = ({ children }) => {
   return (
-    <div className="flex flex-col min-h-screen font-sans bg-surface text-surface-dark selection:bg-accent-light selection:text-[#2bb75c]">
+    <div className="flex flex-col min-h-screen font-sans bg-surface text-surface-dark selection:bg-accent-light selection:text-[#4C1D95]">
       <MarketplaceNavbar />
       <main className="flex-grow">
         {children || <Outlet />}
@@ -16,4 +16,5 @@ const MarketplaceLayout = ({ children }) => {
 };
 
 export default MarketplaceLayout;
+
 

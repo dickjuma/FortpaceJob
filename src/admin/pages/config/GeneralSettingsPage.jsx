@@ -49,7 +49,7 @@ export default function GeneralSettingsPage() {
         <button 
           onClick={handleSave}
           disabled={isUpdating}
-          className="px-5 py-2.5 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-5 py-2.5 bg-surface-dark text-white dark:bg-[#4C1D95] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Save size={16} /> {isUpdating ? 'Saving...' : 'Save Changes'}
         </button>
@@ -70,7 +70,7 @@ export default function GeneralSettingsPage() {
                 name="name"
                 value={companyDetails?.name || ''}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c]" 
+                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#4C1D95]" 
               />
             </div>
             <div>
@@ -80,7 +80,7 @@ export default function GeneralSettingsPage() {
                 name="taxId"
                 value={companyDetails?.taxId || ''}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c]" 
+                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#4C1D95]" 
               />
             </div>
             <div className="md:col-span-2">
@@ -90,7 +90,7 @@ export default function GeneralSettingsPage() {
                 name="address"
                 value={companyDetails?.address || ''}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c]" 
+                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#4C1D95]" 
               />
             </div>
             <div>
@@ -100,7 +100,7 @@ export default function GeneralSettingsPage() {
                 name="email"
                 value={companyDetails?.email || ''}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c]" 
+                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#4C1D95]" 
               />
             </div>
             <div>
@@ -110,7 +110,7 @@ export default function GeneralSettingsPage() {
                 name="website"
                 value={companyDetails?.website || ''}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c]" 
+                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#4C1D95]" 
               />
             </div>
             <div className="md:col-span-2">
@@ -120,7 +120,7 @@ export default function GeneralSettingsPage() {
                 value={companyDetails?.footerMessage || ''}
                 onChange={handleChange}
                 rows="3"
-                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c] resize-none" 
+                className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#4C1D95] resize-none" 
               />
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function GeneralSettingsPage() {
             type="button"
             onClick={handleSaveSocial}
             disabled={isSaving}
-            className="px-4 py-2 bg-[#2bb75c] text-white rounded-xl text-sm font-bold disabled:opacity-50"
+            className="px-4 py-2 bg-[#4C1D95] text-white rounded-xl text-sm font-bold disabled:opacity-50"
           >
             {isSaving ? 'Saving…' : 'Save social'}
           </button>
@@ -170,4 +170,5 @@ export default function GeneralSettingsPage() {
     </div>
   );
 }
+
 

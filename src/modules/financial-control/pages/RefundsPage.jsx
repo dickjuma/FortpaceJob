@@ -55,7 +55,7 @@ export default function RefundsPage() {
             onClick={() => setActiveTab(activeTab === 'management' ? 'audit' : 'management')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#2bb75c]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#4C1D95]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={16} /> {activeTab === 'management' ? 'Audit Trail' : 'Back to Management'}
@@ -80,7 +80,7 @@ export default function RefundsPage() {
                 <input 
                   type="text" 
                   placeholder="Search Refund ID or Client..." 
-                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#2bb75c] outline-none"
+                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#4C1D95] outline-none"
                 />
               </div>
             </div>
@@ -109,7 +109,7 @@ export default function RefundsPage() {
                     ))
                   ) : (
                     isLoading ? (
-                      <tr><td colSpan={6} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#2bb75c]" /></td></tr>
+                      <tr><td colSpan={6} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#4C1D95]" /></td></tr>
                     ) : refunds.length === 0 ? (
                       <tr><td colSpan={6} className="p-8 text-center text-zinc-500 font-medium">No refunds found.</td></tr>
                     ) : refunds.map(ref => (
@@ -191,4 +191,5 @@ export default function RefundsPage() {
     </div>
   );
 }
+
 

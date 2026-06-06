@@ -19,15 +19,15 @@ import {
 import Categories from "./Gigs/Categories";
 
 const skin = {
-  bg: "bg-[#F6F0EB]",
+  bg: "bg-[#F2F2F2]",
   card: "bg-white",
-  border: "border-[#E7DCD4]",
-  ink: "text-[#2C211F]",
-  muted: "text-[#6F5E56]",
-  accent: "bg-[#C64A33]",
-  accentSoft: "bg-[#FCE9E3]",
-  accentText: "text-[#B13E29]",
-  deep: "bg-[#2C211F]",
+  border: "border-[#E5E7EB]",
+  ink: "text-[#222222]",
+  muted: "text-[#6B7280]",
+  accent: "bg-[#22C55E]",
+  accentSoft: "bg-[#DCFCE7]",
+  accentText: "text-[#22C55E]",
+  deep: "bg-[#4C1D95]",
 };
 
 const marketGroups = [
@@ -109,7 +109,7 @@ function PanelCard({ title, children, className = "" }) {
 function MarketHome() {
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-[34px] border border-[#E7DCD4] bg-[radial-gradient(circle_at_top_left,_#FFF7F2,_#F5ECE6_42%,_#FFFDFB_100%)] p-6 shadow-[0_22px_60px_rgba(33,24,21,0.07)] lg:p-8">
+      <section className="overflow-hidden rounded-[34px] border border-[#E7DCD4] bg-[radial-gradient(circle_at_top_left,_#FFFFFF,_#F2F2F2_42%,_#FFFFFF_100%)] p-6 shadow-[0_22px_60px_rgba(33,24,21,0.07)] lg:p-8">
         <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
           <div>
             <p className={`text-sm uppercase tracking-[0.18em] ${skin.muted}`}>Find Work</p>
@@ -124,7 +124,7 @@ function MarketHome() {
                 <Link
                   key={action.label}
                   to={action.to}
-                  className="inline-flex items-center gap-2 rounded-full border border-[#D8CCC4] bg-white px-4 py-2.5 text-sm font-medium text-[#2C211F] transition hover:bg-[#FCF6F1]"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#E5E7EB] bg-white px-4 py-2.5 text-sm font-medium text-[#222222] transition hover:bg-[#F2F2F2]"
                 >
                   <action.icon size={15} />
                   {action.label}
@@ -136,15 +136,15 @@ function MarketHome() {
           <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
             <div className="rounded-[24px] bg-white/80 px-4 py-4">
               <p className="text-xs uppercase tracking-[0.14em] text-[#8A766D]">Best use</p>
-              <p className="mt-2 text-lg font-semibold text-[#2C211F]">Discover, shortlist, then apply intentionally</p>
+              <p className="mt-2 text-lg font-semibold text-[#222222]">Discover, shortlist, then apply intentionally</p>
             </div>
             <div className="rounded-[24px] bg-white/80 px-4 py-4">
               <p className="text-xs uppercase tracking-[0.14em] text-[#8A766D]">Workspace split</p>
-              <p className="mt-2 text-lg font-semibold text-[#2C211F]">Discovery here. Tools elsewhere.</p>
+              <p className="mt-2 text-lg font-semibold text-[#222222]">Discovery here. Tools elsewhere.</p>
             </div>
             <div className="rounded-[24px] bg-white/80 px-4 py-4">
               <p className="text-xs uppercase tracking-[0.14em] text-[#8A766D]">Focus</p>
-              <p className="mt-2 text-lg font-semibold text-[#2C211F]">Categories, fit, and better decisions</p>
+              <p className="mt-2 text-lg font-semibold text-[#222222]">Categories, fit, and better decisions</p>
             </div>
           </div>
         </div>
@@ -154,23 +154,23 @@ function MarketHome() {
         <PanelCard title="Opportunity Board">
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="rounded-[24px] bg-[#FCF7F3] p-4">
-              <TrendingUp size={18} className="text-[#B13E29]" />
-              <p className="mt-4 text-2xl font-semibold text-[#2C211F]">24</p>
-              <p className="mt-1 text-sm text-[#6F5E56]">Fresh opportunities worth checking today</p>
+              <TrendingUp size={18} className="text-[#4C1D95]" />
+              <p className="mt-4 text-2xl font-semibold text-[#222222]">24</p>
+              <p className="mt-1 text-sm text-[#6B7280]">Fresh opportunities worth checking today</p>
             </div>
             <div className="rounded-[24px] bg-[#FCF7F3] p-4">
-              <Sparkles size={18} className="text-[#B13E29]" />
-              <p className="mt-4 text-2xl font-semibold text-[#2C211F]">8</p>
-              <p className="mt-1 text-sm text-[#6F5E56]">Categories that closely match common freelancer strengths</p>
+              <Sparkles size={18} className="text-[#4C1D95]" />
+              <p className="mt-4 text-2xl font-semibold text-[#222222]">8</p>
+              <p className="mt-1 text-sm text-[#6B7280]">Categories that closely match common freelancer strengths</p>
             </div>
             <div className="rounded-[24px] bg-[#FCF7F3] p-4">
-              <ShieldCheck size={18} className="text-[#B13E29]" />
-              <p className="mt-4 text-2xl font-semibold text-[#2C211F]">3</p>
-              <p className="mt-1 text-sm text-[#6F5E56]">Core actions before you start applying widely</p>
+              <ShieldCheck size={18} className="text-[#4C1D95]" />
+              <p className="mt-4 text-2xl font-semibold text-[#222222]">3</p>
+              <p className="mt-1 text-sm text-[#6B7280]">Core actions before you start applying widely</p>
             </div>
           </div>
 
-          <div className="mt-5 rounded-[24px] bg-[#2C211F] p-5 text-white">
+          <div className="mt-5 rounded-[24px] bg-[#222222] p-5 text-white">
             <p className="text-sm uppercase tracking-[0.16em] text-white/65">Recommended flow</p>
             <div className="mt-4 grid gap-3 md:grid-cols-3">
               <div className="rounded-2xl bg-white/10 px-4 py-3 text-sm">1. Scan categories instead of random listings.</div>
@@ -185,10 +185,10 @@ function MarketHome() {
             {marketGroups.map((group) => (
               <div key={group.title} className="rounded-[24px] border border-[#EFE3DB] bg-[#FFFCFA] p-4">
                 <div className="flex items-center gap-3">
-                  <div className="rounded-2xl bg-[#FCE9E3] p-3 text-[#B13E29]">
+                  <div className="rounded-2xl bg-[#F3E8FF] p-3 text-[#4C1D95]">
                     <group.icon size={18} />
                   </div>
-                  <h3 className="text-base font-semibold text-[#2C211F]">{group.title}</h3>
+                  <h3 className="text-base font-semibold text-[#222222]">{group.title}</h3>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {group.items.map((item) => (
@@ -203,7 +203,7 @@ function MarketHome() {
 
           <Link
             to="/find-work/gigs/categories"
-            className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#C64A33] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#AF3E29]"
+            className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#22C55E] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#16A34A]"
           >
             Open category explorer
             <ArrowRight size={15} />
@@ -279,7 +279,7 @@ export default function FindWork() {
             </div>
           </div>
 
-          <div className="rounded-[26px] bg-[#2C211F] p-5 text-white">
+          <div className="rounded-[26px] bg-[#222222] p-5 text-white">
             <p className="text-xs uppercase tracking-[0.18em] text-white/60">Tip</p>
             <p className="mt-3 text-sm leading-6 text-white/85">
               Freelancers usually get better results when they narrow their search through categories first, then apply with stronger fit.
@@ -325,3 +325,5 @@ export default function FindWork() {
     </div>
   );
 }
+
+

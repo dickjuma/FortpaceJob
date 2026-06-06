@@ -28,15 +28,15 @@ const ClientOverview = () => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
         <h3 className="font-semibold mb-2">Active Jobs</h3>
-        <p className="text-3xl font-bold text-[#2bb75c]">5</p>
+        <p className="text-3xl font-bold text-[#4C1D95]">5</p>
       </div>
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
         <h3 className="font-semibold mb-2">Pending Orders</h3>
-        <p className="text-3xl font-bold text-[#2bb75c]">3</p>
+        <p className="text-3xl font-bold text-[#4C1D95]">3</p>
       </div>
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
         <h3 className="font-semibold mb-2">Total Spent</h3>
-        <p className="text-3xl font-bold text-[#2bb75c]">$2,450</p>
+        <p className="text-3xl font-bold text-[#4C1D95]">$2,450</p>
       </div>
     </div>
   </div>
@@ -81,14 +81,14 @@ const NavLink = ({ to, icon: Icon, label, badge }) => {
       to={to}
       className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${
         isActive
-          ? "bg-[#2bb75c]/5 text-[#2bb75c] font-medium"
+          ? "bg-[#4C1D95]/5 text-[#4C1D95] font-medium"
           : "text-gray-700 hover:bg-gray-100"
       }`}
     >
       <Icon size={18} />
       <span>{label}</span>
       {badge && (
-        <span className="ml-auto bg-[#2bb75c] text-white text-xs rounded-full px-2 py-0.5">
+        <span className="ml-auto bg-[#4C1D95] text-white text-xs rounded-full px-2 py-0.5">
           {badge}
         </span>
       )}
@@ -136,7 +136,7 @@ const ClientDashboard = () => {
       <div className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#2bb75c] rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#4C1D95] rounded-xl flex items-center justify-center">
               <User size={20} className="text-white" />
             </div>
             <div>
@@ -194,3 +194,4 @@ const ClientDashboard = () => {
 };
 
 export default ClientDashboard;
+

@@ -97,7 +97,7 @@ export default function ForgotPasswordPage() {
               animate={{ opacity: 1, scale: 1 }}
               className="text-center py-6"
             >
-              <div className="w-16 h-16 bg-[#2bb75c]/10 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_20px_rgba(37,99,235,0.2)]">
+              <div className="w-16 h-16 bg-[#4C1D95]/10 dark:bg-[#4C1D95]/20 text-[#4C1D95] dark:text-[#4C1D95] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_20px_rgba(37,99,235,0.2)]">
                 <Mail className="w-8 h-8" />
               </div>
               <h2 className="text-2xl font-bold mb-2">Check your email</h2>
@@ -128,7 +128,7 @@ export default function ForgotPasswordPage() {
                   <button 
                     onClick={handleSubmit}
                     disabled={isSubmitting}
-                    className="font-semibold text-[#2bb75c] hover:text-[#2bb75c] dark:text-[#2bb75c] transition-colors"
+                    className="font-semibold text-[#4C1D95] hover:text-[#4C1D95] dark:text-[#4C1D95] transition-colors"
                   >
                     Click to resend
                   </button>
@@ -141,4 +141,5 @@ export default function ForgotPasswordPage() {
     </AuthLayout>
   );
 }
+
 

@@ -6,7 +6,7 @@ import apiClient, { unwrapAdminResponse } from '../../api/apiClient';
 const getLogMeta = (log) => {
   const action = (log.action || '').toUpperCase();
   if (action.includes('AUTH') || action.includes('LOGIN') || action.includes('USER') || action.includes('KYC')) {
-    return { icon: User, color: 'text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20' };
+    return { icon: User, color: 'text-[#4C1D95] bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20' };
   }
   if (action.includes('FRAUD') || action.includes('FLAG') || action.includes('BLACKLIST') || action.includes('BLOCK')) {
     return { icon: Shield, color: 'text-danger bg-danger/10' };
@@ -143,4 +143,5 @@ export default function AuditLogTimeline({ limit = 12, moduleFilter }) {
     </div>
   );
 }
+
 

@@ -39,7 +39,7 @@ export default function ManualEntryModal({ isOpen, onClose }) {
 
           <div>
              <label className="block text-xs font-black text-zinc-500 uppercase tracking-widest mb-2">Debit Account</label>
-             <select className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-semibold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c]">
+             <select className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-semibold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#4C1D95]">
                 <option>Platform Revenue Account</option>
                 <option>Escrow Holding Account</option>
                 <option>Tax Payable Account</option>
@@ -48,7 +48,7 @@ export default function ManualEntryModal({ isOpen, onClose }) {
 
           <div>
              <label className="block text-xs font-black text-zinc-500 uppercase tracking-widest mb-2">Credit Account</label>
-             <select className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-semibold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c]">
+             <select className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-semibold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#4C1D95]">
                 <option>Tax Payable Account</option>
                 <option>Escrow Holding Account</option>
                 <option>Platform Revenue Account</option>
@@ -57,12 +57,12 @@ export default function ManualEntryModal({ isOpen, onClose }) {
 
           <div>
              <label className="block text-xs font-black text-zinc-500 uppercase tracking-widest mb-2">Amount (KES)</label>
-             <input type="number" placeholder="0.00" className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c]" />
+             <input type="number" placeholder="0.00" className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#4C1D95]" />
           </div>
 
           <div>
              <label className="block text-xs font-black text-zinc-500 uppercase tracking-widest mb-2">Memo / Reason</label>
-             <textarea rows="3" placeholder="Explain reason for manual adjustment..." className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c] resize-none"></textarea>
+             <textarea rows="3" placeholder="Explain reason for manual adjustment..." className="w-full px-4 py-3 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl font-medium text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#4C1D95] resize-none"></textarea>
           </div>
         </div>
 
@@ -76,7 +76,7 @@ export default function ManualEntryModal({ isOpen, onClose }) {
                toast.success('Manual entry posted successfully');
                onClose();
              }}
-             className="px-5 py-2.5 bg-surface-dark dark:bg-[#2bb75c] text-white rounded-xl font-bold hover:bg-zinc-800 transition-colors flex items-center gap-2"
+             className="px-5 py-2.5 bg-surface-dark dark:bg-[#4C1D95] text-white rounded-xl font-bold hover:bg-zinc-800 transition-colors flex items-center gap-2"
            >
              <Save size={16} /> Post Entry
            </button>
@@ -86,4 +86,5 @@ export default function ManualEntryModal({ isOpen, onClose }) {
     </div>
   );
 }
+
 

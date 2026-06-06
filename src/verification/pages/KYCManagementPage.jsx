@@ -25,7 +25,7 @@ export default function KYCManagementPage() {
         <div className="md:col-span-2 space-y-6">
           <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
             <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-              <FileText className="w-5 h-5 mr-2 text-[#2bb75c]" /> Submitted Documents
+              <FileText className="w-5 h-5 mr-2 text-[#4C1D95]" /> Submitted Documents
             </h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-surface dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
@@ -53,15 +53,15 @@ export default function KYCManagementPage() {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-gradient-to-br from-[#2bb75c] to-[#1d8d38] rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#4C1D95] to-[#22C55E] rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-10">
               <ShieldCheck className="w-24 h-24" />
             </div>
             <h3 className="font-bold text-lg mb-2 relative z-10">Why we need this</h3>
-            <p className="text-[#2bb75c] text-sm mb-4 relative z-10">
+            <p className="text-[#4C1D95] text-sm mb-4 relative z-10">
               KYC helps us prevent fraud, money laundering, and ensure a secure escrow environment for all participants.
             </p>
-            <ul className="text-sm text-[#2bb75c] space-y-2 relative z-10">
+            <ul className="text-sm text-[#4C1D95] space-y-2 relative z-10">
               <li className="flex items-start"><Lock className="w-4 h-4 mr-2 mt-0.5" /> Secure Escrow</li>
               <li className="flex items-start"><CheckCircle className="w-4 h-4 mr-2 mt-0.5" /> High-Value Contracts</li>
               <li className="flex items-start"><Clock className="w-4 h-4 mr-2 mt-0.5" /> Faster Withdrawals</li>
@@ -72,4 +72,5 @@ export default function KYCManagementPage() {
     </div>
   );
 }
+
 

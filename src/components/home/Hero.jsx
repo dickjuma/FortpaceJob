@@ -52,7 +52,7 @@ export default function Hero() {
   const handleTalentSearch = (e) => {
     e.preventDefault();
     if (talentQuery.trim()) {
-      navigate(`/find-work?q=${encodeURIComponent(talentQuery)}`);
+      navigate(`/find-work/search?type=all&q=${encodeURIComponent(talentQuery)}`);
     }
   };
 

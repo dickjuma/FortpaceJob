@@ -38,9 +38,9 @@ export default function GlobalJobsPage() {
                 type="text" 
                 placeholder="Search for any service, skill, or professional..." 
                 defaultValue="React Developer"
-                className="w-full bg-zinc-100 dark:bg-zinc-800 border-none rounded-l-2xl pl-12 pr-4 py-3.5 text-sm font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c]/50"
+                className="w-full bg-zinc-100 dark:bg-zinc-800 border-none rounded-l-2xl pl-12 pr-4 py-3.5 text-sm font-bold text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#4C1D95]/50"
               />
-              <button className="bg-[#2bb75c] hover:bg-[#1d8d38] text-white px-8 py-3.5 rounded-r-2xl font-bold transition-all shrink-0">
+              <button className="bg-[#4C1D95] hover:bg-[#22C55E] text-white px-8 py-3.5 rounded-r-2xl font-bold transition-all shrink-0">
                 Search
               </button>
             </div>
@@ -64,7 +64,7 @@ export default function GlobalJobsPage() {
                 <h3 className="font-bold text-zinc-900 dark:text-white flex items-center gap-2">
                   <SlidersHorizontal className="w-5 h-5" /> Filters
                 </h3>
-                <button className="text-xs font-bold text-[#2bb75c] hover:underline">Clear All</button>
+                <button className="text-xs font-bold text-[#4C1D95] hover:underline">Clear All</button>
               </div>
 
               {/* Sidebar Filters */}
@@ -78,7 +78,7 @@ export default function GlobalJobsPage() {
                       <label key={cat} className="flex items-center gap-3 cursor-pointer group">
                         <div className="relative flex items-center justify-center">
                           <input type="checkbox" defaultChecked={i===0} className="peer sr-only" />
-                          <div className="w-5 h-5 border-2 border-zinc-300 dark:border-zinc-600 rounded peer-checked:border-[#2bb75c]/20 peer-checked:bg-[#2bb75c] transition-colors"></div>
+                          <div className="w-5 h-5 border-2 border-zinc-300 dark:border-zinc-600 rounded peer-checked:border-[#4C1D95]/20 peer-checked:bg-[#4C1D95] transition-colors"></div>
                           <CheckIcon className="w-3.5 h-3.5 text-white absolute opacity-0 peer-checked:opacity-100" />
                         </div>
                         <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">{cat}</span>
@@ -95,7 +95,7 @@ export default function GlobalJobsPage() {
                       <label key={type} className="flex items-center gap-3 cursor-pointer group">
                         <div className="relative flex items-center justify-center">
                           <input type="radio" name="jobtype" defaultChecked={i===0} className="peer sr-only" />
-                          <div className="w-5 h-5 border-2 border-zinc-300 dark:border-zinc-600 rounded-full peer-checked:border-[#2bb75c]/20 peer-checked:bg-[#2bb75c] transition-colors"></div>
+                          <div className="w-5 h-5 border-2 border-zinc-300 dark:border-zinc-600 rounded-full peer-checked:border-[#4C1D95]/20 peer-checked:bg-[#4C1D95] transition-colors"></div>
                           <div className="w-2 h-2 bg-white rounded-full absolute opacity-0 peer-checked:opacity-100"></div>
                         </div>
                         <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">{type}</span>
@@ -130,13 +130,13 @@ export default function GlobalJobsPage() {
             <div className="bg-white dark:bg-surface-dark rounded-2xl p-2 border border-zinc-200 dark:border-zinc-800 shadow-sm flex flex-col sm:flex-row gap-2">
               <button 
                 onClick={() => setJobTypeFilter('online')}
-                className={cn("flex-1 py-3 px-4 sm:px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all", jobTypeFilter === 'online' ? "bg-[#2bb75c]/5 dark:bg-[#2bb75c]/30 text-[#2bb75c] dark:text-[#2bb75c] shadow-sm" : "text-zinc-500 hover:bg-surface dark:hover:bg-zinc-800")}
+                className={cn("flex-1 py-3 px-4 sm:px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all", jobTypeFilter === 'online' ? "bg-[#4C1D95]/5 dark:bg-[#4C1D95]/30 text-[#4C1D95] dark:text-[#4C1D95] shadow-sm" : "text-zinc-500 hover:bg-surface dark:hover:bg-zinc-800")}
               >
                 <Globe className="w-4 h-4 shrink-0" /> <span className="truncate">Online Jobs (Remote)</span>
               </button>
               <button 
                 onClick={() => setJobTypeFilter('onsite')}
-                className={cn("flex-1 py-3 px-4 sm:px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all", jobTypeFilter === 'onsite' ? "bg-[#2bb75c]/5 dark:bg-[#2bb75c]/30 text-[#2bb75c] dark:text-[#2bb75c] shadow-sm" : "text-zinc-500 hover:bg-surface dark:hover:bg-zinc-800")}
+                className={cn("flex-1 py-3 px-4 sm:px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all", jobTypeFilter === 'onsite' ? "bg-[#4C1D95]/5 dark:bg-[#4C1D95]/30 text-[#4C1D95] dark:text-[#4C1D95] shadow-sm" : "text-zinc-500 hover:bg-surface dark:hover:bg-zinc-800")}
               >
                 <Building2 className="w-4 h-4 shrink-0" /> <span className="truncate">Onsite Jobs (Local)</span>
               </button>
@@ -145,7 +145,7 @@ export default function GlobalJobsPage() {
             {/* Jobs List */}
             <div className="space-y-4">
               {loading ? (
-                <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" /></div>
+                <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" /></div>
               ) : jobs.length === 0 ? (
                 <p className="text-center text-zinc-500 py-12">No jobs in this category yet.</p>
               ) : (
@@ -159,14 +159,14 @@ export default function GlobalJobsPage() {
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <Link to={job.detailPath || `/find-work/work/${job.id}`} className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-[#2bb75c] transition-colors cursor-pointer mb-1 block">
+                      <Link to={job.detailPath || `/find-work/work/${job.id}`} className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-[#4C1D95] transition-colors cursor-pointer mb-1 block">
                         {job.title}
                       </Link>
                       <div className="flex items-center gap-3 text-sm font-medium text-zinc-500">
                         <span>{job.client?.name || job.clientName || 'Client'}</span>
                         <div className="w-1 h-1 bg-zinc-300 rounded-full" />
                         <span className="flex items-center gap-1">
-                          {job.workMode === 'local' ? <Building2 className="w-3.5 h-3.5 text-amber-500" /> : <Globe className="w-3.5 h-3.5 text-[#2bb75c]" />}
+                          {job.workMode === 'local' ? <Building2 className="w-3.5 h-3.5 text-amber-500" /> : <Globe className="w-3.5 h-3.5 text-[#4C1D95]" />}
                           {job.locationLabel || job.location || 'Remote'}
                         </span>
                       </div>
@@ -217,4 +217,5 @@ function CheckIcon(props) {
     </svg>
   );
 }
+
 

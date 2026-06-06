@@ -76,11 +76,11 @@ const StepPill = ({ active, label, description }) => (
     className={cn(
       'rounded-2xl border px-4 py-3 transition-all',
       active
-        ? 'border-[#2bb75c]/20 bg-[#2bb75c]/5 shadow-[0_14px_30px_rgba(20,168,0,0.08)]'
+        ? 'border-[#4C1D95]/20 bg-[#4C1D95]/5 shadow-[0_14px_30px_rgba(20,168,0,0.08)]'
         : 'border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900'
     )}
   >
-    <p className={cn('text-sm font-black uppercase tracking-[0.18em]', active ? 'text-[#2bb75c]' : 'text-zinc-400')}>
+    <p className={cn('text-sm font-black uppercase tracking-[0.18em]', active ? 'text-[#4C1D95]' : 'text-zinc-400')}>
       {label}
     </p>
     <p className="mt-1 text-xs leading-5 text-zinc-500 dark:text-zinc-400">{description}</p>
@@ -434,7 +434,7 @@ export default function ProfileCompletionPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-surface dark:bg-surface-dark px-6">
         <div className="max-w-lg rounded-3xl border border-zinc-200 bg-white p-8 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-          <ShieldCheck className="mx-auto h-10 w-10 text-[#2bb75c]" />
+          <ShieldCheck className="mx-auto h-10 w-10 text-[#4C1D95]" />
           <h1 className="mt-4 text-2xl font-black text-zinc-950 dark:text-white">Choose your role first</h1>
           <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
             We need to know whether this account is a client or freelancer before we can build the profile setup.
@@ -442,7 +442,7 @@ export default function ProfileCompletionPage() {
           <button
             type="button"
             onClick={() => navigate('/auth/role-selection', { replace: true })}
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#2bb75c] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#1d8d38]"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#4C1D95] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#22C55E]"
           >
             Select role
             <ArrowRight className="h-4 w-4" />
@@ -453,26 +453,26 @@ export default function ProfileCompletionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans selection:bg-[#2bb75c]/30">
+    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans selection:bg-[#4C1D95]/30">
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute -right-40 top-16 h-[34rem] w-[34rem] rounded-full bg-[#2bb75c]/5 blur-[120px]" />
+        <div className="absolute -right-40 top-16 h-[34rem] w-[34rem] rounded-full bg-[#4C1D95]/5 blur-[120px]" />
         <div className="absolute left-0 top-1/2 h-[28rem] w-[28rem] rounded-full bg-violet-500/5 blur-[120px]" />
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col pb-24">
         <header className="flex items-center justify-between px-4 py-5 sm:px-6">
           <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#2bb75c] text-white shadow-lg shadow-[#2bb75c]/20">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#4C1D95] text-white shadow-lg shadow-[#4C1D95]/20">
               <ShieldCheck className="h-5 w-5" />
             </div>
             <div>
               <div className="text-lg font-black tracking-tight text-zinc-950 dark:text-white">Forte</div>
-              <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[#2bb75c]">Profile launch wizard</div>
+              <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[#4C1D95]">Profile launch wizard</div>
             </div>
           </motion.div>
 
           <div className="hidden items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold text-zinc-500 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 sm:flex">
-            <Sparkles className="h-4 w-4 text-[#2bb75c]" />
+            <Sparkles className="h-4 w-4 text-[#4C1D95]" />
             Saved to the production API
           </div>
         </header>
@@ -487,7 +487,7 @@ export default function ProfileCompletionPage() {
               <div className="border-b border-zinc-200/80 px-6 py-6 dark:border-zinc-800">
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                   <div className="max-w-2xl">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-[#2bb75c]/15 bg-[#2bb75c]/5 px-3 py-1 text-xs font-black uppercase tracking-[0.25em] text-[#2bb75c]">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-[#4C1D95]/15 bg-[#4C1D95]/5 px-3 py-1 text-xs font-black uppercase tracking-[0.25em] text-[#4C1D95]">
                       <BadgeInfo className="h-3.5 w-3.5" />
                       {isFreelancer ? 'Freelancer setup' : 'Client setup'}
                     </div>
@@ -506,7 +506,7 @@ export default function ProfileCompletionPage() {
                     </div>
                     <div className="mt-3 h-2 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-[#2bb75c] to-emerald-400 transition-all"
+                        className="h-full rounded-full bg-gradient-to-r from-[#4C1D95] to-emerald-400 transition-all"
                         style={{ width: `${progressValue}%` }}
                       />
                     </div>
@@ -559,10 +559,10 @@ export default function ProfileCompletionPage() {
                         <div className="rounded-[1.75rem] border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#2bb75c]">Avatar</p>
+                              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#4C1D95]">Avatar</p>
                               <h2 className="mt-2 text-lg font-black text-zinc-950 dark:text-white">Profile identity</h2>
                             </div>
-                            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2bb75c]/10 text-[#2bb75c]">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#4C1D95]/10 text-[#4C1D95]">
                               <UserRound className="h-5 w-5" />
                             </div>
                           </div>
@@ -586,7 +586,7 @@ export default function ProfileCompletionPage() {
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
                                 disabled={isUploadingAvatar}
-                                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#2bb75c] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#1d8d38] disabled:cursor-not-allowed disabled:opacity-60"
+                                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#4C1D95] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#22C55E] disabled:cursor-not-allowed disabled:opacity-60"
                               >
                                 {isUploadingAvatar ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
                                 {formData.avatar ? 'Replace avatar' : 'Upload avatar'}
@@ -595,7 +595,7 @@ export default function ProfileCompletionPage() {
                                 type="button"
                                 onClick={() => coverInputRef.current?.click()}
                                 disabled={isUploadingCover}
-                                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm font-bold text-zinc-700 transition-colors hover:border-[#2bb75c]/20 hover:text-[#2bb75c] dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300"
+                                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm font-bold text-zinc-700 transition-colors hover:border-[#4C1D95]/20 hover:text-[#4C1D95] dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300"
                               >
                                 {isUploadingCover ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImageIcon className="h-4 w-4" />}
                                 {formData.coverPhoto ? 'Replace cover' : 'Upload cover'}
@@ -641,7 +641,7 @@ export default function ProfileCompletionPage() {
 
                           <div className="rounded-[1.75rem] border border-dashed border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
                             <div className="flex items-start gap-3">
-                              <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2bb75c]/10 text-[#2bb75c]">
+                              <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#4C1D95]/10 text-[#4C1D95]">
                                 <CheckCircle2 className="h-5 w-5" />
                               </div>
                               <div>
@@ -669,7 +669,7 @@ export default function ProfileCompletionPage() {
                       <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
                         <div className="space-y-5 rounded-[1.75rem] border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
                           <div>
-                            <p className="text-xs font-black uppercase tracking-[0.22em] text-[#2bb75c]">Role foundation</p>
+                            <p className="text-xs font-black uppercase tracking-[0.22em] text-[#4C1D95]">Role foundation</p>
                             <h2 className="mt-2 text-2xl font-black tracking-tight text-zinc-950 dark:text-white">
                               {isFreelancer ? 'Shape your freelancer profile' : 'Shape your client company profile'}
                             </h2>
@@ -781,7 +781,7 @@ export default function ProfileCompletionPage() {
                         </div>
 
                         <aside className="space-y-4 rounded-[1.75rem] border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
-                          <p className="text-xs font-black uppercase tracking-[0.22em] text-[#2bb75c]">Backend sync</p>
+                          <p className="text-xs font-black uppercase tracking-[0.22em] text-[#4C1D95]">Backend sync</p>
                           <div className="space-y-3">
                             <SummaryRow label="Role" value={isFreelancer ? 'Freelancer' : 'Client'} />
                             <SummaryRow label="Country" value={formData.country || 'Not set'} />
@@ -813,7 +813,7 @@ export default function ProfileCompletionPage() {
                     >
                       <div className="space-y-5 rounded-[1.75rem] border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
                         <div>
-                          <p className="text-xs font-black uppercase tracking-[0.22em] text-[#2bb75c]">Profile story</p>
+                          <p className="text-xs font-black uppercase tracking-[0.22em] text-[#4C1D95]">Profile story</p>
                           <h2 className="mt-2 text-2xl font-black tracking-tight text-zinc-950 dark:text-white">
                             Tell people what you do best
                           </h2>
@@ -903,10 +903,10 @@ export default function ProfileCompletionPage() {
                       <aside className="space-y-4 rounded-[1.75rem] border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-xs font-black uppercase tracking-[0.22em] text-[#2bb75c]">Live preview</p>
+                            <p className="text-xs font-black uppercase tracking-[0.22em] text-[#4C1D95]">Live preview</p>
                             <h3 className="mt-2 text-lg font-black text-zinc-950 dark:text-white">How your profile reads</h3>
                           </div>
-                          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2bb75c]/10 text-[#2bb75c]">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#4C1D95]/10 text-[#4C1D95]">
                             <Sparkles className="h-5 w-5" />
                           </div>
                         </div>
@@ -949,7 +949,7 @@ export default function ProfileCompletionPage() {
                     >
                       <div className="space-y-5 rounded-[1.75rem] border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
                         <div>
-                          <p className="text-xs font-black uppercase tracking-[0.22em] text-[#2bb75c]">Launch check</p>
+                          <p className="text-xs font-black uppercase tracking-[0.22em] text-[#4C1D95]">Launch check</p>
                           <h2 className="mt-2 text-2xl font-black tracking-tight text-zinc-950 dark:text-white">
                             Review everything before we publish your profile
                           </h2>
@@ -989,20 +989,20 @@ export default function ProfileCompletionPage() {
                           <p className="text-sm font-semibold text-zinc-900 dark:text-white">What happens when you click finish</p>
                           <ul className="mt-3 space-y-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
                             <li className="flex items-center gap-2">
-                              <Check className="h-4 w-4 text-[#2bb75c]" /> Your profile data is saved to the backend.
+                              <Check className="h-4 w-4 text-[#4C1D95]" /> Your profile data is saved to the backend.
                             </li>
                             <li className="flex items-center gap-2">
-                              <Check className="h-4 w-4 text-[#2bb75c]" /> The onboarding payment step creates your wallet.
+                              <Check className="h-4 w-4 text-[#4C1D95]" /> The onboarding payment step creates your wallet.
                             </li>
                             <li className="flex items-center gap-2">
-                              <Check className="h-4 w-4 text-[#2bb75c]" /> Once the backend reports complete, we send you to the dashboard.
+                              <Check className="h-4 w-4 text-[#4C1D95]" /> Once the backend reports complete, we send you to the dashboard.
                             </li>
                           </ul>
                         </div>
                       </div>
 
                       <aside className="space-y-4 rounded-[1.75rem] border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
-                        <p className="text-xs font-black uppercase tracking-[0.22em] text-[#2bb75c]">Backend checklist</p>
+                        <p className="text-xs font-black uppercase tracking-[0.22em] text-[#4C1D95]">Backend checklist</p>
                         <div className="space-y-3">
                           {completionChecklist.map((item) => (
                             <div key={item.label} className="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950">
@@ -1034,18 +1034,18 @@ export default function ProfileCompletionPage() {
             <div className="rounded-[2rem] border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.22em] text-[#2bb75c]">Backend status</p>
+                  <p className="text-xs font-black uppercase tracking-[0.22em] text-[#4C1D95]">Backend status</p>
                   <h3 className="mt-2 text-lg font-black text-zinc-950 dark:text-white">
                     {isFetchingStatus ? 'Checking...' : backendStatus.isComplete ? 'Complete' : 'In progress'}
                   </h3>
                 </div>
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#2bb75c]/10 text-[#2bb75c]">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#4C1D95]/10 text-[#4C1D95]">
                   <ShieldCheck className="h-5 w-5" />
                 </div>
               </div>
 
               <div className="mt-4 h-2 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
-                <div className="h-full rounded-full bg-gradient-to-r from-[#2bb75c] to-emerald-400" style={{ width: `${progressValue}%` }} />
+                <div className="h-full rounded-full bg-gradient-to-r from-[#4C1D95] to-emerald-400" style={{ width: `${progressValue}%` }} />
               </div>
 
               <div className="mt-4 space-y-3">
@@ -1056,7 +1056,7 @@ export default function ProfileCompletionPage() {
             </div>
 
             <div className="rounded-[2rem] border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#2bb75c]">Checklist</p>
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#4C1D95]">Checklist</p>
               <div className="mt-4 space-y-3">
                 {completionChecklist.map((item) => (
                   <div key={item.label} className="flex items-center gap-3 text-sm">
@@ -1073,7 +1073,7 @@ export default function ProfileCompletionPage() {
 
             <div className="rounded-[2rem] border border-zinc-200 bg-zinc-50 p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60">
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2bb75c]/10 text-[#2bb75c]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#4C1D95]/10 text-[#4C1D95]">
                   <Sparkles className="h-5 w-5" />
                 </div>
                 <div>
@@ -1102,7 +1102,7 @@ export default function ProfileCompletionPage() {
               type="button"
               onClick={handleNext}
               disabled={isSaving}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#2bb75c] px-6 py-3 text-sm font-black text-white transition-colors hover:bg-[#1d8d38] disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#4C1D95] px-6 py-3 text-sm font-black text-white transition-colors hover:bg-[#22C55E] disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
               {activeStep === 4 ? 'Finish setup' : 'Save and continue'}
@@ -1118,14 +1118,14 @@ function Field({ label, icon: Icon, helper, multiline = false, ...props }) {
   return (
     <label className="block">
       <span className="mb-2 flex items-center gap-2 text-sm font-bold text-zinc-900 dark:text-white">
-        {Icon ? <Icon className="h-4 w-4 text-[#2bb75c]" /> : null}
+        {Icon ? <Icon className="h-4 w-4 text-[#4C1D95]" /> : null}
         {label}
       </span>
       {multiline ? (
         <textarea
           rows={6}
           className={cn(
-            'w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:border-[#2bb75c]/20 focus:ring-2 focus:ring-[#2bb75c]/10 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white',
+            'w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:border-[#4C1D95]/20 focus:ring-2 focus:ring-[#4C1D95]/10 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white',
             props.className
           )}
           {...props}
@@ -1133,7 +1133,7 @@ function Field({ label, icon: Icon, helper, multiline = false, ...props }) {
       ) : (
         <input
           className={cn(
-            'w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:border-[#2bb75c]/20 focus:ring-2 focus:ring-[#2bb75c]/10 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white',
+            'w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:border-[#4C1D95]/20 focus:ring-2 focus:ring-[#4C1D95]/10 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white',
             props.className
           )}
           {...props}
@@ -1147,7 +1147,7 @@ function Field({ label, icon: Icon, helper, multiline = false, ...props }) {
 function SummaryCard({ title, items }) {
   return (
     <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
-      <p className="text-sm font-black uppercase tracking-[0.22em] text-[#2bb75c]">{title}</p>
+      <p className="text-sm font-black uppercase tracking-[0.22em] text-[#4C1D95]">{title}</p>
       <ul className="mt-3 space-y-2">
         {items.map((item) => (
           <li key={item} className="rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
@@ -1158,4 +1158,5 @@ function SummaryCard({ title, items }) {
     </div>
   );
 }
+
 

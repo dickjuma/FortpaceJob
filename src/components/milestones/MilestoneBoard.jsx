@@ -14,7 +14,7 @@ export default function MilestoneBoard() {
     switch (status) {
       case 'paid': return { color: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-success', icon: CheckCircle, label: 'Paid' };
       case 'submitted': return { color: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400', icon: Upload, label: 'In Review' };
-      case 'in_progress': return { color: 'bg-[#2bb75c]/10 text-[#2bb75c] dark:bg-[#2bb75c]/30 dark:text-[#2bb75c]', icon: Clock, label: 'In Progress' };
+      case 'in_progress': return { color: 'bg-[#4C1D95]/10 text-[#4C1D95] dark:bg-[#4C1D95]/30 dark:text-[#4C1D95]', icon: Clock, label: 'In Progress' };
       default: return { color: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400', icon: AlertCircle, label: 'Pending' };
     }
   };
@@ -52,7 +52,7 @@ export default function MilestoneBoard() {
                     <span className="font-bold">{milestone.progress}%</span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-1.5">
-                    <div className="bg-[#2bb75c] h-1.5 rounded-full" style={{ width: `${milestone.progress}%` }}></div>
+                    <div className="bg-[#4C1D95] h-1.5 rounded-full" style={{ width: `${milestone.progress}%` }}></div>
                   </div>
                 </div>
               )}
@@ -64,7 +64,7 @@ export default function MilestoneBoard() {
               </div>
               <div className="flex gap-2">
                 {milestone.status === 'in_progress' && (
-                  <button className="px-4 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-lg text-sm font-medium transition-colors shadow-sm">
+                  <button className="px-4 py-2 bg-[#4C1D95] hover:bg-[#22C55E] text-white rounded-lg text-sm font-medium transition-colors shadow-sm">
                     Submit Work
                   </button>
                 )}
@@ -84,4 +84,5 @@ export default function MilestoneBoard() {
     </div>
   );
 }
+
 

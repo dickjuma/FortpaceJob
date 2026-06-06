@@ -82,14 +82,14 @@ function ProgressMetric({ label, percentage, color = "blue" }) {
   const colorClasses = {
     blue: "bg-[#FDECE7]",
     green: "bg-green-500",
-    purple: "bg-[#2bb75c]",
+    purple: "bg-[#4C1D95]",
     orange: "bg-orange-500"
   };
 
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center">
-        <span className="text-sm font-medium text-[#4A312F]">{label}</span>
+        <span className="text-sm font-medium text-[#4C1D95]">{label}</span>
         <span className="text-sm font-semibold text-[#2E2322]">{percentage}%</span>
       </div>
       <div className="w-full h-2 bg-[#F3E9E5] rounded-full overflow-hidden">
@@ -205,7 +205,7 @@ export default function Analytics() {
             <button 
               onClick={handleRefresh} 
               disabled={refreshing}
-              className="px-4 py-2 bg-white border border-[#E7E1DE] rounded-lg text-[#4A312F] hover:bg-[#F8F4F1] flex items-center gap-2 text-sm font-medium"
+              className="px-4 py-2 bg-white border border-[#E7E1DE] rounded-lg text-[#4C1D95] hover:bg-[#F8F4F1] flex items-center gap-2 text-sm font-medium"
             >
               <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
               Refresh
@@ -215,7 +215,7 @@ export default function Analytics() {
               <select 
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value)}
-                className="appearance-none px-4 py-2 bg-white border border-[#E7E1DE] rounded-lg text-[#4A312F] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#C9452F] focus:border-[#C9452F] pr-10"
+                className="appearance-none px-4 py-2 bg-white border border-[#E7E1DE] rounded-lg text-[#4C1D95] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#22C55E] focus:border-[#22C55E] pr-10"
               >
                 <option value="7d">Last 7 days</option>
                 <option value="30d">Last 30 days</option>
@@ -225,7 +225,7 @@ export default function Analytics() {
               <ChevronDown size={16} className="absolute right-3 top-1/2 transform -tranzinc-y-1/2 text-[#A38F85] pointer-events-none" />
             </div>
             
-            <button className="px-4 py-2 bg-[#C9452F] text-white rounded-lg hover:bg-[#B53A27] flex items-center gap-2 text-sm font-medium">
+            <button className="px-4 py-2 bg-[#22C55E] text-white rounded-lg hover:bg-[#B53A27] flex items-center gap-2 text-sm font-medium">
               <Download size={16} />
               Export
             </button>
@@ -246,12 +246,12 @@ export default function Analytics() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="p-4 bg-[#FDECE7] rounded-lg border border-[#F4C7A1]">
+            <div className="p-4 bg-[#FDECE7] rounded-lg border border-[#E5E7EB]">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-[#FDECE7] rounded-lg">
-                  <Wallet size={18} className="text-[#C9452F]" />
+                  <Wallet size={18} className="text-[#22C55E]" />
                 </div>
-                <span className="text-sm font-medium text-[#4A312F]">Available</span>
+                <span className="text-sm font-medium text-[#4C1D95]">Available</span>
               </div>
               <p className="text-2xl font-bold text-[#2E2322]">
                 ${earnings.available.toLocaleString('en-US', { minimumFractionDigits: 2 })}
@@ -263,7 +263,7 @@ export default function Analytics() {
                 <div className="p-2 bg-yellow-100 rounded-lg">
                   <Clock size={18} className="text-yellow-600" />
                 </div>
-                <span className="text-sm font-medium text-[#4A312F]">Pending</span>
+                <span className="text-sm font-medium text-[#4C1D95]">Pending</span>
               </div>
               <p className="text-2xl font-bold text-[#2E2322]">
                 ${earnings.pending.toLocaleString('en-US', { minimumFractionDigits: 2 })}
@@ -275,7 +275,7 @@ export default function Analytics() {
                 <div className="p-2 bg-green-100 rounded-lg">
                   <CheckCircle size={18} className="text-green-600" />
                 </div>
-                <span className="text-sm font-medium text-[#4A312F]">Withdrawn</span>
+                <span className="text-sm font-medium text-[#4C1D95]">Withdrawn</span>
               </div>
               <p className="text-2xl font-bold text-[#2E2322]">
                 ${earnings.withdrawn.toLocaleString('en-US', { minimumFractionDigits: 2 })}
@@ -284,11 +284,11 @@ export default function Analytics() {
           </div>
           
           <div className="flex gap-3">
-            <button className="px-5 py-2.5 bg-[#C9452F] text-white rounded-lg hover:bg-[#B53A27] flex items-center gap-2 font-medium">
+            <button className="px-5 py-2.5 bg-[#22C55E] text-white rounded-lg hover:bg-[#B53A27] flex items-center gap-2 font-medium">
               <Wallet size={16} />
               Withdraw Funds
             </button>
-            <button className="px-5 py-2.5 bg-white border border-[#E7E1DE] text-[#4A312F] rounded-lg hover:bg-[#F8F4F1] flex items-center gap-2 font-medium">
+            <button className="px-5 py-2.5 bg-white border border-[#E7E1DE] text-[#4C1D95] rounded-lg hover:bg-[#F8F4F1] flex items-center gap-2 font-medium">
               <BarChart2 size={16} />
               View Details
             </button>
@@ -362,8 +362,8 @@ export default function Analytics() {
             
             <div className="mb-6 p-4 bg-[#F8F4F1] rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-[#4A312F]">Next Level: {sellerLevel.nextLevel}</span>
-                <span className="text-sm font-semibold text-[#C9452F]">{sellerLevel.ordersToNext} orders needed</span>
+                <span className="text-sm font-medium text-[#4C1D95]">Next Level: {sellerLevel.nextLevel}</span>
+                <span className="text-sm font-semibold text-[#22C55E]">{sellerLevel.ordersToNext} orders needed</span>
               </div>
               <div className="h-2 bg-[#EFE7E2] rounded-full">
                 <div 
@@ -405,7 +405,7 @@ export default function Analytics() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="p-4 border border-[#E7E1DE] rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-[#4A312F]">Search Views</span>
+                <span className="text-sm font-medium text-[#4C1D95]">Search Views</span>
                 <span className="text-xs px-2 py-1 bg-[#F3E9E5] text-[#6B5B50] rounded">100%</span>
               </div>
               <p className="text-xl font-bold text-[#2E2322]">{funnelData.searchViews.toLocaleString()}</p>
@@ -413,8 +413,8 @@ export default function Analytics() {
             
             <div className="p-4 border border-[#E7E1DE] rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-[#4A312F]">Gig Clicks</span>
-                <span className="text-xs px-2 py-1 bg-[#FDECE7] text-[#C9452F] rounded">
+                <span className="text-sm font-medium text-[#4C1D95]">Gig Clicks</span>
+                <span className="text-xs px-2 py-1 bg-[#FDECE7] text-[#22C55E] rounded">
                   {((funnelData.gigClicks / funnelData.searchViews) * 100).toFixed(1)}%
                 </span>
               </div>
@@ -423,7 +423,7 @@ export default function Analytics() {
             
             <div className="p-4 border border-[#E7E1DE] rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-[#4A312F]">Orders</span>
+                <span className="text-sm font-medium text-[#4C1D95]">Orders</span>
                 <span className="text-xs px-2 py-1 bg-green-50 text-green-600 rounded">
                   {((funnelData.orders / funnelData.gigClicks) * 100).toFixed(1)}%
                 </span>
@@ -433,8 +433,8 @@ export default function Analytics() {
             
             <div className="p-4 border border-[#E7E1DE] rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-[#4A312F]">Repeat Buyers</span>
-                <span className="text-xs px-2 py-1 bg-[#2bb75c]/5 text-[#2bb75c] rounded">
+                <span className="text-sm font-medium text-[#4C1D95]">Repeat Buyers</span>
+                <span className="text-xs px-2 py-1 bg-[#4C1D95]/5 text-[#4C1D95] rounded">
                   {funnelData.repeatBuyers}%
                 </span>
               </div>
@@ -455,7 +455,7 @@ export default function Analytics() {
                   <div className="w-16 h-16 rounded-full border-4 border-white bg-white shadow-sm flex items-center justify-center mb-2">
                     <span className="font-bold text-[#2E2322]">{step.value}</span>
                   </div>
-                  <span className="text-sm font-medium text-[#4A312F]">{step.label}</span>
+                  <span className="text-sm font-medium text-[#4C1D95]">{step.label}</span>
                   <span className="text-xs text-[#7A5A4C]">{step.percentage.toFixed(1)}%</span>
                   {index < 3 && (
                     <div className="flex-1 h-0.5 bg-[#C1B1A8] mt-2 w-full"></div>
@@ -470,16 +470,16 @@ export default function Analytics() {
         <div className="bg-white rounded-lg border border-[#E7E1DE] p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-[#2E2322]">Key Insights</h3>
-            <button className="text-sm text-[#C9452F] hover:text-[#B53A27] font-medium">
+            <button className="text-sm text-[#22C55E] hover:text-[#B53A27] font-medium">
               View All
             </button>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 border border-[#E7E1DE] rounded-lg hover:border-[#C9452F] transition-colors">
+            <div className="p-4 border border-[#E7E1DE] rounded-lg hover:border-[#22C55E] transition-colors">
               <div className="flex items-start gap-3">
                 <div className="p-2 bg-[#FDECE7] rounded-lg">
-                  <TrendingUp size={16} className="text-[#C9452F]" />
+                  <TrendingUp size={16} className="text-[#22C55E]" />
                 </div>
                 <div>
                   <h4 className="font-medium text-[#2E2322] mb-1">Peak Sales Period</h4>
@@ -518,4 +518,6 @@ export default function Analytics() {
     </div>
   );
 }
+
+
 

@@ -51,8 +51,8 @@ const PublicProjectShowcase = () => {
         <div className="container mx-auto px-4 md:px-8 max-w-5xl">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#2bb75c]/10 text-[#2bb75c] text-xs font-bold uppercase tracking-wider mb-6">
-              <span className="w-2 h-2 rounded-full bg-[#2bb75c] animate-pulse"></span> Live Feed
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#4C1D95]/10 text-[#4C1D95] text-xs font-bold uppercase tracking-wider mb-6">
+              <span className="w-2 h-2 rounded-full bg-[#4C1D95] animate-pulse"></span> Live Feed
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-zinc-900 mb-6">Work Delivered Daily</h1>
             <p className="text-lg text-zinc-600">
@@ -91,12 +91,12 @@ const PublicProjectShowcase = () => {
                             </span>
                           ))}
                         </div>
-                        <Link to={`/portfolio/case-study/${project.id}`} className="text-zinc-400 hover:text-[#2bb75c] transition-colors p-2">
+                        <Link to={`/portfolio/case-study/${project.id}`} className="text-zinc-400 hover:text-[#4C1D95] transition-colors p-2">
                           <ExternalLink className="w-5 h-5" />
                         </Link>
                       </div>
 
-                      <h2 className="text-2xl font-bold text-zinc-900 mb-6 leading-tight hover:text-[#2bb75c] transition-colors cursor-pointer">
+                      <h2 className="text-2xl font-bold text-zinc-900 mb-6 leading-tight hover:text-[#4C1D95] transition-colors cursor-pointer">
                         {project.title}
                       </h2>
 
@@ -105,7 +105,7 @@ const PublicProjectShowcase = () => {
                         <div className="flex-1">
                           <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider mb-2">Client</div>
                           <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-[#2bb75c]/10 text-[#2bb75c] rounded-lg flex items-center justify-center font-bold border border-[#2bb75c]/20">
+                            <div className="w-8 h-8 bg-[#4C1D95]/10 text-[#4C1D95] rounded-lg flex items-center justify-center font-bold border border-[#4C1D95]/20">
                               {project.client.charAt(0)}
                             </div>
                             <span className="font-bold text-zinc-900">{project.client}</span>
@@ -120,7 +120,7 @@ const PublicProjectShowcase = () => {
                             <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(project.freelancer)}&background=random`} className="w-8 h-8 rounded-full border border-zinc-200" alt="avatar" />
                             <div>
                               <div className="font-bold text-zinc-900 flex items-center gap-1 leading-tight">
-                                {project.freelancer} <ShieldCheck className="w-3 h-3 text-[#2bb75c]" />
+                                {project.freelancer} <ShieldCheck className="w-3 h-3 text-[#4C1D95]" />
                               </div>
                             </div>
                           </div>
@@ -143,10 +143,10 @@ const PublicProjectShowcase = () => {
 
                     {/* Bottom Actions */}
                     <div className="flex items-center gap-4 mt-6">
-                      <button className="flex items-center gap-1.5 text-zinc-500 hover:text-[#2bb75c] font-medium text-sm transition-colors">
+                      <button className="flex items-center gap-1.5 text-zinc-500 hover:text-[#4C1D95] font-medium text-sm transition-colors">
                         <ThumbsUp className="w-4 h-4" /> 124
                       </button>
-                      <button className="flex items-center gap-1.5 text-zinc-500 hover:text-[#2bb75c] font-medium text-sm transition-colors">
+                      <button className="flex items-center gap-1.5 text-zinc-500 hover:text-[#4C1D95] font-medium text-sm transition-colors">
                         <MessageSquare className="w-4 h-4" /> 12
                       </button>
                     </div>
@@ -170,4 +170,5 @@ const PublicProjectShowcase = () => {
 };
 
 export default PublicProjectShowcase;
+
 

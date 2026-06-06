@@ -136,15 +136,15 @@ export default function ViewRequests() {
             <textarea
               rows="5"
               placeholder="Write your proposal..."
-              className="w-full border border-[#E7E1DE] rounded-lg p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#C9452F] focus:border-[#C9452F]"
+              className="w-full border border-[#E7E1DE] rounded-lg p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#22C55E] focus:border-[#22C55E]"
             />
             <input
               type="text"
               placeholder="Your price (e.g. KES 90,000)"
-              className="w-full border border-[#E7E1DE] rounded-lg p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#C9452F] focus:border-[#C9452F]"
+              className="w-full border border-[#E7E1DE] rounded-lg p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#22C55E] focus:border-[#22C55E]"
             />
             <button
-              className="px-4 py-2 bg-[#C9452F] text-white rounded-lg text-sm hover:bg-[#B53A27]"
+              className="px-4 py-2 bg-[#22C55E] text-white rounded-lg text-sm hover:bg-[#B53A27]"
               onClick={() => {
                 toast.success('Proposal sent successfully!');
                 setSelectedRequest(null);
@@ -175,13 +175,13 @@ export default function ViewRequests() {
               placeholder="Search requests..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full border border-[#E7E1DE] rounded-lg py-2.5 pl-9 pr-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#C9452F] focus:border-[#C9452F]"
+              className="w-full border border-[#E7E1DE] rounded-lg py-2.5 pl-9 pr-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#22C55E] focus:border-[#22C55E]"
             />
           </div>
           <select
             value={activeFilter}
             onChange={(e) => setActiveFilter(e.target.value)}
-            className="border border-[#E7E1DE] rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#C9452F] focus:border-[#C9452F]"
+            className="border border-[#E7E1DE] rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#22C55E] focus:border-[#22C55E]"
           >
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
@@ -192,7 +192,7 @@ export default function ViewRequests() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="border border-[#E7E1DE] rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#C9452F] focus:border-[#C9452F]"
+            className="border border-[#E7E1DE] rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#22C55E] focus:border-[#22C55E]"
           >
             <option value="recent">Most Recent</option>
             <option value="match-high">Best Match</option>
@@ -227,7 +227,7 @@ export default function ViewRequests() {
 
               <div className="flex flex-wrap gap-2">
                 {req.tags.slice(0, 5).map((tag) => (
-                  <span key={tag} className="px-2.5 py-1 bg-[#F8F4F1] text-[#4A312F] text-xs rounded-lg border border-[#E7E1DE]">
+                  <span key={tag} className="px-2.5 py-1 bg-[#F8F4F1] text-[#4C1D95] text-xs rounded-lg border border-[#E7E1DE]">
                     {tag}
                   </span>
                 ))}
@@ -236,12 +236,12 @@ export default function ViewRequests() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                 <div className="text-xs text-[#7A5A4C] flex flex-wrap gap-3">
                   {req.verified && (
-                    <span className="px-2 py-1 bg-white border border-[#F4C7A1] rounded-full text-[#B53A27]">
+                    <span className="px-2 py-1 bg-white border border-[#E5E7EB] rounded-full text-[#B53A27]">
                       Verified
                     </span>
                   )}
                   {req.urgent && (
-                    <span className="px-2 py-1 bg-[#FDECE7] border border-[#F4C7A1] rounded-full text-[#B53A27]">
+                    <span className="px-2 py-1 bg-[#FDECE7] border border-[#E5E7EB] rounded-full text-[#B53A27]">
                       Urgent
                     </span>
                   )}
@@ -250,14 +250,14 @@ export default function ViewRequests() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setSelectedRequest(req)}
-                    className="px-4 py-2 bg-[#C9452F] text-white rounded-lg text-sm hover:bg-[#B53A27] flex items-center gap-2"
+                    className="px-4 py-2 bg-[#22C55E] text-white rounded-lg text-sm hover:bg-[#B53A27] flex items-center gap-2"
                   >
                     <Send size={14} />
                     Send offer
                   </button>
                   <button
                     onClick={() => toggleSave(req.id)}
-                    className="px-4 py-2 border border-[#E7E1DE] rounded-lg text-sm text-[#4A312F] hover:bg-[#F8F4F1]"
+                    className="px-4 py-2 border border-[#E7E1DE] rounded-lg text-sm text-[#4C1D95] hover:bg-[#F8F4F1]"
                   >
                     {savedRequests.includes(req.id) ? "Saved" : "Save"}
                   </button>
@@ -275,7 +275,7 @@ export default function ViewRequests() {
             </p>
             <button
               onClick={() => setSearchQuery("")}
-              className="mt-4 px-4 py-2 bg-[#F3E9E5] hover:bg-[#EFE7E2] text-[#4A312F] rounded-lg text-sm"
+              className="mt-4 px-4 py-2 bg-[#F3E9E5] hover:bg-[#EFE7E2] text-[#4C1D95] rounded-lg text-sm"
             >
               Clear filters
             </button>
@@ -291,3 +291,5 @@ export default function ViewRequests() {
     </div>
   );
 }
+
+

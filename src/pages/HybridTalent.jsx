@@ -41,7 +41,7 @@ const HybridTalent = () => {
       <div className="bg-surface-dark pt-8 pb-12 border-b border-zinc-800">
         <div className="container mx-auto px-4 md:px-8">
           <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2bb75c]/10 border border-[#2bb75c]/50/20 text-[#2bb75c] text-sm font-medium mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#4C1D95]/10 border border-[#4C1D95]/50/20 text-[#4C1D95] text-sm font-medium mb-4">
               <Sparkles className="w-4 h-4 fill-current" />
               <span>Hybrid Talent Engine</span>
             </div>
@@ -69,7 +69,7 @@ const HybridTalent = () => {
                   value={location}
                 />
               </div>
-              <button className="bg-[#2bb75c] hover:bg-[#1d8d38] text-white px-8 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap shadow-sm shadow-#2bb75c]/20" type="submit">
+              <button className="bg-[#4C1D95] hover:bg-[#22C55E] text-white px-8 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap shadow-sm shadow-#4C1D95]/20" type="submit">
                 Match Talent
               </button>
             </form>
@@ -88,7 +88,7 @@ const HybridTalent = () => {
               <Layers className="w-4 h-4" /> All Talent
             </button>
             <button
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm transition-all ${activeTab === 'online' ? 'bg-white text-[#2bb75c] shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm transition-all ${activeTab === 'online' ? 'bg-white text-[#4C1D95] shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
               onClick={() => setActiveTab('online')}
               type="button"
             >
@@ -102,7 +102,7 @@ const HybridTalent = () => {
               <MapPin className="w-4 h-4" /> Onsite Only
             </button>
             <button
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm transition-all ${activeTab === 'hybrid' ? 'bg-white text-[#2bb75c] shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm transition-all ${activeTab === 'hybrid' ? 'bg-white text-[#4C1D95] shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
               onClick={() => setActiveTab('hybrid')}
               type="button"
             >
@@ -134,4 +134,5 @@ const HybridTalent = () => {
 };
 
 export default HybridTalent;
+
 

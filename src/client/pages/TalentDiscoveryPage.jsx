@@ -39,7 +39,7 @@ export default function TalentDiscoveryPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-[#2bb75c]/10 text-success text-xs font-bold rounded-md">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-[#4C1D95]/10 text-success text-xs font-bold rounded-md">
               AI Search
             </div>
           </div>
@@ -57,7 +57,7 @@ export default function TalentDiscoveryPage() {
               <option value="SME">SMEs / Studios</option>
               <option value="CORPORATE">Corporate teams</option>
             </select>
-            <button className="px-6 py-3 bg-success hover:bg-[#1d8d38] text-white rounded-xl text-sm font-bold shadow-lg shadow-[#2bb75c]/25 flex items-center transition-all">
+            <button className="px-6 py-3 bg-success hover:bg-[#22C55E] text-white rounded-xl text-sm font-bold shadow-lg shadow-[#4C1D95]/25 flex items-center transition-all">
               Find Matches
             </button>
           </div>
@@ -66,10 +66,10 @@ export default function TalentDiscoveryPage() {
         {/* Smart Filter Chips */}
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
           <span className="px-4 py-2 bg-success text-white rounded-full text-sm font-bold shrink-0 cursor-pointer shadow-md">All Recommended</span>
-          <span className="px-4 py-2 bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border text-gray-600 dark:text-gray-300 rounded-full text-sm font-medium shrink-0 hover:border-[#2bb75c]/50 cursor-pointer transition-colors flex items-center">Available Now <CheckCircle className="w-4 h-4 ml-2 text-success" /></span>
-          <span className="px-4 py-2 bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border text-gray-600 dark:text-gray-300 rounded-full text-sm font-medium shrink-0 hover:border-[#2bb75c]/50 cursor-pointer transition-colors">US Only</span>
-          <span className="px-4 py-2 bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border text-gray-600 dark:text-gray-300 rounded-full text-sm font-medium shrink-0 hover:border-[#2bb75c]/50 cursor-pointer transition-colors">Top Rated Plus</span>
-          <span className="px-4 py-2 bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border text-gray-600 dark:text-gray-300 rounded-full text-sm font-medium shrink-0 hover:border-[#2bb75c]/50 cursor-pointer transition-colors flex items-center gap-1">
+          <span className="px-4 py-2 bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border text-gray-600 dark:text-gray-300 rounded-full text-sm font-medium shrink-0 hover:border-[#4C1D95]/50 cursor-pointer transition-colors flex items-center">Available Now <CheckCircle className="w-4 h-4 ml-2 text-success" /></span>
+          <span className="px-4 py-2 bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border text-gray-600 dark:text-gray-300 rounded-full text-sm font-medium shrink-0 hover:border-[#4C1D95]/50 cursor-pointer transition-colors">US Only</span>
+          <span className="px-4 py-2 bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border text-gray-600 dark:text-gray-300 rounded-full text-sm font-medium shrink-0 hover:border-[#4C1D95]/50 cursor-pointer transition-colors">Top Rated Plus</span>
+          <span className="px-4 py-2 bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border text-gray-600 dark:text-gray-300 rounded-full text-sm font-medium shrink-0 hover:border-[#4C1D95]/50 cursor-pointer transition-colors flex items-center gap-1">
             <Building2 className="w-4 h-4" /> {talentType || 'All Providers'}
           </span>
         </div>
@@ -94,7 +94,7 @@ export default function TalentDiscoveryPage() {
                 <p className="text-xs text-success mt-1">High Demand (85%)</p>
               </div>
               <div className="pt-4 border-t border-gray-800">
-                <button className="text-[#2bb75c] font-bold hover:text-[#1d8d38] flex items-center text-xs uppercase tracking-wider">
+                <button className="text-[#4C1D95] font-bold hover:text-[#22C55E] flex items-center text-xs uppercase tracking-wider">
                   View Full Report <ChevronDown className="w-4 h-4 ml-1 -rotate-90" />
                 </button>
               </div>
@@ -106,7 +106,7 @@ export default function TalentDiscoveryPage() {
         <div className="lg:col-span-3 space-y-6">
           <div className="flex justify-between items-center px-2">
             <h2 className="text-lg font-bold text-surface-dark dark:text-white">AI Recommended Matches <span className="text-gray-400 font-normal ml-2">Based on your project history</span></h2>
-            <span className="text-sm text-[#2bb75c] font-bold cursor-pointer">Sort by: Match Score</span>
+            <span className="text-sm text-[#4C1D95] font-bold cursor-pointer">Sort by: Match Score</span>
           </div>
 
           <div className="space-y-4">
@@ -169,7 +169,7 @@ export default function TalentDiscoveryPage() {
                         </div>
                         
                         <div className="w-full space-y-2 mt-2">
-                          <div className="flex justify-between items-center bg-[#2bb75c]/10 px-3 py-1.5 rounded-lg border border-[#2bb75c]/20">
+                          <div className="flex justify-between items-center bg-[#4C1D95]/10 px-3 py-1.5 rounded-lg border border-[#4C1D95]/20">
                             <span className="text-xs font-bold text-success flex items-center"><Zap className="w-3 h-3 mr-1" /> Match</span>
                             <span className="text-sm font-black text-success">{match}%</span>
                           </div>
@@ -195,7 +195,7 @@ export default function TalentDiscoveryPage() {
                         </div>
 
                         <div className="flex flex-wrap gap-2 mb-4">
-                          <span className="px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border border-success/20 bg-[#2bb75c]/10 text-success">
+                          <span className="px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border border-success/20 bg-[#4C1D95]/10 text-success">
                             {providerType.replace('_', ' ')}
                           </span>
                           {tags.map(tag => (
@@ -228,7 +228,7 @@ export default function TalentDiscoveryPage() {
                       
                       {/* Actions */}
                       <div className="flex flex-col gap-3 justify-center w-full md:w-32 shrink-0 border-t border-transparent md:border-gray-100 dark:md:border-surface-dark-border pt-4 md:pt-0 pl-0 md:pl-6 border-l">
-                        <button className="w-full py-2.5 bg-success hover:bg-[#1d8d38] text-white rounded-lg text-sm font-bold shadow-md transition-colors">
+                        <button className="w-full py-2.5 bg-success hover:bg-[#22C55E] text-white rounded-lg text-sm font-bold shadow-md transition-colors">
                           Invite
                         </button>
                         <button className="w-full py-2.5 bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border hover:bg-surface dark:hover:bg-surface-dark-secondary text-surface-dark dark:text-white rounded-lg text-sm font-bold transition-colors">
@@ -246,4 +246,5 @@ export default function TalentDiscoveryPage() {
     </div>
   );
 }
+
 

@@ -32,7 +32,7 @@ const SafetyTrustCenter = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-zinc-200 hover:shadow-xl transition-shadow duration-300">
-              <div className="w-14 h-14 bg-[#2bb75c]/10 text-[#2bb75c] rounded-2xl flex items-center justify-center mb-6">
+              <div className="w-14 h-14 bg-[#4C1D95]/10 text-[#4C1D95] rounded-2xl flex items-center justify-center mb-6">
                 <Lock className="w-7 h-7" />
               </div>
               <h3 className="text-xl font-bold text-zinc-900 mb-3">Secure Payments (Escrow)</h3>
@@ -52,7 +52,7 @@ const SafetyTrustCenter = () => {
             </div>
 
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-zinc-200 hover:shadow-xl transition-shadow duration-300">
-              <div className="w-14 h-14 bg-[#2bb75c]/10 text-[#2bb75c] rounded-2xl flex items-center justify-center mb-6">
+              <div className="w-14 h-14 bg-[#4C1D95]/10 text-[#4C1D95] rounded-2xl flex items-center justify-center mb-6">
                 <FileText className="w-7 h-7" />
               </div>
               <h3 className="text-xl font-bold text-zinc-900 mb-3">IP & Data Protection</h3>
@@ -85,4 +85,5 @@ const SafetyTrustCenter = () => {
 };
 
 export default SafetyTrustCenter;
+
 

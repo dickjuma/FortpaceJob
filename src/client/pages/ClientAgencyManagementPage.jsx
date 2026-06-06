@@ -30,7 +30,7 @@ export default function ClientAgencyManagementPage() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-zinc-800 pb-6 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-              <Building2 className="w-8 h-8 text-[#2bb75c]" />
+              <Building2 className="w-8 h-8 text-[#4C1D95]" />
               Agency & Sub-contractor Management
             </h1>
             <p className="text-zinc-400 mt-2 text-sm">
@@ -42,7 +42,7 @@ export default function ClientAgencyManagementPage() {
               <Settings className="w-4 h-4" />
               Agency Policies
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-[#2bb75c] hover:bg-[#2bb75c] text-white rounded-lg text-sm font-medium transition-colors">
+            <button className="flex items-center gap-2 px-4 py-2 bg-[#4C1D95] hover:bg-[#4C1D95] text-white rounded-lg text-sm font-medium transition-colors">
               <Plus className="w-4 h-4" />
               Onboard Agency
             </button>
@@ -54,7 +54,7 @@ export default function ClientAgencyManagementPage() {
           <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-3">
               <span className="text-zinc-400 text-sm">Active Agencies</span>
-              <Building2 className="w-5 h-5 text-[#2bb75c]" />
+              <Building2 className="w-5 h-5 text-[#4C1D95]" />
             </div>
             <div className="text-2xl font-bold text-white">14</div>
             <div className="text-xs text-emerald-400 mt-2">+2 this month</div>
@@ -81,7 +81,7 @@ export default function ClientAgencyManagementPage() {
           <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-3">
               <span className="text-zinc-400 text-sm">Compliance Rate</span>
-              <ShieldCheck className="w-5 h-5 text-#2bb75c]" />
+              <ShieldCheck className="w-5 h-5 text-#4C1D95]" />
             </div>
             <div className="text-2xl font-bold text-white">98.5%</div>
             <div className="text-xs text-orange-400 mt-2">3 MSAs pending renewal</div>
@@ -97,7 +97,7 @@ export default function ClientAgencyManagementPage() {
               <input 
                 type="text" 
                 placeholder="Search agencies..." 
-                className="bg-zinc-950 border border-zinc-700 rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-[#2bb75c] text-zinc-200"
+                className="bg-zinc-950 border border-zinc-700 rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-[#4C1D95] text-zinc-200"
               />
             </div>
           </div>
@@ -166,7 +166,7 @@ export default function ClientAgencyManagementPage() {
                   <div className="text-sm font-medium text-white">Nairobi Region - Site Surveying</div>
                   <div className="text-xs text-zinc-500 mt-1">Route to: Horizon Field Ops</div>
                 </div>
-                <div className="h-4 w-8 bg-[#2bb75c] rounded-full relative cursor-pointer">
+                <div className="h-4 w-8 bg-[#4C1D95] rounded-full relative cursor-pointer">
                   <div className="h-3 w-3 bg-white rounded-full absolute right-0.5 top-0.5"></div>
                 </div>
               </div>
@@ -175,12 +175,12 @@ export default function ClientAgencyManagementPage() {
                   <div className="text-sm font-medium text-white">Global - UI/UX Design Tasks</div>
                   <div className="text-xs text-zinc-500 mt-1">Route to: Apex Digital Solutions</div>
                 </div>
-                <div className="h-4 w-8 bg-[#2bb75c] rounded-full relative cursor-pointer">
+                <div className="h-4 w-8 bg-[#4C1D95] rounded-full relative cursor-pointer">
                   <div className="h-3 w-3 bg-white rounded-full absolute right-0.5 top-0.5"></div>
                 </div>
               </div>
             </div>
-            <button className="mt-4 text-sm text-[#2bb75c] hover:text-[#7bc67e] font-medium">
+            <button className="mt-4 text-sm text-[#4C1D95] hover:text-[#7bc67e] font-medium">
               + Add Dispatch Rule
             </button>
           </div>
@@ -200,13 +200,13 @@ export default function ClientAgencyManagementPage() {
                   <span className="text-xs text-zinc-400">Default</span>
                 </div>
                 <div className="flex h-2 rounded-full overflow-hidden mb-2">
-                  <div className="bg-[#2bb75c] w-[70%]" title="Sub-contractor 70%"></div>
-                  <div className="bg-[#2bb75c] w-[20%]" title="Agency 20%"></div>
+                  <div className="bg-[#4C1D95] w-[70%]" title="Sub-contractor 70%"></div>
+                  <div className="bg-[#4C1D95] w-[20%]" title="Agency 20%"></div>
                   <div className="bg-zinc-600 w-[10%]" title="Platform 10%"></div>
                 </div>
                 <div className="flex justify-between text-xs text-zinc-500">
-                  <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-[#2bb75c]"></div> Worker (70%)</span>
-                  <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-[#2bb75c]"></div> Agency (20%)</span>
+                  <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-[#4C1D95]"></div> Worker (70%)</span>
+                  <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-[#4C1D95]"></div> Agency (20%)</span>
                   <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-zinc-600"></div> ForteSpace (10%)</span>
                 </div>
               </div>
@@ -221,4 +221,5 @@ export default function ClientAgencyManagementPage() {
     </div>
   );
 }
+
 

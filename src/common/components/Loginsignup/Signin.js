@@ -67,7 +67,7 @@ const OtpInputGroup = ({ value, onChange, disabled }) => {
           onChange={(e) => handleChange(e, i)}
           onKeyDown={(e) => handleKeyDown(e, i)}
           disabled={disabled}
-          className="w-12 h-12 text-center text-xl font-semibold border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D34079] focus:border-[#D34079] disabled:bg-gray-100"
+          className="w-12 h-12 text-center text-xl font-semibold border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A855F7] focus:border-[#A855F7] disabled:bg-gray-100"
         />
       ))}
     </div>
@@ -253,10 +253,10 @@ const Signin = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-[#F7F9FB] via-white to-[#F7F9FB] flex items-center justify-center p-4 font-sans antialiased">
+      <div className="min-h-screen bg-gradient-to-br from-[#F2F2F2] via-white to-[#F2F2F2] flex items-center justify-center p-4 font-sans antialiased">
         <div className="max-w-md w-full bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-gray-100 transform transition-all hover:scale-[1.01] duration-300">
           <div className="text-center mb-8">
-            <h2 className="text-4xl font-extrabold text-[#4A312F]">Welcome Back</h2>
+            <h2 className="text-4xl font-extrabold text-[#4C1D95]">Welcome Back</h2>
             <p className="text-gray-500 mt-2">Sign in to continue</p>
           </div>
 
@@ -264,8 +264,8 @@ const Signin = () => {
           <form onSubmit={handleLogin} className="space-y-5">
             {/* Email/Phone field */}
             <div className="group">
-              <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
-                Email or phone number <span className="text-[#D34079]">*</span>
+              <label className="block text-sm font-medium text-[#4C1D95] mb-1.5">
+                Email or phone number <span className="text-[#A855F7]">*</span>
               </label>
               <input
                 type="text"
@@ -274,14 +274,14 @@ const Signin = () => {
                 onChange={(e) => setIdentifier(e.target.value)}
                 required
                 disabled={loading}
-                className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#A855F7]/20 focus:border-[#A855F7] focus:shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
 
             {/* Password field */}
             <div>
-              <label className="block text-sm font-medium text-[#4A312F] mb-1.5">
-                Password <span className="text-[#D34079]">*</span>
+              <label className="block text-sm font-medium text-[#4C1D95] mb-1.5">
+                Password <span className="text-[#A855F7]">*</span>
               </label>
               <input
                 type="password"
@@ -290,23 +290,23 @@ const Signin = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={loading}
-                className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D34079]/20 focus:border-[#D34079] focus:shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#A855F7]/20 focus:border-[#A855F7] focus:shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
 
             {/* Remember me & Forgot password */}
             <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 text-[#4A312F]">
+              <label className="flex items-center gap-2 text-[#4C1D95]">
                 <input
                   type="checkbox"
                   checked={remember}
                   onChange={(e) => setRemember(e.target.checked)}
                   disabled={loading}
-                  className="w-4 h-4 text-[#D34079] border-[#B7E2BF] rounded focus:ring-[#D34079]"
+                  className="w-4 h-4 text-[#A855F7] border-[#E5E7EB] rounded focus:ring-[#A855F7]"
                 />
                 Remember me
               </label>
-              <a href="/forgot" className="text-[#D34079] hover:underline font-medium">
+              <a href="/forgot" className="text-[#A855F7] hover:underline font-medium">
                 Forgot password?
               </a>
             </div>
@@ -341,10 +341,10 @@ const Signin = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`relative w-full overflow-hidden rounded-xl py-4 text-white shadow-md transition focus:outline-none focus:ring-4 focus:ring-[#D34079]/20 ${
+              className={`relative w-full overflow-hidden rounded-xl py-4 text-white shadow-md transition focus:outline-none focus:ring-4 focus:ring-[#A855F7]/20 ${
                 loading
-                  ? "cursor-wait bg-gradient-to-r from-[#D34079] via-[#C33770] to-[#B12F65]"
-                  : "bg-[#D34079] hover:bg-[#b12f65]"
+                  ? "cursor-wait bg-gradient-to-r from-[#A855F7] via-[#C33770] to-[#7C3AED]"
+                  : "bg-[#A855F7] hover:bg-[#7C3AED]"
               }`}
               aria-busy={loading}
             >
@@ -398,7 +398,7 @@ const Signin = () => {
                     return (
                       <div key={stage} className={`rounded-xl px-3 py-2 text-[11px] font-medium transition ${
                         isActive
-                          ? "bg-[#D34079] text-white shadow-sm"
+                          ? "bg-[#A855F7] text-white shadow-sm"
                           : isCompleted
                             ? "bg-[#F9DDE9] text-[#A23967]"
                             : "bg-white text-[#9E7A88]"
@@ -413,9 +413,9 @@ const Signin = () => {
 
             {/* Divider */}
             <div className="relative flex items-center py-2">
-              <div className="flex-grow border-t border-[#B7E2BF]"></div>
-              <span className="flex-shrink mx-4 text-[#4A312F]/50">OR</span>
-              <div className="flex-grow border-t border-[#B7E2BF]"></div>
+              <div className="flex-grow border-t border-[#E5E7EB]"></div>
+              <span className="flex-shrink mx-4 text-[#4C1D95]/50">OR</span>
+              <div className="flex-grow border-t border-[#E5E7EB]"></div>
             </div>
 
             {/* Social login buttons */}
@@ -424,7 +424,7 @@ const Signin = () => {
                 type="button"
                 onClick={() => handleSocialLogin('google')}
                 disabled={loading}
-                className="flex items-center justify-center py-3 px-2 border border-[#B7E2BF] rounded-xl bg-white hover:bg-[#F7F9FB] transition disabled:opacity-50"
+                className="flex items-center justify-center py-3 px-2 border border-[#E5E7EB] rounded-xl bg-white hover:bg-[#F2F2F2] transition disabled:opacity-50"
               >
                 <img
                   src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -436,7 +436,7 @@ const Signin = () => {
                 type="button"
                 onClick={() => handleSocialLogin('facebook')}
                 disabled={loading}
-                className="flex items-center justify-center py-3 px-2 border border-[#B7E2BF] rounded-xl bg-white hover:bg-[#F7F9FB] transition disabled:opacity-50"
+                className="flex items-center justify-center py-3 px-2 border border-[#E5E7EB] rounded-xl bg-white hover:bg-[#F2F2F2] transition disabled:opacity-50"
               >
                 <img
                   src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
@@ -448,7 +448,7 @@ const Signin = () => {
                 type="button"
                 onClick={() => handleSocialLogin('apple')}
                 disabled={loading}
-                className="flex items-center justify-center py-3 px-2 border border-[#B7E2BF] rounded-xl bg-white hover:bg-[#F7F9FB] transition disabled:opacity-50"
+                className="flex items-center justify-center py-3 px-2 border border-[#E5E7EB] rounded-xl bg-white hover:bg-[#F2F2F2] transition disabled:opacity-50"
               >
                 <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current text-black">
                   <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.67-1.48 3.676-2.948 1.158-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.69 3.56-1.702z" />
@@ -457,9 +457,9 @@ const Signin = () => {
             </div>
 
             {/* Sign up link */}
-            <p className="text-center text-[#4A312F] text-sm">
+            <p className="text-center text-[#4C1D95] text-sm">
               Don't have an account?{' '}
-              <a href="/auth/register" className="text-[#D34079] font-semibold hover:underline">
+              <a href="/auth/register" className="text-[#A855F7] font-semibold hover:underline">
                 Sign Up
               </a>
             </p>
@@ -474,7 +474,7 @@ const Signin = () => {
               {verificationData.pendingPhoneNumber && (
                 <div className={`p-5 rounded-xl border ${verificationData.phoneVerified ? "border-green-200 bg-green-50/30" : "border-gray-200"}`}>
                   <div className="flex justify-between mb-3">
-                    <span className="font-medium text-[#4A312F]">Phone ({verificationData.pendingPhoneNumber})</span>
+                    <span className="font-medium text-[#4C1D95]">Phone ({verificationData.pendingPhoneNumber})</span>
                     {verificationData.phoneVerified && <span className="text-green-600 font-bold">✓ Verified</span>}
                   </div>
                   {!verificationData.phoneVerified && (
@@ -485,7 +485,7 @@ const Signin = () => {
                           type="button"
                           onClick={() => handleResendOtp("phone")}
                           disabled={otpTimer > 0 || resendLoading}
-                          className="text-sm text-[#D34079] hover:underline disabled:opacity-50"
+                          className="text-sm text-[#A855F7] hover:underline disabled:opacity-50"
                         >
                           {otpTimer > 0 ? `Wait ${otpTimer}s` : "Resend Code"}
                         </button>
@@ -493,7 +493,7 @@ const Signin = () => {
                           type="button"
                           onClick={() => handleVerifyOtp("phone")}
                           disabled={phoneOtp.length !== 6 || loading}
-                          className="px-4 py-2 bg-[#D34079] text-white rounded-lg text-sm hover:bg-[#b12f65] disabled:opacity-50"
+                          className="px-4 py-2 bg-[#A855F7] text-white rounded-lg text-sm hover:bg-[#7C3AED] disabled:opacity-50"
                         >
                           Verify
                         </button>
@@ -507,7 +507,7 @@ const Signin = () => {
               {verificationData.pendingEmail && (
                 <div className={`p-5 rounded-xl border ${verificationData.emailVerified ? "border-green-200 bg-green-50/30" : "border-gray-200"}`}>
                   <div className="flex justify-between mb-3">
-                    <span className="font-medium text-[#4A312F]">Email ({verificationData.pendingEmail})</span>
+                    <span className="font-medium text-[#4C1D95]">Email ({verificationData.pendingEmail})</span>
                     {verificationData.emailVerified && <span className="text-green-600 font-bold">✓ Verified</span>}
                   </div>
                   {!verificationData.emailVerified && (
@@ -518,7 +518,7 @@ const Signin = () => {
                           type="button"
                           onClick={() => handleResendOtp("email")}
                           disabled={otpTimer > 0 || resendLoading}
-                          className="text-sm text-[#D34079] hover:underline disabled:opacity-50"
+                          className="text-sm text-[#A855F7] hover:underline disabled:opacity-50"
                         >
                           {otpTimer > 0 ? `Wait ${otpTimer}s` : "Resend Code"}
                         </button>
@@ -526,7 +526,7 @@ const Signin = () => {
                           type="button"
                           onClick={() => handleVerifyOtp("email")}
                           disabled={emailOtp.length !== 6 || loading}
-                          className="px-4 py-2 bg-[#D34079] text-white rounded-lg text-sm hover:bg-[#b12f65] disabled:opacity-50"
+                          className="px-4 py-2 bg-[#A855F7] text-white rounded-lg text-sm hover:bg-[#7C3AED] disabled:opacity-50"
                         >
                           Verify
                         </button>
@@ -536,7 +536,7 @@ const Signin = () => {
                 </div>
               )}
 
-              <button onClick={() => setVerificationData(null)} className="w-full text-[#4A312F] text-sm hover:underline">
+              <button onClick={() => setVerificationData(null)} className="w-full text-[#4C1D95] text-sm hover:underline">
                 Back to Login
               </button>
             </div>
@@ -548,7 +548,7 @@ const Signin = () => {
       {showVerificationModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transition-all duration-200 ease-out">
-            <h3 className="text-2xl font-bold text-[#4A312F] mb-2">Verify Your Account</h3>
+            <h3 className="text-2xl font-bold text-[#4C1D95] mb-2">Verify Your Account</h3>
             <p className="text-gray-600 mb-6">
               Your account is not yet verified. Please check your email or phone for the verification code.
             </p>
@@ -568,7 +568,7 @@ const Signin = () => {
               <button
                 onClick={handleResend}
                 disabled={resendLoading}
-                className="w-full py-3 bg-[#D34079] text-white font-semibold rounded-xl hover:bg-[#b12f65] transition disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-3 bg-[#A855F7] text-white font-semibold rounded-xl hover:bg-[#7C3AED] transition disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {resendLoading ? (
                   <>
@@ -594,3 +594,4 @@ const Signin = () => {
 };
 
 export default Signin;
+

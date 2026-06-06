@@ -98,7 +98,7 @@ export default function ClientSetupWizard() {
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
                     isActive 
-                      ? 'bg-success text-white shadow-lg shadow-[#2bb75c]/20' 
+                      ? 'bg-success text-white shadow-lg shadow-[#4C1D95]/20' 
                       : isCompleted 
                         ? 'bg-success text-white' 
                         : 'bg-white/10 text-light-gray/40'
@@ -295,7 +295,7 @@ export default function ClientSetupWizard() {
               <ArrowLeft className="w-4 h-4" /> Previous Step
             </button>
 
-            <Button onClick={handleNext} className="bg-success border-none font-bold text-xs py-3 px-6 rounded-2xl flex items-center gap-1.5 shadow-lg shadow-[#2bb75c]/20">
+            <Button onClick={handleNext} className="bg-success border-none font-bold text-xs py-3 px-6 rounded-2xl flex items-center gap-1.5 shadow-lg shadow-[#4C1D95]/20">
               {step === 4 ? 'Provision Workspace' : 'Continue Step'}
               <ChevronRight className="w-4 h-4" />
             </Button>
@@ -305,4 +305,5 @@ export default function ClientSetupWizard() {
     </div>
   );
 }
+
 

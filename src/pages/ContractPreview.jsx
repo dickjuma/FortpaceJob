@@ -70,7 +70,7 @@ const ContractPreview = () => {
                 <div className="flex items-center gap-3">
                   <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=128&q=80" alt="Sarah" className="w-10 h-10 rounded-full" />
                   <div>
-                    <div className="font-bold text-zinc-900 flex items-center gap-1">Sarah Jenkins <ShieldCheck className="w-4 h-4 text-[#2bb75c]" /></div>
+                    <div className="font-bold text-zinc-900 flex items-center gap-1">Sarah Jenkins <ShieldCheck className="w-4 h-4 text-[#4C1D95]" /></div>
                     <div className="text-sm text-zinc-500">sarah.j.dev@example.com</div>
                   </div>
                 </div>
@@ -115,7 +115,7 @@ const ContractPreview = () => {
                     </tr>
                     <tr>
                       <td colSpan="2" className="px-4 py-3 text-right font-bold text-zinc-900">Total Escrow Funding Required</td>
-                      <td className="px-4 py-3 font-black text-[#2bb75c] text-right">$2,100.00</td>
+                      <td className="px-4 py-3 font-black text-[#4C1D95] text-right">$2,100.00</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -144,9 +144,9 @@ const ContractPreview = () => {
           {/* Action Bar */}
           <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 sticky bottom-6 z-50">
             <div className="flex items-center gap-3 w-full md:w-auto">
-              <input type="checkbox" id="agree" className="w-5 h-5 rounded border-zinc-300 text-[#2bb75c] focus:ring-[#2bb75c]/20 cursor-pointer" />
+              <input type="checkbox" id="agree" className="w-5 h-5 rounded border-zinc-300 text-[#4C1D95] focus:ring-[#4C1D95]/20 cursor-pointer" />
               <label htmlFor="agree" className="text-sm font-medium text-zinc-700 cursor-pointer">
-                I agree to the <a href="#" className="text-[#2bb75c] hover:underline">Terms of Service</a> and Escrow Instructions.
+                I agree to the <a href="#" className="text-[#4C1D95] hover:underline">Terms of Service</a> and Escrow Instructions.
               </label>
             </div>
             
@@ -167,4 +167,5 @@ const ContractPreview = () => {
 };
 
 export default ContractPreview;
+
 

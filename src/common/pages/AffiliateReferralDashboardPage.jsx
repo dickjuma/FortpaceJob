@@ -33,7 +33,7 @@ export default function AffiliateReferralDashboardPage() {
   if (loading) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center">
-        <Loader2 className="w-10 h-10 animate-spin text-[#2bb75c]" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#4C1D95]" />
       </div>
     );
   }
@@ -57,12 +57,12 @@ export default function AffiliateReferralDashboardPage() {
           <div className="text-sm text-zinc-500 font-medium">Pending payout</div>
         </div>
         <div className="bg-white border border-zinc-200 rounded-2xl p-6">
-          <MousePointerClick className="w-8 h-8 text-[#2bb75c] mb-3" />
+          <MousePointerClick className="w-8 h-8 text-[#4C1D95] mb-3" />
           <div className="text-2xl font-black">{summary.clicks || 0}</div>
           <div className="text-sm text-zinc-500 font-medium">Clicks</div>
         </div>
         <div className="bg-white border border-zinc-200 rounded-2xl p-6">
-          <Users className="w-8 h-8 text-[#2bb75c] mb-3" />
+          <Users className="w-8 h-8 text-[#4C1D95] mb-3" />
           <div className="text-2xl font-black">{summary.conversions || 0}</div>
           <div className="text-sm text-zinc-500 font-medium">Conversions</div>
         </div>
@@ -75,7 +75,7 @@ export default function AffiliateReferralDashboardPage() {
             <LinkIcon className="w-4 h-4 text-zinc-400 shrink-0" />
             {summary.referralLink || 'Link will appear after profile setup'}
           </div>
-          <button type="button" onClick={handleCopy} disabled={!summary.referralLink} className="px-6 py-3 bg-[#2bb75c] text-white font-bold rounded-xl disabled:opacity-50 flex items-center gap-2">
+          <button type="button" onClick={handleCopy} disabled={!summary.referralLink} className="px-6 py-3 bg-[#4C1D95] text-white font-bold rounded-xl disabled:opacity-50 flex items-center gap-2">
             <Copy className="w-4 h-4" /> {copied ? 'Copied' : 'Copy'}
           </button>
         </div>
@@ -105,4 +105,5 @@ export default function AffiliateReferralDashboardPage() {
     </div>
   );
 }
+
 

@@ -24,7 +24,7 @@ export default function SelectField({
           className={`w-full appearance-none rounded-2xl border bg-white px-4 py-3.5 pr-11 text-sm text-zinc-900 outline-none transition-colors dark:bg-zinc-950/50 dark:text-white ${
             error
               ? 'border-red-300 focus:border-red-500 dark:border-red-500/60'
-              : 'border-zinc-200 focus:border-[#2bb75c]/20 dark:border-zinc-700 dark:focus:border-[#2bb75c]/20'
+              : 'border-zinc-200 focus:border-[#4C1D95]/20 dark:border-zinc-700 dark:focus:border-[#4C1D95]/20'
           }`}
         >
           <option value="">{placeholder}</option>
@@ -45,4 +45,5 @@ export default function SelectField({
     </div>
   );
 }
+
 

@@ -33,8 +33,8 @@ const SuperAdminDashboard: React.FC = () => {
       />
 
       {/* Real-time Counters Strip */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-surface-dark dark:bg-[#2bb75c] p-8 rounded-[32px] text-white shadow-2xl shadow-[#2bb75c]/25/10 overflow-hidden relative group">
-         <div className="absolute inset-0 bg-gradient-to-br from-[#2bb75c]/20 via-transparent to-emerald-500/10 opacity-50"></div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-surface-dark dark:bg-[#4C1D95] p-8 rounded-[32px] text-white shadow-2xl shadow-[#4C1D95]/25/10 overflow-hidden relative group">
+         <div className="absolute inset-0 bg-gradient-to-br from-[#4C1D95]/20 via-transparent to-emerald-500/10 opacity-50"></div>
          
          <div className="relative z-10 flex items-center gap-4">
             <div className="h-12 w-12 bg-success/20 rounded-2xl flex items-center justify-center text-success">
@@ -47,7 +47,7 @@ const SuperAdminDashboard: React.FC = () => {
          </div>
 
          <div className="relative z-10 flex items-center gap-4 border-l border-white/10 pl-6">
-            <div className="h-12 w-12 bg-[#2bb75c]/20 rounded-2xl flex items-center justify-center text-[#2bb75c]">
+            <div className="h-12 w-12 bg-[#4C1D95]/20 rounded-2xl flex items-center justify-center text-[#4C1D95]">
                <UsersIcon size={24} />
             </div>
             <div>
@@ -57,7 +57,7 @@ const SuperAdminDashboard: React.FC = () => {
          </div>
 
          <div className="relative z-10 flex items-center gap-4 border-l border-white/10 pl-6">
-            <div className="h-12 w-12 bg-[#2bb75c]/20 rounded-2xl flex items-center justify-center text-emerald-300">
+            <div className="h-12 w-12 bg-[#4C1D95]/20 rounded-2xl flex items-center justify-center text-emerald-300">
                <Zap size={24} className="animate-bounce" />
             </div>
             <div>
@@ -91,4 +91,5 @@ const SuperAdminDashboard: React.FC = () => {
 };
 
 export default SuperAdminDashboard;
+
 

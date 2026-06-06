@@ -32,8 +32,8 @@ export default function CategoryBrowse() {
   if (!categoryId) {
     return (
       <>
-        <div className="bg-[#2bb75c] text-white py-16 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#2bb75c]/20 rounded-full blur-3xl -mr-40 -mt-40" />
+        <div className="bg-[#4C1D95] text-white py-16 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#4C1D95]/20 rounded-full blur-3xl -mr-40 -mt-40" />
           <div className="container mx-auto px-4 md:px-8 relative z-10 max-w-6xl">
             <div className="flex items-center gap-2 text-sm font-medium text-zinc-400 mb-8">
               <Link to="/find-work" className="hover:text-white">Find Work</Link>
@@ -76,11 +76,11 @@ export default function CategoryBrowse() {
                   <Icon className="w-6 h-6" />
                 </div>
                 <div className="flex items-start justify-between gap-4 mb-3">
-                  <h2 className="text-lg font-bold text-zinc-900 group-hover:text-[#1d8d38] transition-colors leading-tight">{category.name}</h2>
+                  <h2 className="text-lg font-bold text-zinc-900 group-hover:text-[#22C55E] transition-colors leading-tight">{category.name}</h2>
                   <span className="text-sm font-semibold text-zinc-700 whitespace-nowrap">{category.openJobs} jobs</span>
                 </div>
                 <p className="text-sm text-zinc-500 mb-5 line-clamp-3 leading-relaxed">{category.summary}</p>
-                <div className="flex items-center gap-2 text-sm font-semibold text-[#2bb75c] group-hover:gap-3 transition-all">
+                <div className="flex items-center gap-2 text-sm font-semibold text-[#4C1D95] group-hover:gap-3 transition-all">
                   <span>Explore category</span>
                   <ArrowRight className="w-4 h-4" />
                 </div>
@@ -101,7 +101,7 @@ export default function CategoryBrowse() {
           <Monitor className="w-12 h-12 mx-auto text-zinc-300 mb-4" />
           <h1 className="text-3xl font-black text-zinc-900 mb-2">Category not found</h1>
           <p className="text-zinc-600 mb-6">This category does not exist in the current find-work catalog.</p>
-          <Link to="/find-work/categories" className="px-6 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl">
+          <Link to="/find-work/categories" className="px-6 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl">
             Browse Categories
           </Link>
         </div>
@@ -113,8 +113,8 @@ export default function CategoryBrowse() {
 
   return (
     <>
-      <div className="bg-[#2bb75c] text-white py-16 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#2bb75c]/20 rounded-full blur-3xl -mr-40 -mt-40" />
+      <div className="bg-[#4C1D95] text-white py-16 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#4C1D95]/20 rounded-full blur-3xl -mr-40 -mt-40" />
         <div className="container mx-auto px-4 md:px-8 relative z-10 max-w-5xl">
           <div className="flex items-center gap-2 text-sm font-medium text-zinc-400 mb-8">
             <Link to="/find-work" className="hover:text-white">Find Work</Link>
@@ -146,16 +146,16 @@ export default function CategoryBrowse() {
                   <Link
                     key={specialization}
                     to={`/find-work/search?q=${encodeURIComponent(specialization)}&type=${activeCategory.id === 'local-services' ? 'local' : 'online'}`}
-                    className="bg-surface border border-zinc-200 rounded-2xl p-5 hover:shadow-sm hover:border-[#2bb75c]/50 transition-all group"
+                    className="bg-surface border border-zinc-200 rounded-2xl p-5 hover:shadow-sm hover:border-[#4C1D95]/50 transition-all group"
                   >
-                    <h3 className="font-bold text-zinc-900 group-hover:text-[#2bb75c] transition-colors">{specialization}</h3>
+                    <h3 className="font-bold text-zinc-900 group-hover:text-[#4C1D95] transition-colors">{specialization}</h3>
                     <p className="text-sm text-zinc-500 font-medium mt-1">Search matching opportunities instantly</p>
                   </Link>
                 ))}
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-blue-600 to-[#1d8d38] rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden">
+            <div className="bg-gradient-to-br from-blue-600 to-[#22C55E] rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20" />
               <div className="relative z-10">
                 <div className="text-sm font-bold uppercase tracking-widest text-blue-100 mb-4">Category Snapshot</div>
@@ -164,7 +164,7 @@ export default function CategoryBrowse() {
                 <p className="text-blue-50 mb-8">
                   Use this category hub to jump into filtered search or head directly into the highest-priority jobs below.
                 </p>
-                <Link to={`/find-work/search?type=${activeCategory.id === 'local-services' ? 'local' : 'online'}&q=${encodeURIComponent(activeCategory.name)}`} className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#2bb75c] font-bold rounded-xl hover:bg-surface transition-colors shadow-lg">
+                <Link to={`/find-work/search?type=${activeCategory.id === 'local-services' ? 'local' : 'online'}&q=${encodeURIComponent(activeCategory.name)}`} className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#4C1D95] font-bold rounded-xl hover:bg-surface transition-colors shadow-lg">
                   Search this category <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -177,21 +177,21 @@ export default function CategoryBrowse() {
                 <h2 className="text-2xl font-bold text-zinc-900 mb-2">Live opportunities</h2>
                 <p className="text-zinc-600">The strongest jobs currently mapped to this category.</p>
               </div>
-              <Link to={`/find-work/search?type=${activeCategory.id === 'local-services' ? 'local' : 'online'}&q=${encodeURIComponent(activeCategory.name)}`} className="text-[#2bb75c] font-bold text-sm hover:underline">
+              <Link to={`/find-work/search?type=${activeCategory.id === 'local-services' ? 'local' : 'online'}&q=${encodeURIComponent(activeCategory.name)}`} className="text-[#4C1D95] font-bold text-sm hover:underline">
                 View all matching jobs
               </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {activeJobs.map((job) => (
-                <Link key={job.id} to={job.detailPath} className="bg-white border border-zinc-200 rounded-2xl p-6 hover:shadow-md hover:border-[#2bb75c]/50 transition-all group">
+                <Link key={job.id} to={job.detailPath} className="bg-white border border-zinc-200 rounded-2xl p-6 hover:shadow-md hover:border-[#4C1D95]/50 transition-all group">
                   <div className="flex items-center justify-between gap-3 mb-3">
-                    <span className={`text-xs font-bold uppercase tracking-wider ${job.workMode === 'local' ? 'text-amber-600' : 'text-[#2bb75c]'}`}>
+                    <span className={`text-xs font-bold uppercase tracking-wider ${job.workMode === 'local' ? 'text-amber-600' : 'text-[#4C1D95]'}`}>
                       {job.workModeLabel}
                     </span>
                     <span className="text-xs font-bold text-zinc-400">{job.postedLabel}</span>
                   </div>
-                  <h3 className="font-bold text-lg text-zinc-900 mb-2 group-hover:text-[#2bb75c] transition-colors">{job.title}</h3>
+                  <h3 className="font-bold text-lg text-zinc-900 mb-2 group-hover:text-[#4C1D95] transition-colors">{job.title}</h3>
                   <p className="text-zinc-600 text-sm mb-4">{job.summary}</p>
                   <div className="flex items-center justify-between text-sm">
                     <span className="font-black text-zinc-900">{job.budgetLabel}</span>
@@ -206,4 +206,5 @@ export default function CategoryBrowse() {
     </>
   );
 }
+
 

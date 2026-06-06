@@ -20,7 +20,7 @@ const FreelancerVideoFeeds = () => {
   if (isLoading) {
     return (
       <div className="bg-black min-h-screen flex items-center justify-center">
-        <Loader2 className="w-10 h-10 animate-spin text-[#2bb75c]" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#4C1D95]" />
       </div>
     );
   }
@@ -66,7 +66,7 @@ const FreelancerVideoFeeds = () => {
                     <span className="text-white text-xs font-bold drop-shadow-md">{video.likes}</span>
                   </button>
                   <button className="group flex flex-col items-center gap-1">
-                    <div className="w-12 h-12 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white group-hover:text-[#2bb75c] transition-colors border border-white/10">
+                    <div className="w-12 h-12 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white group-hover:text-[#4C1D95] transition-colors border border-white/10">
                       <MessageCircle className="w-6 h-6 fill-current" />
                     </div>
                     <span className="text-white text-xs font-bold drop-shadow-md">{video.comments}</span>
@@ -93,7 +93,7 @@ const FreelancerVideoFeeds = () => {
                 <div className="absolute bottom-0 left-0 right-16 p-6 z-10">
                   <Link to={video.profilePath || '/profile'} className="flex items-center gap-2 mb-2">
                     <h3 className="text-white font-black text-xl drop-shadow-lg hover:underline">{video.author}</h3>
-                    {video.verified && <ShieldCheck className="w-5 h-5 text-[#2bb75c] drop-shadow-md" />}
+                    {video.verified && <ShieldCheck className="w-5 h-5 text-[#4C1D95] drop-shadow-md" />}
                   </Link>
                   <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-white/20 backdrop-blur rounded text-white text-xs font-bold mb-3 border border-white/20">
                     {video.title || video.role}
@@ -102,7 +102,7 @@ const FreelancerVideoFeeds = () => {
                     {video.description}
                   </p>
                   <div className="flex items-center gap-3">
-                    <button className="flex-1 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl transition-colors shadow-lg shadow-blue-900/50 flex items-center justify-center gap-2">
+                    <button className="flex-1 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl transition-colors shadow-lg shadow-blue-900/50 flex items-center justify-center gap-2">
                       <CheckCircle2 className="w-4 h-4" /> Hire Now
                     </button>
                     <button className="px-6 py-3 bg-white/10 backdrop-blur border border-white/20 hover:bg-white/20 text-white font-bold rounded-xl transition-colors">
@@ -120,4 +120,5 @@ const FreelancerVideoFeeds = () => {
 };
 
 export default FreelancerVideoFeeds;
+
 

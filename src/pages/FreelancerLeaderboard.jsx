@@ -18,7 +18,7 @@ const FreelancerLeaderboard = () => {
       <div className="container mx-auto px-4 md:px-8 py-12 max-w-4xl">
         {loading ? (
           <div className="flex justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" />
           </div>
         ) : talent.length === 0 ? (
           <p className="text-center text-zinc-500 font-medium py-16">Leaderboard data is not available yet.</p>
@@ -63,4 +63,5 @@ const FreelancerLeaderboard = () => {
 };
 
 export default FreelancerLeaderboard;
+
 

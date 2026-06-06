@@ -163,7 +163,7 @@ const ViewApplications = () => {
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
 
-          <Link to="/find-work/my-posted-work" className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#2bb75c] transition-colors mb-6">
+          <Link to="/find-work/my-posted-work" className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#4C1D95] transition-colors mb-6">
             <ArrowLeft className="w-4 h-4" /> Back to My Jobs
           </Link>
 
@@ -174,7 +174,7 @@ const ViewApplications = () => {
             </div>
             <div className="flex gap-4 text-center">
               <div className="bg-surface px-6 py-3 rounded-xl border border-zinc-100">
-                <div className="text-2xl font-black text-[#2bb75c]">{summary.total}</div>
+                <div className="text-2xl font-black text-[#4C1D95]">{summary.total}</div>
                 <div className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Total</div>
               </div>
               <div className="bg-surface px-6 py-3 rounded-xl border border-zinc-100">
@@ -191,10 +191,10 @@ const ViewApplications = () => {
                 <h3 className="font-bold text-zinc-900 mb-4 flex items-center gap-2"><Filter className="w-4 h-4" /> Views</h3>
 
                 <div className="space-y-2">
-                  <button onClick={() => setFilter('all')} type="button" className={`w-full text-left px-3 py-2 rounded-lg font-bold text-sm transition-colors ${filter === 'all' ? 'bg-[#2bb75c]/5 text-[#2bb75c]' : 'text-zinc-600 hover:bg-surface'}`}>
+                  <button onClick={() => setFilter('all')} type="button" className={`w-full text-left px-3 py-2 rounded-lg font-bold text-sm transition-colors ${filter === 'all' ? 'bg-[#4C1D95]/5 text-[#4C1D95]' : 'text-zinc-600 hover:bg-surface'}`}>
                     All Applications
                   </button>
-                  <button onClick={() => setFilter('new')} type="button" className={`w-full text-left px-3 py-2 rounded-lg font-bold text-sm transition-colors ${filter === 'new' ? 'bg-[#2bb75c]/5 text-[#2bb75c]' : 'text-zinc-600 hover:bg-surface'}`}>
+                  <button onClick={() => setFilter('new')} type="button" className={`w-full text-left px-3 py-2 rounded-lg font-bold text-sm transition-colors ${filter === 'new' ? 'bg-[#4C1D95]/5 text-[#4C1D95]' : 'text-zinc-600 hover:bg-surface'}`}>
                     New / Unread
                   </button>
                   <button onClick={() => setFilter('shortlisted')} type="button" className={`w-full text-left px-3 py-2 rounded-lg font-bold text-sm transition-colors ${filter === 'shortlisted' ? 'bg-amber-50 text-amber-700' : 'text-zinc-600 hover:bg-surface'}`}>
@@ -221,7 +221,7 @@ const ViewApplications = () => {
             <div className="flex-1 space-y-6">
               {loading ? (
                 <div className="bg-white border border-zinc-200 rounded-3xl py-20 text-center shadow-sm">
-                  <Loader2 className="w-10 h-10 text-[#2bb75c] animate-spin mx-auto mb-4" />
+                  <Loader2 className="w-10 h-10 text-[#4C1D95] animate-spin mx-auto mb-4" />
                   <p className="text-zinc-600 font-medium">Loading applications...</p>
                 </div>
               ) : displayedApps.length === 0 ? (
@@ -245,12 +245,12 @@ const ViewApplications = () => {
                         {app.avatar ? (
                           <img src={app.avatar} alt={app.provider} className="w-20 h-20 rounded-full mb-3 object-cover" />
                         ) : (
-                          <div className="w-20 h-20 rounded-full mb-3 bg-[#2bb75c]/10 text-[#2bb75c] flex items-center justify-center text-2xl font-black">
+                          <div className="w-20 h-20 rounded-full mb-3 bg-[#4C1D95]/10 text-[#4C1D95] flex items-center justify-center text-2xl font-black">
                             {app.provider.charAt(0)}
                           </div>
                         )}
                         <h3 className="font-bold text-zinc-900 text-lg mb-1">{app.provider}</h3>
-                        <div className="text-xs font-bold text-[#2bb75c] bg-[#2bb75c]/5 px-2 py-0.5 rounded uppercase tracking-wider mb-2">{app.badge}</div>
+                        <div className="text-xs font-bold text-[#4C1D95] bg-[#4C1D95]/5 px-2 py-0.5 rounded uppercase tracking-wider mb-2">{app.badge}</div>
                         <div className="flex items-center gap-1 font-bold text-zinc-700 text-sm mb-1">
                           <Star className="w-4 h-4 text-amber-500 fill-current" /> {app.rating || '—'} ({app.reviews})
                         </div>
@@ -283,7 +283,7 @@ const ViewApplications = () => {
                         </div>
 
                         <div className="flex flex-wrap gap-3 mt-4">
-                          <Link to="/messages" className="flex-1 px-4 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white text-sm font-bold rounded-lg shadow-sm transition-colors text-center">
+                          <Link to="/messages" className="flex-1 px-4 py-2 bg-[#4C1D95] hover:bg-[#22C55E] text-white text-sm font-bold rounded-lg shadow-sm transition-colors text-center">
                             Message
                           </Link>
                           {app.status !== 'shortlisted' ? (
@@ -330,4 +330,5 @@ const ViewApplications = () => {
 };
 
 export default ViewApplications;
+
 

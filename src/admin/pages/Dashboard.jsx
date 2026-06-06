@@ -248,7 +248,7 @@ const Dashboard = () => {
               {[
                 { label: "Redis Cluster", status: "Healthy", ping: "4ms", icon: Zap, color: "text-emerald-500", bg: "bg-emerald-500/10" },
                 { label: "Escrow Ledger", status: "Synchronized", ping: "99.9%", icon: ShieldCheck, color: "text-success", bg: "bg-success/10" },
-                { label: "Notification Queue", status: "Processing", ping: "12/m", icon: TrendingUp, color: "text-[#2bb75c]", bg: "bg-[#2bb75c]/10" }
+                { label: "Notification Queue", status: "Processing", ping: "12/m", icon: TrendingUp, color: "text-[#4C1D95]", bg: "bg-[#4C1D95]/10" }
               ].map((service) => (
                 <div key={service.label} className="p-5 rounded-2xl bg-zinc-50 dark:bg-white/5 border border-zinc-100 dark:border-white/10 hover:border-zinc-200 transition-colors">
                   <div className="flex items-center gap-3 mb-3">
@@ -388,4 +388,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
 

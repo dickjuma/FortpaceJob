@@ -61,7 +61,7 @@ export default function KraComplianceBanner({ compact = false }) {
           {!compact && (
             <div className="mt-3 h-2 bg-white/80 rounded-full overflow-hidden border border-zinc-200">
               <div
-                className={`h-full transition-all ${taxLocked ? 'bg-red-500' : 'bg-[#2bb75c]'}`}
+                className={`h-full transition-all ${taxLocked ? 'bg-red-500' : 'bg-[#4C1D95]'}`}
                 style={{ width: `${Math.min(100, progress)}%` }}
               />
             </div>
@@ -80,7 +80,7 @@ export default function KraComplianceBanner({ compact = false }) {
                 type="button"
                 disabled={updateKra.isPending || kraPin.length < 5}
                 onClick={() => updateKra.mutate()}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#2bb75c] text-white text-sm font-bold rounded-lg disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#4C1D95] text-white text-sm font-bold rounded-lg disabled:opacity-50"
               >
                 {updateKra.isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -102,4 +102,5 @@ export default function KraComplianceBanner({ compact = false }) {
     </div>
   );
 }
+
 

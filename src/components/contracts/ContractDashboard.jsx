@@ -46,7 +46,7 @@ export default function ContractDashboard({ contractId }) {
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-4 text-sm font-medium border-b-2 transition-colors flex items-center whitespace-nowrap ${
                   activeTab === tab.id 
-                    ? 'border-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c]' 
+                    ? 'border-[#4C1D95]/20 text-[#4C1D95] dark:text-[#4C1D95]' 
                     : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
               >
@@ -66,10 +66,10 @@ export default function ContractDashboard({ contractId }) {
                   <h3 className="text-lg font-bold mb-4">Progress</h3>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-500">2 of 5 Milestones Completed</span>
-                    <span className="font-bold text-[#2bb75c]">40%</span>
+                    <span className="font-bold text-[#4C1D95]">40%</span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-2">
-                    <div className="bg-[#2bb75c] h-2 rounded-full" style={{ width: '40%' }}></div>
+                    <div className="bg-[#4C1D95] h-2 rounded-full" style={{ width: '40%' }}></div>
                   </div>
                 </div>
                 
@@ -84,8 +84,8 @@ export default function ContractDashboard({ contractId }) {
               <div className="space-y-6">
                 <div className="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
                   <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Escrow Status</h3>
-                  <div className="flex items-center gap-3 p-3 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 rounded-lg border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/50">
-                    <ShieldCheck className="w-6 h-6 text-[#2bb75c]" />
+                  <div className="flex items-center gap-3 p-3 bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20 rounded-lg border border-[#4C1D95]/20 dark:border-[#4C1D95]/20/50">
+                    <ShieldCheck className="w-6 h-6 text-[#4C1D95]" />
                     <div>
                       <p className="text-xs text-gray-500">Funded in Escrow</p>
                       <p className="font-bold text-gray-900 dark:text-white">$2,500.00</p>
@@ -100,4 +100,5 @@ export default function ContractDashboard({ contractId }) {
     </div>
   );
 }
+
 

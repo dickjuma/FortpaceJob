@@ -14,7 +14,7 @@ const TalentHiringHelpCenter = () => {
           
           <div className="max-w-2xl mx-auto relative">
             <Search className="absolute left-4 top-1/2 -tranzinc-y-1/2 w-6 h-6 text-zinc-400" />
-            <input type="text" placeholder="Search for 'escrow', 'disputes', or 'milestones'..." className="w-full bg-white text-zinc-900 px-12 py-5 rounded-2xl outline-none focus:ring-4 focus:ring-[#2bb75c]/50 text-lg shadow-xl" />
+            <input type="text" placeholder="Search for 'escrow', 'disputes', or 'milestones'..." className="w-full bg-white text-zinc-900 px-12 py-5 rounded-2xl outline-none focus:ring-4 focus:ring-[#4C1D95]/50 text-lg shadow-xl" />
           </div>
         </div>
       </div>
@@ -25,12 +25,12 @@ const TalentHiringHelpCenter = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
             
             <div className="bg-white p-8 rounded-3xl border border-zinc-200 hover:shadow-lg transition-shadow group cursor-pointer">
-              <div className="w-12 h-12 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <BookOpen className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold text-zinc-900 mb-2">Getting Started</h3>
               <p className="text-zinc-600 text-sm mb-4">Learn how to post jobs, invite freelancers, and set up your client account.</p>
-              <div className="text-[#2bb75c] font-bold text-sm flex items-center gap-1">Browse Articles <ChevronRight className="w-4 h-4" /></div>
+              <div className="text-[#4C1D95] font-bold text-sm flex items-center gap-1">Browse Articles <ChevronRight className="w-4 h-4" /></div>
             </div>
 
             <div className="bg-white p-8 rounded-3xl border border-zinc-200 hover:shadow-lg transition-shadow group cursor-pointer">
@@ -70,4 +70,5 @@ const TalentHiringHelpCenter = () => {
 };
 
 export default TalentHiringHelpCenter;
+
 

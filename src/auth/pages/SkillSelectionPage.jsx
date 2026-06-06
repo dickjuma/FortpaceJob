@@ -159,18 +159,18 @@ export default function SkillSelectionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans selection:bg-[#2bb75c]/30 overflow-x-hidden">
+    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans selection:bg-[#4C1D95]/30 overflow-x-hidden">
       {/* Background Gradients */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-[#2bb75c]/10 blur-[120px]" />
-        <div className="absolute top-1/3 -left-40 w-[400px] h-[400px] rounded-full bg-#2bb75c]/10 blur-[100px]" />
+        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-[#4C1D95]/10 blur-[120px]" />
+        <div className="absolute top-1/3 -left-40 w-[400px] h-[400px] rounded-full bg-#4C1D95]/10 blur-[100px]" />
       </div>
 
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 max-w-7xl mx-auto w-full">
           <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-[#2bb75c] rounded-xl flex items-center justify-center shadow-lg shadow-[#2bb75c]/25/30">
+            <div className="w-9 h-9 bg-[#4C1D95] rounded-xl flex items-center justify-center shadow-lg shadow-[#4C1D95]/25/30">
               <Briefcase className="text-white w-5 h-5" />
             </div>
             <span className="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white">ForteSpace</span>
@@ -190,16 +190,16 @@ export default function SkillSelectionPage() {
                     <motion.div
                       className={cn(
                         "w-8 h-8 rounded-full flex items-center justify-center shadow-sm",
-                        isCompleted ? "bg-[#2bb75c] text-white" : isCurrent ? "bg-[#2bb75c] text-white ring-4 ring-#2bb75c]/20 scale-110" : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
+                        isCompleted ? "bg-[#4C1D95] text-white" : isCurrent ? "bg-[#4C1D95] text-white ring-4 ring-#4C1D95]/20 scale-110" : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
                       )}
                     >
                       {isCompleted ? <Check className="w-4 h-4" /> : <span className="text-xs font-bold">{idx + 1}</span>}
                     </motion.div>
-                    <span className={cn("text-[10px] font-bold uppercase tracking-wide hidden sm:block", isCurrent ? "text-[#2bb75c]" : isCompleted ? "text-zinc-500" : "text-zinc-400")}>
+                    <span className={cn("text-[10px] font-bold uppercase tracking-wide hidden sm:block", isCurrent ? "text-[#4C1D95]" : isCompleted ? "text-zinc-500" : "text-zinc-400")}>
                       {step}
                     </span>
                   </div>
-                  {!isLast && <div className={cn("h-[2px] w-8 sm:w-16 mx-1 rounded-full", isCompleted ? "bg-[#2bb75c]" : "bg-zinc-200 dark:bg-zinc-800")} />}
+                  {!isLast && <div className={cn("h-[2px] w-8 sm:w-16 mx-1 rounded-full", isCompleted ? "bg-[#4C1D95]" : "bg-zinc-200 dark:bg-zinc-800")} />}
                 </React.Fragment>
               );
             })}
@@ -213,7 +213,7 @@ export default function SkillSelectionPage() {
           <div className="flex-1 w-full min-w-0 space-y-6">
             <div className="mb-6">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-3">
-                What is your <span className="bg-gradient-to-r from-[#2bb75c] to-violet-600 bg-clip-text text-transparent">primary role?</span>
+                What is your <span className="bg-gradient-to-r from-[#4C1D95] to-violet-600 bg-clip-text text-transparent">primary role?</span>
               </h1>
               <p className="text-zinc-500 dark:text-zinc-400">
                 Pick your industry and trade — then add skills so clients and our matcher can find you.
@@ -227,17 +227,17 @@ export default function SkillSelectionPage() {
             {/* Search Input */}
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-zinc-400 group-focus-within:text-[#2bb75c] transition-colors" />
+                <Search className="h-5 w-5 text-zinc-400 group-focus-within:text-[#4C1D95] transition-colors" />
               </div>
               <input
                 type="text"
                 placeholder="Search skills (e.g. React, UX Design...)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-4 bg-white dark:bg-surface-dark border-2 border-zinc-200 dark:border-zinc-800 rounded-2xl text-zinc-900 dark:text-white font-medium focus:border-[#2bb75c]/20 focus:ring-0 outline-none transition-all shadow-sm"
+                className="w-full pl-11 pr-4 py-4 bg-white dark:bg-surface-dark border-2 border-zinc-200 dark:border-zinc-800 rounded-2xl text-zinc-900 dark:text-white font-medium focus:border-[#4C1D95]/20 focus:ring-0 outline-none transition-all shadow-sm"
               />
               {/* AI Suggestion Button */}
-              <button className="absolute right-3 top-1/2 -tranzinc-y-1/2 flex items-center gap-1.5 px-3 py-1.5 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c] rounded-xl text-xs font-bold hover:bg-[#2bb75c]/10 dark:hover:bg-[#2bb75c]/20 transition-colors">
+              <button className="absolute right-3 top-1/2 -tranzinc-y-1/2 flex items-center gap-1.5 px-3 py-1.5 bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10 text-[#4C1D95] dark:text-[#4C1D95] rounded-xl text-xs font-bold hover:bg-[#4C1D95]/10 dark:hover:bg-[#4C1D95]/20 transition-colors">
                 <Sparkles className="w-3.5 h-3.5" /> Auto-Suggest
               </button>
             </div>
@@ -266,7 +266,7 @@ export default function SkillSelectionPage() {
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.8 }}
                           key={`selected-${skill.id}`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#2bb75c] text-white rounded-xl text-sm font-semibold shadow-sm"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#4C1D95] text-white rounded-xl text-sm font-semibold shadow-sm"
                         >
                           {skill.name}
                           <button onClick={() => removeSkill(skill.id)} className="p-0.5 hover:bg-black/20 rounded-md transition-colors">
@@ -309,7 +309,7 @@ export default function SkillSelectionPage() {
             {!searchQuery && activeCategory === 'All' && (
               <div className="mb-6">
                 <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-[#2bb75c]" /> Trending Right Now
+                  <TrendingUp className="w-4 h-4 text-[#4C1D95]" /> Trending Right Now
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {trendingSkills.map(skill => {
@@ -321,8 +321,8 @@ export default function SkillSelectionPage() {
                         className={cn(
                           "px-4 py-2 rounded-xl text-sm font-semibold transition-all border",
                           isSelected 
-                            ? "bg-[#2bb75c]/5 border-[#2bb75c]/20 text-[#2bb75c] dark:bg-[#2bb75c]/20 dark:border-[#2bb75c]/20/30 dark:text-[#2bb75c]" 
-                            : "bg-white dark:bg-surface-dark border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-[#2bb75c]/50 hover:shadow-sm"
+                            ? "bg-[#4C1D95]/5 border-[#4C1D95]/20 text-[#4C1D95] dark:bg-[#4C1D95]/20 dark:border-[#4C1D95]/20/30 dark:text-[#4C1D95]" 
+                            : "bg-white dark:bg-surface-dark border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-[#4C1D95]/50 hover:shadow-sm"
                         )}
                       >
                         {skill.name}
@@ -342,7 +342,7 @@ export default function SkillSelectionPage() {
               <div className="flex flex-wrap gap-2">
                 {skillsLoading ? (
                   <div className="w-full flex justify-center py-8">
-                    <Loader2 className="w-6 h-6 animate-spin text-[#2bb75c]" />
+                    <Loader2 className="w-6 h-6 animate-spin text-[#4C1D95]" />
                   </div>
                 ) : filteredSkills.map(skill => {
                   const isSelected = selectedSkills.some(s => s.id === skill.id);
@@ -356,8 +356,8 @@ export default function SkillSelectionPage() {
                       className={cn(
                         "px-4 py-2 rounded-xl text-sm font-semibold transition-all border",
                         isSelected 
-                          ? "bg-[#2bb75c]/5 border-[#2bb75c]/20 text-[#2bb75c] dark:bg-[#2bb75c]/20 dark:border-[#2bb75c]/20/30 dark:text-[#2bb75c]" 
-                          : "bg-white dark:bg-surface-dark border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-[#2bb75c]/50 shadow-sm hover:shadow-md"
+                          ? "bg-[#4C1D95]/5 border-[#4C1D95]/20 text-[#4C1D95] dark:bg-[#4C1D95]/20 dark:border-[#4C1D95]/20/30 dark:text-[#4C1D95]" 
+                          : "bg-white dark:bg-surface-dark border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-[#4C1D95]/50 shadow-sm hover:shadow-md"
                       )}
                     >
                       {skill.name}
@@ -379,9 +379,9 @@ export default function SkillSelectionPage() {
               initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
               className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#2bb75c]/10 rounded-bl-full pointer-events-none" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#4C1D95]/10 rounded-bl-full pointer-events-none" />
               <h3 className="text-sm font-extrabold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
-                <Activity className="w-4 h-4 text-[#2bb75c]" /> Market Insights
+                <Activity className="w-4 h-4 text-[#4C1D95]" /> Market Insights
               </h3>
               
               <div className="space-y-4">
@@ -407,11 +407,11 @@ export default function SkillSelectionPage() {
 
             <motion.div 
               initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}
-              className="bg-gradient-to-br from-[#2bb75c] to-violet-600 rounded-2xl p-6 text-white shadow-lg shadow-[#2bb75c]/25/20"
+              className="bg-gradient-to-br from-[#4C1D95] to-violet-600 rounded-2xl p-6 text-white shadow-lg shadow-[#4C1D95]/25/20"
             >
-              <Sparkles className="w-6 h-6 mb-3 text-[#2bb75c]" />
+              <Sparkles className="w-6 h-6 mb-3 text-[#4C1D95]" />
               <h3 className="text-lg font-bold mb-2">Pro Tip</h3>
-              <p className="text-sm text-[#2bb75c] leading-relaxed">
+              <p className="text-sm text-[#4C1D95] leading-relaxed">
                 Freelancers with 5+ verified skills receive <span className="font-bold text-white">3x more interview invites</span>. Be specific with your expertise!
               </p>
             </motion.div>
@@ -434,7 +434,7 @@ export default function SkillSelectionPage() {
               </span>
                <button
                  onClick={handleContinue}
-                 className="flex items-center gap-2 px-6 py-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white text-sm font-bold rounded-xl shadow-sm transition-all"
+                 className="flex items-center gap-2 px-6 py-2.5 bg-[#4C1D95] hover:bg-[#22C55E] text-white text-sm font-bold rounded-xl shadow-sm transition-all"
                >
                  Next Step <ChevronRight className="w-4 h-4" />
                </button>
@@ -446,4 +446,5 @@ export default function SkillSelectionPage() {
     </div>
   );
 }
+
 

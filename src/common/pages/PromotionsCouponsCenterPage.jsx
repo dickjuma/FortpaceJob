@@ -19,9 +19,9 @@ const formSchema = z.object({
 });
 
 const STATS = [
-  { label: 'Active Promotions', value: '12', icon: Tag, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20' },
+  { label: 'Active Promotions', value: '12', icon: Tag, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20' },
   { label: 'Total Redemptions', value: '1,248', icon: CheckCircle2, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-900/20' },
-  { label: 'Revenue Impact', value: '+$14.2k', icon: TrendingUp, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20' },
+  { label: 'Revenue Impact', value: '+$14.2k', icon: TrendingUp, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20' },
   { label: 'Expiring Soon', value: '3', icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50 dark:bg-orange-900/20' },
 ];
 
@@ -69,7 +69,7 @@ export default function PromotionsCouponsCenterPage() {
       case 'expired':
         return <span className="px-2.5 py-1 bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-700">Expired</span>;
       case 'scheduled':
-        return <span className="px-2.5 py-1 bg-[#2bb75c]/10 text-[#2bb75c] dark:bg-[#2bb75c]/30 dark:text-[#2bb75c] rounded-full text-xs font-medium border border-[#2bb75c]/20 dark:border-[#2bb75c]/20">Scheduled</span>;
+        return <span className="px-2.5 py-1 bg-[#4C1D95]/10 text-[#4C1D95] dark:bg-[#4C1D95]/30 dark:text-[#4C1D95] rounded-full text-xs font-medium border border-[#4C1D95]/20 dark:border-[#4C1D95]/20">Scheduled</span>;
       default:
         return null;
     }
@@ -87,7 +87,7 @@ export default function PromotionsCouponsCenterPage() {
           </div>
           <button 
             onClick={() => setIsCreateModalOpen(true)}
-            className="bg-[#2bb75c] hover:bg-[#1d8d38] text-white px-5 py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 shadow-sm"
+            className="bg-[#4C1D95] hover:bg-[#22C55E] text-white px-5 py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 shadow-sm"
           >
             <Plus className="w-5 h-5" />
             Create Promotion
@@ -134,7 +134,7 @@ export default function PromotionsCouponsCenterPage() {
                     <input 
                       type="text" 
                       placeholder="Search codes..." 
-                      className="pl-9 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm bg-surface dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#2bb75c] transition-shadow w-full sm:w-64"
+                      className="pl-9 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm bg-surface dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#4C1D95] transition-shadow w-full sm:w-64"
                     />
                   </div>
                   <button className="p-2 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-500 hover:bg-surface dark:hover:bg-gray-800 transition-colors">
@@ -166,10 +166,10 @@ export default function PromotionsCouponsCenterPage() {
                         >
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-2">
-                              <span className="font-mono font-bold text-[#2bb75c] dark:text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 px-2 py-1 rounded">{promo.code}</span>
+                              <span className="font-mono font-bold text-[#4C1D95] dark:text-[#4C1D95] bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20 px-2 py-1 rounded">{promo.code}</span>
                               <button 
                                 onClick={() => copyCode(promo.code, promo.id)}
-                                className="text-gray-400 hover:text-[#2bb75c] transition-colors p-1"
+                                className="text-gray-400 hover:text-[#4C1D95] transition-colors p-1"
                                 title="Copy code"
                               >
                                 {copiedId === promo.id ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
@@ -195,7 +195,7 @@ export default function PromotionsCouponsCenterPage() {
                           </td>
                           <td className="px-6 py-4 text-right">
                             <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button className="p-2 text-gray-400 hover:text-[#2bb75c] hover:bg-[#2bb75c]/5 dark:hover:bg-[#2bb75c]/20 rounded-lg transition-colors">
+                              <button className="p-2 text-gray-400 hover:text-[#4C1D95] hover:bg-[#4C1D95]/5 dark:hover:bg-[#4C1D95]/20 rounded-lg transition-colors">
                                 <Edit2 className="w-4 h-4" />
                               </button>
                               <button 
@@ -238,12 +238,12 @@ export default function PromotionsCouponsCenterPage() {
               </div>
               <div className="flex items-end gap-2 h-48 mt-4">
                 {[30, 45, 25, 60, 40, 75, 55].map((height, i) => (
-                  <div key={i} className="flex-1 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 rounded-t-md relative group hover:bg-[#2bb75c]/10 dark:hover:bg-[#2bb75c]/40 transition-colors cursor-pointer">
+                  <div key={i} className="flex-1 bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20 rounded-t-md relative group hover:bg-[#4C1D95]/10 dark:hover:bg-[#4C1D95]/40 transition-colors cursor-pointer">
                     <motion.div 
                       initial={{ height: 0 }}
                       animate={{ height: `${height}%` }}
                       transition={{ duration: 1, delay: i * 0.1 }}
-                      className="absolute bottom-0 w-full bg-[#2bb75c] dark:bg-[#2bb75c] rounded-t-md"
+                      className="absolute bottom-0 w-full bg-[#4C1D95] dark:bg-[#4C1D95] rounded-t-md"
                     ></motion.div>
                     {/* Tooltip */}
                     <div className="opacity-0 group-hover:opacity-100 absolute -top-10 left-1/2 -tranzinc-x-1/2 bg-gray-900 text-white text-xs px-2.5 py-1.5 rounded pointer-events-none transition-opacity whitespace-nowrap shadow-lg">
@@ -264,18 +264,18 @@ export default function PromotionsCouponsCenterPage() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#2bb75c] to-[#1d8d38] rounded-2xl p-6 text-white shadow-md relative overflow-hidden group">
+            <div className="bg-gradient-to-br from-[#4C1D95] to-[#22C55E] rounded-2xl p-6 text-white shadow-md relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">
                 <TrendingUp className="w-32 h-32" />
               </div>
               <div className="flex items-center gap-2 mb-3 relative z-10">
-                <AlertCircle className="w-5 h-5 text-[#2bb75c]" />
+                <AlertCircle className="w-5 h-5 text-[#4C1D95]" />
                 <h3 className="text-lg font-bold">Pro Tips</h3>
               </div>
-              <p className="text-[#2bb75c] text-sm mb-6 relative z-10 leading-relaxed">
+              <p className="text-[#4C1D95] text-sm mb-6 relative z-10 leading-relaxed">
                 Offer a 20% discount on first-time orders to increase your conversion rate by up to 35%. Time-limited campaigns create a strong sense of urgency!
               </p>
-              <button className="bg-white text-[#2bb75c] hover:bg-surface text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors relative z-10 w-full shadow-sm">
+              <button className="bg-white text-[#4C1D95] hover:bg-surface text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors relative z-10 w-full shadow-sm">
                 Read Marketing Guide
               </button>
             </div>
@@ -317,7 +317,7 @@ export default function PromotionsCouponsCenterPage() {
                           type="text"
                           {...register('code')}
                           placeholder="e.g. SUMMER24"
-                          className="w-full pl-11 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white uppercase font-mono tracking-wide focus:ring-2 focus:ring-[#2bb75c] focus:border-[#2bb75c]/20 outline-none transition-shadow"
+                          className="w-full pl-11 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white uppercase font-mono tracking-wide focus:ring-2 focus:ring-[#4C1D95] focus:border-[#4C1D95]/20 outline-none transition-shadow"
                         />
                       </div>
                       {errors.code && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.code.message}</p>}
@@ -328,7 +328,7 @@ export default function PromotionsCouponsCenterPage() {
                         <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Discount Type</label>
                         <select 
                           {...register('discountType')}
-                          className="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-[#2bb75c] focus:border-[#2bb75c]/20 outline-none transition-shadow appearance-none"
+                          className="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-[#4C1D95] focus:border-[#4C1D95]/20 outline-none transition-shadow appearance-none"
                         >
                           <option value="percentage">Percentage (%)</option>
                           <option value="fixed">Fixed Amount ($)</option>
@@ -345,7 +345,7 @@ export default function PromotionsCouponsCenterPage() {
                           <input 
                             type="number"
                             {...register('discountValue')}
-                            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-[#2bb75c] focus:border-[#2bb75c]/20 outline-none transition-shadow"
+                            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-[#4C1D95] focus:border-[#4C1D95]/20 outline-none transition-shadow"
                           />
                         </div>
                         {errors.discountValue && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.discountValue.message}</p>}
@@ -359,7 +359,7 @@ export default function PromotionsCouponsCenterPage() {
                           type="number"
                           {...register('minPurchase')}
                           placeholder="Optional"
-                          className="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-[#2bb75c] focus:border-[#2bb75c]/20 outline-none transition-shadow"
+                          className="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-[#4C1D95] focus:border-[#4C1D95]/20 outline-none transition-shadow"
                         />
                       </div>
                       <div>
@@ -368,7 +368,7 @@ export default function PromotionsCouponsCenterPage() {
                           type="number"
                           {...register('maxUses')}
                           placeholder="Unlimited"
-                          className="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-[#2bb75c] focus:border-[#2bb75c]/20 outline-none transition-shadow"
+                          className="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-[#4C1D95] focus:border-[#4C1D95]/20 outline-none transition-shadow"
                         />
                       </div>
                     </div>
@@ -381,7 +381,7 @@ export default function PromotionsCouponsCenterPage() {
                           <input 
                             type="date"
                             {...register('startDate')}
-                            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-[#2bb75c] focus:border-[#2bb75c]/20 outline-none transition-shadow [&::-webkit-calendar-picker-indicator]:dark:filter [&::-webkit-calendar-picker-indicator]:dark:invert"
+                            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-[#4C1D95] focus:border-[#4C1D95]/20 outline-none transition-shadow [&::-webkit-calendar-picker-indicator]:dark:filter [&::-webkit-calendar-picker-indicator]:dark:invert"
                           />
                         </div>
                         {errors.startDate && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.startDate.message}</p>}
@@ -393,7 +393,7 @@ export default function PromotionsCouponsCenterPage() {
                           <input 
                             type="date"
                             {...register('endDate')}
-                            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-[#2bb75c] focus:border-[#2bb75c]/20 outline-none transition-shadow [&::-webkit-calendar-picker-indicator]:dark:filter [&::-webkit-calendar-picker-indicator]:dark:invert"
+                            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-[#4C1D95] focus:border-[#4C1D95]/20 outline-none transition-shadow [&::-webkit-calendar-picker-indicator]:dark:filter [&::-webkit-calendar-picker-indicator]:dark:invert"
                           />
                         </div>
                         {errors.endDate && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.endDate.message}</p>}
@@ -413,7 +413,7 @@ export default function PromotionsCouponsCenterPage() {
                   <button 
                     form="promo-form"
                     type="submit"
-                    className="px-6 py-2.5 font-medium text-white bg-[#2bb75c] hover:bg-[#1d8d38] rounded-lg transition-colors shadow-sm"
+                    className="px-6 py-2.5 font-medium text-white bg-[#4C1D95] hover:bg-[#22C55E] rounded-lg transition-colors shadow-sm"
                   >
                     Generate Coupon
                   </button>
@@ -427,4 +427,5 @@ export default function PromotionsCouponsCenterPage() {
     </div>
   );
 }
+
 

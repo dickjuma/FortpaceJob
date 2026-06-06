@@ -18,7 +18,7 @@ const CityTalentDirectory = () => {
         <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
           {cities.map((city) => (
             <Link
-              className="bg-white rounded-3xl p-6 border border-zinc-200 hover:border-[#2bb75c]/50 hover:shadow-xl transition-all"
+              className="bg-white rounded-3xl p-6 border border-zinc-200 hover:border-[#4C1D95]/50 hover:shadow-xl transition-all"
               key={city.city}
               to={`/search-results?location=${encodeURIComponent(city.city)}&mode=all`}
             >
@@ -40,4 +40,5 @@ const CityTalentDirectory = () => {
 };
 
 export default CityTalentDirectory;
+
 

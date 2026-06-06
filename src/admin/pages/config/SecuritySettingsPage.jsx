@@ -61,7 +61,7 @@ export default function SecuritySettingsPage() {
               onClick={() => setActiveTab(activeTab === 'policy' ? 'audit' : 'policy')}
               className={cn(
                 "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-                activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#2bb75c]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+                activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#4C1D95]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
               )}
            >
               <Activity size={16} /> {activeTab === 'policy' ? 'Security Audit' : 'Policy Editor'}
@@ -131,7 +131,7 @@ export default function SecuritySettingsPage() {
                       </p>
                    </div>
                 </div>
-                 <button onClick={() => rotateMutation.mutate()} disabled={rotateMutation.isPending} className="p-2 text-[#2bb75c] hover:bg-[#2bb75c]/5 rounded-xl transition-colors disabled:opacity-50">
+                 <button onClick={() => rotateMutation.mutate()} disabled={rotateMutation.isPending} className="p-2 text-[#4C1D95] hover:bg-[#4C1D95]/5 rounded-xl transition-colors disabled:opacity-50">
                     {rotateMutation.isPending ? <Loader2 size={18} className="animate-spin" /> : <RefreshCw size={18} />}
                  </button>
              </div>
@@ -141,7 +141,7 @@ export default function SecuritySettingsPage() {
         <button 
           onClick={handleSave}
           disabled={isUpdating}
-          className="w-full py-4 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-2xl font-black text-sm shadow-xl hover:bg-zinc-800 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
+          className="w-full py-4 bg-surface-dark text-white dark:bg-[#4C1D95] rounded-2xl font-black text-sm shadow-xl hover:bg-zinc-800 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {isUpdating ? <><Loader2 size={16} className="animate-spin" /> Saving…</> : <><Save size={16} /> Save Security Changes</>}
         </button>
@@ -151,4 +151,5 @@ export default function SecuritySettingsPage() {
     </div>
   );
 }
+
 

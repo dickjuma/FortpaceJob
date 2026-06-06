@@ -22,8 +22,8 @@ export default function Button({
   const baseStyles = "relative inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 outline-none overflow-hidden group z-10";
   
   const variants = {
-    primary: "text-white bg-[#2bb75c] hover:bg-[#1d8d38] shadow-[0_4px_14px_0_rgb(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)] hover:-tranzinc-y-0.5",
-    gradient: "text-white bg-gradient-to-r from-[#2bb75c] to-[#1d8d38] hover:from-[#2bb75c] hover:to-[#1d8d38] shadow-[0_4px_14px_0_rgb(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)] hover:-tranzinc-y-0.5 border border-[#2bb75c]/20/20",
+    primary: "text-white bg-[#4C1D95] hover:bg-[#22C55E] shadow-[0_4px_14px_0_rgb(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)] hover:-tranzinc-y-0.5",
+    gradient: "text-white bg-gradient-to-r from-[#4C1D95] to-[#22C55E] hover:from-[#4C1D95] hover:to-[#22C55E] shadow-[0_4px_14px_0_rgb(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)] hover:-tranzinc-y-0.5 border border-[#4C1D95]/20/20",
     secondary: "text-zinc-700 bg-white border border-zinc-200 hover:bg-surface dark:text-zinc-200 dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700/80 shadow-sm hover:shadow",
     danger: "text-white bg-red-600 hover:bg-red-700 shadow-[0_4px_14px_0_rgb(220,38,38,0.39)] hover:shadow-[0_6px_20px_rgba(220,38,38,0.23)]",
     ghost: "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-800",
@@ -75,4 +75,5 @@ export default function Button({
     </motion.button>
   );
 }
+
 

@@ -10,8 +10,8 @@ const TalentCategories = () => {
   return (
     <>
       <div className="bg-surface-dark pt-16 pb-20 border-b border-zinc-800 relative overflow-hidden">
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-[#2bb75c]/10 blur-3xl" />
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-[#2bb75c]/10 blur-3xl" />
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-[#4C1D95]/10 blur-3xl" />
+        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-[#4C1D95]/10 blur-3xl" />
 
         <div className="container mx-auto px-4 md:px-8 relative z-10 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
@@ -39,11 +39,11 @@ const TalentCategories = () => {
                   to={`/categories/${category.kind}/${category.id}`}
                 >
                   <div className="text-xs uppercase tracking-[0.2em] text-zinc-500 font-bold mb-4">{category.kind}</div>
-                  <h3 className="text-2xl font-bold text-zinc-900 mb-3 group-hover:text-[#2bb75c] transition-colors">{category.name}</h3>
+                  <h3 className="text-2xl font-bold text-zinc-900 mb-3 group-hover:text-[#4C1D95] transition-colors">{category.name}</h3>
                   <p className="text-zinc-600 mb-6">{category.description}</p>
                   <div className="flex items-center justify-between text-sm font-medium">
                     <span className="text-zinc-500">{formatCompactNumber(count)} active profiles</span>
-                    <ArrowRight className="w-5 h-5 text-zinc-300 group-hover:text-[#2bb75c] group-hover:tranzinc-x-1 transition-all" />
+                    <ArrowRight className="w-5 h-5 text-zinc-300 group-hover:text-[#4C1D95] group-hover:tranzinc-x-1 transition-all" />
                   </div>
                 </Link>
               </motion.div>
@@ -71,4 +71,5 @@ const TalentCategories = () => {
 };
 
 export default TalentCategories;
+
 

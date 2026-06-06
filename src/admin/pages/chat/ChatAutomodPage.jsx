@@ -42,7 +42,7 @@ export default function ChatAutomodPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl">
+            <div className="p-2.5 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl">
               <Bot size={24} />
             </div>
             <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Auto-Moderation Logs</h1>
@@ -78,7 +78,7 @@ export default function ChatAutomodPage() {
 
       {!isLoading && automodLogs.length === 0 && (
         <div className="p-16 flex flex-col items-center justify-center bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800">
-          <Bot size={48} className="text-[#2bb75c] mb-4" />
+          <Bot size={48} className="text-[#4C1D95] mb-4" />
           <h3 className="text-xl font-bold text-zinc-900 dark:text-white">No Moderation Logs</h3>
           <p className="text-zinc-500 text-sm mt-1">Auto-moderation system has not flagged any messages.</p>
         </div>
@@ -147,3 +147,4 @@ export default function ChatAutomodPage() {
     </div>
   );
 }
+

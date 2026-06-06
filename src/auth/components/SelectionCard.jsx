@@ -14,17 +14,17 @@ export default function SelectionCard({
 }) {
   const isSelected = selected === id;
   const defaultTheme = {
-    border: isSelected ? 'border-[#2bb75c]/20' : 'border-zinc-200 dark:border-zinc-800',
-    bg: isSelected ? 'bg-[#2bb75c]/5/50 dark:bg-[#2bb75c]/10' : 'bg-white/50 dark:bg-surface-dark/50',
-    iconBg: isSelected ? 'bg-[#2bb75c]' : 'bg-[#2bb75c]/10 dark:bg-[#2bb75c]/20',
-    iconColor: isSelected ? 'text-white' : 'text-[#2bb75c] dark:text-[#2bb75c]',
+    border: isSelected ? 'border-[#4C1D95]/20' : 'border-zinc-200 dark:border-zinc-800',
+    bg: isSelected ? 'bg-[#4C1D95]/5/50 dark:bg-[#4C1D95]/10' : 'bg-white/50 dark:bg-surface-dark/50',
+    iconBg: isSelected ? 'bg-[#4C1D95]' : 'bg-[#4C1D95]/10 dark:bg-[#4C1D95]/20',
+    iconColor: isSelected ? 'text-white' : 'text-[#4C1D95] dark:text-[#4C1D95]',
     shadow: isSelected ? 'shadow-[0_0_20px_rgba(37,99,235,0.2)]' : 'shadow-sm hover:shadow-md',
   };
   const accentClassMap = {
     brand: {
-      radio: 'border-[#2bb75c]/20 bg-[#2bb75c]',
-      outline: 'border-[#2bb75c]/20',
-      eyebrow: 'text-[#2bb75c] dark:text-[#2bb75c]',
+      radio: 'border-[#4C1D95]/20 bg-[#4C1D95]',
+      outline: 'border-[#4C1D95]/20',
+      eyebrow: 'text-[#4C1D95] dark:text-[#4C1D95]',
     },
     cyan: {
       radio: 'border-cyan-500 bg-cyan-500',
@@ -160,4 +160,5 @@ export default function SelectionCard({
     </motion.button>
   );
 }
+
 

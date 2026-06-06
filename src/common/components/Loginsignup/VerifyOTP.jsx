@@ -128,7 +128,7 @@ const VerifyOTP = () => {
                 value={digit}
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-12 h-12 text-center text-2xl font-bold border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-#2bb75c] focus:border-transparent"
+                className="w-12 h-12 text-center text-2xl font-bold border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-#4C1D95] focus:border-transparent"
               />
             ))}
           </div>
@@ -136,7 +136,7 @@ const VerifyOTP = () => {
             <button
               type="submit"
               disabled={isLoading || otp.some((d) => !d)}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#2bb75c] hover:bg-[#1d8d38] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-#2bb75c] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#4C1D95] hover:bg-[#22C55E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-#4C1D95] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? "Verifying..." : "Verify Code"}
             </button>
@@ -146,7 +146,7 @@ const VerifyOTP = () => {
               type="button"
               onClick={handleResend}
               disabled={resendCooldown > 0}
-              className="text-sm text-[#2bb75c] hover:text-[#2bb75c] disabled:text-gray-400"
+              className="text-sm text-[#4C1D95] hover:text-[#4C1D95] disabled:text-gray-400"
             >
               {resendCooldown > 0
                 ? `Resend in ${resendCooldown}s`
@@ -160,3 +160,4 @@ const VerifyOTP = () => {
 };
 
 export default VerifyOTP;
+

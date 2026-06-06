@@ -112,7 +112,7 @@ export default function FeatureFlagsPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl shadow-sm">
+            <div className="p-2.5 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl shadow-sm">
               <ToggleLeft size={24} />
             </div>
             <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Feature Flags & Rollouts</h1>
@@ -127,7 +127,7 @@ export default function FeatureFlagsPage() {
           </button>
           <button
             onClick={() => setCreateModal(true)}
-            className="px-5 py-2.5 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+            className="px-5 py-2.5 bg-surface-dark text-white dark:bg-[#4C1D95] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
           >
             <Plus size={16} /> Define New Flag
           </button>
@@ -232,4 +232,5 @@ export default function FeatureFlagsPage() {
     </div>
   );
 }
+
 

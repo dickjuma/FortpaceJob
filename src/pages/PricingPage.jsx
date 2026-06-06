@@ -104,7 +104,7 @@ export default function PricingPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center pt-24">
-        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" />
       </div>
     );
   }
@@ -113,7 +113,7 @@ export default function PricingPage() {
     <div className="min-h-screen bg-zinc-50 pt-28 pb-20">
       <div className="container mx-auto px-4 md:px-8 max-w-6xl">
         <div className="text-center mb-14">
-          <p className="text-[#2bb75c] font-bold text-sm uppercase tracking-widest mb-3">Freelancer plans</p>
+          <p className="text-[#4C1D95] font-bold text-sm uppercase tracking-widest mb-3">Freelancer plans</p>
           <h1 className="text-4xl md:text-5xl font-black text-zinc-900 mb-4">
             More visibility. More matched work.
           </h1>
@@ -141,14 +141,14 @@ export default function PricingPage() {
         )}
 
         {isAuthenticated && mySub && (
-          <div className="mb-10 p-4 bg-white border border-[#2bb75c]/30 rounded-2xl flex flex-wrap items-center justify-between gap-4">
+          <div className="mb-10 p-4 bg-white border border-[#4C1D95]/30 rounded-2xl flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-sm text-zinc-500">Your plan</p>
               <p className="font-bold text-zinc-900">{mySub.plan?.name}</p>
             </div>
             <div className="text-sm">
               <span className="text-zinc-500">Recommendations left: </span>
-              <span className="font-bold text-[#2bb75c]">
+              <span className="font-bold text-[#4C1D95]">
                 {mySub.remaining?.gigRecommendations == null
                   ? 'Unlimited'
                   : mySub.remaining.gigRecommendations}
@@ -169,17 +169,17 @@ export default function PricingPage() {
                 key={plan.id}
                 className={`relative bg-white rounded-3xl border-2 p-8 flex flex-col shadow-sm transition-all ${
                   plan.id === 'sme'
-                    ? 'border-[#2bb75c] shadow-lg scale-[1.02]'
+                    ? 'border-[#4C1D95] shadow-lg scale-[1.02]'
                     : 'border-zinc-200 hover:border-zinc-300'
                 } ${disabled ? 'opacity-75' : ''}`}
               >
                 {plan.id === 'sme' && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#2bb75c] text-white text-xs font-bold px-3 py-1 rounded-full">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#4C1D95] text-white text-xs font-bold px-3 py-1 rounded-full">
                     Most popular
                   </span>
                 )}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 rounded-xl bg-[#2bb75c]/10 text-[#2bb75c]">
+                  <div className="p-2.5 rounded-xl bg-[#4C1D95]/10 text-[#4C1D95]">
                     <Icon className="w-6 h-6" />
                   </div>
                   <div>
@@ -195,30 +195,30 @@ export default function PricingPage() {
                 </div>
                 <ul className="space-y-3 mb-8 flex-1 text-sm">
                   <li className="flex gap-2">
-                    <Check className="w-4 h-4 text-[#2bb75c] shrink-0 mt-0.5" />
+                    <Check className="w-4 h-4 text-[#4C1D95] shrink-0 mt-0.5" />
                     <span>
                       <strong>{formatLimit(plan.gigRecommendationsPerMonth, plan.unlimited)}</strong> gig recommendations
                     </span>
                   </li>
                   <li className="flex gap-2">
-                    <Check className="w-4 h-4 text-[#2bb75c] shrink-0 mt-0.5" />
+                    <Check className="w-4 h-4 text-[#4C1D95] shrink-0 mt-0.5" />
                     <span>
                       <strong>{formatLimit(plan.jobApplicationsPerMonth, plan.unlimited)}</strong> job applications
                     </span>
                   </li>
                   <li className="flex gap-2">
-                    <Check className="w-4 h-4 text-[#2bb75c] shrink-0 mt-0.5" />
+                    <Check className="w-4 h-4 text-[#4C1D95] shrink-0 mt-0.5" />
                     <span>+{plan.matchingPriorityBoost} matching priority</span>
                   </li>
                   {plan.featuredProfile && (
                     <li className="flex gap-2">
-                      <Check className="w-4 h-4 text-[#2bb75c] shrink-0 mt-0.5" />
+                      <Check className="w-4 h-4 text-[#4C1D95] shrink-0 mt-0.5" />
                       <span>Featured profile badge</span>
                     </li>
                   )}
                   {plan.prioritySupport && (
                     <li className="flex gap-2">
-                      <Check className="w-4 h-4 text-[#2bb75c] shrink-0 mt-0.5" />
+                      <Check className="w-4 h-4 text-[#4C1D95] shrink-0 mt-0.5" />
                       <span>Priority support</span>
                     </li>
                   )}
@@ -231,7 +231,7 @@ export default function PricingPage() {
                     isCurrent
                       ? 'bg-zinc-100 text-zinc-500 cursor-default'
                       : plan.id === 'sme'
-                        ? 'bg-[#2bb75c] text-white hover:bg-[#1d8d38]'
+                        ? 'bg-[#4C1D95] text-white hover:bg-[#22C55E]'
                         : 'bg-zinc-900 text-white hover:bg-zinc-800'
                   } disabled:opacity-50`}
                 >
@@ -295,7 +295,7 @@ export default function PricingPage() {
 
         <p className="text-center text-xs text-zinc-500 mt-8">
           Subscriptions bill to Fortespace revenue (not escrow).{' '}
-          <Link to="/terms" className="text-[#2bb75c] hover:underline">
+          <Link to="/terms" className="text-[#4C1D95] hover:underline">
             Terms
           </Link>
         </p>
@@ -303,4 +303,5 @@ export default function PricingPage() {
     </div>
   );
 }
+
 

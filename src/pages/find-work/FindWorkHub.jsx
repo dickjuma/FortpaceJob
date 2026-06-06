@@ -48,9 +48,9 @@ export default function FindWorkHub() {
 
   return (
     <>
-      <div className="bg-[#2bb75c] text-white pt-24 pb-20 relative overflow-hidden">
+      <div className="bg-[#4C1D95] text-white pt-24 pb-20 relative overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1d8d38] via-[#2bb75c] to-[#0d7a00]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#22C55E] via-[#4C1D95] to-[#0d7a00]" />
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/10 rounded-full blur-3xl -mr-40 -mt-40" />
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-black/10 rounded-full blur-3xl -ml-20 -mb-20" />
         </div>
@@ -72,7 +72,7 @@ export default function FindWorkHub() {
               ].map(({ label, value, icon: Icon }) => (
                 <div key={label} className="rounded-3xl bg-white/10 border border-white/15 px-5 py-4">
                   <div className="flex items-center gap-3 text-[#d7f9e3] mb-2">
-                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white/15 text-[#2bb75c]">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white/15 text-[#4C1D95]">
                       <Icon className="w-5 h-5" />
                     </span>
                     <span className="text-sm uppercase tracking-[0.21em] font-semibold">{label}</span>
@@ -107,7 +107,7 @@ export default function FindWorkHub() {
                   onClick={() => setWorkType(id)}
                   className={`flex-1 md:flex-none px-5 py-2.5 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-2 ${
                     workType === id
-                      ? 'bg-white shadow-sm text-[#2bb75c] border border-zinc-200'
+                      ? 'bg-white shadow-sm text-[#4C1D95] border border-zinc-200'
                       : 'text-zinc-500 hover:text-zinc-900'
                   }`}
                 >
@@ -115,14 +115,14 @@ export default function FindWorkHub() {
                 </button>
               ))}
             </div>
-            <button type="submit" className="px-8 py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl transition-colors md:ml-2 text-center">
+            <button type="submit" className="px-8 py-4 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl transition-colors md:ml-2 text-center">
               Find Work
             </button>
           </form>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-10 max-w-5xl mx-auto">
             {[
-              { label: 'Online Jobs', value: stats.onlineJobs, accent: 'from-[#58d47b] to-[#2bb75c]' },
+              { label: 'Online Jobs', value: stats.onlineJobs, accent: 'from-[#58d47b] to-[#4C1D95]' },
               { label: 'Local Gigs', value: stats.localJobs, accent: 'from-[#0ea5e9] to-[#6366f1]' },
               { label: 'Verified Clients', value: stats.verifiedJobs, accent: 'from-[#facc15] to-[#f97316]' },
               { label: 'Urgent Dispatches', value: stats.urgentJobs, accent: 'from-[#f43f5e] to-[#ec4899]' },
@@ -150,7 +150,7 @@ export default function FindWorkHub() {
                 <h2 className="text-3xl font-black text-zinc-900 mb-2">Browse categories designed for discovery</h2>
                 <p className="text-zinc-600 max-w-xl">Explore work categories that map directly to client briefs, role taxonomies, and search-ready job filters.</p>
               </div>
-              <Link to="/find-work/categories" className="text-[#2bb75c] font-bold text-sm uppercase tracking-[0.18em] hover:underline">
+              <Link to="/find-work/categories" className="text-[#4C1D95] font-bold text-sm uppercase tracking-[0.18em] hover:underline">
                 View All
               </Link>
             </div>
@@ -181,7 +181,7 @@ export default function FindWorkHub() {
                 <h2 className="text-2xl font-bold text-zinc-900 mb-2">Featured Opportunities</h2>
                 <p className="text-zinc-600">Prioritized by verified clients, urgency, and current hiring momentum.</p>
               </div>
-              <Link to="/find-work/search?type=all" className="text-[#2bb75c] font-bold text-sm hover:underline">
+              <Link to="/find-work/search?type=all" className="text-[#4C1D95] font-bold text-sm hover:underline">
                 Explore All Results
               </Link>
             </div>
@@ -203,4 +203,5 @@ export default function FindWorkHub() {
     </>
   );
 }
+
 

@@ -84,7 +84,7 @@ export default function LedgerPage() {
             onClick={() => setActiveTab(activeTab === 'ledger' ? 'audit' : 'ledger')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#2bb75c]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#4C1D95]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={16} /> {activeTab === 'ledger' ? 'Audit Trail' : 'Back to Ledger'}
@@ -94,7 +94,7 @@ export default function LedgerPage() {
           </button>
           <button 
             onClick={() => setIsManualEntryOpen(true)}
-            className="px-4 py-2 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-surface-dark text-white dark:bg-[#4C1D95] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
           >
             <Plus size={16} /> Manual Entry
           </button>
@@ -111,7 +111,7 @@ export default function LedgerPage() {
               placeholder="Search TXN ID, Reference, or Account..." 
               value={filters.transactions.search}
               onChange={(e) => setFilter('transactions', 'search', e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#2bb75c] outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#4C1D95] outline-none"
             />
           </div>
           <select className="px-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold outline-none cursor-pointer">
@@ -205,7 +205,7 @@ export default function LedgerPage() {
                       <td className="p-4 text-right">
                         <button 
                           onClick={() => setSelectedTransaction(trx)}
-                          className="p-1.5 text-[#2bb75c] bg-[#2bb75c]/5 hover:bg-[#2bb75c]/10 dark:bg-[#2bb75c]/20 dark:hover:bg-[#2bb75c]/40 rounded-lg transition-colors" title="View Detail"
+                          className="p-1.5 text-[#4C1D95] bg-[#4C1D95]/5 hover:bg-[#4C1D95]/10 dark:bg-[#4C1D95]/20 dark:hover:bg-[#4C1D95]/40 rounded-lg transition-colors" title="View Detail"
                         >
                           <Eye size={16} />
                         </button>
@@ -236,4 +236,5 @@ export default function LedgerPage() {
     </div>
   );
 }
+
 

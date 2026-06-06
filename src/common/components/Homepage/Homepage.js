@@ -44,7 +44,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="w-full overflow-x-hidden bg-[#F7F9FB] font-sans antialiased">
+    <div className="w-full overflow-x-hidden bg-[#F2F2F2] font-sans antialiased">
       {/* Hero Section */}
       <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
         {/* Background image with overlay */}
@@ -54,7 +54,7 @@ const HomePage = () => {
             alt="Hero background"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-[#4A312F]/80 to-[#4A312F]/40" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#4C1D95]/80 to-[#4C1D95]/40" />
         </div>
 
         {/* Content */}
@@ -66,7 +66,7 @@ const HomePage = () => {
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6"
           >
             {typed}
-            <span className="text-[#D34079] animate-pulse">|</span>
+            <span className="text-[#A855F7] animate-pulse">|</span>
           </motion.h1>
 
           <motion.p
@@ -74,7 +74,7 @@ const HomePage = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="text-lg sm:text-xl md:text-2xl text-[#B7E2BF] mb-10"
+            className="text-lg sm:text-xl md:text-2xl text-[#E5E7EB] mb-10"
           >
             {taglines[tagIndex]}
           </motion.p>
@@ -84,9 +84,9 @@ const HomePage = () => {
             <input
               type="text"
               placeholder="Search by skill, role, or keyword..."
-              className="flex-1 px-6 py-4 rounded-xl sm:rounded-r-none border-2 border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-[#D34079] focus:border-transparent transition"
+              className="flex-1 px-6 py-4 rounded-xl sm:rounded-r-none border-2 border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-[#A855F7] focus:border-transparent transition"
             />
-            <button className="px-8 py-4 bg-[#D34079] text-white font-semibold rounded-xl sm:rounded-l-none hover:bg-[#b12f65] transition shadow-lg hover:shadow-xl">
+            <button className="px-8 py-4 bg-[#A855F7] text-white font-semibold rounded-xl sm:rounded-l-none hover:bg-[#7C3AED] transition shadow-lg hover:shadow-xl">
               Search
             </button>
           </div>
@@ -96,10 +96,10 @@ const HomePage = () => {
       {/* Categories Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#4A312F] mb-3">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#4C1D95] mb-3">
             Explore Categories
           </h2>
-          <p className="text-[#4A312F]/70 text-lg mb-12">
+          <p className="text-[#4C1D95]/70 text-lg mb-12">
             Find the perfect freelancer for any project or skill set.
           </p>
 
@@ -109,15 +109,15 @@ const HomePage = () => {
                 key={index}
                 whileHover={{ y: -8 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="bg-[#F7F9FB] rounded-2xl p-6 shadow-sm hover:shadow-xl border border-gray-100 cursor-pointer group"
+                className="bg-[#F2F2F2] rounded-2xl p-6 shadow-sm hover:shadow-xl border border-gray-100 cursor-pointer group"
               >
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#B7E2BF] flex items-center justify-center text-2xl text-[#4A312F] group-hover:bg-[#D34079] group-hover:text-white transition-colors duration-300">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#E5E7EB] flex items-center justify-center text-2xl text-[#4C1D95] group-hover:bg-[#A855F7] group-hover:text-white transition-colors duration-300">
                   {category.icon}
                 </div>
-                <h3 className="text-lg font-semibold text-[#4A312F] mb-2">
+                <h3 className="text-lg font-semibold text-[#4C1D95] mb-2">
                   {category.name}
                 </h3>
-                <p className="text-sm text-[#4A312F]/70">
+                <p className="text-sm text-[#4C1D95]/70">
                   {category.desc}
                 </p>
               </motion.div>
@@ -127,10 +127,10 @@ const HomePage = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#F7F9FB]">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#F2F2F2]">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#4A312F]">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#4C1D95]">
               How it Works
             </h2>
             <ToggleButton isHiring={isHiring} setIsHiring={setIsHiring} />
@@ -146,3 +146,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+

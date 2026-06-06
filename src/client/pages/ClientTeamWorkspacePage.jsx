@@ -154,7 +154,7 @@ export default function ClientTeamWorkspacePage() {
               </button>
               <button 
                 onClick={() => setShowInviteModal(true)}
-                className="px-4 py-2 bg-success hover:bg-success text-white rounded-xl text-sm font-bold transition-colors flex items-center gap-2 shadow-lg shadow-[#2bb75c]/10"
+                className="px-4 py-2 bg-success hover:bg-success text-white rounded-xl text-sm font-bold transition-colors flex items-center gap-2 shadow-lg shadow-[#4C1D95]/10"
               >
                 <UserPlus className="w-4 h-4" /> Invite Member
               </button>
@@ -335,7 +335,7 @@ export default function ClientTeamWorkspacePage() {
                             </button>
                             <button 
                               onClick={() => handleApprovalDecision(approval.id, 'approve')}
-                              className="flex items-center justify-center w-10 h-10 rounded-full bg-success text-white hover:bg-success transition-colors shadow-lg shadow-[#2bb75c]/10"
+                              className="flex items-center justify-center w-10 h-10 rounded-full bg-success text-white hover:bg-success transition-colors shadow-lg shadow-[#4C1D95]/10"
                             >
                               <Check className="w-5 h-5" />
                             </button>
@@ -497,7 +497,7 @@ export default function ClientTeamWorkspacePage() {
                 <button 
                   type="submit"
                   disabled={inviteMutation.isPending}
-                  className="w-full py-3 bg-success hover:bg-success text-white rounded-xl text-sm font-bold transition-colors shadow-lg shadow-[#2bb75c]/10 mt-4 disabled:opacity-50"
+                  className="w-full py-3 bg-success hover:bg-success text-white rounded-xl text-sm font-bold transition-colors shadow-lg shadow-[#4C1D95]/10 mt-4 disabled:opacity-50"
                 >
                   {inviteMutation.isPending ? 'Sending Invitation...' : 'Send Invitation'}
                 </button>
@@ -510,5 +510,6 @@ export default function ClientTeamWorkspacePage() {
     </div>
   );
 }
+
 
 

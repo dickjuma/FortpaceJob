@@ -12,14 +12,14 @@ export default function AccountRecoveryPage() {
     >
       <div className="space-y-6">
         <div className="flex justify-center">
-          <div className="w-16 h-16 bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 rounded-full flex items-center justify-center">
-            <ShieldAlert className="w-8 h-8 text-[#2bb75c] dark:text-[#2bb75c]" />
+          <div className="w-16 h-16 bg-[#4C1D95]/10 dark:bg-[#4C1D95]/30 rounded-full flex items-center justify-center">
+            <ShieldAlert className="w-8 h-8 text-[#4C1D95] dark:text-[#4C1D95]" />
           </div>
         </div>
 
         <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900/40">
           <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-2 flex items-center gap-2">
-            <KeyRound className="w-4 h-4 text-[#2bb75c]" />
+            <KeyRound className="w-4 h-4 text-[#4C1D95]" />
             Step 1
           </h3>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -29,7 +29,7 @@ export default function AccountRecoveryPage() {
 
         <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900/40">
           <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-2 flex items-center gap-2">
-            <Mail className="w-4 h-4 text-[#2bb75c]" />
+            <Mail className="w-4 h-4 text-[#4C1D95]" />
             Step 2
           </h3>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -59,4 +59,5 @@ export default function AccountRecoveryPage() {
     </AuthLayout>
   );
 }
+
 

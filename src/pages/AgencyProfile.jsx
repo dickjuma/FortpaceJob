@@ -47,7 +47,7 @@ const AgencyProfile = () => {
               </p>
 
               <div className="flex gap-4">
-                <button className="px-8 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl transition-colors shadow-md">
+                <button className="px-8 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl transition-colors shadow-md">
                   Hire Agency
                 </button>
                 <button className="px-8 py-3 bg-white border border-zinc-200 hover:bg-surface text-zinc-700 font-bold rounded-xl transition-colors flex items-center gap-2 shadow-sm">
@@ -63,11 +63,11 @@ const AgencyProfile = () => {
               {/* Agency Members */}
               <div className="bg-white border border-zinc-200 rounded-3xl p-8">
                 <h2 className="text-xl font-bold text-zinc-900 mb-6 flex items-center gap-2">
-                  <Users className="w-5 h-5 text-[#2bb75c]" /> Core Team Members
+                  <Users className="w-5 h-5 text-[#4C1D95]" /> Core Team Members
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="flex items-center gap-4 p-4 border border-zinc-100 rounded-xl hover:border-[#2bb75c]/20 transition-colors">
+                    <div key={i} className="flex items-center gap-4 p-4 border border-zinc-100 rounded-xl hover:border-[#4C1D95]/20 transition-colors">
                       <img src={`https://ui-avatars.com/api/?name=Member+${i}&background=random`} className="w-12 h-12 rounded-full" alt="member" />
                       <div>
                         <div className="font-bold text-zinc-900">Team Member {i}</div>
@@ -92,7 +92,7 @@ const AgencyProfile = () => {
                       <div className="rounded-2xl overflow-hidden mb-3 h-48 border border-zinc-200">
                         <img src={item.img} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={item.title} />
                       </div>
-                      <h3 className="font-bold text-zinc-900 group-hover:text-[#2bb75c] transition-colors">{item.title}</h3>
+                      <h3 className="font-bold text-zinc-900 group-hover:text-[#4C1D95] transition-colors">{item.title}</h3>
                     </div>
                   ))}
                 </div>
@@ -113,7 +113,7 @@ const AgencyProfile = () => {
               </div>
               
               <div className="bg-surface-dark rounded-3xl p-8 text-white relative overflow-hidden">
-                <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-[#2bb75c] rounded-full blur-3xl opacity-50"></div>
+                <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-[#4C1D95] rounded-full blur-3xl opacity-50"></div>
                 <h3 className="text-xl font-bold mb-4 relative z-10">Need a managed team?</h3>
                 <p className="text-zinc-300 text-sm mb-6 relative z-10 leading-relaxed">
                   TechFlow can deploy a full squad of designers, developers, and project managers to your project within 48 hours.
@@ -132,4 +132,5 @@ const AgencyProfile = () => {
 };
 
 export default AgencyProfile;
+
 

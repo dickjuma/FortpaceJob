@@ -108,11 +108,11 @@ export default function AuditLogViewer({
         ].map((metric, i) => (
           <div key={i} className="bg-white dark:bg-surface-dark p-6 rounded-[2rem] border border-zinc-100 dark:border-zinc-800 shadow-sm group hover:shadow-xl transition-all duration-500 relative overflow-hidden">
              <div className={cn("absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 rounded-full opacity-5 group-hover:scale-150 transition-transform duration-700",
-               metric.color === 'blue' ? 'bg-[#2bb75c]' : metric.color === 'rose' ? 'bg-rose-500' : metric.color === 'amber' ? 'bg-amber-500' : 'bg-success'
+               metric.color === 'blue' ? 'bg-[#4C1D95]' : metric.color === 'rose' ? 'bg-rose-500' : metric.color === 'amber' ? 'bg-amber-500' : 'bg-success'
              )} />
              <div className="flex items-center gap-4 relative z-10">
                 <div className={cn("p-4 rounded-2xl",
-                  metric.color === 'blue' ? 'bg-[#2bb75c]/5 text-[#2bb75c]' : metric.color === 'rose' ? 'bg-rose-50 text-rose-600' : metric.color === 'amber' ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-success'
+                  metric.color === 'blue' ? 'bg-[#4C1D95]/5 text-[#4C1D95]' : metric.color === 'rose' ? 'bg-rose-50 text-rose-600' : metric.color === 'amber' ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-success'
                 )}>
                   <metric.icon size={24} />
                 </div>
@@ -145,13 +145,13 @@ export default function AuditLogViewer({
       <Card className="p-6 rounded-[2.5rem] bg-surface/50 dark:bg-zinc-800/30 backdrop-blur-md border-zinc-200/60 dark:border-zinc-800 shadow-inner">
         <div className="flex flex-wrap gap-4 items-center">
           <div className="relative flex-1 min-w-[340px] group">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#2bb75c] transition-colors" size={20} />
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#4C1D95] transition-colors" size={20} />
             <input 
               type="text" 
               value={filters.search}
               onChange={(e) => { setFilters(f => ({ ...f, search: e.target.value })); setPage(1); }}
               placeholder="Search actor, action, or entity..." 
-              className="w-full pl-14 pr-4 py-4 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-[#2bb75c]/10 outline-none transition-all shadow-sm"
+              className="w-full pl-14 pr-4 py-4 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-[#4C1D95]/10 outline-none transition-all shadow-sm"
             />
           </div>
           
@@ -239,7 +239,7 @@ export default function AuditLogViewer({
                     >
                       <td className="p-8">
                          <div className="flex flex-col">
-                            <span className="text-sm font-black text-zinc-900 dark:text-white mb-1 group-hover:text-[#2bb75c] transition-colors">
+                            <span className="text-sm font-black text-zinc-900 dark:text-white mb-1 group-hover:text-[#4C1D95] transition-colors">
                               {format(new Date(log.createdAt), 'HH:mm:ss.SSS')}
                             </span>
                             <span className="text-[10px] font-mono text-zinc-400 tracking-tighter uppercase">{log.id}</span>
@@ -247,7 +247,7 @@ export default function AuditLogViewer({
                       </td>
                       <td className="p-8">
                          <div className="flex items-center gap-4">
-                            <div className="h-12 w-12 bg-zinc-100 dark:bg-zinc-800 rounded-2xl flex items-center justify-center border border-zinc-200 dark:border-zinc-700 shadow-sm group-hover:border-[#2bb75c]/20/40 transition-colors">
+                            <div className="h-12 w-12 bg-zinc-100 dark:bg-zinc-800 rounded-2xl flex items-center justify-center border border-zinc-200 dark:border-zinc-700 shadow-sm group-hover:border-[#4C1D95]/20/40 transition-colors">
                                {log.adminId ? <Shield size={20} className="text-amber-500" /> : <User size={20} className="text-zinc-500" />}
                             </div>
                             <div className="flex flex-col">
@@ -287,7 +287,7 @@ export default function AuditLogViewer({
                          </div>
                       </td>
                       <td className="p-8 text-right">
-                         <button className="p-3 bg-surface dark:bg-zinc-800 rounded-2xl text-zinc-400 group-hover:bg-surface-dark group-hover:text-white dark:group-hover:bg-[#2bb75c] transition-all duration-300">
+                         <button className="p-3 bg-surface dark:bg-zinc-800 rounded-2xl text-zinc-400 group-hover:bg-surface-dark group-hover:text-white dark:group-hover:bg-[#4C1D95] transition-all duration-300">
                             <Hash size={18} />
                          </button>
                       </td>
@@ -326,7 +326,7 @@ export default function AuditLogViewer({
                     onClick={() => setPage(p)}
                     className={`flex h-10 w-10 items-center justify-center rounded-xl border text-xs font-black transition-colors ${
                       p === page
-                        ? 'border-[#2bb75c]/20/50 bg-[#2bb75c]/10 text-[#2bb75c]'
+                        ? 'border-[#4C1D95]/20/50 bg-[#4C1D95]/10 text-[#4C1D95]'
                         : 'border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:border-zinc-400 hover:text-zinc-900 dark:hover:text-white'
                     }`}
                   >
@@ -376,11 +376,11 @@ export default function AuditLogViewer({
 
                <div className="flex flex-wrap gap-3">
                   <div className="px-4 py-2 bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 flex items-center gap-2 shadow-sm">
-                     <Globe size={14} className="text-[#2bb75c]" />
+                     <Globe size={14} className="text-[#4C1D95]" />
                      <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400 uppercase tracking-widest">{selectedLog.geo} • {selectedLog.ipAddress}</span>
                   </div>
                   <div className="px-4 py-2 bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 flex items-center gap-2 shadow-sm">
-                     <Cpu size={14} className="text-[#2bb75c]" />
+                     <Cpu size={14} className="text-[#4C1D95]" />
                      <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400 uppercase tracking-widest">TraceID: {selectedLog.traceId}</span>
                   </div>
                </div>
@@ -409,13 +409,13 @@ export default function AuditLogViewer({
                {/* Request Payload */}
                <div className="space-y-4">
                   <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                    <FileText size={14} className="text-[#2bb75c]" /> Structured Payload Analysis
+                    <FileText size={14} className="text-[#4C1D95]" /> Structured Payload Analysis
                   </h3>
                   <div className="bg-surface-dark rounded-[2rem] p-8 border border-zinc-800 shadow-2xl relative group">
                      <button className="absolute top-6 right-6 p-2 bg-zinc-800 text-zinc-400 rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:text-white">
                         <ExternalLink size={14} />
                      </button>
-                     <pre className="text-[12px] font-mono text-[#2bb75c] overflow-x-auto leading-relaxed">
+                     <pre className="text-[12px] font-mono text-[#4C1D95] overflow-x-auto leading-relaxed">
                         {JSON.stringify(selectedLog.metadata, null, 3)}
                      </pre>
                   </div>
@@ -439,7 +439,7 @@ export default function AuditLogViewer({
                <Button 
                  variant="primary" 
                  fullWidth 
-                 className="rounded-2xl h-16 text-sm font-black uppercase tracking-widest bg-[#2bb75c] hover:bg-[#1d8d38] shadow-xl shadow-[#2bb75c]/25/20"
+                 className="rounded-2xl h-16 text-sm font-black uppercase tracking-widest bg-[#4C1D95] hover:bg-[#22C55E] shadow-xl shadow-[#4C1D95]/25/20"
                  leftIcon={<Activity size={20} />}
                  onClick={() => setShowTrace(true)}
                >
@@ -458,12 +458,12 @@ export default function AuditLogViewer({
              <div className="p-10 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
                 <div>
                    <h2 className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight flex items-center gap-4">
-                      <div className="p-3 bg-[#2bb75c] text-white rounded-[1.25rem]">
+                      <div className="p-3 bg-[#4C1D95] text-white rounded-[1.25rem]">
                          <Activity size={28} />
                       </div>
                       Distributed Trace Analysis
                    </h2>
-                   <p className="text-zinc-500 font-medium mt-1">Tracing execution flow across microservices for TraceID: <span className="text-[#2bb75c] font-mono font-bold">{selectedLog?.traceId}</span></p>
+                   <p className="text-zinc-500 font-medium mt-1">Tracing execution flow across microservices for TraceID: <span className="text-[#4C1D95] font-mono font-bold">{selectedLog?.traceId}</span></p>
                 </div>
                 <button onClick={() => setShowTrace(false)} className="p-4 bg-zinc-100 dark:bg-zinc-800 rounded-[1.5rem] transition-all hover:rotate-90">
                    <X size={28} />
@@ -472,7 +472,7 @@ export default function AuditLogViewer({
 
              <div className="flex-1 overflow-y-auto p-12 bg-surface/30 dark:bg-surface-dark/30 custom-scrollbar">
                 <div className="relative">
-                   <div className="absolute left-10 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2bb75c] via-#2bb75c] to-transparent opacity-20" />
+                   <div className="absolute left-10 top-0 bottom-0 w-1 bg-gradient-to-b from-[#4C1D95] via-#4C1D95] to-transparent opacity-20" />
                    
                    <div className="space-y-16">
                       {[
@@ -488,7 +488,7 @@ export default function AuditLogViewer({
                               <step.icon size={32} />
                            </div>
                            
-                           <div className="flex-1 bg-white dark:bg-surface-dark p-8 rounded-[2.5rem] border border-zinc-100 dark:border-zinc-800 shadow-sm group-hover:shadow-2xl group-hover:border-[#2bb75c]/20/20 transition-all duration-500 relative">
+                           <div className="flex-1 bg-white dark:bg-surface-dark p-8 rounded-[2.5rem] border border-zinc-100 dark:border-zinc-800 shadow-sm group-hover:shadow-2xl group-hover:border-[#4C1D95]/20/20 transition-all duration-500 relative">
                               <div className="absolute top-8 right-8 flex items-center gap-2">
                                  <div className="px-3 py-1 bg-surface dark:bg-zinc-800 rounded-full text-[10px] font-black text-zinc-400">
                                     {step.duration}
@@ -510,7 +510,7 @@ export default function AuditLogViewer({
 
              <div className="p-10 border-t border-zinc-100 dark:border-zinc-800 flex justify-end gap-4">
                 <Button variant="secondary" className="rounded-2xl px-10 h-14 font-black" onClick={() => setShowTrace(false)}>Back to Investigation</Button>
-                <Button variant="primary" className="rounded-2xl px-10 h-14 font-black bg-[#2bb75c]">Export Trace JSON</Button>
+                <Button variant="primary" className="rounded-2xl px-10 h-14 font-black bg-[#4C1D95]">Export Trace JSON</Button>
              </div>
           </div>
         </div>
@@ -539,4 +539,5 @@ function Wallet({ size, className }) {
     </svg>
   );
 }
+
 

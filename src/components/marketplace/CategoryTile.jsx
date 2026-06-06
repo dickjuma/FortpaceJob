@@ -16,7 +16,7 @@ export default function CategoryTile({
 }) {
   const content = (
     <div className="group relative h-full overflow-hidden rounded-[1.75rem] border border-zinc-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
-      <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#2bb75c] via-[#4ade80] to-[#0ea5e9]" />
+      <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#4C1D95] via-[#4ade80] to-[#0ea5e9]" />
       <div className="relative flex h-full flex-col justify-between p-6">
         <div>
           {badge && (
@@ -33,7 +33,7 @@ export default function CategoryTile({
           <span className={`inline-flex items-center rounded-full px-3 py-2 text-xs font-semibold ${accent}`}>
             {count != null ? `${count} ${countLabel}` : 'Explore'}
           </span>
-          <ArrowRight className="w-5 h-5 text-zinc-300 transition-colors group-hover:text-[#2bb75c]" />
+          <ArrowRight className="w-5 h-5 text-zinc-300 transition-colors group-hover:text-[#4C1D95]" />
         </div>
       </div>
     </div>
@@ -49,4 +49,5 @@ export default function CategoryTile({
 
   return content;
 }
+
 

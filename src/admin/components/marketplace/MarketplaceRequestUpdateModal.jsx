@@ -14,7 +14,7 @@ export default function MarketplaceRequestUpdateModal({ isOpen, onClose, data })
   if (!isOpen || !data) return null;
 
   const requestOptions = [
-    { id: 'status', label: 'Progress Update', icon: Clock, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5' },
+    { id: 'status', label: 'Progress Update', icon: Clock, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
     { id: 'files', label: 'Missing Deliverables', icon: FileCheck, color: 'text-success', bg: 'bg-emerald-50' },
     { id: 'payment', label: 'Payment Clarification', icon: CreditCard, color: 'text-amber-500', bg: 'bg-amber-50' },
   ];
@@ -54,7 +54,7 @@ export default function MarketplaceRequestUpdateModal({ isOpen, onClose, data })
           {/* Header */}
           <div className="p-8 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-surface/50 dark:bg-zinc-800/30">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-[#2bb75c] text-white rounded-2xl shadow-lg shadow-[#2bb75c]/25/20">
+              <div className="p-3 bg-[#4C1D95] text-white rounded-2xl shadow-lg shadow-[#4C1D95]/25/20">
                 <Send size={20} />
               </div>
               <div>
@@ -87,12 +87,12 @@ export default function MarketplaceRequestUpdateModal({ isOpen, onClose, data })
                     className={cn(
                       "p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2",
                       requestType === opt.id 
-                        ? "border-[#2bb75c]/20 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10" 
+                        ? "border-[#4C1D95]/20 bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10" 
                         : "border-zinc-100 dark:border-zinc-800 bg-surface dark:bg-zinc-800/50 hover:border-zinc-200"
                     )}
                   >
-                    <opt.icon size={20} className={cn(requestType === opt.id ? "text-[#2bb75c]" : opt.color)} />
-                    <span className={cn("text-[10px] font-black text-center", requestType === opt.id ? "text-[#2bb75c] dark:text-[#2bb75c]" : "text-zinc-500")}>
+                    <opt.icon size={20} className={cn(requestType === opt.id ? "text-[#4C1D95]" : opt.color)} />
+                    <span className={cn("text-[10px] font-black text-center", requestType === opt.id ? "text-[#4C1D95] dark:text-[#4C1D95]" : "text-zinc-500")}>
                       {opt.label}
                     </span>
                   </button>
@@ -110,15 +110,15 @@ export default function MarketplaceRequestUpdateModal({ isOpen, onClose, data })
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows={4}
-                className="w-full px-5 py-4 bg-surface dark:bg-zinc-800 border-none rounded-2xl text-sm font-medium focus:ring-2 focus:ring-[#2bb75c] outline-none transition-all resize-none"
+                className="w-full px-5 py-4 bg-surface dark:bg-zinc-800 border-none rounded-2xl text-sm font-medium focus:ring-2 focus:ring-[#4C1D95] outline-none transition-all resize-none"
                 placeholder="What exactly do you need the parties to provide or update?..."
                 required
               />
             </div>
 
-            <div className="p-4 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 rounded-2xl flex items-start gap-3 border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/50">
-              <AlertCircle size={18} className="text-[#2bb75c] mt-0.5 shrink-0" />
-              <p className="text-[10px] text-[#2bb75c] dark:text-[#2bb75c] font-bold leading-relaxed uppercase tracking-tight">
+            <div className="p-4 bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20 rounded-2xl flex items-start gap-3 border border-[#4C1D95]/20 dark:border-[#4C1D95]/20/50">
+              <AlertCircle size={18} className="text-[#4C1D95] mt-0.5 shrink-0" />
+              <p className="text-[10px] text-[#4C1D95] dark:text-[#4C1D95] font-bold leading-relaxed uppercase tracking-tight">
                 Note: This request will be sent to both {data.clientName || 'the client'} and {data.freelancerName || 'the freelancer'} to ensure transparency.
               </p>
             </div>
@@ -137,7 +137,7 @@ export default function MarketplaceRequestUpdateModal({ isOpen, onClose, data })
               type="submit"
               disabled={isSending}
               className={cn(
-                "px-8 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-2xl text-sm font-black shadow-xl shadow-[#2bb75c]/25/20 transition-all flex items-center gap-2 active:scale-95 disabled:opacity-50",
+                "px-8 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white rounded-2xl text-sm font-black shadow-xl shadow-[#4C1D95]/25/20 transition-all flex items-center gap-2 active:scale-95 disabled:opacity-50",
                 isSending && "animate-pulse"
               )}
             >
@@ -150,4 +150,5 @@ export default function MarketplaceRequestUpdateModal({ isOpen, onClose, data })
     </div>
   );
 }
+
 

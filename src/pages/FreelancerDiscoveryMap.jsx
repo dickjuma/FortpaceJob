@@ -10,7 +10,7 @@ const FreelancerDiscoveryMap = () => {
       <div className="bg-white border-b border-zinc-200 py-10 pt-24">
         <div className="container mx-auto px-4 md:px-8">
           <h1 className="text-3xl font-black text-zinc-900 mb-2 flex items-center gap-2">
-            <Map className="w-8 h-8 text-[#2bb75c]" /> Talent Discovery Map
+            <Map className="w-8 h-8 text-[#4C1D95]" /> Talent Discovery Map
           </h1>
           <p className="text-zinc-600">Browse freelancers by location and availability.</p>
         </div>
@@ -23,7 +23,7 @@ const FreelancerDiscoveryMap = () => {
 
         {loading ? (
           <div className="flex justify-center py-16">
-            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" />
           </div>
         ) : talent.length === 0 ? (
           <p className="text-center text-zinc-500 font-medium py-12">No talent to display on the map yet.</p>
@@ -47,4 +47,5 @@ const FreelancerDiscoveryMap = () => {
 };
 
 export default FreelancerDiscoveryMap;
+
 

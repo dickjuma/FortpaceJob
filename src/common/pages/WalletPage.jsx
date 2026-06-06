@@ -60,7 +60,7 @@ const WalletPage = () => {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-[#2bb75c] to-[#1d8d38] rounded-2xl p-8 text-white"
+        className="bg-gradient-to-r from-[#4C1D95] to-[#22C55E] rounded-2xl p-8 text-white"
       >
         <div className="flex items-center gap-3 mb-4">
           <Wallet size={32} />
@@ -68,11 +68,11 @@ const WalletPage = () => {
         </div>
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <p className="text-[#2bb75c] text-sm">Available Balance</p>
+            <p className="text-[#4C1D95] text-sm">Available Balance</p>
             <p className="text-4xl font-bold">$2,450.00</p>
           </div>
           <div>
-            <p className="text-[#2bb75c] text-sm">Escrow Balance</p>
+            <p className="text-[#4C1D95] text-sm">Escrow Balance</p>
             <p className="text-4xl font-bold">$1,200.00</p>
           </div>
         </div>
@@ -100,7 +100,7 @@ const WalletPage = () => {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0.00"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-#2bb75c]"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-#4C1D95]"
               />
             </div>
 
@@ -113,7 +113,7 @@ const WalletPage = () => {
                   onClick={() => setPaymentMethod("mpesa")}
                   className={`p-3 rounded-lg border text-center transition ${
                     paymentMethod === "mpesa"
-                      ? "border-[#2bb75c]/50 bg-[#2bb75c]/5"
+                      ? "border-[#4C1D95]/50 bg-[#4C1D95]/5"
                       : "border-gray-200 hover:bg-surface"
                   }`}
                 >
@@ -124,7 +124,7 @@ const WalletPage = () => {
                   onClick={() => setPaymentMethod("airtel")}
                   className={`p-3 rounded-lg border text-center transition ${
                     paymentMethod === "airtel"
-                      ? "border-[#2bb75c]/50 bg-[#2bb75c]/5"
+                      ? "border-[#4C1D95]/50 bg-[#4C1D95]/5"
                       : "border-gray-200 hover:bg-surface"
                   }`}
                 >
@@ -135,7 +135,7 @@ const WalletPage = () => {
                   onClick={() => setPaymentMethod("card")}
                   className={`p-3 rounded-lg border text-center transition ${
                     paymentMethod === "card"
-                      ? "border-[#2bb75c]/50 bg-[#2bb75c]/5"
+                      ? "border-[#4C1D95]/50 bg-[#4C1D95]/5"
                       : "border-gray-200 hover:bg-surface"
                   }`}
                 >
@@ -155,7 +155,7 @@ const WalletPage = () => {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="+254712345678"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-#2bb75c]"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-#4C1D95]"
                 />
               </div>
             )}
@@ -177,7 +177,7 @@ const WalletPage = () => {
           className="bg-white rounded-2xl p-6 border border-gray-200"
         >
           <div className="flex items-center gap-3 mb-6">
-            <ArrowDownRight className="text-[#2bb75c]" size={24} />
+            <ArrowDownRight className="text-[#4C1D95]" size={24} />
             <h3 className="text-xl font-bold">Withdraw Funds</h3>
           </div>
 
@@ -192,7 +192,7 @@ const WalletPage = () => {
                 onChange={(e) => setWithdrawAmount(e.target.value)}
                 placeholder="0.00"
                 max="2450"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-#2bb75c]"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-#4C1D95]"
               />
             </div>
 
@@ -219,7 +219,7 @@ const WalletPage = () => {
             <button
               onClick={handleWithdraw}
               disabled={loading || !withdrawAmount}
-              className="w-full py-3 bg-[#2bb75c] text-white rounded-lg font-semibold hover:bg-[#1d8d38] disabled:opacity-50"
+              className="w-full py-3 bg-[#4C1D95] text-white rounded-lg font-semibold hover:bg-[#22C55E] disabled:opacity-50"
             >
               {loading ? "Processing..." : "Withdraw Now"}
             </button>
@@ -242,12 +242,12 @@ const WalletPage = () => {
               <div key={i} className="flex items-center justify-between py-3 border-b">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    i % 2 === 0 ? "bg-green-100" : "bg-[#2bb75c]/10"
+                    i % 2 === 0 ? "bg-green-100" : "bg-[#4C1D95]/10"
                   }`}>
                     {i % 2 === 0 ? (
                       <ArrowUpRight className="text-green-600" size={20} />
                     ) : (
-                      <ArrowDownRight className="text-[#2bb75c]" size={20} />
+                      <ArrowDownRight className="text-[#4C1D95]" size={20} />
                     )}
                   </div>
                   <div>
@@ -277,3 +277,4 @@ const WalletPage = () => {
 };
 
 export default WalletPage;
+

@@ -116,12 +116,12 @@ export default function QualityPage() {
             </div>
           </div>
           
-          <div className="bg-gradient-to-br from-[#2bb75c] to-violet-600 rounded-2xl p-5 text-white shadow-md">
+          <div className="bg-gradient-to-br from-[#4C1D95] to-violet-600 rounded-2xl p-5 text-white shadow-md">
              <div className="flex items-center gap-3 mb-2">
                <ShieldX size={20} className="text-white/80" />
                <h3 className="font-bold">Auto-Mod Status</h3>
              </div>
-             <p className="text-[#2bb75c] text-sm mb-4">
+             <p className="text-[#4C1D95] text-sm mb-4">
                The AI moderation engine is actively scanning new listings.
              </p>
              <div className="bg-white/10 rounded-xl p-3 backdrop-blur-sm">
@@ -152,7 +152,7 @@ export default function QualityPage() {
                   <div key={item.id} className="p-4 hover:bg-surface/50 dark:hover:bg-zinc-800/20 transition-colors flex items-start gap-4">
                     <div className={cn(
                       "p-2 rounded-lg mt-1",
-                      item.type === 'job' ? 'bg-[#2bb75c]/10 text-[#2bb75c] dark:bg-[#2bb75c]/30' : 'bg-[#2bb75c]/10 text-[#2bb75c] dark:bg-[#2bb75c]/30'
+                      item.type === 'job' ? 'bg-[#4C1D95]/10 text-[#4C1D95] dark:bg-[#4C1D95]/30' : 'bg-[#4C1D95]/10 text-[#4C1D95] dark:bg-[#4C1D95]/30'
                     )}>
                       <AlertTriangle size={20} />
                     </div>
@@ -172,7 +172,7 @@ export default function QualityPage() {
                       <div className="flex items-center gap-3 mt-3">
                         <button
                           onClick={() => toast('Opening investigation view...', { icon: '🔍' })}
-                          className="text-xs font-semibold px-3 py-1.5 bg-[#2bb75c]/5 text-[#2bb75c] dark:bg-[#2bb75c]/10 dark:text-[#2bb75c] rounded-lg hover:bg-[#2bb75c]/10 transition-colors"
+                          className="text-xs font-semibold px-3 py-1.5 bg-[#4C1D95]/5 text-[#4C1D95] dark:bg-[#4C1D95]/10 dark:text-[#4C1D95] rounded-lg hover:bg-[#4C1D95]/10 transition-colors"
                         >
                           Investigate
                         </button>
@@ -194,4 +194,5 @@ export default function QualityPage() {
     </div>
   );
 }
+
 

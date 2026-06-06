@@ -24,11 +24,11 @@ const ActivityFeed = () => {
 
   const getIcon = (type: string) => {
     switch (type) {
-      case 'user_registered': return { icon: Users, color: 'bg-[#2bb75c]/10 text-[#2bb75c] dark:bg-[#2bb75c]/30 dark:text-[#2bb75c]' };
+      case 'user_registered': return { icon: Users, color: 'bg-[#4C1D95]/10 text-[#4C1D95] dark:bg-[#4C1D95]/30 dark:text-[#4C1D95]' };
       case 'payment': return { icon: CreditCard, color: 'bg-emerald-100 text-success dark:bg-emerald-900/30 dark:text-success' };
       case 'dispute': return { icon: Scale, color: 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400' };
       case 'fraud_flag': return { icon: ShieldAlert, color: 'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400' };
-      default: return { icon: Briefcase, color: 'bg-[#2bb75c]/10 text-[#2bb75c] dark:bg-[#2bb75c]/30 dark:text-[#2bb75c]' };
+      default: return { icon: Briefcase, color: 'bg-[#4C1D95]/10 text-[#4C1D95] dark:bg-[#4C1D95]/30 dark:text-[#4C1D95]' };
     }
   };
 
@@ -78,7 +78,7 @@ const ActivityFeed = () => {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-bold text-zinc-900 dark:text-white truncate group-hover:text-[#2bb75c] transition-colors">
+                    <p className="text-xs font-bold text-zinc-900 dark:text-white truncate group-hover:text-[#4C1D95] transition-colors">
                       {item.title}
                     </p>
                     <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-tighter whitespace-nowrap">
@@ -95,7 +95,7 @@ const ActivityFeed = () => {
         )}
       </div>
 
-      <button className="mt-6 w-full flex items-center justify-center gap-2 py-3 text-[10px] font-black text-zinc-400 hover:text-[#2bb75c] border-t border-surface-border dark:border-surface-dark-border transition-all uppercase tracking-widest">
+      <button className="mt-6 w-full flex items-center justify-center gap-2 py-3 text-[10px] font-black text-zinc-400 hover:text-[#4C1D95] border-t border-surface-border dark:border-surface-dark-border transition-all uppercase tracking-widest">
         Full Activity Log <ArrowRight size={12} />
       </button>
     </Card>
@@ -103,4 +103,5 @@ const ActivityFeed = () => {
 };
 
 export default ActivityFeed;
+
 

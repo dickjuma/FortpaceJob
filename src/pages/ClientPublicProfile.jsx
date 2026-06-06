@@ -62,7 +62,7 @@ const ClientPublicProfile = () => {
                 { title: 'Freelance UI/UX Designer', type: 'Hourly', rate: '$50 - $75/hr', time: 'Est. 1 month' }
               ].map((job, i) => (
                 <div key={i} className="bg-white border border-zinc-200 rounded-2xl p-6 hover:shadow-md transition-shadow cursor-pointer group">
-                  <h3 className="text-lg font-bold text-zinc-900 mb-2 group-hover:text-[#2bb75c] transition-colors">{job.title}</h3>
+                  <h3 className="text-lg font-bold text-zinc-900 mb-2 group-hover:text-[#4C1D95] transition-colors">{job.title}</h3>
                   <div className="flex flex-wrap gap-3 text-sm text-zinc-600 font-medium">
                     <span className="px-2.5 py-1 bg-zinc-100 rounded-lg">{job.type}</span>
                     <span className="px-2.5 py-1 bg-zinc-100 rounded-lg font-bold text-zinc-900">{job.rate}</span>
@@ -106,4 +106,5 @@ const ClientPublicProfile = () => {
 };
 
 export default ClientPublicProfile;
+
 

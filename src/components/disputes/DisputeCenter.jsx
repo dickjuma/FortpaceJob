@@ -12,7 +12,7 @@ export default function DisputeCenter() {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-            <Scale className="w-6 h-6 mr-3 text-[#2bb75c]" /> Dispute Center
+            <Scale className="w-6 h-6 mr-3 text-[#4C1D95]" /> Dispute Center
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage active disputes and track arbitration status.</p>
         </div>
@@ -25,10 +25,10 @@ export default function DisputeCenter() {
         <div className="lg:col-span-1 space-y-4">
           <h2 className="text-lg font-bold mb-4">Active Disputes</h2>
           {disputes.map(dispute => (
-            <div key={dispute.id} className="bg-white dark:bg-gray-900 border border-[#2bb75c]/20 dark:border-[#2bb75c]/20 rounded-xl p-5 shadow-sm cursor-pointer relative overflow-hidden">
-              <div className="absolute left-0 top-0 w-1 h-full bg-[#2bb75c]"></div>
+            <div key={dispute.id} className="bg-white dark:bg-gray-900 border border-[#4C1D95]/20 dark:border-[#4C1D95]/20 rounded-xl p-5 shadow-sm cursor-pointer relative overflow-hidden">
+              <div className="absolute left-0 top-0 w-1 h-full bg-[#4C1D95]"></div>
               <div className="flex justify-between items-start mb-2">
-                <span className="text-xs font-bold text-[#2bb75c] dark:text-[#2bb75c] uppercase tracking-wider">{dispute.id}</span>
+                <span className="text-xs font-bold text-[#4C1D95] dark:text-[#4C1D95] uppercase tracking-wider">{dispute.id}</span>
                 <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
                   Under Review
                 </span>
@@ -58,28 +58,28 @@ export default function DisputeCenter() {
                 <div className="bg-white dark:bg-gray-900 p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-200 dark:border-gray-800 text-sm">
                   <p className="font-bold mb-1">You opened this dispute</p>
                   <p className="text-gray-600 dark:text-gray-400 mb-3">The delivered frontend code does not meet the performance criteria established in Milestone 2. Page load times exceed the 2-second threshold.</p>
-                  <div className="flex items-center gap-2 text-[#2bb75c]">
+                  <div className="flex items-center gap-2 text-[#4C1D95]">
                     <Paperclip className="w-4 h-4" /> <span className="font-medium">lighthouse_report.pdf</span>
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-4 flex-row-reverse">
-                <div className="w-10 h-10 rounded-full bg-[#2bb75c]/10 text-[#2bb75c] flex items-center justify-center shrink-0 text-sm font-bold">
+                <div className="w-10 h-10 rounded-full bg-[#4C1D95]/10 text-[#4C1D95] flex items-center justify-center shrink-0 text-sm font-bold">
                   SJ
                 </div>
-                <div className="bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 p-4 rounded-2xl rounded-tr-none shadow-sm border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/50 text-sm">
+                <div className="bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20 p-4 rounded-2xl rounded-tr-none shadow-sm border border-[#4C1D95]/20 dark:border-[#4C1D95]/20/50 text-sm">
                   <p className="font-bold mb-1">Sarah Jenkins</p>
                   <p className="text-gray-600 dark:text-gray-400 mb-3">The performance drop is due to the unoptimized 3D assets the client insisted on uploading to the hero section. My code matches the spec.</p>
                 </div>
               </div>
 
               <div className="flex gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#2bb75c]/10 text-[#2bb75c] flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-[#4C1D95]/10 text-[#4C1D95] flex items-center justify-center shrink-0">
                   <Scale className="w-5 h-5" />
                 </div>
-                <div className="bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 p-4 rounded-2xl rounded-tl-none shadow-sm border border-[#2bb75c]/50 dark:border-[#2bb75c]/50/50 text-sm w-full">
-                  <p className="font-bold mb-1 text-[#2bb75c] dark:text-[#2bb75c]">Admin Response</p>
+                <div className="bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20 p-4 rounded-2xl rounded-tl-none shadow-sm border border-[#4C1D95]/50 dark:border-[#4C1D95]/50/50 text-sm w-full">
+                  <p className="font-bold mb-1 text-[#4C1D95] dark:text-[#4C1D95]">Admin Response</p>
                   <p className="text-gray-600 dark:text-gray-400">We are reviewing the attached evidence and the commit history. We will issue a decision within 48 hours.</p>
                 </div>
               </div>
@@ -93,9 +93,9 @@ export default function DisputeCenter() {
                 <input 
                   type="text" 
                   placeholder="Type a message or provide more evidence..." 
-                  className="flex-1 bg-gray-100 dark:bg-gray-800 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#2bb75c] outline-none"
+                  className="flex-1 bg-gray-100 dark:bg-gray-800 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#4C1D95] outline-none"
                 />
-                <button className="p-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-xl transition-colors">
+                <button className="p-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white rounded-xl transition-colors">
                   <MessageSquare className="w-5 h-5" />
                 </button>
               </div>
@@ -106,4 +106,5 @@ export default function DisputeCenter() {
     </div>
   );
 }
+
 

@@ -66,7 +66,7 @@ export default function TaxonomyRolePicker({ value, onChange }) {
   if (loading) {
     return (
       <div className="flex justify-center py-8">
-        <Loader2 className="w-6 h-6 animate-spin text-[#2bb75c]" />
+        <Loader2 className="w-6 h-6 animate-spin text-[#4C1D95]" />
       </div>
     );
   }
@@ -87,8 +87,8 @@ export default function TaxonomyRolePicker({ value, onChange }) {
               className={cn(
                 'px-3 py-1.5 rounded-full text-xs font-bold border transition-colors',
                 activeSection?.slug === section.slug
-                  ? 'bg-[#2bb75c] text-white border-[#2bb75c]'
-                  : 'bg-white border-zinc-200 text-zinc-700 hover:border-[#2bb75c]'
+                  ? 'bg-[#4C1D95] text-white border-[#4C1D95]'
+                  : 'bg-white border-zinc-200 text-zinc-700 hover:border-[#4C1D95]'
               )}
             >
               {section.name || section.title}
@@ -129,7 +129,7 @@ export default function TaxonomyRolePicker({ value, onChange }) {
                   className={cn(
                     'text-left px-3 py-2.5 rounded-xl border text-sm font-semibold flex items-center justify-between gap-2',
                     selected
-                      ? 'border-[#2bb75c] bg-[#2bb75c]/5 text-[#2bb75c]'
+                      ? 'border-[#4C1D95] bg-[#4C1D95]/5 text-[#4C1D95]'
                       : 'border-zinc-200 hover:border-zinc-300 text-zinc-800'
                   )}
                 >
@@ -144,4 +144,5 @@ export default function TaxonomyRolePicker({ value, onChange }) {
     </div>
   );
 }
+
 

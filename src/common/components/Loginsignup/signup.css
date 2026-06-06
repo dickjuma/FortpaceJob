@@ -4,7 +4,7 @@
   max-width: 1200px;
   margin: 60px auto;
   padding: 40px;
-  background: #F7F9FB; /* Secondary color */
+  background: #F2F2F2; /* Secondary color */
   border-radius: 20px;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
   font-family: 'Segoe UI', sans-serif;
@@ -26,20 +26,20 @@
   background: #fff;
   border-radius: 18px;
   padding: 30px 32px;
-  border: 1px solid #B7E2BF;
+  border: 1px solid #E5E7EB;
 }
 
 /* Header */
 .signup-container-guided h2 {
   font-size: 2.6rem;
   margin-bottom: 10px;
-  color: #4A312F; /* Primary color */
+  color: #4C1D95; /* Primary color */
   transition: color 0.5s ease-in-out;
 }
 
 .signup-subtitle {
   font-size: 1.1rem;
-  color: #4A312F;
+  color: #4C1D95;
   margin-bottom: 18px;
 }
 
@@ -53,21 +53,21 @@
   margin: 10px 0;
   padding-left: 20px;
   position: relative;
-  color: #4A312F;
+  color: #4C1D95;
 }
 
 .signup-points li::before {
   content: "�";
   position: absolute;
   left: 0;
-  color: #D34079;
+  color: #A855F7;
 }
 
 /* Step guidance */
 .step-guidance {
   text-align: left;
   font-size: 1.1rem;
-  color: #4A312F; /* Primary color */
+  color: #4C1D95; /* Primary color */
   margin: 12px 0 20px;
   transition: color 0.5s ease-in-out;
 }
@@ -84,8 +84,8 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #FBB9C2; /* Accent Pink */
-  color: #4A312F; /* Primary */
+  background: #C084FC; /* Accent Pink */
+  color: #4C1D95; /* Primary */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -95,7 +95,7 @@
 }
 
 .step-circle.active {
-  background: #D34079; /* Action CTA */
+  background: #A855F7; /* Action CTA */
   color: #fff;
   box-shadow: 0 6px 15px rgba(211,64,121,0.4);
 }
@@ -104,7 +104,7 @@
 .progress-bar-bg-guided {
   width: 100%;
   height: 10px;
-  background: #B7E2BF; /* Accent Mint */
+  background: #E5E7EB; /* Accent Mint */
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 10px;
@@ -113,7 +113,7 @@
 
 .progress-bar-fill-guided {
   height: 100%;
-  background: #D34079; /* Action CTA */
+  background: #A855F7; /* Action CTA */
   border-radius: 6px;
   transition: width 0.7s ease-in-out;
 }
@@ -124,7 +124,7 @@
   display: block;
   margin-bottom: 8px;
   margin-top: 18px;
-  color: #4A312F; /* Primary */
+  color: #4C1D95; /* Primary */
   transition: color 0.5s ease-in-out;
 }
 
@@ -134,18 +134,18 @@
   width: 100%;
   padding: 14px 18px;
   border-radius: 14px;
-  border: 1px solid #B7E2BF; /* Accent Mint */
+  border: 1px solid #E5E7EB; /* Accent Mint */
   outline: none;
   font-size: 1rem;
   transition: all 0.5s ease-in-out;
   background: #fff;
-  color: #4A312F;
+  color: #4C1D95;
 }
 
 .signup-form-guided input:focus,
 .signup-form-guided select:focus,
 .signup-form-guided textarea:focus {
-  border-color: #D34079; /* Action CTA */
+  border-color: #A855F7; /* Action CTA */
   box-shadow: 0 0 14px rgba(211,64,121,0.2);
 }
 
@@ -160,11 +160,11 @@
   text-align: left;
   padding: 18px 20px;
   border-radius: 16px;
-  border: 1px solid #B7E2BF;
-  background: #FBB9C2; /* Accent Pink */
+  border: 1px solid #E5E7EB;
+  background: #C084FC; /* Accent Pink */
   cursor: pointer;
   transition: all 0.4s ease;
-  color: #4A312F;
+  color: #4C1D95;
 }
 
 .role-card h3 {
@@ -179,7 +179,7 @@
 
 .role-card.selected,
 .role-card:hover {
-  background: #D34079;
+  background: #A855F7;
   color: #fff;
   box-shadow: 0 6px 15px rgba(211,64,121,0.3);
 }
@@ -193,7 +193,7 @@
   border-radius: 14px;
   font-weight: 600;
   cursor: pointer;
-  background: #D34079; /* Action CTA */
+  background: #A855F7; /* Action CTA */
   color: #fff;
   box-shadow: 0 6px 12px rgba(211,64,121,0.3);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -201,7 +201,7 @@
 
 .btn-next-guided:hover,
 .btn-submit-guided:hover {
-  background: #b12f65; /* Slightly darker */
+  background: #7C3AED; /* Slightly darker */
   transform: translateY(-2px);
 }
 
@@ -209,12 +209,12 @@
 .btn-back-guided {
   padding: 14px 32px;
   margin: 14px 8px 0 0;
-  border: 2px solid #4A312F;
+  border: 2px solid #4C1D95;
   border-radius: 14px;
   font-weight: 600;
   cursor: pointer;
-  background: #F7F9FB; /* Secondary */
-  color: #4A312F; /* Primary */
+  background: #F2F2F2; /* Secondary */
+  color: #4C1D95; /* Primary */
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -234,18 +234,18 @@
 .skill-btn-guided {
   padding: 8px 16px;
   border-radius: 12px;
-  border: 1px solid #B7E2BF; /* Accent Mint */
-  background: #FBB9C2; /* Accent Pink */
+  border: 1px solid #E5E7EB; /* Accent Mint */
+  background: #C084FC; /* Accent Pink */
   cursor: pointer;
   font-size: 0.95rem;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  color: #4A312F;
+  color: #4C1D95;
 }
 
 .skill-btn-guided.selected {
-  background: #D34079;
+  background: #A855F7;
   color: #fff;
-  border-color: #b12f65;
+  border-color: #7C3AED;
 }
 
 /* Avatar & Portfolio previews */
@@ -255,7 +255,7 @@
   height: 120px;
   object-fit: cover;
   border-radius: 50%;
-  border: 3px solid #D34079;
+  border: 3px solid #A855F7;
   transition: all 0.5s ease-in-out;
 }
 
@@ -272,7 +272,7 @@
   height: 130px;
   object-fit: cover;
   border-radius: 14px;
-  border: 1px solid #B7E2BF;
+  border: 1px solid #E5E7EB;
   transition: all 0.5s ease-in-out;
 }
 
@@ -288,7 +288,7 @@
   flex: 1;
   height: 10px;
   border-radius: 6px;
-  background: #B7E2BF;
+  background: #E5E7EB;
   -webkit-appearance: none;
   cursor: pointer;
   transition: all 0.5s ease-in-out;
@@ -299,7 +299,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #D34079;
+  background: #A855F7;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   transition: all 0.5s ease-in-out;
@@ -329,7 +329,7 @@
 
 .password-strength.weak { color: #ef4444; }
 .password-strength.medium { color: #f59e0b; }
-.password-strength.strong { color: #D34079; }
+.password-strength.strong { color: #A855F7; }
 
 /* Hover and Focus Effects */
 .skill-btn-guided:hover,
@@ -473,7 +473,7 @@
   display: block;
   margin-bottom: 10px;
   font-weight: 600;
-  color: #4a312f;
+  color: #4C1D95;
 }
 
 .otp-input-group input {
@@ -489,7 +489,7 @@
 }
 
 .otp-input-group input:focus {
-  border-color: #d34079;
+  border-color: #A855F7;
   box-shadow: 0 0 10px rgba(211, 64, 121, 0.1);
 }
 
@@ -498,7 +498,7 @@
   padding: 8px 12px;
   background: none;
   border: none;
-  color: #d34079;
+  color: #A855F7;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -507,7 +507,7 @@
 }
 
 .resend-link:hover:not(:disabled) {
-  color: #b12f65;
+  color: #7C3AED;
   opacity: 0.9;
 }
 
@@ -518,6 +518,7 @@
 }
 
 .required {
-  color: #d34079;
+  color: #A855F7;
   font-weight: 700;
 }
+

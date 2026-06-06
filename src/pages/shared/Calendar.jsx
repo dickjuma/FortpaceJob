@@ -8,11 +8,11 @@ import {
 
 // Mock Event Data
 const mockEvents = [
-  { id: 1, title: 'UX Review Sync', type: 'Meeting', time: '10:00 AM', duration: 1, day: 15, color: 'bg-[#2bb75c]' },
+  { id: 1, title: 'UX Review Sync', type: 'Meeting', time: '10:00 AM', duration: 1, day: 15, color: 'bg-[#4C1D95]' },
   { id: 2, title: 'Phase 1 Delivery', type: 'Milestone', time: '5:00 PM', duration: 1, day: 15, color: 'bg-green-500' },
-  { id: 3, title: 'Interview: Frontend Dev', type: 'Interview', time: '2:30 PM', duration: 1, day: 16, color: 'bg-[#2bb75c]' },
+  { id: 3, title: 'Interview: Frontend Dev', type: 'Interview', time: '2:30 PM', duration: 1, day: 16, color: 'bg-[#4C1D95]' },
   { id: 4, title: 'Project Proposal Due', type: 'Deadline', time: '11:59 PM', duration: 1, day: 18, color: 'bg-red-500' },
-  { id: 5, title: 'Weekly Standup', type: 'Meeting', time: '9:00 AM', duration: 1, day: 19, color: 'bg-[#2bb75c]' },
+  { id: 5, title: 'Weekly Standup', type: 'Meeting', time: '9:00 AM', duration: 1, day: 19, color: 'bg-[#4C1D95]' },
 ];
 
 const Calendar = () => {
@@ -29,7 +29,7 @@ const Calendar = () => {
       {/* Header & Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#2bb75c] flex items-center justify-center shadow-lg shadow-#2bb75c]/20 text-white shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-[#4C1D95] flex items-center justify-center shadow-lg shadow-#4C1D95]/20 text-white shrink-0">
             <CalendarIcon className="w-6 h-6" />
           </div>
           <div>
@@ -69,7 +69,7 @@ const Calendar = () => {
             </button>
           </div>
 
-          <button className="bg-[#2bb75c] hover:bg-[#1d8d38] text-white px-4 py-2 rounded-xl font-bold shadow-lg shadow-#2bb75c]/20 transition-all flex items-center gap-2">
+          <button className="bg-[#4C1D95] hover:bg-[#22C55E] text-white px-4 py-2 rounded-xl font-bold shadow-lg shadow-#4C1D95]/20 transition-all flex items-center gap-2">
             <Plus className="w-4 h-4" /> New Event
           </button>
         </div>
@@ -88,7 +88,7 @@ const Calendar = () => {
             <h3 className="font-bold text-sm mb-3 text-zinc-900 dark:text-white">My Calendars</h3>
             <div className="space-y-3">
               <label className="flex items-center gap-3 cursor-pointer group">
-                <input type="checkbox" defaultChecked className="w-4 h-4 text-[#2bb75c] rounded border-zinc-300 focus:ring-[#2bb75c]" />
+                <input type="checkbox" defaultChecked className="w-4 h-4 text-[#4C1D95] rounded border-zinc-300 focus:ring-[#4C1D95]" />
                 <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">Meeting & Interviews</span>
               </label>
               <label className="flex items-center gap-3 cursor-pointer group">
@@ -102,14 +102,14 @@ const Calendar = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-[#2bb75c] to-blue-900 rounded-2xl p-5 text-white shadow-xl relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#4C1D95] to-blue-900 rounded-2xl p-5 text-white shadow-xl relative overflow-hidden">
              <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-xl -tranzinc-y-1/2 tranzinc-x-1/2 pointer-events-none" />
              <h3 className="font-bold text-sm mb-2 flex items-center gap-2 relative z-10">
-               <Video className="w-4 h-4 text-[#2bb75c]" /> Next Meeting
+               <Video className="w-4 h-4 text-[#4C1D95]" /> Next Meeting
              </h3>
              <div className="relative z-10">
                <p className="font-extrabold text-lg leading-tight mb-1">UX Review Sync</p>
-               <p className="text-[#2bb75c] text-xs font-medium mb-4">Starts in 15 mins</p>
+               <p className="text-[#4C1D95] text-xs font-medium mb-4">Starts in 15 mins</p>
                <button className="w-full py-2 bg-white/20 hover:bg-white/30 border border-white/20 rounded-lg text-sm font-bold backdrop-blur-sm transition-colors">
                  Join Call
                </button>
@@ -140,10 +140,10 @@ const Calendar = () => {
               return (
                 <div 
                   key={index} 
-                  className={`bg-white dark:bg-zinc-800 p-2 flex flex-col transition-colors group cursor-crosshair hover:bg-[#2bb75c]/5/30 dark:hover:bg-zinc-700/50 ${!isCurrentMonth ? 'opacity-40 bg-surface dark:bg-surface-dark' : ''}`}
+                  className={`bg-white dark:bg-zinc-800 p-2 flex flex-col transition-colors group cursor-crosshair hover:bg-[#4C1D95]/5/30 dark:hover:bg-zinc-700/50 ${!isCurrentMonth ? 'opacity-40 bg-surface dark:bg-surface-dark' : ''}`}
                 >
                   <div className="flex justify-between items-start mb-1">
-                    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${isToday ? 'bg-[#2bb75c] text-white shadow-md' : 'text-zinc-700 dark:text-zinc-300 group-hover:text-[#2bb75c]'}`}>
+                    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${isToday ? 'bg-[#4C1D95] text-white shadow-md' : 'text-zinc-700 dark:text-zinc-300 group-hover:text-[#4C1D95]'}`}>
                       {dayNum > 0 && dayNum <= 31 ? dayNum : dayNum <= 0 ? 30 + dayNum : dayNum - 31}
                     </span>
                   </div>
@@ -183,4 +183,5 @@ function ChevronDown(props) {
 }
 
 export default Calendar;
+
 

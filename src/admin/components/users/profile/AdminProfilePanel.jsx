@@ -65,7 +65,7 @@ const AdminProfilePanel = ({ user, activeTab }) => {
             <h3 className="text-xl font-black text-zinc-900 dark:text-white tracking-tight">Access Control</h3>
             <p className="text-zinc-500 font-medium text-xs mt-1">Granular module permissions for this staff account.</p>
           </div>
-          <button className="px-4 py-2 bg-surface-dark text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#2bb75c] transition-all">
+          <button className="px-4 py-2 bg-surface-dark text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#4C1D95] transition-all">
             Modify Permissions
           </button>
         </div>
@@ -111,7 +111,7 @@ const AdminProfilePanel = ({ user, activeTab }) => {
             </div>
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Active Perma-id</p>
-              <p className="text-2xl font-black text-[#2bb75c] truncate">{user.id.split('-')[1]}</p>
+              <p className="text-2xl font-black text-[#4C1D95] truncate">{user.id.split('-')[1]}</p>
             </div>
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Account State</p>
@@ -131,7 +131,7 @@ const AdminProfilePanel = ({ user, activeTab }) => {
              {[1, 2, 3].map(i => (
                <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-surface/50 dark:bg-zinc-800/30 border border-zinc-100 dark:border-zinc-800/50">
                   <div className="flex items-center gap-4">
-                     <div className="h-10 w-10 bg-white dark:bg-surface-dark rounded-xl flex items-center justify-center text-[#2bb75c] shadow-sm border border-zinc-100 dark:border-zinc-800">
+                     <div className="h-10 w-10 bg-white dark:bg-surface-dark rounded-xl flex items-center justify-center text-[#4C1D95] shadow-sm border border-zinc-100 dark:border-zinc-800">
                         <ActivityIcon size={20} />
                      </div>
                      <div>
@@ -160,7 +160,7 @@ const AdminProfilePanel = ({ user, activeTab }) => {
                     <span className="text-[10px] font-black text-zinc-900 dark:text-white">{user.actionsToday} / 500</span>
                  </div>
                  <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#2bb75c] rounded-full" style={{ width: `${(user.actionsToday / 500) * 100}%` }} />
+                    <div className="h-full bg-[#4C1D95] rounded-full" style={{ width: `${(user.actionsToday / 500) * 100}%` }} />
                  </div>
               </div>
               <div className="flex justify-between items-center text-xs font-bold">
@@ -172,8 +172,8 @@ const AdminProfilePanel = ({ user, activeTab }) => {
 
         <Card className="bg-surface-dark text-white border-none shadow-xl shadow-zinc-900/20">
            <div className="flex items-center gap-2 mb-6">
-              <Lock size={16} className="text-[#2bb75c]" />
-              <h3 className="text-xs font-black uppercase tracking-widest text-[#2bb75c]">Security Credentials</h3>
+              <Lock size={16} className="text-[#4C1D95]" />
+              <h3 className="text-xs font-black uppercase tracking-widest text-[#4C1D95]">Security Credentials</h3>
            </div>
            <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -201,4 +201,5 @@ const AdminProfilePanel = ({ user, activeTab }) => {
 const ActivityIcon = ({ size }) => <Activity size={size} />;
 
 export default AdminProfilePanel;
+
 

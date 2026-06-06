@@ -64,7 +64,7 @@ export default function OAuthCallbackPage() {
       <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl border border-zinc-200 text-center">
         {!error ? (
           <>
-            <Loader2 className="w-10 h-10 animate-spin mx-auto text-[#2bb75c] mb-4" />
+            <Loader2 className="w-10 h-10 animate-spin mx-auto text-[#4C1D95] mb-4" />
             <h1 className="text-2xl font-bold text-zinc-900 mb-2">Finishing sign in</h1>
             <p className="text-zinc-500">{status}</p>
           </>
@@ -76,7 +76,7 @@ export default function OAuthCallbackPage() {
             <button
               type="button"
               onClick={() => navigate('/auth/login', { replace: true })}
-              className="inline-flex items-center justify-center rounded-xl bg-[#2bb75c] px-5 py-3 font-semibold text-white hover:bg-[#1d8d38] transition-colors"
+              className="inline-flex items-center justify-center rounded-xl bg-[#4C1D95] px-5 py-3 font-semibold text-white hover:bg-[#22C55E] transition-colors"
             >
               Back to login
             </button>
@@ -86,4 +86,5 @@ export default function OAuthCallbackPage() {
     </div>
   );
 }
+
 

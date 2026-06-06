@@ -104,9 +104,9 @@ export default function AdminActionModal({
   const config = actionConfigs[actionType] || {
     title: 'Confirm Action',
     subtitle: 'Please confirm you wish to proceed.',
-    icon: <Info className="text-[#2bb75c]" />,
+    icon: <Info className="text-[#4C1D95]" />,
     actionLabel: 'Confirm',
-    color: 'bg-[#2bb75c]',
+    color: 'bg-[#4C1D95]',
     warning: 'This action may have significant impact on user experience or platform data.',
     successMsg: 'Action completed.'
   };
@@ -179,14 +179,14 @@ export default function AdminActionModal({
 
           <div className="space-y-3">
             <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest px-1 flex items-center gap-2">
-              <MessageSquare size={12} className="text-[#2bb75c]" />
+              <MessageSquare size={12} className="text-[#4C1D95]" />
               Administrative Reason
             </label>
             <textarea 
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={2}
-              className="w-full px-6 py-4 bg-surface dark:bg-zinc-800 border-2 border-transparent focus:border-[#2bb75c]/20/20 rounded-2xl text-sm font-medium text-zinc-900 dark:text-white placeholder:text-zinc-400 outline-none transition-all resize-none shadow-inner"
+              className="w-full px-6 py-4 bg-surface dark:bg-zinc-800 border-2 border-transparent focus:border-[#4C1D95]/20/20 rounded-2xl text-sm font-medium text-zinc-900 dark:text-white placeholder:text-zinc-400 outline-none transition-all resize-none shadow-inner"
               placeholder="Justification for audit trail..."
             />
           </div>
@@ -247,4 +247,5 @@ export default function AdminActionModal({
     </div>
   );
 }
+
 

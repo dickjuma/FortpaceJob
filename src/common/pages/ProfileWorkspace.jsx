@@ -28,7 +28,7 @@ const shell = {
   border: "border-[#E7DDD8]",
   ink: "text-[#2B211F]",
   muted: "text-[#6F5B53]",
-  accent: "bg-[#C9452F]",
+  accent: "bg-[#22C55E]",
   accentText: "text-[#B53A27]",
   accentSoft: "bg-[#FDECE7]",
 };
@@ -200,4 +200,5 @@ export default function ProfileWorkspace() {
     </div>
   );
 }
+
 

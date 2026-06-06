@@ -15,7 +15,7 @@ const Button = ({
   ...props
 }) => {
   const variants = {
-    primary: 'bg-[#2bb75c] text-white hover:bg-[#1d8d38] shadow-sm active:scale-[0.98]',
+    primary: 'bg-[#4C1D95] text-white hover:bg-[#22C55E] shadow-sm active:scale-[0.98]',
     secondary: 'bg-white dark:bg-surface-dark-secondary border border-surface-border dark:border-surface-dark-border text-zinc-700 dark:text-zinc-300 hover:bg-surface dark:hover:bg-zinc-800 shadow-sm active:scale-[0.98]',
     ghost: 'bg-transparent text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800',
     danger: 'bg-rose-600 text-white hover:bg-rose-700 shadow-sm active:scale-[0.98]',
@@ -32,7 +32,7 @@ const Button = ({
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center rounded-button font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none focus-visible:ring-2 focus-visible:ring-#2bb75c] focus-visible:ring-offset-2',
+        'inline-flex items-center justify-center rounded-button font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none focus-visible:ring-2 focus-visible:ring-#4C1D95] focus-visible:ring-offset-2',
         variants[variant],
         sizes[size],
         fullWidth && 'w-full',
@@ -55,4 +55,5 @@ const Button = ({
 };
 
 export default Button;
+
 

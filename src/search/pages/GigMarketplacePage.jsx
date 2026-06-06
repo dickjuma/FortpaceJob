@@ -12,7 +12,7 @@ export default function GigMarketplacePage() {
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="bg-gradient-to-r from-[#2bb75c] to-[#1d8d38] rounded-3xl p-8 mb-8 text-white relative overflow-hidden shadow-xl">
+      <div className="bg-gradient-to-r from-[#4C1D95] to-[#22C55E] rounded-3xl p-8 mb-8 text-white relative overflow-hidden shadow-xl">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl transform tranzinc-x-1/2 -tranzinc-y-1/2"></div>
         <div className="relative z-10 max-w-2xl">
           <h1 className="text-4xl font-bold mb-4">Find the perfect freelance service for your business</h1>
@@ -25,14 +25,14 @@ export default function GigMarketplacePage() {
               placeholder="Try 'react dashboard', 'logo design'..." 
               className="w-full border-none focus:ring-0 text-gray-900 placeholder-gray-500 py-3 px-4"
             />
-            <button className="bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold py-3 px-8 rounded-lg transition-colors">
+            <button className="bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold py-3 px-8 rounded-lg transition-colors">
               Search
             </button>
           </div>
           <div className="flex flex-wrap gap-3 mt-4 text-sm font-medium">
-            <span className="text-[#2bb75c]">Popular:</span>
+            <span className="text-[#4C1D95]">Popular:</span>
             {['Web Design', 'React.js', 'AWS Setup', 'SEO Writing'].map(tag => (
-              <span key={tag} className="border border-[#2bb75c]/20/30 bg-[#1d8d38]/30 hover:bg-[#1d8d38]/50 cursor-pointer px-3 py-1 rounded-full transition-colors">
+              <span key={tag} className="border border-[#4C1D95]/20/30 bg-[#22C55E]/30 hover:bg-[#22C55E]/50 cursor-pointer px-3 py-1 rounded-full transition-colors">
                 {tag}
               </span>
             ))}
@@ -53,17 +53,17 @@ export default function GigMarketplacePage() {
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Service Category</h3>
                 <div className="space-y-2">
-                  <label className="flex items-center text-sm text-gray-600 dark:text-gray-400"><input type="checkbox" className="mr-2 rounded text-[#2bb75c] focus:ring-[#2bb75c]" /> Programming & Tech</label>
-                  <label className="flex items-center text-sm text-gray-600 dark:text-gray-400"><input type="checkbox" className="mr-2 rounded text-[#2bb75c] focus:ring-[#2bb75c]" /> Graphics & Design</label>
-                  <label className="flex items-center text-sm text-gray-600 dark:text-gray-400"><input type="checkbox" className="mr-2 rounded text-[#2bb75c] focus:ring-[#2bb75c]" /> Digital Marketing</label>
+                  <label className="flex items-center text-sm text-gray-600 dark:text-gray-400"><input type="checkbox" className="mr-2 rounded text-[#4C1D95] focus:ring-[#4C1D95]" /> Programming & Tech</label>
+                  <label className="flex items-center text-sm text-gray-600 dark:text-gray-400"><input type="checkbox" className="mr-2 rounded text-[#4C1D95] focus:ring-[#4C1D95]" /> Graphics & Design</label>
+                  <label className="flex items-center text-sm text-gray-600 dark:text-gray-400"><input type="checkbox" className="mr-2 rounded text-[#4C1D95] focus:ring-[#4C1D95]" /> Digital Marketing</label>
                 </div>
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Delivery Time</h3>
                 <div className="space-y-2">
-                  <label className="flex items-center text-sm text-gray-600 dark:text-gray-400"><input type="radio" name="delivery" className="mr-2 text-[#2bb75c] focus:ring-[#2bb75c]" /> Express 24h</label>
-                  <label className="flex items-center text-sm text-gray-600 dark:text-gray-400"><input type="radio" name="delivery" className="mr-2 text-[#2bb75c] focus:ring-[#2bb75c]" /> Up to 3 days</label>
-                  <label className="flex items-center text-sm text-gray-600 dark:text-gray-400"><input type="radio" name="delivery" className="mr-2 text-[#2bb75c] focus:ring-[#2bb75c]" /> Up to 7 days</label>
+                  <label className="flex items-center text-sm text-gray-600 dark:text-gray-400"><input type="radio" name="delivery" className="mr-2 text-[#4C1D95] focus:ring-[#4C1D95]" /> Express 24h</label>
+                  <label className="flex items-center text-sm text-gray-600 dark:text-gray-400"><input type="radio" name="delivery" className="mr-2 text-[#4C1D95] focus:ring-[#4C1D95]" /> Up to 3 days</label>
+                  <label className="flex items-center text-sm text-gray-600 dark:text-gray-400"><input type="radio" name="delivery" className="mr-2 text-[#4C1D95] focus:ring-[#4C1D95]" /> Up to 7 days</label>
                 </div>
               </div>
             </div>
@@ -75,7 +75,7 @@ export default function GigMarketplacePage() {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recommended for you</h2>
             <button className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
-              Sort by: <span className="text-[#2bb75c] dark:text-[#2bb75c] ml-1">Relevance</span> <ChevronDown className="w-4 h-4 ml-1" />
+              Sort by: <span className="text-[#4C1D95] dark:text-[#4C1D95] ml-1">Relevance</span> <ChevronDown className="w-4 h-4 ml-1" />
             </button>
           </div>
 
@@ -97,12 +97,12 @@ export default function GigMarketplacePage() {
                 </div>
                 <div className="p-5">
                   <div className="flex items-center space-x-2 mb-3">
-                    <div className="w-6 h-6 rounded-full bg-[#2bb75c]/10 dark:bg-[#2bb75c]/50 text-[#2bb75c] flex items-center justify-center text-xs font-bold">
+                    <div className="w-6 h-6 rounded-full bg-[#4C1D95]/10 dark:bg-[#4C1D95]/50 text-[#4C1D95] flex items-center justify-center text-xs font-bold">
                       {gig.seller[0]}
                     </div>
                     <span className="text-sm font-medium text-gray-900 dark:text-white hover:underline">{gig.seller}</span>
                   </div>
-                  <h3 className="font-medium text-gray-900 dark:text-white text-lg leading-snug mb-4 group-hover:text-[#2bb75c] transition-colors line-clamp-2 h-14">
+                  <h3 className="font-medium text-gray-900 dark:text-white text-lg leading-snug mb-4 group-hover:text-[#4C1D95] transition-colors line-clamp-2 h-14">
                     {gig.title}
                   </h3>
                   <div className="flex items-center text-sm font-bold text-gray-900 dark:text-white mb-4">
@@ -127,4 +127,5 @@ export default function GigMarketplacePage() {
     </div>
   );
 }
+
 

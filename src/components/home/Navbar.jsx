@@ -8,7 +8,7 @@ import Button from '../common/Button';
 
 const NAV_LINKS = [
   { name: 'Find Talent', href: '/find-talent' },
-  { name: 'Find Work', href: '/find-work' },
+  { name: 'Find Work', href: '/find-work/search?type=all' },
   { name: 'Enterprise', href: '/enterprise' },
   { name: 'About', href: '/about' },
 ];

@@ -68,7 +68,7 @@ export default function GrowthAnalyticsPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl shadow-sm">
+            <div className="p-2.5 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl shadow-sm">
               <TrendingUp size={24} />
             </div>
             <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Growth Intelligence</h1>
@@ -87,7 +87,7 @@ export default function GrowthAnalyticsPage() {
           </button>
           <button
             onClick={handleExport}
-            className="px-4 py-2 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-surface-dark text-white dark:bg-[#4C1D95] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
           >
             <Download size={16} /> Export Data
           </button>
@@ -98,7 +98,7 @@ export default function GrowthAnalyticsPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white dark:bg-surface-dark p-8 rounded-[32px] border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-[#2bb75c]/5 text-[#2bb75c] rounded-2xl">
+            <div className="p-3 bg-[#4C1D95]/5 text-[#4C1D95] rounded-2xl">
               <Users size={24} />
             </div>
             <div className="text-right">
@@ -118,7 +118,7 @@ export default function GrowthAnalyticsPage() {
 
         <div className="bg-white dark:bg-surface-dark p-8 rounded-[32px] border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-[#2bb75c]/5 text-[#2bb75c] rounded-2xl">
+            <div className="p-3 bg-[#4C1D95]/5 text-[#4C1D95] rounded-2xl">
               <UserPlus size={24} />
             </div>
             <div className="text-right">
@@ -166,11 +166,11 @@ export default function GrowthAnalyticsPage() {
           </div>
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-[#2bb75c]" />
+              <div className="w-3 h-3 rounded-full bg-[#4C1D95]" />
               <span className="text-[10px] font-black text-zinc-400 uppercase">MAU</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-[#2bb75c]" />
+              <div className="w-3 h-3 rounded-full bg-[#4C1D95]" />
               <span className="text-[10px] font-black text-zinc-400 uppercase">DAU</span>
             </div>
           </div>
@@ -189,8 +189,8 @@ export default function GrowthAnalyticsPage() {
               const dauVal = bar.dau || bar.dailyActive || 0;
               return (
                 <div key={i} className="flex-1 flex flex-col gap-1">
-                  <div className="w-full bg-[#2bb75c] rounded-t-sm" style={{ height: `${(mauVal / maxBar) * 100}%` }} />
-                  <div className="w-full bg-[#2bb75c] rounded-t-sm" style={{ height: `${(dauVal / maxBar) * 100}%` }} />
+                  <div className="w-full bg-[#4C1D95] rounded-t-sm" style={{ height: `${(mauVal / maxBar) * 100}%` }} />
+                  <div className="w-full bg-[#4C1D95] rounded-t-sm" style={{ height: `${(dauVal / maxBar) * 100}%` }} />
                 </div>
               );
             })}
@@ -200,4 +200,5 @@ export default function GrowthAnalyticsPage() {
     </div>
   );
 }
+
 

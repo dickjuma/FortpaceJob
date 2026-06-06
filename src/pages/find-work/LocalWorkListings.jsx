@@ -87,7 +87,7 @@ export default function LocalWorkListings() {
                     <div className="grid gap-4 sm:grid-cols-[1fr_1fr]">
                       <label className="block">
                         <span className="text-sm font-semibold text-zinc-700">Search local work</span>
-                        <div className="relative mt-2 rounded-3xl border border-zinc-200 bg-white shadow-sm focus-within:border-[#2bb75c]">
+                        <div className="relative mt-2 rounded-3xl border border-zinc-200 bg-white shadow-sm focus-within:border-[#4C1D95]">
                           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                           <input
                             type="text"
@@ -100,7 +100,7 @@ export default function LocalWorkListings() {
                       </label>
                       <label className="block">
                         <span className="text-sm font-semibold text-zinc-700">Location</span>
-                        <div className="relative mt-2 rounded-3xl border border-zinc-200 bg-white shadow-sm focus-within:border-[#2bb75c]">
+                        <div className="relative mt-2 rounded-3xl border border-zinc-200 bg-white shadow-sm focus-within:border-[#4C1D95]">
                           <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                           <input
                             type="text"
@@ -133,7 +133,7 @@ export default function LocalWorkListings() {
                             onClick={() => setSelectedSpecialization(item)}
                             className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                               selectedSpecialization === item
-                                ? 'bg-[#2bb75c] text-white'
+                                ? 'bg-[#4C1D95] text-white'
                                 : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                             }`}
                           >
@@ -144,7 +144,7 @@ export default function LocalWorkListings() {
                     </div>
 
                     <div className="flex flex-col sm:flex-row items-stretch gap-3">
-                      <button type="submit" className="rounded-3xl bg-[#2bb75c] px-6 py-4 text-sm font-bold text-white shadow-lg hover:bg-[#1d8d38] transition-colors">
+                      <button type="submit" className="rounded-3xl bg-[#4C1D95] px-6 py-4 text-sm font-bold text-white shadow-lg hover:bg-[#22C55E] transition-colors">
                         Refresh local matches
                       </button>
                       <span className="inline-flex items-center justify-center rounded-3xl border border-zinc-200 bg-zinc-50 px-4 py-4 text-sm text-zinc-600">
@@ -183,7 +183,7 @@ export default function LocalWorkListings() {
 
                     <div className="flex flex-wrap justify-between gap-3 items-center pt-4 border-t border-zinc-100 text-sm">
                       <span className="font-semibold text-zinc-900">{job.client.name}</span>
-                      <Link to={job.detailPath} className="rounded-full bg-[#2bb75c] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#1d8d38]">
+                      <Link to={job.detailPath} className="rounded-full bg-[#4C1D95] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#22C55E]">
                         View details
                       </Link>
                     </div>
@@ -245,7 +245,7 @@ export default function LocalWorkListings() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row">
-                      <Link to={featuredJob.detailPath} className="rounded-3xl bg-[#2bb75c] px-5 py-3 text-center text-sm font-bold text-zinc-950 transition hover:bg-[#1d8d38]">
+                      <Link to={featuredJob.detailPath} className="rounded-3xl bg-[#4C1D95] px-5 py-3 text-center text-sm font-bold text-zinc-950 transition hover:bg-[#22C55E]">
                         View Details
                       </Link>
                       <Link to={featuredJob.proposalPath} className="rounded-3xl border border-white/20 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10">
@@ -266,3 +266,4 @@ export default function LocalWorkListings() {
     </>
   );
 }
+

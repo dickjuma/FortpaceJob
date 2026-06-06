@@ -49,7 +49,7 @@ export default function FinancialHubPage() {
             onClick={() => setActiveTab(activeTab === 'dashboard' ? 'audit' : 'dashboard')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#2bb75c]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#4C1D95]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={16} /> {activeTab === 'dashboard' ? 'Audit Trail' : 'Back to Dashboard'}
@@ -76,7 +76,7 @@ export default function FinancialHubPage() {
         <div className="p-6 bg-white dark:bg-surface-dark rounded-[32px] border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden group hover:border-emerald-500/30 transition-all">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 bg-[#2bb75c]/5 text-[#2bb75c] rounded-xl">
+              <div className="p-2 bg-[#4C1D95]/5 text-[#4C1D95] rounded-xl">
                 <Activity size={18} />
               </div>
               <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest">Gross Volume</h3>
@@ -165,13 +165,13 @@ export default function FinancialHubPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Core Ledger & Activity */}
-            <div className="group bg-white dark:bg-surface-dark p-8 rounded-[40px] border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-2xl hover:border-[#2bb75c]/20/50 transition-all cursor-pointer" onClick={() => window.location.pathname = '/admin/finance/transactions'}>
-               <div className="w-16 h-16 bg-[#2bb75c]/10 text-[#2bb75c] rounded-[24px] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="group bg-white dark:bg-surface-dark p-8 rounded-[40px] border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-2xl hover:border-[#4C1D95]/20/50 transition-all cursor-pointer" onClick={() => window.location.pathname = '/admin/finance/transactions'}>
+               <div className="w-16 h-16 bg-[#4C1D95]/10 text-[#4C1D95] rounded-[24px] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <Activity size={32} />
                </div>
                <h3 className="text-xl font-black text-zinc-900 dark:text-white mb-2">General Ledger</h3>
                <p className="text-sm text-zinc-500 mb-6 leading-relaxed">Immutable record of every single transaction on the platform. Audit-ready double-entry logs.</p>
-               <div className="flex items-center text-[#2bb75c] font-bold text-sm">
+               <div className="flex items-center text-[#4C1D95] font-bold text-sm">
                  Open Ledger <ArrowUpRight size={16} className="ml-1" />
                </div>
             </div>
@@ -201,13 +201,13 @@ export default function FinancialHubPage() {
             </div>
 
             {/* Subscriptions */}
-            <div className="group bg-white dark:bg-surface-dark p-8 rounded-[40px] border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-2xl hover:border-[#2bb75c]/50/50 transition-all cursor-pointer" onClick={() => window.location.pathname = '/admin/finance/subscriptions'}>
-               <div className="w-16 h-16 bg-[#2bb75c]/10 text-[#2bb75c] rounded-[24px] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="group bg-white dark:bg-surface-dark p-8 rounded-[40px] border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-2xl hover:border-[#4C1D95]/50/50 transition-all cursor-pointer" onClick={() => window.location.pathname = '/admin/finance/subscriptions'}>
+               <div className="w-16 h-16 bg-[#4C1D95]/10 text-[#4C1D95] rounded-[24px] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <CreditCard size={32} />
                </div>
                <h3 className="text-xl font-black text-zinc-900 dark:text-white mb-2">Subscriptions</h3>
                <p className="text-sm text-zinc-500 mb-6 leading-relaxed">Manage recurring revenue, plan tiers, and automated billing for platform members.</p>
-               <div className="flex items-center text-[#2bb75c] font-bold text-sm">
+               <div className="flex items-center text-[#4C1D95] font-bold text-sm">
                  Revenue Manager <ArrowUpRight size={16} className="ml-1" />
                </div>
             </div>
@@ -253,7 +253,7 @@ export default function FinancialHubPage() {
                 placeholder="Search Ref ID..." 
                 value={filters.transactions.search}
                 onChange={(e) => setFilter('transactions', 'search', e.target.value)}
-                className="pl-9 pr-4 py-1.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-[#2bb75c] outline-none w-48"
+                className="pl-9 pr-4 py-1.5 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-[#4C1D95] outline-none w-48"
               />
             </div>
             <select 
@@ -332,4 +332,5 @@ export default function FinancialHubPage() {
     </div>
   );
 }
+
 

@@ -13,11 +13,11 @@ const UserStatsCard = ({
   index = 0 
 }) => {
   const colors = {
-    brand: 'bg-[#2bb75c]/5 text-[#2bb75c] dark:bg-[#2bb75c]/20 dark:text-[#2bb75c]',
+    brand: 'bg-[#4C1D95]/5 text-[#4C1D95] dark:bg-[#4C1D95]/20 dark:text-[#4C1D95]',
     emerald: 'bg-emerald-50 text-success dark:bg-emerald-900/20 dark:text-success',
     amber: 'bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400',
     rose: 'bg-rose-50 text-rose-600 dark:bg-rose-900/20 dark:text-rose-400',
-    blue: 'bg-[#2bb75c]/5 text-[#2bb75c] dark:bg-[#2bb75c]/20 dark:text-[#2bb75c]',
+    blue: 'bg-[#4C1D95]/5 text-[#4C1D95] dark:bg-[#4C1D95]/20 dark:text-[#4C1D95]',
   };
 
   return (
@@ -49,4 +49,5 @@ const UserStatsCard = ({
 };
 
 export default UserStatsCard;
+
 

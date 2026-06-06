@@ -40,7 +40,7 @@ export default function SessionExpiredPage() {
             </Button>
             
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Need help? <a href="#" className="font-semibold text-[#2bb75c] hover:text-[#2bb75c] dark:text-[#2bb75c] transition-colors">Contact Support</a>
+              Need help? <a href="#" className="font-semibold text-[#4C1D95] hover:text-[#4C1D95] dark:text-[#4C1D95] transition-colors">Contact Support</a>
             </p>
           </div>
         </motion.div>
@@ -48,4 +48,5 @@ export default function SessionExpiredPage() {
     </AuthLayout>
   );
 }
+
 

@@ -40,14 +40,14 @@ export async function loadFindWorkCategories() {
         .filter((node) => node.children?.length || node.name)
         .map((node) => {
           const accentPalette = [
-            'bg-[#2bb75c]/10 text-[#2bb75c]',
+            'bg-[#4C1D95]/10 text-[#4C1D95]',
             'bg-emerald-100 text-emerald-700',
             'bg-amber-100 text-amber-700',
             'bg-cyan-100 text-cyan-700',
             'bg-rose-100 text-rose-700',
             'bg-violet-100 text-violet-700',
           ];
-          const accentClass = accentPalette[Math.floor(Math.random() * accentPalette.length)] || 'bg-[#2bb75c]/10 text-[#2bb75c]';
+          const accentClass = accentPalette[Math.floor(Math.random() * accentPalette.length)] || 'bg-[#4C1D95]/10 text-[#4C1D95]';
 
           return {
             id: node.slug || String(node.id),
@@ -547,4 +547,5 @@ if (typeof window !== 'undefined') {
       ensureFindWorkSynced();
    });
 }
+
 

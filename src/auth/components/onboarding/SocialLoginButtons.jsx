@@ -56,7 +56,7 @@ export default function SocialLoginButtons({ isLoading }) {
             whileTap={{ scale: 0.98 }}
             onClick={() => handleLogin(btn.name, btn.action)}
             disabled={isLoading || (loadingProvider && loadingProvider !== btn.name)}
-            className="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-medium transition-colors border-2 rounded-xl text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2bb75c] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-medium transition-colors border-2 rounded-xl text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4C1D95] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loadingProvider === btn.name ? (
               <span className="w-4 h-4 rounded-full border-2 border-zinc-300 border-t-zinc-500 animate-spin" />
@@ -70,4 +70,5 @@ export default function SocialLoginButtons({ isLoading }) {
     </div>
   );
 }
+
 

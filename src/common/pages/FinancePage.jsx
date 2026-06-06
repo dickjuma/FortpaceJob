@@ -101,7 +101,7 @@ function MethodCard({ option, selected, values, saving, onSelect, onChange, onSa
               value={values[field.id] || ""}
               onChange={(event) => onChange(option.id, field.id, event.target.value)}
               placeholder={field.placeholder}
-              className="w-full rounded-2xl border border-[#E7DDD8] bg-[#FCFAF8] px-4 py-3 text-sm text-[#2B211F] outline-none transition focus:border-[#C9452F] focus:ring-2 focus:ring-[#F9D7CD]"
+              className="w-full rounded-2xl border border-[#E7DDD8] bg-[#FCFAF8] px-4 py-3 text-sm text-[#2B211F] outline-none transition focus:border-[#22C55E] focus:ring-2 focus:ring-[#F9D7CD]"
             />
           </label>
         ))}
@@ -462,3 +462,4 @@ export default function FinancePage({ initialTab = "wallet" }) {
     </WorkspaceToolLayout>
   );
 }
+

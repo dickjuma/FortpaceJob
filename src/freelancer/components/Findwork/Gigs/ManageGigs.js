@@ -29,12 +29,12 @@ const Badge = ({ children, variant = "default", size = "sm", className = "" }) =
   };
   
   const variantClasses = {
-    default: "bg-[#F3E9E5] text-[#4A312F]",
+    default: "bg-[#F3E9E5] text-[#4C1D95]",
     success: "bg-green-100 text-green-800 border border-green-200",
     warning: "bg-yellow-100 text-yellow-800 border border-yellow-200",
     danger: "bg-red-100 text-red-800 border border-red-200",
-    primary: "bg-[#FDECE7] text-[#9E331E] border border-[#F4C7A1]",
-    purple: "bg-[#2bb75c]/10 text-[#2bb75c] border border-[#2bb75c]/50",
+    primary: "bg-[#FDECE7] text-[#9E331E] border border-[#E5E7EB]",
+    purple: "bg-[#4C1D95]/10 text-[#4C1D95] border border-[#4C1D95]/50",
     gray: "bg-[#F8F4F1] text-[#6B5B50] border border-[#E7E1DE]",
     fiverr: "bg-green-50 text-green-700 border border-green-200"
   };
@@ -119,7 +119,7 @@ const ProgressBar = ({ value, max = 100, label, showPercentage = true, color = "
   const colorClasses = {
     green: "bg-green-500",
     blue: "bg-[#FDECE7]",
-    purple: "bg-[#2bb75c]",
+    purple: "bg-[#4C1D95]",
     yellow: "bg-yellow-500",
     red: "bg-red-500"
   };
@@ -128,7 +128,7 @@ const ProgressBar = ({ value, max = 100, label, showPercentage = true, color = "
     <div className="space-y-2">
       {label && (
         <div className="flex justify-between items-center">
-          <span className="text-sm text-[#4A312F]">{label}</span>
+          <span className="text-sm text-[#4C1D95]">{label}</span>
           {showPercentage && (
             <span className="text-sm font-semibold text-[#2E2322]">{percentage.toFixed(0)}%</span>
           )}
@@ -162,11 +162,11 @@ const ActionButton = ({
   };
   
   const variantClasses = {
-    default: "bg-[#F3E9E5] text-[#4A312F] hover:bg-[#EFE7E2] border border-[#E7E1DE]",
+    default: "bg-[#F3E9E5] text-[#4C1D95] hover:bg-[#EFE7E2] border border-[#E7E1DE]",
     primary: "bg-green-600 text-white hover:bg-green-700 shadow-sm",
     success: "bg-green-600 text-white hover:bg-green-700 shadow-sm",
     danger: "bg-red-600 text-white hover:bg-red-700 shadow-sm",
-    outline: "bg-white text-[#4A312F] border border-[#E7E1DE] hover:bg-[#F8F4F1]",
+    outline: "bg-white text-[#4C1D95] border border-[#E7E1DE] hover:bg-[#F8F4F1]",
     ghost: "text-[#6B5B50] hover:bg-[#F3E9E5] hover:text-[#2E2322]"
   };
 
@@ -209,7 +209,7 @@ const StatusIndicator = ({ status, showIcon = true }) => {
     draft: { 
       color: "bg-[#F8F4F1]0", 
       label: "Draft", 
-      textColor: "text-[#4A312F]",
+      textColor: "text-[#4C1D95]",
       bgColor: "bg-[#F8F4F1]",
       borderColor: "border-[#E7E1DE]",
       icon: FileText 
@@ -219,15 +219,15 @@ const StatusIndicator = ({ status, showIcon = true }) => {
       label: "Pending Review", 
       textColor: "text-[#B53A27]",
       bgColor: "bg-[#FDECE7]",
-      borderColor: "border-[#F4C7A1]",
+      borderColor: "border-[#E5E7EB]",
       icon: Clock 
     },
     featured: { 
-      color: "bg-[#2bb75c]", 
+      color: "bg-[#4C1D95]", 
       label: "Featured", 
-      textColor: "text-[#2bb75c]",
-      bgColor: "bg-[#2bb75c]/5",
-      borderColor: "border-[#2bb75c]/50",
+      textColor: "text-[#4C1D95]",
+      bgColor: "bg-[#4C1D95]/5",
+      borderColor: "border-[#4C1D95]/50",
       icon: Star 
     },
     limited: { 
@@ -446,8 +446,8 @@ const CATEGORIES = [
   { id: "active", name: "Active", count: 89, icon: Play, color: "text-green-600" },
   { id: "paused", name: "Paused", count: 12, icon: Pause, color: "text-yellow-600" },
   { id: "draft", name: "Drafts", count: 23, icon: FileText, color: "text-[#6B5B50]" },
-  { id: "featured", name: "Featured", count: 8, icon: Star, color: "text-[#2bb75c]" },
-  { id: "promoted", name: "Promoted", count: 15, icon: Rocket, color: "text-[#C9452F]" }
+  { id: "featured", name: "Featured", count: 8, icon: Star, color: "text-[#4C1D95]" },
+  { id: "promoted", name: "Promoted", count: 15, icon: Rocket, color: "text-[#22C55E]" }
 ];
 
 // Enhanced Analytics Data
@@ -570,7 +570,7 @@ const QuickActionModal = ({ isOpen, onClose, selectedGigs }) => {
                 <div className={`p-2 rounded-lg ${
                   item.variant === 'success' ? 'bg-green-50 text-green-600 border border-green-200' :
                   item.variant === 'warning' ? 'bg-yellow-50 text-yellow-600 border border-yellow-200' :
-                  item.variant === 'primary' ? 'bg-[#FDECE7] text-[#C9452F] border border-[#F4C7A1]' :
+                  item.variant === 'primary' ? 'bg-[#FDECE7] text-[#22C55E] border border-[#E5E7EB]' :
                   'bg-[#F8F4F1] text-[#6B5B50] border border-[#E7E1DE]'
                 }`}>
                   <item.icon size={18} />
@@ -602,7 +602,7 @@ const QuickActionModal = ({ isOpen, onClose, selectedGigs }) => {
         <div className="p-6 border-t border-[#E7E1DE] flex justify-end gap-3">
           <button 
             onClick={onClose}
-            className="px-4 py-2.5 text-[#4A312F] hover:text-[#2E2322] hover:bg-[#F3E9E5] rounded-lg text-sm font-medium transition-colors"
+            className="px-4 py-2.5 text-[#4C1D95] hover:text-[#2E2322] hover:bg-[#F3E9E5] rounded-lg text-sm font-medium transition-colors"
           >
             Cancel
           </button>
@@ -631,7 +631,7 @@ const GigRow = ({ gig, isSelected, onSelect, viewMode = "list", onAction }) => {
 
   const getPerformanceColor = (score) => {
     if (score >= 90) return "text-green-600 bg-green-50 border-green-200";
-    if (score >= 70) return "text-[#C9452F] bg-[#FDECE7] border-[#F4C7A1]";
+    if (score >= 70) return "text-[#22C55E] bg-[#FDECE7] border-[#E5E7EB]";
     if (score >= 50) return "text-yellow-600 bg-yellow-50 border-yellow-200";
     return "text-red-600 bg-red-50 border-red-200";
   };
@@ -706,7 +706,7 @@ const GigRow = ({ gig, isSelected, onSelect, viewMode = "list", onAction }) => {
           {/* Performance Score */}
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-[#4A312F]">Performance</span>
+              <span className="text-sm font-medium text-[#4C1D95]">Performance</span>
               <span className={`text-xs px-2 py-1 rounded-full border ${getPerformanceColor(gig.performanceScore)}`}>
                 {gig.performanceScore}/100
               </span>
@@ -836,7 +836,7 @@ const GigRow = ({ gig, isSelected, onSelect, viewMode = "list", onAction }) => {
               
               <div className={`flex items-center gap-1 text-sm font-medium px-2 py-1 rounded-lg ${
                 gig.performanceScore >= 90 ? 'text-green-600 bg-green-50 border border-green-200' :
-                gig.performanceScore >= 70 ? 'text-[#C9452F] bg-[#FDECE7] border border-[#F4C7A1]' :
+                gig.performanceScore >= 70 ? 'text-[#22C55E] bg-[#FDECE7] border border-[#E5E7EB]' :
                 'text-yellow-600 bg-yellow-50 border border-yellow-200'
               }`}>
                 <TargetIcon size={12} />
@@ -850,7 +850,7 @@ const GigRow = ({ gig, isSelected, onSelect, viewMode = "list", onAction }) => {
             <div className="flex-1">
               <div className="flex flex-wrap gap-1 mb-3">
                 {gig.tags.slice(0, 3).map(tag => (
-                  <span key={tag} className="px-2 py-1 bg-[#F8F4F1] text-[#4A312F] rounded-md text-xs border border-[#E7E1DE]">
+                  <span key={tag} className="px-2 py-1 bg-[#F8F4F1] text-[#4C1D95] rounded-md text-xs border border-[#E7E1DE]">
                     {tag}
                   </span>
                 ))}
@@ -990,7 +990,7 @@ export default function ManageGigs() {
                         className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
                           activeTab === category.id
                             ? "bg-green-600 text-white shadow-sm"
-                            : "bg-white text-[#4A312F] border border-[#E7E1DE] hover:bg-[#F8F4F1]"
+                            : "bg-white text-[#4C1D95] border border-[#E7E1DE] hover:bg-[#F8F4F1]"
                         }`}
                       >
                         <Icon size={16} className={activeTab === category.id ? "text-white" : category.color} />
@@ -1065,8 +1065,8 @@ export default function ManageGigs() {
         <div className="mb-6 bg-white rounded-xl border border-[#E7E1DE] p-5">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-[#FDECE7] rounded-lg border border-[#F4C7A1]">
-                <Activity size={20} className="text-[#C9452F]" />
+              <div className="p-3 bg-[#FDECE7] rounded-lg border border-[#E5E7EB]">
+                <Activity size={20} className="text-[#22C55E]" />
               </div>
               <div>
                 <h3 className="text-lg font-bold text-[#2E2322]">Performance Analytics</h3>
@@ -1120,7 +1120,7 @@ export default function ManageGigs() {
               <h4 className="text-sm font-semibold text-[#2E2322] mb-3">Quick Actions</h4>
               <div className="space-y-2">
                 <button className="w-full text-left p-3 bg-[#F8F4F1] hover:bg-[#F3E9E5] rounded-lg border border-[#E7E1DE] transition-colors flex items-center gap-3">
-                  <Sparkles size={16} className="text-[#2bb75c]" />
+                  <Sparkles size={16} className="text-[#4C1D95]" />
                   <span className="text-sm">Optimize with AI</span>
                 </button>
                 <button className="w-full text-left p-3 bg-[#F8F4F1] hover:bg-[#F3E9E5] rounded-lg border border-[#E7E1DE] transition-colors flex items-center gap-3">
@@ -1128,7 +1128,7 @@ export default function ManageGigs() {
                   <span className="text-sm">Boost Performance</span>
                 </button>
                 <button className="w-full text-left p-3 bg-[#F8F4F1] hover:bg-[#F3E9E5] rounded-lg border border-[#E7E1DE] transition-colors flex items-center gap-3">
-                  <Bell size={16} className="text-[#C9452F]" />
+                  <Bell size={16} className="text-[#22C55E]" />
                   <span className="text-sm">Set Alerts</span>
                 </button>
               </div>
@@ -1337,12 +1337,12 @@ export default function ManageGigs() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="bg-white rounded-lg p-4 border border-[#E7E1DE] hover:border-green-300 transition-colors">
               <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-[#FDECE7] rounded-lg border border-[#F4C7A1]">
-                  <TrendingUpIcon size={16} className="text-[#C9452F]" />
+                <div className="p-2 bg-[#FDECE7] rounded-lg border border-[#E5E7EB]">
+                  <TrendingUpIcon size={16} className="text-[#22C55E]" />
                 </div>
                 <span className="font-semibold text-[#2E2322]">Optimization Tip</span>
               </div>
-              <p className="text-[#4A312F] text-sm">
+              <p className="text-[#4C1D95] text-sm">
                 Add 3 more portfolio items to your React gig to increase conversions by 23%
               </p>
               <button className="mt-3 text-sm text-green-600 hover:text-green-700 font-medium">
@@ -1352,12 +1352,12 @@ export default function ManageGigs() {
             
             <div className="bg-white rounded-lg p-4 border border-[#E7E1DE] hover:border-green-300 transition-colors">
               <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-[#2bb75c]/5 rounded-lg border border-[#2bb75c]/50">
-                  <Clock size={16} className="text-[#2bb75c]" />
+                <div className="p-2 bg-[#4C1D95]/5 rounded-lg border border-[#4C1D95]/50">
+                  <Clock size={16} className="text-[#4C1D95]" />
                 </div>
                 <span className="font-semibold text-[#2E2322]">Best Time to Post</span>
               </div>
-              <p className="text-[#4A312F] text-sm">
+              <p className="text-[#4C1D95] text-sm">
                 Update your gigs on Wednesday at 2 PM EST for 37% more visibility
               </p>
               <div className="mt-3 text-xs text-[#7A5A4C]">
@@ -1401,4 +1401,6 @@ export default function ManageGigs() {
     </div>
   );
 }
+
+
 

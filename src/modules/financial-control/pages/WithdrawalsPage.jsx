@@ -53,14 +53,14 @@ export default function WithdrawalsPage() {
             onClick={() => setActiveTab(activeTab === 'management' ? 'audit' : 'management')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#2bb75c]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#4C1D95]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={16} /> {activeTab === 'management' ? 'Audit Trail' : 'Back to Management'}
           </button>
           <button 
             onClick={() => toast.success('Processing manual batch...')}
-            className="px-4 py-2 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-surface-dark text-white dark:bg-[#4C1D95] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
           >
              Process Manual Batch
           </button>
@@ -86,7 +86,7 @@ export default function WithdrawalsPage() {
                   placeholder="Search freelancer or ID..." 
                   value={filters.withdrawals.search}
                   onChange={(e) => setFilter('withdrawals', 'search', e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#2bb75c] outline-none"
+                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#4C1D95] outline-none"
                 />
               </div>
               <select 
@@ -208,4 +208,5 @@ export default function WithdrawalsPage() {
     </div>
   );
 }
+
 

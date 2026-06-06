@@ -21,7 +21,7 @@ const CategoryDetailsOnline = () => {
       <div className="container mx-auto px-4 md:px-8 py-20">
         <div className="bg-white rounded-3xl border border-zinc-200 p-10 text-center">
           <h1 className="text-3xl font-black text-zinc-900 mb-3">Category not found</h1>
-          <Link className="text-[#2bb75c] font-bold" to="/categories">
+          <Link className="text-[#4C1D95] font-bold" to="/categories">
             Back to categories
           </Link>
         </div>
@@ -35,8 +35,8 @@ const CategoryDetailsOnline = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(59,130,246,0.18),_transparent_35%)]" />
         <div className="container mx-auto px-4 md:px-8 relative z-10">
           <div className="max-w-3xl">
-            <div className="flex items-center gap-3 text-[#2bb75c] font-medium mb-4">
-              <Link className="hover:text-[#2bb75c]" to="/categories">
+            <div className="flex items-center gap-3 text-[#4C1D95] font-medium mb-4">
+              <Link className="hover:text-[#4C1D95]" to="/categories">
                 Categories
               </Link>
               <span>/</span>
@@ -55,7 +55,7 @@ const CategoryDetailsOnline = () => {
       <div className="container mx-auto px-4 md:px-8 py-12">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-zinc-900">Online professionals</h2>
-          <Link to={`/search-results?mode=online&category=${category}`} className="text-[#2bb75c] font-bold flex items-center gap-1">
+          <Link to={`/search-results?mode=online&category=${category}`} className="text-[#4C1D95] font-bold flex items-center gap-1">
             View all <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -76,4 +76,5 @@ const CategoryDetailsOnline = () => {
 };
 
 export default CategoryDetailsOnline;
+
 

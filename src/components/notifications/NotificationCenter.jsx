@@ -20,7 +20,7 @@ export default function NotificationCenter({ isOpen, onClose }) {
     switch (type) {
       case 'success': return 'text-success bg-success/10';
       case 'warning': return 'text-warning bg-warning/10';
-      case 'info': return 'text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 dark:text-[#2bb75c]';
+      case 'info': return 'text-[#4C1D95] bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20 dark:text-[#4C1D95]';
       default: return 'text-gray-500 bg-gray-100 dark:bg-gray-800';
     }
   };
@@ -39,7 +39,7 @@ export default function NotificationCenter({ isOpen, onClose }) {
               <Bell className="w-4 h-4 mr-2" /> Notifications
             </h3>
             <div className="flex gap-3">
-              <button onClick={markAllRead} className="text-xs font-medium text-[#2bb75c] dark:text-[#2bb75c] hover:text-[#2bb75c]">Mark all read</button>
+              <button onClick={markAllRead} className="text-xs font-medium text-[#4C1D95] dark:text-[#4C1D95] hover:text-[#4C1D95]">Mark all read</button>
               <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X className="w-4 h-4" /></button>
             </div>
           </div>
@@ -50,7 +50,7 @@ export default function NotificationCenter({ isOpen, onClose }) {
                 {notifications.map((notif) => {
                   const Icon = notif.icon;
                   return (
-                    <div key={notif.id} className={`p-4 hover:bg-surface dark:hover:bg-surface-dark-secondary transition-colors cursor-pointer flex gap-4 ${notif.unread ? 'bg-[#2bb75c]/5/50 dark:bg-[#2bb75c]/10' : ''}`}>
+                    <div key={notif.id} className={`p-4 hover:bg-surface dark:hover:bg-surface-dark-secondary transition-colors cursor-pointer flex gap-4 ${notif.unread ? 'bg-[#4C1D95]/5/50 dark:bg-[#4C1D95]/10' : ''}`}>
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${getIconColor(notif.type)}`}>
                         <Icon className="w-5 h-5" />
                       </div>
@@ -64,7 +64,7 @@ export default function NotificationCenter({ isOpen, onClose }) {
                         <p className="text-sm text-gray-500 line-clamp-2">{notif.text}</p>
                       </div>
                       {notif.unread && (
-                        <div className="w-2 h-2 rounded-full bg-[#2bb75c] mt-2 shrink-0"></div>
+                        <div className="w-2 h-2 rounded-full bg-[#4C1D95] mt-2 shrink-0"></div>
                       )}
                     </div>
                   );
@@ -86,4 +86,5 @@ export default function NotificationCenter({ isOpen, onClose }) {
     </AnimatePresence>
   );
 }
+
 

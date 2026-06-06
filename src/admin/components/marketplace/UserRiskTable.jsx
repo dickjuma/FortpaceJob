@@ -30,11 +30,11 @@ const UserRiskTable = ({ data, isLoading, onAction }) => {
             className="flex items-center gap-3 cursor-pointer group/user"
             onClick={() => onAction('profile', row.original)}
           >
-            <div className="h-10 w-10 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center font-black text-zinc-400 text-xs shadow-inner group-hover/user:border-[#2bb75c]/20 transition-colors">
+            <div className="h-10 w-10 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center font-black text-zinc-400 text-xs shadow-inner group-hover/user:border-[#4C1D95]/20 transition-colors">
               {row.original.avatar ? <img src={row.original.avatar} alt="" className="h-full w-full rounded-full object-cover" /> : row.original.name.charAt(0)}
             </div>
             <div>
-              <p className="text-sm font-bold text-white leading-none mb-1 group-hover/user:text-[#2bb75c] transition-colors">{row.original.name}</p>
+              <p className="text-sm font-bold text-white leading-none mb-1 group-hover/user:text-[#4C1D95] transition-colors">{row.original.name}</p>
               <p className="text-[10px] font-['DM_Mono'] text-zinc-500 uppercase tracking-tighter">{row.original.id}</p>
             </div>
           </div>
@@ -46,7 +46,7 @@ const UserRiskTable = ({ data, isLoading, onAction }) => {
         cell: ({ getValue }) => (
           <span className={cn(
             "text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest",
-            getValue() === 'Client' ? "bg-[#2bb75c]/10 text-[#2bb75c]" : "bg-success/10 text-success"
+            getValue() === 'Client' ? "bg-[#4C1D95]/10 text-[#4C1D95]" : "bg-success/10 text-success"
           )}>
             {getValue()}
           </span>
@@ -158,7 +158,7 @@ const UserRiskTable = ({ data, isLoading, onAction }) => {
             </button>
             <button 
               onClick={() => onAction('logs', row.original)}
-              className="p-2 text-zinc-400 hover:text-[#2bb75c] hover:bg-[#2bb75c]/10 rounded-lg transition-all" 
+              className="p-2 text-zinc-400 hover:text-[#4C1D95] hover:bg-[#4C1D95]/10 rounded-lg transition-all" 
               title="View User Activity"
             >
               <Activity size={16} />
@@ -192,7 +192,7 @@ const UserRiskTable = ({ data, isLoading, onAction }) => {
             <input 
               type="text" 
               placeholder="Search user ID, name or email..." 
-              className="w-full pl-10 pr-4 py-2 bg-[#0a0f1e] border border-zinc-800 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none focus:border-[#2bb75c]/20 transition-all"
+              className="w-full pl-10 pr-4 py-2 bg-[#0a0f1e] border border-zinc-800 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none focus:border-[#4C1D95]/20 transition-all"
             />
          </div>
          <div className="flex items-center gap-3">
@@ -271,4 +271,5 @@ const UserRiskTable = ({ data, isLoading, onAction }) => {
 };
 
 export default UserRiskTable;
+
 

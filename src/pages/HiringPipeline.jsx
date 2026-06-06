@@ -5,7 +5,7 @@ const HiringPipeline = () => {
   const KANBAN_DATA = [
     {
       title: 'Sourced (12)',
-      color: 'border-[#2bb75c]/20',
+      color: 'border-[#4C1D95]/20',
       cards: [
         { name: 'Sarah W.', role: 'React Developer', rate: '$85/hr' },
         { name: 'David C.', role: 'Backend Engineer', rate: '$90/hr' },
@@ -21,7 +21,7 @@ const HiringPipeline = () => {
     },
     {
       title: 'Offer Sent (1)',
-      color: 'border-[#2bb75c]/50',
+      color: 'border-[#4C1D95]/50',
       cards: [
         { name: 'TechFlow Agency', role: 'Dev Team', rate: '$150/hr', tag: 'Awaiting Signature' }
       ]
@@ -43,11 +43,11 @@ const HiringPipeline = () => {
           <div className="flex justify-between items-center mb-8 shrink-0">
             <div>
               <h1 className="text-2xl font-black text-zinc-900 flex items-center gap-2">
-                <Columns className="w-6 h-6 text-[#2bb75c]" /> Hiring Pipeline
+                <Columns className="w-6 h-6 text-[#4C1D95]" /> Hiring Pipeline
               </h1>
               <p className="text-zinc-600 text-sm mt-1">Drag and drop candidates across stages.</p>
             </div>
-            <button className="px-4 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white text-sm font-bold rounded-lg transition-colors shadow-sm flex items-center gap-1">
+            <button className="px-4 py-2 bg-[#4C1D95] hover:bg-[#22C55E] text-white text-sm font-bold rounded-lg transition-colors shadow-sm flex items-center gap-1">
               <Plus className="w-4 h-4" /> Add Candidate
             </button>
           </div>
@@ -63,7 +63,7 @@ const HiringPipeline = () => {
                 
                 <div className="p-3 overflow-y-auto flex-1 space-y-3 min-h-[200px]">
                   {column.cards.map((card, j) => (
-                    <div key={j} className="bg-white border border-zinc-200 p-4 rounded-xl shadow-sm hover:border-[#2bb75c]/20 hover:shadow-md transition-all cursor-grab active:cursor-grabbing">
+                    <div key={j} className="bg-white border border-zinc-200 p-4 rounded-xl shadow-sm hover:border-[#4C1D95]/20 hover:shadow-md transition-all cursor-grab active:cursor-grabbing">
                       <div className="flex justify-between items-start mb-3">
                         <div className="flex items-center gap-3">
                           <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(card.name)}&background=random`} className="w-8 h-8 rounded-full" alt="avatar" />
@@ -100,4 +100,5 @@ const HiringPipeline = () => {
 };
 
 export default HiringPipeline;
+
 

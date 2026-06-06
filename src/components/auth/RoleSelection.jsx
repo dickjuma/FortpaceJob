@@ -101,7 +101,7 @@ export default function RoleSelection() {
           onClick={() => setRole('client')}
           className={`group relative overflow-hidden rounded-[2rem] border-2 cursor-pointer transition-all duration-500 ${
             role === 'client' 
-              ? 'border-[#2bb75c]/20 shadow-2xl shadow-[#2bb75c]/25' 
+              ? 'border-[#4C1D95]/20 shadow-2xl shadow-[#4C1D95]/25' 
               : 'border-zinc-200 shadow-lg shadow-zinc-200/50 hover:border-zinc-300'
           }`}
         >
@@ -113,7 +113,7 @@ export default function RoleSelection() {
               className="w-full h-full object-cover opacity-20 transition-transform duration-700 group-hover:scale-105"
             />
             <div className={`absolute inset-0 transition-colors duration-500 ${
-              role === 'client' ? 'bg-[#2bb75c]/40' : 'bg-surface-dark/60'
+              role === 'client' ? 'bg-[#4C1D95]/40' : 'bg-surface-dark/60'
             }`} />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/80 to-transparent" />
           </div>
@@ -121,13 +121,13 @@ export default function RoleSelection() {
           {/* Floating UI Widget Simulation */}
           <div className="absolute top-8 right-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 w-56 shadow-2xl transform -rotate-2 group-hover:-rotate-4 transition-transform duration-500">
             <div className="flex items-center gap-3 mb-3">
-              <Building2 className="w-4 h-4 text-[#2bb75c]" />
+              <Building2 className="w-4 h-4 text-[#4C1D95]" />
               <span className="text-xs font-semibold text-white uppercase tracking-wider">Hiring Pipeline</span>
             </div>
             <div className="flex -space-x-3">
               <img className="w-10 h-10 rounded-full border-2 border-zinc-800" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop" alt="Candidate" />
               <img className="w-10 h-10 rounded-full border-2 border-zinc-800" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=64&h=64&fit=crop" alt="Candidate" />
-              <div className="w-10 h-10 rounded-full border-2 border-zinc-800 bg-[#2bb75c] flex items-center justify-center text-xs text-white font-bold">+12</div>
+              <div className="w-10 h-10 rounded-full border-2 border-zinc-800 bg-[#4C1D95] flex items-center justify-center text-xs text-white font-bold">+12</div>
             </div>
           </div>
 
@@ -137,23 +137,23 @@ export default function RoleSelection() {
               <motion.div 
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute top-8 left-8 w-10 h-10 bg-[#2bb75c] rounded-full flex items-center justify-center shadow-lg"
+                className="absolute top-8 left-8 w-10 h-10 bg-[#4C1D95] rounded-full flex items-center justify-center shadow-lg"
               >
                 <CheckCircle2 className="w-6 h-6 text-white" />
               </motion.div>
             )}
             
             <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mb-6">
-              <Building2 className="w-8 h-8 text-[#2bb75c]" />
+              <Building2 className="w-8 h-8 text-[#4C1D95]" />
             </div>
             <h3 className="font-bold text-3xl text-white mb-3">Client</h3>
             <p className="text-lg text-zinc-300 leading-relaxed mb-6">
               Hire top-tier talent, manage complex projects, and scale your global workforce.
             </p>
             <ul className="space-y-2">
-              <li className="flex items-center gap-2 text-zinc-400 text-sm"><CheckCircle2 className="w-4 h-4 text-[#2bb75c]" /> Advanced applicant tracking</li>
-              <li className="flex items-center gap-2 text-zinc-400 text-sm"><CheckCircle2 className="w-4 h-4 text-[#2bb75c]" /> Automated compliance</li>
-              <li className="flex items-center gap-2 text-zinc-400 text-sm"><CheckCircle2 className="w-4 h-4 text-[#2bb75c]" /> Multi-department workflows</li>
+              <li className="flex items-center gap-2 text-zinc-400 text-sm"><CheckCircle2 className="w-4 h-4 text-[#4C1D95]" /> Advanced applicant tracking</li>
+              <li className="flex items-center gap-2 text-zinc-400 text-sm"><CheckCircle2 className="w-4 h-4 text-[#4C1D95]" /> Automated compliance</li>
+              <li className="flex items-center gap-2 text-zinc-400 text-sm"><CheckCircle2 className="w-4 h-4 text-[#4C1D95]" /> Multi-department workflows</li>
             </ul>
           </div>
         </motion.div>
@@ -177,4 +177,5 @@ export default function RoleSelection() {
     </motion.div>
   );
 }
+
 

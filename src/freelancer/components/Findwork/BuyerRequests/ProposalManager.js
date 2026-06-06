@@ -84,7 +84,7 @@ const ProposalCard = ({ proposal, onView, onActionMenu }) => {
             
             <button
               onClick={onView}
-              className="px-3 py-1.5 text-sm font-medium text-[#C9452F] hover:text-[#B53A27] hover:bg-[#FDECE7] rounded-lg transition-colors"
+              className="px-3 py-1.5 text-sm font-medium text-[#22C55E] hover:text-[#B53A27] hover:bg-[#FDECE7] rounded-lg transition-colors"
             >
               View Details
             </button>
@@ -186,7 +186,7 @@ const ProposalDetailModal = ({ proposal, onClose, onAction }) => {
                 </div>
                 <div>
                   <div className="text-sm text-[#7A5A4C] mb-1">Description</div>
-                  <div className="text-[#4A312F]">{proposal.description}</div>
+                  <div className="text-[#4C1D95]">{proposal.description}</div>
                 </div>
               </div>
             </div>
@@ -215,22 +215,22 @@ const ProposalDetailModal = ({ proposal, onClose, onAction }) => {
             <div className="flex flex-col sm:flex-row gap-3">
               {proposal.status === 'accepted' ? (
                 <>
-                  <button className="flex-1 px-4 py-2.5 bg-[#C9452F] text-white rounded-lg font-medium hover:bg-[#B53A27] flex items-center justify-center gap-2">
+                  <button className="flex-1 px-4 py-2.5 bg-[#22C55E] text-white rounded-lg font-medium hover:bg-[#B53A27] flex items-center justify-center gap-2">
                     <ExternalLink size={16} />
                     Start Project
                   </button>
-                  <button className="flex-1 px-4 py-2.5 border border-[#E7E1DE] text-[#4A312F] rounded-lg font-medium hover:bg-[#F8F4F1] flex items-center justify-center gap-2">
+                  <button className="flex-1 px-4 py-2.5 border border-[#E7E1DE] text-[#4C1D95] rounded-lg font-medium hover:bg-[#F8F4F1] flex items-center justify-center gap-2">
                     <MessageSquare size={16} />
                     Message Client
                   </button>
                 </>
               ) : proposal.status === 'pending' ? (
                 <>
-                  <button className="flex-1 px-4 py-2.5 bg-[#C9452F] text-white rounded-lg font-medium hover:bg-[#B53A27] flex items-center justify-center gap-2">
+                  <button className="flex-1 px-4 py-2.5 bg-[#22C55E] text-white rounded-lg font-medium hover:bg-[#B53A27] flex items-center justify-center gap-2">
                     <Edit size={16} />
                     Edit Proposal
                   </button>
-                  <button className="flex-1 px-4 py-2.5 border border-[#E7E1DE] text-[#4A312F] rounded-lg font-medium hover:bg-[#F8F4F1] flex items-center justify-center gap-2">
+                  <button className="flex-1 px-4 py-2.5 border border-[#E7E1DE] text-[#4C1D95] rounded-lg font-medium hover:bg-[#F8F4F1] flex items-center justify-center gap-2">
                     <Copy size={16} />
                     Duplicate
                   </button>
@@ -376,7 +376,7 @@ export default function ProposalManager() {
         <div className="bg-white border border-[#E7E1DE] rounded-lg p-5">
           <div className="flex items-center justify-between mb-3">
             <div className="p-2 bg-[#FDECE7] rounded-lg">
-              <FileText size={18} className="text-[#C9452F]" />
+              <FileText size={18} className="text-[#22C55E]" />
             </div>
             <div className="text-sm font-medium text-green-600">+12%</div>
           </div>
@@ -431,7 +431,7 @@ export default function ProposalManager() {
                   placeholder="Search proposals by title, client, or ID..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 border border-[#E7E1DE] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C9452F] focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 border border-[#E7E1DE] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#22C55E] focus:border-transparent"
                 />
               </div>
             </div>
@@ -448,7 +448,7 @@ export default function ProposalManager() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="border border-[#E7E1DE] rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9452F] focus:border-transparent"
+                className="border border-[#E7E1DE] rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#22C55E] focus:border-transparent"
               >
                 <option value="date">Sort by: Most Recent</option>
                 <option value="amount-high">Budget: High to Low</option>
@@ -458,7 +458,7 @@ export default function ProposalManager() {
 
               <button
                 onClick={handleExport}
-                className="px-4 py-2.5 bg-[#F3E9E5] text-[#4A312F] rounded-lg text-sm font-medium hover:bg-[#EFE7E2] flex items-center gap-2"
+                className="px-4 py-2.5 bg-[#F3E9E5] text-[#4C1D95] rounded-lg text-sm font-medium hover:bg-[#EFE7E2] flex items-center gap-2"
               >
                 <Download size={16} />
                 Export
@@ -472,8 +472,8 @@ export default function ProposalManager() {
               onClick={() => setFilter("all")}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 filter === "all" 
-                  ? "bg-[#C9452F] text-white" 
-                  : "bg-[#F3E9E5] text-[#4A312F] hover:bg-[#EFE7E2]"
+                  ? "bg-[#22C55E] text-white" 
+                  : "bg-[#F3E9E5] text-[#4C1D95] hover:bg-[#EFE7E2]"
               }`}
             >
               All ({stats.total})
@@ -483,7 +483,7 @@ export default function ProposalManager() {
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 filter === "pending" 
                   ? "bg-yellow-600 text-white" 
-                  : "bg-[#F3E9E5] text-[#4A312F] hover:bg-[#EFE7E2]"
+                  : "bg-[#F3E9E5] text-[#4C1D95] hover:bg-[#EFE7E2]"
               }`}
             >
               Pending ({stats.pending})
@@ -493,7 +493,7 @@ export default function ProposalManager() {
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 filter === "accepted" 
                   ? "bg-green-600 text-white" 
-                  : "bg-[#F3E9E5] text-[#4A312F] hover:bg-[#EFE7E2]"
+                  : "bg-[#F3E9E5] text-[#4C1D95] hover:bg-[#EFE7E2]"
               }`}
             >
               Accepted ({stats.accepted})
@@ -503,7 +503,7 @@ export default function ProposalManager() {
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 filter === "rejected" 
                   ? "bg-red-600 text-white" 
-                  : "bg-[#F3E9E5] text-[#4A312F] hover:bg-[#EFE7E2]"
+                  : "bg-[#F3E9E5] text-[#4C1D95] hover:bg-[#EFE7E2]"
               }`}
             >
               Rejected ({stats.rejected})
@@ -515,7 +515,7 @@ export default function ProposalManager() {
             <div className="mt-4 pt-4 border-t border-[#E7E1DE]">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#4A312F] mb-2">Budget Range</label>
+                  <label className="block text-sm font-medium text-[#4C1D95] mb-2">Budget Range</label>
                   <div className="flex gap-2">
                     <input 
                       type="number" 
@@ -530,7 +530,7 @@ export default function ProposalManager() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#4A312F] mb-2">Date Range</label>
+                  <label className="block text-sm font-medium text-[#4C1D95] mb-2">Date Range</label>
                   <div className="flex gap-2">
                     <input 
                       type="date" 
@@ -543,7 +543,7 @@ export default function ProposalManager() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#4A312F] mb-2">Category</label>
+                  <label className="block text-sm font-medium text-[#4C1D95] mb-2">Category</label>
                   <select className="w-full border border-[#E7E1DE] rounded-lg p-2 text-sm">
                     <option>All Categories</option>
                     <option>Web Development</option>
@@ -557,7 +557,7 @@ export default function ProposalManager() {
                 <button className="px-4 py-2 text-sm text-[#6B5B50] hover:text-[#2E2322]">
                   Reset
                 </button>
-                <button className="px-4 py-2 bg-[#C9452F] text-white rounded-lg text-sm font-medium">
+                <button className="px-4 py-2 bg-[#22C55E] text-white rounded-lg text-sm font-medium">
                   Apply Filters
                 </button>
               </div>
@@ -590,7 +590,7 @@ export default function ProposalManager() {
                   setFilter("all");
                   setSearchQuery("");
                 }}
-                className="px-4 py-2 bg-[#F3E9E5] text-[#4A312F] rounded-lg font-medium hover:bg-[#EFE7E2]"
+                className="px-4 py-2 bg-[#F3E9E5] text-[#4C1D95] rounded-lg font-medium hover:bg-[#EFE7E2]"
               >
                 Clear All Filters
               </button>
@@ -608,7 +608,7 @@ export default function ProposalManager() {
               <button className="px-3 py-2 border border-[#E7E1DE] rounded-lg hover:bg-[#F8F4F1]">
                 Previous
               </button>
-              <button className="px-3 py-2 bg-[#C9452F] text-white rounded-lg">1</button>
+              <button className="px-3 py-2 bg-[#22C55E] text-white rounded-lg">1</button>
               <button className="px-3 py-2 border border-[#E7E1DE] rounded-lg hover:bg-[#F8F4F1]">2</button>
               <button className="px-3 py-2 border border-[#E7E1DE] rounded-lg hover:bg-[#F8F4F1]">3</button>
               <button className="px-3 py-2 border border-[#E7E1DE] rounded-lg hover:bg-[#F8F4F1]">
@@ -620,10 +620,10 @@ export default function ProposalManager() {
       </div>
 
       {/* Tips Card */}
-      <div className="mt-8 bg-[#FDECE7] border border-[#F4C7A1] rounded-lg p-6">
+      <div className="mt-8 bg-[#FDECE7] border border-[#E5E7EB] rounded-lg p-6">
         <div className="flex items-start gap-4">
           <div className="p-2 bg-[#FDECE7] rounded-lg">
-            <CheckCircle2 size={20} className="text-[#C9452F]" />
+            <CheckCircle2 size={20} className="text-[#22C55E]" />
           </div>
           <div className="flex-1">
             <h4 className="font-semibold text-[#2E2322] mb-2">Tips for Higher Acceptance Rates</h4>
@@ -641,15 +641,15 @@ export default function ProposalManager() {
       {showActionMenu && (
         <div className="fixed inset-0 z-40" onClick={() => setShowActionMenu(null)}>
           <div className="absolute right-4 top-20 bg-white border border-[#E7E1DE] rounded-lg shadow-lg w-48 py-2">
-            <button className="w-full px-4 py-2 text-left text-sm text-[#4A312F] hover:bg-[#F8F4F1] flex items-center gap-2">
+            <button className="w-full px-4 py-2 text-left text-sm text-[#4C1D95] hover:bg-[#F8F4F1] flex items-center gap-2">
               <Edit size={14} />
               Edit Proposal
             </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-[#4A312F] hover:bg-[#F8F4F1] flex items-center gap-2">
+            <button className="w-full px-4 py-2 text-left text-sm text-[#4C1D95] hover:bg-[#F8F4F1] flex items-center gap-2">
               <Copy size={14} />
               Duplicate
             </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-[#4A312F] hover:bg-[#F8F4F1] flex items-center gap-2">
+            <button className="w-full px-4 py-2 text-left text-sm text-[#4C1D95] hover:bg-[#F8F4F1] flex items-center gap-2">
               <Download size={14} />
               Download PDF
             </button>
@@ -675,3 +675,5 @@ export default function ProposalManager() {
     </div>
   );
 }
+
+

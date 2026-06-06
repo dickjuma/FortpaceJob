@@ -286,16 +286,16 @@ const getBadges = (profile, completeness, portfolioCount, hasIntroVideo) => {
   const badges = [];
   if (profile?.emailVerified) badges.push({ name: "Email Verified", icon: CheckCircle, color: "text-green-600", description: "Your email address has been confirmed." });
   if (profile?.phoneVerified) badges.push({ name: "Phone Verified", icon: CheckCircle, color: "text-green-600", description: "Your phone number has been verified." });
-  if (profile?.isVerified) badges.push({ name: "Identity Verified", icon: Shield, color: "text-[#2bb75c]", description: "Your identity has been verified." });
-  if (profile?.paymentVerified) badges.push({ name: "Payment Verified", icon: Shield, color: "text-[#2bb75c]", description: "Your payment method is verified." });
+  if (profile?.isVerified) badges.push({ name: "Identity Verified", icon: Shield, color: "text-[#4C1D95]", description: "Your identity has been verified." });
+  if (profile?.paymentVerified) badges.push({ name: "Payment Verified", icon: Shield, color: "text-[#4C1D95]", description: "Your payment method is verified." });
   if (profile?.topRated) badges.push({ name: "Top Rated", icon: Award, color: "text-yellow-600", description: "You are among the highest-rated professionals." });
   if (profile?.risingTalent) badges.push({ name: "Rising Talent", icon: TrendingUp, color: "text-green-600", description: "You are quickly gaining recognition." });
   if (completeness >= 50) badges.push({ name: "50% Complete", icon: Award, color: "text-yellow-600", description: "Your profile is halfway there!" });
   if (completeness >= 80) badges.push({ name: "80% Complete", icon: Award, color: "text-yellow-600", description: "Almost done – keep going!" });
-  if (completeness === 100) badges.push({ name: "All-Star Profile", icon: Award, color: "text-[#2bb75c]", description: "Perfect! Your profile is complete." });
+  if (completeness === 100) badges.push({ name: "All-Star Profile", icon: Award, color: "text-[#4C1D95]", description: "Perfect! Your profile is complete." });
   if (profile?.role === 'freelancer') {
-    if (portfolioCount >= 3) badges.push({ name: "Portfolio Starter", icon: Award, color: "text-[#2bb75c]", description: "You have at least 3 portfolio items." });
-    if (hasIntroVideo) badges.push({ name: "Video Introduction", icon: Award, color: "text-[#2bb75c]", description: "You've uploaded an intro video." });
+    if (portfolioCount >= 3) badges.push({ name: "Portfolio Starter", icon: Award, color: "text-[#4C1D95]", description: "You have at least 3 portfolio items." });
+    if (hasIntroVideo) badges.push({ name: "Video Introduction", icon: Award, color: "text-[#4C1D95]", description: "You've uploaded an intro video." });
   }
   return badges;
 };
@@ -613,7 +613,7 @@ const PreviewModal = ({ file, onClose, onPrev, onNext, hasMultiple }) => {
                   href={file.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-[#2bb75c] underline inline-flex items-center gap-1"
+                  className="text-[#4C1D95] underline inline-flex items-center gap-1"
                 >
                   <Download size={16} /> Download
                 </a>
@@ -675,7 +675,7 @@ const ProfileHeader = ({
         {profile?.coverPhoto ? (
           <img src={profile.coverPhoto} alt="Cover" className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-r from-blue-400 to-[#1d8d38] flex items-center justify-center text-white">
+          <div className="w-full h-full bg-gradient-to-r from-blue-400 to-[#22C55E] flex items-center justify-center text-white">
             <Camera size={32} />
             <span className="text-lg ml-2">Upload a cover photo</span>
           </div>
@@ -2521,4 +2521,5 @@ export const MyProfile = () => {
 };
 
 export default MyProfile;
+
 

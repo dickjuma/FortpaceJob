@@ -68,7 +68,7 @@ export default function ClientSidebar() {
       {/* Brand & Workspace Selector */}
       <div className="p-5 border-b border-gray-200 sticky top-0 bg-white z-10">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-success rounded-lg flex items-center justify-center shadow-lg shadow-[#2bb75c]/20">
+          <div className="w-8 h-8 bg-success rounded-lg flex items-center justify-center shadow-lg shadow-[#4C1D95]/20">
             <Building2 className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -124,4 +124,5 @@ export default function ClientSidebar() {
     </aside>
   );
 }
+
 

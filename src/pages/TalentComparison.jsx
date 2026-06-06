@@ -28,7 +28,7 @@ const TalentComparison = () => {
                 <th className="p-6 text-left text-zinc-500 text-sm font-semibold">Compare</th>
                 {talents.map((talent) => (
                   <th className="p-6 border-l border-zinc-100 min-w-[260px] text-left align-top" key={talent.id}>
-                    <Link className="font-bold text-zinc-900 hover:text-[#2bb75c] transition-colors text-lg" to={`/talent/${talent.id}`}>
+                    <Link className="font-bold text-zinc-900 hover:text-[#4C1D95] transition-colors text-lg" to={`/talent/${talent.id}`}>
                       {talent.name}
                     </Link>
                     <div className="text-sm text-zinc-500 mt-1">{talent.title}</div>
@@ -113,4 +113,5 @@ const TalentComparison = () => {
 };
 
 export default TalentComparison;
+
 

@@ -47,13 +47,13 @@ export default function SuccessStoriesPage() {
 
       {loading ? (
         <div className="py-20 text-center">
-          <Loader2 className="w-10 h-10 mx-auto animate-spin text-[#2bb75c]" />
+          <Loader2 className="w-10 h-10 mx-auto animate-spin text-[#4C1D95]" />
         </div>
       ) : stories.length === 0 ? (
         <div className="py-20 text-center bg-white border border-dashed border-zinc-300 rounded-2xl">
           <Quote className="w-12 h-12 mx-auto mb-4 text-zinc-300" />
           <p className="font-bold text-zinc-700">No published success stories yet.</p>
-          <Link to="/find-talent" className="inline-block mt-4 text-[#2bb75c] font-bold hover:underline">
+          <Link to="/find-talent" className="inline-block mt-4 text-[#4C1D95] font-bold hover:underline">
             Explore talent
           </Link>
         </div>
@@ -62,7 +62,7 @@ export default function SuccessStoriesPage() {
           {featured ? (
             <div className="bg-white border border-zinc-200 rounded-3xl overflow-hidden mb-12 shadow-sm">
               <div className="p-8 md:p-12">
-                <span className="text-xs font-bold text-[#2bb75c] uppercase tracking-wider">{featured.category}</span>
+                <span className="text-xs font-bold text-[#4C1D95] uppercase tracking-wider">{featured.category}</span>
                 <h2 className="text-3xl font-black text-zinc-900 mt-2 mb-4">{featured.title}</h2>
                 <p className="text-zinc-600 font-medium mb-6">{featured.summary}</p>
                 <div className="flex items-center gap-3">
@@ -80,7 +80,7 @@ export default function SuccessStoriesPage() {
             {stories.slice(1).map((story) => (
               <article key={story.id} className="bg-white border border-zinc-200 rounded-2xl p-6 hover:shadow-md transition-shadow">
                 <span className="text-xs font-bold text-zinc-400 uppercase">{story.category}</span>
-                {story.stat ? <div className="text-[#2bb75c] font-black text-lg mt-1">{story.stat}</div> : null}
+                {story.stat ? <div className="text-[#4C1D95] font-black text-lg mt-1">{story.stat}</div> : null}
                 <h3 className="font-bold text-zinc-900 text-lg mt-2 mb-2">{story.title}</h3>
                 <p className="text-sm text-zinc-600 line-clamp-3 mb-4">{story.summary}</p>
                 <div className="flex items-center gap-2">
@@ -92,7 +92,7 @@ export default function SuccessStoriesPage() {
           </div>
 
           <div className="text-center mt-12">
-            <Link to="/register" className="inline-flex items-center gap-2 px-8 py-4 bg-[#2bb75c] text-white font-bold rounded-xl hover:bg-[#1d8d38]">
+            <Link to="/register" className="inline-flex items-center gap-2 px-8 py-4 bg-[#4C1D95] text-white font-bold rounded-xl hover:bg-[#22C55E]">
               Start your success story <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
@@ -101,4 +101,5 @@ export default function SuccessStoriesPage() {
     </div>
   );
 }
+
 

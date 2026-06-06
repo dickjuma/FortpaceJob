@@ -281,12 +281,12 @@ const RequestCard = ({ request, isSaved, onSave, onApply, onQuickView }) => {
       label: "Great Fit", 
       color: "text-[#B53A27]", 
       bg: "bg-[#FDECE7]", 
-      border: "border-[#F4C7A1]",
-      icon: <CheckCircle2 size={12} className="text-[#C9452F]" />
+      border: "border-[#E5E7EB]",
+      icon: <CheckCircle2 size={12} className="text-[#22C55E]" />
     };
     return { 
       label: "Good Fit", 
-      color: "text-[#4A312F]", 
+      color: "text-[#4C1D95]", 
       bg: "bg-[#F8F4F1]", 
       border: "border-[#E7E1DE]",
       icon: <Briefcase size={12} className="text-[#6B5B50]" />
@@ -295,7 +295,7 @@ const RequestCard = ({ request, isSaved, onSave, onApply, onQuickView }) => {
 
   const getUrgencyLevel = () => {
     if (request.urgent) return { color: "bg-red-100 text-red-700 border-red-200", text: "Urgent Hire", icon: <Zap size={10} /> };
-    if (request.featuredBadge) return { color: "bg-[#2bb75c]/10 text-[#2bb75c] border-[#2bb75c]/50", text: "Featured", icon: <Sparkles size={10} /> };
+    if (request.featuredBadge) return { color: "bg-[#4C1D95]/10 text-[#4C1D95] border-[#4C1D95]/50", text: "Featured", icon: <Sparkles size={10} /> };
     return null;
   };
 
@@ -337,7 +337,7 @@ const RequestCard = ({ request, isSaved, onSave, onApply, onQuickView }) => {
                     {request.title}
                   </h3>
                   {request.featuredBadge && (
-                    <span className="px-2 py-0.5 text-xs font-medium bg-[#2bb75c]/10 text-[#2bb75c] rounded-full border border-[#2bb75c]/50">
+                    <span className="px-2 py-0.5 text-xs font-medium bg-[#4C1D95]/10 text-[#4C1D95] rounded-full border border-[#4C1D95]/50">
                       Featured
                     </span>
                   )}
@@ -382,7 +382,7 @@ const RequestCard = ({ request, isSaved, onSave, onApply, onQuickView }) => {
                   {request.tags.slice(0, 4).map((tag) => (
                     <span 
                       key={tag} 
-                      className="px-2 py-1 text-xs bg-[#F8F4F1] text-[#4A312F] rounded border border-[#E7E1DE] hover:bg-[#F3E9E5] transition-colors"
+                      className="px-2 py-1 text-xs bg-[#F8F4F1] text-[#4C1D95] rounded border border-[#E7E1DE] hover:bg-[#F3E9E5] transition-colors"
                     >
                       {tag}
                     </span>
@@ -556,8 +556,8 @@ const RequestCard = ({ request, isSaved, onSave, onApply, onQuickView }) => {
                     key={tag}
                     className={`px-3 py-1.5 text-sm rounded-md border ${
                       index < 3 
-                        ? "bg-[#FDECE7] text-[#B53A27] border-[#F4C7A1] font-medium" 
-                        : "bg-[#F8F4F1] text-[#4A312F] border-[#E7E1DE]"
+                        ? "bg-[#FDECE7] text-[#B53A27] border-[#E5E7EB] font-medium" 
+                        : "bg-[#F8F4F1] text-[#4C1D95] border-[#E7E1DE]"
                     }`}
                   >
                     {tag}
@@ -631,7 +631,7 @@ const QuickViewModal = ({ request, onClose }) => {
             {/* Description */}
             <div>
               <h3 className="text-sm font-semibold text-[#2E2322] uppercase tracking-wide mb-3">Description</h3>
-              <p className="text-[#4A312F] leading-relaxed">{request.description}</p>
+              <p className="text-[#4C1D95] leading-relaxed">{request.description}</p>
             </div>
             
             {/* Project Details */}
@@ -672,7 +672,7 @@ const QuickViewModal = ({ request, onClose }) => {
               <h3 className="text-sm font-semibold text-[#2E2322] uppercase tracking-wide mb-3">Skills Required</h3>
               <div className="flex flex-wrap gap-2">
                 {request.tags.map(tag => (
-                  <span key={tag} className="px-3 py-1.5 bg-[#F8F4F1] text-[#4A312F] text-sm rounded border border-[#E7E1DE]">
+                  <span key={tag} className="px-3 py-1.5 bg-[#F8F4F1] text-[#4C1D95] text-sm rounded border border-[#E7E1DE]">
                     {tag}
                   </span>
                 ))}
@@ -793,7 +793,7 @@ const ApplyModal = ({ request, onClose }) => {
                 <h4 className="text-sm font-semibold text-[#2E2322] mb-3">Your Bid</h4>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                    <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                       Bid Amount (USD)
                     </label>
                     <div className="relative">
@@ -813,7 +813,7 @@ const ApplyModal = ({ request, onClose }) => {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                    <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                       Estimated Delivery Time (days)
                     </label>
                     <div className="flex items-center gap-4">
@@ -1105,7 +1105,7 @@ export default function CategoryResults() {
                     <h4 className="text-sm font-semibold text-[#2E2322] mb-3">Filter Options</h4>
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-xs font-medium text-[#4A312F] mb-1">
+                        <label className="block text-xs font-medium text-[#4C1D95] mb-1">
                           Minimum Match: {filters.minMatch}%
                         </label>
                         <input
@@ -1119,7 +1119,7 @@ export default function CategoryResults() {
                       </div>
                       
                       <div>
-                        <label className="block text-xs font-medium text-[#4A312F] mb-1">
+                        <label className="block text-xs font-medium text-[#4C1D95] mb-1">
                           Max Proposals: {filters.maxOffers}
                         </label>
                         <input
@@ -1133,7 +1133,7 @@ export default function CategoryResults() {
                       </div>
                       
                       <div className="space-y-2">
-                        <label className="flex items-center gap-2 text-sm text-[#4A312F]">
+                        <label className="flex items-center gap-2 text-sm text-[#4C1D95]">
                           <input
                             type="checkbox"
                             checked={filters.verifiedOnly}
@@ -1143,7 +1143,7 @@ export default function CategoryResults() {
                           Verified clients only
                         </label>
                         
-                        <label className="flex items-center gap-2 text-sm text-[#4A312F]">
+                        <label className="flex items-center gap-2 text-sm text-[#4C1D95]">
                           <input
                             type="checkbox"
                             checked={filters.urgentOnly}
@@ -1153,7 +1153,7 @@ export default function CategoryResults() {
                           Urgent projects
                         </label>
                         
-                        <label className="flex items-center gap-2 text-sm text-[#4A312F]">
+                        <label className="flex items-center gap-2 text-sm text-[#4C1D95]">
                           <input
                             type="checkbox"
                             checked={filters.paymentVerified}
@@ -1170,7 +1170,7 @@ export default function CategoryResults() {
                 <div className="mt-8 flex gap-3">
                   <button
                     onClick={resetFilters}
-                    className="flex-1 px-4 py-2.5 border border-[#E7E1DE] text-[#4A312F] rounded-md text-sm font-medium hover:bg-[#F8F4F1] transition-colors"
+                    className="flex-1 px-4 py-2.5 border border-[#E7E1DE] text-[#4C1D95] rounded-md text-sm font-medium hover:bg-[#F8F4F1] transition-colors"
                   >
                     Reset All
                   </button>
@@ -1202,7 +1202,7 @@ export default function CategoryResults() {
                   </div>
                   <div>
                     <div className="text-sm text-[#7A5A4C] mb-1">Featured</div>
-                    <div className="text-lg font-semibold text-[#2bb75c]">{stats.featuredCount}</div>
+                    <div className="text-lg font-semibold text-[#4C1D95]">{stats.featuredCount}</div>
                   </div>
                 </div>
                 <div className="pt-4 border-t border-[#E7E1DE]">
@@ -1256,7 +1256,7 @@ export default function CategoryResults() {
               </div>
               <div className="space-y-5">
                 <div>
-                  <label className="block text-xs font-medium text-[#4A312F] mb-1">
+                  <label className="block text-xs font-medium text-[#4C1D95] mb-1">
                     Minimum Match: {filters.minMatch}%
                   </label>
                   <input
@@ -1270,7 +1270,7 @@ export default function CategoryResults() {
                 </div>
                 
                 <div>
-                  <label className="block text-xs font-medium text-[#4A312F] mb-1">
+                  <label className="block text-xs font-medium text-[#4C1D95] mb-1">
                     Max Proposals: {filters.maxOffers}
                   </label>
                   <input
@@ -1284,7 +1284,7 @@ export default function CategoryResults() {
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-sm text-[#4A312F]">
+                  <label className="flex items-center gap-2 text-sm text-[#4C1D95]">
                     <input
                       type="checkbox"
                       checked={filters.verifiedOnly}
@@ -1294,7 +1294,7 @@ export default function CategoryResults() {
                     Verified clients only
                   </label>
                   
-                  <label className="flex items-center gap-2 text-sm text-[#4A312F]">
+                  <label className="flex items-center gap-2 text-sm text-[#4C1D95]">
                     <input
                       type="checkbox"
                       checked={filters.urgentOnly}
@@ -1304,7 +1304,7 @@ export default function CategoryResults() {
                     Urgent projects
                   </label>
                   
-                  <label className="flex items-center gap-2 text-sm text-[#4A312F]">
+                  <label className="flex items-center gap-2 text-sm text-[#4C1D95]">
                     <input
                       type="checkbox"
                       checked={filters.paymentVerified}
@@ -1318,17 +1318,17 @@ export default function CategoryResults() {
             </div>
             
             {/* Tips Card */}
-            <div className="bg-[#FDECE7] border border-[#F4C7A1] rounded-lg p-5">
+            <div className="bg-[#FDECE7] border border-[#E5E7EB] rounded-lg p-5">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-8 h-8 rounded-full bg-[#FDECE7] flex items-center justify-center">
-                  <Target size={16} className="text-[#C9452F]" />
+                  <Target size={16} className="text-[#22C55E]" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-[#2E2322]">Pro Tip</h4>
                   <p className="text-xs text-[#6B5B50]">Stand out from the crowd</p>
                 </div>
               </div>
-              <ul className="space-y-2 text-sm text-[#4A312F]">
+              <ul className="space-y-2 text-sm text-[#4C1D95]">
                 <li className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#FDECE7] mt-1.5"></div>
                   <span>Apply within 24 hours for better visibility</span>
@@ -1392,7 +1392,7 @@ export default function CategoryResults() {
               {/* Active filters */}
               <div className="flex flex-wrap items-center gap-2 mb-6">
                 {filters.verifiedOnly && (
-                  <span className="px-3 py-1 text-xs font-medium bg-[#FDECE7] text-[#B53A27] rounded-md border border-[#F4C7A1] flex items-center gap-1">
+                  <span className="px-3 py-1 text-xs font-medium bg-[#FDECE7] text-[#B53A27] rounded-md border border-[#E5E7EB] flex items-center gap-1">
                     <CheckCircle2 size={12} />
                     Verified clients
                   </span>
@@ -1406,7 +1406,7 @@ export default function CategoryResults() {
                 {(filters.verifiedOnly || filters.urgentOnly || filters.paymentVerified) && (
                   <button
                     onClick={resetFilters}
-                    className="px-3 py-1 text-xs text-[#7A5A4C] hover:text-[#4A312F] hover:bg-[#F3E9E5] rounded-md transition-colors"
+                    className="px-3 py-1 text-xs text-[#7A5A4C] hover:text-[#4C1D95] hover:bg-[#F3E9E5] rounded-md transition-colors"
                   >
                     Clear all
                   </button>
@@ -1449,7 +1449,7 @@ export default function CategoryResults() {
             {/* Load more */}
             {filteredRequests.length > 0 && (
               <div className="mt-8 text-center">
-                <button className="px-5 py-2.5 border border-[#E7E1DE] text-[#4A312F] hover:bg-[#F8F4F1] rounded-md text-sm font-medium transition-colors">
+                <button className="px-5 py-2.5 border border-[#E7E1DE] text-[#4C1D95] hover:bg-[#F8F4F1] rounded-md text-sm font-medium transition-colors">
                   Load more projects
                 </button>
                 <p className="text-xs text-[#7A5A4C] mt-3">
@@ -1512,4 +1512,6 @@ export default function CategoryResults() {
     </div>
   );
 }
+
+
 

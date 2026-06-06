@@ -33,7 +33,7 @@ const UserAnalyticsPage = () => {
         <div>
           <div className="flex items-center gap-3">
              <h1 className="text-4xl font-black text-zinc-900 dark:text-white tracking-tight">User Analytics</h1>
-             <span className="h-7 px-3 flex items-center justify-center bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 text-[#2bb75c] dark:text-[#2bb75c] text-xs font-black rounded-full border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/50">
+             <span className="h-7 px-3 flex items-center justify-center bg-[#4C1D95]/10 dark:bg-[#4C1D95]/30 text-[#4C1D95] dark:text-[#4C1D95] text-xs font-black rounded-full border border-[#4C1D95]/20 dark:border-[#4C1D95]/20/50">
                Live Data
              </span>
           </div>
@@ -53,12 +53,12 @@ const UserAnalyticsPage = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
          {/* Governance Insight Banner */}
-         <div className="lg:col-span-2 bg-gradient-to-br from-[#2bb75c] to-[#1d8d38] rounded-3xl p-8 text-white shadow-xl shadow-[#2bb75c]/25/20 overflow-hidden relative group flex flex-col justify-center">
+         <div className="lg:col-span-2 bg-gradient-to-br from-[#4C1D95] to-[#22C55E] rounded-3xl p-8 text-white shadow-xl shadow-[#4C1D95]/25/20 overflow-hidden relative group flex flex-col justify-center">
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
                <PieIcon size={120} strokeWidth={1} />
             </div>
             <h3 className="text-xl font-black mb-2 relative z-10">Governance Insight</h3>
-            <p className="text-[#2bb75c] text-sm font-medium leading-relaxed mb-6 relative z-10 max-w-xl">
+            <p className="text-[#4C1D95] text-sm font-medium leading-relaxed mb-6 relative z-10 max-w-xl">
                Freelancers represent 62% of your active user base this month, with a 15% increase in verification completion.
                Client acquisition cost has decreased by 4% over the same period.
             </p>
@@ -80,7 +80,7 @@ const UserAnalyticsPage = () => {
         <div className="flex items-center justify-between mb-8">
            <div>
               <h3 className="text-lg font-black text-zinc-900 dark:text-white flex items-center gap-2">
-                 <TrendingUp size={20} className="text-[#2bb75c]" /> User Growth Trends
+                 <TrendingUp size={20} className="text-[#4C1D95]" /> User Growth Trends
               </h3>
               <p className="text-sm font-medium text-zinc-500 mt-1">Platform adoption over the last 7 months</p>
            </div>
@@ -90,7 +90,7 @@ const UserAnalyticsPage = () => {
                  <span className="text-xs font-bold text-zinc-600 dark:text-zinc-400">Freelancers</span>
               </div>
               <div className="flex items-center gap-2">
-                 <div className="w-3 h-3 rounded-full bg-[#2bb75c]"></div>
+                 <div className="w-3 h-3 rounded-full bg-[#4C1D95]"></div>
                  <span className="text-xs font-bold text-zinc-600 dark:text-zinc-400">Clients</span>
               </div>
            </div>
@@ -127,4 +127,5 @@ const UserAnalyticsPage = () => {
 };
 
 export default UserAnalyticsPage;
+
 

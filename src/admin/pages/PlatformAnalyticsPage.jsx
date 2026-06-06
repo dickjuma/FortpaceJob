@@ -11,7 +11,7 @@ export default function PlatformAnalyticsPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl shadow-sm">
+            <div className="p-2.5 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl shadow-sm">
               <BarChart2 size={24} />
             </div>
             <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Platform Analytics</h1>
@@ -34,7 +34,7 @@ export default function PlatformAnalyticsPage() {
                <div className={cn(
                  "p-2 rounded-lg",
                  stat.color === 'emerald' ? 'bg-emerald-50 text-success dark:bg-emerald-900/20' :
-                 stat.color === 'blue' ? 'bg-[#2bb75c]/5 text-[#2bb75c] dark:bg-[#2bb75c]/20' :
+                 stat.color === 'blue' ? 'bg-[#4C1D95]/5 text-[#4C1D95] dark:bg-[#4C1D95]/20' :
                  stat.color === 'violet' ? 'bg-violet-50 text-violet-600 dark:bg-violet-900/20' :
                  'bg-amber-50 text-amber-600 dark:bg-amber-900/20'
                )}>
@@ -72,4 +72,5 @@ export default function PlatformAnalyticsPage() {
     </div>
   );
 }
+
 

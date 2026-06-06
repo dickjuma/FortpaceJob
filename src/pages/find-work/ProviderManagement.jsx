@@ -64,7 +64,7 @@ const ProviderManagement = () => {
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl flex items-center justify-center shadow-sm">
+              <div className="w-12 h-12 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl flex items-center justify-center shadow-sm">
                 <Users className="w-6 h-6" />
               </div>
               <div>
@@ -81,7 +81,7 @@ const ProviderManagement = () => {
                   placeholder="Search providers..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 bg-white border border-zinc-200 rounded-xl focus:border-[#2bb75c]/20 focus:outline-none font-medium text-sm text-zinc-900"
+                  className="w-full pl-9 pr-4 py-2.5 bg-white border border-zinc-200 rounded-xl focus:border-[#4C1D95]/20 focus:outline-none font-medium text-sm text-zinc-900"
                 />
               </div>
               <button type="button" className="p-2.5 bg-white border border-zinc-200 text-zinc-600 rounded-xl hover:bg-surface transition-colors">
@@ -92,7 +92,7 @@ const ProviderManagement = () => {
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
-              <Loader2 className="w-10 h-10 animate-spin text-[#2bb75c] mb-4" />
+              <Loader2 className="w-10 h-10 animate-spin text-[#4C1D95] mb-4" />
               <p className="font-medium">Loading providers…</p>
             </div>
           ) : filtered.length === 0 ? (
@@ -111,7 +111,7 @@ const ProviderManagement = () => {
                       alt={provider.name}
                       className="w-20 h-20 rounded-full border border-zinc-200 mb-3 object-cover"
                     />
-                    <Link to={`/seller/${provider.id}`} className="font-bold text-zinc-900 text-lg hover:text-[#2bb75c] transition-colors">{provider.name}</Link>
+                    <Link to={`/seller/${provider.id}`} className="font-bold text-zinc-900 text-lg hover:text-[#4C1D95] transition-colors">{provider.name}</Link>
                     <div className="text-sm font-medium text-zinc-500 mb-2">{provider.title}</div>
                     <div className="flex items-center gap-1 font-bold text-zinc-700 text-sm">
                       <Star className="w-4 h-4 text-amber-500 fill-current" /> {provider.rating.toFixed(1)}
@@ -133,7 +133,7 @@ const ProviderManagement = () => {
                     <Link to="/messages" className="flex-1 py-2.5 bg-white border border-zinc-200 hover:bg-surface text-zinc-700 font-bold rounded-xl transition-colors text-sm flex items-center justify-center gap-2">
                       <MessageSquare className="w-4 h-4" /> Message
                     </Link>
-                    <Link to="/post-job" className="flex-1 py-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-sm transition-colors text-sm flex items-center justify-center gap-2">
+                    <Link to="/post-job" className="flex-1 py-2.5 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl shadow-sm transition-colors text-sm flex items-center justify-center gap-2">
                       <Briefcase className="w-4 h-4" /> Hire Again
                     </Link>
                   </div>
@@ -148,4 +148,5 @@ const ProviderManagement = () => {
 };
 
 export default ProviderManagement;
+
 

@@ -103,7 +103,7 @@ export default function SendProposal({ request, onCancel }) {
               <div className="text-lg font-semibold">{request?.budget || "$0.00"}</div>
             </div>
             <div className="w-12 h-12 rounded-lg bg-[#FDECE7] flex items-center justify-center">
-              <Send size={20} className="text-[#C9452F]" />
+              <Send size={20} className="text-[#22C55E]" />
             </div>
           </div>
         </div>
@@ -113,27 +113,27 @@ export default function SendProposal({ request, onCancel }) {
       <div className="bg-white border border-[#E7E1DE] rounded-lg p-6 mb-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
-            <div className={`flex items-center gap-2 ${step >= 1 ? 'text-[#C9452F]' : 'text-[#A38F85]'}`}>
+            <div className={`flex items-center gap-2 ${step >= 1 ? 'text-[#22C55E]' : 'text-[#A38F85]'}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                step >= 1 ? 'bg-[#C9452F] text-white' : 'bg-[#EFE7E2] text-[#A38F85]'
+                step >= 1 ? 'bg-[#22C55E] text-white' : 'bg-[#EFE7E2] text-[#A38F85]'
               }`}>
                 1
               </div>
               <span className="font-medium">Proposal</span>
             </div>
             <div className="h-1 w-8 bg-[#EFE7E2]"></div>
-            <div className={`flex items-center gap-2 ${step >= 2 ? 'text-[#C9452F]' : 'text-[#A38F85]'}`}>
+            <div className={`flex items-center gap-2 ${step >= 2 ? 'text-[#22C55E]' : 'text-[#A38F85]'}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                step >= 2 ? 'bg-[#C9452F] text-white' : 'bg-[#EFE7E2] text-[#A38F85]'
+                step >= 2 ? 'bg-[#22C55E] text-white' : 'bg-[#EFE7E2] text-[#A38F85]'
               }`}>
                 2
               </div>
               <span className="font-medium">Details</span>
             </div>
             <div className="h-1 w-8 bg-[#EFE7E2]"></div>
-            <div className={`flex items-center gap-2 ${step >= 3 ? 'text-[#C9452F]' : 'text-[#A38F85]'}`}>
+            <div className={`flex items-center gap-2 ${step >= 3 ? 'text-[#22C55E]' : 'text-[#A38F85]'}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                step >= 3 ? 'bg-[#C9452F] text-white' : 'bg-[#EFE7E2] text-[#A38F85]'
+                step >= 3 ? 'bg-[#22C55E] text-white' : 'bg-[#EFE7E2] text-[#A38F85]'
               }`}>
                 3
               </div>
@@ -147,7 +147,7 @@ export default function SendProposal({ request, onCancel }) {
           <div className="flex items-start justify-between">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <ShieldCheck size={16} className="text-[#C9452F]" />
+                <ShieldCheck size={16} className="text-[#22C55E]" />
                 <span className="text-sm font-medium text-[#2E2322]">Project: {request?.title || "Custom Project"}</span>
               </div>
               <div className="flex items-center gap-4 text-sm text-[#6B5B50]">
@@ -182,7 +182,7 @@ export default function SendProposal({ request, onCancel }) {
                 <span className="text-red-500 ml-1">*</span>
               </label>
               <textarea
-                className="w-full border border-[#E7E1DE] rounded-lg p-4 min-h-[150px] focus:border-[#C9452F] focus:outline-none text-[#4A312F] text-sm"
+                className="w-full border border-[#E7E1DE] rounded-lg p-4 min-h-[150px] focus:border-[#22C55E] focus:outline-none text-[#4C1D95] text-sm"
                 placeholder="Introduce yourself and explain how you will execute this project. Be specific about the value you bring, your approach, and relevant experience."
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -200,7 +200,7 @@ export default function SendProposal({ request, onCancel }) {
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                    <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                       Total Price
                       <span className="text-red-500 ml-1">*</span>
                     </label>
@@ -208,7 +208,7 @@ export default function SendProposal({ request, onCancel }) {
                       <DollarSign className="absolute left-3 top-1/2 -tranzinc-y-1/2 text-[#A38F85]" size={16} />
                       <input
                         type="number"
-                        className="w-full border border-[#E7E1DE] rounded-lg py-2.5 pl-9 pr-3 focus:outline-none focus:border-[#C9452F]"
+                        className="w-full border border-[#E7E1DE] rounded-lg py-2.5 pl-9 pr-3 focus:outline-none focus:border-[#22C55E]"
                         placeholder="0.00"
                         value={formData.price}
                         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
@@ -218,13 +218,13 @@ export default function SendProposal({ request, onCancel }) {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                    <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                       Delivery Time
                     </label>
                     <div className="relative">
                       <Clock className="absolute left-3 top-1/2 -tranzinc-y-1/2 text-[#A38F85]" size={16} />
                       <select
-                        className="w-full border border-[#E7E1DE] rounded-lg py-2.5 pl-9 pr-8 appearance-none focus:outline-none focus:border-[#C9452F] bg-white"
+                        className="w-full border border-[#E7E1DE] rounded-lg py-2.5 pl-9 pr-8 appearance-none focus:outline-none focus:border-[#22C55E] bg-white"
                         value={formData.deliveryTime}
                         onChange={(e) => setFormData({ ...formData, deliveryTime: e.target.value })}
                       >
@@ -238,13 +238,13 @@ export default function SendProposal({ request, onCancel }) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                  <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                     Revisions Included
                   </label>
                   <div className="relative">
                     <FileText className="absolute left-3 top-1/2 -tranzinc-y-1/2 text-[#A38F85]" size={16} />
                     <select
-                      className="w-full border border-[#E7E1DE] rounded-lg py-2.5 pl-9 pr-8 appearance-none focus:outline-none focus:border-[#C9452F] bg-white"
+                      className="w-full border border-[#E7E1DE] rounded-lg py-2.5 pl-9 pr-8 appearance-none focus:outline-none focus:border-[#22C55E] bg-white"
                       value={formData.revisions}
                       onChange={(e) => setFormData({ ...formData, revisions: e.target.value })}
                     >
@@ -258,12 +258,12 @@ export default function SendProposal({ request, onCancel }) {
 
                 {/* File Upload */}
                 <div>
-                  <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                  <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                     Attachments (Optional)
                   </label>
                   <div 
                     className={`border-2 border-dashed rounded-lg p-6 text-center transition-all cursor-pointer ${
-                      dragActive ? 'border-[#C9452F] bg-[#FDECE7]' : 'border-[#E7E1DE] hover:border-[#C9452F]'
+                      dragActive ? 'border-[#22C55E] bg-[#FDECE7]' : 'border-[#E7E1DE] hover:border-[#22C55E]'
                     }`}
                     onDragEnter={handleDrag}
                     onDragLeave={handleDrag}
@@ -273,7 +273,7 @@ export default function SendProposal({ request, onCancel }) {
                   >
                     <Upload className="mx-auto mb-3 text-[#A38F85]" size={24} />
                     <p className="text-sm text-[#6B5B50] mb-1">
-                      Drag & drop files or <span className="text-[#C9452F] font-medium">click to browse</span>
+                      Drag & drop files or <span className="text-[#22C55E] font-medium">click to browse</span>
                     </p>
                     <p className="text-xs text-[#7A5A4C]">Max 3 files, 10MB each</p>
                     <input 
@@ -291,7 +291,7 @@ export default function SendProposal({ request, onCancel }) {
                         <div key={i} className="flex items-center justify-between bg-[#F8F4F1] rounded-lg p-3">
                           <div className="flex items-center gap-2">
                             <Paperclip size={14} className="text-[#7A5A4C]" />
-                            <span className="text-sm font-medium text-[#4A312F] truncate max-w-[200px]">{file.name}</span>
+                            <span className="text-sm font-medium text-[#4C1D95] truncate max-w-[200px]">{file.name}</span>
                             <span className="text-xs text-[#7A5A4C]">
                               ({(file.size / 1024 / 1024).toFixed(2)} MB)
                             </span>
@@ -330,7 +330,7 @@ export default function SendProposal({ request, onCancel }) {
 
                   <div className="flex justify-between items-center py-2 border-t border-[#E7E1DE]">
                     <div>
-                      <div className="text-sm font-medium text-[#4A312F]">Service Fee (20%)</div>
+                      <div className="text-sm font-medium text-[#4C1D95]">Service Fee (20%)</div>
                       <div className="text-xs text-[#7A5A4C]">Platform commission</div>
                     </div>
                     <div className="text-sm font-semibold text-red-600">
@@ -340,7 +340,7 @@ export default function SendProposal({ request, onCancel }) {
 
                   <div className="flex justify-between items-center py-2 border-t border-[#E7E1DE]">
                     <div>
-                      <div className="text-sm font-medium text-[#4A312F]">Taxes & Processing</div>
+                      <div className="text-sm font-medium text-[#4C1D95]">Taxes & Processing</div>
                       <div className="text-xs text-[#7A5A4C]">Estimated</div>
                     </div>
                     <div className="text-sm font-semibold text-red-600">
@@ -361,10 +361,10 @@ export default function SendProposal({ request, onCancel }) {
                   </div>
                 </div>
 
-                <div className="p-4 bg-[#FDECE7] rounded-lg border border-[#F4C7A1]">
+                <div className="p-4 bg-[#FDECE7] rounded-lg border border-[#E5E7EB]">
                   <div className="flex items-start gap-3">
-                    <AlertCircle size={18} className="text-[#C9452F] flex-shrink-0 mt-0.5" />
-                    <div className="text-sm text-[#4A312F]">
+                    <AlertCircle size={18} className="text-[#22C55E] flex-shrink-0 mt-0.5" />
+                    <div className="text-sm text-[#4C1D95]">
                       This offer will be valid for 48 hours. Once accepted, a workspace will be created for collaboration.
                     </div>
                   </div>
@@ -399,20 +399,20 @@ export default function SendProposal({ request, onCancel }) {
                   <button
                     type="button"
                     onClick={onCancel}
-                    className="px-5 py-2.5 border border-[#E7E1DE] text-[#4A312F] rounded-lg font-medium hover:bg-[#F8F4F1] transition-colors"
+                    className="px-5 py-2.5 border border-[#E7E1DE] text-[#4C1D95] rounded-lg font-medium hover:bg-[#F8F4F1] transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     onClick={() => alert("Draft saved")}
-                    className="px-5 py-2.5 bg-[#F3E9E5] text-[#4A312F] rounded-lg font-medium hover:bg-[#EFE7E2] transition-colors"
+                    className="px-5 py-2.5 bg-[#F3E9E5] text-[#4C1D95] rounded-lg font-medium hover:bg-[#EFE7E2] transition-colors"
                   >
                     Save as Draft
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 bg-[#C9452F] hover:bg-[#B53A27] text-white rounded-lg font-medium shadow-sm flex items-center gap-2 transition-colors"
+                    className="px-6 py-2.5 bg-[#22C55E] hover:bg-[#B53A27] text-white rounded-lg font-medium shadow-sm flex items-center gap-2 transition-colors"
                   >
                     <Send size={16} />
                     Send Proposal
@@ -426,3 +426,5 @@ export default function SendProposal({ request, onCancel }) {
     </div>
   );
 }
+
+

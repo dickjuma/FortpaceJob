@@ -21,7 +21,7 @@ const CategoryDetailsOnsite = () => {
       <div className="container mx-auto px-4 md:px-8 py-20">
         <div className="bg-white rounded-3xl border border-zinc-200 p-10 text-center">
           <h1 className="text-3xl font-black text-zinc-900 mb-3">Category not found</h1>
-          <Link className="text-[#2bb75c] font-bold" to="/categories">
+          <Link className="text-[#4C1D95] font-bold" to="/categories">
             Back to categories
           </Link>
         </div>
@@ -94,7 +94,7 @@ const CategoryDetailsOnsite = () => {
             <div>
               <h3 className="font-bold text-amber-900">No on-site matches yet</h3>
               <p className="text-sm text-amber-800 mt-1">Try broadening your location or browse all on-site talent.</p>
-              <Link to="/onsite" className="inline-block mt-3 text-[#2bb75c] font-bold">
+              <Link to="/onsite" className="inline-block mt-3 text-[#4C1D95] font-bold">
                 Browse on-site directory
               </Link>
             </div>
@@ -112,4 +112,5 @@ const CategoryDetailsOnsite = () => {
 };
 
 export default CategoryDetailsOnsite;
+
 

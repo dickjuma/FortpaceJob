@@ -6,10 +6,10 @@ const ActionItem = ({ icon: Icon, title, description, buttonText, onClick, isUrg
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl hover:border-[#2bb75c]/20 dark:hover:border-[#2bb75c]/50 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors group"
+      className="flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl hover:border-[#4C1D95]/20 dark:hover:border-[#4C1D95]/50 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors group"
     >
       <div className="flex items-center gap-4">
-        <div className={`p-3 rounded-full flex-shrink-0 ${isUrgent ? 'bg-red-50 text-red-500 dark:bg-red-500/10 dark:text-red-400' : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 group-hover:bg-[#2bb75c]/5 group-hover:text-[#2bb75c] dark:group-hover:bg-[#2bb75c]/10 dark:group-hover:text-[#2bb75c]'} transition-colors`}>
+        <div className={`p-3 rounded-full flex-shrink-0 ${isUrgent ? 'bg-red-50 text-red-500 dark:bg-red-500/10 dark:text-red-400' : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 group-hover:bg-[#4C1D95]/5 group-hover:text-[#4C1D95] dark:group-hover:bg-[#4C1D95]/10 dark:group-hover:text-[#4C1D95]'} transition-colors`}>
           <Icon className="w-5 h-5" />
         </div>
         <div>
@@ -22,7 +22,7 @@ const ActionItem = ({ icon: Icon, title, description, buttonText, onClick, isUrg
       </div>
       <button 
         onClick={onClick}
-        className="ml-4 flex-shrink-0 px-4 py-2 text-sm font-semibold text-[#2bb75c] dark:text-[#2bb75c] bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 rounded-xl hover:bg-[#2bb75c]/10 dark:hover:bg-[#2bb75c]/20 transition-colors"
+        className="ml-4 flex-shrink-0 px-4 py-2 text-sm font-semibold text-[#4C1D95] dark:text-[#4C1D95] bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10 rounded-xl hover:bg-[#4C1D95]/10 dark:hover:bg-[#4C1D95]/20 transition-colors"
       >
         {buttonText}
       </button>
@@ -31,4 +31,5 @@ const ActionItem = ({ icon: Icon, title, description, buttonText, onClick, isUrg
 };
 
 export default ActionItem;
+
 

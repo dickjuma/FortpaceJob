@@ -24,7 +24,7 @@ export default function FraudAnalyticsPage() {
         <div className="flex gap-2">
            <button 
              onClick={() => toast.success('Exporting threat landscape report...')}
-             className="px-4 py-2 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+             className="px-4 py-2 bg-surface-dark text-white dark:bg-[#4C1D95] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
            >
              <Download size={16} /> Export Intelligence
            </button>
@@ -54,7 +54,7 @@ export default function FraudAnalyticsPage() {
         </div>
 
         <div className="bg-white dark:bg-surface-dark p-8 rounded-[40px] border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <div className="p-3 bg-[#2bb75c]/5 text-[#2bb75c] rounded-2xl w-fit mb-6">
+          <div className="p-3 bg-[#4C1D95]/5 text-[#4C1D95] rounded-2xl w-fit mb-6">
             <Activity size={24} />
           </div>
           <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Rules Accuracy</span>
@@ -70,7 +70,7 @@ export default function FraudAnalyticsPage() {
             { label: 'Account Takeover (ATO)', value: '42%', color: 'bg-rose-500' },
             { label: 'Payment Fraud / Chargebacks', value: '28%', color: 'bg-orange-500' },
             { label: 'Bot-driven Spam', value: '18%', color: 'bg-amber-500' },
-            { label: 'Off-platform Solicitation', value: '12%', color: 'bg-[#2bb75c]' },
+            { label: 'Off-platform Solicitation', value: '12%', color: 'bg-[#4C1D95]' },
           ].map((item, i) => (
             <div key={i} className="space-y-2">
               <div className="flex justify-between text-sm font-bold">
@@ -87,4 +87,5 @@ export default function FraudAnalyticsPage() {
     </div>
   );
 }
+
 

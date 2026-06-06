@@ -5,17 +5,13 @@ import { motion } from 'framer-motion';
 import { authAPI } from '../../common/services/api';
 import {
   validateEmail,
-  validateName,
   validatePassword,
 } from '../../common/utils/validation';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
     email: '',
     password: '',
-    role: 'CLIENT',
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -27,11 +23,9 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const firstErr = validateName(formData.firstName, 'First name');
-    const lastErr = validateName(formData.lastName, 'Last name');
     const emailErr = validateEmail(formData.email);
     const passErr = validatePassword(formData.password);
-    const validationError = firstErr || lastErr || emailErr || passErr;
+    const validationError = emailErr || passErr;
     if (validationError) {
       setError(validationError);
       return;
@@ -39,7 +33,12 @@ export default function RegisterPage() {
     setError('');
     setIsLoading(true);
     try {
-      await authAPI.register(formData);
+      await authAPI.register({
+        email: formData.email,
+        password: formData.password,
+        role: 'CLIENT',
+        accountType: 'INDIVIDUAL',
+      });
       navigate('/client');
     } catch (err) {
       setError(err.message || 'Registration failed');
@@ -63,7 +62,7 @@ export default function RegisterPage() {
         variants={containerVariants}
         className="w-full max-w-md bg-white border border-border rounded-2xl shadow-lg p-6 sm:p-8"
       >
-        <div className="text-center mb-6">
+          <div className="text-center mb-6">
           <h2 className="font-display text-2xl font-bold text-brand-900">Register as a Client</h2>
           <p className="text-sm text-ink-secondary mt-1">Create your account to start hiring</p>
         </div>
@@ -74,35 +73,10 @@ export default function RegisterPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-ink-secondary mb-1.5">First Name</label>
+              <label className="block text-xs font-semibold text-ink-secondary mb-1.5">Email Address</label>
               <input
-                type="text"
-                name="firstName"
-                required
-                value={formData.firstName}
-                onChange={handleChange}
-                className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent bg-white text-ink-primary"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-ink-secondary mb-1.5">Last Name</label>
-              <input
-                type="text"
-                name="lastName"
-                required
-                value={formData.lastName}
-                onChange={handleChange}
-                className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent bg-white text-ink-primary"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-ink-secondary mb-1.5">Email Address</label>
-            <input
               type="email"
               name="email"
               required
@@ -112,8 +86,8 @@ export default function RegisterPage() {
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-ink-secondary mb-1.5">Password</label>
+            <div>
+              <label className="block text-xs font-semibold text-ink-secondary mb-1.5">Password</label>
             <input
               type="password"
               name="password"
@@ -122,8 +96,8 @@ export default function RegisterPage() {
               onChange={handleChange}
               className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent bg-white text-ink-primary"
             />
-            <p className="text-xs text-ink-tertiary mt-1.5">Minimum 8 characters, at least one letter and one number</p>
-          </div>
+              <p className="text-xs text-ink-tertiary mt-1.5">Minimum 8 characters, at least one letter and one number</p>
+            </div>
 
           <motion.button
             whileTap={buttonTap}

@@ -29,7 +29,7 @@ export default function FinanceNavigation() {
           className={({ isActive }) => cn(
             "px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest whitespace-nowrap transition-all",
             isActive 
-              ? "bg-surface-dark text-white dark:bg-[#2bb75c] shadow-lg shadow-[#2bb75c]/25/20" 
+              ? "bg-surface-dark text-white dark:bg-[#4C1D95] shadow-lg shadow-[#4C1D95]/25/20" 
               : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800"
           )}
         >
@@ -39,4 +39,5 @@ export default function FinanceNavigation() {
     </div>
   );
 }
+
 

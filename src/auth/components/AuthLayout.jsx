@@ -30,7 +30,7 @@ export default function AuthLayout({
   ].filter(Boolean).join(' ');
 
   return (
-    <div className="min-h-screen flex flex-col bg-surface dark:bg-surface-dark text-zinc-900 dark:text-zinc-50 selection:bg-[#2bb75c]/30 lg:flex-row">
+    <div className="min-h-screen flex flex-col bg-surface dark:bg-surface-dark text-zinc-900 dark:text-zinc-50 selection:bg-[#4C1D95]/30 lg:flex-row">
       
       {/* Left Side: Animated Branding Panel */}
       <AuthHeroPanel 
@@ -45,7 +45,7 @@ export default function AuthLayout({
         
         {/* Subtle Background Elements for Right Side */}
         <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#2bb75c]/5 rounded-full blur-[100px]" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#4C1D95]/5 rounded-full blur-[100px]" />
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[100px]" />
         </div>
 
@@ -71,13 +71,14 @@ export default function AuthLayout({
         
         {/* Mobile-only logo (hidden on desktop since it's in the hero panel) */}
         <div className="lg:hidden absolute top-6 left-6 flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[#2bb75c] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-[#4C1D95] flex items-center justify-center">
             <span className="text-white font-bold">F</span>
           </div>
-          <span className="font-bold tracking-tight">Forte<span className="text-[#2bb75c]">.</span></span>
+          <span className="font-bold tracking-tight">Forte<span className="text-[#4C1D95]">.</span></span>
         </div>
       </div>
     </div>
   );
 }
+
 

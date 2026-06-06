@@ -35,7 +35,7 @@ export default function AgencyWorkspacePage() {
 
   const agencyStats = [
     { label: 'Agency Growth', value: '+24% QoQ', icon: ArrowUpRight, color: 'text-success', bg: 'bg-success/15' },
-    { label: 'Billing Efficiency', value: '92.4%', icon: Zap, color: 'text-[#2bb75c]', bg: 'bg-[#2bb75c]/5' },
+    { label: 'Billing Efficiency', value: '92.4%', icon: Zap, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
     { label: 'Active Roster Count', value: '12 Developers', icon: Users, color: 'text-success', bg: 'bg-success/10' },
   ];
 
@@ -169,4 +169,5 @@ export default function AgencyWorkspacePage() {
     </div>
   );
 }
+
 

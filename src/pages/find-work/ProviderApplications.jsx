@@ -12,7 +12,7 @@ function renderStatusBadge(status) {
     case 'pending':
       return <span className="px-3 py-1 bg-amber-100 text-amber-700 border border-amber-200 rounded-lg text-xs font-bold uppercase tracking-wider">Pending</span>;
     case 'interviewing':
-      return <span className="px-3 py-1 bg-[#2bb75c]/10 text-[#2bb75c] border border-[#2bb75c]/20 rounded-lg text-xs font-bold uppercase tracking-wider">Interviewing</span>;
+      return <span className="px-3 py-1 bg-[#4C1D95]/10 text-[#4C1D95] border border-[#4C1D95]/20 rounded-lg text-xs font-bold uppercase tracking-wider">Interviewing</span>;
     case 'accepted':
       return (
         <span className="px-3 py-1 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1">
@@ -63,7 +63,7 @@ export default function ProviderApplications() {
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-5xl">
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-12 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl flex items-center justify-center shadow-sm">
+            <div className="w-12 h-12 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl flex items-center justify-center shadow-sm">
               <FileText className="w-6 h-6 fill-current" />
             </div>
             <div>
@@ -78,7 +78,7 @@ export default function ProviderApplications() {
                 type="button"
                 onClick={() => setActiveTab('active')}
                 className={`flex-1 sm:flex-none px-8 py-4 font-bold text-sm transition-colors border-b-2 ${
-                  activeTab === 'active' ? 'border-[#2bb75c]/20 text-[#2bb75c] bg-white' : 'border-transparent text-zinc-500 hover:text-zinc-900 hover:bg-surface'
+                  activeTab === 'active' ? 'border-[#4C1D95]/20 text-[#4C1D95] bg-white' : 'border-transparent text-zinc-500 hover:text-zinc-900 hover:bg-surface'
                 }`}
               >
                 Active Proposals ({activeApps.length})
@@ -97,14 +97,14 @@ export default function ProviderApplications() {
             <div className="divide-y divide-zinc-100">
               {loading ? (
                 <div className="py-20 text-center text-zinc-500">
-                  <Loader2 className="w-10 h-10 mx-auto mb-4 animate-spin text-[#2bb75c]" />
+                  <Loader2 className="w-10 h-10 mx-auto mb-4 animate-spin text-[#4C1D95]" />
                   <p className="font-medium">Loading your proposals...</p>
                 </div>
               ) : displayApps.length === 0 ? (
                 <div className="py-20 text-center text-zinc-500">
                   <FileText className="w-12 h-12 mx-auto mb-4 opacity-20" />
                   <p className="font-medium">No proposals in this section.</p>
-                  <Link to="/find-work" className="inline-block mt-4 text-[#2bb75c] font-bold hover:underline">
+                  <Link to="/find-work" className="inline-block mt-4 text-[#4C1D95] font-bold hover:underline">
                     Browse open jobs
                   </Link>
                 </div>
@@ -114,7 +114,7 @@ export default function ProviderApplications() {
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                       <div className="flex-1">
                         <div className="mb-2">{renderStatusBadge(application.status)}</div>
-                        <Link to={application.job.detailPath} className="text-xl font-bold text-zinc-900 hover:text-[#2bb75c] transition-colors mb-1 block">
+                        <Link to={application.job.detailPath} className="text-xl font-bold text-zinc-900 hover:text-[#4C1D95] transition-colors mb-1 block">
                           {application.job.title}
                         </Link>
                         <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-zinc-500">
@@ -128,7 +128,7 @@ export default function ProviderApplications() {
 
                       <div className="flex flex-wrap md:flex-nowrap gap-2 w-full md:w-auto mt-4 md:mt-0">
                         {application.status === 'interviewing' ? (
-                          <Link to="/messages" className="flex-1 md:flex-none px-6 py-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2">
+                          <Link to="/messages" className="flex-1 md:flex-none px-6 py-2.5 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2">
                             <MessageCircle className="w-4 h-4" /> Message
                           </Link>
                         ) : null}
@@ -157,4 +157,5 @@ export default function ProviderApplications() {
     </>
   );
 }
+
 

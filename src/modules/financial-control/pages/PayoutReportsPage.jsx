@@ -24,7 +24,7 @@ export default function PayoutReportsPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl shadow-sm">
+            <div className="p-2.5 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl shadow-sm">
               <FileText size={24} />
             </div>
             <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Payout & Disbursement Logs</h1>
@@ -36,7 +36,7 @@ export default function PayoutReportsPage() {
         <div className="flex gap-2">
            <button 
              onClick={() => toast.success('Generating payout summary...')}
-             className="px-4 py-2 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+             className="px-4 py-2 bg-surface-dark text-white dark:bg-[#4C1D95] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
            >
              <Download size={16} /> Export CSV
            </button>
@@ -50,7 +50,7 @@ export default function PayoutReportsPage() {
             <input 
               type="text" 
               placeholder="Search Payout ID or Provider..." 
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#2bb75c] outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#4C1D95] outline-none"
             />
           </div>
         </div>
@@ -69,7 +69,7 @@ export default function PayoutReportsPage() {
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/50">
               {isLoading ? (
-                <tr><td colSpan={6} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#2bb75c]" /></td></tr>
+                <tr><td colSpan={6} className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#4C1D95]" /></td></tr>
               ) : payouts.length === 0 ? (
                 <tr><td colSpan={6} className="p-8 text-center text-zinc-500 font-medium">No payout records found.</td></tr>
               ) : payouts.map(item => (
@@ -106,4 +106,5 @@ export default function PayoutReportsPage() {
     </div>
   );
 }
+
 

@@ -37,14 +37,14 @@ const TOAST_CONFIG = {
     icon: Info,
     lottie: null,
     duration: 3000,
-    baseClass: 'border-[#2bb75c]/30 bg-[#2bb75c]/10',
-    iconClass: 'text-[#2bb75c]',
+    baseClass: 'border-[#4C1D95]/30 bg-[#4C1D95]/10',
+    iconClass: 'text-[#4C1D95]',
     titleClass: 'text-[#7bc67e]',
-    barClass: 'bg-[#2bb75c]',
-    lightBase: 'border-[#2bb75c]/30 bg-[#2bb75c]/5',
-    lightIcon: 'text-[#2bb75c]',
-    lightTitle: 'text-[#2bb75c]',
-    lightBar: 'bg-[#2bb75c]',
+    barClass: 'bg-[#4C1D95]',
+    lightBase: 'border-[#4C1D95]/30 bg-[#4C1D95]/5',
+    lightIcon: 'text-[#4C1D95]',
+    lightTitle: 'text-[#4C1D95]',
+    lightBar: 'bg-[#4C1D95]',
   },
 };
 
@@ -220,4 +220,5 @@ export function useToast() {
   }
   return ctx;
 }
+
 

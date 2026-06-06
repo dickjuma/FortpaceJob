@@ -25,7 +25,7 @@ const CommunityRecommendations = () => {
                 <div className="md:w-1/3 flex flex-col items-center text-center border-b md:border-b-0 md:border-r border-zinc-200 pb-6 md:pb-0 md:pr-6">
                   <img src={`https://ui-avatars.com/api/?name=Freelancer+${i}&background=random`} className="w-24 h-24 rounded-full mb-4 border-4 border-zinc-100" alt="avatar" />
                   <h3 className="text-xl font-bold text-zinc-900 flex items-center justify-center gap-1 mb-1">
-                    Alex M. <ShieldCheck className="w-4 h-4 text-[#2bb75c]" />
+                    Alex M. <ShieldCheck className="w-4 h-4 text-[#4C1D95]" />
                   </h3>
                   <p className="text-sm text-zinc-500 mb-4">Senior Motion Designer</p>
                   <Link to="/profile" className="w-full py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold rounded-lg transition-colors">
@@ -58,7 +58,7 @@ const CommunityRecommendations = () => {
                   </div>
 
                   <div className="flex items-center gap-4 text-sm font-medium text-zinc-500">
-                    <button className="flex items-center gap-1.5 hover:text-[#2bb75c] transition-colors">
+                    <button className="flex items-center gap-1.5 hover:text-[#4C1D95] transition-colors">
                       <ThumbsUp className="w-4 h-4" /> Upvote Recommendation
                     </button>
                   </div>
@@ -75,4 +75,5 @@ const CommunityRecommendations = () => {
 };
 
 export default CommunityRecommendations;
+
 

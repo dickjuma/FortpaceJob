@@ -18,13 +18,13 @@ const IndustryTalent = () => {
         <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
           {industries.map((industry) => (
             <Link
-              className="bg-white rounded-3xl p-8 border border-zinc-200 hover:border-[#2bb75c]/50 hover:shadow-xl transition-all group flex flex-col"
+              className="bg-white rounded-3xl p-8 border border-zinc-200 hover:border-[#4C1D95]/50 hover:shadow-xl transition-all group flex flex-col"
               key={industry.id}
               to={`/search-results?q=${encodeURIComponent(industry.name)}`}
             >
               <div className="text-sm uppercase tracking-[0.2em] text-zinc-500 font-bold mb-4">{industry.name}</div>
               <div className="text-zinc-700 leading-relaxed">{industry.summary}</div>
-              <div className="mt-6 text-[#2bb75c] font-bold">Explore talent</div>
+              <div className="mt-6 text-[#4C1D95] font-bold">Explore talent</div>
             </Link>
           ))}
         </div>
@@ -34,4 +34,5 @@ const IndustryTalent = () => {
 };
 
 export default IndustryTalent;
+
 

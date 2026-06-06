@@ -86,7 +86,7 @@ function TiltCard({ children, className }) {
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const NAV_LINKS = [
   { label: 'Find Talent', href: '/find-talent', isRoute: true },
-  { label: 'Find Work', href: '/find-work', isRoute: true },
+  { label: 'Find Work', href: '/find-work/search?type=all', isRoute: true },
   { label: 'Gigs', href: '/gigs', isRoute: true },
   { label: 'Features', href: '#features', isRoute: false },
   { label: 'How It Works', href: '#how-it-works', isRoute: false },
@@ -99,7 +99,7 @@ const ACTIVITY_ICONS = {
 };
 
 const AVATAR_GRADIENTS = [
-  'from-[#2bb75c] to-[#1d8d38]',
+  'from-[#4C1D95] to-[#22C55E]',
   'from-sky-400 to-cyan-600',
   'from-amber-400 to-orange-500',
 ];
@@ -109,7 +109,7 @@ const BENEFITS = [
     icon: BrainCircuit,
     title: 'AI-Powered Matching',
     desc: 'Our engine analyses 200+ data points to connect you with the perfect match in under 60 seconds.',
-    gradient: 'from-[#2bb75c] to-[#1d8d38]',
+    gradient: 'from-[#4C1D95] to-[#22C55E]',
     delay: 0,
   },
   {
@@ -144,7 +144,7 @@ const BENEFITS = [
     icon: MessageSquare,
     title: 'Built-In Workspace',
     desc: 'Chat, video calls, file sharing, and milestones — everything in one seamless workspace.',
-    gradient: 'from-blue-400 to-[#1d8d38]',
+    gradient: 'from-blue-400 to-[#22C55E]',
     delay: 0.5,
   },
 ];
@@ -157,9 +157,9 @@ const PATHS = [
     tagline: 'Earn by offering your skills',
     description: 'Join 150,000+ freelancers earning top dollar on Forte. Set your rates, choose your projects, and build your reputation on the world\'s most trusted marketplace.',
     cta: 'Continue as Freelancer',
-    gradient: 'from-violet-600 to-[#1d8d38]',
-    glow: 'shadow-[#2bb75c]/30',
-    border: 'border-[#2bb75c]/30',
+    gradient: 'from-violet-600 to-[#22C55E]',
+    glow: 'shadow-[#4C1D95]/30',
+    border: 'border-[#4C1D95]/30',
     bg: 'bg-violet-50 dark:bg-violet-950/20',
     perks: [
       'Zero commission for first 30 days',
@@ -209,11 +209,11 @@ function Navbar({ scrolled, mobileOpen, onToggleMobile }) {
         <div className="flex justify-between items-center h-18 py-4">
           {/* Logo */}
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2bb75c] to-blue-700 flex items-center justify-center shadow-lg shadow-[#2bb75c]/30">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#4C1D95] to-blue-700 flex items-center justify-center shadow-lg shadow-[#4C1D95]/30">
               <Zap className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-              Forte<span className="text-[#2bb75c]">.</span>
+              Forte<span className="text-[#4C1D95]">.</span>
             </span>
           </div>
 
@@ -224,7 +224,7 @@ function Navbar({ scrolled, mobileOpen, onToggleMobile }) {
                 <Link
                   key={label}
                   to={href}
-                  className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-[#2bb75c] dark:hover:text-[#2bb75c] transition-colors"
+                  className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-[#4C1D95] dark:hover:text-[#4C1D95] transition-colors"
                 >
                   {label}
                 </Link>
@@ -232,7 +232,7 @@ function Navbar({ scrolled, mobileOpen, onToggleMobile }) {
                 <a
                   key={label}
                   href={href}
-                  className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-[#2bb75c] dark:hover:text-[#2bb75c] transition-colors"
+                  className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-[#4C1D95] dark:hover:text-[#4C1D95] transition-colors"
                 >
                   {label}
                 </a>
@@ -244,13 +244,13 @@ function Navbar({ scrolled, mobileOpen, onToggleMobile }) {
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={() => navigate('/auth/login')}
-              className="text-sm font-semibold text-zinc-700 dark:text-zinc-200 hover:text-[#2bb75c] dark:hover:text-[#2bb75c] transition-colors px-4 py-2"
+              className="text-sm font-semibold text-zinc-700 dark:text-zinc-200 hover:text-[#4C1D95] dark:hover:text-[#4C1D95] transition-colors px-4 py-2"
             >
               Log in
             </button>
             <button
               onClick={() => navigate('/auth/register')}
-              className="px-5 py-2.5 rounded-full bg-[#2bb75c] text-white text-sm font-semibold hover:bg-[#1d8d38] transition-all shadow-lg shadow-[#2bb75c]/25 hover:shadow-[#2bb75c]/40 hover:scale-[1.02] active:scale-[0.98]"
+              className="px-5 py-2.5 rounded-full bg-[#4C1D95] text-white text-sm font-semibold hover:bg-[#22C55E] transition-all shadow-lg shadow-[#4C1D95]/25 hover:shadow-[#4C1D95]/40 hover:scale-[1.02] active:scale-[0.98]"
             >
               Get Started Free
             </button>
@@ -302,7 +302,7 @@ function Navbar({ scrolled, mobileOpen, onToggleMobile }) {
                 <button onClick={() => navigate('/auth/login')} className="w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-surface dark:hover:bg-zinc-800 transition-colors">
                   Log in
                 </button>
-                <button onClick={() => navigate('/auth/register')} className="w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#2bb75c] hover:bg-[#1d8d38] transition-colors">
+                <button onClick={() => navigate('/auth/register')} className="w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#4C1D95] hover:bg-[#22C55E] transition-colors">
                   Get Started Free
                 </button>
               </div>
@@ -345,7 +345,7 @@ function LiveTicker({ activity = [], loading = false }) {
             const Icon = ACTIVITY_ICONS[item.type] || Activity;
             return (
               <span key={i} className="inline-flex items-center gap-2 mx-10 text-sm text-zinc-500 dark:text-zinc-400">
-                <Icon className="w-4 h-4 text-[#2bb75c] shrink-0" />
+                <Icon className="w-4 h-4 text-[#4C1D95] shrink-0" />
                 <span>{item.text}</span>
                 <span className="text-zinc-300 dark:text-zinc-700">·</span>
               </span>
@@ -366,7 +366,7 @@ function HeroSection({ stats, categories = [], openJobs = 0, loading = false }) 
       value: stats?.talentCount || 0,
       suffix: '+',
       icon: Users,
-      color: 'text-[#2bb75c]',
+      color: 'text-[#4C1D95]',
     },
     {
       label: 'Open jobs',
@@ -380,7 +380,7 @@ function HeroSection({ stats, categories = [], openJobs = 0, loading = false }) 
       value: stats?.categoriesCount || categories.length,
       suffix: '',
       icon: Globe,
-      color: 'text-[#2bb75c]',
+      color: 'text-[#4C1D95]',
     },
     {
       label: 'Avg. rating',
@@ -399,11 +399,11 @@ function HeroSection({ stats, categories = [], openJobs = 0, loading = false }) 
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c] text-xs sm:text-sm font-semibold mb-8 border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/20 shadow-sm"
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10 text-[#4C1D95] dark:text-[#4C1D95] text-xs sm:text-sm font-semibold mb-8 border border-[#4C1D95]/20 dark:border-[#4C1D95]/20/20 shadow-sm"
       >
         <Sparkles className="w-4 h-4" />
         <span>AI-Powered Matching Engine 2.0 — Now Live</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-[#2bb75c] animate-pulse" />
+        <span className="w-1.5 h-1.5 rounded-full bg-[#4C1D95] animate-pulse" />
       </motion.div>
 
       {/* Headline */}
@@ -441,7 +441,7 @@ function HeroSection({ stats, categories = [], openJobs = 0, loading = false }) 
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate('/auth/register', { state: { role: 'FREELANCER' } })}
-          className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 text-white text-base font-bold shadow-2xl shadow-[#2bb75c]/30 hover:shadow-[#2bb75c]/50 transition-all"
+          className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 text-white text-base font-bold shadow-2xl shadow-[#4C1D95]/30 hover:shadow-[#4C1D95]/50 transition-all"
         >
           <Briefcase className="w-5 h-5" />
           Continue as Freelancer
@@ -452,7 +452,7 @@ function HeroSection({ stats, categories = [], openJobs = 0, loading = false }) 
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate('/auth/register', { state: { role: 'CLIENT' } })}
-          className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white text-base font-bold border border-zinc-200 dark:border-zinc-700 hover:border-[#2bb75c]/50 dark:hover:border-[#2bb75c]/20 shadow-sm hover:shadow-md transition-all"
+          className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white text-base font-bold border border-zinc-200 dark:border-zinc-700 hover:border-[#4C1D95]/50 dark:hover:border-[#4C1D95]/20 shadow-sm hover:shadow-md transition-all"
         >
           <Building2 className="w-5 h-5" />
           Continue as Client
@@ -470,7 +470,7 @@ function HeroSection({ stats, categories = [], openJobs = 0, loading = false }) 
         {/* Glassmorphism Hero Card */}
         <div className="relative rounded-3xl overflow-hidden border border-zinc-200/60 dark:border-zinc-700/60 shadow-2xl shadow-zinc-200/50 dark:shadow-black/50 bg-white/60 dark:bg-surface-dark/60 backdrop-blur-xl p-6 sm:p-8">
           {/* Inner gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#2bb75c]/5 via-[#2bb75c]/5 to-cyan-500/5 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#4C1D95]/5 via-[#4C1D95]/5 to-cyan-500/5 pointer-events-none" />
 
           {/* Floating stat badges */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
@@ -517,9 +517,9 @@ function HeroSection({ stats, categories = [], openJobs = 0, loading = false }) 
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.8 + i * 0.06 }}
                       whileHover={{ scale: 1.05, y: -2 }}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm cursor-pointer hover:border-[#2bb75c]/50 transition-all"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm cursor-pointer hover:border-[#4C1D95]/50 transition-all"
                     >
-                      <Briefcase className="w-4 h-4 text-[#2bb75c]" />
+                      <Briefcase className="w-4 h-4 text-[#4C1D95]" />
                       <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{cat.label}</span>
                       <span className="text-xs text-zinc-400 dark:text-zinc-500">{cat.count}</span>
                     </motion.div>
@@ -547,7 +547,7 @@ function HeroSection({ stats, categories = [], openJobs = 0, loading = false }) 
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
           className="absolute -top-5 -right-4 sm:-right-8 bg-white dark:bg-zinc-800 rounded-2xl shadow-xl border border-zinc-100 dark:border-zinc-700 px-4 py-3 hidden sm:flex items-center gap-2.5"
         >
-          <Activity className="w-5 h-5 text-[#2bb75c]" />
+          <Activity className="w-5 h-5 text-[#4C1D95]" />
           <div>
             <div className="text-xs font-bold text-zinc-900 dark:text-white">847 Matches</div>
             <div className="text-[10px] text-zinc-500">Made today</div>
@@ -579,7 +579,7 @@ function BenefitsSection() {
         viewport={{ once: true }}
         className="text-center mb-16"
       >
-        <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#2bb75c] dark:text-[#2bb75c] mb-4">
+        <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#4C1D95] dark:text-[#4C1D95] mb-4">
           <Sparkles className="w-4 h-4" /> Platform Benefits
         </span>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-4">
@@ -639,7 +639,7 @@ function FreelancersSection({ freelancers = [], loading = false, talentCount = 0
         </div>
         <Link
           to="/find-talent"
-          className="mt-6 md:mt-0 text-sm font-semibold text-[#2bb75c] flex items-center gap-1.5 hover:gap-3 transition-all group"
+          className="mt-6 md:mt-0 text-sm font-semibold text-[#4C1D95] flex items-center gap-1.5 hover:gap-3 transition-all group"
         >
           View all {talentCount > 0 ? `${talentCount}+` : ''} professionals
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -738,7 +738,7 @@ function FreelancersSection({ freelancers = [], loading = false, talentCount = 0
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => navigate(`/freelancer/${f.userId || f.id}`)}
-                  className="text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-2 rounded-xl shadow-md shadow-[#2bb75c]/20 hover:shadow-[#2bb75c]/40 transition-all"
+                  className="text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-2 rounded-xl shadow-md shadow-[#4C1D95]/20 hover:shadow-[#4C1D95]/40 transition-all"
                 >
                   View Profile
                 </motion.button>
@@ -789,9 +789,9 @@ function HowItWorksSection() {
                 )}
                 <div className="relative mb-4">
                   <div className="w-20 h-20 rounded-2xl bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-lg flex items-center justify-center">
-                    <Icon className="w-8 h-8 text-[#2bb75c] dark:text-[#2bb75c]" />
+                    <Icon className="w-8 h-8 text-[#4C1D95] dark:text-[#4C1D95]" />
                   </div>
-                  <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#2bb75c] text-white text-xs font-extrabold flex items-center justify-center shadow-md">
+                  <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#4C1D95] text-white text-xs font-extrabold flex items-center justify-center shadow-md">
                     {step.step.slice(1)}
                   </span>
                 </div>
@@ -942,7 +942,7 @@ function TestimonialsSection({ testimonials = [], loading = false }) {
                 </div>
 
                 <div className="flex-1">
-                  <div className="text-3xl text-[#2bb75c] font-serif leading-none mb-3">&ldquo;</div>
+                  <div className="text-3xl text-[#4C1D95] font-serif leading-none mb-3">&ldquo;</div>
                   <p className="text-base sm:text-lg text-zinc-700 dark:text-zinc-200 leading-relaxed mb-6">
                     {list[active].text}
                   </p>
@@ -962,7 +962,7 @@ function TestimonialsSection({ testimonials = [], loading = false }) {
           <div className="flex items-center justify-center gap-4 mt-8">
             <button
               onClick={prev}
-              className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex items-center justify-center hover:border-[#2bb75c]/50 dark:hover:border-[#2bb75c]/20 hover:text-[#2bb75c] transition-all shadow-sm"
+              className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex items-center justify-center hover:border-[#4C1D95]/50 dark:hover:border-[#4C1D95]/20 hover:text-[#4C1D95] transition-all shadow-sm"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -973,14 +973,14 @@ function TestimonialsSection({ testimonials = [], loading = false }) {
                   onClick={() => setActive(i)}
                   className={cn(
                     'h-2 rounded-full transition-all',
-                    i === active ? 'w-8 bg-[#2bb75c]' : 'w-2 bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400'
+                    i === active ? 'w-8 bg-[#4C1D95]' : 'w-2 bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400'
                   )}
                 />
               ))}
             </div>
             <button
               onClick={next}
-              className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex items-center justify-center hover:border-[#2bb75c]/50 dark:hover:border-[#2bb75c]/20 hover:text-[#2bb75c] transition-all shadow-sm"
+              className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex items-center justify-center hover:border-[#4C1D95]/50 dark:hover:border-[#4C1D95]/20 hover:text-[#4C1D95] transition-all shadow-sm"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -1001,7 +1001,7 @@ function TrustSection() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
         >
-          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#2bb75c] dark:text-[#2bb75c] mb-4">
+          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#4C1D95] dark:text-[#4C1D95] mb-4">
             <Lock className="w-4 h-4" /> Trust & Safety
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-6">
@@ -1011,7 +1011,7 @@ function TrustSection() {
             {[
               {
                 icon: ShieldCheck,
-                color: 'bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 text-[#2bb75c] dark:text-[#2bb75c]',
+                color: 'bg-[#4C1D95]/10 dark:bg-[#4C1D95]/30 text-[#4C1D95] dark:text-[#4C1D95]',
                 title: 'Identity & Fraud Protection',
                 desc: 'Every user undergoes rigorous KYC and real-time fraud monitoring — absolute safety guaranteed.',
               },
@@ -1058,7 +1058,7 @@ function TrustSection() {
           viewport={{ once: true }}
           className="relative"
         >
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#2bb75c]/20 to-teal-500/20 rounded-3xl blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-[#4C1D95]/20 to-teal-500/20 rounded-3xl blur-3xl" />
           <div className="relative bg-white dark:bg-zinc-800 rounded-3xl p-8 border border-zinc-200 dark:border-zinc-700 shadow-2xl">
             <div className="flex items-center gap-5 mb-8">
               <div className="relative w-20 h-20">
@@ -1089,8 +1089,8 @@ function TrustSection() {
                 <div className="text-lg font-extrabold text-zinc-900 dark:text-white">Trust Score Verified</div>
                 <div className="text-sm text-zinc-500 dark:text-zinc-400">Based on 200+ data points</div>
                 <div className="flex items-center gap-1.5 mt-2">
-                  <BadgeCheck className="w-4 h-4 text-[#2bb75c]" />
-                  <span className="text-xs font-bold text-[#2bb75c]">Forte Certified Elite</span>
+                  <BadgeCheck className="w-4 h-4 text-[#4C1D95]" />
+                  <span className="text-xs font-bold text-[#4C1D95]">Forte Certified Elite</span>
                 </div>
               </div>
             </div>
@@ -1098,7 +1098,7 @@ function TrustSection() {
             <div className="space-y-4">
               {[
                 { label: 'Identity Verified', value: 100, color: 'from-emerald-400 to-teal-500' },
-                { label: 'Work History', value: 98, color: 'from-blue-400 to-[#2bb75c]' },
+                { label: 'Work History', value: 98, color: 'from-blue-400 to-[#4C1D95]' },
                 { label: 'Client Reviews', value: 99, color: 'from-amber-400 to-orange-500' },
                 { label: 'On-Time Delivery', value: 96, color: 'from-pink-400 to-rose-500' },
               ].map((bar, i) => (
@@ -1150,7 +1150,7 @@ function PaymentSection({ methods = DEFAULT_PAYMENT_METHODS }) {
               whileHover={{ scale: 1.05, y: -2 }}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm"
             >
-              <DollarSign className="w-4 h-4 text-[#2bb75c]" />
+              <DollarSign className="w-4 h-4 text-[#4C1D95]" />
               <span className="text-sm font-bold text-zinc-700 dark:text-zinc-200">{name}</span>
             </motion.div>
           ))}
@@ -1184,9 +1184,9 @@ function CTASection() {
 
           <h2 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-5 leading-tight">
             Start building your future<br />
-            <span className="text-[#2bb75c]">on Forte today.</span>
+            <span className="text-[#4C1D95]">on Forte today.</span>
           </h2>
-          <p className="text-lg text-[#2bb75c] mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg text-[#4C1D95] mb-10 max-w-xl mx-auto leading-relaxed">
             Free to join. Zero risk. World-class talent and projects waiting for you right now.
           </p>
 
@@ -1195,7 +1195,7 @@ function CTASection() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate('/auth/register', { state: { role: 'FREELANCER' } })}
-              className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white text-[#2bb75c] text-base font-extrabold shadow-2xl hover:shadow-white/20 transition-all"
+              className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white text-[#4C1D95] text-base font-extrabold shadow-2xl hover:shadow-white/20 transition-all"
             >
               <Briefcase className="w-5 h-5" />
               Continue as Freelancer
@@ -1213,7 +1213,7 @@ function CTASection() {
             </motion.button>
           </div>
 
-          <p className="mt-8 text-[#2bb75c] text-sm">
+          <p className="mt-8 text-[#4C1D95] text-sm">
             No credit card required · Cancel anytime · 30-day money-back guarantee
           </p>
         </motion.div>
@@ -1229,10 +1229,10 @@ function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#2bb75c] to-blue-700 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4C1D95] to-blue-700 flex items-center justify-center">
                 <Zap className="w-4 h-4 text-white" />
               </div>
-              <span className="font-extrabold text-zinc-900 dark:text-white">Forte<span className="text-[#2bb75c]">.</span></span>
+              <span className="font-extrabold text-zinc-900 dark:text-white">Forte<span className="text-[#4C1D95]">.</span></span>
             </div>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
               The world's most trusted AI-powered freelance marketplace.
@@ -1248,7 +1248,7 @@ function Footer() {
               <ul className="space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link}>
-                    <button type="button" className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-[#2bb75c] dark:hover:text-[#2bb75c] transition-colors text-left">
+                    <button type="button" className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-[#4C1D95] dark:hover:text-[#4C1D95] transition-colors text-left">
                       {link}
                     </button>
                   </li>
@@ -1293,8 +1293,8 @@ export default function LandingPage() {
       />
       {/* Ambient background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-[#2bb75c]/8 blur-[140px]" />
-        <div className="absolute top-[30%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#2bb75c]/8 blur-[140px]" />
+        <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-[#4C1D95]/8 blur-[140px]" />
+        <div className="absolute top-[30%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#4C1D95]/8 blur-[140px]" />
         <div className="absolute bottom-0 left-[20%] w-[40%] h-[40%] rounded-full bg-teal-500/8 blur-[120px]" />
       </div>
 
@@ -1329,4 +1329,5 @@ export default function LandingPage() {
     </>
   );
 }
+
 

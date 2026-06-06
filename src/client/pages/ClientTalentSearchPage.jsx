@@ -86,7 +86,7 @@ export default function ClientTalentSearchPage() {
   const getGradient = (str = '') => {
     const gradients = [
       'from-success/40 to-success/40',
-      'from-#2bb75c]/40 to-[#1d8d38]/40',
+      'from-#4C1D95]/40 to-[#22C55E]/40',
       'from-success/40 to-emerald-600/40',
       'from-orange-400/40 to-red-500/40',
       'from-pink-500/40 to-rose-600/40'
@@ -121,7 +121,7 @@ export default function ClientTalentSearchPage() {
             </div>
           )}
           {f.isPro && (
-             <div className="absolute top-3 left-3 bg-white text-[#2bb75c] px-2 py-1 rounded-sm text-[10px] font-black uppercase tracking-wider shadow-sm border border-zinc-100 flex items-center gap-1">
+             <div className="absolute top-3 left-3 bg-white text-[#4C1D95] px-2 py-1 rounded-sm text-[10px] font-black uppercase tracking-wider shadow-sm border border-zinc-100 flex items-center gap-1">
                <ShieldCheck className="w-3 h-3" /> Pro
              </div>
           )}
@@ -132,15 +132,15 @@ export default function ClientTalentSearchPage() {
           <div className="flex items-center gap-3 mb-2">
             <div className="w-8 h-8 rounded-full bg-zinc-200 border border-zinc-300 flex items-center justify-center text-sm font-bold text-zinc-700 overflow-hidden shrink-0 relative">
               {avatar ? <img src={avatar} alt={name} className="w-full h-full object-cover" /> : initial}
-              {f.isOnline && <span className="absolute bottom-0 right-0 w-2 h-2 bg-[#2bb75c] border border-white rounded-full"></span>}
+              {f.isOnline && <span className="absolute bottom-0 right-0 w-2 h-2 bg-[#4C1D95] border border-white rounded-full"></span>}
             </div>
             <div className="flex-1 min-w-0 flex items-center gap-2">
               <h3 className="font-bold text-zinc-900 text-sm truncate group-hover:underline">{name}</h3>
-              <p className="text-[10px] text-[#2bb75c] font-bold bg-[#2bb75c]/10 px-1.5 py-0.5 rounded">{f.level || 'Level 1'}</p>
+              <p className="text-[10px] text-[#4C1D95] font-bold bg-[#4C1D95]/10 px-1.5 py-0.5 rounded">{f.level || 'Level 1'}</p>
             </div>
           </div>
 
-          <p className="text-zinc-700 font-medium text-sm leading-snug line-clamp-2 hover:text-[#2bb75c] transition-colors mb-2 flex-1">
+          <p className="text-zinc-700 font-medium text-sm leading-snug line-clamp-2 hover:text-[#4C1D95] transition-colors mb-2 flex-1">
             {f.title || f.headline || `I will provide professional ${f.category || 'freelance'} services for your project`}
           </p>
 
@@ -156,7 +156,7 @@ export default function ClientTalentSearchPage() {
               <button onClick={(e) => handleSave(e, fId)} className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors">
                 <Heart className={`w-4 h-4 ${isSaved ? 'fill-red-500 text-red-500' : ''}`} />
               </button>
-              <button onClick={(e) => handleMessage(e, fId)} className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-[#2bb75c] transition-colors">
+              <button onClick={(e) => handleMessage(e, fId)} className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-[#4C1D95] transition-colors">
                 <MessageSquare className="w-4 h-4" />
               </button>
             </div>
@@ -177,7 +177,7 @@ export default function ClientTalentSearchPage() {
       <div className="max-w-[1400px] mx-auto space-y-6">
 
         {/* Hero Section */}
-        <div className="bg-[#2bb75c] rounded-xl p-10 flex flex-col items-center justify-center text-center relative overflow-hidden shadow-lg">
+        <div className="bg-[#4C1D95] rounded-xl p-10 flex flex-col items-center justify-center text-center relative overflow-hidden shadow-lg">
           <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2850)' }}></div>
           <div className="relative z-10 max-w-2xl">
             <h1 className="text-4xl font-black text-white mb-6">Find the perfect freelance services</h1>
@@ -192,7 +192,7 @@ export default function ClientTalentSearchPage() {
                 placeholder="What service are you looking for today?"
                 className="w-full bg-transparent px-4 py-3 text-sm font-semibold text-zinc-900 placeholder-zinc-500 focus:outline-none"
               />
-              <button type="submit" className="px-8 bg-[#2bb75c] hover:bg-[#1d8d38] rounded text-white text-sm font-black transition-colors">
+              <button type="submit" className="px-8 bg-[#4C1D95] hover:bg-[#22C55E] rounded text-white text-sm font-black transition-colors">
                 Search
               </button>
             </form>
@@ -200,7 +200,7 @@ export default function ClientTalentSearchPage() {
             <div className="flex flex-wrap items-center justify-center gap-3 mt-6 text-sm font-semibold text-white/90">
               <span className="text-white/70">Popular:</span>
               {['Website Design', 'React Native', 'SEO', 'Logo Design'].map(term => (
-                <button key={term} onClick={() => { setSearchInput(term); setSearch(term); }} className="px-4 py-1.5 rounded-full border border-white/40 hover:bg-white hover:text-[#2bb75c] transition-colors">
+                <button key={term} onClick={() => { setSearchInput(term); setSearch(term); }} className="px-4 py-1.5 rounded-full border border-white/40 hover:bg-white hover:text-[#4C1D95] transition-colors">
                   {term}
                 </button>
               ))}
@@ -213,7 +213,7 @@ export default function ClientTalentSearchPage() {
           <div className="flex items-center gap-4 w-full md:w-auto">
             <button 
               onClick={() => setShowFilters(!showFilters)} 
-              className={`flex items-center gap-2 px-4 py-2 rounded-md border text-sm font-bold transition-colors ${showFilters ? 'bg-[#2bb75c]/10 text-[#2bb75c] border-[#2bb75c]/20' : 'bg-transparent text-zinc-700 border-zinc-300 hover:border-zinc-400'}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md border text-sm font-bold transition-colors ${showFilters ? 'bg-[#4C1D95]/10 text-[#4C1D95] border-[#4C1D95]/20' : 'bg-transparent text-zinc-700 border-zinc-300 hover:border-zinc-400'}`}
             >
               <SlidersHorizontal className="w-4 h-4" /> Filters
             </button>
@@ -233,19 +233,19 @@ export default function ClientTalentSearchPage() {
           <div className="bg-white border border-zinc-200 rounded-xl p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 shadow-sm">
             <div>
               <label className="text-xs font-bold text-zinc-700 mb-2 block">Category</label>
-              <select value={category} onChange={(e) => { setCategory(e.target.value); setPage(1); }} className="w-full bg-white border border-zinc-300 rounded-md px-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#2bb75c] transition-colors">
+              <select value={category} onChange={(e) => { setCategory(e.target.value); setPage(1); }} className="w-full bg-white border border-zinc-300 rounded-md px-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#4C1D95] transition-colors">
                 {CATEGORIES.map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
             <div>
               <label className="text-xs font-bold text-zinc-700 mb-2 block">Talent Type</label>
-              <select value={sellerType} onChange={(e) => { setSellerType(e.target.value); setPage(1); }} className="w-full bg-white border border-zinc-300 rounded-md px-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#2bb75c] transition-colors">
+              <select value={sellerType} onChange={(e) => { setSellerType(e.target.value); setPage(1); }} className="w-full bg-white border border-zinc-300 rounded-md px-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#4C1D95] transition-colors">
                 {TALENT_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
             </div>
             <div>
               <label className="text-xs font-bold text-zinc-700 mb-2 block">Seller Level</label>
-              <select value={experience} onChange={(e) => { setExperience(e.target.value); setPage(1); }} className="w-full bg-white border border-zinc-300 rounded-md px-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#2bb75c] transition-colors">
+              <select value={experience} onChange={(e) => { setExperience(e.target.value); setPage(1); }} className="w-full bg-white border border-zinc-300 rounded-md px-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#4C1D95] transition-colors">
                 <option value="">Any Level</option>
                 {EXPERIENCE.filter(Boolean).map(e => <option key={e} value={e}>{e.charAt(0) + e.slice(1).toLowerCase()}</option>)}
               </select>
@@ -254,19 +254,19 @@ export default function ClientTalentSearchPage() {
               <label className="text-xs font-bold text-zinc-700 mb-2 block">Budget Min</label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500 font-bold">KES</span>
-                <input type="number" value={rateMin} onChange={(e) => { setRateMin(e.target.value); setPage(1); }} placeholder="Min" className="w-full bg-white border border-zinc-300 rounded-md pl-10 pr-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#2bb75c] transition-colors" />
+                <input type="number" value={rateMin} onChange={(e) => { setRateMin(e.target.value); setPage(1); }} placeholder="Min" className="w-full bg-white border border-zinc-300 rounded-md pl-10 pr-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#4C1D95] transition-colors" />
               </div>
             </div>
             <div>
               <label className="text-xs font-bold text-zinc-700 mb-2 block">Budget Max</label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500 font-bold">KES</span>
-                <input type="number" value={rateMax} onChange={(e) => { setRateMax(e.target.value); setPage(1); }} placeholder="Max" className="w-full bg-white border border-zinc-300 rounded-md pl-10 pr-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#2bb75c] transition-colors" />
+                <input type="number" value={rateMax} onChange={(e) => { setRateMax(e.target.value); setPage(1); }} placeholder="Max" className="w-full bg-white border border-zinc-300 rounded-md pl-10 pr-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#4C1D95] transition-colors" />
               </div>
             </div>
             <div>
               <label className="text-xs font-bold text-zinc-700 mb-2 block">Sort By</label>
-              <select value={sortBy} onChange={(e) => { setSortBy(e.target.value); setPage(1); }} className="w-full bg-white border border-zinc-300 rounded-md px-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#2bb75c] transition-colors">
+              <select value={sortBy} onChange={(e) => { setSortBy(e.target.value); setPage(1); }} className="w-full bg-white border border-zinc-300 rounded-md px-3 py-2 text-sm font-semibold text-zinc-900 focus:outline-none focus:border-[#4C1D95] transition-colors">
                 {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
             </div>
@@ -308,7 +308,7 @@ export default function ClientTalentSearchPage() {
               <h3 className="text-xl font-black text-zinc-900">No services found</h3>
               <p className="text-zinc-500 mt-1 text-sm font-medium">Try adjusting your filters or searching for something else.</p>
             </div>
-            <button onClick={() => { setCategory('All'); setExperience(''); setRateMin(''); setRateMax(''); setSortBy('rating'); setSearch(''); setSearchInput(''); setPage(1); }} className="px-6 py-2.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-md text-sm font-bold transition-colors">
+            <button onClick={() => { setCategory('All'); setExperience(''); setRateMin(''); setRateMax(''); setSortBy('rating'); setSearch(''); setSearchInput(''); setPage(1); }} className="px-6 py-2.5 bg-[#4C1D95] hover:bg-[#22C55E] text-white rounded-md text-sm font-bold transition-colors">
               Clear Filters
             </button>
           </div>
@@ -330,4 +330,5 @@ export default function ClientTalentSearchPage() {
     </div>
   );
 }
+
 

@@ -123,7 +123,7 @@ const DisputeResolution = () => {
             onClick={() => setActiveTab(activeTab === 'queue' ? 'audit' : 'queue')}
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2",
-              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#2bb75c]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
+              activeTab === 'audit' ? "bg-surface-dark text-white dark:bg-[#4C1D95]" : "bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-surface"
             )}
           >
             <Activity size={16} /> {activeTab === 'queue' ? 'Arbitration Logs' : 'Back to Queue'}
@@ -276,7 +276,7 @@ const DisputeResolution = () => {
                   </div>
                   <div className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
                     <div className="flex items-center gap-3">
-                      <FileText size={18} className="text-[#2bb75c]" />
+                      <FileText size={18} className="text-[#4C1D95]" />
                       <span className="text-xs font-bold text-zinc-600 dark:text-zinc-400">Escrow in Conflict</span>
                     </div>
                     <span className="text-sm font-bold text-zinc-900 dark:text-white">
@@ -327,3 +327,4 @@ const DisputeResolution = () => {
 };
 
 export default DisputeResolution;
+

@@ -69,7 +69,7 @@ export default function ClientOverview() {
 
   return (
     <div className="space-y-6">
-      <div className="overflow-hidden rounded-[32px] border border-[#E5D9D0] bg-[radial-gradient(circle_at_top_left,_#FFF7F2,_#F6EFEA_40%,_#FFFFFF_100%)] p-6 shadow-[0_22px_60px_rgba(33,24,21,0.08)] lg:p-8">
+      <div className="overflow-hidden rounded-[32px] border border-[#E5E7EB] bg-[radial-gradient(circle_at_top_left,_#FFFFFF,_#F2F2F2_40%,_#FFFFFF_100%)] p-6 shadow-[0_22px_60px_rgba(33,24,21,0.08)] lg:p-8">
         <p className="text-sm uppercase tracking-[0.18em] text-[#7A665E]">Client Workspace</p>
         <h1 className="mt-3 text-3xl font-semibold text-[#2B211F]">A cleaner system for clients who need services</h1>
         <p className="mt-3 max-w-3xl text-sm text-[#6F5B53]">
@@ -102,7 +102,7 @@ export default function ClientOverview() {
           <Link
             key={card.to}
             to={card.to}
-            className="rounded-[28px] border border-[#E5D9D0] bg-white p-5 shadow-[0_18px_45px_rgba(33,24,21,0.06)] transition hover:-tranzinc-y-0.5 hover:shadow-lg"
+            className="rounded-[28px] border border-[#E5E7EB] bg-white p-5 shadow-[0_18px_45px_rgba(33,24,21,0.06)] transition hover:-tranzinc-y-0.5 hover:shadow-lg"
           >
             <div className="inline-flex rounded-2xl bg-[#FDECE7] p-3 text-[#B53A27]">
               <card.icon size={18} />
@@ -114,7 +114,7 @@ export default function ClientOverview() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-[28px] border border-[#E5D9D0] bg-white p-6 shadow-[0_18px_45px_rgba(33,24,21,0.06)]">
+        <div className="rounded-[28px] border border-[#E5E7EB] bg-white p-6 shadow-[0_18px_45px_rgba(33,24,21,0.06)]">
           <h2 className="text-xl font-semibold text-[#2B211F]">What clients can manage here</h2>
           <div className="mt-4 space-y-3 text-sm text-[#5E4D46]">
             <div className="rounded-2xl bg-[#FCFAF8] px-4 py-3">Keep your company profile polished and verified.</div>
@@ -124,7 +124,7 @@ export default function ClientOverview() {
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-[#E5D9D0] bg-[#2B211F] p-6 text-white shadow-[0_22px_50px_rgba(33,24,21,0.18)]">
+        <div className="rounded-[28px] border border-[#E5E7EB] bg-[#2B211F] p-6 text-white shadow-[0_22px_50px_rgba(33,24,21,0.18)]">
           <div className="flex items-center gap-3">
             <BadgeCheck size={18} />
             <p className="text-lg font-semibold">How it stays integrated</p>
@@ -143,17 +143,17 @@ export default function ClientOverview() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1fr]">
-        <Link to="/client/messages" className="rounded-[26px] border border-[#E5D9D0] bg-white p-5 shadow-[0_18px_45px_rgba(33,24,21,0.06)] transition hover:-tranzinc-y-0.5">
+        <Link to="/client/messages" className="rounded-[26px] border border-[#E5E7EB] bg-white p-5 shadow-[0_18px_45px_rgba(33,24,21,0.06)] transition hover:-tranzinc-y-0.5">
           <MessagesSquare size={18} className="text-[#B53A27]" />
           <h2 className="mt-4 text-lg font-semibold text-[#2B211F]">Messages</h2>
           <p className="mt-2 text-sm text-[#6F5B53]">Stay in touch with freelancers and keep project communication moving.</p>
         </Link>
-        <Link to="/client/financial-dashboard" className="rounded-[26px] border border-[#E5D9D0] bg-white p-5 shadow-[0_18px_45px_rgba(33,24,21,0.06)] transition hover:-tranzinc-y-0.5">
+        <Link to="/client/financial-dashboard" className="rounded-[26px] border border-[#E5E7EB] bg-white p-5 shadow-[0_18px_45px_rgba(33,24,21,0.06)] transition hover:-tranzinc-y-0.5">
           <WalletCards size={18} className="text-[#B53A27]" />
           <h2 className="mt-4 text-lg font-semibold text-[#2B211F]">Wallet and payments</h2>
           <p className="mt-2 text-sm text-[#6F5B53]">Review finance tools, linked payout methods, and payment readiness.</p>
         </Link>
-        <Link to="/talent" className="rounded-[26px] border border-[#E5D9D0] bg-white p-5 shadow-[0_18px_45px_rgba(33,24,21,0.06)] transition hover:-tranzinc-y-0.5">
+        <Link to="/talent" className="rounded-[26px] border border-[#E5E7EB] bg-white p-5 shadow-[0_18px_45px_rgba(33,24,21,0.06)] transition hover:-tranzinc-y-0.5">
           <BriefcaseBusiness size={18} className="text-[#B53A27]" />
           <h2 className="mt-4 text-lg font-semibold text-[#2B211F]">Browse talent</h2>
           <p className="mt-2 text-sm text-[#6F5B53]">Explore talent publicly, then come back and post a structured request.</p>
@@ -162,3 +162,4 @@ export default function ClientOverview() {
     </div>
   );
 }
+

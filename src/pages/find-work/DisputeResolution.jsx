@@ -78,7 +78,7 @@ const DisputeResolution = () => {
   if (loading) {
     return (
       <div className="bg-surface min-h-screen py-20 flex flex-col items-center justify-center text-zinc-500">
-        <Loader2 className="w-10 h-10 animate-spin text-[#2bb75c] mb-4" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#4C1D95] mb-4" />
         <p className="font-medium">Loading contract…</p>
       </div>
     );
@@ -105,7 +105,7 @@ const DisputeResolution = () => {
     <>
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-3xl">
-          <Link to={`/find-work/orders/${orderId}`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#2bb75c] transition-colors mb-6">
+          <Link to={`/find-work/orders/${orderId}`} className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#4C1D95] transition-colors mb-6">
             <ArrowLeft className="w-4 h-4" /> Back to Order
           </Link>
 
@@ -128,7 +128,7 @@ const DisputeResolution = () => {
               <select
                 value={reasonCategory}
                 onChange={(e) => setReasonCategory(e.target.value)}
-                className="w-full px-4 py-3 bg-surface border border-zinc-200 rounded-xl focus:border-[#2bb75c]/20 focus:outline-none font-medium text-zinc-900 cursor-pointer mb-6"
+                className="w-full px-4 py-3 bg-surface border border-zinc-200 rounded-xl focus:border-[#4C1D95]/20 focus:outline-none font-medium text-zinc-900 cursor-pointer mb-6"
               >
                 {DISPUTE_REASONS.map((reason) => (
                   <option key={reason} value={reason}>{reason}</option>
@@ -142,7 +142,7 @@ const DisputeResolution = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Provide a detailed timeline of events and why you are disputing this contract..."
-                className="w-full p-4 bg-surface border border-zinc-200 rounded-xl focus:border-[#2bb75c]/20 focus:outline-none focus:ring-4 focus:ring-[#2bb75c]/10 font-medium text-zinc-900 resize-y"
+                className="w-full p-4 bg-surface border border-zinc-200 rounded-xl focus:border-[#4C1D95]/20 focus:outline-none focus:ring-4 focus:ring-[#4C1D95]/10 font-medium text-zinc-900 resize-y"
               />
             </div>
 
@@ -167,4 +167,5 @@ const DisputeResolution = () => {
 };
 
 export default DisputeResolution;
+
 

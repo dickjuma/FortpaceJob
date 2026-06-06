@@ -50,7 +50,7 @@ const FindTalentLanding = () => {
         <div className="container mx-auto px-4 md:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-6">
-              Find the perfect <i className="font-serif font-light text-[#2bb75c]">freelance</i> talent
+              Find the perfect <i className="font-serif font-light text-[#4C1D95]">freelance</i> talent
             </h1>
             <p className="text-lg text-zinc-300 max-w-3xl mx-auto mb-8">
               Discover curated professionals, verified profiles, and talent categories linked directly to the marketplace search experience.
@@ -79,7 +79,7 @@ const FindTalentLanding = () => {
                 value={query}
               />
               <button
-                className="bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-3xl px-8 py-4 font-bold transition-colors flex items-center justify-center gap-2"
+                className="bg-[#4C1D95] hover:bg-[#22C55E] text-white rounded-3xl px-8 py-4 font-bold transition-colors flex items-center justify-center gap-2"
                 type="submit"
               >
                 <Search className="w-5 h-5" />
@@ -136,7 +136,7 @@ const FindTalentLanding = () => {
               </div>
               <Link
                 to={currentBasePath}
-                className="hidden md:inline-flex items-center gap-2 text-[#2bb75c] font-bold text-sm hover:underline"
+                className="hidden md:inline-flex items-center gap-2 text-[#4C1D95] font-bold text-sm hover:underline"
               >
                 View all <ArrowRight className="w-4 h-4" />
               </Link>
@@ -173,7 +173,7 @@ const FindTalentLanding = () => {
               </div>
               <Link
                 to="/search-results"
-                className="text-[#2bb75c] font-bold text-sm hover:underline self-start"
+                className="text-[#4C1D95] font-bold text-sm hover:underline self-start"
               >
                 View all results
               </Link>
@@ -196,4 +196,5 @@ const FindTalentLanding = () => {
 };
 
 export default FindTalentLanding;
+
 

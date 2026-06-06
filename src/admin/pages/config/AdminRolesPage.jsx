@@ -53,7 +53,7 @@ export default function AdminRolesPage() {
   });
 
   const ROLE_COLORS = {
-    SUPER_ADMIN: 'bg-#2bb75c]/10 text-violet-400 border-#2bb75c]/20',
+    SUPER_ADMIN: 'bg-#4C1D95]/10 text-violet-400 border-#4C1D95]/20',
     FINANCIAL_ADMIN: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
     OPERATIONS_ADMIN: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
     SUPPORT_ADMIN: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
@@ -98,7 +98,7 @@ export default function AdminRolesPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl shadow-sm">
+            <div className="p-2.5 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl shadow-sm">
               <Shield size={24} />
             </div>
             <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Admin Roles & Permissions</h1>
@@ -117,7 +117,7 @@ export default function AdminRolesPage() {
           </button>
           <button
             onClick={() => setCreateModal(true)}
-            className="px-5 py-2.5 bg-surface-dark text-white dark:bg-[#2bb75c] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
+            className="px-5 py-2.5 bg-surface-dark text-white dark:bg-[#4C1D95] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2"
           >
             <Plus size={16} /> Create New Role
           </button>
@@ -157,7 +157,7 @@ export default function AdminRolesPage() {
             return (
               <div
                 key={role.id || role._id}
-                className="bg-white dark:bg-surface-dark p-7 rounded-[32px] border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden group hover:border-[#2bb75c]/20/30 transition-all"
+                className="bg-white dark:bg-surface-dark p-7 rounded-[32px] border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden group hover:border-[#4C1D95]/20/30 transition-all"
               >
                 <div className="flex items-center justify-between mb-6">
                   <div className={`p-3 rounded-2xl border ${colorClass}`}>
@@ -212,4 +212,5 @@ export default function AdminRolesPage() {
     </div>
   );
 }
+
 

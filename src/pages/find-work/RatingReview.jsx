@@ -192,14 +192,14 @@ const RatingReview = () => {
                 value={review}
                 onChange={e => setReview(e.target.value)}
                 placeholder="What was it like working with this freelancer? (e.g., quality of work, communication, meeting deadlines)"
-                className="w-full p-4 bg-surface border border-zinc-200 rounded-xl focus:border-[#2bb75c]/20 focus:outline-none focus:ring-4 focus:ring-[#2bb75c]/10 font-medium text-zinc-900 resize-none"
+                className="w-full p-4 bg-surface border border-zinc-200 rounded-xl focus:border-[#4C1D95]/20 focus:outline-none focus:ring-4 focus:ring-[#4C1D95]/10 font-medium text-zinc-900 resize-none"
               ></textarea>
               {formError && <p className="mt-2 text-sm font-semibold text-red-600">{formError}</p>}
             </div>
 
-            <div className="flex items-center gap-3 p-4 bg-[#2bb75c]/5 border border-[#2bb75c]/20 rounded-xl mb-8">
-              <Heart className="w-5 h-5 text-[#2bb75c] shrink-0" />
-              <div className="text-sm font-medium text-[#2bb75c]">
+            <div className="flex items-center gap-3 p-4 bg-[#4C1D95]/5 border border-[#4C1D95]/20 rounded-xl mb-8">
+              <Heart className="w-5 h-5 text-[#4C1D95] shrink-0" />
+              <div className="text-sm font-medium text-[#4C1D95]">
                 You can add this freelancer to your favorites list after submitting the review, making it easy to re-hire them in the future.
               </div>
             </div>
@@ -215,7 +215,7 @@ const RatingReview = () => {
               <button
                 type="submit"
                 disabled={rating === 0 || createReview.isPending || loadingMeta}
-                className={`px-8 py-3 font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 ${rating > 0 && !loadingMeta ? 'bg-[#2bb75c] hover:bg-[#1d8d38] text-white' : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'}`}
+                className={`px-8 py-3 font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 ${rating > 0 && !loadingMeta ? 'bg-[#4C1D95] hover:bg-[#22C55E] text-white' : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'}`}
               >
                 {createReview.isPending ? (
                   <>
@@ -238,4 +238,5 @@ const RatingReview = () => {
 };
 
 export default RatingReview;
+
 

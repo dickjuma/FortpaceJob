@@ -191,7 +191,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
                 <span className="text-text-secondary font-medium">Wallet Balance</span>
                 <span className="font-bold text-text-primary">KES {availableBalance.toLocaleString()}</span>
               </div>
-              <Link to="/freelancer/gigs/create" className="w-full flex items-center justify-center gap-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+              <Link to="/freelancer/gigs/create" className="w-full flex items-center justify-center gap-2 bg-[#4C1D95] hover:bg-[#22C55E] text-white py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
                 <Plus size={16} /> Create Service
               </Link>
             </div>
@@ -322,4 +322,5 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
     </>
   );
 }
+
 

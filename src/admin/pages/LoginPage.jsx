@@ -55,18 +55,18 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen grid lg:grid-cols-2 bg-white selection:bg-[#2bb75c]/10 selection:text-[#2bb75c]">
+    <div className="min-h-screen grid lg:grid-cols-2 bg-white selection:bg-[#4C1D95]/10 selection:text-[#4C1D95]">
       <div className="hidden lg:flex flex-col justify-between p-16 bg-surface-dark text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,#4338ca_0,transparent_50%)] opacity-40"></div>
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-12">
-             <div className="h-10 w-10 bg-[#2bb75c] rounded-2xl flex items-center justify-center text-white shadow-xl shadow-[#2bb75c]/25/20">
+             <div className="h-10 w-10 bg-[#4C1D95] rounded-2xl flex items-center justify-center text-white shadow-xl shadow-[#4C1D95]/25/20">
                 <ShieldCheck size={24} />
              </div>
-             <span className="text-xl font-black tracking-tight">Forte<span className="text-[#2bb75c]">Admin</span></span>
+             <span className="text-xl font-black tracking-tight">Forte<span className="text-[#4C1D95]">Admin</span></span>
           </div>
           <h1 className="text-6xl font-black leading-[1.1] tracking-tighter mb-6 max-w-md">
-             The brain behind the <span className="text-[#2bb75c] underline decoration-#2bb75c] underline-offset-8">marketplace.</span>
+             The brain behind the <span className="text-[#4C1D95] underline decoration-#4C1D95] underline-offset-8">marketplace.</span>
           </h1>
         </div>
       </div>
@@ -82,13 +82,13 @@ const LoginPage = () => {
                <div className="space-y-1.5">
                   <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Work Email</label>
                   <div className="relative group">
-                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#2bb75c] transition-colors" size={18} />
+                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#4C1D95] transition-colors" size={18} />
                      <input 
                         type="email" 
                         placeholder="admin@forte.ke"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full pl-12 pr-4 h-14 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl outline-none focus:border-[#2bb75c]/20 dark:focus:border-[#2bb75c]/20 transition-all"
+                        className="w-full pl-12 pr-4 h-14 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl outline-none focus:border-[#4C1D95]/20 dark:focus:border-[#4C1D95]/20 transition-all"
                       />
                   </div>
                </div>
@@ -96,13 +96,13 @@ const LoginPage = () => {
                <div className="space-y-1.5">
                   <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Password</label>
                   <div className="relative group">
-<Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#2bb75c] transition-colors" size={18} />
+<Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#4C1D95] transition-colors" size={18} />
                       <input
                          type={showPassword ? 'text' : 'password'}
                          placeholder="••••••••"
                          value={password}
                          onChange={(e) => setPassword(e.target.value)}
-                         className="w-full pl-12 pr-12 h-14 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl outline-none focus:border-[#2bb75c]/20 dark:focus:border-[#2bb75c]/20 transition-all"
+                         className="w-full pl-12 pr-12 h-14 bg-surface dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl outline-none focus:border-[#4C1D95]/20 dark:focus:border-[#4C1D95]/20 transition-all"
                       />
                       <button
                          type="button"
@@ -130,4 +130,5 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
 

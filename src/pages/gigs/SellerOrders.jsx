@@ -25,8 +25,8 @@ const SellerOrders = () => {
   const getStatusStyle = (status) => {
     switch (status) {
       case 'pending': return 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400 border-amber-200 dark:border-amber-500/30';
-      case 'in_progress': return 'bg-blue-100 text-blue-700 dark:bg-[#2bb75c]/20 dark:text-blue-400 border-blue-200';
-      case 'delivered': return 'bg-[#2bb75c]/10 text-[#2bb75c] border-[#2bb75c]/30';
+      case 'in_progress': return 'bg-blue-100 text-blue-700 dark:bg-[#4C1D95]/20 dark:text-blue-400 border-blue-200';
+      case 'delivered': return 'bg-[#4C1D95]/10 text-[#4C1D95] border-[#4C1D95]/30';
       case 'completed': return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 border-emerald-200';
       default: return 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 border-zinc-200';
     }
@@ -47,13 +47,13 @@ const SellerOrders = () => {
               onClick={() => setActiveTab(tab)}
               className={`relative px-6 py-4 font-bold text-sm whitespace-nowrap transition-colors capitalize ${
                 activeTab === tab
-                  ? 'text-[#2bb75c] dark:text-[#2bb75c] bg-white dark:bg-zinc-900'
+                  ? 'text-[#4C1D95] dark:text-[#4C1D95] bg-white dark:bg-zinc-900'
                   : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/50 dark:hover:bg-zinc-800'
               }`}
             >
               {tab.replace('_', ' ')} <span className="ml-1 opacity-60">({mapped.filter((o) => o.status === tab).length})</span>
               {activeTab === tab && (
-                <motion.div layoutId="orderTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2bb75c]" />
+                <motion.div layoutId="orderTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4C1D95]" />
               )}
             </button>
           ))}
@@ -62,7 +62,7 @@ const SellerOrders = () => {
         <div className="p-6 md:p-8">
           {loading ? (
             <div className="flex justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
+              <Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" />
             </div>
           ) : (
             <AnimatePresence mode="wait">
@@ -81,7 +81,7 @@ const SellerOrders = () => {
                   </div>
                 ) : (
                   displayOrders.map((order) => (
-                    <div key={order.id} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 hover:border-[#2bb75c]/50 transition-all flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 group">
+                    <div key={order.id} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 hover:border-[#4C1D95]/50 transition-all flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 group">
                       <div className="flex-1 w-full">
                         <div className="flex items-center gap-3 mb-2">
                           <span className="text-xs font-bold text-zinc-400 dark:text-zinc-500">{order.id}</span>
@@ -97,7 +97,7 @@ const SellerOrders = () => {
                         <h3 className="font-bold text-zinc-900 dark:text-white text-lg mb-1">{order.gig}</h3>
                         <div className="flex items-center gap-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
                           Buyer: <span className="text-zinc-900 dark:text-zinc-200 font-bold">{order.buyer}</span> •
-                          Tier: <span className="text-[#2bb75c] font-bold">{order.tier}</span>
+                          Tier: <span className="text-[#4C1D95] font-bold">{order.tier}</span>
                         </div>
                       </div>
                       <div className="w-full lg:w-auto flex flex-col sm:flex-row items-center gap-4 pt-4 lg:pt-0 border-t lg:border-t-0 border-zinc-100 dark:border-zinc-800">
@@ -109,12 +109,12 @@ const SellerOrders = () => {
                             <MessageSquare className="w-5 h-5" />
                           </button>
                           {order.status === 'in_progress' && (
-                            <button type="button" className="flex-1 sm:flex-none px-6 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-semibold rounded-xl transition-all text-center whitespace-nowrap">
+                            <button type="button" className="flex-1 sm:flex-none px-6 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-semibold rounded-xl transition-all text-center whitespace-nowrap">
                               Deliver Work
                             </button>
                           )}
                           {order.status === 'pending' && (
-                            <button type="button" className="flex-1 sm:flex-none px-6 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-semibold rounded-xl transition-all text-center whitespace-nowrap">
+                            <button type="button" className="flex-1 sm:flex-none px-6 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-semibold rounded-xl transition-all text-center whitespace-nowrap">
                               Start Order
                             </button>
                           )}
@@ -133,4 +133,5 @@ const SellerOrders = () => {
 };
 
 export default SellerOrders;
+
 

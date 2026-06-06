@@ -43,7 +43,7 @@ const GigReviews = () => {
             <div className="p-6 md:p-8">
               {loading ? (
                 <div className="flex justify-center py-16">
-                  <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
+                  <Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" />
                 </div>
               ) : reviews.length === 0 ? (
                 <p className="text-center text-zinc-500 font-medium py-12">No reviews yet for this gig.</p>
@@ -113,4 +113,5 @@ const GigReviews = () => {
 };
 
 export default GigReviews;
+
 

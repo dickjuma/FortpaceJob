@@ -32,7 +32,7 @@ const WorkAnalytics = () => {
   if (loading) {
     return (
       <div className="bg-surface min-h-screen py-20 flex flex-col items-center justify-center text-zinc-500">
-        <Loader2 className="w-10 h-10 animate-spin text-[#2bb75c] mb-4" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#4C1D95] mb-4" />
         <p className="font-medium">Loading analytics…</p>
       </div>
     );
@@ -43,7 +43,7 @@ const WorkAnalytics = () => {
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-12 bg-[#2bb75c]/10 text-[#2bb75c] rounded-xl flex items-center justify-center shadow-sm">
+            <div className="w-12 h-12 bg-[#4C1D95]/10 text-[#4C1D95] rounded-xl flex items-center justify-center shadow-sm">
               <BarChart2 className="w-6 h-6" />
             </div>
             <div>
@@ -66,11 +66,11 @@ const WorkAnalytics = () => {
 
             <div className="bg-white p-6 rounded-3xl border border-zinc-200 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-[#2bb75c]/10 text-[#2bb75c] rounded-lg"><Users className="w-5 h-5" /></div>
+                <div className="p-2 bg-[#4C1D95]/10 text-[#4C1D95] rounded-lg"><Users className="w-5 h-5" /></div>
                 <div className="font-bold text-zinc-500">Talent Hired</div>
               </div>
               <div className="text-3xl font-black text-zinc-900">{talentHired}</div>
-              <div className="text-sm font-bold text-[#2bb75c] mt-2">{jobsPosted} jobs posted</div>
+              <div className="text-sm font-bold text-[#4C1D95] mt-2">{jobsPosted} jobs posted</div>
             </div>
 
             <div className="bg-white p-6 rounded-3xl border border-zinc-200 shadow-sm">
@@ -84,7 +84,7 @@ const WorkAnalytics = () => {
 
             <div className="bg-white p-6 rounded-3xl border border-zinc-200 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-[#2bb75c]/10 text-[#2bb75c] rounded-lg"><TrendingUp className="w-5 h-5" /></div>
+                <div className="p-2 bg-[#4C1D95]/10 text-[#4C1D95] rounded-lg"><TrendingUp className="w-5 h-5" /></div>
                 <div className="font-bold text-zinc-500">Hire Rate</div>
               </div>
               <div className="text-3xl font-black text-zinc-900">{hireRate}%</div>
@@ -117,4 +117,5 @@ const WorkAnalytics = () => {
 };
 
 export default WorkAnalytics;
+
 

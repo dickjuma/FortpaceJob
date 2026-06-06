@@ -632,7 +632,7 @@ export default function CreateGig() {
               
               <button 
                 onClick={() => setShowPreview(true)}
-                className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-semibold text-[#4A312F] hover:text-[#2E2322] hover:bg-[#F3E9E5] rounded-lg transition-colors"
+                className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-semibold text-[#4C1D95] hover:text-[#2E2322] hover:bg-[#F3E9E5] rounded-lg transition-colors"
               >
                 <Eye size={16} />
                 Preview
@@ -737,26 +737,26 @@ export default function CreateGig() {
                     <div className="w-full h-2 bg-[#EFE7E2] rounded-full overflow-hidden">
                       <div className="w-3/4 h-full bg-yellow-500" />
                     </div>
-                    <span className="text-sm font-medium text-[#4A312F]">Medium</span>
+                    <span className="text-sm font-medium text-[#4C1D95]">Medium</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-gradient-to-r from-[#FDECE7] to-[#F8F4F1] rounded-xl border border-[#F4C7A1] p-6">
+            <div className="bg-gradient-to-r from-[#FDECE7] to-[#F8F4F1] rounded-xl border border-[#E5E7EB] p-6">
               <h3 className="font-semibold text-[#2E2322] mb-4">Quick Actions</h3>
               <div className="space-y-3">
-                <button className="w-full text-left p-3 bg-white rounded-lg border border-[#E7E1DE] hover:border-[#C9452F] transition-colors flex items-center gap-3">
-                  <Sparkles size={16} className="text-[#C9452F]" />
+                <button className="w-full text-left p-3 bg-white rounded-lg border border-[#E7E1DE] hover:border-[#22C55E] transition-colors flex items-center gap-3">
+                  <Sparkles size={16} className="text-[#22C55E]" />
                   <span>Optimize with AI</span>
                 </button>
-                <button className="w-full text-left p-3 bg-white rounded-lg border border-[#E7E1DE] hover:border-[#C9452F] transition-colors flex items-center gap-3">
+                <button className="w-full text-left p-3 bg-white rounded-lg border border-[#E7E1DE] hover:border-[#22C55E] transition-colors flex items-center gap-3">
                   <BarChart size={16} className="text-green-500" />
                   <span>View Analytics</span>
                 </button>
-                <button className="w-full text-left p-3 bg-white rounded-lg border border-[#E7E1DE] hover:border-[#C9452F] transition-colors flex items-center gap-3">
-                  <Users size={16} className="text-[#2bb75c]" />
+                <button className="w-full text-left p-3 bg-white rounded-lg border border-[#E7E1DE] hover:border-[#22C55E] transition-colors flex items-center gap-3">
+                  <Users size={16} className="text-[#4C1D95]" />
                   <span>Target Audience</span>
                 </button>
               </div>
@@ -861,7 +861,7 @@ export default function CreateGig() {
                         }`}>
                           <div className="flex flex-wrap gap-2 mb-2">
                             {formData.tags.map(tag => (
-                              <span key={tag} className="inline-flex items-center gap-1.5 bg-[#F3E9E5] text-[#4A312F] px-3 py-1.5 rounded-full text-sm font-medium">
+                              <span key={tag} className="inline-flex items-center gap-1.5 bg-[#F3E9E5] text-[#4C1D95] px-3 py-1.5 rounded-full text-sm font-medium">
                                 #{tag}
                                 <button 
                                   onClick={() => removeTag(tag)}
@@ -963,7 +963,7 @@ export default function CreateGig() {
                           {pkg.enabled && (
                             <div className="space-y-4">
                               <div data-error={`package_${index}_desc`}>
-                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                                   Package Description
                                 </label>
                                 <input
@@ -980,7 +980,7 @@ export default function CreateGig() {
 
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div data-error={`package_${index}_delivery`}>
-                                  <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                  <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                                     Delivery Time
                                   </label>
                                   <div className="flex gap-2">
@@ -1006,7 +1006,7 @@ export default function CreateGig() {
                                 </div>
 
                                 <div>
-                                  <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                  <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                                     Revisions
                                   </label>
                                   <input
@@ -1020,7 +1020,7 @@ export default function CreateGig() {
                               </div>
 
                               <div data-error={`package_${index}_price`}>
-                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                                   Price <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">
@@ -1041,7 +1041,7 @@ export default function CreateGig() {
                               </div>
 
                               <div>
-                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                                   Features
                                 </label>
                                 <div className="space-y-2">
@@ -1147,7 +1147,7 @@ export default function CreateGig() {
                             
                             <div className="space-y-4">
                               <div data-error={`faq_${index}_question`}>
-                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                                   Question <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -1163,7 +1163,7 @@ export default function CreateGig() {
                               </div>
                               
                               <div data-error={`faq_${index}_answer`}>
-                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                                   Answer <span className="text-red-500">*</span>
                                 </label>
                                 <textarea
@@ -1219,7 +1219,7 @@ export default function CreateGig() {
                           
                           <div className="space-y-4">
                             <div data-error={`req_${index}_question`}>
-                              <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                              <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                                 Question Text <span className="text-red-500">*</span>
                               </label>
                               <input
@@ -1236,7 +1236,7 @@ export default function CreateGig() {
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                               <div>
-                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                                   Answer Type
                                 </label>
                                 <select 
@@ -1252,7 +1252,7 @@ export default function CreateGig() {
                               </div>
                               
                               <div>
-                                <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                                <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                                   Placeholder Text
                                 </label>
                                 <input
@@ -1273,7 +1273,7 @@ export default function CreateGig() {
                                   onChange={(e) => updateRequirement(index, 'required', e.target.checked)}
                                   className="w-4 h-4 text-green-600 rounded focus:ring-green-500"
                                 />
-                                <span className="text-sm font-medium text-[#4A312F]">Required field</span>
+                                <span className="text-sm font-medium text-[#4C1D95]">Required field</span>
                               </label>
                               
                               {req.required && (
@@ -1315,7 +1315,7 @@ export default function CreateGig() {
                           id="media-upload"
                         />
                         <label htmlFor="media-upload" className="cursor-pointer">
-                          <div className="w-20 h-20 bg-gradient-to-br from-green-50 to-[#F8F4F1] rounded-full flex items-center justify-center mx-auto mb-6 group-hover:from-green-100 group-hover:to-[#F4C7A1] transition-colors">
+                          <div className="w-20 h-20 bg-gradient-to-br from-green-50 to-[#F8F4F1] rounded-full flex items-center justify-center mx-auto mb-6 group-hover:from-green-100 group-hover:to-[#E5E7EB] transition-colors">
                             <Upload size={32} className="text-[#A38F85] group-hover:text-green-500" />
                           </div>
                           <h3 className="text-xl font-bold text-[#2E2322] mb-2">Drag & drop files here</h3>
@@ -1324,7 +1324,7 @@ export default function CreateGig() {
                             <button className="px-8 py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition-colors shadow-sm">
                               Browse Files
                             </button>
-                            <button className="px-8 py-3 border border-[#E7E1DE] text-[#4A312F] rounded-lg font-semibold hover:bg-[#F8F4F1] transition-colors">
+                            <button className="px-8 py-3 border border-[#E7E1DE] text-[#4C1D95] rounded-lg font-semibold hover:bg-[#F8F4F1] transition-colors">
                               Sample Images
                             </button>
                           </div>
@@ -1333,9 +1333,9 @@ export default function CreateGig() {
                       <InputError error={validationErrors.images} />
                       
                       {/* Requirements */}
-                      <div className="mt-4 p-4 bg-[#FDECE7] border border-[#F4C7A1] rounded-lg">
+                      <div className="mt-4 p-4 bg-[#FDECE7] border border-[#E5E7EB] rounded-lg">
                         <h4 className="font-medium text-[#2E2322] mb-2 flex items-center gap-2">
-                          <Info size={16} className="text-[#C9452F]" />
+                          <Info size={16} className="text-[#22C55E]" />
                           Media Requirements
                         </h4>
                         <ul className="text-sm text-[#6B5B50] space-y-1">
@@ -1488,7 +1488,7 @@ export default function CreateGig() {
                       <h3 className="text-lg font-bold text-[#2E2322] mb-4">SEO Settings (Optional)</h3>
                       <div className="space-y-4">
                         <div data-error="metaTitle">
-                          <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                          <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                             SEO Title
                           </label>
                           <input
@@ -1516,7 +1516,7 @@ export default function CreateGig() {
                         </div>
 
                         <div data-error="metaDescription">
-                          <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                          <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                             SEO Description
                           </label>
                           <textarea
@@ -1620,7 +1620,7 @@ export default function CreateGig() {
 
                         {formData.visibility === "scheduled" && (
                           <div data-error="publishDate" className="pl-14">
-                            <label className="block text-sm font-medium text-[#4A312F] mb-2">
+                            <label className="block text-sm font-medium text-[#4C1D95] mb-2">
                               Publish Date & Time
                             </label>
                             <input
@@ -1691,7 +1691,7 @@ export default function CreateGig() {
                     className={`px-6 py-3 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${
                       currentStep === 1
                         ? 'opacity-0 pointer-events-none'
-                        : 'text-[#4A312F] hover:bg-[#EFE7E2] hover:text-[#2E2322]'
+                        : 'text-[#4C1D95] hover:bg-[#EFE7E2] hover:text-[#2E2322]'
                     }`}
                   >
                     <ChevronLeft size={18} /> Previous
@@ -1703,7 +1703,7 @@ export default function CreateGig() {
                         localStorage.setItem('gigDraft', JSON.stringify(formData));
                         alert('Draft saved successfully!');
                       }}
-                      className="px-6 py-3 text-[#4A312F] hover:bg-[#EFE7E2] rounded-lg font-semibold text-sm transition-colors hidden sm:block"
+                      className="px-6 py-3 text-[#4C1D95] hover:bg-[#EFE7E2] rounded-lg font-semibold text-sm transition-colors hidden sm:block"
                     >
                       Save as Draft
                     </button>
@@ -1766,7 +1766,7 @@ export default function CreateGig() {
                   </h1>
                   <div className="flex flex-wrap gap-2 mb-6">
                     {formData.tags.map(tag => (
-                      <span key={tag} className="px-3 py-1 bg-[#F3E9E5] text-[#4A312F] rounded-full text-sm">
+                      <span key={tag} className="px-3 py-1 bg-[#F3E9E5] text-[#4C1D95] rounded-full text-sm">
                         #{tag}
                       </span>
                     ))}
@@ -1830,7 +1830,7 @@ export default function CreateGig() {
                   <h2 className="text-2xl font-bold text-[#2E2322] mb-4">About This Gig</h2>
                   <div className="prose max-w-none">
                     {formData.description.split('\n').map((para, idx) => (
-                      <p key={idx} className="text-[#4A312F] mb-4">{para}</p>
+                      <p key={idx} className="text-[#4C1D95] mb-4">{para}</p>
                     ))}
                   </div>
                 </div>
@@ -1857,4 +1857,6 @@ export default function CreateGig() {
     </div>
   );
 }
+
+
 
