@@ -1,169 +1,253 @@
+// src/pages/settings/AppearanceSettingsPage.jsx
 import React, { useState } from 'react';
-import { 
-  Settings, Sun, Moon, Laptop, Layout, Check, Palette, Sparkles
-} from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import { cn } from '../../admin/utils/cn';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Settings, Sun, Moon, Laptop, Layout, Check, Palette, Sparkles } from 'lucide-react';
 
 export default function AppearanceSettingsPage() {
   const [theme, setTheme] = useState('system'); // 'light' | 'dark' | 'system'
   const [sidebarLayout, setSidebarLayout] = useState('expanded'); // 'expanded' | 'collapsed'
-  const [accentColor, setAccentColor] = useState('purple'); // 'purple' | 'blue' | 'green' | 'red'
+  const [accentColor, setAccentColor] = useState('green'); // 'green' | 'blue' | 'amber' | 'rose'
+  const [showSaveSuccess, setShowSaveSuccess] = useState(false);
 
   const handleSelectTheme = (mode) => {
     setTheme(mode);
-    toast.success(`Theme updated to: ${mode.toUpperCase()} mode! 🌓`);
   };
 
   const handleSelectAccent = (color) => {
     setAccentColor(color);
-    toast.success(`Primary accent color updated: ${color.toUpperCase()}! 🎨`);
   };
 
   const handleSave = () => {
-    toast.promise(
-      new Promise((resolve) => setTimeout(resolve, 800)),
-      {
-        loading: 'Syncing aesthetic workspace configurations...',
-        success: 'Visual environment preferences saved! ✨',
-        error: 'Failed to update aesthetics.'
-      }
-    );
+    setShowSaveSuccess(true);
+    setTimeout(() => setShowSaveSuccess(false), 3000);
   };
 
   const accentColors = [
-    { key: 'purple', label: 'Royal Purple', class: 'bg-success border-success' },
-    { key: 'blue', label: 'Deep Blue', class: 'bg-[#2bb75c] border-[#2bb75c]/20' },
-    { key: 'green', label: 'Emerald Green', class: 'bg-success border-success' },
-    { key: 'red', label: 'Sunset Red', class: 'bg-[#e63946] border-[#e63946]' }
+    { key: 'green', label: 'Green', class: 'bg-accent DEFAULT', activeClass: 'ring-accent DEFAULT' },
+    { key: 'blue', label: 'Blue', class: 'bg-info DEFAULT', activeClass: 'ring-info DEFAULT' },
+    { key: 'amber', label: 'Amber', class: 'bg-warn DEFAULT', activeClass: 'ring-warn DEFAULT' },
+    { key: 'rose', label: 'Rose', class: 'bg-danger DEFAULT', activeClass: 'ring-danger DEFAULT' }
   ];
 
+  const Button = ({ children, variant = 'primary', icon, onClick, disabled = false, className = '' }) => {
+    const baseStyles = "px-5 py-2.5 rounded-lg font-body font-medium text-sm inline-flex items-center justify-center gap-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2";
+    const variants = {
+      primary: "bg-brand-900 text-white hover:bg-brand-800 focus:ring-brand-900",
+      ghost: "border border-brand-900 text-brand-900 hover:bg-surface-muted focus:ring-brand-900",
+      danger: "bg-danger text-white hover:bg-red-700 focus:ring-danger"
+    };
+
+    return (
+      <motion.button
+        whileTap={{ scale: 0.97 }}
+        onClick={onClick}
+        disabled={disabled}
+        className={`${baseStyles} ${variants[variant]} ${disabled ? 'opacity-40 cursor-not-allowed' : ''} ${className}`}
+      >
+        {icon && <span className="w-4 h-4 flex items-center justify-center">{icon}</span>}
+        {children}
+      </motion.button>
+    );
+  };
+
+  const Badge = ({ children, variant = 'default' }) => {
+    const variants = {
+      default: "bg-surface-muted text-ink-secondary",
+      success: "bg-accent-light text-accent-dark",
+      warning: "bg-warn-light text-warn",
+      danger: "bg-danger-light text-danger",
+      info: "bg-info-light text-info"
+    };
+
+    return (
+      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[variant]}`}>
+        {children}
+      </span>
+    );
+  };
+
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans animate-in slide-in-from-bottom-4 duration-500 relative">
-      <Toaster position="top-right" />
-      
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSaveSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm"
+          >
+            Appearance settings saved
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <Palette className="w-8 h-8 text-success" />
-            Appearance Configurator
+          <h1 className="font-display font-bold text-4xl text-brand-900 flex items-center gap-3">
+            <Palette className="w-8 h-8 text-accent DEFAULT" />
+            Appearance
           </h1>
-          <p className="text-sm text-text-secondary mt-1">
-            Customize the look and feel of your workspace portal environment, select accent palettes, and toggle dark frames.
+          <p className="text-ink-secondary font-body mt-1 text-base">
+            Customize your workspace look and feel
           </p>
         </div>
-        <Button 
-          variant="primary" 
+        <Button
+          variant="primary"
           icon={<Check size={18} />}
           onClick={handleSave}
         >
-          Save Appearance
+          Save changes
         </Button>
       </div>
 
       <div className="space-y-6">
-        
+
         {/* Theme configuration */}
-        <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
-          <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-            <Sun className="w-5 h-5 text-success" />
-            Theme Color Settings
-          </h3>
+        <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+          <div className="flex items-center gap-2 mb-5 pb-3 border-b border-border">
+            <Sun className="w-5 h-5 text-accent DEFAULT" />
+            <h3 className="font-display font-semibold text-lg text-brand-900">Theme preference</h3>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
-              { key: 'light', label: 'Light Theme', icon: Sun, desc: 'Optimized workspace framework with clean white panels.' },
-              { key: 'dark', label: 'Dark Slate Theme', icon: Moon, desc: 'Sleek dark interface tailored for low-light environment builds.' },
-              { key: 'system', label: 'Automatic Sync', icon: Laptop, desc: 'Syncs slate layouts automatically with operating system settings.' }
+              { key: 'light', label: 'Light', icon: Sun, description: 'Clean bright interface for daytime work' },
+              { key: 'dark', label: 'Dark', icon: Moon, description: 'Reduced eye strain in low-light environments' },
+              { key: 'system', label: 'System', icon: Laptop, description: 'Matches your operating system preference' }
             ].map(opt => (
-              <div 
+              <motion.div
                 key={opt.key}
+                whileHover={{ y: -2 }}
+                transition={{ duration: 0.2 }}
                 onClick={() => handleSelectTheme(opt.key)}
-                className={cn(
-                  "p-5 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between min-h-[140px]",
-                  theme === opt.key 
-                    ? "border-success bg-success/5 shadow-sm" 
-                    : "border-border bg-light-gray hover:border-border-hover hover:bg-white"
-                )}
+                className={`p-5 rounded-xl border-2 cursor-pointer transition-all ${
+                  theme === opt.key
+                    ? "border-accent DEFAULT bg-accent-light"
+                    : "border-border bg-white hover:border-border-strong"
+                }`}
               >
-                <div className="flex justify-between items-start">
-                  <div className={cn("p-2.5 rounded-xl border border-border bg-white text-text-primary", theme === opt.key && "text-success")}>
-                    <opt.icon size={18} />
+                <div className="flex justify-between items-start mb-3">
+                  <div className={`p-2 rounded-lg border ${theme === opt.key ? 'border-accent DEFAULT bg-white' : 'border-border bg-surface-muted'}`}>
+                    <opt.icon className={`w-5 h-5 ${theme === opt.key ? 'text-accent DEFAULT' : 'text-ink-secondary'}`} />
                   </div>
-                  {theme === opt.key && <span className="w-5 h-5 bg-success rounded-full flex items-center justify-center text-white"><Check size={12} /></span>}
+                  {theme === opt.key && <Check className="w-5 h-5 text-accent DEFAULT" />}
                 </div>
-                <div className="mt-4">
-                  <h4 className="font-black text-sm text-text-primary">{opt.label}</h4>
-                  <p className="text-[10px] text-text-secondary font-medium leading-relaxed mt-0.5">{opt.desc}</p>
-                </div>
-              </div>
+                <h4 className="font-body font-semibold text-ink-primary mb-1">{opt.label}</h4>
+                <p className="text-ink-tertiary text-xs font-body leading-relaxed">{opt.description}</p>
+              </motion.div>
             ))}
           </div>
-        </Card>
+        </div>
 
-        {/* Accent Selector */}
-        <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
-          <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-            <Sparkles className="w-5 h-5 text-success" />
-            Primary Accent Color
-          </h3>
+        {/* Accent Color Selector */}
+        <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+          <div className="flex items-center gap-2 mb-5 pb-3 border-b border-border">
+            <Sparkles className="w-5 h-5 text-accent DEFAULT" />
+            <h3 className="font-display font-semibold text-lg text-brand-900">Accent color</h3>
+          </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {accentColors.map(color => (
-              <div 
+              <motion.div
                 key={color.key}
+                whileHover={{ y: -2 }}
+                transition={{ duration: 0.2 }}
                 onClick={() => handleSelectAccent(color.key)}
-                className={cn(
-                  "p-4 rounded-xl border cursor-pointer flex items-center gap-3 transition-all hover:scale-102",
-                  accentColor === color.key ? "border-border shadow-sm bg-light-gray" : "border-border/60 hover:border-border-hover"
-                )}
+                className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                  accentColor === color.key
+                    ? "border-accent DEFAULT bg-accent-light ring-2 ring-accent-light"
+                    : "border-border bg-white hover:border-border-strong"
+                }`}
               >
-                <span className={cn("w-5 h-5 rounded-full border border-white/20 shrink-0", color.class)}></span>
-                <span className="font-bold text-xs text-text-primary">{color.label}</span>
-                {accentColor === color.key && <Check size={14} className="ml-auto text-success" />}
-              </div>
+                <div className="flex items-center gap-3">
+                  <div className={`w-6 h-6 rounded-full ${color.class} shadow-sm`}></div>
+                  <span className="font-body font-medium text-sm text-ink-primary flex-1">{color.label}</span>
+                  {accentColor === color.key && <Check className="w-4 h-4 text-accent DEFAULT" />}
+                </div>
+              </motion.div>
             ))}
           </div>
-        </Card>
+
+          <p className="mt-4 text-ink-tertiary text-xs font-body">
+            Accent colors appear on buttons, links, and active states
+          </p>
+        </div>
 
         {/* Sidebar layouts */}
-        <Card className="bg-white border border-border p-6 rounded-2xl shadow-sm">
-          <h3 className="text-base font-black text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-3">
-            <Layout className="w-5 h-5 text-success" />
-            Navigation Layout Grid
-          </h3>
+        <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+          <div className="flex items-center gap-2 mb-5 pb-3 border-b border-border">
+            <Layout className="w-5 h-5 text-accent DEFAULT" />
+            <h3 className="font-display font-semibold text-lg text-brand-900">Sidebar layout</h3>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {[
-              { key: 'expanded', label: 'Standard Sidebar Expanded', desc: 'Displays descriptive headers alongside icon marks.' },
-              { key: 'collapsed', label: 'Minimal Sidebar Icon Drawer', desc: 'Saves screenspace by showing clean minimal icons only.' }
+              { key: 'expanded', label: 'Expanded', description: 'Full labels next to navigation icons' },
+              { key: 'collapsed', label: 'Collapsed', description: 'Icon-only sidebar saves screen space' }
             ].map(opt => (
-              <div 
+              <motion.div
                 key={opt.key}
+                whileHover={{ y: -2 }}
+                transition={{ duration: 0.2 }}
                 onClick={() => setSidebarLayout(opt.key)}
-                className={cn(
-                  "p-5 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between min-h-[120px]",
-                  sidebarLayout === opt.key 
-                    ? "border-success bg-success/5 shadow-sm" 
-                    : "border-border bg-light-gray hover:border-border-hover hover:bg-white"
-                )}
+                className={`p-5 rounded-xl border-2 cursor-pointer transition-all ${
+                  sidebarLayout === opt.key
+                    ? "border-accent DEFAULT bg-accent-light"
+                    : "border-border bg-white hover:border-border-strong"
+                }`}
               >
-                <div className="flex justify-between items-start">
-                  <h4 className="font-black text-sm text-text-primary">{opt.label}</h4>
-                  {sidebarLayout === opt.key && <span className="w-5 h-5 bg-success rounded-full flex items-center justify-center text-white"><Check size={12} /></span>}
+                <div className="flex justify-between items-start mb-2">
+                  <h4 className="font-body font-semibold text-ink-primary">{opt.label}</h4>
+                  {sidebarLayout === opt.key && <Check className="w-5 h-5 text-accent DEFAULT" />}
                 </div>
-                <p className="text-xs text-text-secondary font-medium mt-2 leading-relaxed">{opt.desc}</p>
-              </div>
+                <p className="text-ink-tertiary text-xs font-body leading-relaxed">{opt.description}</p>
+              </motion.div>
             ))}
           </div>
-        </Card>
+        </div>
+
+        {/* Preview Section */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.3 }}
+          className="bg-surface-soft rounded-2xl p-6 border border-border"
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <Settings className="w-5 h-5 text-ink-secondary" />
+            <h3 className="font-body font-semibold text-ink-primary">Preview</h3>
+            <Badge variant="info">Live preview</Badge>
+          </div>
+
+          <div className="bg-white rounded-xl p-4 border border-border shadow-sm">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-full bg-surface-muted flex items-center justify-center">
+                <span className="text-ink-secondary font-body text-sm">JD</span>
+              </div>
+              <div>
+                <div className="font-body font-medium text-ink-primary text-sm">Your profile</div>
+                <div className="text-ink-tertiary text-xs">settings appear here</div>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Badge variant="success">Active</Badge>
+              <Badge variant="default">Member since 2024</Badge>
+            </div>
+          </div>
+
+          <p className="mt-4 text-ink-tertiary text-xs font-body text-center">
+            Changes apply immediately to your dashboard experience
+          </p>
+        </motion.div>
 
       </div>
-
-    </div>
+    </motion.div>
   );
 }
-

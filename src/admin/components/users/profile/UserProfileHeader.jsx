@@ -11,10 +11,8 @@ import {
   DollarSign,
   Briefcase,
   UserCheck,
-  Shield,
   Activity
 } from 'lucide-react';
-import { cn } from '../../../utils/cn';
 import UserAvatar from '../shared/UserAvatar';
 import StatusBadge from '../shared/StatusBadge';
 import KycStatusBadge from '../shared/KycStatusBadge';

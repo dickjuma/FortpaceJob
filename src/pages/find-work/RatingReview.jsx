@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, CheckCircle2, MessageSquare, Heart, Loader2 } from 'lucide-react';
 import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useCreateReview } from '../../common/hooks/useReviews';
 import { useAuthStore } from '../../common/authStore';
 import { validateMinLength, validateRating } from '../../common/utils/validation';
+import { loadContractOrOrder } from './findWorkWorkflow';
 
 const RatingReview = () => {
   const { orderId } = useParams();
@@ -16,9 +17,71 @@ const RatingReview = () => {
   const [review, setReview] = useState('');
   const [formError, setFormError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [loadingMeta, setLoadingMeta] = useState(true);
+  const [resolvedContractId, setResolvedContractId] = useState(searchParams.get('contractId') || orderId);
+  const [resolvedRevieweeId, setResolvedRevieweeId] = useState(searchParams.get('revieweeId') || searchParams.get('freelancerId') || '');
+  const [resolvedRevieweeName, setResolvedRevieweeName] = useState('the provider');
 
-  const revieweeId = searchParams.get('revieweeId') || searchParams.get('freelancerId');
-  const contractId = searchParams.get('contractId') || orderId;
+  useEffect(() => {
+    const initReviewMeta = async () => {
+      const queryRevieweeId = searchParams.get('revieweeId') || searchParams.get('freelancerId');
+      const queryContractId = searchParams.get('contractId');
+      if (queryRevieweeId && queryContractId) {
+        setResolvedRevieweeId(queryRevieweeId);
+        setResolvedContractId(queryContractId);
+        setResolvedRevieweeName(searchParams.get('revieweeName') || 'the provider');
+        setLoadingMeta(false);
+        return;
+      }
+
+      try {
+        setLoadingMeta(true);
+        const { record } = await loadContractOrOrder(orderId);
+        if (!record) {
+          throw new Error('Unable to load review context for this order');
+        }
+
+        const clientId = record.clientId || record.client?.id || record.client?.userId;
+        const freelancerId = record.freelancerId || record.freelancer?.id || record.freelancer?.userId || record.providerId || record.provider?.id || record.provider?.userId;
+        const contractIdFromRecord = queryContractId || record.contractId || record.id || record.relatedContractId;
+
+        let reviewee = queryRevieweeId || null;
+        let revieweeName = 'the provider';
+
+        if (!reviewee) {
+          const currentUserId = user?.id;
+          if (currentUserId) {
+            if (clientId && clientId !== currentUserId) {
+              reviewee = clientId;
+              revieweeName = record.client?.name || record.client?.displayName || 'Client';
+            } else if (freelancerId && freelancerId !== currentUserId) {
+              reviewee = freelancerId;
+              revieweeName = record.freelancer?.name || record.freelancer?.displayName || record.provider?.name || 'Freelancer';
+            }
+          } else {
+            reviewee = freelancerId || clientId;
+            revieweeName = record.freelancer?.name || record.provider?.name || record.client?.name || 'Provider';
+          }
+        } else {
+          revieweeName = searchParams.get('revieweeName') || record.freelancer?.name || record.provider?.name || record.client?.name || 'Provider';
+        }
+
+        if (!reviewee) {
+          throw new Error('Unable to determine the review recipient for this order');
+        }
+
+        setResolvedRevieweeId(reviewee);
+        setResolvedContractId(contractIdFromRecord);
+        setResolvedRevieweeName(revieweeName);
+      } catch (error) {
+        setFormError(error.message || 'Unable to prepare review');
+      } finally {
+        setLoadingMeta(false);
+      }
+    };
+
+    initReviewMeta();
+  }, [orderId, searchParams, user?.id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,23 +96,15 @@ const RatingReview = () => {
       setFormError(reviewError);
       return;
     }
-    if (!revieweeId) {
-      createReview.mutate(
-        {
-          contractId,
-          orderId,
-          overallRating: rating,
-          comment: review,
-          reviewerRole: 'CLIENT',
-        },
-        { onSuccess: () => setSuccess(true) }
-      );
+    if (!resolvedRevieweeId || !resolvedContractId) {
+      setFormError('Review recipient or contract could not be determined.');
       return;
     }
+
     createReview.mutate(
       {
-        revieweeId,
-        contractId,
+        revieweeId: resolvedRevieweeId,
+        contractId: resolvedContractId,
         orderId,
         overallRating: rating,
         comment: review,
@@ -82,19 +137,24 @@ const RatingReview = () => {
     <>
       <div className="bg-surface min-h-screen py-10">
         <div className="container mx-auto px-4 md:px-8 max-w-3xl">
-          
+
           <div className="mb-8 text-center">
             <h1 className="text-3xl font-black text-zinc-900 mb-2">Rate Your Experience</h1>
-            <p className="text-zinc-600 font-medium">The contract is now complete. Please rate DevMasterPro.</p>
+            <p className="text-zinc-600 font-medium">
+              The contract is now complete. Please rate {resolvedRevieweeName || 'the provider'}.
+            </p>
+            {loadingMeta && (
+              <p className="text-sm text-ink-secondary mt-2">Loading review details...</p>
+            )}
           </div>
 
           <form onSubmit={handleSubmit} className="bg-white border border-zinc-200 rounded-3xl p-6 md:p-10 shadow-sm">
-            
+
             <div className="flex flex-col items-center mb-10">
-              <img src="https://i.pravatar.cc/150?img=11" alt="Provider" className="w-20 h-20 rounded-full mb-4 border-2 border-zinc-100" />
-              <h3 className="font-bold text-zinc-900 text-xl">DevMasterPro</h3>
-              <div className="text-sm font-medium text-zinc-500 mb-6">Senior React Developer for Dashboard Rebuild</div>
-              
+              <img src="https://i.pravatar.cc/150?img=11" alt={resolvedRevieweeName || 'Reviewee'} className="w-20 h-20 rounded-full mb-4 border-2 border-zinc-100" />
+              <h3 className="font-bold text-zinc-900 text-xl">{resolvedRevieweeName || 'Reviewee'}</h3>
+              <div className="text-sm font-medium text-zinc-500 mb-6">Please share your honest feedback on their performance.</div>
+
               <div className="flex gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -105,12 +165,12 @@ const RatingReview = () => {
                     onMouseLeave={() => setHoverRating(0)}
                     className="p-1 transition-transform hover:scale-110"
                   >
-                    <Star 
+                    <Star
                       className={`w-12 h-12 ${
-                        star <= (hoverRating || rating) 
-                          ? 'text-amber-400 fill-amber-400 drop-shadow-sm' 
+                        star <= (hoverRating || rating)
+                          ? 'text-amber-400 fill-amber-400 drop-shadow-sm'
                           : 'text-zinc-200'
-                      } transition-colors`} 
+                      } transition-colors`}
                     />
                   </button>
                 ))}
@@ -126,7 +186,7 @@ const RatingReview = () => {
 
             <div className="mb-8">
               <label className="block text-sm font-bold text-zinc-700 mb-2">Write a public review</label>
-              <textarea 
+              <textarea
                 rows="5"
                 required
                 value={review}
@@ -145,22 +205,24 @@ const RatingReview = () => {
             </div>
 
             <div className="flex justify-end gap-4">
-              <button 
-                type="button" 
-                onClick={() => navigate('/find-work/my-posted-work')} 
+              <button
+                type="button"
+                onClick={() => navigate('/find-work/my-posted-work')}
                 className="px-6 py-3 bg-white border border-zinc-200 hover:bg-surface text-zinc-700 font-bold rounded-xl transition-colors"
               >
                 Skip for now
               </button>
-              <button 
-                type="submit" 
-                disabled={rating === 0 || createReview.isPending}
-                className={`px-8 py-3 font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 ${rating > 0 ? 'bg-[#2bb75c] hover:bg-[#1d8d38] text-white' : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'}`}
+              <button
+                type="submit"
+                disabled={rating === 0 || createReview.isPending || loadingMeta}
+                className={`px-8 py-3 font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 ${rating > 0 && !loadingMeta ? 'bg-[#2bb75c] hover:bg-[#1d8d38] text-white' : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'}`}
               >
                 {createReview.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" /> Submitting...
                   </>
+                ) : loadingMeta ? (
+                  'Preparing review...'
                 ) : (
                   'Submit Review'
                 )}

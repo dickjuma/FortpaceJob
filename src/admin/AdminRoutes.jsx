@@ -72,23 +72,6 @@ const marketplaceJobActions = [
   },
 ];
 
-const marketplaceGigActions = [
-  {
-    label: "Approve",
-    endpoint: (row) => `/marketplace/gigs/${row.id || row._id}/approve`,
-    successMessage: "Gig approved.",
-    confirmMessage: "Approve this gig listing?",
-  },
-  {
-    label: "Remove",
-    endpoint: (row) => `/marketplace/gigs/${row.id || row._id}/remove`,
-    variant: "danger",
-    requireReason: true,
-    successMessage: "Gig removed.",
-    confirmMessage: "Remove this gig listing from the marketplace?",
-  },
-];
-
 const marketplaceCategoryActions = [
   {
     label: "Delete",

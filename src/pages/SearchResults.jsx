@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Building,
   CheckCircle2,
@@ -16,15 +16,9 @@ import { Link, useSearchParams } from 'react-router-dom';
 import FilterSidebar from '../components/marketplace/FilterSidebar';
 import FreelancerCard from '../components/marketplace/FreelancerCard';
 import OnsiteWorkerCard from '../components/marketplace/OnsiteWorkerCard';
-import {
-  formatCompactNumber,
-  getFeaturedTalent,
-  getMarketplaceTalent,
-  getRecentMarketplaceActivity,
-  getTalentCategories,
-  subscribeToTalentData,
-  syncTalentWithBackend,
-} from './find-talent/talentMarketplaceData';
+import { useTalentSearch } from '../common/hooks/useTalentSearch';
+import { useTalentCategories, useFeaturedTalent } from '../common/services/talentHooks';
+import { formatCompactNumber, getRecentMarketplaceActivity } from './find-talent/talentMarketplaceData';
 
 function toggleListValue(values, nextValue) {
   return values.includes(nextValue) ? values.filter((value) => value !== nextValue) : [...values, nextValue];
@@ -33,13 +27,7 @@ function toggleListValue(values, nextValue) {
 const SearchResults = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState('grid');
-  const [, setDataVersion] = useState(0);
 
-  React.useEffect(() => {
-    const unsubscribe = subscribeToTalentData(() => setDataVersion((version) => version + 1));
-    syncTalentWithBackend();
-    return unsubscribe;
-  }, []);
   const query = searchParams.get('q') || '';
   const location = searchParams.get('location') || '';
   const mode = searchParams.get('mode') || 'all';
@@ -47,9 +35,12 @@ const SearchResults = () => {
   const rate = searchParams.get('rate') || 'all';
   const provider = searchParams.get('provider') || 'all';
   const availability = searchParams.get('availability') || 'all';
-  const categoryIds = searchParams.getAll('category');
-  const badgeIds = searchParams.getAll('badge');
-  const locationIds = searchParams.getAll('locationFilter');
+  const categoryIds = Array.from(new Set(searchParams.getAll('category')));
+  const badgeIds = Array.from(new Set(searchParams.getAll('badge')));
+  const locationIds = Array.from(new Set(searchParams.getAll('locationFilter')));
+  const categoryIdsKey = categoryIds.join(',');
+  const badgeIdsKey = badgeIds.join(',');
+  const locationIdsKey = locationIds.join(',');
 
   const locationMap = {
     us: 'United States',
@@ -57,20 +48,30 @@ const SearchResults = () => {
     eu: 'Europe',
     africa: 'Africa',
   };
-
   const resolvedLocation = location || (locationIds.length ? locationMap[locationIds[0]] || '' : '');
-  const talent = getMarketplaceTalent({
-    query,
-    mode,
-    categoryIds,
-    badges: badgeIds,
-    rate,
-    availability,
-    provider,
-    location: resolvedLocation,
-    sortBy,
+
+  const { talents = [], loading, error, search } = useTalentSearch();
+  const { data: categories = [] } = useTalentCategories(mode === 'onsite' ? 'onsite' : mode === 'online' ? 'online' : 'all');
+  const { data: featuredTalent = [] } = useFeaturedTalent(2, {
+    mode: mode !== 'all' ? mode : undefined,
   });
-  const featuredTalent = getFeaturedTalent();
+
+  useEffect(() => {
+    search({
+      q: query || undefined,
+      location: resolvedLocation || undefined,
+      mode: mode !== 'all' ? mode : undefined,
+      category: categoryIds.length ? categoryIds : undefined,
+      badge: badgeIds.length ? badgeIds : undefined,
+      locationFilter: locationIds.length ? locationIds : undefined,
+      rate: rate !== 'all' ? rate : undefined,
+      availability: availability !== 'all' ? availability : undefined,
+      provider: provider !== 'all' ? provider : undefined,
+      sort: sortBy !== 'recommended' ? sortBy : undefined,
+    });
+  }, [query, resolvedLocation, mode, categoryIdsKey, badgeIdsKey, locationIdsKey, rate, availability, provider, sortBy, search]);
+
+  const talent = talents;
   const activity = getRecentMarketplaceActivity();
 
   const setParamState = (next) => {
@@ -99,8 +100,6 @@ const SearchResults = () => {
     params.set('mode', nextMode);
     setSearchParams(params);
   };
-
-  const categories = getTalentCategories(mode === 'onsite' ? 'onsite' : mode === 'online' ? 'online' : 'all');
 
   return (
     <>
@@ -205,7 +204,10 @@ const SearchResults = () => {
               }
               type="button"
             >
-              {category.name} <span className="text-zinc-400 text-xs font-normal">{formatCompactNumber(getMarketplaceTalent({ categoryIds: [category.id], mode: category.kind }).length)}</span>
+              {category.name}
+              <span className="text-zinc-400 text-xs font-normal">
+                {formatCompactNumber(category.stats?.talentCount || 0)}
+              </span>
             </button>
           ))}
         </div>
@@ -224,7 +226,7 @@ const SearchResults = () => {
                 categories={categories.map((category) => ({
                   id: category.id,
                   label: category.name,
-                  count: getMarketplaceTalent({ categoryIds: [category.id], mode: category.kind }).length,
+                  count: category.stats?.talentCount || 0,
                 }))}
                 onAvailabilityChange={(value) => setParamState((params) => params.set('availability', value))}
                 onClear={() => {
@@ -373,7 +375,20 @@ const SearchResults = () => {
               </div>
             ) : null}
 
-            {talent.length === 0 ? (
+            {loading && talent.length === 0 ? (
+              <div className="bg-white border border-dashed border-zinc-300 rounded-2xl p-10 text-center text-zinc-600 mb-12">
+                Loading talent results…
+              </div>
+            ) : null}
+
+            {!loading && error ? (
+              <div className="bg-rose-50 border border-rose-200 rounded-2xl p-10 text-center text-rose-700 mb-12">
+                <div className="font-semibold mb-2">Unable to load search results</div>
+                <div className="text-sm">{error}</div>
+              </div>
+            ) : null}
+
+            {!loading && !error && talent.length === 0 ? (
               <div className="bg-white border border-dashed border-zinc-300 rounded-2xl p-10 text-center text-zinc-600 mb-12">
                 No talent matched those filters yet. Try broadening the location, clearing a badge, or switching between remote and onsite modes.
               </div>

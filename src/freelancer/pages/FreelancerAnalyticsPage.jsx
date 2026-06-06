@@ -1,14 +1,12 @@
+// src/pages/freelancer/FreelancerAnalyticsPage.jsx
 import React, { useState } from 'react';
-import { 
-  TrendingUp, Eye, MousePointer, DollarSign, Download, Filter, Zap, 
-  ArrowUpRight, ArrowDownRight, Target, Share2, Award, Calendar, BarChart2, Star
+import { motion } from 'framer-motion';
+import {
+  TrendingUp, Eye, MousePointer, DollarSign, Download, Filter, Zap,
+  ArrowUpRight, ArrowDownRight, Target, Share2, Award, Calendar, BarChart2, Star, Check
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import toast, { Toaster } from 'react-hot-toast';
 
-// --- Premium custom SVG Progress Ring ---
+// Custom Progress Ring Component
 const CustomProgressRing = ({ percent, colorClass }) => {
   const radius = 30;
   const stroke = 6;
@@ -18,70 +16,116 @@ const CustomProgressRing = ({ percent, colorClass }) => {
   return (
     <div className="relative flex items-center justify-center w-16 h-16 shrink-0">
       <svg className="w-full h-full transform -rotate-90">
-        <circle 
-          className="text-light-gray" 
-          strokeWidth={stroke} 
-          stroke="currentColor" 
-          fill="transparent" 
-          r={radius} 
-          cx="32" 
-          cy="32" 
+        <circle
+          className="text-border"
+          strokeWidth={stroke}
+          stroke="currentColor"
+          fill="transparent"
+          r={radius}
+          cx="32"
+          cy="32"
         />
-        <circle 
-          className={colorClass} 
-          strokeWidth={stroke} 
-          strokeDasharray={circumference} 
-          strokeDashoffset={offset} 
-          strokeLinecap="round" 
-          stroke="currentColor" 
-          fill="transparent" 
-          r={radius} 
-          cx="32" 
-          cy="32" 
+        <circle
+          className={colorClass}
+          strokeWidth={stroke}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          stroke="currentColor"
+          fill="transparent"
+          r={radius}
+          cx="32"
+          cy="32"
         />
       </svg>
-      <span className="absolute text-[10px] font-black text-text-primary">{percent}%</span>
+      <span className="absolute text-xs font-mono font-semibold text-ink-primary">{percent}%</span>
     </div>
   );
 };
 
 export default function FreelancerAnalyticsPage() {
   const [datePeriod, setDatePeriod] = useState('Last 30 Days');
+  const [showSuccess, setShowSuccess] = useState(null);
 
   const stats = [
-    { title: 'Search Impressions', value: '18,294', change: '14.2%', isPositive: true, icon: Eye },
-    { title: 'Profile Clicks', value: '1,485', change: '8.7%', isPositive: true, icon: MousePointer },
-    { title: 'Proposal Success', value: '42.8%', change: '3.1%', isPositive: true, icon: Target },
-    { title: 'Job Success Score', value: '99.4%', change: '0.2%', isPositive: true, icon: Award }
+    { title: 'Search impressions', value: '18,294', change: '+14.2%', isPositive: true, icon: Eye },
+    { title: 'Profile clicks', value: '1,485', change: '+8.7%', isPositive: true, icon: MousePointer },
+    { title: 'Proposal success', value: '42.8%', change: '+3.1%', isPositive: true, icon: Target },
+    { title: 'Job success score', value: '99.4%', change: '+0.2%', isPositive: true, icon: Award }
   ];
 
   const handleExport = () => {
-    toast.success('Analytics report dispatched successfully! 📊', { icon: '📈' });
+    setShowSuccess({ message: 'Analytics report exported' });
+    setTimeout(() => setShowSuccess(null), 2000);
   };
 
+  const StatCard = ({ title, value, change, isPositive, icon: Icon, delay }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay, duration: 0.35 }}
+      whileHover={{ y: -2 }}
+      className="bg-white border border-border rounded-2xl p-5 shadow-sm relative overflow-hidden group"
+    >
+      <div className="flex justify-between items-center mb-3">
+        <div className="p-2 bg-surface-muted rounded-xl group-hover:bg-accent-light transition-all">
+          <Icon className="w-5 h-5 text-accent DEFAULT" />
+        </div>
+        <span className={`inline-flex items-center gap-0.5 text-xs font-mono font-medium px-2 py-0.5 rounded-full ${
+          isPositive ? 'bg-accent-light text-accent-dark' : 'bg-danger-light text-danger'
+        }`}>
+          {isPositive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+          {change}
+        </span>
+      </div>
+      <p className="text-xs font-body font-medium text-ink-secondary uppercase tracking-wide">
+        {title}
+      </p>
+      <p className="font-mono font-semibold text-2xl text-ink-primary mt-1">
+        {value}
+      </p>
+    </motion.div>
+  );
+
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans animate-in slide-in-from-bottom-4 duration-500 relative">
-      <Toaster position="top-right" />
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Success Toast */}
+      {showSuccess && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+        >
+          <Check className="w-4 h-4" />
+          {showSuccess.message}
+        </motion.div>
+      )}
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6 mb-8">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-success/20 text-success rounded-xl border border-success/20 shadow-sm">
-              <BarChart2 className="w-6 h-6 animate-pulse" />
+            <div className="p-2.5 bg-accent-light rounded-xl">
+              <BarChart2 className="w-6 h-6 text-accent DEFAULT" />
             </div>
-            <h1 className="text-3xl font-black text-text-primary tracking-tight">Business Intelligence Dashboard</h1>
+            <h1 className="font-display font-bold text-4xl text-brand-900">Business intelligence</h1>
           </div>
-          <p className="text-sm text-text-secondary mt-1 font-semibold">
-            Track user visibility metrics, conversion indexes, geographical engagement, and task velocity indicators.
+          <p className="text-sm text-ink-secondary font-body mt-1">
+            Track visibility metrics, conversion indexes, and performance indicators
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <select 
+          <select
             value={datePeriod}
             onChange={(e) => setDatePeriod(e.target.value)}
-            className="text-xs font-bold text-text-primary border border-border bg-white rounded-xl px-3 py-2 outline-none shadow-sm cursor-pointer"
+            className="h-9 px-3 rounded-lg border border-border bg-white text-ink-primary text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 cursor-pointer"
           >
             <option>Last 7 Days</option>
             <option>Last 30 Days</option>
@@ -89,113 +133,149 @@ export default function FreelancerAnalyticsPage() {
             <option>This Year</option>
           </select>
 
-          <Button 
+          <button
             onClick={handleExport}
-            variant="outline" 
-            className="rounded-xl font-bold text-xs shadow-sm bg-white" 
-            icon={<Download size={14} />}
+            className="h-9 px-4 rounded-lg border border-border bg-white text-ink-primary hover:bg-surface-muted font-body text-sm font-medium transition-colors inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-brand-900"
           >
-            Export CSV Dataset
-          </Button>
+            <Download className="w-4 h-4" />
+            Export CSV
+          </button>
         </div>
       </div>
 
-      {/* KPIs Summary Stats Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((st, idx) => {
-          const Icon = st.icon;
-          return (
-            <Card key={idx} className="p-6 border border-border bg-white shadow-sm relative overflow-hidden group hover:border-success/30 transition-all">
-              <div className="flex justify-between items-center mb-4">
-                <div className="p-2 bg-light-gray text-text-secondary rounded-xl group-hover:scale-105 transition-all">
-                  <Icon className="w-5 h-5 text-success" />
-                </div>
-                <span className={cn(
-                  "text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md flex items-center gap-0.5",
-                  st.isPositive ? "bg-success/10 text-success" : "bg-[#e63946]/10 text-[#e63946]"
-                )}>
-                  {st.isPositive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-                  {st.change}
-                </span>
-              </div>
-              <p className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">{st.title}</p>
-              <h3 className="text-3xl font-black text-text-primary mt-1">{st.value}</h3>
-            </Card>
-          );
-        })}
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        {stats.map((stat, idx) => (
+          <StatCard
+            key={stat.title}
+            title={stat.title}
+            value={stat.value}
+            change={stat.change}
+            isPositive={stat.isPositive}
+            icon={stat.icon}
+            delay={idx * 0.05}
+          />
+        ))}
       </div>
 
-      {/* Advanced performance ring dashboard metrics */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        
-        {/* Core Conversion Rings */}
-        <Card className="p-6 border border-border bg-white shadow-sm space-y-6">
-          <h3 className="font-black text-text-primary text-sm uppercase tracking-wider border-b border-border pb-3">
-            Conversion Indexes
+      {/* Advanced Metrics Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        {/* Conversion Rings */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.35 }}
+          className="bg-white border border-border rounded-2xl p-6 shadow-sm"
+        >
+          <h3 className="font-display font-semibold text-sm text-brand-900 uppercase tracking-wide border-b border-border pb-3 mb-4">
+            Conversion indexes
           </h3>
           <div className="space-y-4">
-            <div className="flex items-center justify-between gap-4 p-3 bg-light-gray/40 rounded-2xl">
-              <div className="flex-1">
-                <h4 className="text-xs font-bold text-text-primary">Response Index Rating</h4>
-                <p className="text-[9px] font-semibold text-text-secondary mt-0.5">Average time replies within 1 hour limit</p>
-              </div>
-              <CustomProgressRing percent={96} colorClass="text-success" />
-            </div>
-
-            <div className="flex items-center justify-between gap-4 p-3 bg-light-gray/40 rounded-2xl">
-              <div className="flex-1">
-                <h4 className="text-xs font-bold text-text-primary">Deliver On-time Index</h4>
-                <p className="text-[9px] font-semibold text-text-secondary mt-0.5">Projects finalized before client deadline</p>
-              </div>
-              <CustomProgressRing percent={98} colorClass="text-success" />
-            </div>
-
-            <div className="flex items-center justify-between gap-4 p-3 bg-light-gray/40 rounded-2xl">
-              <div className="flex-1">
-                <h4 className="text-xs font-bold text-text-primary">Engagement Conversion</h4>
-                <p className="text-[9px] font-semibold text-text-secondary mt-0.5">Ratio of clicks that trigger project milestones</p>
-              </div>
-              <CustomProgressRing percent={84} colorClass="text-warning" />
-            </div>
-          </div>
-        </Card>
-
-        {/* Client Insights card heatmap mock */}
-        <Card className="p-6 border border-border bg-white shadow-sm lg:col-span-2 space-y-4">
-          <h3 className="font-black text-text-primary text-sm uppercase tracking-wider border-b border-border pb-3">
-            Client Traffic Heatmap By Peak Availability
-          </h3>
-          <p className="text-xs text-text-secondary font-semibold">
-            Evaluate time periods when top procurement clients view your active service listings.
-          </p>
-          
-          <div className="grid grid-cols-7 gap-2.5 pt-2 text-center text-[9px] font-black text-text-secondary">
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
-              <span key={day}>{day}</span>
-            ))}
-            
-            {/* Heatmap mock pixels */}
             {[
-              'bg-success/10', 'bg-success/40', 'bg-success/20', 'bg-success/80', 'bg-success/90', 'bg-success/10', 'bg-success/20',
-              'bg-success/40', 'bg-success/90', 'bg-success/60', 'bg-success/80', 'bg-success/90', 'bg-success/15', 'bg-success/10',
-              'bg-success/20', 'bg-success/80', 'bg-success/90', 'bg-success/90', 'bg-success/90', 'bg-success/20', 'bg-success/10'
-            ].map((cl, i) => (
-              <div key={i} className={cn("h-7 rounded-lg transition-transform hover:scale-110 cursor-pointer shadow-inner", cl)}></div>
+              { label: 'Response index', description: 'Average reply within 1 hour', percent: 96, color: 'text-accent DEFAULT' },
+              { label: 'On-time delivery', description: 'Projects completed before deadline', percent: 98, color: 'text-accent DEFAULT' },
+              { label: 'Engagement conversion', description: 'Clicks to project milestones', percent: 84, color: 'text-warn' }
+            ].map((item, idx) => (
+              <div key={idx} className="flex items-center justify-between gap-4 p-3 bg-surface-soft rounded-xl">
+                <div className="flex-1">
+                  <h4 className="text-sm font-body font-semibold text-ink-primary">{item.label}</h4>
+                  <p className="text-xs font-body text-ink-tertiary mt-0.5">{item.description}</p>
+                </div>
+                <CustomProgressRing percent={item.percent} colorClass={item.color} />
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Client Traffic Heatmap */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.35 }}
+          className="bg-white border border-border rounded-2xl p-6 shadow-sm lg:col-span-2"
+        >
+          <h3 className="font-display font-semibold text-sm text-brand-900 uppercase tracking-wide border-b border-border pb-3 mb-4">
+            Client traffic by peak hours
+          </h3>
+
+          <div className="grid grid-cols-7 gap-2 mb-3 text-center">
+            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
+              <div key={day} className="text-xs font-body font-medium text-ink-tertiary">
+                {day}
+              </div>
             ))}
           </div>
 
-          <div className="flex justify-between items-center text-[8px] font-bold uppercase tracking-wider pt-3 border-t border-border">
-            <span>Low Engagement</span>
-            <div className="flex gap-1">
-              <div className="w-2.5 h-2.5 bg-success/10 rounded"></div>
-              <div className="w-2.5 h-2.5 bg-success/40 rounded"></div>
-              <div className="w-2.5 h-2.5 bg-success/80 rounded"></div>
-              <div className="w-2.5 h-2.5 bg-success/90 rounded"></div>
-            </div>
-            <span>High Engagement</span>
+          <div className="grid grid-cols-7 gap-2">
+            {[
+              { intensity: 20, color: 'bg-accent-light/20' },
+              { intensity: 40, color: 'bg-accent-light/40' },
+              { intensity: 30, color: 'bg-accent-light/30' },
+              { intensity: 80, color: 'bg-accent-light/80' },
+              { intensity: 95, color: 'bg-accent DEFAULT' },
+              { intensity: 15, color: 'bg-accent-light/15' },
+              { intensity: 25, color: 'bg-accent-light/25' },
+              { intensity: 45, color: 'bg-accent-light/45' },
+              { intensity: 85, color: 'bg-accent-light/85' },
+              { intensity: 70, color: 'bg-accent-light/70' },
+              { intensity: 90, color: 'bg-accent-light/90' },
+              { intensity: 20, color: 'bg-accent-light/20' },
+              { intensity: 10, color: 'bg-accent-light/10' },
+              { intensity: 35, color: 'bg-accent-light/35' },
+              { intensity: 75, color: 'bg-accent-light/75' },
+              { intensity: 92, color: 'bg-accent DEFAULT' },
+              { intensity: 88, color: 'bg-accent-light/88' },
+              { intensity: 50, color: 'bg-accent-light/50' },
+              { intensity: 30, color: 'bg-accent-light/30' },
+              { intensity: 15, color: 'bg-accent-light/15' },
+              { intensity: 12, color: 'bg-accent-light/12' }
+            ].map((cell, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.05, zIndex: 10 }}
+                className={`h-10 rounded-lg ${cell.color} transition-all cursor-pointer shadow-sm`}
+                title={`Engagement: ${cell.intensity}%`}
+              />
+            ))}
           </div>
-        </Card>
+
+          <div className="flex justify-between items-center mt-4 pt-3 border-t border-border">
+            <span className="text-xs font-body text-ink-tertiary">Low engagement</span>
+            <div className="flex gap-1">
+              <div className="w-3 h-3 rounded bg-accent-light/20"></div>
+              <div className="w-3 h-3 rounded bg-accent-light/40"></div>
+              <div className="w-3 h-3 rounded bg-accent-light/70"></div>
+              <div className="w-3 h-3 rounded bg-accent DEFAULT"></div>
+            </div>
+            <span className="text-xs font-body text-ink-tertiary">High engagement</span>
+          </div>
+        </motion.div>
       </div>
-    </div>
+
+      {/* Additional Insights Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.35 }}
+        className="mt-6 bg-gradient-to-br from-brand-900 to-brand-800 rounded-2xl p-6 text-white shadow-sm"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Zap className="w-5 h-5 text-accent-light" />
+              <h3 className="font-display font-semibold text-lg">Performance insight</h3>
+            </div>
+            <p className="text-white/80 text-sm font-body max-w-md">
+              Your profile views are up 24% this week. Consider updating your portfolio to maintain momentum.
+            </p>
+          </div>
+          <button className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-body text-sm font-medium transition-colors inline-flex items-center gap-2">
+            <TrendingUp className="w-4 h-4" />
+            View detailed report
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }

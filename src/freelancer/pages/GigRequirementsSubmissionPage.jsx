@@ -1,25 +1,17 @@
+// src/pages/client/GigRequirementsSubmissionPage.jsx
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  FileText, UploadCloud, Link as LinkIcon, CheckCircle2, 
-  Clock, AlertCircle, Save, Send, ShieldCheck
+import { useParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  FileText, UploadCloud, Link as LinkIcon, CheckCircle2,
+  Clock, AlertCircle, Save, Send, ShieldCheck, Check
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
-import { validateJobDescription } from '../../common/utils/validation';
-import notify from '../../common/utils/notify';
-
-// Mock Data
-const ORDER = {
-  id: '#ORD-9821',
-  title: 'I will build a responsive modern React JS web application',
-  seller: {
-    name: 'Alex Rivera',
-    avatar: 'https://i.pravatar.cc/150?u=alex'
-  },
-  deliveryDays: 7
-};
+import { useOrderById, useUpdateOrderStatus } from '../services/freelancerHooks';
 
 export default function GigRequirementsSubmissionPage() {
+  const { orderId } = useParams();
+  const { data: orderData, isLoading: loadingOrder, error: orderError } = useOrderById(orderId);
+  const updateOrderStatus = useUpdateOrderStatus();
   const [formData, setFormData] = useState({
     description: '',
     industry: '',
@@ -28,37 +20,89 @@ export default function GigRequirementsSubmissionPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(null);
+
+  const ORDER = orderData?.order ?? orderData?.data ?? orderData;
+
+  if (loadingOrder) {
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-accent DEFAULT border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (orderError) {
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center text-center">
+        <p className="text-ink-secondary">Unable to load order requirements.</p>
+      </div>
+    );
+  }
+
+  if (!ORDER) {
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center text-center">
+        <p className="text-ink-secondary">Order not found. Please check the link or try again later.</p>
+      </div>
+    );
+  }
+
+  const handleFileUpload = (e) => {
+    const files = Array.from(e.target.files);
+    setFormData(prev => ({ ...prev, files: [...prev.files, ...files] }));
+    setShowSuccess({ message: `${files.length} file(s) added` });
+    setTimeout(() => setShowSuccess(null), 2000);
+  };
+
+  const handleSaveDraft = () => {
+    setShowSuccess({ message: 'Draft saved successfully' });
+    setTimeout(() => setShowSuccess(null), 2000);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const descriptionErr = validateJobDescription(formData.description, 30);
-    if (descriptionErr) {
-      notify.error(descriptionErr);
+    if (!formData.description.trim()) {
+      setShowSuccess({ message: 'Please describe your project', isError: true });
+      setTimeout(() => setShowSuccess(null), 2000);
       return;
     }
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    }, 2000);
+    updateOrderStatus.mutate(
+      { orderId, data: { status: 'ACTIVE' } },
+      {
+        onSuccess: () => {
+          setIsSubmitting(false);
+          setIsSubmitted(true);
+          setShowSuccess({ message: 'Requirements submitted. Order is now active.' });
+          setTimeout(() => setShowSuccess(null), 2500);
+        },
+        onError: () => {
+          setIsSubmitting(false);
+          setShowSuccess({ message: 'Failed to submit requirements. Please try again.', isError: true });
+          setTimeout(() => setShowSuccess(null), 2500);
+        }
+      }
+    );
   };
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-surface dark:bg-surface-dark flex flex-col items-center justify-center p-4 font-sans">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="bg-white dark:bg-surface-dark p-8 sm:p-12 rounded-3xl shadow-xl border border-zinc-200 dark:border-zinc-800 text-center max-w-md w-full"
+      <div className="min-h-screen bg-surface-soft flex flex-col items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="bg-white rounded-2xl shadow-lg p-8 text-center max-w-md w-full border border-border"
         >
-          <div className="w-20 h-20 bg-[#2bb75c]/10 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] rounded-full flex items-center justify-center mx-auto mb-6">
-            <Clock className="w-10 h-10" />
+          <div className="w-20 h-20 bg-accent-light rounded-full flex items-center justify-center mx-auto mb-5">
+            <Clock className="w-10 h-10 text-accent DEFAULT" />
           </div>
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">Order Started!</h2>
-          <p className="text-zinc-500 font-medium mb-8">
-            The seller has received your requirements. The {ORDER.deliveryDays}-day delivery countdown has officially begun.
+          <h2 className="font-display font-bold text-2xl text-brand-900 mb-2">Order started!</h2>
+          <p className="text-ink-secondary font-body mb-6">
+            The seller has received your requirements. The {ORDER.deliveryDays}-day delivery countdown has begun.
           </p>
-          <button className="w-full py-3.5 bg-[#2bb75c] text-white font-bold rounded-xl shadow-sm hover:bg-[#1d8d38] transition-colors">
-            Go to Order Track
+          <button className="w-full py-2.5 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors">
+            Go to order track
           </button>
         </motion.div>
       </div>
@@ -66,151 +110,196 @@ export default function GigRequirementsSubmissionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans py-12 px-4 sm:px-6">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="min-h-screen bg-surface-soft py-12 px-4 sm:px-6"
+    >
+      {/* Success/Error Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className={`fixed top-20 right-4 z-50 px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2 ${
+              showSuccess.isError ? 'bg-danger text-white' : 'bg-accent-dark text-white'
+            }`}
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="max-w-4xl mx-auto">
-        
+
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-2 text-sm font-bold text-[#2bb75c]">
-            <span>Order {ORDER.id}</span>
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-sm font-mono font-semibold text-accent DEFAULT">Order {ORDER.id}</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2">Submit Requirements</h1>
-          <p className="text-zinc-500 font-medium">Please provide the details below so {ORDER.seller.name} can start working on your order.</p>
+          <h1 className="font-display font-bold text-3xl text-brand-900 mb-2">Submit requirements</h1>
+          <p className="text-ink-secondary font-body">
+            Please provide the details below so {ORDER.seller.name} can start working on your order.
+          </p>
         </div>
 
         {/* Info Banner */}
-        <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-2xl p-4 mb-8 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+        <div className="bg-warn-light border border-warn DEFAULT rounded-xl p-4 mb-6 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-warn shrink-0 mt-0.5" />
           <div>
-            <h4 className="text-sm font-bold text-amber-800 dark:text-amber-400 mb-1">Order timer is paused</h4>
-            <p className="text-xs text-amber-700 dark:text-amber-300/80 font-medium leading-relaxed">
-              The delivery countdown will not begin until you submit all required information. If you're not ready, you can save a draft and come back later.
+            <h4 className="text-sm font-body font-semibold text-warn mb-1">Order timer is paused</h4>
+            <p className="text-xs text-warn/80 leading-relaxed">
+              The delivery countdown will not begin until you submit all required information.
             </p>
           </div>
         </div>
 
         {/* Form Container */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-xl overflow-hidden">
-          
+        <div className="bg-white border border-border rounded-2xl shadow-lg overflow-hidden">
+
           <form onSubmit={handleSubmit}>
-            
-            {/* Form Fields */}
-            <div className="p-6 sm:p-10 space-y-10">
-              
-              {/* Question 1: Text Area */}
+            <div className="p-6 sm:p-8 space-y-8">
+
+              {/* Question 1: Description */}
               <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-[#2bb75c]/10 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] flex items-center justify-center font-bold text-sm shrink-0">1</div>
-                  <label className="text-lg font-bold text-zinc-900 dark:text-white leading-snug">
-                    Please describe your project in detail. What are the main goals and features?
-                    <span className="text-rose-500 ml-1">*</span>
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-7 h-7 rounded-full bg-accent-light text-accent DEFAULT flex items-center justify-center font-mono font-bold text-sm shrink-0 mt-0.5">1</div>
+                  <label className="font-body font-semibold text-base text-ink-primary">
+                    Please describe your project in detail.
+                    <span className="text-danger ml-1">*</span>
                   </label>
                 </div>
-                <div className="pl-11">
-                  <textarea 
+                <div className="pl-10">
+                  <textarea
                     required
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
                     placeholder="Enter project details..."
-                    className="w-full min-h-[150px] bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4 text-sm font-medium text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c] transition-all resize-none placeholder:text-zinc-400"
+                    className="w-full min-h-[140px] bg-white border border-border rounded-xl p-4 text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900 resize-none"
                   />
-                  <div className="flex justify-end mt-2">
-                    <span className="text-xs font-semibold text-zinc-400">{formData.description.length} / 2500 chars</span>
+                  <div className="flex justify-end mt-1">
+                    <span className="text-xs font-mono text-ink-tertiary">{formData.description.length} characters</span>
                   </div>
                 </div>
               </div>
 
-              {/* Question 2: Select/Input */}
+              {/* Question 2: Industry */}
               <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-[#2bb75c]/10 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] flex items-center justify-center font-bold text-sm shrink-0">2</div>
-                  <label className="text-lg font-bold text-zinc-900 dark:text-white leading-snug">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-7 h-7 rounded-full bg-accent-light text-accent DEFAULT flex items-center justify-center font-mono font-bold text-sm shrink-0 mt-0.5">2</div>
+                  <label className="font-body font-semibold text-base text-ink-primary">
                     What industry is this project for?
-                    <span className="text-zinc-400 text-sm font-normal ml-2">(Optional)</span>
+                    <span className="text-ink-tertiary text-sm font-normal ml-2">(Optional)</span>
                   </label>
                 </div>
-                <div className="pl-11">
-                  <input 
+                <div className="pl-10">
+                  <input
                     type="text"
                     value={formData.industry}
                     onChange={(e) => setFormData({...formData, industry: e.target.value})}
-                    placeholder="e.g. Healthcare, E-commerce, Finance..."
-                    className="w-full bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4 text-sm font-medium text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c] transition-all placeholder:text-zinc-400"
+                    placeholder="e.g., Healthcare, E-commerce, Finance..."
+                    className="w-full h-11 px-4 bg-white border border-border rounded-xl text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
                   />
                 </div>
               </div>
 
               {/* Question 3: File Upload */}
               <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-[#2bb75c]/10 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] flex items-center justify-center font-bold text-sm shrink-0">3</div>
-                  <label className="text-lg font-bold text-zinc-900 dark:text-white leading-snug">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-7 h-7 rounded-full bg-accent-light text-accent DEFAULT flex items-center justify-center font-mono font-bold text-sm shrink-0 mt-0.5">3</div>
+                  <label className="font-body font-semibold text-base text-ink-primary">
                     Please attach your brand guidelines and logo files.
-                    <span className="text-rose-500 ml-1">*</span>
+                    <span className="text-danger ml-1">*</span>
                   </label>
                 </div>
-                <div className="pl-11">
-                  <div className="w-full border-2 border-dashed border-zinc-300 dark:border-zinc-700 bg-surface dark:bg-zinc-800/30 rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer hover:border-[#2bb75c]/20 hover:bg-[#2bb75c]/5 dark:hover:bg-[#2bb75c]/5 transition-all text-center">
-                    <UploadCloud className="w-10 h-10 text-zinc-400 mb-3" />
-                    <h4 className="text-sm font-bold text-zinc-900 dark:text-white mb-1">Click to upload or drag & drop</h4>
-                    <p className="text-xs font-medium text-zinc-500">SVG, PNG, JPG or PDF (max. 50MB)</p>
-                  </div>
+                <div className="pl-10">
+                  <label className="w-full border-2 border-dashed border-border bg-surface-soft rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-accent DEFAULT hover:bg-accent-light transition-all text-center group">
+                    <input type="file" multiple className="hidden" onChange={handleFileUpload} />
+                    <UploadCloud className="w-10 h-10 text-ink-tertiary mb-2 group-hover:text-accent DEFAULT transition-colors" />
+                    <h4 className="text-sm font-body font-medium text-ink-primary mb-1 group-hover:text-accent DEFAULT transition-colors">
+                      Click to upload or drag & drop
+                    </h4>
+                    <p className="text-xs font-body text-ink-tertiary">SVG, PNG, JPG or PDF (max. 50MB)</p>
+                  </label>
+
+                  {formData.files.length > 0 && (
+                    <div className="mt-3 space-y-2">
+                      {formData.files.map((file, idx) => (
+                        <div key={idx} className="flex items-center gap-2 p-2 bg-surface-soft rounded-lg border border-border">
+                          <FileText className="w-4 h-4 text-accent DEFAULT" />
+                          <span className="text-sm font-body text-ink-primary">{file.name}</span>
+                          <span className="text-xs font-mono text-ink-tertiary ml-auto">
+                            {(file.size / 1024 / 1024).toFixed(2)} MB
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Question 4: URL Input */}
+              {/* Question 4: URL */}
               <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-[#2bb75c]/10 dark:bg-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c] flex items-center justify-center font-bold text-sm shrink-0">4</div>
-                  <label className="text-lg font-bold text-zinc-900 dark:text-white leading-snug">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-7 h-7 rounded-full bg-accent-light text-accent DEFAULT flex items-center justify-center font-mono font-bold text-sm shrink-0 mt-0.5">4</div>
+                  <label className="font-body font-semibold text-base text-ink-primary">
                     Do you have any inspiration websites?
-                    <span className="text-zinc-400 text-sm font-normal ml-2">(Optional)</span>
+                    <span className="text-ink-tertiary text-sm font-normal ml-2">(Optional)</span>
                   </label>
                 </div>
-                <div className="pl-11">
+                <div className="pl-10">
                   <div className="relative">
-                    <LinkIcon className="absolute left-4 top-1/2 -tranzinc-y-1/2 w-4 h-4 text-zinc-400" />
-                    <input 
+                    <LinkIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-ink-tertiary" />
+                    <input
                       type="url"
                       value={formData.url}
                       onChange={(e) => setFormData({...formData, url: e.target.value})}
                       placeholder="https://..."
-                      className="w-full bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl pl-11 pr-4 py-4 text-sm font-medium text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-[#2bb75c] transition-all placeholder:text-zinc-400"
+                      className="w-full h-11 pl-11 pr-4 bg-white border border-border rounded-xl text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
                     />
                   </div>
                 </div>
               </div>
-
             </div>
 
-            {/* Action Footer */}
-            <div className="bg-surface dark:bg-surface-dark/50 border-t border-zinc-200 dark:border-zinc-800 p-6 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2 text-xs font-bold text-zinc-500">
-                <ShieldCheck className="w-4 h-4 text-success" /> Information is securely shared with the seller.
+            {/* Footer */}
+            <div className="bg-surface-soft border-t border-border p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-2 text-xs font-body font-medium text-ink-tertiary">
+                <ShieldCheck className="w-4 h-4 text-accent DEFAULT" />
+                Information is securely shared with the seller
               </div>
               <div className="flex items-center gap-3 w-full sm:w-auto">
-                <button type="button" className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:bg-surface dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-sm font-bold rounded-xl transition-all">
-                  <Save className="w-4 h-4" /> Save Draft
+                <button
+                  type="button"
+                  onClick={handleSaveDraft}
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2 rounded-lg border border-border text-ink-primary hover:bg-surface-muted font-body font-medium text-sm transition-colors"
+                >
+                  <Save className="w-4 h-4" /> Save draft
                 </button>
-                <button 
-                  type="submit" 
-                  disabled={isSubmitting || !formData.description}
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-[#2bb75c] hover:bg-[#1d8d38] text-white text-sm font-bold rounded-xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                <button
+                  type="submit"
+                  disabled={isSubmitting || !formData.description.trim()}
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-2 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
-                    <>Submitting <span className="animate-pulse">...</span></>
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Submitting...
+                    </>
                   ) : (
-                    <>Start Order <Send className="w-4 h-4" /></>
+                    <>
+                      Start order <Send className="w-4 h-4" />
+                    </>
                   )}
                 </button>
               </div>
             </div>
-
           </form>
         </div>
-
       </div>
-    </div>
+    </motion.div>
   );
 }
-

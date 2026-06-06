@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Search, SlidersHorizontal, RotateCcw, ChevronDown, SortAsc, SortDesc, X, Loader2 } from 'lucide-react';
-import { cn } from '../../../utils/cn';
 import useUserManagementStore from '../../../store/userManagementStore';
 import { USER_STATUSES, KYC_STATUSES, USER_GROUPS } from '../../../config/users/userRoleConfig';
 
@@ -40,7 +39,7 @@ const UserTableFilters = ({ section = 'all' }) => {
       setIsDebouncing(false);
     }, 400);
     return () => clearTimeout(timer);
-  }, [localSearch]);
+  }, [localSearch, section, setFilter]);
 
   const activeCount = Object.entries(currentFilters).filter(([key, val]) => val !== '' && key !== 'sortBy' && key !== 'sortOrder').length;
 

@@ -1,27 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
-  History, Search, Filter, Eye, 
-  User, Shield, FileText, Download, Clock, ChevronRight,
-  Activity, AlertTriangle, Info, CheckCircle, Database,
-  ArrowRight, Hash, Terminal, X, ExternalLink,
-  ShieldAlert, Fingerprint, Globe, Cpu, Zap,
-  Lock, Unlock, AlertOctagon, TrendingUp, BarChart3, ShieldCheck
+  History, Search, Filter,
+  User, Shield, FileText, Download,
+  Activity, Hash, Terminal, X, ExternalLink,
+  ShieldAlert, Globe, Cpu, Zap,
+  Lock, AlertOctagon, BarChart3, ShieldCheck
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { format } from 'date-fns';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import apiClient, { unwrapAdminResponse } from '../../api/apiClient';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
-
-const SEVERITY_COLORS = {
-  CRITICAL: 'bg-rose-500 text-white',
-  HIGH: 'bg-amber-500 text-white',
-  MEDIUM: 'bg-amber-100 text-amber-800',
-  INFO: 'bg-emerald-100 text-emerald-800',
-};
 
 export default function AuditLogViewer({ 
   moduleFilter = '', 
@@ -240,10 +232,6 @@ export default function AuditLogViewer({
                   const roleName = log.adminId ? 'ADMIN' : (log.userId ? 'USER' : 'SYSTEM');
                   const riskScore = log.metadata?.riskScore || null;
                   const status = log.metadata?.status || 'SUCCESS';
-                  const traceId = log.metadata?.traceId || null;
-                  const ipAddress = log.ipAddress || 'N/A';
-                  const geo = log.metadata?.geo || 'Unknown';
-                  
                   return (
                     <tr key={log.id} 
                       className="hover:bg-surface/50 dark:hover:bg-zinc-800/20 transition-all group cursor-pointer"

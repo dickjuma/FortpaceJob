@@ -1,122 +1,208 @@
+// src/pages/freelancer/TutorialOnboardingPage.jsx
 import React, { useState } from 'react';
-import { 
-  Award, PlayCircle, ChevronRight, CheckCircle2, Globe, Shield, 
-  Database, ShieldCheck, HelpCircle, X, Sparkles, BookOpen
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  BookOpen,
+  ShieldCheck,
+  Sparkles,
+  CheckCircle2,
+  ChevronRight,
+  AlertCircle,
 } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import { cn } from '../../admin/utils/cn';
 
+// ---------- Shared UI Components (inline) ----------
+const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick }) => {
+  const base = 'px-5 py-2.5 rounded-lg font-body font-medium text-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-900 focus:ring-offset-2 inline-flex items-center justify-center gap-2';
+  const variants = {
+    primary: 'bg-brand-900 text-white hover:bg-brand-800 disabled:opacity-40',
+    ghost: 'border border-brand-900 text-brand-900 hover:bg-surface-muted disabled:opacity-40',
+  };
+  return (
+    <motion.button
+      whileTap={{ scale: 0.97 }}
+      className={`${base} ${variants[variant]} ${className}`}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {children}
+    </motion.button>
+  );
+};
+
+const Card = ({ children, className = '' }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 8 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+    className={`bg-white border border-border rounded-2xl p-6 shadow-sm ${className}`}
+  >
+    {children}
+  </motion.div>
+);
+
+const Badge = ({ children, variant = 'default', className = '' }) => {
+  const variants = {
+    default: 'bg-surface-muted text-ink-secondary',
+    success: 'bg-accent-light text-accent-dark',
+    warning: 'bg-warn-light text-warn',
+    danger: 'bg-danger-light text-danger',
+    info: 'bg-info-light text-info',
+  };
+  return (
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[variant]} ${className}`}>
+      {children}
+    </span>
+  );
+};
+
+// ---------- Main Component ----------
 export default function TutorialOnboardingPage() {
   const [activeStep, setActiveStep] = useState(0);
+  const [toast, setToast] = useState(null);
 
   const onboardingSteps = [
-    { title: 'Establish Roster Profile', desc: 'Verify your ID documents, update skills taxonomy, configure availability limits, and set up your public agency/freelancer portfolio.', icon: ShieldCheck },
-    { title: 'Crate Service Offerings', desc: 'Utilize our multi-step Create Service Wizard to publish premium gig cards specifying pricing models, requirements, and deadlines.', icon: Sparkles },
-    { title: 'Configure Wallet Escrow', desc: 'Securely sync tax parameters, connect compliance bank routing details, and review secure milestone holding conditions.', icon: BookOpen }
+    {
+      title: 'Complete your profile',
+      desc: 'Verify your identity, add your skills, and set up your public portfolio.',
+      icon: ShieldCheck,
+    },
+    {
+      title: 'Create service offerings',
+      desc: 'Publish gigs with clear pricing, requirements, and delivery timelines.',
+      icon: Sparkles,
+    },
+    {
+      title: 'Set up payments',
+      desc: 'Connect your payment method and configure your withdrawal preferences.',
+      icon: BookOpen,
+    },
   ];
 
   const handleNextStep = () => {
     if (activeStep === onboardingSteps.length - 1) {
-      toast.success('Congratulations! Onboarding completed successfully! 🎓');
+      setToast({ type: 'success', message: 'Onboarding completed successfully!' });
+      setTimeout(() => setToast(null), 3000);
       setActiveStep(0);
     } else {
       setActiveStep(prev => prev + 1);
-      toast.success(`Completed Step ${activeStep + 1}!`);
+      setToast({ type: 'success', message: `Step ${activeStep + 1} completed!` });
+      setTimeout(() => setToast(null), 3000);
     }
   };
 
   const StepIcon = onboardingSteps[activeStep].icon;
+  const progressPercent = ((activeStep + 1) / onboardingSteps.length) * 100;
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans animate-in slide-in-from-bottom-4 duration-500 relative">
-      <Toaster position="top-right" />
-      
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+      className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className={`fixed top-20 right-4 z-50 px-4 py-3 rounded-lg shadow-md text-sm font-medium flex items-center gap-2 ${
+              toast.type === 'success' ? 'bg-accent text-white' : 'bg-danger text-white'
+            }`}
+          >
+            {toast.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <BookOpen className="w-8 h-8 text-success" />
-            Academy & Onboarding
-          </h1>
-          <p className="text-sm text-text-secondary mt-1">
-            Complete our interactive onboarding tour to verify capability structures and successfully receive client orders.
-          </p>
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2.5 bg-accent-light text-accent-dark rounded-xl">
+            <BookOpen className="w-6 h-6" />
+          </div>
+          <h1 className="text-3xl font-display font-bold text-brand-900">Onboarding guide</h1>
         </div>
+        <p className="text-sm text-ink-secondary">
+          Complete these steps to start receiving orders and grow your freelance business.
+        </p>
       </div>
 
-      {/* Main Interactive Card */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left Step Indicators */}
-        <div className="lg:col-span-1 space-y-3">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Step indicators */}
+        <div className="space-y-3">
           {onboardingSteps.map((step, idx) => (
-            <div 
+            <button
               key={idx}
               onClick={() => setActiveStep(idx)}
-              className={cn(
-                "p-4 rounded-2xl border cursor-pointer transition-all flex items-center gap-3",
-                activeStep === idx 
-                  ? "border-success bg-success/5 shadow-sm scale-[1.01]" 
-                  : "border-border bg-white hover:border-border-hover"
-              )}
+              className={`w-full p-4 rounded-2xl border text-left transition-all flex items-center gap-3 ${
+                activeStep === idx
+                  ? 'border-accent bg-accent-light'
+                  : 'border-border bg-white hover:border-border-strong'
+              }`}
             >
-              <div className={cn(
-                "w-6 h-6 rounded-full flex items-center justify-center font-black text-xs border",
-                activeStep === idx ? "border-success bg-success text-white" : "border-border bg-light-gray text-text-secondary"
-              )}>
+              <div
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                  activeStep === idx
+                    ? 'bg-accent text-white'
+                    : 'bg-surface-muted text-ink-secondary'
+                }`}
+              >
                 {idx + 1}
               </div>
-              <span className={cn("font-bold text-xs", activeStep === idx ? "text-text-primary" : "text-text-secondary")}>{step.title}</span>
-            </div>
+              <span
+                className={`text-sm font-medium ${
+                  activeStep === idx ? 'text-brand-900' : 'text-ink-secondary'
+                }`}
+              >
+                {step.title}
+              </span>
+            </button>
           ))}
         </div>
 
-        {/* Right Interactive Content Display */}
+        {/* Active step content */}
         <div className="lg:col-span-2">
-          <Card className="bg-white border border-border p-8 rounded-[24px] shadow-md flex flex-col justify-between min-h-[340px] relative overflow-hidden">
-            <div className="absolute top-[-50%] right-[-10%] w-64 h-64 bg-success/5 blur-[80px] rounded-full pointer-events-none"></div>
-
-            <div className="space-y-6 relative z-10">
-              <div className="flex justify-between items-start">
-                <div className="p-4 bg-success/10 text-success rounded-2xl animate-pulse">
-                  <StepIcon size={24} />
-                </div>
-                <span className="text-[10px] font-black uppercase text-success tracking-widest bg-success/10 border border-success/20 px-3 py-1 rounded-full">
-                  Step {activeStep + 1} of {onboardingSteps.length}
-                </span>
+          <Card>
+            <div className="flex justify-between items-start mb-6">
+              <div className="p-3 bg-accent-light text-accent-dark rounded-xl">
+                <StepIcon className="w-6 h-6" />
               </div>
-
-              <div className="space-y-2">
-                <h3 className="text-xl font-black text-text-primary">{onboardingSteps[activeStep].title}</h3>
-                <p className="text-sm text-text-secondary font-medium leading-relaxed max-w-lg">{onboardingSteps[activeStep].desc}</p>
-              </div>
+              <Badge variant="success">
+                Step {activeStep + 1} of {onboardingSteps.length}
+              </Badge>
             </div>
 
-            <div className="pt-6 border-t border-border mt-8 flex justify-between items-center bg-transparent relative z-10">
-              <div className="w-1/2">
-                <div className="flex justify-between text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1.5">
-                  <span>Academy Progress</span>
-                  <span>{Math.round(((activeStep + 1) / onboardingSteps.length) * 100)}%</span>
+            <h3 className="text-xl font-display font-semibold text-brand-900 mb-3">
+              {onboardingSteps[activeStep].title}
+            </h3>
+            <p className="text-sm text-ink-secondary leading-relaxed mb-8">
+              {onboardingSteps[activeStep].desc}
+            </p>
+
+            <div className="pt-6 border-t border-border flex justify-between items-center">
+              <div className="flex-1 max-w-[60%]">
+                <div className="flex justify-between text-xs text-ink-tertiary mb-1">
+                  <span>Progress</span>
+                  <span>{Math.round(progressPercent)}%</span>
                 </div>
-                <div className="w-full bg-light-gray rounded-full h-1.5 overflow-hidden border border-border">
-                  <div className="h-full bg-success rounded-full transition-all" style={{ width: `${((activeStep + 1) / onboardingSteps.length) * 100}%` }}></div>
+                <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-accent rounded-full transition-all duration-300"
+                    style={{ width: `${progressPercent}%` }}
+                  />
                 </div>
               </div>
-              <button 
-                onClick={handleNextStep}
-                className="px-5 py-2.5 bg-success hover:bg-success/95 text-white font-black rounded-xl text-xs transition-colors shadow-lg shadow-[#2bb75c]/20 flex items-center gap-1"
-              >
-                {activeStep === onboardingSteps.length - 1 ? 'Finalize Tour' : 'Next Step'} <ChevronRight size={14} />
-              </button>
+              <Button variant="primary" onClick={handleNextStep}>
+                {activeStep === onboardingSteps.length - 1 ? 'Complete' : 'Next step'}
+                <ChevronRight className="w-4 h-4" />
+              </Button>
             </div>
           </Card>
         </div>
-
       </div>
-
-    </div>
+    </motion.div>
   );
 }
-

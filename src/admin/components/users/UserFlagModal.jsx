@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  X, AlertTriangle, Ban, ShieldX, Info, MessageSquare, ShieldAlert 
+  Ban, Info, MessageSquare, ShieldAlert 
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { cn } from '../../utils/cn';

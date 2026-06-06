@@ -10,7 +10,7 @@ import Button from './ui/Button';
 import Input from './ui/Input';
 import PasswordInput from './ui/PasswordInput';
 import SignupStepper from './SignupStepper';
-import { validateEmail, validatePassword } from '../../common/utils/validation';
+import { validateConfirmPassword, validateEmail, validatePassword } from '../../common/utils/validation';
 
 const SIGNUP_STEPS = [
   { num: 1, label: 'Choose role' },
@@ -103,10 +103,10 @@ export default function SignupForm() {
       return;
     }
 
-    if (credentials.password !== credentials.confirmPassword) {
-      const message = 'Passwords do not match.';
-      setFormError(message);
-      toast.error(message);
+    const confirmError = validateConfirmPassword(credentials.password, credentials.confirmPassword);
+    if (confirmError) {
+      setFormError(confirmError);
+      toast.error(confirmError);
       return;
     }
 

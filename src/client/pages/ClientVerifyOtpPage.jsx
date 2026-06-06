@@ -1,10 +1,10 @@
+// ClientVerifyOtpPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, Smartphone, Mail, RefreshCw, ArrowRight, CheckCircle } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
-import { validateOtp } from '../../common/utils/validation';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ShieldCheck, Smartphone, Mail, RefreshCw, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
+
+const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export default function ClientVerifyOtpPage() {
   const navigate = useNavigate();
@@ -12,19 +12,25 @@ export default function ClientVerifyOtpPage() {
   const [timer, setTimer] = useState(59);
   const [isVerifying, setIsVerifying] = useState(false);
   const [verified, setVerified] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (type, message, duration = 3000) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), duration);
+  };
 
   useEffect(() => {
     let interval = null;
-    if (timer > 0) {
+    if (timer > 0 && !verified) {
       interval = setInterval(() => {
         setTimer(prev => prev - 1);
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [timer]);
+  }, [timer, verified]);
 
   const handleChange = (element, index) => {
-    if (isNaN(element.value)) return false;
+    if (isNaN(element.value)) return;
     setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
     if (element.nextSibling && element.value) {
       element.nextSibling.focus();
@@ -39,98 +45,104 @@ export default function ClientVerifyOtpPage() {
 
   const handleResend = () => {
     setTimer(59);
-    toast.success('A fresh OTP code has been dispatched via M-Pesa Auth SMS & Email.');
+    showToast('success', 'A fresh OTP code has been dispatched via SMS.');
   };
 
-  const handleVerify = (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
     const code = otp.join('');
-    const otpError = validateOtp(code);
-    if (otpError) {
-      toast.error(otpError);
+    if (code.length !== 6) {
+      showToast('error', 'Please enter the 6-digit verification code.');
       return;
     }
-
     setIsVerifying(true);
-    toast.promise(
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          if (code === '123456' || code === '000000' || code.length === 6) {
-            resolve();
-          } else {
-            reject();
-          }
-        }, 1500);
-      }),
-      {
-        loading: 'Decrypting 2FA OTP Payload...',
-        success: () => {
-          setVerified(true);
-          setTimeout(() => {
-            navigate('/client/dashboard');
-          }, 1200);
-          return 'Access granted. Welcome back! 🔐';
-        },
-        error: 'Invalid OTP code. Please try again.'
-      }
-    ).finally(() => setIsVerifying(false));
+    // Simulate verification
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    if (code === '123456' || code === '000000') {
+      setVerified(true);
+      showToast('success', 'Access granted.');
+      setTimeout(() => {
+        navigate('/client/dashboard');
+      }, 1200);
+    } else {
+      showToast('error', 'Invalid OTP code. Please try again.');
+    }
+    setIsVerifying(false);
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } }
+  };
+  const buttonTap = { scale: 0.97 };
+
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-zinc-950 via-[#222222] to-zinc-900 font-sans text-white">
-      <Toaster position="top-right" />
-      
-      {/* Left side brand banner and illustration */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 bg-cover bg-center relative overflow-hidden border-r border-white/5">
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-zinc-900/40 z-10"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-success/20 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#e63946]/10 blur-[120px] rounded-full"></div>
+    <div className="min-h-screen flex bg-surface-soft font-body">
+      {/* Left side brand banner (hidden on mobile) */}
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 bg-brand-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-900 to-brand-800 opacity-80 z-10" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/20 blur-3xl rounded-full" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/10 blur-3xl rounded-full" />
 
         <div className="relative z-20 flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl bg-success flex items-center justify-center font-black text-xl shadow-lg">F</div>
-          <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-light-gray bg-clip-text text-transparent">ForteSpace</span>
+          <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center font-bold text-xl text-white shadow-sm">F</div>
+          <span className="text-xl font-bold tracking-tight text-white">ForteSpace</span>
         </div>
 
-        <div className="relative z-20 space-y-6">
-          <h2 className="text-5xl font-black leading-tight tracking-tight max-w-lg">
-            Securing Your <span className="bg-gradient-to-r from-success via-[#e63946] to-orange-400 bg-clip-text text-transparent">Workforce Ecosystem</span>.
+        <div className="relative z-20 space-y-5">
+          <h2 className="font-display text-4xl font-bold leading-tight tracking-tight max-w-lg text-white">
+            Securing Your <span className="text-accent">Workforce Ecosystem</span>.
           </h2>
-          <p className="text-light-gray/70 text-base max-w-md font-medium">
-            Confirm identity to manage escrow accounts, authorize payment runs, and locate checked-in field operators instantly.
+          <p className="text-white/70 text-base max-w-md font-medium">
+            Confirm identity to manage escrow accounts, authorize payment runs, and monitor field operations.
           </p>
         </div>
 
-        <div className="relative z-20 flex gap-4 text-xs font-bold uppercase tracking-wider text-light-gray/40">
-          <span>Stripe Protected</span>
+        <div className="relative z-20 flex gap-4 text-xs font-semibold uppercase tracking-wider text-white/40">
+          <span>Secure Gateway</span>
           <span>•</span>
-          <span>Daraja Secured</span>
+          <span>Encrypted Channel</span>
         </div>
       </div>
 
-      {/* Right side interactive glassmorphic card */}
+      {/* Right side verification card */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative">
-        <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-success/10 blur-[80px] rounded-full"></div>
+        <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-accent/5 blur-3xl rounded-full" />
 
-        <Card className="w-full max-w-md p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-[32px] shadow-2xl relative z-10">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="w-full max-w-md bg-white border border-border rounded-2xl shadow-lg p-6 sm:p-8 relative z-10"
+        >
           {verified ? (
-            <div className="text-center py-8 space-y-6 animate-in zoom-in-95 duration-300">
-              <div className="w-20 h-20 bg-success/20 text-success rounded-full flex items-center justify-center mx-auto shadow-lg shadow-[#2bb75c]/10 border border-success/30">
-                <CheckCircle className="w-10 h-10 animate-bounce" />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-8 space-y-5"
+            >
+              <div className="w-20 h-20 bg-accent-light text-accent-dark rounded-full flex items-center justify-center mx-auto border border-accent/20">
+                <CheckCircle className="w-10 h-10" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-2xl font-black tracking-tight">Identity Decrypted</h3>
-                <p className="text-sm text-light-gray/60 font-medium">Establishing secure portal credentials...</p>
+                <h3 className="font-display text-2xl font-bold text-brand-900">Identity Verified</h3>
+                <p className="text-sm text-ink-secondary">Establishing secure portal access...</p>
               </div>
-            </div>
+            </motion.div>
           ) : (
             <div className="space-y-6">
               <div className="space-y-2">
-                <div className="inline-flex p-3 bg-success/20 text-success rounded-2xl border border-success/20 mb-2">
+                <div className="inline-flex p-3 bg-accent-light text-accent-dark rounded-xl mb-2">
                   <Smartphone className="w-6 h-6" />
                 </div>
-                <h3 className="text-2xl font-black tracking-tight">Confirm OTP Identity</h3>
-                <p className="text-xs text-light-gray/60 font-medium leading-relaxed">
-                  We've dispatched a 6-digit confirmation payload to your authenticated device ending in <span className="text-success font-bold">***890</span>.
+                <h3 className="font-display text-2xl font-bold text-brand-900">Confirm OTP Identity</h3>
+                <p className="text-xs text-ink-secondary leading-relaxed">
+                  We've sent a 6‑digit verification code to your registered mobile number ending in <span className="font-semibold text-accent">***890</span>.
                 </p>
               </div>
 
@@ -140,8 +152,8 @@ export default function ClientVerifyOtpPage() {
                     <input
                       key={index}
                       type="text"
-                      maxLength="1"
-                      className="w-12 h-14 bg-white/5 border border-white/10 text-center text-xl font-bold rounded-xl focus:border-success focus:ring-2 focus:ring-success/20 transition-all outline-none"
+                      maxLength={1}
+                      className="w-12 h-12 bg-white border border-border text-center text-xl font-bold rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent transition-all"
                       value={data}
                       onChange={e => handleChange(e.target, index)}
                       onKeyDown={e => handleKeyDown(e, index)}
@@ -150,18 +162,18 @@ export default function ClientVerifyOtpPage() {
                   ))}
                 </div>
 
-                <div className="bg-white/5 rounded-2xl p-3 border border-white/5 text-center text-[10px] font-bold text-light-gray/60 flex items-center justify-between">
+                <div className="bg-surface-soft rounded-xl p-3 border border-border text-center text-[10px] font-medium text-ink-tertiary flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-success" />
-                    <span>M-Pesa SMS Code Helper</span>
+                    <Mail className="w-3.5 h-3.5 text-accent" />
+                    <span>Test code: 123456</span>
                   </div>
-                  <span className="text-[#e63946] font-mono bg-white/5 px-2 py-0.5 rounded">123456</span>
+                  <span className="text-accent font-mono bg-white px-2 py-0.5 rounded border border-border">123456</span>
                 </div>
 
                 <div className="flex justify-between items-center text-xs">
-                  <span className="text-light-gray/50 font-medium">
+                  <span className="text-ink-tertiary font-medium">
                     {timer > 0 ? (
-                      <span>Resend code in <strong className="text-success font-mono font-bold">{timer}s</strong></span>
+                      <span>Resend code in <strong className="text-accent font-mono">{timer}s</strong></span>
                     ) : (
                       <span>Code expired</span>
                     )}
@@ -170,26 +182,55 @@ export default function ClientVerifyOtpPage() {
                     type="button"
                     onClick={handleResend}
                     disabled={timer > 0}
-                    className="flex items-center gap-1 font-bold text-success hover:text-success/80 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                    className="flex items-center gap-1 font-medium text-accent hover:text-accent-dark disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     <RefreshCw className="w-3.5 h-3.5" /> Resend OTP
                   </button>
                 </div>
 
-                <Button
+                <motion.button
+                  whileTap={buttonTap}
                   type="submit"
                   disabled={isVerifying}
-                  className="w-full bg-success hover:bg-success/95 border-none font-bold text-xs py-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-[#2bb75c]/20 transition-all"
+                  className="w-full py-3 bg-accent hover:bg-accent-dark text-white rounded-lg font-medium text-sm transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm"
                 >
-                  {isVerifying ? 'Verifying Payload...' : 'Decrypt Command Portal'}
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
+                  {isVerifying ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" /> Verifying...
+                    </>
+                  ) : (
+                    <>
+                      Verify & Access <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </motion.button>
               </form>
             </div>
           )}
-        </Card>
+        </motion.div>
       </div>
+
+      {/* Toast Notifications */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2 rounded-lg shadow-lg text-sm font-medium"
+            style={{
+              backgroundColor: toast.type === 'success' ? 'rgb(220, 252, 231)' :
+                               toast.type === 'error' ? 'rgb(254, 226, 226)' : 'rgb(219, 234, 254)',
+              color: toast.type === 'success' ? 'rgb(21, 128, 61)' :
+                     toast.type === 'error' ? 'rgb(185, 28, 28)' : 'rgb(29, 78, 216)'
+            }}
+          >
+            {toast.type === 'success' && <CheckCircle className="w-4 h-4" />}
+            {toast.type === 'error' && <AlertCircle className="w-4 h-4" />}
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
-

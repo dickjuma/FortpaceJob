@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// EnterpriseHiringDashboardPage.jsx
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import {
@@ -6,6 +7,8 @@ import {
   ArrowUpRight, ArrowDownRight, Loader2, AlertCircle, RefreshCw,
 } from 'lucide-react';
 import { workAPI } from '../../common/services/api';
+
+const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 function formatCurrency(value) {
   const num = Number(value) || 0;
@@ -70,7 +73,7 @@ function timeAgo(iso) {
 }
 
 export default function EnterpriseHiringDashboardPage() {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = React.useState('overview');
 
   const {
     data: analytics,
@@ -80,7 +83,7 @@ export default function EnterpriseHiringDashboardPage() {
   } = useQuery({
     queryKey: ['client', 'work', 'analytics'],
     queryFn: () => workAPI.getAnalytics(),
-    staleTime: 60_000,
+    staleTime: 60000,
   });
 
   const {
@@ -91,7 +94,7 @@ export default function EnterpriseHiringDashboardPage() {
   } = useQuery({
     queryKey: ['client', 'work', 'pipeline'],
     queryFn: () => workAPI.getPipeline(),
-    staleTime: 60_000,
+    staleTime: 60000,
   });
 
   const analyticsCards = buildAnalyticsCards(analytics);
@@ -109,94 +112,130 @@ export default function EnterpriseHiringDashboardPage() {
       }))
     : [];
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+  };
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  };
+  const listItemVariants = {
+    hidden: { opacity: 0, x: -8 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.2 } },
+  };
+  const buttonTap = { scale: 0.97 };
+
+  const handleRefresh = () => {
+    refetchAnalytics();
+    refetchPipeline();
+  };
+
   return (
-    <div className="min-h-screen bg-surface dark:bg-gray-950 font-sans text-gray-900 dark:text-gray-100 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-surface-soft font-body py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Enterprise Hiring</h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">Manage bulk hiring, departments, and vendors.</p>
+            <h1 className="font-display text-3xl font-bold text-brand-900">Enterprise Hiring</h1>
+            <p className="text-ink-secondary mt-1">Manage bulk hiring, departments, and vendors.</p>
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => { refetchAnalytics(); refetchPipeline(); }}
-              className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg hover:bg-surface dark:hover:bg-gray-800 transition-colors"
+              onClick={handleRefresh}
+              className="inline-flex items-center gap-2 px-4 py-2 border border-border bg-white rounded-lg text-sm font-medium text-ink-primary hover:bg-surface-soft transition-colors"
             >
               <RefreshCw className="w-4 h-4" />
               <span>Refresh</span>
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg hover:bg-surface dark:hover:bg-gray-800 transition-colors">
+            <button className="inline-flex items-center gap-2 px-4 py-2 border border-border bg-white rounded-lg text-sm font-medium text-ink-primary hover:bg-surface-soft transition-colors">
               <Filter className="w-4 h-4" />
               <span>Filters</span>
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white rounded-lg transition-colors shadow-sm">
+            <button className="inline-flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-dark text-white rounded-lg text-sm font-medium transition-colors shadow-sm">
               <Plus className="w-4 h-4" />
               <span>New Request</span>
             </button>
           </div>
         </div>
 
+        {/* Loading / Error States */}
         {isLoading ? (
           <div className="flex items-center justify-center h-48">
-            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
+            <Loader2 className="w-8 h-8 text-accent animate-spin" />
           </div>
         ) : hasError ? (
-          <div className="flex flex-col items-center justify-center h-48 gap-3 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
-            <AlertCircle className="w-10 h-10 text-red-400" />
-            <p className="text-gray-500">Failed to load hiring data.</p>
-            <button onClick={() => { refetchAnalytics(); refetchPipeline(); }} className="text-sm text-[#2bb75c] hover:underline">Retry</button>
+          <div className="flex flex-col items-center justify-center h-48 gap-3 bg-white border border-border rounded-2xl">
+            <AlertCircle className="w-10 h-10 text-danger opacity-60" />
+            <p className="text-ink-secondary">Failed to load hiring data.</p>
+            <button onClick={handleRefresh} className="text-sm text-accent hover:underline">Retry</button>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Analytics Cards */}
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+            >
               {analyticsCards.map((stat, idx) => (
                 <motion.div
                   key={stat.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm"
+                  variants={cardVariants}
+                  whileHover={{ y: -3, boxShadow: '0 8px 24px rgba(0,0,0,0.06)' }}
+                  className="bg-white border border-border rounded-2xl p-5 shadow-sm"
                 >
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">{stat.title}</h3>
-                  <div className="mt-2 flex items-baseline gap-2">
-                    <span className="text-3xl font-semibold">{stat.value}</span>
-                    <span className={`flex items-center text-sm ${stat.isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                  <h3 className="text-sm font-medium text-ink-tertiary">{stat.title}</h3>
+                  <div className="mt-2 flex items-baseline gap-2 flex-wrap">
+                    <span className="text-3xl font-semibold text-ink-primary">{stat.value}</span>
+                    <span className={`inline-flex items-center text-sm ${stat.isPositive ? 'text-accent' : 'text-danger'}`}>
                       {stat.isPositive ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
                       {stat.change}
                     </span>
                   </div>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
 
+            {/* Main Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Left Column: Hiring Pipelines */}
               <div className="lg:col-span-2 space-y-6">
-                <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
-                  <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
-                    <h2 className="text-lg font-semibold flex items-center gap-2">
-                      <Briefcase className="w-5 h-5 text-[#2bb75c]" />
+                <div className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
+                  <div className="p-5 border-b border-border flex justify-between items-center bg-white">
+                    <h2 className="font-display text-lg font-semibold text-brand-900 flex items-center gap-2">
+                      <Briefcase className="w-5 h-5 text-accent" />
                       Active Hiring Pipelines
                     </h2>
-                    <span className="text-sm text-gray-500">{pipeline?.total ?? 0} candidates</span>
+                    <span className="text-sm text-ink-tertiary">{pipeline?.total ?? 0} candidates</span>
                   </div>
-                  <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                  <div className="divide-y divide-border">
                     {pipelineRows.length === 0 ? (
-                      <div className="p-8 text-center text-gray-500">No active pipeline data yet.</div>
+                      <div className="p-8 text-center text-ink-tertiary">No active pipeline data yet.</div>
                     ) : (
-                      pipelineRows.map((job) => (
-                        <div key={job.id} className="p-6 hover:bg-surface dark:hover:bg-gray-800/50 transition-colors">
-                          <div className="flex justify-between items-start mb-4">
+                      pipelineRows.map((job, idx) => (
+                        <motion.div
+                          key={job.id}
+                          variants={listItemVariants}
+                          initial="hidden"
+                          animate="visible"
+                          transition={{ delay: idx * 0.05 }}
+                          className="p-5 hover:bg-surface-soft transition-colors"
+                        >
+                          <div className="flex flex-wrap justify-between items-start gap-3 mb-3">
                             <div>
-                              <h3 className="font-semibold text-lg">{job.role}</h3>
-                              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mt-1">
+                              <h3 className="font-semibold text-ink-primary text-base">{job.role}</h3>
+                              <p className="text-sm text-ink-tertiary flex items-center gap-2 mt-0.5">
                                 <Building className="w-4 h-4" /> {job.department}
                               </p>
                             </div>
-                            <span className="px-3 py-1 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/30 text-[#2bb75c] dark:text-[#2bb75c] text-xs font-medium rounded-full">
+                            <span className="inline-flex px-2.5 py-1 bg-accent-light text-accent-dark text-xs font-medium rounded-full">
                               {job.stage}
                             </span>
                           </div>
-                          <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                          <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-ink-tertiary">
                             <div className="flex items-center gap-4">
                               <span className="flex items-center gap-1">
                                 <Users className="w-4 h-4" /> {job.candidates} Candidates
@@ -205,39 +244,45 @@ export default function EnterpriseHiringDashboardPage() {
                                 <Clock className="w-4 h-4" /> {timeAgo(job.lastUpdated)}
                               </span>
                             </div>
-                            <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                            <button className="text-ink-tertiary hover:text-accent transition-colors">
                               <MoreVertical className="w-5 h-5" />
                             </button>
                           </div>
-                        </div>
+                        </motion.div>
                       ))
                     )}
                   </div>
                 </div>
               </div>
 
+              {/* Right Column: Pipeline Stages */}
               <div className="space-y-6">
-                <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
-                  <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <Building className="w-5 h-5 text-[#2bb75c]" />
+                <div className="bg-white border border-border rounded-2xl shadow-sm p-5">
+                  <h2 className="font-display text-lg font-semibold text-brand-900 mb-4 flex items-center gap-2">
+                    <Building className="w-5 h-5 text-accent" />
                     Pipeline Stages
                   </h2>
                   <div className="space-y-4">
                     {stageSummary.length === 0 ? (
-                      <p className="text-sm text-gray-500">No stage breakdown available.</p>
+                      <p className="text-sm text-ink-tertiary">No stage breakdown available.</p>
                     ) : (
                       stageSummary.map((dept) => (
-                        <div key={dept.id} className="p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-surface dark:bg-gray-800/30">
+                        <div
+                          key={dept.id}
+                          className="p-4 rounded-xl border border-border bg-surface-soft"
+                        >
                           <div className="flex justify-between items-center mb-2">
-                            <span className="font-medium">{dept.name}</span>
-                            <span className={`text-xs px-2 py-1 rounded-md ${
-                              dept.status === 'On Track' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-                              'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
-                            }`}>
+                            <span className="font-medium text-ink-primary">{dept.name}</span>
+                            <span className={cn(
+                              "text-xs px-2 py-0.5 rounded-full font-medium",
+                              dept.status === 'On Track'
+                                ? "bg-accent-light text-accent-dark"
+                                : "bg-warn-light text-warn"
+                            )}>
                               {dept.status}
                             </span>
                           </div>
-                          <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
+                          <div className="flex justify-between text-sm text-ink-tertiary">
                             <span>{dept.activeContractors} Candidates</span>
                           </div>
                         </div>
@@ -253,4 +298,3 @@ export default function EnterpriseHiringDashboardPage() {
     </div>
   );
 }
-

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Clock, Filter, MapPin, Search, Star, Zap, Loader2 } from 'lucide-react';
+import { Clock, Filter, MapPin, Search, Sparkles, Star, Zap, Loader2 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getFindWorkJobs, subscribeToFindWorkData, syncJobsWithBackend, loadFindWorkCategories } from './findWorkData';
 
@@ -49,166 +49,218 @@ export default function LocalWorkListings() {
 
   return (
     <>
-      <div className="h-[calc(100vh-80px)] flex flex-col md:flex-row relative">
-        <div className="w-full md:w-[470px] bg-white border-r border-zinc-200 h-full flex flex-col z-10 shadow-xl">
-          <div className="p-5 border-b border-zinc-200 bg-surface-dark text-white">
-            <h1 className="font-black text-2xl mb-4 flex items-center gap-2">
-              <MapPin className="w-6 h-6 text-success" /> Local Gigs
-            </h1>
-            <form onSubmit={handleSearchSubmit} className="space-y-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 w-4 h-4 text-zinc-400" />
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search local services or job titles..."
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none font-medium placeholder:text-zinc-500"
-                />
+      <div className="bg-surface min-h-screen py-16">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr]">
+            <div className="space-y-6">
+              <div className="rounded-[2rem] bg-white border border-zinc-200 shadow-2xl overflow-hidden">
+                <div className="bg-gradient-to-r from-[#22c55e] via-[#16a34a] to-[#0f766e] p-8 text-white">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-semibold tracking-wide mb-4">
+                    <Sparkles className="w-4 h-4 text-amber-200" /> Local gigs with premium client briefs
+                  </div>
+                  <div className="flex flex-col gap-6 md:gap-0 md:flex-row md:items-end md:justify-between">
+                    <div>
+                      <h1 className="text-4xl md:text-5xl font-black leading-tight">Find the best local work in your region</h1>
+                      <p className="mt-4 max-w-2xl text-zinc-100 text-lg">Search verified local jobs, urgent dispatches, and specialty services that match your skills and availability.</p>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                      <div className="rounded-3xl bg-white/10 p-4">
+                        <div className="text-sm uppercase tracking-[0.2em] font-bold text-white/70">Matches</div>
+                        <div className="mt-2 text-3xl font-black">{localJobs.length}</div>
+                      </div>
+                      <div className="rounded-3xl bg-white/10 p-4">
+                        <div className="text-sm uppercase tracking-[0.2em] font-bold text-white/70">Specialties</div>
+                        <div className="mt-2 text-3xl font-black">{Math.max(specializations.length - 1, 0)}</div>
+                      </div>
+                      <div className="rounded-3xl bg-white/10 p-4">
+                        <div className="text-sm uppercase tracking-[0.2em] font-bold text-white/70">Sync status</div>
+                        <div className="mt-2 text-3xl font-black flex items-center justify-center gap-2">
+                          {syncing ? <Loader2 className="w-5 h-5 animate-spin" /> : '✓'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 md:p-8">
+                  <form onSubmit={handleSearchSubmit} className="grid gap-4">
+                    <div className="grid gap-4 sm:grid-cols-[1fr_1fr]">
+                      <label className="block">
+                        <span className="text-sm font-semibold text-zinc-700">Search local work</span>
+                        <div className="relative mt-2 rounded-3xl border border-zinc-200 bg-white shadow-sm focus-within:border-[#2bb75c]">
+                          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+                          <input
+                            type="text"
+                            value={query}
+                            onChange={(event) => setQuery(event.target.value)}
+                            placeholder="Search local services or job titles..."
+                            className="w-full rounded-3xl border-0 bg-transparent py-4 pl-12 pr-4 text-sm text-zinc-900 focus:outline-none"
+                          />
+                        </div>
+                      </label>
+                      <label className="block">
+                        <span className="text-sm font-semibold text-zinc-700">Location</span>
+                        <div className="relative mt-2 rounded-3xl border border-zinc-200 bg-white shadow-sm focus-within:border-[#2bb75c]">
+                          <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+                          <input
+                            type="text"
+                            value={locationQuery}
+                            onChange={(event) => setLocationQuery(event.target.value)}
+                            className="w-full rounded-3xl border-0 bg-transparent py-4 pl-12 pr-4 text-sm text-zinc-900 focus:outline-none"
+                          />
+                        </div>
+                      </label>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 items-center">
+                      <button
+                        type="button"
+                        onClick={() => setUrgentOnly((current) => !current)}
+                        className={`inline-flex items-center gap-2 rounded-2xl border px-4 py-2 text-sm font-semibold transition ${
+                          urgentOnly
+                            ? 'bg-rose-50 text-rose-700 border-rose-200'
+                            : 'bg-zinc-100 text-zinc-700 border-zinc-200'
+                        }`}
+                      >
+                        <Zap className="w-4 h-4" /> Urgent Only
+                      </button>
+                      <span className="text-sm text-zinc-500">Specialty filters:</span>
+                      <div className="flex flex-wrap gap-2">
+                        {specializations.map((item) => (
+                          <button
+                            key={item}
+                            type="button"
+                            onClick={() => setSelectedSpecialization(item)}
+                            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                              selectedSpecialization === item
+                                ? 'bg-[#2bb75c] text-white'
+                                : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
+                            }`}
+                          >
+                            {item === 'all' ? 'All Specialties' : item}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-stretch gap-3">
+                      <button type="submit" className="rounded-3xl bg-[#2bb75c] px-6 py-4 text-sm font-bold text-white shadow-lg hover:bg-[#1d8d38] transition-colors">
+                        Refresh local matches
+                      </button>
+                      <span className="inline-flex items-center justify-center rounded-3xl border border-zinc-200 bg-zinc-50 px-4 py-4 text-sm text-zinc-600">
+                        {localJobs.length} gigs found • {selectedSpecialization === 'all' ? 'all specialties' : selectedSpecialization}
+                      </span>
+                    </div>
+                  </form>
+                </div>
               </div>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -tranzinc-y-1/2 w-4 h-4 text-zinc-400" />
-                <input
-                  type="text"
-                  value={locationQuery}
-                  onChange={(event) => setLocationQuery(event.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none font-medium text-zinc-300"
-                />
-              </div>
-              <div className="flex gap-2 overflow-x-auto pb-1 hide-scrollbar mt-2">
-                <button
-                  type="button"
-                  onClick={() => setUrgentOnly((current) => !current)}
-                  className={`px-4 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap flex items-center gap-1 border ${
-                    urgentOnly
-                      ? 'bg-rose-500/20 text-rose-400 border-rose-500/30'
-                      : 'bg-zinc-800 text-zinc-300 border-zinc-700'
-                  }`}
-                >
-                  <Zap className="w-3 h-3 fill-current" /> Urgent Only
-                </button>
-                {specializations.map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => setSelectedSpecialization(item)}
-                    className={`px-4 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap flex items-center gap-1 border ${
-                      selectedSpecialization === item
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-                        : 'bg-zinc-800 text-zinc-300 border-zinc-700'
+
+              <div className="grid gap-4">
+                {localJobs.map((job) => (
+                  <div
+                    key={job.id}
+                    onMouseEnter={() => setActiveCard(job.id)}
+                    onMouseLeave={() => setActiveCard(null)}
+                    className={`group rounded-[1.75rem] border p-6 transition-all ${
+                      featuredJob && featuredJob.id === job.id
+                        ? 'border-emerald-500 shadow-2xl ring-1 ring-emerald-500/20'
+                        : 'border-zinc-200 bg-white shadow-sm hover:border-emerald-300 hover:shadow-xl'
                     }`}
                   >
-                    <Filter className="w-3 h-3" /> {item === 'all' ? 'All Specialties' : item}
-                  </button>
+                    <div className="flex justify-between items-start gap-4 mb-4">
+                      <div>
+                        <h3 className="text-xl font-black text-zinc-900 mb-2">{job.title}</h3>
+                        <p className="text-sm text-zinc-600 leading-relaxed line-clamp-2">{job.summary}</p>
+                      </div>
+                      <div className="rounded-3xl bg-zinc-100 px-4 py-2 text-sm font-bold text-zinc-700">{job.budgetLabel}</div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-3 text-sm text-zinc-600 mb-5">
+                      <span className="inline-flex items-center gap-2 rounded-full bg-[#f8fafc] px-3 py-2">{job.specialization}</span>
+                      <span className="inline-flex items-center gap-2 rounded-full bg-[#f8fafc] px-3 py-2">{job.locationLabel}</span>
+                      <span className="inline-flex items-center gap-2 rounded-full bg-[#f8fafc] px-3 py-2">{job.durationLabel}</span>
+                    </div>
+
+                    <div className="flex flex-wrap justify-between gap-3 items-center pt-4 border-t border-zinc-100 text-sm">
+                      <span className="font-semibold text-zinc-900">{job.client.name}</span>
+                      <Link to={job.detailPath} className="rounded-full bg-[#2bb75c] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#1d8d38]">
+                        View details
+                      </Link>
+                    </div>
+                  </div>
                 ))}
               </div>
-            </form>
-          </div>
+            </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-surface">
-            <div className="font-bold text-sm text-zinc-500 px-1">Found {localJobs.length} local gigs near your search area</div>
-            {localJobs.map((job) => (
-              <div
-                key={job.id}
-                onMouseEnter={() => setActiveCard(job.id)}
-                onMouseLeave={() => setActiveCard(null)}
-                className={`bg-white border rounded-2xl p-5 cursor-pointer transition-all ${
-                  featuredJob && featuredJob.id === job.id
-                    ? 'border-emerald-500 shadow-md ring-1 ring-emerald-500/20'
-                    : 'border-zinc-200 shadow-sm hover:border-emerald-300'
-                }`}
-              >
-                {job.urgent && (
-                  <div className="mb-3 inline-flex items-center gap-1 px-2.5 py-1 bg-rose-100 text-rose-700 text-xs font-bold uppercase tracking-wider rounded-lg border border-rose-200">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" /> Urgent Dispatch
+            <div className="relative rounded-[2rem] overflow-hidden border border-zinc-200 shadow-2xl bg-zinc-900 text-white min-h-[720px]">
+              <img
+                src="https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+                className="absolute inset-0 h-full w-full object-cover opacity-50"
+                alt="City map backdrop"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/40 to-transparent" />
+              <div className="absolute inset-0 p-8 flex flex-col justify-between">
+                <div className="space-y-5 max-w-xl">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-200">
+                    Local-first discovery
+                  </span>
+                  <h2 className="text-4xl font-black leading-tight">A beautifully designed local work hub that feels premium, fast, and curated.</h2>
+                  <p className="max-w-2xl text-sm text-zinc-200/90">Track urgent dispatches, compare nearby clients, and connect with local opportunities that reward speed, quality, and trust.</p>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="rounded-3xl bg-white/10 p-5">
+                      <div className="text-sm uppercase tracking-[0.2em] text-zinc-300">Best nearby</div>
+                      <div className="mt-3 text-2xl font-black">{featuredJob ? featuredJob.locationLabel : 'Nairobi'}</div>
+                    </div>
+                    <div className="rounded-3xl bg-white/10 p-5">
+                      <div className="text-sm uppercase tracking-[0.2em] text-zinc-300">Next to hire</div>
+                      <div className="mt-3 text-2xl font-black">{featuredJob ? featuredJob.client.name : 'Top clients'}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {featuredJob ? (
+                  <div className="rounded-[2rem] bg-white/10 border border-white/15 p-6 backdrop-blur-xl">
+                    <div className="flex items-center justify-between gap-4 mb-4">
+                      <div>
+                        <div className="text-xs uppercase tracking-[0.3em] text-emerald-200 font-semibold">Featured urgent gig</div>
+                        <h3 className="mt-3 text-2xl font-black leading-tight">{featuredJob.title}</h3>
+                      </div>
+                      {featuredJob.urgent && (
+                        <span className="rounded-full bg-rose-500/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-rose-200">Urgent</span>
+                      )}
+                    </div>
+                    <p className="text-sm text-zinc-200 mb-5">{featuredJob.summary}</p>
+                    <div className="grid gap-4 sm:grid-cols-3 text-sm text-zinc-200 mb-5">
+                      <div>
+                        <div className="text-zinc-400 uppercase tracking-[0.2em] text-[10px] font-semibold">Budget</div>
+                        <div className="mt-2 font-black text-white">{featuredJob.budgetLabel}</div>
+                      </div>
+                      <div>
+                        <div className="text-zinc-400 uppercase tracking-[0.2em] text-[10px] font-semibold">Location</div>
+                        <div className="mt-2 font-black text-white">{featuredJob.locationLabel}</div>
+                      </div>
+                      <div>
+                        <div className="text-zinc-400 uppercase tracking-[0.2em] text-[10px] font-semibold">Client</div>
+                        <div className="mt-2 font-black text-white">{featuredJob.client.name}</div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <Link to={featuredJob.detailPath} className="rounded-3xl bg-[#2bb75c] px-5 py-3 text-center text-sm font-bold text-zinc-950 transition hover:bg-[#1d8d38]">
+                        View Details
+                      </Link>
+                      <Link to={featuredJob.proposalPath} className="rounded-3xl border border-white/20 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10">
+                        Submit Proposal
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-[2rem] border border-white/15 p-6 bg-white/5 text-sm text-zinc-200">
+                    No featured local gig selected yet. Explore the listings on the left to preview urgent opportunities and client briefs.
                   </div>
                 )}
-
-                <div className="flex justify-between items-start gap-2 mb-2">
-                  <h3 className="font-bold text-lg text-zinc-900 leading-tight">{job.title}</h3>
-                  <div className="font-black text-zinc-900 text-right shrink-0">{job.budgetLabel}</div>
-                </div>
-
-                <div className="flex items-center gap-2 text-xs font-bold text-success mb-4 bg-emerald-50 inline-block px-2 py-1 rounded">
-                  {job.specialization}
-                </div>
-
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 text-sm font-medium text-zinc-600">
-                    <MapPin className="w-4 h-4 text-zinc-400" /> {job.locationLabel}
-                    {job.distanceLabel ? <span className="text-zinc-400 text-xs">({job.distanceLabel})</span> : null}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm font-medium text-zinc-600">
-                    <Clock className="w-4 h-4 text-zinc-400" /> {job.durationLabel}
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-zinc-100 flex justify-between items-center">
-                  <span className="text-xs font-medium text-zinc-500 flex items-center gap-1">
-                    <Star className="w-3.5 h-3.5 text-amber-500 fill-current" /> {job.client.rating} Client Rating
-                  </span>
-                  <Link to={job.detailPath} className="text-success text-sm font-bold hover:underline">
-                    Apply Now
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex-1 bg-zinc-200 relative h-full overflow-hidden">
-          <img
-            src="https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
-            className="w-full h-full object-cover opacity-60 grayscale"
-            alt="City map backdrop"
-          />
-          <div className="absolute inset-0 bg-success/10 mix-blend-overlay" />
-
-          <div className="absolute top-4 right-4 flex flex-col gap-2">
-            <button type="button" className="w-10 h-10 bg-white rounded-xl shadow-lg flex items-center justify-center font-bold text-xl hover:bg-surface border border-zinc-200 text-zinc-700">
-              +
-            </button>
-            <button type="button" className="w-10 h-10 bg-white rounded-xl shadow-lg flex items-center justify-center font-bold text-xl hover:bg-surface border border-zinc-200 text-zinc-700">
-              -
-            </button>
-          </div>
-
-          {featuredJob ? (
-            <div className="absolute left-6 right-6 bottom-6 bg-white/95 backdrop-blur border border-zinc-200 rounded-3xl shadow-2xl p-6 max-w-xl">
-              <div className="flex items-start justify-between gap-4 mb-3">
-                <div>
-                  <div className="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-2">{featuredJob.specialization}</div>
-                  <h2 className="text-2xl font-black text-zinc-900 leading-tight">{featuredJob.title}</h2>
-                </div>
-                {featuredJob.urgent ? (
-                  <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-xs font-bold uppercase tracking-wider">Urgent</span>
-                ) : null}
-              </div>
-              <p className="text-zinc-600 mb-4">{featuredJob.summary}</p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm mb-5">
-                <div>
-                  <div className="text-zinc-400 uppercase tracking-wider text-[11px] font-bold mb-1">Budget</div>
-                  <div className="font-black text-zinc-900">{featuredJob.budgetLabel}</div>
-                </div>
-                <div>
-                  <div className="text-zinc-400 uppercase tracking-wider text-[11px] font-bold mb-1">Location</div>
-                  <div className="font-bold text-zinc-900">{featuredJob.locationLabel}</div>
-                </div>
-                <div>
-                  <div className="text-zinc-400 uppercase tracking-wider text-[11px] font-bold mb-1">Client</div>
-                  <div className="font-bold text-zinc-900">{featuredJob.client.name}</div>
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link to={featuredJob.detailPath} className="px-6 py-3 bg-success hover:bg-emerald-700 text-white font-bold rounded-xl text-center">
-                  View Details
-                </Link>
-                <Link to={featuredJob.proposalPath} className="px-6 py-3 bg-white border border-zinc-200 hover:bg-surface text-zinc-700 font-bold rounded-xl text-center">
-                  Submit Proposal
-                </Link>
               </div>
             </div>
-          ) : null}
+          </div>
         </div>
       </div>
     </>

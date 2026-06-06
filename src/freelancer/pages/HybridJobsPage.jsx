@@ -1,11 +1,9 @@
+// src/pages/public/HybridJobsPage.jsx
 import React, { useState } from 'react';
-import { 
-  Building, Search, Plus, X, Award, Briefcase, ChevronRight, Star, DollarSign, Clock, Eye, MapPin
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Building, Search, Plus, X, Award, Briefcase, ChevronRight, Star, DollarSign, Clock, Eye, MapPin, Check
 } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import { cn } from '../../admin/utils/cn';
 
 export default function HybridJobsPage() {
   const [jobs, setJobs] = useState([
@@ -15,94 +13,119 @@ export default function HybridJobsPage() {
   ]);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [showSuccess, setShowSuccess] = useState(null);
 
-  const handleApplySimulate = (title) => {
-    toast.promise(
-      new Promise((resolve) => setTimeout(resolve, 800)),
-      {
-        loading: 'Submitting hybrid proposal details...',
-        success: `Applied to "${title}" successfully! 🚀`,
-        error: 'Failed to submit proposal.'
-      }
-    );
+  const handleApply = (title) => {
+    setShowSuccess({ message: `Applied to "${title}"` });
+    setTimeout(() => setShowSuccess(null), 2000);
   };
 
-  const filteredJobs = jobs.filter(j => 
+  const filteredJobs = jobs.filter(j =>
     j.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     j.client.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans animate-in slide-in-from-bottom-4 duration-500 relative">
-      <Toaster position="top-right" />
-      
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <Building className="w-8 h-8 text-success" />
-            Hybrid Jobs Directory
-          </h1>
-          <p className="text-sm text-text-secondary mt-1">
-            Browse engineering contracts combining remote workspace flexibility with occasional office collaboration days.
-          </p>
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2.5 bg-accent-light rounded-xl">
+            <Building className="w-6 h-6 text-accent DEFAULT" />
+          </div>
+          <h1 className="font-display font-bold text-3xl text-brand-900">Hybrid jobs directory</h1>
         </div>
+        <p className="text-ink-secondary font-body">
+          Browse engineering contracts combining remote flexibility with occasional office collaboration
+        </p>
       </div>
 
+      {/* Search */}
       <div className="mb-6 max-w-xs">
         <div className="relative">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -tranzinc-y-1/2 text-text-secondary" />
-          <input 
-            type="text" 
-            placeholder="Search hybrid positions..." 
+          <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-tertiary" />
+          <input
+            type="text"
+            placeholder="Search hybrid positions..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 pr-4 py-2 w-full border border-border rounded-xl bg-light-gray/40 text-sm focus:outline-none focus:border-success text-text-primary"
+            className="w-full pl-9 pr-4 h-10 bg-white border border-border rounded-xl text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
           />
         </div>
       </div>
 
-      {/* Jobs list */}
-      <div className="space-y-4">
-        {filteredJobs.map((job) => (
-          <Card key={job.id} className="bg-white border border-border p-6 rounded-3xl shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group">
+      {/* Jobs List */}
+      <div className="space-y-3">
+        {filteredJobs.map((job, idx) => (
+          <motion.div
+            key={job.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.05 }}
+            whileHover={{ y: -2 }}
+            className="bg-white border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group"
+          >
             <div className="space-y-2 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-success/10 text-success border-success/20">
+                <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-body font-medium bg-accent-light text-accent-dark">
                   {job.frequency}
                 </span>
-                <span className="text-xs text-text-secondary font-bold flex items-center gap-1"><MapPin size={12} /> {job.location}</span>
+                <span className="text-xs text-ink-tertiary font-body flex items-center gap-1">
+                  <MapPin className="w-3 h-3" /> {job.location}
+                </span>
               </div>
-              
-              <h3 className="font-black text-sm text-text-primary leading-tight group-hover:text-success transition-colors cursor-pointer">{job.title}</h3>
-              <p className="text-xs text-text-secondary font-bold">Client: {job.client}</p>
+
+              <h3 className="font-body font-semibold text-base text-ink-primary leading-tight group-hover:text-accent DEFAULT transition-colors cursor-pointer">
+                {job.title}
+              </h3>
+              <p className="text-sm text-ink-secondary font-body">Client: {job.client}</p>
             </div>
 
             <div className="flex items-center gap-4 self-end md:self-center shrink-0">
               <div className="text-right">
-                <p className="text-xs font-black text-text-secondary uppercase tracking-widest">{job.type}</p>
-                <p className="font-black text-lg text-text-primary">${job.budget.toLocaleString()}{job.type === 'Hourly Rate' && '/hr'}</p>
+                <p className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide">{job.type}</p>
+                <p className="font-mono font-bold text-lg text-ink-primary">
+                  KES {job.budget.toLocaleString()}{job.type === 'Hourly Rate' && '/hr'}
+                </p>
               </div>
-              <button 
-                onClick={() => handleApplySimulate(job.title)}
-                className="px-4 py-2 bg-success hover:bg-success/95 text-white font-black rounded-xl text-xs transition-colors shadow-lg shadow-[#2bb75c]/15 flex items-center gap-1"
+              <button
+                onClick={() => handleApply(job.title)}
+                className="px-4 py-2 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors"
               >
-                Apply Hybrid
+                Apply hybrid
               </button>
             </div>
-          </Card>
+          </motion.div>
         ))}
 
         {filteredJobs.length === 0 && (
-          <div className="text-center py-12">
-            <Building className="w-12 h-12 text-text-secondary mx-auto mb-3" />
-            <h4 className="font-bold text-text-primary">No hybrid jobs discovered</h4>
-            <p className="text-xs text-text-secondary mt-1">Refine your search parameters or try another keyword.</p>
+          <div className="text-center py-12 bg-white border border-border rounded-xl">
+            <Building className="w-12 h-12 text-ink-tertiary mx-auto mb-3" />
+            <h4 className="font-body font-semibold text-lg text-ink-primary mb-1">No hybrid jobs found</h4>
+            <p className="text-sm text-ink-secondary">Try adjusting your search terms</p>
           </div>
         )}
       </div>
-
-    </div>
+    </motion.div>
   );
 }
-

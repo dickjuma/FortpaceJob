@@ -1,65 +1,93 @@
+// ClientRevisionRequestPage.jsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  RefreshCw, AlertCircle, FileText, Image as ImageIcon, 
-  MessageSquare, Check, X, Send, Eye, ShieldAlert, CheckCircle2
+import {
+  RefreshCw,
+  AlertCircle,
+  FileText,
+  Image as ImageIcon,
+  X,
+  Send,
+  Eye,
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
-import { validateRevisionFeedback } from '../../common/utils/validation';
-import notify from '../../common/utils/notify';
 
-// Mock Data
+// ─── Mock Data ──────────────────────────────────────────────────────────────
 const ORDER = {
   id: '#ORD-9821',
   seller: { name: 'Alex Rivera', avatar: 'https://i.pravatar.cc/150?u=alex' },
   revisionsRemaining: 2,
   revisionsTotal: 3,
   delivery: {
-    message: 'Hi Sarah,\n\nHere is the final delivery for the React JS web application. I\'ve included all the source code in the attached ZIP file, and a README with instructions on how to run it locally.\n\nLet me know if you need any revisions. Thank you for your business!',
+    message:
+      'Hi Sarah,\n\nHere is the final delivery for the React JS web application. I\'ve included all the source code in the attached ZIP file, and a README with instructions on how to run it locally.\n\nLet me know if you need any revisions. Thank you for your business!',
     files: [
       { name: 'react-app-source-v1.zip', size: '24.5 MB', type: 'zip' },
       { name: 'preview-screenshot.png', size: '1.2 MB', type: 'image' },
-      { name: 'README.pdf', size: '450 KB', type: 'pdf' }
-    ]
-  }
+      { name: 'README.pdf', size: '450 KB', type: 'pdf' },
+    ],
+  },
 };
 
-export default function RevisionRequestPage() {
+// Helper for conditional classes
+const cn = (...classes) => classes.filter(Boolean).join(' ');
+
+export default function ClientRevisionRequestPage() {
   const [feedback, setFeedback] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [activeFilePreview, setActiveFilePreview] = useState(null);
 
-  const handleRequestRevision = (e) => {
+  const validateFeedback = (text) => {
+    if (!text.trim()) return 'Please provide revision feedback.';
+    if (text.trim().length < 10) return 'Please provide at least 10 characters of feedback.';
+    return null;
+  };
+
+  const handleRequestRevision = async (e) => {
     e.preventDefault();
-    const feedbackErr = validateRevisionFeedback(feedback);
-    if (feedbackErr) {
-      notify.error(feedbackErr);
+    const error = validateFeedback(feedback);
+    if (error) {
+      alert(error);
       return;
     }
-
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-    }, 2000);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setIsSubmitting(false);
+    setIsSuccess(true);
+  };
+
+  // Animation variants
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  };
+  const buttonTap = { scale: 0.97 };
+  const cardHover = {
+    rest: { y: 0, boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)' },
+    hover: {
+      y: -3,
+      boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+      transition: { duration: 0.2, ease: 'easeOut' },
+    },
   };
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-surface dark:bg-surface-dark flex flex-col items-center justify-center p-4 font-sans">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="bg-white dark:bg-surface-dark p-8 sm:p-12 rounded-3xl shadow-xl border border-zinc-200 dark:border-zinc-800 text-center max-w-md w-full"
+      <div className="min-h-screen bg-surface-soft flex flex-col items-center justify-center p-4 font-body">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="bg-white border border-border rounded-2xl shadow-xl p-8 sm:p-12 text-center max-w-md w-full"
         >
-          <div className="w-20 h-20 bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+          <div className="w-20 h-20 bg-warn-light text-warn rounded-full flex items-center justify-center mx-auto mb-6">
             <RefreshCw className="w-10 h-10" />
           </div>
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">Revision Requested</h2>
-          <p className="text-zinc-500 font-medium mb-8">
+          <h2 className="font-display text-2xl font-bold text-brand-900 mb-2">Revision Requested</h2>
+          <p className="text-ink-secondary font-medium mb-8">
             The seller has been notified of your changes. The order delivery time has been paused until the revision is provided.
           </p>
-          <button className="w-full py-3.5 bg-surface-dark dark:bg-white text-white dark:text-zinc-900 font-bold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <button className="w-full py-3.5 bg-brand-900 text-white font-semibold rounded-xl shadow-sm hover:bg-brand-800 transition-colors">
             Return to Order Tracking
           </button>
         </motion.div>
@@ -68,51 +96,70 @@ export default function RevisionRequestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-surface-soft font-body py-12 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8">
-        
         {/* Left Column: Review Delivery */}
         <div className="flex-1 space-y-8">
-          
           <div className="mb-4">
-            <div className="flex items-center gap-2 mb-2 text-sm font-bold text-[#2bb75c]">
+            <div className="flex items-center gap-2 mb-2 text-sm font-semibold text-accent">
               <span>Order {ORDER.id}</span>
             </div>
-            <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">Review Delivery</h1>
+            <h1 className="font-display text-3xl font-bold text-brand-900 tracking-tight">
+              Review Delivery
+            </h1>
           </div>
 
-          {/* Delivered Content Card */}
-          <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 bg-surface/50 dark:bg-surface-dark/50 flex items-center gap-4">
-              <img src={ORDER.seller.avatar} alt="Seller" className="w-12 h-12 rounded-full object-cover" />
+          {/* Delivery Card */}
+          <motion.div
+            variants={itemVariants}
+            initial="hidden"
+            animate="visible"
+            whileHover={cardHover.hover}
+            className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden"
+          >
+            <div className="p-5 border-b border-border bg-surface-soft flex items-center gap-4">
+              <img
+                src={ORDER.seller.avatar}
+                alt="Seller"
+                className="w-12 h-12 rounded-full object-cover"
+              />
               <div>
-                <h3 className="font-bold text-zinc-900 dark:text-white">{ORDER.seller.name} delivered your order</h3>
-                <p className="text-xs font-semibold text-zinc-500">Delivered 2 hours ago</p>
+                <h3 className="font-semibold text-ink-primary">{ORDER.seller.name} delivered your order</h3>
+                <p className="text-xs font-medium text-ink-tertiary">Delivered 2 hours ago</p>
               </div>
             </div>
-            
             <div className="p-6 sm:p-8">
-              <div className="prose prose-slate dark:prose-invert text-sm font-medium text-zinc-600 dark:text-zinc-400 whitespace-pre-wrap mb-8">
+              <div className="prose text-sm text-ink-secondary whitespace-pre-wrap mb-6">
                 {ORDER.delivery.message}
               </div>
 
-              <h4 className="text-sm font-bold text-zinc-900 dark:text-white mb-4 uppercase tracking-wider">Delivered Files</h4>
+              <h4 className="text-sm font-semibold text-ink-primary mb-3 uppercase tracking-wide">
+                Delivered Files
+              </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {ORDER.delivery.files.map((file, i) => (
-                  <div key={i} className="flex items-center gap-3 p-4 bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl group hover:border-[#2bb75c]/20 transition-colors cursor-pointer">
-                    <div className="w-10 h-10 rounded-lg bg-white dark:bg-zinc-800 shadow-sm flex items-center justify-center shrink-0">
-                      {file.type === 'image' ? <ImageIcon className="w-5 h-5 text-[#2bb75c]" /> : 
-                       file.type === 'pdf' ? <FileText className="w-5 h-5 text-rose-500" /> : 
-                       <FileText className="w-5 h-5 text-zinc-500" />}
+                  <div
+                    key={i}
+                    className="flex items-center gap-3 p-3 bg-surface-soft border border-border rounded-xl group hover:border-accent/30 transition-colors cursor-pointer"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-white shadow-sm flex items-center justify-center shrink-0">
+                      {file.type === 'image' ? (
+                        <ImageIcon className="w-5 h-5 text-accent" />
+                      ) : file.type === 'pdf' ? (
+                        <FileText className="w-5 h-5 text-info" />
+                      ) : (
+                        <FileText className="w-5 h-5 text-ink-tertiary" />
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-bold text-zinc-900 dark:text-white truncate">{file.name}</p>
-                      <p className="text-xs font-medium text-zinc-500">{file.size}</p>
+                      <p className="text-sm font-medium text-ink-primary truncate">{file.name}</p>
+                      <p className="text-xs font-medium text-ink-tertiary">{file.size}</p>
                     </div>
                     {file.type === 'image' && (
-                      <button 
+                      <button
                         onClick={() => setActiveFilePreview(file)}
-                        className="p-2 text-zinc-400 hover:text-[#2bb75c] opacity-0 group-hover:opacity-100 transition-all"
+                        className="p-2 rounded-lg text-ink-tertiary hover:text-accent opacity-0 group-hover:opacity-100 transition-all"
+                        aria-label="Preview image"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
@@ -121,106 +168,123 @@ export default function RevisionRequestPage() {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Visual Annotation Preview Mock */}
+          {/* Image Preview Panel */}
           <AnimatePresence>
             {activeFilePreview && (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-                className="bg-surface-dark rounded-3xl border border-zinc-800 overflow-hidden relative"
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="bg-white border border-border rounded-2xl overflow-hidden shadow-sm"
               >
-                <div className="p-4 bg-black/50 border-b border-white/10 flex justify-between items-center text-white">
-                  <span className="text-sm font-bold flex items-center gap-2"><ImageIcon className="w-4 h-4 text-[#2bb75c]" /> {activeFilePreview.name}</span>
-                  <button onClick={() => setActiveFilePreview(null)} className="p-1 hover:bg-white/10 rounded-md transition-colors"><X className="w-4 h-4" /></button>
+                <div className="p-4 bg-surface-soft border-b border-border flex justify-between items-center">
+                  <span className="text-sm font-semibold flex items-center gap-2">
+                    <ImageIcon className="w-4 h-4 text-accent" /> {activeFilePreview.name}
+                  </span>
+                  <button
+                    onClick={() => setActiveFilePreview(null)}
+                    className="p-1 rounded-md hover:bg-surface-muted transition-colors"
+                    aria-label="Close preview"
+                  >
+                    <X className="w-4 h-4 text-ink-tertiary" />
+                  </button>
                 </div>
-                <div className="p-8 flex justify-center relative bg-zinc-800/50">
-                  <div className="relative inline-block border border-zinc-700 shadow-2xl">
-                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80" alt="Preview" className="max-w-full rounded" />
-                    {/* Mock Annotation Pin */}
-                    <div className="absolute top-[30%] left-[45%] w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-lg border-2 border-white animate-bounce cursor-pointer">1</div>
+                <div className="p-6 flex justify-center bg-surface-soft/50">
+                  <div className="relative inline-block border border-border rounded-lg shadow-sm">
+                    <img
+                      src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80"
+                      alt="Preview"
+                      className="max-w-full rounded"
+                    />
+                    {/* Static annotation pin (no looping animation) */}
+                    <div className="absolute top-[30%] left-[45%] w-6 h-6 bg-warn text-white rounded-full flex items-center justify-center text-xs font-bold shadow-md border-2 border-white">
+                      1
+                    </div>
                   </div>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
-
         </div>
 
         {/* Right Column: Revision Request Form */}
         <div className="w-full lg:w-[400px] shrink-0">
-          
-          <div className="sticky top-8 bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-xl shadow-zinc-200/50 dark:shadow-none overflow-hidden">
-            
+          <div className="sticky top-8 bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
             {/* Form Header */}
-            <div className="p-6 sm:p-8 border-b border-zinc-100 dark:border-zinc-800 bg-amber-50 dark:bg-amber-500/10">
-              <h2 className="text-xl font-bold text-amber-900 dark:text-amber-500 flex items-center gap-2 mb-2">
+            <div className="p-6 border-b border-border bg-warn-light">
+              <h2 className="font-display text-xl font-bold text-warn flex items-center gap-2 mb-1">
                 <RefreshCw className="w-5 h-5" /> Request a Revision
               </h2>
-              <p className="text-sm text-amber-800 dark:text-amber-400/80 font-medium">
+              <p className="text-sm text-warn-dark font-medium">
                 Not quite right? Outline what needs to be changed.
               </p>
             </div>
 
             {/* Revisions Remaining Badge */}
-            <div className="px-6 sm:px-8 py-4 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center bg-surface/50 dark:bg-surface-dark/50">
-              <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Revisions Remaining</span>
+            <div className="px-6 py-4 border-b border-border bg-surface-soft flex justify-between items-center">
+              <span className="text-sm font-semibold text-ink-primary">Revisions Remaining</span>
               <div className="flex gap-1">
                 {Array.from({ length: ORDER.revisionsTotal }).map((_, i) => (
-                  <div key={i} className={cn(
-                    "w-3 h-3 rounded-full",
-                    i < ORDER.revisionsRemaining ? "bg-amber-400" : "bg-zinc-200 dark:bg-zinc-700"
-                  )} />
+                  <div
+                    key={i}
+                    className={cn(
+                      'w-3 h-3 rounded-full',
+                      i < ORDER.revisionsRemaining ? 'bg-warn' : 'bg-surface-muted'
+                    )}
+                  />
                 ))}
               </div>
             </div>
 
-            <form onSubmit={handleRequestRevision} className="p-6 sm:p-8">
-              
-              <div className="mb-6">
-                <label className="text-sm font-bold text-zinc-900 dark:text-white mb-2 block">What needs to be changed?</label>
-                <textarea 
+            <form onSubmit={handleRequestRevision} className="p-6 space-y-6">
+              <div>
+                <label className="block text-sm font-semibold text-ink-primary mb-2">
+                  What needs to be changed?
+                </label>
+                <textarea
                   required
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
                   placeholder="Be as specific as possible. Point out exact files, colors, wording, or functionality that requires adjusting..."
-                  className="w-full min-h-[160px] bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4 text-sm font-medium text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-amber-500 transition-all resize-none placeholder:text-zinc-400"
+                  className="w-full min-h-[160px] border border-border rounded-xl px-4 py-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent resize-none bg-white text-ink-primary placeholder:text-ink-tertiary"
                 />
               </div>
 
               {/* Guidelines Info */}
-              <div className="flex items-start gap-3 p-4 bg-surface dark:bg-zinc-800/50 rounded-xl border border-zinc-100 dark:border-zinc-800 mb-8">
-                <AlertCircle className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
+              <div className="flex items-start gap-3 p-4 bg-surface-soft rounded-xl border border-border">
+                <AlertCircle className="w-4 h-4 text-ink-tertiary shrink-0 mt-0.5" />
+                <p className="text-xs text-ink-tertiary leading-relaxed">
                   Revisions must fall within the scope of the original requirements. Completely new features may require purchasing an extra.
                 </p>
               </div>
 
-              <button 
+              <motion.button
+                whileTap={buttonTap}
                 type="submit"
                 disabled={isSubmitting || !feedback.trim()}
-                className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-tranzinc-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3.5 bg-warn hover:bg-warn-dark text-white font-semibold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>Submitting <span className="animate-pulse">...</span></>
                 ) : (
                   <>Submit Revision Request <Send className="w-4 h-4" /></>
                 )}
-              </button>
+              </motion.button>
 
-              <div className="mt-4 text-center">
-                <button type="button" className="text-sm font-bold text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">
+              <div className="text-center">
+                <button
+                  type="button"
+                  className="text-sm font-medium text-ink-tertiary hover:text-ink-primary transition-colors"
+                >
                   Actually, I accept the delivery
                 </button>
               </div>
-
             </form>
-
           </div>
         </div>
-
       </div>
     </div>
   );
 }
-

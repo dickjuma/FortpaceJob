@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { getPublicProfileUrl } from '../../../utils/publicProfileLinks';
 import { 
   Building2, 
-  Wallet, 
   History, 
   ShieldAlert, 
   Target,

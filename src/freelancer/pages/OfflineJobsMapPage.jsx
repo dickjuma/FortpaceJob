@@ -1,17 +1,16 @@
+// src/pages/freelancer/OfflineJobsMapPage.jsx
 import React, { useState, useMemo } from 'react';
-import { 
-  MapPin, Star, Laptop, DollarSign, Clock, X, Navigation, Award, Briefcase, Eye, ChevronRight, SlidersHorizontal, Search
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  MapPin, Star, Laptop, DollarSign, Clock, X, Navigation, Award, Briefcase, Eye, ChevronRight, SlidersHorizontal, Search, Check
 } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import { cn } from '../../admin/utils/cn';
 
 export default function OfflineJobsMapPage() {
   const [selectedPin, setSelectedPin] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [maxDistance, setMaxDistance] = useState(5.0); // in miles
-  
+  const [maxDistance, setMaxDistance] = useState(5.0);
+  const [showSuccess, setShowSuccess] = useState(null);
+
   const mapPins = [
     { id: 1, title: 'Server Room Configuration', x: '35%', y: '42%', client: 'Apex Holdings', distance: 1.2, budget: 1500, type: 'Fixed Price', duration: '2 days' },
     { id: 2, title: 'On-site Commercial Photography', x: '65%', y: '30%', client: 'Cloudfront Media', distance: 3.4, budget: 2800, type: 'Fixed Price', duration: '3 days' },
@@ -20,162 +19,171 @@ export default function OfflineJobsMapPage() {
     { id: 5, title: 'Fibre Optic Splice Inspection', x: '80%', y: '50%', client: 'Symmetric Telecom', distance: 8.5, budget: 450, type: 'Hourly Rate', duration: '5 hours' }
   ];
 
-  // Dynamic filter based on query and radius slider value
   const filteredPins = useMemo(() => {
     return mapPins.filter(pin => {
-      const matchesSearch = pin.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      const matchesSearch = pin.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                             pin.client.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesDistance = pin.distance <= maxDistance;
       return matchesSearch && matchesDistance;
     });
   }, [searchQuery, maxDistance]);
 
-  const handleApplySimulate = (title) => {
-    toast.promise(
-      new Promise((resolve) => setTimeout(resolve, 800)),
-      {
-        loading: 'Submitting mapping application...',
-        success: `Applied to "${title}" successfully! 🚀`,
-        error: 'Failed to submit proposal.'
-      }
-    );
+  const handleApply = (title) => {
+    setShowSuccess({ message: `Applied to "${title}"` });
+    setTimeout(() => setShowSuccess(null), 2000);
     setSelectedPin(null);
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans animate-in slide-in-from-bottom-4 duration-500 relative">
-      <Toaster position="top-right" />
-      
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6 mb-8">
         <div>
-          <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <Navigation className="w-8 h-8 text-success animate-pulse" />
-            Offline Contracts Map
-          </h1>
-          <p className="text-sm text-text-secondary mt-1">
-            Browse in-person and offline job vacancies mapped strictly by relative distance metrics.
-          </p>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2.5 bg-accent-light rounded-xl">
+              <Navigation className="w-6 h-6 text-accent DEFAULT" />
+            </div>
+            <h1 className="font-display font-bold text-3xl text-brand-900">Offline contracts map</h1>
+          </div>
+          <p className="text-ink-secondary font-body">Browse in-person job vacancies mapped by distance</p>
         </div>
       </div>
 
-      {/* Control Filters bar */}
+      {/* Filters */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="md:col-span-1 relative">
-          <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-text-secondary" />
-          <input 
-            type="text" 
-            placeholder="Search keywords or client..." 
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-ink-tertiary" />
+          <input
+            type="text"
+            placeholder="Search keywords or client..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-2xl border border-border bg-white text-xs font-bold text-text-primary focus:border-success outline-none shadow-sm transition-all"
+            className="w-full pl-9 pr-3 h-10 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
           />
         </div>
 
-        <div className="md:col-span-2 flex items-center gap-4 bg-white border border-border p-3 rounded-2xl shadow-sm">
-          <SlidersHorizontal className="w-4 h-4 text-success shrink-0" />
+        <div className="md:col-span-2 flex items-center gap-3 bg-white border border-border p-2 rounded-lg">
+          <SlidersHorizontal className="w-4 h-4 text-accent DEFAULT shrink-0" />
           <div className="flex-1 flex items-center gap-3">
-            <span className="text-[10px] font-black uppercase text-text-secondary">Search Radius:</span>
-            <input 
-              type="range" 
-              min="0.5" 
-              max="10.0" 
+            <span className="text-xs font-body font-medium text-ink-tertiary">Radius:</span>
+            <input
+              type="range"
+              min="0.5"
+              max="10.0"
               step="0.5"
               value={maxDistance}
               onChange={(e) => setMaxDistance(parseFloat(e.target.value))}
-              className="flex-1 accent-success h-1 bg-light-gray rounded-lg appearance-none cursor-pointer"
+              className="flex-1 h-1.5 bg-border rounded-lg appearance-none cursor-pointer accent-accent DEFAULT"
             />
-            <span className="text-xs font-black text-success shrink-0 min-w-[50px] text-right">
+            <span className="text-xs font-mono font-semibold text-accent DEFAULT shrink-0 min-w-[50px] text-right">
               {maxDistance.toFixed(1)} miles
             </span>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[600px]">
-        
-        {/* Map Explorer Area (2 Columns) */}
-        <div className="lg:col-span-2 relative rounded-[32px] overflow-hidden border border-border bg-zinc-900 shadow-xl flex items-center justify-center">
-          {/* Simulated geocoded map grid design */}
-          <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1.5px,transparent_1.5px)] [background-size:24px_24px] pointer-events-none"></div>
-          <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none"></div>
-          <div className="absolute w-[300px] h-[300px] bg-success/10 blur-[120px] rounded-full pointer-events-none"></div>
-          
-          {/* Pins mapping */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[550px]">
+
+        {/* Map Area */}
+        <div className="lg:col-span-2 relative rounded-xl overflow-hidden border border-border bg-brand-900 shadow-sm">
+          {/* Map Grid Background */}
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1.5px,transparent_1.5px)] [background-size:24px_24px] pointer-events-none" />
+          <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none" />
+          <div className="absolute w-80 h-80 bg-accent-light/20 blur-[100px] rounded-full pointer-events-none" />
+
+          {/* Pins */}
           {filteredPins.map(pin => (
             <button
               key={pin.id}
               onClick={() => setSelectedPin(pin)}
-              className={cn(
-                "absolute p-3 rounded-full shadow-xl hover:scale-115 border-2 border-white transition-all z-20 group",
-                selectedPin?.id === pin.id ? "bg-white text-success" : "bg-success text-white"
-              )}
+              className={`absolute p-2 rounded-full shadow-md border-2 transition-all z-20 group ${
+                selectedPin?.id === pin.id
+                  ? "bg-white border-accent DEFAULT"
+                  : "bg-accent DEFAULT border-white hover:scale-110"
+              }`}
               style={{ left: pin.x, top: pin.y }}
             >
-              <MapPin size={18} className="group-hover:animate-bounce" />
-              <span className="absolute left-1/2 -tranzinc-x-1/2 -top-9 bg-[#222222] text-white text-[10px] font-black px-2 py-0.5 rounded shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                ${pin.budget.toLocaleString()} ({pin.distance}m)
+              <MapPin className={`w-4 h-4 ${selectedPin?.id === pin.id ? "text-accent DEFAULT" : "text-white"}`} />
+              <span className="absolute left-1/2 transform -translate-x-1/2 -top-8 bg-ink-primary text-white text-xs font-body font-medium px-2 py-0.5 rounded shadow-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                KES {pin.budget.toLocaleString()} ({pin.distance}mi)
               </span>
             </button>
           ))}
 
-          <span className="absolute bottom-4 left-4 bg-[#222222]/80 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-xl text-[10px] font-black text-white/80 flex items-center gap-1.5 shadow-lg">
-            <span className="w-2 h-2 rounded-full bg-success animate-ping"></span>
-            Geocoding Engine Live ({filteredPins.length} targets found)
-          </span>
+          <div className="absolute bottom-3 left-3 bg-ink-primary/80 border border-white/10 px-3 py-1 rounded-lg text-xs font-body font-medium text-white/80 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent-light animate-pulse" />
+            {filteredPins.length} jobs found
+          </div>
         </div>
 
-        {/* Selected Details Sidebar Panel */}
-        <div className="lg:col-span-1 h-full">
+        {/* Selected Job Details */}
+        <div className="lg:col-span-1">
           {selectedPin ? (
-            <Card className="bg-white border border-border p-6 rounded-3xl shadow-xl h-full flex flex-col justify-between animate-in slide-in-from-right-4 duration-200">
-              <div className="space-y-6">
-                <div className="flex justify-between items-start border-b border-border pb-3">
-                  <div>
-                    <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border bg-success/10 text-success border-success/20">
-                      {selectedPin.distance} miles away
-                    </span>
-                    <h3 className="font-black text-lg text-text-primary mt-2">{selectedPin.title}</h3>
-                    <p className="text-xs text-text-secondary font-bold">Client: {selectedPin.client}</p>
-                  </div>
-                  <button onClick={() => setSelectedPin(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="bg-white border border-border rounded-xl p-5 shadow-sm h-full flex flex-col"
+            >
+              <div className="flex justify-between items-start mb-4 pb-3 border-b border-border">
+                <div>
+                  <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-body font-medium bg-accent-light text-accent-dark">
+                    {selectedPin.distance} miles away
+                  </span>
+                  <h3 className="font-body font-semibold text-base text-ink-primary mt-2">{selectedPin.title}</h3>
+                  <p className="text-sm text-ink-secondary">Client: {selectedPin.client}</p>
                 </div>
-
-                <div className="space-y-3 font-bold text-text-secondary text-xs">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-success" />
-                    <span>Duration: {selectedPin.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="w-4 h-4 text-success" />
-                    <span>Project Budget: ${selectedPin.budget.toLocaleString()} ({selectedPin.type})</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-border mt-6">
-                <button 
-                  onClick={() => handleApplySimulate(selectedPin.title)}
-                  className="w-full py-3 bg-success hover:bg-success/95 text-white font-black rounded-xl text-sm transition-all shadow-lg shadow-[#2bb75c]/20 flex items-center justify-center gap-1.5"
-                >
-                  Apply On-site Contract
+                <button onClick={() => setSelectedPin(null)} className="p-1 text-ink-tertiary hover:text-ink-primary rounded transition-colors">
+                  <X className="w-4 h-4" />
                 </button>
               </div>
-            </Card>
+
+              <div className="space-y-3 text-sm font-body text-ink-secondary mb-6">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-accent DEFAULT" />
+                  <span>Duration: {selectedPin.duration}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-accent DEFAULT" />
+                  <span>Budget: KES {selectedPin.budget.toLocaleString()} ({selectedPin.type})</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => handleApply(selectedPin.title)}
+                className="w-full py-2.5 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors mt-auto"
+              >
+                Apply on-site
+              </button>
+            </motion.div>
           ) : (
-            <Card className="bg-white border border-border p-8 rounded-3xl shadow-md h-full flex flex-col items-center justify-center text-center">
-              <Navigation className="w-12 h-12 text-text-secondary mb-3 animate-pulse" />
-              <h4 className="font-black text-text-primary text-base">Select Map Pin</h4>
-              <p className="text-xs text-text-secondary mt-1 max-w-[200px] leading-relaxed font-semibold">
-                Click on any geocoded location marker pin on the map to review in-person contract scopes.
-              </p>
-            </Card>
+            <div className="bg-white border border-border rounded-xl p-8 shadow-sm h-full flex flex-col items-center justify-center text-center">
+              <Navigation className="w-12 h-12 text-ink-tertiary mb-3" />
+              <h4 className="font-body font-semibold text-base text-ink-primary mb-1">Select a job</h4>
+              <p className="text-sm text-ink-secondary">Click on any map marker to view job details</p>
+            </div>
           )}
         </div>
-
       </div>
-
-    </div>
+    </motion.div>
   );
 }
-

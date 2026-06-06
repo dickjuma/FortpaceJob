@@ -1,15 +1,14 @@
+// src/pages/public/GlobalSearchResultsPage.jsx
 import React, { useState } from 'react';
-import { 
-  Search, Briefcase, User, Star, Globe, ShieldCheck, ChevronRight, X, ArrowUpRight
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Search, Briefcase, User, Star, Globe, ShieldCheck, ChevronRight, X, ArrowUpRight, Check
 } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import { cn } from '../../admin/utils/cn';
 
 export default function GlobalSearchResultsPage() {
   const [activeTab, setActiveTab] = useState('jobs');
   const [query, setQuery] = useState('React');
+  const [showSuccess, setShowSuccess] = useState(null);
 
   const results = {
     jobs: [
@@ -26,92 +25,143 @@ export default function GlobalSearchResultsPage() {
     ]
   };
 
-  const handleActionSimulate = (name) => {
-    toast.success(`Redirecting to: ${name}`);
+  const handleAction = (name) => {
+    setShowSuccess({ message: `Opening: ${name}` });
+    setTimeout(() => setShowSuccess(null), 2000);
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setShowSuccess({ message: `Searching for: ${query}` });
+    setTimeout(() => setShowSuccess(null), 2000);
+  };
+
+  const tabs = [
+    { key: 'jobs', label: `Jobs (${results.jobs.length})`, icon: Briefcase },
+    { key: 'gigs', label: `Services (${results.gigs.length})`, icon: Globe },
+    { key: 'talent', label: `Talent (${results.talent.length})`, icon: User }
+  ];
+
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans animate-in slide-in-from-bottom-4 duration-500 relative">
-      <Toaster position="top-right" />
-      
-      {/* Search Header Input */}
-      <div className="bg-white border border-border p-6 rounded-2xl shadow-sm mb-8">
-        <h1 className="text-xl font-black text-text-primary mb-4 flex items-center gap-2">
-          <Search className="w-5 h-5 text-success" />
-          Global Search Results
-        </h1>
-        <div className="relative">
-          <Search className="w-4 h-4 absolute left-4 top-1/2 -tranzinc-y-1/2 text-text-secondary" />
-          <input 
-            type="text" 
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search jobs, talents, services..."
-            className="pl-11 pr-4 py-3 w-full border border-border rounded-xl bg-light-gray focus:outline-none focus:border-success focus:bg-white text-sm text-text-primary font-bold"
-          />
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Search Header */}
+      <div className="bg-white border border-border rounded-2xl p-6 shadow-sm mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="p-2 bg-accent-light rounded-lg">
+            <Search className="w-5 h-5 text-accent DEFAULT" />
+          </div>
+          <h1 className="font-display font-bold text-xl text-brand-900">Global search results</h1>
         </div>
+        <form onSubmit={handleSearch}>
+          <div className="relative">
+            <Search className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2 text-ink-tertiary" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search jobs, talent, services..."
+              className="w-full pl-11 pr-4 h-11 bg-white border border-border rounded-xl text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+            />
+          </div>
+        </form>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-border mb-6">
-        {[
-          { key: 'jobs', label: `Jobs (${results.jobs.length})`, icon: Briefcase },
-          { key: 'gigs', label: `Gigs (${results.gigs.length})`, icon: Globe },
-          { key: 'talent', label: `Talent (${results.talent.length})`, icon: User }
-        ].map(tab => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={cn(
-              "pb-4 text-xs font-black uppercase tracking-widest transition-all border-b-2 flex items-center gap-1.5",
-              activeTab === tab.key 
-                ? "border-success text-text-primary" 
-                : "border-transparent text-text-secondary hover:text-text-primary"
-            )}
+      <div className="flex gap-6 border-b border-border mb-6">
+        {tabs.map(tab => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.key;
+          return (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`pb-3 text-xs font-body font-medium uppercase tracking-wide transition-all border-b-2 flex items-center gap-1.5 ${
+                isActive
+                  ? "border-accent DEFAULT text-accent DEFAULT"
+                  : "border-transparent text-ink-tertiary hover:text-ink-primary"
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Results Lists */}
+      <div className="space-y-3">
+        {results[activeTab].map((item, idx) => (
+          <motion.div
+            key={item.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.05 }}
+            whileHover={{ y: -2 }}
+            className="bg-white border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row justify-between sm:items-center gap-4 group"
           >
-            <tab.icon size={14} />
-            {tab.label}
-          </button>
+            <div className="flex-1">
+              <h3 className="font-body font-semibold text-base text-ink-primary group-hover:text-accent DEFAULT transition-colors">
+                {activeTab === 'jobs' ? item.title : activeTab === 'gigs' ? item.title : item.name}
+              </h3>
+
+              {activeTab === 'jobs' && (
+                <p className="text-sm font-body text-ink-secondary mt-1">
+                  Client: {item.client} • Budget: KES {item.budget} ({item.type})
+                </p>
+              )}
+
+              {activeTab === 'gigs' && (
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 fill-accent DEFAULT text-accent DEFAULT" />
+                    <span className="text-sm font-body font-semibold text-ink-primary">{item.rating}</span>
+                    <span className="text-xs text-ink-tertiary">({item.reviews} reviews)</span>
+                  </div>
+                  <span className="text-ink-tertiary">•</span>
+                  <span className="text-sm font-mono font-semibold text-ink-primary">KES {item.price}</span>
+                </div>
+              )}
+
+              {activeTab === 'talent' && (
+                <>
+                  <p className="text-sm font-body text-ink-secondary mt-1">{item.title} • {item.location}</p>
+                  <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-accent-light rounded-full">
+                    <ShieldCheck className="w-3.5 h-3.5 text-accent DEFAULT" />
+                    <span className="text-xs font-body font-medium text-accent-dark">Success: {item.success}</span>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <button
+              onClick={() => handleAction(activeTab === 'jobs' ? item.title : activeTab === 'gigs' ? item.title : item.name)}
+              className="p-2 text-ink-tertiary hover:text-accent DEFAULT rounded-lg transition-colors"
+            >
+              <ArrowUpRight className="w-4 h-4" />
+            </button>
+          </motion.div>
         ))}
       </div>
-
-      {/* Tab Contents */}
-      <div className="space-y-4">
-        {activeTab === 'jobs' && results.jobs.map(job => (
-          <Card key={job.id} className="bg-white border border-border p-5 rounded-2xl shadow-sm hover:border-success/30 transition-all flex justify-between items-center group">
-            <div>
-              <h3 className="font-black text-sm text-text-primary group-hover:text-success transition-colors cursor-pointer">{job.title}</h3>
-              <p className="text-xs text-text-secondary font-bold mt-1">Client: {job.client} • Budget: ${job.budget} ({job.type})</p>
-            </div>
-            <button onClick={() => handleActionSimulate(job.title)} className="p-2 bg-light-gray/60 hover:bg-success hover:text-white rounded-xl transition-all text-text-secondary"><ArrowUpRight size={16} /></button>
-          </Card>
-        ))}
-
-        {activeTab === 'gigs' && results.gigs.map(gig => (
-          <Card key={gig.id} className="bg-white border border-border p-5 rounded-2xl shadow-sm hover:border-success/30 transition-all flex justify-between items-center group">
-            <div>
-              <h3 className="font-black text-sm text-text-primary group-hover:text-success transition-colors cursor-pointer">{gig.title}</h3>
-              <p className="text-xs text-text-secondary font-bold mt-1">Starting At: ${gig.price} • Rating: {gig.rating} ({gig.reviews} reviews)</p>
-            </div>
-            <button onClick={() => handleActionSimulate(gig.title)} className="p-2 bg-light-gray/60 hover:bg-success hover:text-white rounded-xl transition-all text-text-secondary"><ArrowUpRight size={16} /></button>
-          </Card>
-        ))}
-
-        {activeTab === 'talent' && results.talent.map(tal => (
-          <Card key={tal.id} className="bg-white border border-border p-5 rounded-2xl shadow-sm hover:border-success/30 transition-all flex justify-between items-center group">
-            <div>
-              <div className="flex items-center gap-1.5">
-                <h3 className="font-black text-sm text-text-primary group-hover:text-success transition-colors cursor-pointer">{tal.name}</h3>
-                <ShieldCheck size={14} className="text-success" />
-              </div>
-              <p className="text-xs text-text-secondary font-bold mt-0.5">{tal.title} • {tal.location}</p>
-              <p className="text-[10px] text-success font-black uppercase tracking-wider mt-1">Job Success: {tal.success}</p>
-            </div>
-            <button onClick={() => handleActionSimulate(tal.name)} className="p-2 bg-light-gray/60 hover:bg-success hover:text-white rounded-xl transition-all text-text-secondary"><ArrowUpRight size={16} /></button>
-          </Card>
-        ))}
-      </div>
-
-    </div>
+    </motion.div>
   );
 }

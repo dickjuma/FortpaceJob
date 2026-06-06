@@ -4,8 +4,7 @@ import {
   ChevronDown, 
   ChevronLeft, 
   ChevronRight,
-  MoreVertical,
-  Search
+  MoreVertical
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import Skeleton from '../ui/Skeleton';

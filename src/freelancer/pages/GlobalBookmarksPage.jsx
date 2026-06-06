@@ -1,11 +1,9 @@
+// src/pages/common/GlobalBookmarksPage.jsx
 import React, { useState } from 'react';
-import { 
-  Bookmark, Briefcase, User, Star, Trash2, Globe, ShieldCheck, ChevronRight, X, ArrowUpRight
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Bookmark, Briefcase, User, Star, Trash2, Globe, ShieldCheck, ChevronRight, X, ArrowUpRight, Check
 } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import { cn } from '../../admin/utils/cn';
 
 export default function GlobalBookmarksPage() {
   const [bookmarks, setBookmarks] = useState({
@@ -20,118 +18,154 @@ export default function GlobalBookmarksPage() {
       { id: 1, name: 'Elena Rodriguez', title: 'Lead Developer & PM', location: 'London, UK', success: '100%' }
     ]
   });
-
   const [activeTab, setActiveTab] = useState('jobs');
+  const [showSuccess, setShowSuccess] = useState(null);
 
   const removeBookmark = (id, type, name) => {
-    setBookmarks(prev => {
-      const updatedList = prev[type].filter(item => item.id !== id);
-      toast.success(`Removed bookmark: ${name}`);
-      return {
-        ...prev,
-        [type]: updatedList
-      };
-    });
+    setBookmarks(prev => ({
+      ...prev,
+      [type]: prev[type].filter(item => item.id !== id)
+    }));
+    setShowSuccess({ message: `Removed: ${name}` });
+    setTimeout(() => setShowSuccess(null), 2000);
   };
 
-  const handleActionSimulate = (name) => {
-    toast.success(`Opening: ${name}`);
+  const handleAction = (name) => {
+    setShowSuccess({ message: `Opening: ${name}` });
+    setTimeout(() => setShowSuccess(null), 2000);
   };
+
+  const tabs = [
+    { key: 'jobs', label: `Jobs (${bookmarks.jobs.length})`, icon: Briefcase },
+    { key: 'gigs', label: `Services (${bookmarks.gigs.length})`, icon: Globe },
+    { key: 'talent', label: `Profiles (${bookmarks.talent.length})`, icon: User }
+  ];
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans animate-in slide-in-from-bottom-4 duration-500 relative">
-      <Toaster position="top-right" />
-      
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
-            <Bookmark className="w-8 h-8 text-success" />
-            Global Bookmarks
-          </h1>
-          <p className="text-sm text-text-secondary mt-1">
-            Access and manage your saved vacancies, gig templates, and profiles ledger.
-          </p>
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2.5 bg-accent-light rounded-xl">
+            <Bookmark className="w-6 h-6 text-accent DEFAULT" />
+          </div>
+          <h1 className="font-display font-bold text-3xl text-brand-900">Global bookmarks</h1>
         </div>
+        <p className="text-ink-secondary font-body">Access and manage your saved jobs, services, and profiles</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-border mb-6">
-        {[
-          { key: 'jobs', label: `Saved Jobs (${bookmarks.jobs.length})`, icon: Briefcase },
-          { key: 'gigs', label: `Services (${bookmarks.gigs.length})`, icon: Globe },
-          { key: 'talent', label: `Talent Profiles (${bookmarks.talent.length})`, icon: User }
-        ].map(tab => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={cn(
-              "pb-4 text-xs font-black uppercase tracking-widest transition-all border-b-2 flex items-center gap-1.5",
-              activeTab === tab.key 
-                ? "border-success text-text-primary" 
-                : "border-transparent text-text-secondary hover:text-text-primary"
-            )}
-          >
-            <tab.icon size={14} />
-            {tab.label}
-          </button>
-        ))}
+      <div className="flex gap-6 border-b border-border mb-6">
+        {tabs.map(tab => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.key;
+          return (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`pb-3 text-xs font-body font-medium uppercase tracking-wide transition-all border-b-2 flex items-center gap-1.5 ${
+                isActive
+                  ? "border-accent DEFAULT text-accent DEFAULT"
+                  : "border-transparent text-ink-tertiary hover:text-ink-primary"
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* Tab Contents */}
-      <div className="space-y-4">
-        {activeTab === 'jobs' && bookmarks.jobs.map(job => (
-          <Card key={job.id} className="bg-white border border-border p-5 rounded-2xl shadow-sm hover:border-success/30 transition-all flex justify-between items-center group">
-            <div>
-              <h3 className="font-black text-sm text-text-primary group-hover:text-success transition-colors cursor-pointer">{job.title}</h3>
-              <p className="text-xs text-text-secondary font-bold mt-1">Client: {job.client} • Budget: ${job.budget} ({job.type})</p>
-            </div>
-            <div className="flex gap-2">
-              <button onClick={() => handleActionSimulate(job.title)} className="p-2 bg-light-gray/60 hover:bg-success hover:text-white rounded-xl transition-all text-text-secondary"><ArrowUpRight size={16} /></button>
-              <button onClick={() => removeBookmark(job.id, 'jobs', job.title)} className="p-2 text-text-secondary hover:text-[#e63946] hover:bg-light-gray rounded-xl transition-all"><Trash2 size={16} /></button>
-            </div>
-          </Card>
-        ))}
-
-        {activeTab === 'gigs' && bookmarks.gigs.map(gig => (
-          <Card key={gig.id} className="bg-white border border-border p-5 rounded-2xl shadow-sm hover:border-success/30 transition-all flex justify-between items-center group">
-            <div>
-              <h3 className="font-black text-sm text-text-primary group-hover:text-success transition-colors cursor-pointer">{gig.title}</h3>
-              <p className="text-xs text-text-secondary font-bold mt-1">Starting At: ${gig.price} • Rating: {gig.rating} ({gig.reviews} reviews)</p>
-            </div>
-            <div className="flex gap-2">
-              <button onClick={() => handleActionSimulate(gig.title)} className="p-2 bg-light-gray/60 hover:bg-success hover:text-white rounded-xl transition-all text-text-secondary"><ArrowUpRight size={16} /></button>
-              <button onClick={() => removeBookmark(gig.id, 'gigs', gig.title)} className="p-2 text-text-secondary hover:text-[#e63946] hover:bg-light-gray rounded-xl transition-all"><Trash2 size={16} /></button>
-            </div>
-          </Card>
-        ))}
-
-        {activeTab === 'talent' && bookmarks.talent.map(tal => (
-          <Card key={tal.id} className="bg-white border border-border p-5 rounded-2xl shadow-sm hover:border-success/30 transition-all flex justify-between items-center group">
-            <div>
-              <div className="flex items-center gap-1.5">
-                <h3 className="font-black text-sm text-text-primary group-hover:text-success transition-colors cursor-pointer">{tal.name}</h3>
-                <ShieldCheck className="w-14 h-14 bg-success/10 text-success rounded-xl shrink-0 flex items-center justify-center font-bold" />
-              </div>
-              <p className="text-xs text-text-secondary font-bold mt-0.5">{tal.title} • {tal.location}</p>
-              <p className="text-[10px] text-success font-black uppercase tracking-wider mt-1">Job Success: {tal.success}</p>
-            </div>
-            <div className="flex gap-2">
-              <button onClick={() => handleActionSimulate(tal.name)} className="p-2 bg-light-gray/60 hover:bg-success hover:text-white rounded-xl transition-all text-text-secondary"><ArrowUpRight size={16} /></button>
-              <button onClick={() => removeBookmark(tal.id, 'talent', tal.name)} className="p-2 text-text-secondary hover:text-[#e63946] hover:bg-light-gray rounded-xl transition-all"><Trash2 size={16} /></button>
-            </div>
-          </Card>
-        ))}
-
-        {bookmarks[activeTab].length === 0 && (
-          <div className="text-center py-12">
-            <Bookmark className="w-12 h-12 text-text-secondary mx-auto mb-3" />
-            <h4 className="font-bold text-text-primary">No bookmarks saved</h4>
-            <p className="text-xs text-text-secondary mt-1">Bookmark vacancies or profiles to manage them here.</p>
+      <div className="space-y-3">
+        {bookmarks[activeTab].length === 0 ? (
+          <div className="text-center py-16 bg-white border border-border rounded-2xl">
+            <Bookmark className="w-14 h-14 text-ink-tertiary mx-auto mb-3" />
+            <h4 className="font-body font-semibold text-lg text-ink-primary mb-1">No bookmarks saved</h4>
+            <p className="text-sm text-ink-secondary">Save jobs or profiles to manage them here</p>
           </div>
+        ) : (
+          bookmarks[activeTab].map((item, idx) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.05 }}
+              whileHover={{ y: -2 }}
+              className="bg-white border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row justify-between sm:items-center gap-4 group"
+            >
+              <div className="flex-1">
+                <h3 className="font-body font-semibold text-base text-ink-primary group-hover:text-accent DEFAULT transition-colors">
+                  {activeTab === 'jobs' ? item.title : activeTab === 'gigs' ? item.title : item.name}
+                </h3>
+
+                {activeTab === 'jobs' && (
+                  <p className="text-sm font-body text-ink-secondary mt-1">
+                    Client: {item.client} • Budget: KES {item.budget} ({item.type})
+                  </p>
+                )}
+
+                {activeTab === 'gigs' && (
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 fill-accent DEFAULT text-accent DEFAULT" />
+                      <span className="text-sm font-body font-semibold text-ink-primary">{item.rating}</span>
+                      <span className="text-xs text-ink-tertiary">({item.reviews} reviews)</span>
+                    </div>
+                    <span className="text-ink-tertiary">•</span>
+                    <span className="text-sm font-mono font-semibold text-ink-primary">KES {item.price}</span>
+                  </div>
+                )}
+
+                {activeTab === 'talent' && (
+                  <>
+                    <p className="text-sm font-body text-ink-secondary mt-1">{item.title} • {item.location}</p>
+                    <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-accent-light rounded-full">
+                      <ShieldCheck className="w-3.5 h-3.5 text-accent DEFAULT" />
+                      <span className="text-xs font-body font-medium text-accent-dark">Success: {item.success}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleAction(activeTab === 'jobs' ? item.title : activeTab === 'gigs' ? item.title : item.name)}
+                  className="p-2 text-ink-tertiary hover:text-accent DEFAULT rounded-lg transition-colors"
+                >
+                  <ArrowUpRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => removeBookmark(item.id, activeTab, activeTab === 'jobs' ? item.title : activeTab === 'gigs' ? item.title : item.name)}
+                  className="p-2 text-ink-tertiary hover:text-danger rounded-lg transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </motion.div>
+          ))
         )}
       </div>
-
-    </div>
+    </motion.div>
   );
 }

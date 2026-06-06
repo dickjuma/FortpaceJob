@@ -82,6 +82,7 @@ export async function loadTalentCategories() {
           workMode: node.workMode || kind,
           description: node.description || '',
           roleCount: node.stats?.roles || (node.children || []).length,
+          stats: { talentCount: 0 },
           _raw: node,
         };
       });
@@ -340,9 +341,10 @@ async function fetchBackendTalentsAndJobs(filters = {}) {
   if (query) params.q = query;
   if (filters.sectionSlug) params.section = filters.sectionSlug;
   if (categoryId) params.category = categoryId;
-  if (categoryIds.length) params.categories = categoryIds.join(',');
+  if (categoryIds.length) params.categories = Array.from(new Set(categoryIds)).join(',');
   if (mode === 'online') params.onlineOnly = 'true';
   if (mode === 'onsite') params.offlineOnly = 'true';
+  if (mode === 'hybrid') params.mode = 'hybrid';
 
   const res = await publicAPI.searchFreelancers(params);
   return Array.isArray(res?.talents) ? res.talents : Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
@@ -351,8 +353,6 @@ async function fetchBackendTalentsAndJobs(filters = {}) {
 export async function syncTalentWithBackend(filters = {}) {
   try {
     const backendTalent = await fetchBackendTalentsAndJobs(filters);
-
-    if (backendTalent.length === 0) return;
 
     const mappedTalent = backendTalent.map((freelancer) => {
       let skillsArray = [];
@@ -447,6 +447,25 @@ export async function syncTalentWithBackend(filters = {}) {
 
     TALENT.length = 0;
     TALENT.push(...mappedTalent);
+
+    const counts = mappedTalent.reduce((acc, talent) => {
+      const key = talent.categoryId || talent.sectionSlug || talent.roleSlug || 'uncategorized';
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    const updateStats = (categoryList) => {
+      categoryList.forEach((category) => {
+        category.stats = {
+          ...category.stats,
+          talentCount: counts[category.id] || counts[category.slug] || 0,
+        };
+      });
+    };
+
+    updateStats(TALENT_TOP_LEVEL);
+    updateStats(TALENT_CATEGORIES);
+
     notifyListeners();
   } catch (err) {
     console.error('[Live Sync] Failed to sync talent:', err.message);

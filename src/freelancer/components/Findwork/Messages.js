@@ -33,7 +33,7 @@ const formatDay = (iso) => {
 };
 
 export default function Messages() {
-  const { isConnected, joinConversation, leaveConversation, sendMessage, startTyping, stopTyping, markRead } = useSocket();
+  const { socket, isConnected, joinConversation, leaveConversation, sendMessage, startTyping, stopTyping, markRead } = useSocket();
 
   // State
   const [conversations, setConversations] = useState([]);
@@ -92,18 +92,15 @@ export default function Messages() {
 
   // Listen for new messages
   useEffect(() => {
-    if (!isConnected) return;
+    if (!socket || !isConnected) return;
 
     const handleNewMessage = (msg) => {
-      // msg: { _id, sender: { _id, name, avatar }, content, attachments, createdAt, conversationId }
       if (msg.conversationId === activeId) {
-        // Add to current conversation
         setMessages((prev) => ({
           ...prev,
           [activeId]: [...(prev[activeId] || []), msg],
         }));
       } else {
-        // Update unread count for the conversation in the list
         setConversations((prev) =>
           prev.map((conv) =>
             conv.id === msg.conversationId
@@ -140,23 +137,25 @@ export default function Messages() {
 
     const handleMessagesRead = ({ userId, conversationId }) => {
       if (conversationId === activeId) {
-        // Could mark messages as read visually, but backend likely handles it
+        // Optionally update local read indicators
       }
     };
 
-    window.socket?.on('new_message', handleNewMessage);
-    window.socket?.on('user_typing', handleUserTyping);
-    window.socket?.on('user_stopped_typing', handleUserStoppedTyping);
-    window.socket?.on('messages_read', handleMessagesRead);
+    socket.on('new_message', handleNewMessage);
+    socket.on('message_sent', handleNewMessage);
+    socket.on('user_typing', handleUserTyping);
+    socket.on('user_stopped_typing', handleUserStoppedTyping);
+    socket.on('messages_read', handleMessagesRead);
 
     return () => {
-      window.socket?.off('new_message', handleNewMessage);
-      window.socket?.off('user_typing', handleUserTyping);
-      window.socket?.off('user_stopped_typing', handleUserStoppedTyping);
-      window.socket?.off('messages_read', handleMessagesRead);
+      socket.off('new_message', handleNewMessage);
+      socket.off('message_sent', handleNewMessage);
+      socket.off('user_typing', handleUserTyping);
+      socket.off('user_stopped_typing', handleUserStoppedTyping);
+      socket.off('messages_read', handleMessagesRead);
       clearTimeout(typingTimeoutRef.current);
     };
-  }, [isConnected, activeId]);
+  }, [socket, isConnected, activeId]);
 
   // Handle typing events
   const handleTypingStart = useCallback(() => {

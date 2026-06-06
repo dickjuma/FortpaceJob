@@ -1,66 +1,105 @@
+// src/pages/freelancer/FreelancerReferralPage.jsx
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  Gift, Users, DollarSign, Share2, Copy, 
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Gift, Users, DollarSign, Share2, Copy,
   CheckCircle2, Trophy, ArrowRight, Mail,
-  Twitter, Linkedin, MessageCircle
+  Twitter, Linkedin, MessageCircle, Check
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
 
 const LEADERBOARD = [
-  { rank: 1, name: 'Alex Rivera', invites: 42, earnings: 4200, avatar: 'https://i.pravatar.cc/150?u=a1' },
-  { rank: 2, name: 'Sarah Mitchell', invites: 38, earnings: 3800, avatar: 'https://i.pravatar.cc/150?u=s1' },
-  { rank: 3, name: 'You', invites: 12, earnings: 1200, avatar: 'https://i.pravatar.cc/150?u=you', isYou: true },
-  { rank: 4, name: 'David Kim', invites: 8, earnings: 800, avatar: 'https://i.pravatar.cc/150?u=d2' },
+  { rank: 1, name: 'Alex Rivera', invites: 42, earnings: 4200, avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop' },
+  { rank: 2, name: 'Sarah Mitchell', invites: 38, earnings: 3800, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop' },
+  { rank: 3, name: 'You', invites: 12, earnings: 1200, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop', isYou: true },
+  { rank: 4, name: 'David Kim', invites: 8, earnings: 800, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop' },
 ];
 
 const HISTORY = [
-  { id: 1, user: 'john.doe@example.com', status: 'Completed', reward: '+$100', date: 'May 18, 2026' },
-  { id: 2, user: 'jane.smith@design.io', status: 'Pending', reward: '+$100', date: 'May 20, 2026' },
+  { id: 1, user: 'john.doe@example.com', status: 'Completed', reward: 100, date: 'May 18, 2026' },
+  { id: 2, user: 'jane.smith@design.io', status: 'Pending', reward: 100, date: 'May 20, 2026' },
 ];
 
 export default function FreelancerReferralPage() {
   const [copied, setCopied] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(null);
   const referralLink = 'https://forte.com/ref/freelancer123';
 
   const handleCopy = () => {
+    navigator.clipboard.writeText(referralLink);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setShowSuccess({ message: 'Referral link copied to clipboard' });
+    setTimeout(() => {
+      setCopied(false);
+      setShowSuccess(null);
+    }, 2000);
   };
 
+  const handleShare = (platform) => {
+    setShowSuccess({ message: `Share via ${platform} would open here` });
+    setTimeout(() => setShowSuccess(null), 2000);
+  };
+
+  const totalEarned = 1200;
+  const invitesSent = 45;
+  const pendingEarnings = 300;
+
   return (
-    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans pb-24">
-      
-      {/* Header */}
-      <div className="bg-[#2bb75c] dark:bg-[#2bb75c] pt-16 pb-32 text-center px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="min-h-screen bg-surface-soft pb-16"
+    >
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Hero Section */}
+      <div className="bg-gradient-to-br from-brand-900 to-brand-800 pt-16 pb-32 text-center px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
         <div className="relative z-10 max-w-3xl mx-auto">
-          <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-6 text-white shadow-xl">
-            <Gift className="w-8 h-8" />
+          <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Gift className="w-8 h-8 text-accent-light" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">Invite Friends, Earn $100</h1>
-          <p className="text-[#2bb75c] text-lg md:text-xl font-medium max-w-2xl mx-auto">
-            Get $100 for every freelancer or client who signs up with your link and completes their first $500 in transactions.
+          <h1 className="font-display font-bold text-4xl md:text-5xl text-white mb-4">Invite friends, earn KES 100</h1>
+          <p className="text-white/80 text-lg md:text-xl font-body max-w-2xl mx-auto">
+            Get KES 100 for every freelancer or client who signs up with your link and completes their first transaction.
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-20 relative z-20">
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Main Referral Card */}
-          <div className="lg:col-span-2 space-y-8">
-            
-            <div className="bg-white dark:bg-surface-dark rounded-3xl p-8 shadow-xl border border-zinc-200 dark:border-zinc-800">
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-6">Your Referral Link</h2>
-              
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <div className="flex-1 bg-surface dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl p-4 flex items-center justify-between">
-                  <span className="text-sm font-bold text-zinc-600 dark:text-zinc-300 font-mono truncate mr-4">{referralLink}</span>
-                  <button 
+
+          {/* Main Referral Section */}
+          <div className="lg:col-span-2 space-y-6">
+
+            {/* Referral Link Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-2xl p-6 shadow-lg border border-border"
+            >
+              <h2 className="font-display font-semibold text-xl text-brand-900 mb-5">Your referral link</h2>
+
+              <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                <div className="flex-1 bg-surface-soft border border-border rounded-xl p-3 flex items-center justify-between">
+                  <span className="text-sm font-mono text-ink-primary truncate mr-3">{referralLink}</span>
+                  <button
                     onClick={handleCopy}
-                    className="shrink-0 flex items-center gap-2 text-[#2bb75c] hover:text-[#2bb75c] font-bold text-sm bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 px-4 py-2 rounded-lg transition-colors"
+                    className="shrink-0 flex items-center gap-2 text-accent DEFAULT hover:text-accent-dark font-body text-sm bg-accent-light px-3 py-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-900"
                   >
                     {copied ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                     {copied ? 'Copied!' : 'Copy'}
@@ -68,131 +107,178 @@ export default function FreelancerReferralPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <button className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#0077b5]/10 text-[#0077b5] hover:bg-[#0077b5]/20 transition-colors">
-                  <Linkedin className="w-6 h-6 mb-2" />
-                  <span className="text-xs font-bold">LinkedIn</span>
-                </button>
-                <button className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#1DA1F2]/10 text-[#1DA1F2] hover:bg-[#1DA1F2]/20 transition-colors">
-                  <Twitter className="w-6 h-6 mb-2" />
-                  <span className="text-xs font-bold">Twitter</span>
-                </button>
-                <button className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 transition-colors">
-                  <MessageCircle className="w-6 h-6 mb-2" />
-                  <span className="text-xs font-bold">WhatsApp</span>
-                </button>
-                <button className="flex flex-col items-center justify-center p-4 rounded-2xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors">
-                  <Mail className="w-6 h-6 mb-2" />
-                  <span className="text-xs font-bold">Email</span>
-                </button>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[
+                  { name: 'LinkedIn', icon: Linkedin, color: 'bg-[#0077b5]/10 text-[#0077b5] hover:bg-[#0077b5]/20' },
+                  { name: 'Twitter', icon: Twitter, color: 'bg-[#1DA1F2]/10 text-[#1DA1F2] hover:bg-[#1DA1F2]/20' },
+                  { name: 'WhatsApp', icon: MessageCircle, color: 'bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20' },
+                  { name: 'Email', icon: Mail, color: 'bg-surface-muted text-ink-secondary hover:bg-surface-soft' }
+                ].map(platform => {
+                  const Icon = platform.icon;
+                  return (
+                    <button
+                      key={platform.name}
+                      onClick={() => handleShare(platform.name)}
+                      className={`flex flex-col items-center justify-center p-3 rounded-xl ${platform.color} transition-colors focus:outline-none focus:ring-2 focus:ring-brand-900`}
+                    >
+                      <Icon className="w-5 h-5 mb-1" />
+                      <span className="text-xs font-body font-medium">{platform.name}</span>
+                    </button>
+                  );
+                })}
               </div>
-            </div>
+            </motion.div>
 
             {/* Reward History */}
-            <div className="bg-white dark:bg-surface-dark rounded-3xl p-8 shadow-sm border border-zinc-200 dark:border-zinc-800">
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-6">Recent Referrals</h2>
-              
-              <div className="space-y-4">
-                {HISTORY.map(item => (
-                  <div key={item.id} className="flex items-center justify-between p-4 border border-zinc-100 dark:border-zinc-800 rounded-2xl hover:bg-surface dark:hover:bg-zinc-800/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-zinc-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-zinc-400">
-                        <Users className="w-5 h-5" />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-2xl p-6 shadow-sm border border-border"
+            >
+              <h2 className="font-display font-semibold text-xl text-brand-900 mb-5">Recent referrals</h2>
+
+              <div className="space-y-3">
+                {HISTORY.map((item, idx) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="flex items-center justify-between p-3 border border-border rounded-xl hover:bg-surface-soft transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 bg-surface-muted rounded-full flex items-center justify-center">
+                        <Users className="w-4 h-4 text-ink-tertiary" />
                       </div>
                       <div>
-                        <p className="font-bold text-zinc-900 dark:text-white text-sm">{item.user}</p>
-                        <p className="text-xs font-medium text-zinc-500">{item.date}</p>
+                        <p className="font-body font-medium text-sm text-ink-primary">{item.user}</p>
+                        <p className="text-xs font-body text-ink-tertiary">{item.date}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-black text-success">{item.reward}</p>
-                      <span className={cn(
-                        "text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 inline-block",
-                        item.status === 'Completed' ? "bg-emerald-100 text-emerald-700 dark:bg-success/20 dark:text-success" : "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400"
-                      )}>
+                      <p className="font-mono font-semibold text-accent DEFAULT">KES {item.reward}</p>
+                      <span className={`text-xs font-body font-medium px-2 py-0.5 rounded-full ${
+                        item.status === 'Completed'
+                          ? 'bg-accent-light text-accent-dark'
+                          : 'bg-warn-light text-warn'
+                      }`}>
                         {item.status}
                       </span>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-              
-              <button className="w-full mt-6 py-3 border-2 border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 font-bold rounded-xl hover:bg-surface dark:hover:bg-zinc-800 transition-colors">
-                View All History
-              </button>
-            </div>
 
+              <button className="w-full mt-5 py-2.5 border border-border text-ink-primary font-body font-medium rounded-xl hover:bg-surface-soft transition-colors focus:outline-none focus:ring-2 focus:ring-brand-900">
+                View all history
+              </button>
+            </motion.div>
           </div>
 
           {/* Right Column: Stats & Leaderboard */}
-          <div className="space-y-8">
-            
-            {/* Stats */}
-            <div className="bg-white dark:bg-surface-dark rounded-3xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
-              <h3 className="font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
-                <DollarSign className="w-5 h-5 text-success" /> Your Earnings
+          <div className="space-y-6">
+
+            {/* Stats Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="bg-white rounded-2xl p-5 shadow-sm border border-border"
+            >
+              <h3 className="font-body font-semibold text-ink-primary mb-5 flex items-center gap-2">
+                <DollarSign className="w-5 h-5 text-accent DEFAULT" /> Your earnings
               </h3>
-              
-              <div className="space-y-6">
+
+              <div className="space-y-5">
                 <div>
-                  <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Total Earned</p>
-                  <h4 className="text-4xl font-black text-zinc-900 dark:text-white">$1,200</h4>
+                  <p className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1">
+                    Total earned
+                  </p>
+                  <h4 className="font-mono font-bold text-3xl text-ink-primary">KES {totalEarned.toLocaleString()}</h4>
                 </div>
-                
-                <div className="grid grid-cols-2 gap-4 pt-6 border-t border-zinc-100 dark:border-zinc-800">
+
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border">
                   <div>
-                    <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Invites Sent</p>
-                    <p className="text-xl font-black text-zinc-900 dark:text-white">45</p>
+                    <p className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1">
+                      Invites sent
+                    </p>
+                    <p className="font-mono font-semibold text-xl text-ink-primary">{invitesSent}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Pending</p>
-                    <p className="text-xl font-black text-amber-500">$300</p>
+                    <p className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1">
+                      Pending
+                    </p>
+                    <p className="font-mono font-semibold text-xl text-warn">KES {pendingEarnings}</p>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Leaderboard */}
-            <div className="bg-gradient-to-br from-amber-500 to-orange-500 rounded-3xl p-1 shadow-lg">
-              <div className="bg-white dark:bg-surface-dark rounded-[22px] p-6 h-full">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                    <Trophy className="w-5 h-5 text-amber-500" /> Leaderboard
+            {/* Leaderboard Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-gradient-to-br from-accent DEFAULT to-accent-dark rounded-2xl p-0.5 shadow-lg"
+            >
+              <div className="bg-white rounded-2xl p-5 h-full">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="font-body font-semibold text-ink-primary flex items-center gap-2">
+                    <Trophy className="w-5 h-5 text-accent DEFAULT" /> Leaderboard
                   </h3>
-                  <span className="text-xs font-bold bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400 px-2 py-1 rounded-md">This Month</span>
+                  <span className="text-xs font-body font-medium bg-accent-light text-accent-dark px-2 py-0.5 rounded-full">
+                    This month
+                  </span>
                 </div>
 
-                <div className="space-y-4">
-                  {LEADERBOARD.map(user => (
-                    <div key={user.rank} className={cn(
-                      "flex items-center justify-between p-3 rounded-xl transition-colors",
-                      user.isYou ? "bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20" : "hover:bg-surface dark:hover:bg-zinc-800/50"
-                    )}>
+                <div className="space-y-3">
+                  {LEADERBOARD.map((user, idx) => (
+                    <motion.div
+                      key={user.rank}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className={`flex items-center justify-between p-3 rounded-xl transition-colors ${
+                        user.isYou
+                          ? 'bg-accent-light border border-accent DEFAULT'
+                          : 'hover:bg-surface-soft'
+                      }`}
+                    >
                       <div className="flex items-center gap-3">
-                        <span className={cn(
-                          "text-sm font-black w-5 text-center",
-                          user.rank === 1 ? "text-amber-500" : user.rank === 2 ? "text-zinc-400" : user.rank === 3 ? "text-amber-700" : "text-zinc-300"
-                        )}>#{user.rank}</span>
-                        <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full" />
+                        <span className={`text-sm font-mono font-bold w-5 text-center ${
+                          user.rank === 1 ? 'text-accent DEFAULT' :
+                          user.rank === 2 ? 'text-ink-secondary' :
+                          user.rank === 3 ? 'text-accent-dark' : 'text-ink-tertiary'
+                        }`}>
+                          #{user.rank}
+                        </span>
+                        <img
+                          src={user.avatar}
+                          alt={user.name}
+                          className="w-8 h-8 rounded-full object-cover"
+                          width={32}
+                          height={32}
+                        />
                         <div>
-                          <p className="text-sm font-bold text-zinc-900 dark:text-white leading-tight">
-                            {user.name} {user.isYou && <span className="text-[10px] bg-amber-500 text-white px-1.5 rounded ml-1">YOU</span>}
+                          <p className="text-sm font-body font-semibold text-ink-primary leading-tight">
+                            {user.name}
+                            {user.isYou && (
+                              <span className="text-xs font-body font-medium bg-accent DEFAULT text-white px-1.5 rounded ml-1">YOU</span>
+                            )}
                           </p>
-                          <p className="text-xs font-medium text-zinc-500 leading-tight">{user.invites} invites</p>
+                          <p className="text-xs font-body text-ink-tertiary">{user.invites} invites</p>
                         </div>
                       </div>
-                      <span className="text-sm font-black text-zinc-900 dark:text-white">${user.earnings}</span>
-                    </div>
+                      <span className="text-sm font-mono font-semibold text-ink-primary">KES {user.earnings.toLocaleString()}</span>
+                    </motion.div>
                   ))}
                 </div>
               </div>
-            </div>
-
+            </motion.div>
           </div>
         </div>
-
       </div>
-    </div>
+    </motion.div>
   );
 }
-

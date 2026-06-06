@@ -1,19 +1,14 @@
 import React from 'react';
 import { 
   Download, 
-  History, 
   Search, 
   Filter, 
   User as UserIcon, 
-  Shield, 
-  Activity, 
   MapPin, 
   Globe 
 } from 'lucide-react';
 import { cn } from '../../../utils/cn';
-import Card from '../../../components/ui/Card';
 import UserAvatar from '../shared/UserAvatar';
-import Skeleton from '../../../components/ui/Skeleton';
 import { format, parseISO } from 'date-fns';
 
 const AUDIT_DATA = [

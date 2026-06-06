@@ -580,7 +580,7 @@ const Signup = () => {
                   {!fieldErrors.email && emailExists && (
                     <p className="mt-1 text-sm text-yellow-600">
                       This email is already registered.{" "}
-                      <a href="/signin" className="underline font-medium">
+                      <a href="/auth/login" className="underline font-medium">
                         Sign in
                       </a>
                     </p>
@@ -809,7 +809,7 @@ const Signup = () => {
         {/* Sign in link */}
         <p className="text-center text-[#4A312F] text-sm mt-6">
           Already have an account?{" "}
-          <a href="/signin" className="text-[#D34079] font-semibold hover:underline">
+          <a href="/auth/login" className="text-[#D34079] font-semibold hover:underline">
             Sign In
           </a>
         </p>

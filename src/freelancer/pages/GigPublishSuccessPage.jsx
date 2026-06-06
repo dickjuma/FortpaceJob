@@ -1,143 +1,187 @@
-import React, { useEffect, useState } from 'react';
+// src/pages/freelancer/GigPublishSuccessPage.jsx
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  CheckCircle2, Share2, Facebook, Twitter, Linkedin, 
-  Copy, ArrowRight, TrendingUp, Search, Eye, Sparkles
+import {
+  CheckCircle2, Share2, Facebook, Twitter, Linkedin,
+  Copy, ArrowRight, TrendingUp, Search, Eye, Sparkles, Check
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
 
 export default function GigPublishSuccessPage() {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(null);
   const gigUrl = 'https://forte.com/gig/alexrivera/react-web-app';
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(gigUrl);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setShowSuccess({ message: 'Link copied to clipboard' });
+    setTimeout(() => {
+      setCopied(false);
+      setShowSuccess(null);
+    }, 2000);
+  };
+
+  const handleShare = (platform) => {
+    setShowSuccess({ message: `Share via ${platform} would open here` });
+    setTimeout(() => setShowSuccess(null), 2000);
   };
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans flex items-center justify-center py-12 px-4 sm:px-6 relative overflow-hidden">
-      
-      {/* Celebration Background Effects */}
-      <div className="absolute top-1/2 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 w-[800px] h-[800px] bg-[#2bb75c]/10 dark:bg-[#2bb75c]/20 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 w-[400px] h-[400px] bg-success/10 dark:bg-success/20 rounded-full blur-[80px] pointer-events-none" />
+    <div className="min-h-screen bg-surface-soft flex items-center justify-center py-12 px-4 sm:px-6 relative overflow-hidden">
 
-      <div className="max-w-4xl w-full z-10 flex flex-col md:flex-row gap-8 items-stretch">
-        
+      {/* Background Effects */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent-light/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-accent-light/30 rounded-full blur-[80px] pointer-events-none" />
+
+      <div className="max-w-5xl w-full z-10 flex flex-col md:flex-row gap-8 items-stretch">
+
         {/* Main Success Card */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="flex-1 bg-white dark:bg-surface-dark rounded-[2.5rem] p-10 shadow-2xl border border-zinc-200 dark:border-zinc-800 text-center relative overflow-hidden"
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="flex-1 bg-white rounded-3xl p-8 shadow-lg border border-border text-center relative overflow-hidden"
         >
-          <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-20">
-            <Sparkles className="w-24 h-24 text-[#2bb75c]" />
+          <div className="absolute top-0 right-0 p-5 pointer-events-none opacity-10">
+            <Sparkles className="w-24 h-24 text-accent DEFAULT" />
           </div>
 
-          <motion.div 
-            initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-            className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-emerald-500/30"
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+            className="w-20 h-20 bg-accent-light rounded-full flex items-center justify-center mx-auto mb-6 shadow-md"
           >
-            <CheckCircle2 className="w-12 h-12 text-white" />
+            <CheckCircle2 className="w-10 h-10 text-accent DEFAULT" />
           </motion.div>
 
-          <h1 className="text-3xl sm:text-4xl font-black text-zinc-900 dark:text-white mb-4 tracking-tight">
-            Gig Published Successfully!
+          <h1 className="font-display font-bold text-3xl sm:text-4xl text-brand-900 mb-3">
+            Gig published successfully!
           </h1>
-          <p className="text-zinc-500 dark:text-zinc-400 font-medium max-w-sm mx-auto mb-10 leading-relaxed">
-            Your gig is now live and visible to thousands of buyers on the Forte marketplace.
+          <p className="text-ink-secondary font-body max-w-sm mx-auto mb-8 leading-relaxed">
+            Your gig is now live and visible to thousands of buyers on the marketplace.
           </p>
 
-          <div className="bg-surface dark:bg-zinc-800/50 rounded-2xl p-6 mb-8 border border-zinc-100 dark:border-zinc-800">
-            <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-4">Share your Gig to get your first order</h3>
-            
-            <div className="flex justify-center gap-3 mb-6">
-              <button className="w-12 h-12 rounded-full bg-[#2bb75c] text-white flex items-center justify-center hover:bg-[#1d8d38] transition-colors shadow-sm"><Facebook className="w-5 h-5" /></button>
-              <button className="w-12 h-12 rounded-full bg-sky-500 text-white flex items-center justify-center hover:bg-sky-600 transition-colors shadow-sm"><Twitter className="w-5 h-5" /></button>
-              <button className="w-12 h-12 rounded-full bg-[#1d8d38] text-white flex items-center justify-center hover:bg-[#1d8d38] transition-colors shadow-sm"><Linkedin className="w-5 h-5" /></button>
+          <div className="bg-surface-soft rounded-xl p-5 mb-6 border border-border">
+            <h3 className="text-sm font-body font-semibold text-ink-primary mb-4">Share your gig to get your first order</h3>
+
+            <div className="flex justify-center gap-3 mb-5">
+              <button
+                onClick={() => handleShare('Facebook')}
+                className="w-10 h-10 rounded-full bg-accent-light text-accent DEFAULT flex items-center justify-center hover:bg-accent-light/80 transition-colors"
+              >
+                <Facebook className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleShare('Twitter')}
+                className="w-10 h-10 rounded-full bg-accent-light text-accent DEFAULT flex items-center justify-center hover:bg-accent-light/80 transition-colors"
+              >
+                <Twitter className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleShare('LinkedIn')}
+                className="w-10 h-10 rounded-full bg-accent-light text-accent DEFAULT flex items-center justify-center hover:bg-accent-light/80 transition-colors"
+              >
+                <Linkedin className="w-4 h-4" />
+              </button>
             </div>
 
-            <div className="flex items-center gap-2 bg-white dark:bg-surface-dark p-2 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm">
-              <div className="flex-1 truncate px-3 text-sm font-medium text-zinc-500">{gigUrl}</div>
-              <button 
+            <div className="flex items-center gap-2 bg-white p-1.5 rounded-lg border border-border">
+              <div className="flex-1 truncate px-2 text-xs font-mono text-ink-tertiary">{gigUrl}</div>
+              <button
                 onClick={copyToClipboard}
-                className={cn(
-                  "px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2",
-                  copied ? "bg-emerald-100 text-emerald-700" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
-                )}
+                className={`px-3 py-1.5 rounded-md text-xs font-body font-medium transition-all flex items-center gap-1.5 ${
+                  copied
+                    ? "bg-accent-light text-accent-dark"
+                    : "bg-surface-muted text-ink-primary hover:bg-surface-soft"
+                }`}
               >
-                {copied ? <><CheckCircle2 className="w-4 h-4" /> Copied</> : <><Copy className="w-4 h-4" /> Copy Link</>}
+                {copied ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? 'Copied' : 'Copy link'}
               </button>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 justify-center">
-            <button 
+          <div className="flex flex-col sm:flex-row items-center gap-3 justify-center">
+            <button
               onClick={() => navigate('/freelancer/gigs')}
-              className="px-8 py-3.5 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-lg shadow-[#2bb75c]/25/25 transition-all w-full sm:w-auto flex items-center justify-center gap-2"
+              className="px-6 py-2.5 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors inline-flex items-center gap-2 w-full sm:w-auto justify-center"
             >
-              View My Gigs <ArrowRight className="w-4 h-4" />
+              View my gigs <ArrowRight className="w-4 h-4" />
             </button>
-            <button 
+            <button
               onClick={() => navigate('/freelancer/dashboard')}
-              className="px-8 py-3.5 bg-transparent border-2 border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600 text-zinc-700 dark:text-zinc-300 font-bold rounded-xl transition-all w-full sm:w-auto"
+              className="px-6 py-2.5 rounded-lg border border-border text-ink-primary hover:bg-surface-muted font-body font-medium text-sm transition-colors w-full sm:w-auto"
             >
-              Go to Dashboard
+              Go to dashboard
             </button>
           </div>
         </motion.div>
 
         {/* Sidebar Insights */}
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}
-          className="w-full md:w-80 shrink-0 space-y-6 flex flex-col justify-center"
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          className="w-full md:w-72 shrink-0 space-y-5 flex flex-col justify-center"
         >
           {/* Visibility Card */}
-          <div className="bg-white dark:bg-surface-dark rounded-3xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm">
-            <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
-              <Eye className="w-4 h-4 text-[#2bb75c]" /> Marketplace Visibility
+          <div className="bg-white rounded-2xl p-5 border border-border shadow-sm">
+            <h3 className="text-sm font-body font-semibold text-ink-primary mb-3 flex items-center gap-2">
+              <Eye className="w-4 h-4 text-accent DEFAULT" /> Marketplace visibility
             </h3>
-            
+
             <div className="flex items-end gap-2 mb-2">
-              <span className="text-3xl font-black text-zinc-900 dark:text-white">~450</span>
-              <span className="text-sm font-semibold text-zinc-500 mb-1">impressions / week</span>
+              <span className="font-mono font-bold text-3xl text-ink-primary">~450</span>
+              <span className="text-xs font-body text-ink-tertiary mb-1">impressions / week</span>
             </div>
-            
-            <div className="h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden mb-4">
-              <div className="w-[70%] h-full bg-success rounded-full" />
+
+            <div className="h-1.5 w-full bg-border rounded-full overflow-hidden mb-3">
+              <div className="w-[70%] h-full bg-accent DEFAULT rounded-full" />
             </div>
-            <p className="text-xs text-zinc-500 leading-relaxed font-medium">
-              Based on your Gig's quality score and category demand. It may take up to 24 hours to fully index in search.
+            <p className="text-xs text-ink-tertiary leading-relaxed font-body">
+              Based on your gig's quality score. It may take up to 24 hours to fully index in search.
             </p>
           </div>
 
           {/* Quick Tips */}
-          <div className="bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-3xl p-6 text-white shadow-xl">
-            <h3 className="text-sm font-bold mb-4 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-success" /> How to get your first order
+          <div className="bg-gradient-to-br from-brand-900 to-brand-800 rounded-2xl p-5 text-white shadow-sm">
+            <h3 className="text-sm font-body font-semibold mb-4 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-accent-light" /> Get your first order
             </h3>
-            
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5"><span className="text-xs font-bold text-[#2bb75c]">1</span></div>
-                <p className="text-xs text-zinc-300 leading-relaxed font-medium">Share your gig link on LinkedIn and professional networks.</p>
+
+            <ul className="space-y-3">
+              <li className="flex items-start gap-2">
+                <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-xs font-mono font-bold text-accent-light">1</span>
+                </div>
+                <p className="text-xs text-white/80 leading-relaxed">Share your gig link on professional networks</p>
               </li>
-              <li className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5"><span className="text-xs font-bold text-[#2bb75c]">2</span></div>
-                <p className="text-xs text-zinc-300 leading-relaxed font-medium">Stay online. Buyers filter search results by "Online Sellers".</p>
+              <li className="flex items-start gap-2">
+                <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-xs font-mono font-bold text-accent-light">2</span>
+                </div>
+                <p className="text-xs text-white/80 leading-relaxed">Stay online — buyers filter by "online sellers"</p>
               </li>
-              <li className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5"><span className="text-xs font-bold text-[#2bb75c]">3</span></div>
-                <p className="text-xs text-zinc-300 leading-relaxed font-medium">Respond to messages within 1 hour to boost your response rate.</p>
+              <li className="flex items-start gap-2">
+                <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-xs font-mono font-bold text-accent-light">3</span>
+                </div>
+                <p className="text-xs text-white/80 leading-relaxed">Respond to messages within 1 hour</p>
               </li>
             </ul>
           </div>
-        </motion.div>
 
+          {/* Quick Stats */}
+          <div className="bg-accent-light border border-accent DEFAULT rounded-2xl p-4">
+            <h4 className="text-sm font-body font-semibold text-accent-dark mb-1">Pro tip</h4>
+            <p className="text-xs text-accent-dark">
+              Gigs with a video receive 200% more orders. Consider adding a video to your gallery.
+            </p>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
 }
-

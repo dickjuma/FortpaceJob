@@ -60,7 +60,27 @@ export const SocketProvider = ({ children, token }) => {
   };
 
   const sendMessage = (data) => {
-    if (socket && isConnected) socket.emit('send_message', data);
+    if (!socket || !isConnected) {
+      return Promise.reject(new Error('Socket not connected'));
+    }
+    const payload = {
+      ...data,
+      idempotencyKey:
+        data?.idempotencyKey ||
+        (typeof crypto?.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`),
+    };
+
+    return new Promise((resolve, reject) => {
+      socket.emit('send_message', payload, (response) => {
+        if (response?.success) {
+          resolve(response);
+        } else {
+          reject(new Error(response?.error || 'Message sending failed'));
+        }
+      });
+    });
   };
 
   const startTyping = (conversationId) => {
@@ -69,6 +89,17 @@ export const SocketProvider = ({ children, token }) => {
 
   const stopTyping = (conversationId) => {
     if (socket && isConnected) socket.emit('typing', { conversationId, isTyping: false });
+  };
+
+  const onEvent = (event, callback) => {
+    if (!socket) return;
+    socket.on(event, callback);
+    return () => socket.off(event, callback);
+  };
+
+  const offEvent = (event, callback) => {
+    if (!socket) return;
+    socket.off(event, callback);
   };
 
   const markRead = (messageId) => {

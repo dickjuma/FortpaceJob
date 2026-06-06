@@ -1,17 +1,41 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
 import { Edit, Trash2, ExternalLink } from 'lucide-react';
-
-const articles = [
-  { id: '1', title: 'Top 10 Freelancing Tips for 2025', status: 'Published', views: '1.2k', date: 'May 10, 2025' },
-  { id: '2', name: 'How to Write a Winning Proposal', status: 'Draft', views: '-', date: 'May 20, 2025' },
-  { id: '3', title: 'Understanding Marketplace Fees', status: 'Published', views: '3.4k', date: 'Apr 15, 2025' },
-];
+import { api } from '../../common/services/api';
 
 export const ArticlesPage = () => {
+  const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    setIsLoading(true);
+    setError(null);
+
+    api
+      .get('/admin_rbc/articles')
+      .then(({ data }) => {
+        if (!active) return;
+        setArticles(data.items || data.articles || []);
+      })
+      .catch((err) => {
+        if (!active) return;
+        setError(err?.message || 'Unable to load articles.');
+      })
+      .finally(() => {
+        if (!active) return;
+        setIsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -22,28 +46,46 @@ export const ArticlesPage = () => {
         <Button variant="primary">Create Article</Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-4">
-        {articles.map(article => (
-          <Card key={article.id} hover className="flex flex-col md:flex-row justify-between items-start md:items-center p-6">
-            <div className="mb-4 md:mb-0">
-              <h3 className="text-lg font-bold text-[#222222] mb-2">{article.title || article.name}</h3>
-              <div className="flex items-center space-x-4 text-sm text-text-secondary">
-                <Badge variant={article.status === 'Published' ? 'success' : 'default'}>
-                  {article.status}
-                </Badge>
-                <span>{article.date}</span>
-                <span>{article.views} views</span>
-              </div>
+      {error && (
+        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+          {error}
+        </div>
+      )}
+
+      {isLoading ? (
+        <div className="rounded-2xl border border-zinc-200 bg-zinc-100 p-8 text-center text-zinc-500 animate-pulse">
+          Loading articles...
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4">
+          {articles.length === 0 ? (
+            <div className="text-center py-12 bg-white rounded-lg border border-border">
+              <p className="text-text-secondary">No articles found.</p>
             </div>
-            
-            <div className="flex items-center space-x-2 w-full md:w-auto justify-end">
-              <Button variant="ghost" size="sm" icon={<ExternalLink size={16} />}>View</Button>
-              <Button variant="ghost" size="sm" icon={<Edit size={16} />}>Edit</Button>
-              <Button variant="ghost" size="sm" className="text-error hover:text-error hover:bg-red-50" icon={<Trash2 size={16} />}></Button>
-            </div>
-          </Card>
-        ))}
-      </div>
+          ) : (
+            articles.map((article) => (
+              <Card key={article.id} hover className="flex flex-col md:flex-row justify-between items-start md:items-center p-6">
+                <div className="mb-4 md:mb-0">
+                  <h3 className="text-lg font-bold text-[#222222] mb-2">{article.title || article.name}</h3>
+                  <div className="flex items-center space-x-4 text-sm text-text-secondary">
+                    <Badge variant={article.status === 'Published' ? 'success' : 'default'}>
+                      {article.status}
+                    </Badge>
+                    <span>{article.date}</span>
+                    <span>{article.views} views</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2 w-full md:w-auto justify-end">
+                  <Button variant="ghost" size="sm" icon={<ExternalLink size={16} />}>View</Button>
+                  <Button variant="ghost" size="sm" icon={<Edit size={16} />}>Edit</Button>
+                  <Button variant="ghost" size="sm" className="text-error hover:text-error hover:bg-red-50" icon={<Trash2 size={16} />}></Button>
+                </div>
+              </Card>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 };

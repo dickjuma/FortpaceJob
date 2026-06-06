@@ -5,8 +5,6 @@ import {
   Briefcase, 
   Target, 
   Wifi, 
-  MapPin, 
-  UserCheck, 
   TrendingUp, 
   ShieldAlert, 
   Flag,
@@ -14,7 +12,6 @@ import {
   CheckCircle2,
   ExternalLink
 } from 'lucide-react';
-import { cn } from '../../../utils/cn';
 import Card from '../../../components/ui/Card';
 import RiskScoreMeter from '../shared/RiskScoreMeter';
 import Badge from '../../../components/ui/Badge';

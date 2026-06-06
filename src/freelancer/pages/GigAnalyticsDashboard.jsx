@@ -1,7 +1,9 @@
+// src/pages/freelancer/GigAnalyticsDashboard.jsx
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { TrendingUp, Eye, DollarSign, Package, ChevronLeft, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const salesData = [
   { name: 'Jan', sales: 400, views: 2400 },
@@ -14,77 +16,173 @@ const salesData = [
 
 export default function GigAnalyticsDashboard() {
   const stats = [
-    { name: 'Total Revenue', value: '$12.4K', change: '+24%', icon: DollarSign, color: 'text-green-600' },
-    { name: 'Active Orders', value: '5', change: '+2', icon: ShoppingCart, color: 'text-[#2bb75c]' },
-    { name: 'Gig Views (30d)', value: '14.2K', change: '+45%', icon: Eye, color: 'text-[#2bb75c]' },
-    { name: 'Conversion Rate', value: '4.8%', change: '+1.2%', icon: TrendingUp, color: 'text-[#2bb75c]' },
+    { name: 'Total revenue', value: 'KES 12.4K', change: '+24%', icon: DollarSign },
+    { name: 'Active orders', value: '5', change: '+2', icon: ShoppingCart },
+    { name: 'Gig views (30d)', value: '14.2K', change: '+45%', icon: Eye },
+    { name: 'Conversion rate', value: '4.8%', change: '+1.2%', icon: TrendingUp },
   ];
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white border border-border rounded-lg shadow-md p-3">
+          <p className="text-xs font-body font-medium text-ink-secondary">{label}</p>
+          <p className="text-sm font-mono font-semibold text-ink-primary">
+            KES {payload[0].value.toLocaleString()}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const CustomBarTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white border border-border rounded-lg shadow-md p-3">
+          <p className="text-xs font-body font-medium text-ink-secondary">{label}</p>
+          <p className="text-sm font-mono font-semibold text-ink-primary">
+            {payload[0].value.toLocaleString()} views
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Header */}
       <div className="mb-8">
-        <Link to="/freelancer/gigs" className="text-sm font-medium text-[#2bb75c] hover:text-[#2bb75c] mb-4 inline-flex items-center">
-          <ChevronLeft className="w-4 h-4 mr-1" /> Back to My Gigs
+        <Link
+          to="/freelancer/gigs"
+          className="text-sm font-body font-medium text-accent DEFAULT hover:text-accent-dark mb-4 inline-flex items-center transition-colors"
+        >
+          <ChevronLeft className="w-4 h-4 mr-1" /> Back to my gigs
         </Link>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-          <Package className="w-8 h-8 mr-3 text-[#2bb75c]" /> Gig Business Analytics
-        </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Track your marketplace performance, gig views, and conversion rates.</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat) => (
-          <div key={stat.name} className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-surface dark:bg-gray-800 ${stat.color}`}>
-                <stat.icon className="w-6 h-6" />
-              </div>
-              <span className="text-xs font-bold px-2 py-1 rounded-full text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/30">
-                {stat.change}
-              </span>
-            </div>
-            <div>
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-white">{stat.value}</h3>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1">{stat.name}</p>
-            </div>
+        <div className="flex items-center gap-3 mt-2">
+          <div className="p-2.5 bg-accent-light rounded-xl">
+            <Package className="w-6 h-6 text-accent DEFAULT" />
           </div>
-        ))}
+          <h1 className="font-display font-bold text-4xl text-brand-900">Gig business analytics</h1>
+        </div>
+        <p className="text-ink-secondary font-body mt-2">
+          Track your marketplace performance, gig views, and conversion rates
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Sales Chart */}
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Revenue Trend</h2>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        {stats.map((stat, idx) => {
+          const Icon = stat.icon;
+          return (
+            <motion.div
+              key={stat.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.05 }}
+              whileHover={{ y: -2 }}
+              className="bg-white border border-border rounded-2xl p-5 shadow-sm"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-10 h-10 rounded-xl bg-accent-light flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-accent DEFAULT" />
+                </div>
+                <span className="text-xs font-mono font-semibold text-accent-dark bg-accent-light px-2 py-0.5 rounded-full">
+                  {stat.change}
+                </span>
+              </div>
+              <div>
+                <h3 className="font-mono font-bold text-2xl text-ink-primary">{stat.value}</h3>
+                <p className="text-xs font-body font-medium text-ink-tertiary mt-1">{stat.name}</p>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Revenue Trend Chart */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white border border-border rounded-2xl p-5 shadow-sm"
+        >
+          <h2 className="font-display font-semibold text-lg text-brand-900 mb-5">Revenue trend</h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={salesData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#374151" opacity={0.1} />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#6B7280', fontSize: 12}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#6B7280', fontSize: 12}} />
-                <Tooltip contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'}} />
-                <Line type="monotone" dataKey="sales" stroke="#10b981" strokeWidth={3} dot={{r: 4, strokeWidth: 2}} activeDot={{r: 8}} />
+              <LineChart data={salesData} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E7E5E4" />
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#A8A29E', fontSize: 12, fontFamily: 'DM Sans' }}
+                  dy={8}
+                />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#A8A29E', fontSize: 12, fontFamily: 'DM Sans' }}
+                  tickFormatter={(value) => `KES ${value}`}
+                />
+                <Tooltip content={<CustomTooltip />} />
+                <Line
+                  type="monotone"
+                  dataKey="sales"
+                  stroke="#16A34A"
+                  strokeWidth={3}
+                  dot={{ r: 4, strokeWidth: 2, fill: '#16A34A', stroke: '#FFFFFF' }}
+                  activeDot={{ r: 8 }}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Traffic Chart */}
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Gig Views</h2>
+        {/* Gig Views Chart */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+          className="bg-white border border-border rounded-2xl p-5 shadow-sm"
+        >
+          <h2 className="font-display font-semibold text-lg text-brand-900 mb-5">Gig views</h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={salesData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#374151" opacity={0.1} />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#6B7280', fontSize: 12}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#6B7280', fontSize: 12}} />
-                <Tooltip cursor={{fill: '#F3F4F6', opacity: 0.4}} contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'}} />
-                <Bar dataKey="views" fill="#8b5cf6" radius={[6, 6, 0, 0]} barSize={30} />
+              <BarChart data={salesData} margin={{ top: 20, right: 20, left: 0, bottom: 10 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E7E5E4" />
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#A8A29E', fontSize: 12, fontFamily: 'DM Sans' }}
+                  dy={8}
+                />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#A8A29E', fontSize: 12, fontFamily: 'DM Sans' }}
+                />
+                <Tooltip content={<CustomBarTooltip />} cursor={{ fill: '#F4F4F1', opacity: 0.4 }} />
+                <Bar
+                  dataKey="views"
+                  fill="#16A34A"
+                  radius={[6, 6, 0, 0]}
+                  barSize={40}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
-

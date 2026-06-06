@@ -7,9 +7,10 @@ import Container from '../common/Container';
 import Button from '../common/Button';
 
 const NAV_LINKS = [
-  { name: 'Find Talent', href: '/search' },
-  { name: 'Find Work', href: '/jobs' },
-  { name: 'Enterprise', href: '/client/enterprise' },
+  { name: 'Find Talent', href: '/find-talent' },
+  { name: 'Find Work', href: '/find-work' },
+  { name: 'Enterprise', href: '/enterprise' },
+  { name: 'About', href: '/about' },
 ];
 
 export default function Navbar() {
@@ -26,7 +27,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav 
+    <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-[100] transition-all duration-300 bg-white/95 backdrop-blur-md shadow-sm py-3",
       )}
@@ -45,66 +46,52 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Links / Search */}
-            <div className="hidden md:flex items-center gap-6 flex-1 transition-all duration-300">
-              <AnimatePresence mode="wait">
-                {isScrolled ? (
-                  <motion.form 
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex-1 max-w-xl ml-4 relative"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      const query = e.target.search.value;
-                      if (query.trim()) navigate(`/search?q=${encodeURIComponent(query)}`);
-                    }}
+            <div className="hidden md:flex items-center gap-8 flex-1">
+              <div className="flex items-center gap-6">
+                {NAV_LINKS.map((link) => (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className="text-sm font-medium text-zinc-600 hover:text-emerald-700 transition-colors"
                   >
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Search className="h-4 w-4 text-zinc-400" />
-                      </div>
-                      <input
-                        type="text"
-                        name="search"
-                        className="block w-full pl-10 pr-3 py-2 border border-zinc-200 rounded-lg leading-5 bg-zinc-50 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-colors"
-                        placeholder="What service are you looking for today?"
-                      />
-                      <button 
-                        type="submit"
-                        className="absolute inset-y-1 right-1 px-3 bg-emerald-600 text-white text-xs font-bold rounded hover:bg-emerald-700 transition-colors"
-                      >
-                        Search
-                      </button>
-                    </div>
-                  </motion.form>
-                ) : (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex items-center gap-6"
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+
+              <form
+                className="flex-1 max-w-xl ml-4 relative"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const query = e.target.search.value;
+                  if (query.trim()) navigate(`/search?q=${encodeURIComponent(query)}`);
+                }}
+              >
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Search className="h-4 w-4 text-zinc-400" />
+                  </div>
+                  <input
+                    type="text"
+                    name="search"
+                    className="block w-full pl-10 pr-24 py-2 border border-zinc-200 rounded-lg leading-5 bg-zinc-50 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-colors"
+                    placeholder="Search services, skills, or talent"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute inset-y-1 right-1 px-4 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-colors"
                   >
-                    {NAV_LINKS.map((link) => (
-                      <Link 
-                        key={link.name} 
-                        to={link.href}
-                        className="text-sm font-medium text-zinc-600 hover:text-emerald-700 transition-colors"
-                      >
-                        {link.name}
-                      </Link>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                    Search
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
 
           {/* Desktop Right */}
           <div className="hidden md:flex items-center gap-4">
             {!isScrolled && (
-              <Link 
+              <Link
                 to="/search"
                 className="p-2 text-zinc-400 hover:text-emerald-600 transition-colors"
               >
@@ -112,7 +99,7 @@ export default function Navbar() {
               </Link>
             )}
             <div className="w-px h-5 bg-zinc-200 mx-1"></div>
-            <Link 
+            <Link
               to="/auth/login"
               className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors px-2"
             >
@@ -124,7 +111,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Toggle */}
-          <button 
+          <button
             className="md:hidden p-2 -mr-2 text-zinc-600"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >

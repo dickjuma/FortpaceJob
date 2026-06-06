@@ -1,14 +1,77 @@
+// src/pages/freelancer/ReviewsPage.jsx
 import React, { useState, useMemo } from 'react';
-import { 
-  Star, MessageCircle, Filter, Search, ThumbsUp, MoreVertical, Reply, 
-  MessageSquare, ShieldCheck, Sparkles, Check, AlertTriangle, Share2, Loader2
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Star,
+  MessageCircle,
+  Filter,
+  Search,
+  ThumbsUp,
+  MoreVertical,
+  Reply,
+  MessageSquare,
+  ShieldCheck,
+  Check,
+  AlertTriangle,
+  Share2,
+  Loader2,
+  AlertCircle,
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import toast, { Toaster } from 'react-hot-toast';
 import { useMyReceivedReviews, useReplyToReview } from '../../common/hooks/useReviews';
 
+// ---------- Shared UI Components (inline) ----------
+const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, icon: Icon }) => {
+  const base = 'px-5 py-2.5 rounded-lg font-body font-medium text-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-900 focus:ring-offset-2 inline-flex items-center justify-center gap-2';
+  const variants = {
+    primary: 'bg-brand-900 text-white hover:bg-brand-800 disabled:opacity-40',
+    ghost: 'border border-brand-900 text-brand-900 hover:bg-surface-muted disabled:opacity-40',
+    outline: 'border border-border text-ink-primary hover:bg-surface-muted disabled:opacity-40',
+  };
+  return (
+    <motion.button
+      whileTap={{ scale: 0.97 }}
+      className={`${base} ${variants[variant]} ${className}`}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {Icon && <Icon className="w-4 h-4" />}
+      {children}
+    </motion.button>
+  );
+};
+
+const Card = ({ children, className = '', hover = true }) => (
+  <motion.div
+    whileHover={hover ? { y: -3, boxShadow: '0 8px 24px rgba(0,0,0,0.08)' } : {}}
+    transition={{ duration: 0.2 }}
+    className={`bg-white border border-border rounded-2xl p-6 shadow-sm ${className}`}
+  >
+    {children}
+  </motion.div>
+);
+
+const Badge = ({ children, variant = 'default', className = '' }) => {
+  const variants = {
+    default: 'bg-surface-muted text-ink-secondary',
+    success: 'bg-accent-light text-accent-dark',
+    warning: 'bg-warn-light text-warn',
+    danger: 'bg-danger-light text-danger',
+    info: 'bg-info-light text-info',
+  };
+  return (
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[variant]} ${className}`}>
+      {children}
+    </span>
+  );
+};
+
+const Spinner = () => (
+  <div className="flex justify-center items-center py-20">
+    <div className="w-8 h-8 border-4 border-border border-t-brand-900 rounded-full animate-spin" />
+  </div>
+);
+
+// ---------- Helper Functions ----------
 function mapReview(r) {
   return {
     id: r.id,
@@ -23,10 +86,12 @@ function mapReview(r) {
   };
 }
 
+// ---------- Main Component ----------
 export default function ReviewsPage() {
   const [filter, setFilter] = useState('All');
   const [replyText, setReplyText] = useState('');
   const [replyingTo, setReplyingTo] = useState(null);
+  const [toast, setToast] = useState(null);
   const { data: apiReviews = [], isLoading, refetch } = useMyReceivedReviews();
   const replyMutation = useReplyToReview();
 
@@ -34,7 +99,8 @@ export default function ReviewsPage() {
 
   const handleReplySubmit = async (id) => {
     if (!replyText.trim()) {
-      toast.error('Reply content cannot be empty.');
+      setToast({ type: 'error', message: 'Reply cannot be empty.' });
+      setTimeout(() => setToast(null), 3000);
       return;
     }
     try {
@@ -42,207 +108,232 @@ export default function ReviewsPage() {
       setReplyingTo(null);
       setReplyText('');
       refetch();
+      setToast({ type: 'success', message: 'Reply posted successfully!' });
+      setTimeout(() => setToast(null), 3000);
     } catch {
-      /* toast from mutation */
+      setToast({ type: 'error', message: 'Failed to post reply.' });
+      setTimeout(() => setToast(null), 3000);
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-24">
-        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
-      </div>
-    );
-  }
+  if (isLoading) return <Spinner />;
 
-  const filteredReviews = reviews.filter(r => {
+  const filteredReviews = reviews.filter((r) => {
     if (filter === '5 Stars') return r.rating === 5;
     if (filter === 'Unanswered') return r.reply === null;
     return true;
   });
 
+  // Calculate summary stats
+  const totalReviews = reviews.length;
+  const avgRating = totalReviews > 0
+    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(1)
+    : '0.0';
+  const ratingDistribution = {
+    5: reviews.filter((r) => r.rating === 5).length,
+  };
+  const verifiedCount = reviews.filter((r) => r.verified).length;
+
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans animate-in slide-in-from-bottom-4 duration-500 relative">
-      <Toaster position="top-right" />
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+      className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className={`fixed top-20 right-4 z-50 px-4 py-3 rounded-lg shadow-md text-sm font-medium flex items-center gap-2 ${
+              toast.type === 'success' ? 'bg-accent text-white' : 'bg-danger text-white'
+            }`}
+          >
+            {toast.type === 'success' ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6 mb-8">
         <div>
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-warning/15 text-warning rounded-xl border border-warning/20 shadow-sm">
-              <Star className="w-6 h-6 fill-warning text-warning animate-pulse" />
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2.5 bg-warn-light text-warn rounded-xl">
+              <Star className="w-6 h-6" />
             </div>
-            <h1 className="text-3xl font-black text-text-primary tracking-tight">Reviews & Ratings Center</h1>
+            <h1 className="text-3xl font-display font-bold text-brand-900">Reviews & ratings</h1>
           </div>
-          <p className="text-sm text-text-secondary mt-1 font-semibold">
-            Evaluate client feedback, manage verified listings, and interact with professional responses.
+          <p className="text-sm text-ink-secondary">
+            View client feedback and manage your professional responses.
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        
-        {/* Left Side: Summary Score and Categories */}
-        <div className="lg:col-span-1 space-y-6">
-          
-          {/* Main Success Score */}
-          <Card className="bg-[#222222] text-white p-6 rounded-3xl border-none shadow-xl text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-warning/10 blur-[40px] rounded-full"></div>
-            <h3 className="text-xs font-bold text-white/60 uppercase tracking-widest">Success Rating</h3>
-            <div className="flex items-baseline justify-center gap-1.5 mt-3 mb-2">
-              <span className="text-5xl font-black">4.9</span>
-              <span className="text-sm font-bold text-white/50">/ 5.0</span>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Left Sidebar: Summary */}
+        <div className="space-y-6">
+          <Card className="text-center">
+            <h3 className="text-xs font-medium text-ink-tertiary uppercase tracking-wide mb-2">
+              Overall rating
+            </h3>
+            <div className="flex items-baseline justify-center gap-1.5 mt-2">
+              <span className="text-5xl font-mono font-bold text-brand-900">{avgRating}</span>
+              <span className="text-sm text-ink-tertiary">/ 5.0</span>
             </div>
-            <div className="flex justify-center text-warning mb-4">
-              {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-warning" />)}
-            </div>
-            <p className="text-[10px] font-bold text-white/40">From 142 client projects</p>
-          </Card>
-
-          {/* Review Sentiment Analysis */}
-          <Card className="p-6 border border-border bg-white shadow-sm space-y-4">
-            <h4 className="font-black text-text-primary text-xs uppercase tracking-wider flex items-center gap-1.5 border-b border-border pb-2">
-              <Sparkles className="w-4 h-4 text-success" /> AI Sentiment Summary
-            </h4>
-            <div className="space-y-2 text-[11px] font-semibold text-text-secondary leading-relaxed">
-              <p>
-                💡 Clients frequently praise <strong className="text-text-primary">technical quality</strong>, <strong className="text-text-primary">timely delivery</strong>, and <strong className="text-text-primary">stellar communications</strong>.
-              </p>
-            </div>
-          </Card>
-
-          {/* Categorized ratings sliders */}
-          <Card className="p-6 border border-border bg-white shadow-sm space-y-4">
-            <h4 className="font-black text-text-primary text-xs uppercase tracking-wider border-b border-border pb-2">
-              Performance Indexes
-            </h4>
-            
-            <div className="space-y-3 text-xs font-bold text-text-secondary">
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span>Communication</span>
-                  <span className="text-text-primary">5.0</span>
-                </div>
-                <div className="w-full h-1 bg-light-gray rounded-full overflow-hidden">
-                  <div className="h-full bg-success rounded-full" style={{ width: '100%' }}></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span>Delivery Speed</span>
-                  <span className="text-text-primary">4.9</span>
-                </div>
-                <div className="w-full h-1 bg-light-gray rounded-full overflow-hidden">
-                  <div className="h-full bg-success rounded-full" style={{ width: '95%' }}></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span>Quality of Work</span>
-                  <span className="text-text-primary">4.8</span>
-                </div>
-                <div className="w-full h-1 bg-light-gray rounded-full overflow-hidden">
-                  <div className="h-full bg-success rounded-full" style={{ width: '92%' }}></div>
-                </div>
-              </div>
-            </div>
-          </Card>
-
-        </div>
-
-        {/* Right side: Reviews List */}
-        <div className="lg:col-span-3 space-y-6">
-          
-          {/* Filters */}
-          <div className="flex items-center justify-between p-2.5 bg-white border border-border rounded-2xl shadow-sm">
-            <div className="flex gap-1.5">
-              {['All', '5 Stars', 'Unanswered'].map(f => (
-                <button
-                  key={f}
-                  onClick={() => setFilter(f)}
-                  className={cn(
-                    "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all",
-                    filter === f ? "bg-[#222222] text-white shadow-sm" : "text-text-secondary hover:text-text-primary hover:bg-light-gray"
-                  )}
-                >
-                  {f}
-                </button>
+            <div className="flex justify-center gap-0.5 my-3">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Star
+                  key={i}
+                  className={`w-4 h-4 ${
+                    i <= Math.round(parseFloat(avgRating))
+                      ? 'fill-warn text-warn'
+                      : 'text-border'
+                  }`}
+                />
               ))}
             </div>
-          </div>
+            <p className="text-xs text-ink-secondary">
+              From {totalReviews} {totalReviews === 1 ? 'review' : 'reviews'}
+            </p>
+          </Card>
 
-          {/* List */}
-          <div className="space-y-4">
-            {filteredReviews.map(rev => (
-              <Card key={rev.id} className="p-6 border border-border bg-white shadow-sm space-y-4 hover:border-success/20 transition-all">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-black text-text-primary text-sm">{rev.client}</h4>
-                      {rev.verified && (
-                        <span className="text-[9px] font-black uppercase tracking-wider text-success bg-success/15 px-2 py-0.5 rounded-md flex items-center gap-0.5 border border-success/20">
-                          <ShieldCheck className="w-3 h-3" /> Verified Project
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-[10px] font-bold text-success uppercase tracking-wider mt-1">{rev.project} • {rev.type}</p>
-                  </div>
-
-                  <div className="flex items-center gap-1 bg-warning/10 border border-warning/20 rounded-xl px-2.5 py-1 text-xs font-black text-warning">
-                    <Star className="w-4 h-4 fill-warning" />
-                    <span>{rev.rating}</span>
-                  </div>
+          <Card>
+            <h3 className="text-xs font-medium text-ink-tertiary uppercase tracking-wide mb-3">
+              Rating breakdown
+            </h3>
+            <div className="space-y-2">
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-ink-secondary">5 stars</span>
+                  <span className="font-mono text-ink-primary">{ratingDistribution[5] || 0}</span>
                 </div>
+                <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-warn rounded-full"
+                    style={{ width: `${((ratingDistribution[5] || 0) / totalReviews) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          </Card>
 
-                <p className="text-xs text-text-secondary leading-relaxed font-semibold">
-                  "{rev.content}"
-                </p>
+          <Card>
+            <h3 className="text-xs font-medium text-ink-tertiary uppercase tracking-wide mb-3">
+              Verified projects
+            </h3>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-accent" />
+                <span className="text-sm font-medium text-ink-primary">{verifiedCount} verified</span>
+              </div>
+              <Badge variant="success">{Math.round((verifiedCount / totalReviews) * 100)}%</Badge>
+            </div>
+          </Card>
+        </div>
 
-                {rev.reply ? (
-                  <div className="bg-light-gray/40 border border-border rounded-2xl p-4 ml-6 relative">
-                    <div className="absolute top-4 -left-3 text-border">
-                      <Reply size={20} className="scale-x-[-1]" />
-                    </div>
-                    <span className="text-[9px] font-black text-[#222222] uppercase tracking-wider block mb-1">Your reply</span>
-                    <p className="text-xs text-text-primary font-medium">{rev.reply}</p>
-                  </div>
-                ) : replyingTo === rev.id ? (
-                  <div className="ml-6 space-y-3 animate-in fade-in duration-200">
-                    <textarea
-                      placeholder="Formulate a polite, professional reply..."
-                      rows="3"
-                      value={replyText}
-                      onChange={(e) => setReplyText(e.target.value)}
-                      className="w-full text-xs font-semibold text-text-primary border border-border rounded-xl p-3 bg-light-gray focus:bg-white focus:border-success outline-none"
-                    ></textarea>
-                    <div className="flex justify-end gap-2">
-                      <Button variant="outline" size="sm" onClick={() => setReplyingTo(null)}>Cancel</Button>
-                      <Button variant="primary" size="sm" onClick={() => handleReplySubmit(rev.id)}>Post Reply</Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex justify-end">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => setReplyingTo(rev.id)} 
-                      icon={<MessageSquare size={14} />}
-                      className="rounded-xl px-4 py-2 font-bold text-xs"
-                    >
-                      Write Reply Response
-                    </Button>
-                  </div>
-                )}
-              </Card>
+        {/* Right Side: Reviews List */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* Filters */}
+          <div className="flex flex-wrap items-center gap-2 p-1 bg-white border border-border rounded-xl">
+            {['All', '5 Stars', 'Unanswered'].map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
+                  filter === f
+                    ? 'bg-brand-900 text-white'
+                    : 'text-ink-secondary hover:text-ink-primary hover:bg-surface-muted'
+                }`}
+              >
+                {f}
+              </button>
             ))}
           </div>
 
-        </div>
+          {/* Reviews */}
+          <div className="space-y-4">
+            {filteredReviews.length === 0 ? (
+              <div className="text-center py-12">
+                <MessageCircle className="w-12 h-12 text-ink-tertiary mx-auto mb-3" />
+                <p className="text-ink-secondary">No reviews match the selected filter.</p>
+              </div>
+            ) : (
+              filteredReviews.map((review) => (
+                <Card key={review.id} className="space-y-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h4 className="font-display font-semibold text-brand-900">
+                          {review.client}
+                        </h4>
+                        {review.verified && (
+                          <Badge variant="success" className="gap-1">
+                            <ShieldCheck className="w-3 h-3" />
+                            Verified
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-xs text-ink-tertiary mt-1">
+                        {review.project} • {review.date}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1 bg-warn-light px-2 py-1 rounded-lg">
+                      <Star className="w-3.5 h-3.5 fill-warn text-warn" />
+                      <span className="text-xs font-semibold text-warn">{review.rating}</span>
+                    </div>
+                  </div>
 
+                  <p className="text-sm text-ink-secondary leading-relaxed">
+                    "{review.content}"
+                  </p>
+
+                  {review.reply ? (
+                    <div className="mt-4 pl-4 border-l-2 border-border">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Reply className="w-3.5 h-3.5 text-ink-tertiary" />
+                        <span className="text-xs font-medium text-ink-tertiary">Your reply</span>
+                      </div>
+                      <p className="text-sm text-ink-primary">{review.reply}</p>
+                    </div>
+                  ) : replyingTo === review.id ? (
+                    <div className="space-y-3">
+                      <textarea
+                        rows={3}
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder="Write a professional response..."
+                        className="w-full px-3 py-2 border border-border rounded-lg text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900"
+                      />
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" onClick={() => setReplyingTo(null)}>
+                          Cancel
+                        </Button>
+                        <Button variant="primary" onClick={() => handleReplySubmit(review.id)}>
+                          Post reply
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex justify-end">
+                      <Button
+                        variant="outline"
+                        onClick={() => setReplyingTo(review.id)}
+                        icon={MessageSquare}
+                      >
+                        Reply
+                      </Button>
+                    </div>
+                  )}
+                </Card>
+              ))
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
-

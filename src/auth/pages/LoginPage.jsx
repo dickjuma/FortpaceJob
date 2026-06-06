@@ -71,7 +71,7 @@ export default function LoginPage() {
     <AuthLayout
       heroTitle="Welcome back to Forte."
       heroSubtitle="Log in to access your enterprise dashboard, manage active contracts, and collaborate with your team."
-      showStats={true}
+      showStats={false}
       cardClassName="!p-8 sm:!p-10 !shadow-2xl !shadow-[#2bb75c]/25"
     >
       <div className="w-full">

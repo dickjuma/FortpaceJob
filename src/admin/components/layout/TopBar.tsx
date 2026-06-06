@@ -7,7 +7,6 @@ import {
   Command,
   ChevronRight,
   User,
-  Settings,
   HelpCircle,
   LogOut
 } from 'lucide-react';

@@ -192,7 +192,7 @@ const ResetPassword = () => {
         await authAPI.resetPassword({ email, otp: otp.join(""), password });
       }
       setMessage({ type: "success", text: "Password reset successful! Redirecting to sign in..." });
-      setTimeout(() => navigate("/signin"), 1500);
+      setTimeout(() => navigate("/auth/login"), 1500);
     } catch (err) {
       setMessage({ type: "error", text: err.message || "Could not reset password." });
     } finally {
@@ -313,7 +313,7 @@ const ResetPassword = () => {
           {/* Sign-in link */}
           <p className="text-center text-[#4A312F] text-sm">
             Remember your password?{" "}
-            <Link to="/signin" className="text-[#D34079] font-semibold hover:underline">
+            <Link to="/auth/login" className="text-[#D34079] font-semibold hover:underline">
               Sign In
             </Link>
           </p>

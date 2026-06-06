@@ -1,5 +1,7 @@
+// MessagesPage.jsx
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useConversations, useMessages, useSendMessage } from '../services/clientHooks';
 import { useAuthStore } from '../../common/authStore';
 import { messagingAPI } from '../../common/services/messagingApi';
@@ -33,7 +35,7 @@ export default function MessagesPage() {
   }, [conversations, selectedConvId]);
 
   useEffect(() => {
-    if (!selectedConvId) return undefined;
+    if (!selectedConvId) return;
     messagingAPI.markRead(selectedConvId).catch(() => {});
     const timer = setInterval(() => {
       refetchMsgs();
@@ -56,16 +58,27 @@ export default function MessagesPage() {
   const selected = conversations.find((c) => c.id === selectedConvId);
   const other = selected?.otherParticipant || selected?.participant || {};
 
+  // Animation variants
+  const pageVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+  };
+
   return (
-    <div className="p-4 md:p-6 max-w-6xl mx-auto">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={pageVariants}
+      className="p-4 md:p-6 max-w-6xl mx-auto font-body"
+    >
       {!isConnected && (
-        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">
+        <div className="text-xs text-warn bg-warn-light border border-warn/20 rounded-lg px-3 py-2 mb-3">
           Real-time connection offline — messages still sync via API.
-        </p>
+        </div>
       )}
       <MessagesInbox
         backLink={
-          <Link to="/client/dashboard" className="text-sm font-medium text-[#2bb75c] hover:underline">
+          <Link to="/client/dashboard" className="text-sm font-medium text-accent hover:underline">
             ← Dashboard
           </Link>
         }
@@ -100,7 +113,6 @@ export default function MessagesPage() {
           callType="VIDEO"
         />
       )}
-    </div>
+    </motion.div>
   );
 }
-

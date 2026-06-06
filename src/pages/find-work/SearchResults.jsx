@@ -42,6 +42,12 @@ export default function SearchResults() {
     local: getFindWorkJobs({ query, workMode: 'local' }).length,
   };
 
+  const activeFilters = [
+    ...budgetTypes,
+    ...experienceLevels,
+    ...(urgentOnly ? ['Urgent only'] : []),
+  ];
+
   const updateParams = (nextTab, nextQuery) => {
     const next = new URLSearchParams();
     if (nextQuery.trim()) {
@@ -82,24 +88,31 @@ export default function SearchResults() {
           <div className="mb-8">
             <h1 className="text-3xl font-black text-zinc-900 mb-4">Search Results{query ? ` for "${query}"` : ''}</h1>
 
-            <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-4">
+            <form onSubmit={handleSearchSubmit} className="bg-white border border-zinc-200 rounded-3xl shadow-xl p-4 grid gap-4 md:grid-cols-[1.7fr_auto]">
               <div className="flex-1 relative">
-                <Search className="absolute left-4 top-1/2 -tranzinc-y-1/2 w-5 h-5 text-zinc-400" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                 <input
                   type="text"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-white border border-zinc-200 rounded-xl focus:outline-none focus:border-[#2bb75c]/20 font-medium text-lg shadow-sm"
+                  className="w-full pl-12 pr-4 py-4 bg-transparent focus:outline-none focus:border-[#2bb75c]/20 border border-transparent rounded-2xl font-medium text-lg"
                   placeholder="Search jobs, clients, skills, or categories..."
                 />
               </div>
-              <button type="submit" className="px-8 py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl transition-colors shadow-sm">
+              <button type="submit" className="px-8 py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-2xl transition-colors shadow-lg">
                 Search
               </button>
             </form>
+            <div className="mt-4 rounded-3xl bg-[#effaf3] border border-[#d7f9e3] p-4 text-sm text-zinc-700 flex flex-col sm:flex-row items-center gap-3">
+              <span className="font-semibold text-[#2bb75c]">Smart work search</span>
+              <span>Use a role, brief, or category to surface prioritized job matches with richer client signals.</span>
+              <span className="inline-flex items-center gap-2 text-[#1d8d38] font-bold">
+                <CheckCircle2 className="w-4 h-4" /> Verified taxonomy-backed results
+              </span>
+            </div>
           </div>
 
-          <div className="flex gap-2 border-b border-zinc-200 mb-8 overflow-x-auto hide-scrollbar">
+          <div className="flex flex-wrap gap-3 mb-8">
             {[
               { id: 'all', label: `All Results (${counts.all})` },
               { id: 'online', label: `Online Work (${counts.online})` },
@@ -124,16 +137,28 @@ export default function SearchResults() {
           </div>
 
           <div className="flex flex-col lg:flex-row gap-8">
-            <div className="w-full lg:w-64 shrink-0 space-y-6">
-              <div className="bg-white border border-zinc-200 rounded-2xl p-5 shadow-sm">
+            <div className="w-full lg:w-72 shrink-0 space-y-6 lg:sticky lg:top-24">
+              <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-xl">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="font-bold text-zinc-900 flex items-center gap-2">
                     <Filter className="w-4 h-4" /> Filters
                   </h3>
-                  <button type="button" onClick={resetFilters} className="text-xs font-bold text-[#2bb75c] hover:underline">
-                    Clear All
+                  <button type="button" onClick={resetFilters} className="text-xs font-semibold text-[#2bb75c] hover:underline">
+                    Clear
                   </button>
                 </div>
+
+                {activeFilters.length > 0 ? (
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {activeFilters.map((filter) => (
+                      <span key={filter} className="px-3 py-2 rounded-full bg-[#effaf3] text-xs font-semibold text-[#1f7b46]">
+                        {filter}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-sm text-zinc-500 mb-4">No filters active yet.</div>
+                )}
 
                 <div className="space-y-6">
                   <div>
@@ -222,63 +247,37 @@ export default function SearchResults() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                   {results.map((job) => (
-                    <div key={job.id} className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg hover:border-[#2bb75c]/50 transition-all duration-200 flex flex-col h-full">
-                      <div className="p-4 flex-1 flex flex-col">
-                        {/* Category & Urgent Badge */}
-                        <div className="flex items-center justify-between mb-2.5">
-                          <span className="text-xs font-bold uppercase tracking-wider text-[#2bb75c]">{job.category.name}</span>
+                    <Link key={job.id} to={job.detailPath} className="group block bg-white rounded-3xl border border-zinc-200 overflow-hidden hover:shadow-2xl hover:border-[#2bb75c]/50 transition-all duration-200 h-full">
+                      <div className="p-6 flex flex-col h-full">
+                        <div className="flex items-center justify-between mb-4 gap-3">
+                          <span className="text-xs font-bold uppercase tracking-[0.24em] text-[#2bb75c]">{job.category.name}</span>
                           {job.urgent && (
-                            <span className="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold uppercase rounded-full">
+                            <span className="px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.18em] rounded-full bg-rose-50 text-rose-700 border border-rose-200">
                               Urgent
                             </span>
                           )}
                         </div>
 
-                        {/* Title */}
-                        <Link to={job.detailPath} className="font-semibold text-base text-gray-900 mb-2 line-clamp-2 leading-snug group-hover:text-[#1d8d38] transition-colors">
-                          {job.title}
-                        </Link>
+                        <h3 className="font-bold text-xl text-zinc-900 mb-3 leading-snug transition-colors group-hover:text-[#1d8d38]">{job.title}</h3>
 
-                        {/* Summary */}
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2 leading-relaxed flex-1">
-                          {job.summary}
-                        </p>
+                        <p className="text-sm text-zinc-600 mb-5 line-clamp-3 leading-relaxed flex-1">{job.summary}</p>
 
-                        {/* Meta Info */}
-                        <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                          <span className={`px-2 py-0.5 rounded-full font-semibold ${job.workMode === 'local' ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'}`}>
-                            {job.workMode === 'local' ? '📍 Local' : '🌐 Online'}
+                        <div className="flex flex-wrap gap-2 items-center text-xs font-semibold text-zinc-600 mb-5">
+                          <span className={`px-3 py-2 rounded-full ${job.workMode === 'local' ? 'bg-amber-50 text-amber-800' : 'bg-blue-50 text-blue-800'}`}>
+                            {job.workMode === 'local' ? 'Local' : 'Online'}
                           </span>
-                          <span className="font-medium text-gray-700">{job.budgetType}: {job.budgetLabel}</span>
+                          <span className="px-3 py-2 rounded-full bg-[#eef6ff] text-blue-700">{job.budgetType}</span>
+                          <span className="px-3 py-2 rounded-full bg-[#f3fdf4] text-[#1f7b46]">{job.budgetLabel}</span>
                         </div>
-                      </div>
 
-                      {/* Bottom Bar */}
-                      <div className="border-t border-gray-100 px-4 py-3 bg-gray-50/50 mt-auto">
-                        <div className="flex items-center justify-between mb-2.5">
-                          <div className="flex items-center gap-3 text-xs text-gray-600">
-                            <span className="flex items-center gap-1">
-                              <Users className="w-3.5 h-3.5 text-gray-400" />
-                              <span className="font-bold text-gray-900">{job.applicants}</span>
-                            </span>
-                            {job.client.verified && (
-                              <span className="flex items-center gap-1 text-[#1d8d38] font-semibold">
-                                <CheckCircle2 className="w-3.5 h-3.5" /> Verified
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-sm font-bold text-gray-900">
-                            {job.budgetLabel}
+                        <div className="mt-auto pt-4 border-t border-zinc-100">
+                          <div className="flex items-center justify-between text-sm text-zinc-500">
+                            <span>{job.client.name}</span>
+                            <span>{job.postedLabel}</span>
                           </div>
                         </div>
-                        <Link
-                          to={job.proposalPath}
-                          className="flex items-center justify-center gap-2 w-full py-2.5 bg-gray-900 hover:bg-[#2bb75c] text-white text-sm font-bold rounded-lg transition-colors"
-                        >
-                          Apply Now <ArrowRight className="w-4 h-4" />
-                        </Link>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               )}

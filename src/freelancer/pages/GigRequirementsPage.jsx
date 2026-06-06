@@ -1,11 +1,11 @@
+// src/pages/freelancer/GigRequirementsPage.jsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  GripVertical, Plus, Trash2, CheckSquare, Type, 
+import {
+  GripVertical, Plus, Trash2, CheckSquare, Type,
   Paperclip, List, Link, Calendar, CheckCircle2,
-  FileQuestion, Zap, Info, MoreVertical
+  FileQuestion, Zap, Info, MoreVertical, Check
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
 
 const REQUIREMENT_TYPES = [
   { id: 'text', label: 'Free Text', icon: Type },
@@ -26,12 +26,12 @@ export default function GigRequirementsPage() {
   const [requirements, setRequirements] = useState([
     { id: 1, type: 'text', question: 'Please describe your project in detail.', required: true, options: [] }
   ]);
-  
   const [isAdding, setIsAdding] = useState(false);
   const [newReqType, setNewReqType] = useState('text');
   const [newQuestion, setNewQuestion] = useState('');
   const [newRequired, setNewRequired] = useState(true);
   const [newOptions, setNewOptions] = useState(['Option 1', 'Option 2']);
+  const [showSuccess, setShowSuccess] = useState(null);
 
   const addRequirement = () => {
     if (newQuestion.trim()) {
@@ -46,19 +46,25 @@ export default function GigRequirementsPage() {
       setNewQuestion('');
       setNewOptions(['Option 1', 'Option 2']);
       setNewReqType('text');
+      setShowSuccess({ message: 'Requirement added' });
+      setTimeout(() => setShowSuccess(null), 2000);
     }
   };
 
   const removeRequirement = (id) => {
     setRequirements(requirements.filter(r => r.id !== id));
+    setShowSuccess({ message: 'Requirement removed' });
+    setTimeout(() => setShowSuccess(null), 1500);
   };
 
   const loadTemplate = () => {
     setRequirements([
-      { id: 101, type: 'text', question: 'What is the main goal of this project?', required: true, options: [] },
-      { id: 102, type: 'url', question: 'Do you have any inspiration websites?', required: false, options: [] },
-      { id: 103, type: 'file', question: 'Please attach your brand guidelines and logo files.', required: true, options: [] },
+      { id: Date.now(), type: 'text', question: 'What is the main goal of this project?', required: true, options: [] },
+      { id: Date.now() + 1, type: 'url', question: 'Do you have any inspiration websites?', required: false, options: [] },
+      { id: Date.now() + 2, type: 'file', question: 'Please attach your brand guidelines and logo files.', required: true, options: [] },
     ]);
+    setShowSuccess({ message: 'Template loaded' });
+    setTimeout(() => setShowSuccess(null), 2000);
   };
 
   const getIcon = (typeId) => {
@@ -67,79 +73,106 @@ export default function GigRequirementsPage() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 items-start w-full font-sans">
-      
+    <div className="flex flex-col lg:flex-row gap-8 items-start w-full">
+
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Main Form Area */}
-      <div className="flex-1 w-full space-y-8">
-        
-        {/* Header Block */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
-          <div className="flex justify-between items-start">
+      <div className="flex-1 w-full space-y-6">
+
+        {/* Header */}
+        <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
             <div>
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">Buyer Requirements</h2>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-2xl">
+              <h2 className="font-display font-semibold text-lg text-brand-900 mb-1">Buyer requirements</h2>
+              <p className="text-sm font-body text-ink-secondary max-w-2xl">
                 Get all the information you need from buyers to start working on their order. The order timer won't start until they submit these requirements.
               </p>
             </div>
-            <button 
+            <button
               onClick={() => setIsAdding(true)}
-              className="flex items-center gap-1.5 px-4 py-2 bg-surface-dark dark:bg-white text-white dark:text-zinc-900 rounded-xl text-sm font-bold shadow-sm hover:shadow-md transition-all shrink-0"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-brand-900 text-white hover:bg-brand-800 text-sm font-body font-medium transition-colors shrink-0"
             >
-              <Plus className="w-4 h-4" /> Add Requirement
+              <Plus className="w-4 h-4" /> Add requirement
             </button>
           </div>
         </div>
 
-        {/* Dynamic Builder List */}
-        <div className="space-y-4">
+        {/* Requirements List */}
+        <div className="space-y-3">
           <AnimatePresence>
             {requirements.map((req, index) => (
-              <motion.div 
+              <motion.div
                 layout
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
                 key={req.id}
-                className="bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm overflow-hidden flex group"
+                className="bg-white border border-border rounded-xl shadow-sm overflow-hidden flex group"
               >
-                {/* Drag Handle */}
-                <div className="w-10 bg-surface dark:bg-zinc-800/50 flex flex-col items-center justify-center border-r border-zinc-100 dark:border-zinc-800 cursor-grab active:cursor-grabbing text-zinc-300 hover:text-zinc-500 transition-colors">
-                  <GripVertical className="w-5 h-5" />
+                <div className="w-8 bg-surface-soft flex flex-col items-center justify-center border-r border-border text-ink-tertiary">
+                  <GripVertical className="w-4 h-4" />
                 </div>
-                
-                {/* Content */}
-                <div className="flex-1 p-5">
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg flex items-center gap-1.5 text-xs font-bold text-zinc-600 dark:text-zinc-400 capitalize">
+
+                <div className="flex-1 p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="px-2 py-0.5 bg-surface-muted rounded-lg flex items-center gap-1.5 text-xs font-body font-medium text-ink-secondary capitalize">
                         {getIcon(req.type)} {REQUIREMENT_TYPES.find(t => t.id === req.type)?.label}
                       </span>
                       {req.required && (
-                        <span className="px-2.5 py-1 bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-lg text-xs font-bold">
+                        <span className="px-2 py-0.5 bg-danger-light text-danger rounded-lg text-xs font-body font-medium">
                           Required
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-1.5 text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800">
-                        <MoreVertical className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => removeRequirement(req.id)} className="p-1.5 text-zinc-400 hover:text-rose-500 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-500/10">
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => removeRequirement(req.id)}
+                        className="p-1 text-ink-tertiary hover:text-danger rounded-lg transition-colors"
+                      >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
-                  <h3 className="text-base font-bold text-zinc-900 dark:text-white mb-2">{req.question}</h3>
-                  
-                  {/* Mock Input Previews based on type */}
-                  <div className="mt-4 pointer-events-none opacity-60">
-                    {req.type === 'text' && <div className="h-20 w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-surface dark:bg-zinc-800/30" />}
-                    {req.type === 'file' && <div className="h-16 w-full rounded-xl border-2 border-dashed border-zinc-300 dark:border-zinc-600 bg-surface dark:bg-zinc-800/30 flex items-center justify-center"><Paperclip className="w-4 h-4 text-zinc-400 mr-2"/> <span className="text-sm font-medium text-zinc-400">Drag & drop files here</span></div>}
-                    {req.type === 'url' && <div className="h-10 w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-surface dark:bg-zinc-800/30 flex items-center px-3"><Link className="w-4 h-4 text-zinc-400 mr-2"/> <span className="text-sm text-zinc-400">https://...</span></div>}
+                  <h3 className="font-body font-semibold text-base text-ink-primary mb-2">{req.question}</h3>
+
+                  {/* Preview based on type */}
+                  <div className="mt-3 pointer-events-none opacity-60">
+                    {req.type === 'text' && (
+                      <div className="h-16 w-full rounded-lg border border-border bg-surface-soft" />
+                    )}
+                    {req.type === 'file' && (
+                      <div className="h-12 w-full rounded-lg border-2 border-dashed border-border bg-surface-soft flex items-center justify-center">
+                        <Paperclip className="w-4 h-4 text-ink-tertiary mr-2" />
+                        <span className="text-xs text-ink-tertiary">Drag & drop files here</span>
+                      </div>
+                    )}
+                    {req.type === 'url' && (
+                      <div className="h-9 w-full rounded-lg border border-border bg-surface-soft flex items-center px-3">
+                        <Link className="w-4 h-4 text-ink-tertiary mr-2" />
+                        <span className="text-xs text-ink-tertiary">https://...</span>
+                      </div>
+                    )}
                     {(req.type === 'multiple' || req.type === 'checklist') && (
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         {req.options.map((opt, i) => (
                           <div key={i} className="flex items-center gap-2">
-                            <div className={cn("w-4 h-4 border border-zinc-300 dark:border-zinc-600", req.type === 'multiple' ? 'rounded-full' : 'rounded')} />
-                            <span className="text-sm text-zinc-500">{opt}</span>
+                            <div className={`w-4 h-4 border border-border rounded ${req.type === 'checklist' ? 'rounded' : 'rounded-full'}`} />
+                            <span className="text-xs text-ink-tertiary">{opt}</span>
                           </div>
                         ))}
                       </div>
@@ -152,96 +185,136 @@ export default function GigRequirementsPage() {
 
           {/* Empty State */}
           {requirements.length === 0 && !isAdding && (
-            <div className="text-center py-12 border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-3xl bg-surface dark:bg-surface-dark/50">
-              <FileQuestion className="w-10 h-10 text-zinc-300 dark:text-zinc-600 mx-auto mb-3" />
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-1">No requirements added</h3>
-              <p className="text-xs text-zinc-500 mb-6 max-w-sm mx-auto">Orders will start immediately without collecting any specific information from the buyer.</p>
-              <button onClick={() => setIsAdding(true)} className="px-6 py-2.5 bg-[#2bb75c] text-white font-bold text-sm rounded-xl">Add First Requirement</button>
+            <div className="text-center py-12 border-2 border-dashed border-border rounded-2xl bg-surface-soft">
+              <FileQuestion className="w-10 h-10 text-ink-tertiary mx-auto mb-3" />
+              <h3 className="font-body font-semibold text-base text-ink-primary mb-1">No requirements added</h3>
+              <p className="text-xs text-ink-tertiary mb-5">Orders will start without collecting any information</p>
+              <button
+                onClick={() => setIsAdding(true)}
+                className="px-5 py-2 rounded-lg bg-brand-900 text-white hover:bg-brand-800 text-sm font-body font-medium transition-colors"
+              >
+                Add first requirement
+              </button>
             </div>
           )}
 
-          {/* Add Requirement Form Builder inline */}
+          {/* Add Requirement Form */}
           <AnimatePresence>
             {isAdding && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, height: 0 }}
-                className="bg-white dark:bg-surface-dark border-2 border-[#2bb75c]/20 shadow-lg shadow-[#2bb75c]/25/10 rounded-2xl p-6 relative"
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, height: 0 }}
+                className="bg-white border-2 border-accent DEFAULT rounded-xl p-5 shadow-sm"
               >
-                <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-6">Build Requirement</h3>
-                
-                <div className="space-y-6">
+                <h3 className="font-display font-semibold text-lg text-brand-900 mb-4">Add requirement</h3>
+
+                <div className="space-y-4">
                   <div>
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 block">Response Type</label>
+                    <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1.5 block">
+                      Response type
+                    </label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                      {REQUIREMENT_TYPES.map(type => (
-                        <button
-                          key={type.id}
-                          onClick={() => setNewReqType(type.id)}
-                          className={cn(
-                            "flex flex-col items-center justify-center p-3 rounded-xl border transition-all text-center",
-                            newReqType === type.id ? "bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 border-[#2bb75c]/20 text-[#2bb75c] dark:text-[#2bb75c]" : "bg-surface dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300"
-                          )}
-                        >
-                          <type.icon className={cn("w-5 h-5 mb-1.5", newReqType === type.id ? "text-[#2bb75c]" : "text-zinc-400")} />
-                          <span className="text-[10px] font-bold uppercase tracking-wider">{type.label}</span>
-                        </button>
-                      ))}
+                      {REQUIREMENT_TYPES.map(type => {
+                        const Icon = type.icon;
+                        const isSelected = newReqType === type.id;
+                        return (
+                          <button
+                            key={type.id}
+                            onClick={() => setNewReqType(type.id)}
+                            className={`flex flex-col items-center justify-center p-2.5 rounded-lg border transition-all ${
+                              isSelected
+                                ? "border-accent DEFAULT bg-accent-light text-accent DEFAULT"
+                                : "border-border bg-white text-ink-tertiary hover:border-border-strong"
+                            }`}
+                          >
+                            <Icon className={`w-4 h-4 mb-1 ${isSelected ? "text-accent DEFAULT" : "text-ink-tertiary"}`} />
+                            <span className="text-xs font-body font-medium">{type.label}</span>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 block">Question for the Buyer</label>
-                    <input 
-                      type="text" 
+                    <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1.5 block">
+                      Question for buyer
+                    </label>
+                    <input
+                      type="text"
                       value={newQuestion}
                       onChange={(e) => setNewQuestion(e.target.value)}
-                      placeholder="What exactly do you need the buyer to provide?"
-                      className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#2bb75c]/20 focus:ring-1 focus:ring-[#2bb75c] transition-all"
+                      placeholder="What do you need the buyer to provide?"
+                      className="w-full h-11 px-3 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
                     />
                   </div>
 
                   {(newReqType === 'multiple' || newReqType === 'checklist') && (
                     <div>
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 block">Options</label>
+                      <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1.5 block">
+                        Options
+                      </label>
                       <div className="space-y-2 mb-2">
                         {newOptions.map((opt, i) => (
                           <div key={i} className="flex items-center gap-2">
-                            <input 
-                              type="text" 
+                            <input
+                              type="text"
                               value={opt}
                               onChange={(e) => {
                                 const newOpts = [...newOptions];
                                 newOpts[i] = e.target.value;
                                 setNewOptions(newOpts);
                               }}
-                              className="flex-1 p-2 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-medium outline-none focus:border-[#2bb75c]/20"
+                              className="flex-1 h-9 px-3 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
                             />
-                            <button onClick={() => setNewOptions(newOptions.filter((_, idx) => idx !== i))} className="p-2 text-zinc-400 hover:text-rose-500">
+                            <button
+                              onClick={() => setNewOptions(newOptions.filter((_, idx) => idx !== i))}
+                              className="p-1.5 text-ink-tertiary hover:text-danger rounded transition-colors"
+                            >
                               <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
                         ))}
                       </div>
-                      <button onClick={() => setNewOptions([...newOptions, `Option ${newOptions.length + 1}`])} className="text-xs font-bold text-[#2bb75c] flex items-center gap-1 hover:underline">
-                        <Plus className="w-3 h-3" /> Add Option
+                      <button
+                        onClick={() => setNewOptions([...newOptions, `Option ${newOptions.length + 1}`])}
+                        className="text-xs font-body font-medium text-accent DEFAULT hover:text-accent-dark flex items-center gap-1 transition-colors"
+                      >
+                        <Plus className="w-3.5 h-3.5" /> Add option
                       </button>
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                  <div className="flex items-center justify-between pt-3 border-t border-border">
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <div className={cn(
-                        "w-10 h-5 rounded-full transition-colors relative flex items-center p-0.5",
-                        newRequired ? "bg-[#2bb75c]" : "bg-zinc-200 dark:bg-zinc-700"
-                      )}>
-                        <motion.div layout className="w-4 h-4 bg-white rounded-full shadow-sm" animate={{ x: newRequired ? 20 : 0 }} />
+                      <div
+                        className={`w-9 h-5 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer ${
+                          newRequired ? "bg-accent DEFAULT" : "bg-border"
+                        }`}
+                        onClick={() => setNewRequired(!newRequired)}
+                      >
+                        <motion.div
+                          className="w-4 h-4 bg-white rounded-full shadow-sm"
+                          animate={{ x: newRequired ? 14 : 0 }}
+                        />
                       </div>
-                      <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Answer is mandatory</span>
+                      <span className="text-sm font-body font-medium text-ink-primary">Answer is mandatory</span>
                     </label>
 
                     <div className="flex items-center gap-2">
-                      <button onClick={() => setIsAdding(false)} className="px-4 py-2 text-sm font-bold text-zinc-500 hover:text-zinc-900 dark:hover:text-white">Cancel</button>
-                      <button onClick={addRequirement} disabled={!newQuestion} className="px-6 py-2 bg-[#2bb75c] disabled:bg-zinc-300 text-white text-sm font-bold rounded-xl transition-colors">Add</button>
+                      <button
+                        onClick={() => setIsAdding(false)}
+                        className="px-4 py-1.5 text-sm font-body font-medium text-ink-secondary hover:text-ink-primary transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={addRequirement}
+                        disabled={!newQuestion}
+                        className="px-5 py-1.5 rounded-lg bg-brand-900 text-white hover:bg-brand-800 text-sm font-body font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Add
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -249,64 +322,76 @@ export default function GigRequirementsPage() {
             )}
           </AnimatePresence>
         </div>
-
       </div>
 
-      {/* Sidebar - Templates & Tips */}
-      <div className="w-full lg:w-80 shrink-0 space-y-6">
-        
-        {/* Templates Box */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+      {/* Sidebar */}
+      <div className="w-full lg:w-80 shrink-0 space-y-5">
+
+        {/* Templates */}
+        <div className="bg-white border border-border rounded-2xl p-5 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
-            <Zap className="w-5 h-5 text-amber-500" />
-            <h3 className="font-bold text-zinc-900 dark:text-white">Quick Templates</h3>
+            <Zap className="w-5 h-5 text-accent DEFAULT" />
+            <h3 className="font-body font-semibold text-ink-primary">Quick templates</h3>
           </div>
-          
-          <div className="space-y-3">
+
+          <div className="space-y-2">
             {TEMPLATES.map(temp => (
-              <div key={temp.id} className="p-3 bg-surface dark:bg-zinc-800/50 rounded-xl border border-zinc-100 dark:border-zinc-700/50 group cursor-pointer hover:border-[#2bb75c]/50 transition-colors" onClick={loadTemplate}>
+              <div
+                key={temp.id}
+                onClick={loadTemplate}
+                className="p-3 bg-surface-soft rounded-xl border border-border cursor-pointer hover:border-accent DEFAULT transition-all group"
+              >
                 <div className="flex justify-between items-start mb-1">
-                  <h4 className="text-xs font-bold text-zinc-900 dark:text-white">{temp.title}</h4>
-                  <Plus className="w-3.5 h-3.5 text-zinc-400 group-hover:text-[#2bb75c] transition-colors" />
+                  <h4 className="text-xs font-body font-semibold text-ink-primary">{temp.title}</h4>
+                  <Plus className="w-3.5 h-3.5 text-ink-tertiary group-hover:text-accent DEFAULT transition-colors" />
                 </div>
-                <p className="text-[10px] text-zinc-500 leading-relaxed">{temp.desc}</p>
+                <p className="text-xs text-ink-tertiary leading-relaxed">{temp.desc}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Tips Box */}
-        <div className="bg-gradient-to-br from-[#2bb75c] to-violet-600 rounded-3xl p-6 text-white shadow-xl shadow-[#2bb75c]/25/20">
+        {/* Tips */}
+        <div className="bg-gradient-to-br from-brand-900 to-brand-800 rounded-2xl p-5 text-white shadow-sm">
           <div className="flex items-center gap-2 mb-4">
-            <Info className="w-5 h-5 text-[#2bb75c]" />
-            <h3 className="font-bold text-[#2bb75c]">Conversion Tip</h3>
+            <Info className="w-5 h-5 text-accent-light" />
+            <h3 className="font-body font-semibold">Conversion tips</h3>
           </div>
-          
-          <div className="space-y-4">
-            <div className="bg-white/10 p-4 rounded-xl border border-white/10 flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0" />
-              <div>
-                <h4 className="text-sm font-bold mb-1">Keep it simple</h4>
-                <p className="text-xs text-[#2bb75c] leading-relaxed">
-                  Too many requirements can overwhelm buyers and cause them to abandon the order. Ask only for what is absolutely necessary to start.
-                </p>
+
+          <div className="space-y-3">
+            <div className="bg-white/10 p-3 rounded-lg border border-white/20">
+              <div className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-accent-light shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="text-sm font-body font-semibold mb-1">Keep it simple</h4>
+                  <p className="text-xs text-white/70 leading-relaxed">
+                    Too many requirements can overwhelm buyers. Ask only for what is absolutely necessary.
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="bg-white/10 p-4 rounded-xl border border-white/10 flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0" />
-              <div>
-                <h4 className="text-sm font-bold mb-1">Use Multiple Choice</h4>
-                <p className="text-xs text-[#2bb75c] leading-relaxed">
-                  Multiple choice questions are 3x more likely to be answered quickly than open-ended text fields.
-                </p>
+            <div className="bg-white/10 p-3 rounded-lg border border-white/20">
+              <div className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-accent-light shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="text-sm font-body font-semibold mb-1">Use multiple choice</h4>
+                  <p className="text-xs text-white/70 leading-relaxed">
+                    Multiple choice questions are answered faster than open-ended text fields.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
+        {/* Quick tip */}
+        <div className="bg-accent-light border border-accent DEFAULT rounded-xl p-4">
+          <h4 className="text-sm font-body font-semibold text-accent-dark mb-1">Pro tip</h4>
+          <p className="text-xs text-accent-dark">
+            The order timer only starts after the buyer submits these requirements. Take your time to set them up correctly.
+          </p>
+        </div>
       </div>
-
     </div>
   );
 }
-

@@ -1,14 +1,12 @@
+// src/pages/freelancer/PersonalDetailsPage.jsx
 import React, { useState } from 'react';
-import { User, Briefcase, Globe, Home, CheckCircle2, Save, MapPin, CreditCard, Smartphone, Building2 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  User, Briefcase, Globe, Home, CheckCircle2, Save, MapPin, CreditCard, Smartphone, Building2, Check
+} from 'lucide-react';
 
 export default function PersonalDetailsPage() {
-  // accountType is now assumed to come from the server context/state
-  // e.g., const { accountType } = useAuth();
-  
-  const [workModality, setWorkModality] = useState('ONLINE'); // ONLINE, OFFLINE, HYBRID
+  const [workModality, setWorkModality] = useState('ONLINE');
   const [formData, setFormData] = useState({
     name: '',
     titleOrCrn: '',
@@ -20,6 +18,7 @@ export default function PersonalDetailsPage() {
     bankAccount: ''
   });
   const [isSaved, setIsSaved] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(null);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,239 +26,290 @@ export default function PersonalDetailsPage() {
   };
 
   const handleSave = () => {
-    // Simulate API call
+    setIsSaved(true);
+    setShowSuccess({ message: 'Details saved successfully' });
     setTimeout(() => {
-      setIsSaved(true);
-      setTimeout(() => setIsSaved(false), 3000);
-    }, 500);
+      setIsSaved(false);
+      setShowSuccess(null);
+    }, 2000);
   };
 
+  const handleClear = () => {
+    setFormData({
+      name: '',
+      titleOrCrn: '',
+      baseCity: '',
+      travelRadius: '',
+      preferredPaymentMethod: 'mpesa',
+      phoneNumber: '',
+      bankName: 'KCB',
+      bankAccount: ''
+    });
+    setShowSuccess({ message: 'Form cleared' });
+    setTimeout(() => setShowSuccess(null), 1500);
+  };
+
+  const paymentMethods = [
+    { id: 'mpesa', name: 'M-Pesa', icon: Smartphone, color: 'text-accent DEFAULT' },
+    { id: 'airtel', name: 'Airtel Money', icon: Smartphone, color: 'text-danger' },
+    { id: 'bank', name: 'Bank Account', icon: Building2, color: 'text-info' }
+  ];
+
   return (
-    <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500 pb-12 max-w-4xl mx-auto">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-black text-text-primary tracking-tight mb-2">Service Configuration</h1>
-        <p className="text-sm text-text-secondary font-medium">
-          Tell us how you prefer to work so we can match you with the right clients.
-        </p>
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2.5 bg-accent-light rounded-xl">
+            <User className="w-6 h-6 text-accent DEFAULT" />
+          </div>
+          <h1 className="font-display font-bold text-3xl text-brand-900">Service configuration</h1>
+        </div>
+        <p className="text-ink-secondary font-body">Tell us how you prefer to work so we can match you with the right clients</p>
       </div>
 
-      <div className="space-y-8">
-        
-        {/* Basic Details Form */}
-        <Card title="Business Information">
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-widest">
-                  Display Name
-                </label>
-                <input 
-                  type="text" 
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2.5 bg-light-gray border border-transparent rounded-md focus:border-border focus:bg-white transition-all text-sm font-medium outline-none text-text-primary"
-                  placeholder="e.g. Jane Doe or Acme Solutions"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-widest">
-                  Professional Headline / Tagline
-                </label>
-                <input 
-                  type="text" 
-                  name="titleOrCrn"
-                  value={formData.titleOrCrn}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2.5 bg-light-gray border border-transparent rounded-md focus:border-border focus:bg-white transition-all text-sm font-medium outline-none text-text-primary"
-                  placeholder="e.g. Senior Frontend Developer"
-                />
-              </div>
+      <div className="space-y-6">
+
+        {/* Business Information */}
+        <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+          <h2 className="font-display font-semibold text-lg text-brand-900 mb-5">Business information</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="space-y-1.5">
+              <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide">
+                Display name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="w-full h-11 px-4 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                placeholder="e.g., Jane Doe or Acme Solutions"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide">
+                Professional headline
+              </label>
+              <input
+                type="text"
+                name="titleOrCrn"
+                value={formData.titleOrCrn}
+                onChange={handleInputChange}
+                className="w-full h-11 px-4 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                placeholder="e.g., Senior Frontend Developer"
+              />
             </div>
           </div>
-        </Card>
+        </div>
 
-        {/* Work Modality Selection */}
-        <section>
-          <h2 className="text-lg font-bold text-text-primary mb-4">Work Modality & Location</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {/* Online */}
-            <div 
+        {/* Work Modality */}
+        <div>
+          <h2 className="font-display font-semibold text-lg text-brand-900 mb-4">Work modality & location</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            <div
               onClick={() => setWorkModality('ONLINE')}
-              className={cn(
-                "p-6 rounded-lg border-2 cursor-pointer transition-all flex items-start gap-4",
-                workModality === 'ONLINE' 
-                  ? "border-success bg-success/5" 
-                  : "border-border bg-white hover:border-text-secondary"
-              )}
+              className={`p-5 rounded-xl border-2 cursor-pointer transition-all flex items-start gap-4 ${
+                workModality === 'ONLINE'
+                  ? "border-accent DEFAULT bg-accent-light"
+                  : "border-border bg-white hover:border-border-strong"
+              }`}
             >
-              <div className={cn("p-2.5 rounded-md shrink-0", workModality === 'ONLINE' ? "bg-success text-white" : "bg-light-gray text-text-secondary")}>
-                <Globe size={20} />
+              <div className={`p-2 rounded-lg shrink-0 ${workModality === 'ONLINE' ? "bg-accent DEFAULT text-white" : "bg-surface-muted text-ink-tertiary"}`}>
+                <Globe className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold text-text-primary">Online / Remote Services</h3>
-                <p className="text-sm text-text-secondary mt-1">Digital work such as software development, design, writing, or virtual consulting.</p>
+                <h3 className="font-body font-semibold text-ink-primary">Online / Remote services</h3>
+                <p className="text-sm text-ink-secondary mt-1">Digital work such as software development, design, writing</p>
               </div>
             </div>
 
-            {/* Offline */}
-            <div 
+            <div
               onClick={() => setWorkModality('OFFLINE')}
-              className={cn(
-                "p-6 rounded-lg border-2 cursor-pointer transition-all flex items-start gap-4",
-                workModality === 'OFFLINE' 
-                  ? "border-[#e63946] bg-[#e63946]/5" 
-                  : "border-border bg-white hover:border-text-secondary"
-              )}
+              className={`p-5 rounded-xl border-2 cursor-pointer transition-all flex items-start gap-4 ${
+                workModality === 'OFFLINE'
+                  ? "border-danger bg-danger-light"
+                  : "border-border bg-white hover:border-border-strong"
+              }`}
             >
-              <div className={cn("p-2.5 rounded-md shrink-0", workModality === 'OFFLINE' ? "bg-[#e63946] text-white" : "bg-light-gray text-text-secondary")}>
-                <Home size={20} />
+              <div className={`p-2 rounded-lg shrink-0 ${workModality === 'OFFLINE' ? "bg-danger text-white" : "bg-surface-muted text-ink-tertiary"}`}>
+                <Home className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold text-text-primary">Physical / On-Site Services</h3>
-                <p className="text-sm text-text-secondary mt-1">In-person tasks such as plumbing, electrical work, home cleaning, or event photography.</p>
+                <h3 className="font-body font-semibold text-ink-primary">Physical / On-site services</h3>
+                <p className="text-sm text-ink-secondary mt-1">In-person tasks such as plumbing, electrical, cleaning</p>
               </div>
             </div>
           </div>
 
-          {/* Conditional Location Input for Offline work */}
+          {/* Offline Location Settings */}
           {workModality === 'OFFLINE' && (
-            <Card className="border-l-4 border-l-[#e63946] p-6">
-              <div className="flex items-center gap-3 mb-4 text-[#e63946]">
-                <MapPin size={20} />
-                <h3 className="font-bold text-text-primary">Service Area Settings</h3>
+            <div className="bg-danger-light border-l-4 border-danger rounded-xl p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <MapPin className="w-5 h-5 text-danger" />
+                <h3 className="font-body font-semibold text-danger">Service area settings</h3>
               </div>
-              <p className="text-sm text-text-secondary mb-4">
-                Since you offer physical services, please define your operating region. Clients outside this region won't be able to book you for on-site work.
+              <p className="text-sm text-danger/80 mb-4">
+                Since you offer physical services, please define your operating region.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-widest">Base City/Region</label>
-                  <input 
-                    type="text" 
+                <div className="space-y-1.5">
+                  <label className="text-xs font-body font-medium text-danger uppercase tracking-wide">Base city/region</label>
+                  <input
+                    type="text"
                     name="baseCity"
                     value={formData.baseCity}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 bg-white border border-border rounded-md focus:border-[#e63946] outline-none text-sm font-medium"
-                    placeholder="e.g. Nairobi, Kenya"
+                    className="w-full h-11 px-4 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                    placeholder="e.g., Nairobi, Kenya"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-widest">Maximum Travel Radius (km)</label>
-                  <input 
-                    type="number" 
+                <div className="space-y-1.5">
+                  <label className="text-xs font-body font-medium text-danger uppercase tracking-wide">Max travel radius (km)</label>
+                  <input
+                    type="number"
                     name="travelRadius"
                     value={formData.travelRadius}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 bg-white border border-border rounded-md focus:border-[#e63946] outline-none text-sm font-medium"
-                    placeholder="e.g. 50"
+                    className="w-full h-11 px-4 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                    placeholder="e.g., 50"
                   />
                 </div>
               </div>
-            </Card>
+            </div>
           )}
-        </section>
+        </div>
 
-        {/* Payment & Withdrawal Details */}
-        <Card title="Payment & Withdrawal Settings">
-          <div className="space-y-6">
-            <p className="text-sm text-text-secondary">Select your preferred withdrawal method and link your account details below.</p>
-            
-            {/* Method Selection */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-text-secondary uppercase tracking-widest">Preferred Withdrawal Method</label>
+        {/* Payment & Withdrawal */}
+        <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+          <h2 className="font-display font-semibold text-lg text-brand-900 mb-4">Payment & withdrawal settings</h2>
+          <p className="text-sm text-ink-secondary mb-5">Select your preferred withdrawal method and link your account details</p>
+
+          <div className="space-y-5">
+            <div>
+              <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-2 block">
+                Preferred withdrawal method
+              </label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {[
-                  { id: 'mpesa', name: 'M-Pesa', icon: Smartphone, color: 'text-green-600' },
-                  { id: 'airtel', name: 'Airtel Money', icon: Smartphone, color: 'text-red-600' },
-                  { id: 'bank', name: 'Bank Account', icon: Building2, color: 'text-[#2bb75c]' }
-                ].map(method => (
-                  <div 
-                    key={method.id}
-                    onClick={() => setFormData({...formData, preferredPaymentMethod: method.id})}
-                    className={`p-3 border-2 rounded-xl cursor-pointer transition-all flex items-center gap-2 ${
-                      formData.preferredPaymentMethod === method.id ? 'border-[#2bb75c]/20 bg-[#2bb75c]/5' : 'border-border hover:border-zinc-300'
-                    }`}
-                  >
-                    <method.icon size={18} className={method.color} />
-                    <span className="font-bold text-sm text-text-primary">{method.name}</span>
-                  </div>
-                ))}
+                {paymentMethods.map(method => {
+                  const Icon = method.icon;
+                  const isSelected = formData.preferredPaymentMethod === method.id;
+                  return (
+                    <div
+                      key={method.id}
+                      onClick={() => setFormData({...formData, preferredPaymentMethod: method.id})}
+                      className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-2 ${
+                        isSelected
+                          ? `border-accent DEFAULT bg-accent-light`
+                          : "border-border hover:border-border-strong"
+                      }`}
+                    >
+                      <Icon className={`w-4 h-4 ${isSelected ? method.color : "text-ink-tertiary"}`} />
+                      <span className={`font-body font-medium text-sm ${isSelected ? "text-accent DEFAULT" : "text-ink-primary"}`}>
+                        {method.name}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Dynamic Form Fields */}
             <div className="pt-4 border-t border-border">
               {(formData.preferredPaymentMethod === 'mpesa' || formData.preferredPaymentMethod === 'airtel') ? (
-                <div className="space-y-2 max-w-md">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-widest flex items-center gap-1">
-                    <Smartphone size={14} className={formData.preferredPaymentMethod === 'mpesa' ? 'text-green-600' : 'text-red-600'} /> 
-                    {formData.preferredPaymentMethod === 'mpesa' ? 'M-Pesa' : 'Airtel'} Phone Number
+                <div className="space-y-1.5 max-w-md">
+                  <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide flex items-center gap-1">
+                    <Smartphone className="w-3.5 h-3.5 text-accent DEFAULT" />
+                    {formData.preferredPaymentMethod === 'mpesa' ? 'M-Pesa' : 'Airtel'} phone number
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="tel"
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 bg-light-gray border border-transparent rounded-md focus:border-border focus:bg-white transition-all text-sm font-medium outline-none text-text-primary"
-                    placeholder="e.g. +254 712 345 678"
+                    className="w-full h-11 px-4 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                    placeholder="e.g., +254 712 345 678"
                   />
-                  <p className="text-xs text-text-secondary">Please ensure the number is registered in your name.</p>
+                  <p className="text-xs text-ink-tertiary">Ensure the number is registered in your name</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-text-secondary uppercase tracking-widest flex items-center gap-1">
-                      <Building2 size={14} className="text-[#2bb75c]" /> Select Bank
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide flex items-center gap-1">
+                      <Building2 className="w-3.5 h-3.5 text-info" /> Bank
                     </label>
-                    <select 
+                    <select
                       name="bankName"
                       value={formData.bankName}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2.5 bg-light-gray border border-transparent rounded-md focus:border-border focus:bg-white transition-all text-sm font-medium outline-none text-text-primary"
+                      className="w-full h-11 px-4 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
                     >
                       <option value="KCB">KCB Bank</option>
                       <option value="Equity">Equity Bank</option>
                       <option value="Coop">Co-operative Bank</option>
                       <option value="Absa">Absa Bank Kenya</option>
                       <option value="NCBA">NCBA Bank</option>
-                      <option value="StanChart">Standard Chartered</option>
                     </select>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-text-secondary uppercase tracking-widest flex items-center gap-1">
-                      <CreditCard size={14} className="text-[#2bb75c]" /> Account Number
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide flex items-center gap-1">
+                      <CreditCard className="w-3.5 h-3.5 text-info" /> Account number
                     </label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       name="bankAccount"
                       value={formData.bankAccount}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2.5 bg-light-gray border border-transparent rounded-md focus:border-border focus:bg-white transition-all text-sm font-medium outline-none text-text-primary"
-                      placeholder="Enter 10-14 digit account number"
+                      className="w-full h-11 px-4 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                      placeholder="Enter account number"
                     />
                   </div>
                 </div>
               )}
             </div>
           </div>
-        </Card>
+        </div>
 
-        {/* Action Buttons */}
-        <div className="flex justify-end items-center gap-4 pt-6 border-t border-border">
+        {/* Actions */}
+        <div className="flex justify-end items-center gap-4 pt-4 border-t border-border">
           {isSaved && (
-            <span className="text-sm font-bold text-success flex items-center gap-1.5 mr-auto">
-              <CheckCircle2 size={16} /> Details Saved Successfully
+            <span className="text-sm font-body font-medium text-accent DEFAULT flex items-center gap-1.5 mr-auto">
+              <CheckCircle2 className="w-4 h-4" /> Details saved
             </span>
           )}
-          <Button variant="outline" size="lg" onClick={() => setFormData({name:'', titleOrCrn:'', baseCity:'', travelRadius:''})}>Clear</Button>
-          <Button variant="primary" size="lg" icon={<Save size={18} />} onClick={handleSave}>
-            Save Details
-          </Button>
+          <button
+            onClick={handleClear}
+            className="px-5 py-2 rounded-lg border border-border text-ink-primary hover:bg-surface-muted font-body font-medium text-sm transition-colors"
+          >
+            Clear
+          </button>
+          <button
+            onClick={handleSave}
+            className="px-5 py-2 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors inline-flex items-center gap-2"
+          >
+            <Save className="w-4 h-4" /> Save details
+          </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
-

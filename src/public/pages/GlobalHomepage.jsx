@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
+import {
   Search, Code, PenTool, TrendingUp,
   Star, PlayCircle, Zap, Video, Music, BookOpen
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import FreelancerCard from '../../components/marketplace/FreelancerCard';
-import { useTrendingCategories, useTopFreelancers, useFeaturedGigs } from '../../common/services/publicHooks';
+import { useTrendingCategories, useTopFreelancers, useFeaturedGigs, usePlatformReviews, useTrustedClients } from '../../common/services/publicHooks';
 
 // Helper functions for category icons and colors
 function getCategoryIcon(categoryName) {
@@ -37,6 +37,19 @@ function getCategoryColor(categoryName) {
   return colorMap[categoryName] || 'bg-[#2bb75c]/5 text-[#2bb75c]';
 }
 
+function getCategoryRoute(category) {
+  const slug = category.slug || category.id || String(category.name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  const isOnline = category.isOnline === true || category.isOnline === 'true';
+  const isOffline = category.isOffline === true || category.isOffline === 'true';
+  const kind = isOnline && !isOffline ? 'online' : isOffline && !isOnline ? 'onsite' : 'online';
+
+  return `/categories/${kind}/${slug}`;
+}
+
 export default function GlobalHomepage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,13 +64,15 @@ export default function GlobalHomepage() {
   const { data: trendingCategories = [] } = useTrendingCategories();
   const { data: topFreelancers = [] } = useTopFreelancers(6);
   const { data: apiGigs = [] } = useFeaturedGigs(8);
+  const { data: platformReviews = [] } = usePlatformReviews();
+  const { data: trustedClients = [] } = useTrustedClients();
 
   // Convert trending categories to the format expected by the UI
   const dynamicCategories = trendingCategories.map(category => ({
     name: category.name,
     icon: getCategoryIcon(category.name),
     color: getCategoryColor(category.name),
-    link: `/categories/${category.slug || category.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+    link: getCategoryRoute(category),
   }));
 
   const CATEGORIES = dynamicCategories;
@@ -83,24 +98,24 @@ export default function GlobalHomepage() {
       <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 px-4 bg-[#2bb75c] text-white overflow-hidden">
         {/* Background Image Overlay */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600&q=80" 
-            alt="Freelancer working" 
+          <img
+            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600&q=80"
+            alt="Freelancer working"
             className="w-full h-full object-cover opacity-30 mix-blend-overlay"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#2bb75c] via-[#2bb75c]/80 to-transparent"></div>
         </div>
-        
+
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col justify-center min-h-[450px]">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-8 text-white">
               Find the right <span className="font-serif italic text-white/90">freelance</span> service, right away
             </h1>
-            
+
             <form onSubmit={handleHeroSearch} className="bg-white rounded-lg p-2 flex items-center mb-8 shadow-2xl">
-              <input 
-                type="search" 
-                placeholder="Search for any service..." 
+              <input
+                type="search"
+                placeholder="Search for any service..."
                 className="w-full bg-transparent border-none outline-none px-4 py-3 text-zinc-900 font-medium text-lg placeholder:text-zinc-400"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -110,7 +125,7 @@ export default function GlobalHomepage() {
                 <span className="hidden sm:inline">Search</span>
               </button>
             </form>
-            
+
             <div className="flex flex-wrap items-center gap-3 text-sm font-semibold">
               <span className="opacity-80">Popular:</span>
               {['Website Design', 'WordPress', 'Logo Design', 'AI Services'].map((term) => (
@@ -209,7 +224,7 @@ export default function GlobalHomepage() {
       {/* Popular Services Slider (Grid representation) */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6">
         <h2 className="text-3xl font-bold text-zinc-900 mb-10">Popular professional services</h2>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
           {[
             { title: 'Logo Design', subtitle: 'Build your brand', img: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=400&q=80', color: 'bg-emerald-900' },
@@ -218,12 +233,12 @@ export default function GlobalHomepage() {
             { title: 'Video Explainer', subtitle: 'Engage your audience', img: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?w=400&q=80', color: 'bg-rose-900' },
             { title: 'SEO', subtitle: 'Unlock growth online', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80', color: 'bg-[#2bb75c]' },
           ].map((service, i) => (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              key={service.title} 
+              key={service.title}
               className={`relative h-[340px] rounded-xl overflow-hidden cursor-pointer group ${service.color}`}
             >
               <img src={service.img} alt={service.title} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-300 mix-blend-overlay" />
@@ -242,7 +257,7 @@ export default function GlobalHomepage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold mb-8 text-zinc-900">A whole world of freelance talent at your fingertips</h2>
-            
+
             <div className="space-y-6">
               <div>
                 <div className="flex items-center gap-3 mb-2">
@@ -274,7 +289,7 @@ export default function GlobalHomepage() {
               </div>
             </div>
           </div>
-          
+
           <div className="relative rounded-xl overflow-hidden shadow-2xl">
             <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80" alt="Collaboration" className="w-full h-[500px] object-cover" />
             <button className="absolute top-1/2 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 w-20 h-20 bg-success/90 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-110 transition-transform backdrop-blur-sm">
@@ -287,7 +302,7 @@ export default function GlobalHomepage() {
       {/* Explore the marketplace */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6">
         <h2 className="text-3xl font-bold text-zinc-900 mb-12">Explore the marketplace</h2>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12">
           {CATEGORIES.map((cat, i) => (
             <Link key={cat.name} to={cat.link} className="group flex flex-col items-center text-center">
@@ -303,6 +318,65 @@ export default function GlobalHomepage() {
         </div>
       </section>
 
+      {trustedClients.length > 0 && (
+        <section className="py-20 bg-white border-b border-zinc-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10">
+              <div>
+                <h2 className="text-3xl font-bold text-zinc-900">Trusted by fast-moving teams</h2>
+                <p className="text-zinc-600 mt-2 max-w-2xl">
+                  Companies and brands rely on Fortspace to connect with vetted freelancers and deliver work reliably.
+                </p>
+              </div>
+              <span className="text-sm font-semibold text-zinc-500">{trustedClients.length} trusted clients onboarded</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 items-center">
+              {trustedClients.slice(0, 12).map((client) => (
+                <div key={client.id || client.name} className="flex items-center justify-center p-4 bg-surface rounded-2xl border border-zinc-200">
+                  {client.logoUrl || client.logo ? (
+                    <img src={client.logoUrl || client.logo} alt={client.name} className="max-h-10 object-contain" />
+                  ) : (
+                    <span className="text-zinc-800 font-semibold">{client.name}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {platformReviews.length > 0 && (
+        <section className="py-24 bg-[#f9fafb]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="mb-12 text-center">
+              <p className="text-sm uppercase tracking-[0.28em] text-zinc-500 mb-3">Real feedback</p>
+              <h2 className="text-3xl font-bold text-zinc-900">What clients and freelancers are saying</h2>
+            </div>
+            <div className="grid gap-6 md:grid-cols-3">
+              {platformReviews.slice(0, 3).map((review, index) => (
+                <div key={review.id || `${review.author}-${index}`} className="bg-white rounded-3xl border border-zinc-200 p-8 shadow-sm">
+                  <div className="flex items-center gap-4 mb-5">
+                    <div className="w-12 h-12 rounded-full bg-[#2bb75c]/10 flex items-center justify-center text-emerald-700 font-black">
+                      {review.author?.charAt(0) || 'F'}
+                    </div>
+                    <div>
+                      <p className="font-bold text-zinc-900">{review.author || review.company || 'Verified user'}</p>
+                      <p className="text-sm text-zinc-500">{review.role || review.title || 'Client review'}</p>
+                    </div>
+                  </div>
+                  <p className="text-zinc-600 leading-relaxed">“{review.comment || review.feedback || review.message || 'This platform makes every freelance project simpler.'}”</p>
+                  {review.rating !== undefined && (
+                    <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-[#2bb75c]">
+                      <Star className="w-4 h-4" /> {review.rating.toFixed ? review.rating.toFixed(1) : review.rating}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Enterprise Solutions Banner (Fiverr Pro style) */}
       <section className="bg-surface-dark py-24 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col lg:flex-row items-center justify-between gap-12">
@@ -313,7 +387,7 @@ export default function GlobalHomepage() {
             <h3 className="text-2xl md:text-3xl font-medium mb-8">
               Advanced solutions and professional talent for businesses
             </h3>
-            
+
             <ul className="space-y-4 mb-10">
               <li className="flex items-start gap-3">
                 <CheckCircleIcon className="w-6 h-6 text-success shrink-0" />
@@ -328,12 +402,12 @@ export default function GlobalHomepage() {
                 <span className="text-lg">Manage teamwork and boost productivity with one powerful workspace</span>
               </li>
             </ul>
-            
+
             <button className="px-8 py-3 bg-success hover:bg-[#1d8d38] text-white font-bold rounded-md shadow-lg transition-colors text-lg">
               Explore Fortspace Enterprise
             </button>
           </div>
-          
+
           <div className="w-full lg:w-1/2">
             <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Enterprise Team" className="rounded-xl shadow-2xl" />
           </div>
@@ -346,7 +420,7 @@ export default function GlobalHomepage() {
           <h2 className="text-3xl font-bold text-zinc-900">Inspiring work made on Fortspace</h2>
           <Link to="/find-work" className="text-success font-semibold hover:underline hidden md:block">See more work &gt;</Link>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {FEATURED_GIGS.map(gig => (
             <Link key={gig.id} to={gig.slug ? `/gig/${gig.slug}` : `/gigs/gig/${gig.id}`} className="bg-white rounded-md overflow-hidden border border-zinc-200 shadow-sm hover:shadow-xl transition-all group cursor-pointer flex flex-col">

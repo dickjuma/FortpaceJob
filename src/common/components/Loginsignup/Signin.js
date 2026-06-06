@@ -134,7 +134,7 @@ const Signin = () => {
       if (err.response && err.response.status === 403 && err.response.data.verificationNeeded) {
         setVerificationData(err.response.data);
         // Pre-fill verified states based on backend response
-        if (err.response.data.phoneVerified) setPhoneOtp("VERIFIED"); 
+        if (err.response.data.phoneVerified) setPhoneOtp("VERIFIED");
         if (err.response.data.emailVerified) setEmailOtp("VERIFIED");
         return;
       }
@@ -194,7 +194,7 @@ const Signin = () => {
       let res;
       const isEmail = channel === "email";
       const otp = isEmail ? emailOtp : phoneOtp;
-      
+
       if (isEmail) {
         res = await authAPI.verifyEmailOTP(verificationData.pendingEmail, otp);
       } else {
@@ -459,7 +459,7 @@ const Signin = () => {
             {/* Sign up link */}
             <p className="text-center text-[#4A312F] text-sm">
               Don't have an account?{' '}
-              <a href="/signup" className="text-[#D34079] font-semibold hover:underline">
+              <a href="/auth/register" className="text-[#D34079] font-semibold hover:underline">
                 Sign Up
               </a>
             </p>
@@ -535,7 +535,7 @@ const Signin = () => {
                   )}
                 </div>
               )}
-              
+
               <button onClick={() => setVerificationData(null)} className="w-full text-[#4A312F] text-sm hover:underline">
                 Back to Login
               </button>

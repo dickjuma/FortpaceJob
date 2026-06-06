@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { 
   X, Star, TrendingUp, TrendingDown, 
-  Award, ShieldCheck, Zap 
+  Zap 
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { cn } from '../../utils/cn';
 
 export default function UserRankingModal({ isOpen, onClose, user }) {
   const [ranking, setRanking] = useState(4.5);

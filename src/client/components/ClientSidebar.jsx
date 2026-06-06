@@ -1,14 +1,14 @@
 import React from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../common/authStore';
-import { 
-  LayoutDashboard, 
-  Search, 
-  PlusCircle, 
-  Briefcase, 
-  MessageSquare, 
-  FileText, 
-  CreditCard, 
+import {
+  LayoutDashboard,
+  Search,
+  PlusCircle,
+  Briefcase,
+  MessageSquare,
+  FileText,
+  CreditCard,
   Heart,
   Settings,
   HelpCircle,
@@ -33,6 +33,7 @@ const flatNavModules = [
   { id: 'collaboration', label: 'Collaboration Hub', icon: Users, path: '/client/collaboration-hub' },
   { id: 'interviews', label: 'Video Interviews', icon: Video, path: '/client/interviews' },
   { id: 'invoices', label: 'Invoices', icon: FileText, path: '/client/invoices' },
+  { id: 'wallet', label: 'Wallet', icon: CreditCard, path: '/client/wallet' },
   { id: 'payments', label: 'Payments Dashboard', icon: CreditCard, path: '/client/financial-dashboard' },
   { id: 'reviews', label: 'Reviews', icon: Heart, path: '/client/reviews' },
   { id: 'favorites', label: 'Favorites', icon: Heart, path: '/client/shortlist' },
@@ -82,12 +83,12 @@ export default function ClientSidebar() {
       {/* Main Navigation */}
       <nav className="flex-1 px-3 py-6 space-y-1">
         {flatNavModules.map((module) => (
-          <NavLink 
+          <NavLink
             key={module.id}
             to={module.path}
             className={({ isActive }) => `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-              isActive 
-                ? 'text-success bg-success/10 border border-success/20 shadow-inner' 
+              isActive
+                ? 'text-success bg-success/10 border border-success/20 shadow-inner'
                 : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
             }`}
           >
@@ -99,14 +100,14 @@ export default function ClientSidebar() {
 
       {/* Footer Profile & Logout */}
       <div className="p-4 border-t border-gray-200 sticky bottom-0 bg-white">
-        <button 
+        <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 mb-3"
         >
           <LogOut className="w-5 h-5 text-gray-400" />
           Logout
         </button>
-        <div 
+        <div
           onClick={() => navigate('/client/profile')}
           className="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:border-success/50 transition-colors"
         >

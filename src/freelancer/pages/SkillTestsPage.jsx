@@ -1,24 +1,129 @@
+// src/pages/freelancer/SkillTestsPage.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Code, PenTool, TrendingUp, Clock, AlertCircle, 
-  CheckCircle, Play, XCircle, Award, ChevronLeft, ChevronRight,
-  ShieldAlert, RefreshCcw, Search, Filter, Star
+import {
+  Code,
+  PenTool,
+  TrendingUp,
+  Clock,
+  AlertCircle,
+  CheckCircle,
+  Play,
+  XCircle,
+  Award,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  Star,
+  X,
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
 
 import { useAvailableSkillTests, useSubmitSkillTest } from '../services/freelancerHooks';
-import { useConfirm } from '../../common/context/ConfirmContext';
 
-const CATEGORY_ICONS = { dev: Code, design: PenTool, marketing: TrendingUp, development: Code };
+// ---------- Shared UI Components ----------
+const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, type = 'button' }) => {
+  const base = 'px-5 py-2.5 rounded-lg font-body font-medium text-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-900 focus:ring-offset-2 inline-flex items-center justify-center gap-2';
+  const variants = {
+    primary: 'bg-brand-900 text-white hover:bg-brand-800 disabled:opacity-40',
+    ghost: 'border border-brand-900 text-brand-900 hover:bg-surface-muted disabled:opacity-40',
+    outline: 'border border-border text-ink-primary hover:bg-surface-muted disabled:opacity-40',
+    success: 'bg-accent text-white hover:bg-accent-dark disabled:opacity-40',
+    danger: 'bg-danger text-white hover:bg-red-700 disabled:opacity-40',
+  };
+  return (
+    <motion.button
+      whileTap={{ scale: 0.97 }}
+      type={type}
+      className={`${base} ${variants[variant]} ${className}`}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {children}
+    </motion.button>
+  );
+};
 
+const Card = ({ children, className = '', hover = true }) => (
+  <motion.div
+    whileHover={hover ? { y: -3, boxShadow: '0 8px 24px rgba(0,0,0,0.08)' } : {}}
+    transition={{ duration: 0.2 }}
+    className={`bg-white border border-border rounded-2xl p-6 shadow-sm ${className}`}
+  >
+    {children}
+  </motion.div>
+);
+
+const Badge = ({ children, variant = 'default', className = '' }) => {
+  const variants = {
+    default: 'bg-surface-muted text-ink-secondary',
+    success: 'bg-accent-light text-accent-dark',
+    warning: 'bg-warn-light text-warn',
+    danger: 'bg-danger-light text-danger',
+    info: 'bg-info-light text-info',
+  };
+  return (
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[variant]} ${className}`}>
+      {children}
+    </span>
+  );
+};
+
+const Input = ({ value, onChange, placeholder, className = '', icon: Icon }) => (
+  <div className="relative">
+    {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-tertiary" />}
+    <input
+      type="text"
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className={`w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent bg-white ${Icon ? 'pl-9' : ''} ${className}`}
+    />
+  </div>
+);
+
+const Modal = ({ isOpen, onClose, onConfirm, title, message, confirmText = 'Confirm', isDestructive = false }) => (
+  <AnimatePresence>
+    {isOpen && (
+      <>
+        <div className="fixed inset-0 bg-black/50 z-50" onClick={onClose} />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-full max-w-md z-50"
+        >
+          <div className="p-6 border-b border-border">
+            <h3 className="text-lg font-display font-bold text-brand-900">{title}</h3>
+          </div>
+          <div className="p-6">
+            <p className="text-sm text-ink-secondary">{message}</p>
+          </div>
+          <div className="p-6 pt-0 flex justify-end gap-3">
+            <Button variant="outline" onClick={onClose}>Cancel</Button>
+            <Button variant={isDestructive ? 'danger' : 'primary'} onClick={onConfirm}>{confirmText}</Button>
+          </div>
+        </motion.div>
+      </>
+    )}
+  </AnimatePresence>
+);
+
+// ---------- Constants ----------
+const CATEGORY_ICONS = {
+  dev: Code,
+  design: PenTool,
+  marketing: TrendingUp,
+  development: Code,
+};
+
+// ---------- Main Component ----------
 export default function SkillTestsPage() {
-  const { confirm } = useConfirm();
   const [view, setView] = useState('marketplace'); // 'marketplace', 'exam', 'results'
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // Exam State
+  const [exitModalOpen, setExitModalOpen] = useState(false);
+
+  // Exam state
   const [activeTest, setActiveTest] = useState(null);
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -27,12 +132,12 @@ export default function SkillTestsPage() {
 
   const { data: testData, isLoading } = useAvailableSkillTests();
   const submitSkillTest = useSubmitSkillTest();
-  
+
   const TESTS = testData?.data?.tests || [];
   const QUESTIONS = testData?.data?.questions || [];
 
   const testCategories = useMemo(() => {
-    const cats = [{ id: 'all', name: 'All Tests', icon: null }];
+    const cats = [{ id: 'all', name: 'All', icon: null }];
     const seen = new Set();
     for (const test of TESTS) {
       const cat = test.category || 'general';
@@ -49,7 +154,7 @@ export default function SkillTestsPage() {
 
   const filteredTests = TESTS.filter(test => {
     const matchesCategory = selectedCategory === 'all' || test.category === selectedCategory;
-    const matchesSearch = test.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    const matchesSearch = test.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           test.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesCategory && matchesSearch;
   });
@@ -62,14 +167,13 @@ export default function SkillTestsPage() {
     setView('exam');
   };
 
-  const handleExitExam = async () => {
-    const ok = await confirm({
-      title: 'Exit assessment',
-      message: 'Leave this test? Your progress will be lost and cannot be recovered.',
-      confirmLabel: 'Exit test',
-      critical: true,
-    });
-    if (ok) setView('marketplace');
+  const handleExitExam = () => {
+    setExitModalOpen(true);
+  };
+
+  const confirmExit = () => {
+    setExitModalOpen(false);
+    setView('marketplace');
   };
 
   const submitExam = async () => {
@@ -81,17 +185,16 @@ export default function SkillTestsPage() {
     const passed = finalScore >= activeTest.passScore;
     setExamScore(finalScore);
     setView('results');
-    
-    // Save result to backend
+
     try {
       await submitSkillTest.mutateAsync({
         testId: activeTest.id,
         score: finalScore,
         passed,
-        badgeEarned: passed
+        badgeEarned: passed,
       });
     } catch (e) {
-      console.error(e);
+      // silent fail for demo
     }
   };
 
@@ -111,127 +214,121 @@ export default function SkillTestsPage() {
     return `${m}:${s.toString().padStart(2, '0')}`;
   };
 
+  const getDifficultyVariant = (difficulty) => {
+    if (difficulty === 'Easy') return 'success';
+    if (difficulty === 'Medium') return 'warning';
+    return 'danger';
+  };
+
+  // ---------- Marketplace View ----------
   const renderMarketplace = () => (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8 animate-in slide-in-from-bottom-4 duration-500 pb-12">
-      {/* Hero Section */}
-      <div className="bg-[#222222] rounded-[32px] p-8 md:p-12 text-white shadow-xl relative overflow-hidden border border-white/10 group">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-success/20 blur-[80px] rounded-full -tranzinc-y-1/2 tranzinc-x-1/3 pointer-events-none group-hover:bg-success/30 transition-colors" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 blur-[60px] rounded-full tranzinc-y-1/3 -tranzinc-x-1/4 pointer-events-none" />
-        
-        <div className="relative z-10 max-w-3xl">
-          <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight leading-tight">Validate your skills.<br/>Stand out to clients.</h1>
-          <p className="text-zinc-400 text-lg mb-8 font-medium max-w-2xl">Take Forte skill tests to earn badges, boost your trust score, and rank higher in client searches. Top performers see a 40% increase in profile views.</p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1 max-w-md group/input">
-              <Search className="absolute left-5 top-1/2 -tranzinc-y-1/2 w-5 h-5 text-zinc-400 group-focus-within/input:text-success transition-colors" />
-              <input 
-                type="text" 
-                placeholder="Search for skills (e.g., React, Python)" 
-                className="w-full pl-14 pr-4 py-4 rounded-2xl text-white bg-white/5 border border-white/10 focus:outline-none focus:border-success focus:ring-1 focus:ring-success font-medium placeholder:text-zinc-500 transition-all shadow-sm"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <button className="bg-success hover:bg-success/90 text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-[#2bb75c]/20 whitespace-nowrap">
-              Explore Tests
-            </button>
-          </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="space-y-8 pb-12"
+    >
+      {/* Hero */}
+      <div className="bg-brand-900 rounded-2xl p-8 text-white">
+        <h1 className="text-3xl lg:text-4xl font-display font-bold mb-3">
+          Validate your skills
+        </h1>
+        <p className="text-white/80 text-base mb-6 max-w-2xl">
+          Take skill tests to earn badges and increase your visibility to clients.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 max-w-md">
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search for skills (e.g., React, Python)"
+            icon={Search}
+            className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+          />
         </div>
       </div>
 
-      {/* Categories & Filters */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between pt-4">
-        <div className="flex overflow-x-auto pb-2 w-full md:w-auto gap-3 scrollbar-hide">
-          {testCategories.map(cat => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={cn(
-                "px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all flex items-center gap-2 border",
-                selectedCategory === cat.id 
-                  ? 'bg-success/20 text-success border-success/50 shadow-sm' 
-                  : 'bg-white dark:bg-white/5 text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/10 dark:hover:text-white'
-              )}
-            >
-              {cat.icon && <cat.icon className="w-4 h-4" />}
-              {cat.name}
-            </button>
-          ))}
-        </div>
-        <button className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-zinc-50 dark:hover:bg-white/10 transition-colors">
-          <Filter className="w-4 h-4" /> Filters
-        </button>
-      </div>
-
-      {/* Tests Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-        {filteredTests.map((test, idx) => (
-          <motion.div
-            key={test.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.05 }}
-            className="bg-white dark:bg-[#222222] rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all overflow-hidden flex flex-col relative group"
+      {/* Category filters */}
+      <div className="flex flex-wrap gap-2 pb-2">
+        {testCategories.map(cat => (
+          <button
+            key={cat.id}
+            onClick={() => setSelectedCategory(cat.id)}
+            className={`px-4 py-2 rounded-lg text-xs font-medium transition-all flex items-center gap-2 ${
+              selectedCategory === cat.id
+                ? 'bg-brand-900 text-white'
+                : 'bg-white border border-border text-ink-secondary hover:bg-surface-muted'
+            }`}
           >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-success/5 blur-[40px] rounded-full pointer-events-none group-hover:bg-success/10 transition-colors"></div>
-            
-            <div className="p-8 flex-1 flex flex-col relative z-10">
-              <div className="flex justify-between items-start mb-6">
-                <span className={cn(
-                  "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest",
-                  test.difficulty === 'Easy' ? 'bg-emerald-500/10 text-emerald-500' :
-                  test.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-500' :
-                  'bg-rose-500/10 text-rose-500'
-                )}>
-                  {test.difficulty}
-                </span>
-                {test.popular && (
-                  <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-amber-500 bg-amber-500/10 px-3 py-1 rounded-lg">
-                    <Star className="w-3 h-3 fill-current" /> Popular
-                  </span>
-                )}
-              </div>
-              
-              <h3 className="text-xl font-black text-zinc-900 dark:text-white mb-4 line-clamp-2 tracking-tight">{test.title}</h3>
-              
-              <div className="flex flex-wrap gap-2 mb-8">
-                {test.tags.map(tag => (
-                  <span key={tag} className="text-[10px] font-bold uppercase tracking-widest bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-zinc-300 px-2.5 py-1 rounded-md">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-auto grid grid-cols-3 gap-4 border-t border-zinc-100 dark:border-white/10 pt-6">
-                <div className="text-center">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1 flex items-center justify-center gap-1"><Clock className="w-3 h-3" /> Time</div>
-                  <div className="font-black text-zinc-900 dark:text-white text-lg">{test.duration}m</div>
-                </div>
-                <div className="text-center border-l border-zinc-100 dark:border-white/10">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1">Questions</div>
-                  <div className="font-black text-zinc-900 dark:text-white text-lg">{test.questionsCount}</div>
-                </div>
-                <div className="text-center border-l border-zinc-100 dark:border-white/10">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1">Pass Score</div>
-                  <div className="font-black text-zinc-900 dark:text-white text-lg text-emerald-500">{test.passScore}%</div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="p-6 bg-zinc-50 dark:bg-white/5 border-t border-zinc-100 dark:border-white/10 relative z-10">
-              <button 
-                onClick={() => startExam(test)}
-                className="w-full py-3.5 bg-white dark:bg-[#222222] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white font-bold rounded-xl hover:bg-success hover:text-white hover:border-success transition-all flex items-center justify-center gap-2 shadow-sm"
-              >
-                Start Test <Play className="w-4 h-4 fill-current" />
-              </button>
-            </div>
-          </motion.div>
+            {cat.icon && <cat.icon className="w-3.5 h-3.5" />}
+            {cat.name}
+          </button>
         ))}
       </div>
+
+      {/* Tests grid */}
+      {isLoading ? (
+        <div className="text-center py-12">
+          <div className="w-8 h-8 border-4 border-border border-t-brand-900 rounded-full animate-spin mx-auto" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredTests.map((test) => (
+            <Card key={test.id} className="flex flex-col h-full">
+              <div className="flex justify-between items-start mb-4">
+                <Badge variant={getDifficultyVariant(test.difficulty)}>
+                  {test.difficulty}
+                </Badge>
+                {test.popular && (
+                  <Badge variant="warning" className="gap-1">
+                    <Star className="w-3 h-3" /> Popular
+                  </Badge>
+                )}
+              </div>
+              <h3 className="text-lg font-display font-semibold text-brand-900 mb-2">
+                {test.title}
+              </h3>
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {test.tags.slice(0, 3).map(tag => (
+                  <Badge key={tag} variant="default">{tag}</Badge>
+                ))}
+              </div>
+              <div className="mt-auto grid grid-cols-3 gap-3 pt-4 border-t border-border">
+                <div className="text-center">
+                  <div className="text-[10px] font-medium text-ink-tertiary uppercase mb-1 flex items-center justify-center gap-1">
+                    <Clock className="w-3 h-3" /> Time
+                  </div>
+                  <div className="font-mono font-semibold text-ink-primary">{test.duration}m</div>
+                </div>
+                <div className="text-center border-l border-border">
+                  <div className="text-[10px] font-medium text-ink-tertiary uppercase mb-1">Questions</div>
+                  <div className="font-mono font-semibold text-ink-primary">{test.questionsCount}</div>
+                </div>
+                <div className="text-center border-l border-border">
+                  <div className="text-[10px] font-medium text-ink-tertiary uppercase mb-1">Pass</div>
+                  <div className="font-mono font-semibold text-accent">{test.passScore}%</div>
+                </div>
+              </div>
+              <Button
+                variant="primary"
+                className="w-full mt-4"
+                onClick={() => startExam(test)}
+              >
+                <Play className="w-4 h-4" /> Start test
+              </Button>
+            </Card>
+          ))}
+        </div>
+      )}
+      {filteredTests.length === 0 && !isLoading && (
+        <div className="text-center py-12">
+          <AlertCircle className="w-12 h-12 text-ink-tertiary mx-auto mb-3" />
+          <p className="text-ink-secondary">No tests match your criteria.</p>
+        </div>
+      )}
     </motion.div>
   );
 
+  // ---------- Exam View ----------
   const renderExam = () => {
     const question = QUESTIONS[currentQuestionIdx];
     const isLast = currentQuestionIdx === QUESTIONS.length - 1;
@@ -240,217 +337,240 @@ export default function SkillTestsPage() {
     if (!question) return null;
 
     return (
-      <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="max-w-4xl mx-auto pt-8">
-        <div className="bg-white dark:bg-[#222222] rounded-t-[32px] border border-zinc-200 dark:border-white/10 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 sticky top-0 z-20 shadow-sm">
-          <div>
-            <h2 className="font-black text-zinc-900 dark:text-white text-2xl tracking-tight">{activeTest?.title}</h2>
-            <div className="text-sm flex items-center gap-2 mt-3">
-              <span className="flex items-center gap-1.5 bg-rose-500/10 text-rose-500 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border border-rose-500/20">
-                <ShieldAlert className="w-3.5 h-3.5" /> Anti-cheat active
-              </span>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, y: -20 }}
+        className="max-w-3xl mx-auto"
+      >
+        <Card className="overflow-hidden">
+          <div className="p-6 border-b border-border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h2 className="text-xl font-display font-semibold text-brand-900">
+                {activeTest?.title}
+              </h2>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <div className="text-[10px] font-medium text-ink-tertiary uppercase">Time left</div>
+                <div className={`font-mono font-bold text-xl ${timeLeft < 60 ? 'text-danger' : 'text-brand-900'}`}>
+                  {formatTime(timeLeft)}
+                </div>
+              </div>
+              <Button variant="outline" onClick={handleExitExam} className="text-sm">
+                Exit
+              </Button>
             </div>
           </div>
 
-          <div className="flex items-center gap-8">
-            <div className="flex flex-col items-end">
-              <span className="text-[10px] text-zinc-500 dark:text-zinc-400 uppercase font-black tracking-widest mb-1">Time Remaining</span>
-              <span className={`text-4xl font-black ${timeLeft < 300 ? 'text-rose-500 animate-pulse' : 'text-zinc-900 dark:text-white'}`}>
-                {formatTime(timeLeft)}
-              </span>
-            </div>
-            <button 
-              onClick={handleExitExam}
-              className="text-xs font-bold text-zinc-500 hover:text-rose-500 border border-zinc-200 dark:border-white/10 px-4 py-2 rounded-xl transition-colors uppercase tracking-widest"
-            >
-              Exit
-            </button>
+          <div className="w-full h-1 bg-border">
+            <motion.div
+              className="h-full bg-accent"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+            />
           </div>
-        </div>
 
-        <div className="w-full bg-zinc-100 dark:bg-white/5 h-2 relative z-10 overflow-hidden">
-          <motion.div className="h-full bg-success" initial={{ width: 0 }} animate={{ width: `${progress}%` }} />
-        </div>
-
-        <div className="bg-white dark:bg-[#222222] border-x border-b border-zinc-200 dark:border-white/10 rounded-b-[32px] shadow-sm min-h-[500px] flex flex-col relative overflow-hidden">
-          <div className="absolute top-[-50%] left-[-10%] w-96 h-96 bg-success/5 blur-[100px] rounded-full pointer-events-none"></div>
-
-          <div className="p-8 md:p-12 flex-1 relative z-10">
-            <div className="flex items-center justify-between mb-8">
-              <span className="text-[10px] font-black text-success uppercase tracking-widest bg-success/10 px-3 py-1.5 rounded-lg">
+          <div className="p-6">
+            <div className="mb-6">
+              <span className="text-xs font-medium text-ink-tertiature">
                 Question {currentQuestionIdx + 1} of {QUESTIONS.length}
               </span>
             </div>
-            
-            <h3 className="text-3xl text-zinc-900 dark:text-white font-black mb-12 leading-tight tracking-tight">
+            <h3 className="text-xl font-display font-semibold text-ink-primary mb-6">
               {question.text}
             </h3>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {question.options.map((opt, idx) => (
-                <label 
-                  key={idx} 
-                  className={cn(
-                    "flex items-center p-6 rounded-2xl border-2 cursor-pointer transition-all group",
-                    answers[currentQuestionIdx] === idx 
-                      ? 'border-success bg-success/10' 
-                      : 'border-zinc-100 dark:border-white/5 hover:border-success/50 hover:bg-zinc-50 dark:hover:bg-white/5'
-                  )}
+                <label
+                  key={idx}
+                  className={`flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                    answers[currentQuestionIdx] === idx
+                      ? 'border-accent bg-accent-light'
+                      : 'border-border hover:border-accent/50'
+                  }`}
                 >
-                  <div className={cn(
-                    "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors shrink-0",
-                    answers[currentQuestionIdx] === idx ? "border-success bg-success" : "border-zinc-300 dark:border-zinc-600 group-hover:border-success/50"
-                  )}>
-                    {answers[currentQuestionIdx] === idx && <div className="w-2 h-2 bg-white rounded-full"></div>}
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                      answers[currentQuestionIdx] === idx
+                        ? 'border-accent bg-accent'
+                        : 'border-border'
+                    }`}
+                  >
+                    {answers[currentQuestionIdx] === idx && (
+                      <div className="w-2 h-2 bg-white rounded-full" />
+                    )}
                   </div>
-                  <span className={cn(
-                    "ml-4 text-lg font-bold transition-colors",
-                    answers[currentQuestionIdx] === idx ? "text-success" : "text-zinc-700 dark:text-zinc-200"
-                  )}>{opt}</span>
+                  <span className={`ml-3 text-sm font-medium ${
+                    answers[currentQuestionIdx] === idx ? 'text-accent-dark' : 'text-ink-primary'
+                  }`}>
+                    {opt}
+                  </span>
                 </label>
               ))}
             </div>
           </div>
 
-          <div className="p-8 border-t border-zinc-100 dark:border-white/10 bg-zinc-50/50 dark:bg-white/5 flex justify-between items-center relative z-10">
-            <button 
+          <div className="p-6 border-t border-border flex justify-between items-center">
+            <Button
+              variant="outline"
               onClick={() => setCurrentQuestionIdx(prev => Math.max(0, prev - 1))}
               disabled={currentQuestionIdx === 0}
-              className="flex items-center gap-2 px-6 py-3 font-bold text-sm text-zinc-500 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white rounded-xl transition-all uppercase tracking-widest border border-transparent hover:border-zinc-200 dark:hover:border-white/10"
             >
-              <ChevronLeft size={18} /> Previous
-            </button>
-            
-            <div className="hidden md:flex gap-3 bg-white dark:bg-[#222222] p-3 rounded-2xl border border-zinc-200 dark:border-white/10">
+              <ChevronLeft className="w-4 h-4" /> Previous
+            </Button>
+            <div className="flex gap-2">
               {QUESTIONS.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentQuestionIdx(idx)}
-                  className={cn(
-                    "w-3 h-3 rounded-full transition-all",
-                    idx === currentQuestionIdx ? 'bg-success scale-150 shadow-md shadow-[#2bb75c]/50' :
-                    answers[idx] !== undefined ? 'bg-emerald-500' : 'bg-zinc-200 dark:bg-white/10 hover:bg-zinc-300 dark:hover:bg-white/20'
-                  )}
-                  title={`Question ${idx + 1}`}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    idx === currentQuestionIdx
+                      ? 'w-4 bg-accent'
+                      : answers[idx] !== undefined
+                      ? 'bg-accent-light'
+                      : 'bg-border'
+                  }`}
+                  aria-label={`Go to question ${idx + 1}`}
                 />
               ))}
             </div>
-
             {isLast ? (
-              <button 
-                onClick={submitExam}
-                className="flex items-center gap-2 px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-500/20 text-sm uppercase tracking-widest"
-              >
-                Submit Exam <CheckCircle size={18} />
-              </button>
+              <Button variant="success" onClick={submitExam}>
+                Submit <CheckCircle className="w-4 h-4" />
+              </Button>
             ) : (
-              <button 
+              <Button
+                variant="primary"
                 onClick={() => setCurrentQuestionIdx(prev => Math.min(QUESTIONS.length - 1, prev + 1))}
-                className="flex items-center gap-2 px-8 py-3 bg-success hover:bg-success/90 text-white font-bold rounded-xl transition-all shadow-lg shadow-[#2bb75c]/20 text-sm uppercase tracking-widest"
               >
-                Next <ChevronRight size={18} />
-              </button>
+                Next <ChevronRight className="w-4 h-4" />
+              </Button>
             )}
           </div>
-        </div>
+        </Card>
       </motion.div>
     );
   };
 
+  // ---------- Results View ----------
   const renderResults = () => {
     const passed = examScore >= activeTest?.passScore;
 
     return (
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto pt-8">
-        <div className="bg-white dark:bg-[#222222] rounded-[32px] border border-zinc-200 dark:border-white/10 shadow-xl overflow-hidden relative">
-          
-          <div className={cn(
-            "p-12 text-center text-white relative overflow-hidden",
-            passed ? 'bg-gradient-to-br from-emerald-500 to-emerald-700' : 'bg-gradient-to-br from-rose-500 to-orange-600'
-          )}>
-            <div className="absolute inset-0 bg-white/5 opacity-50 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent"></div>
-            
-            <motion.div 
-              initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", bounce: 0.5, delay: 0.2 }}
-              className="w-28 h-28 bg-white/20 rounded-3xl flex items-center justify-center mx-auto mb-8 backdrop-blur-md shadow-2xl border border-white/20 rotate-3"
-            >
-              {passed ? <Award size={56} className="text-white drop-shadow-lg" /> : <XCircle size={56} className="text-white drop-shadow-lg" />}
-            </motion.div>
-            <h2 className="text-4xl font-black mb-3 tracking-tight drop-shadow-md">{passed ? 'Congratulations!' : 'Keep Learning!'}</h2>
-            <p className="text-white/90 text-lg font-medium max-w-md mx-auto">
-              {passed ? `You successfully passed the ${activeTest?.title} certification.` : `You did not pass the ${activeTest?.title} this time. Review and try again!`}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className="max-w-2xl mx-auto"
+      >
+        <Card>
+          <div className={`text-center p-8 rounded-t-2xl ${passed ? 'bg-accent-light' : 'bg-danger-light'}`}>
+            <div className="w-20 h-20 rounded-full bg-white mx-auto mb-4 flex items-center justify-center">
+              {passed ? (
+                <Award className="w-10 h-10 text-accent" />
+              ) : (
+                <XCircle className="w-10 h-10 text-danger" />
+              )}
+            </div>
+            <h2 className="text-2xl font-display font-bold text-brand-900 mb-2">
+              {passed ? 'Congratulations!' : 'Keep learning'}
+            </h2>
+            <p className="text-ink-secondary">
+              {passed
+                ? `You passed the ${activeTest?.title} certification.`
+                : `You did not pass ${activeTest?.title} this time.`}
             </p>
           </div>
 
-          <div className="p-12 relative z-10 bg-white dark:bg-[#222222]">
-            <div className="flex justify-center mb-12 relative">
-              <svg className="w-48 h-48 transform -rotate-90 drop-shadow-xl">
-                <circle cx="96" cy="96" r="84" stroke="currentColor" strokeWidth="16" fill="transparent" className="text-zinc-100 dark:text-white/5" />
-                <motion.circle 
-                  cx="96" cy="96" r="84" stroke="currentColor" strokeWidth="16" fill="transparent" strokeDasharray="527.7" strokeDashoffset={527.7 - (527.7 * examScore) / 100}
-                  className={passed ? 'text-emerald-500' : 'text-rose-500'}
-                  initial={{ strokeDashoffset: 527.7 }} animate={{ strokeDashoffset: 527.7 - (527.7 * examScore) / 100 }} transition={{ duration: 1.5, delay: 0.5 }} strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-5xl font-black text-zinc-900 dark:text-white tracking-tighter">{examScore}%</span>
-                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mt-1">Score</span>
-              </div>
-            </div>
-
-            <div className="bg-zinc-50 dark:bg-white/5 rounded-[24px] p-8 mb-10 border border-zinc-100 dark:border-white/10">
-              <h4 className="font-black text-zinc-900 dark:text-white mb-6 uppercase tracking-widest text-xs">Performance Summary</h4>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-bold text-zinc-500 dark:text-zinc-400">Required to pass</span>
-                  <span className="font-black text-lg text-zinc-900 dark:text-white">{activeTest?.passScore}%</span>
-                </div>
-                <div className="w-full h-px bg-zinc-200 dark:bg-white/10"></div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-bold text-zinc-500 dark:text-zinc-400">Time taken</span>
-                  <span className="font-black text-lg text-zinc-900 dark:text-white">{formatTime((activeTest?.duration * 60) - timeLeft)}</span>
-                </div>
-                <div className="w-full h-px bg-zinc-200 dark:bg-white/10"></div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-bold text-zinc-500 dark:text-zinc-400">Questions attempted</span>
-                  <span className="font-black text-lg text-zinc-900 dark:text-white">{Object.keys(answers).length} / {QUESTIONS.length}</span>
+          <div className="p-8">
+            <div className="flex justify-center mb-8">
+              <div className="relative w-36 h-36">
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle
+                    cx="72"
+                    cy="72"
+                    r="64"
+                    stroke="#E7E5E4"
+                    strokeWidth="12"
+                    fill="transparent"
+                  />
+                  <motion.circle
+                    cx="72"
+                    cy="72"
+                    r="64"
+                    stroke={passed ? '#16A34A' : '#DC2626'}
+                    strokeWidth="12"
+                    fill="transparent"
+                    strokeDasharray="402"
+                    strokeDashoffset={402}
+                    initial={{ strokeDashoffset: 402 }}
+                    animate={{ strokeDashoffset: 402 - (402 * examScore) / 100 }}
+                    transition={{ duration: 1 }}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-3xl font-mono font-bold text-brand-900">{examScore}%</span>
+                  <span className="text-[10px] font-medium text-ink-tertiary">Score</span>
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-4">
-              <button 
-                onClick={() => setView('marketplace')}
-                className="flex-1 py-4 px-4 border border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-white font-bold rounded-2xl hover:bg-zinc-50 dark:hover:bg-white/5 transition-all text-sm uppercase tracking-widest"
-              >
-                Back to Tests
-              </button>
+            <div className="space-y-3 mb-8 p-4 bg-surface-soft rounded-xl">
+              <div className="flex justify-between text-sm">
+                <span className="text-ink-secondary">Required to pass</span>
+                <span className="font-semibold text-ink-primary">{activeTest?.passScore}%</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-ink-secondary">Time taken</span>
+                <span className="font-mono font-semibold text-ink-primary">
+                  {formatTime((activeTest?.duration * 60) - timeLeft)}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-ink-secondary">Questions answered</span>
+                <span className="font-semibold text-ink-primary">{Object.keys(answers).length} / {QUESTIONS.length}</span>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={() => setView('marketplace')} className="flex-1">
+                Back to tests
+              </Button>
               {passed ? (
-                <button className="flex-1 py-4 px-4 bg-success text-white font-bold rounded-2xl hover:bg-success/90 transition-all shadow-lg shadow-[#2bb75c]/20 text-sm uppercase tracking-widest">
-                  View Certificate
-                </button>
+                <Button variant="success" className="flex-1">
+                  View certificate
+                </Button>
               ) : (
-                <button 
-                  onClick={() => startExam(activeTest)}
-                  className="flex-1 py-4 px-4 bg-success text-white font-bold rounded-2xl hover:bg-success/90 transition-all shadow-lg shadow-[#2bb75c]/20 flex items-center justify-center gap-2 text-sm uppercase tracking-widest"
-                >
-                  <RefreshCcw size={18} /> Retake Test
-                </button>
+                <Button variant="primary" onClick={() => startExam(activeTest)} className="flex-1">
+                  Retake test
+                </Button>
               )}
             </div>
           </div>
-        </div>
+        </Card>
       </motion.div>
     );
   };
 
   return (
-    <div className="w-full">
+    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <Modal
+        isOpen={exitModalOpen}
+        onClose={() => setExitModalOpen(false)}
+        onConfirm={confirmExit}
+        title="Exit assessment"
+        message="Leave this test? Your progress will be lost and cannot be recovered."
+        confirmText="Exit test"
+        isDestructive
+      />
       <AnimatePresence mode="wait">
-        {view === 'marketplace' && <motion.div key="marketplace" exit={{ opacity: 0, y: -20 }}>{renderMarketplace()}</motion.div>}
-        {view === 'exam' && <motion.div key="exam" exit={{ opacity: 0, y: -20 }}>{renderExam()}</motion.div>}
-        {view === 'results' && <motion.div key="results" exit={{ opacity: 0, y: -20 }}>{renderResults()}</motion.div>}
+        {view === 'marketplace' && renderMarketplace()}
+        {view === 'exam' && renderExam()}
+        {view === 'results' && renderResults()}
       </AnimatePresence>
     </div>
   );
 }
-

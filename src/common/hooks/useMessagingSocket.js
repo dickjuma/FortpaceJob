@@ -5,12 +5,12 @@ import { useSocket } from '../context/SocketContext';
  * Real-time layer for MessagesInbox — complements REST polling.
  */
 export function useMessagingSocket({ conversationId, onIncomingMessage, onTyping }) {
-  const { socket, isConnected } = useSocket();
+  const { socket, isConnected, joinConversation, leaveConversation } = useSocket();
 
   useEffect(() => {
     if (!socket || !isConnected || !conversationId) return undefined;
 
-    socket.emit('conversation:join', { conversationId });
+    joinConversation(conversationId);
 
     const onReceive = (message) => {
       if (message?.conversationId === conversationId || !message?.conversationId) {
@@ -18,33 +18,38 @@ export function useMessagingSocket({ conversationId, onIncomingMessage, onTyping
       }
     };
 
-    const onTyping = (payload) => {
+    const onTypingEvent = (payload) => {
       if (payload?.conversationId === conversationId) {
         onTyping?.(payload);
       }
     };
 
-    socket.on('receive_message', onReceive);
+    socket.on('new_message', onReceive);
     socket.on('message_sent', onReceive);
-    socket.on('user_typing', onTyping);
-    socket.on('chat:typing', onTyping);
+    socket.on('user_typing', onTypingEvent);
+    socket.on('user_stopped_typing', onTypingEvent);
+    socket.on('messages_read', () => {
+      onTyping?.({ conversationId, readEvent: true });
+    });
 
     return () => {
-      socket.off('receive_message', onReceive);
+      leaveConversation(conversationId);
+      socket.off('new_message', onReceive);
       socket.off('message_sent', onReceive);
-      socket.off('user_typing', onTyping);
-      socket.off('chat:typing', onTyping);
+      socket.off('user_typing', onTypingEvent);
+      socket.off('user_stopped_typing', onTypingEvent);
+      socket.off('messages_read');
     };
-  }, [socket, isConnected, conversationId, onIncomingMessage, onTyping]);
+  }, [socket, isConnected, conversationId, joinConversation, leaveConversation, onIncomingMessage, onTyping]);
 
   const sendRealtime = useCallback(
     (content, messageType = 'TEXT') => {
       if (!socket || !isConnected || !conversationId) return;
-      socket.emit(
-        'send_message',
-        { conversationId, content, type: messageType },
-        () => {}
-      );
+      socket.emit('send_message', {
+        conversationId,
+        content,
+        type: messageType,
+      });
     },
     [socket, isConnected, conversationId]
   );

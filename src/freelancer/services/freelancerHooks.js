@@ -304,12 +304,32 @@ export const useFreelancerOrders = (params) => {
   });
 };
 
+export const useOrderById = (orderId) => {
+  return useQuery({
+    queryKey: ['freelancer', 'orders', 'detail', orderId],
+    queryFn: () => orderAPI.getOrder(orderId),
+    enabled: !!orderId,
+  });
+};
+
+export const useCreateOrder = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (orderData) => orderAPI.createOrder(orderData),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders'] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'dashboard'] });
+    },
+  });
+};
+
 export const useUpdateOrderStatus = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ orderId, data }) => orderAPI.updateOrderStatus(orderId, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['freelancer', 'orders'] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders', 'detail'] });
     },
   });
 };
@@ -322,6 +342,36 @@ export const useFreelancerGigs = () => {
   return useQuery({
     queryKey: ['freelancer', 'gigs', 'my'],
     queryFn: () => gigAPI.getMyGigs(),
+    keepPreviousData: true,
+  });
+};
+
+export const useFreelancerGigById = (gigId) => {
+  return useQuery({
+    queryKey: ['freelancer', 'gigs', gigId],
+    queryFn: () => gigAPI.getGig(gigId),
+    enabled: !!gigId,
+  });
+};
+
+export const useUpdateFreelancerGig = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ gigId, data }) => gigAPI.updateGig(gigId, data),
+    onSuccess: (_, variables) => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'gigs', variables.gigId] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'gigs', 'my'] });
+    },
+  });
+};
+
+export const useCreateGig = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (gigData) => gigAPI.createGig(gigData),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'gigs', 'my'] });
+    },
   });
 };
 

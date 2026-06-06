@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Mail, Shield, Smartphone, Globe, Save, AlertCircle } from 'lucide-react';
-import { cn } from '../../../utils/cn';
+import { X, User, Mail, Smartphone, Globe, Save, AlertCircle } from 'lucide-react';
 import useUserManagementStore from '../../../store/userManagementStore';
-import { useUserActions } from '../../../hooks/users/useUserActions';
 import { updateUserApi } from '../../../api/users/users.api';
-import Button from '../../../components/ui/Button';
 import toast from 'react-hot-toast';
 
 export default function EditUserModal() {
   const { activeModal, closeModal, modalTargetUser: user } = useUserManagementStore();
-  const { suspendUser } = useUserActions();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',

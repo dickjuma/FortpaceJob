@@ -1,29 +1,12 @@
+// src/pages/client/GigCheckoutPage.jsx
 import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  CreditCard, ShieldCheck, Check, Info, Lock, 
+import {
+  CreditCard, ShieldCheck, Check, Info, Lock,
   Plus, X, Clock, RefreshCw, ChevronRight, Zap
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
-import CheckoutFeeBreakdown from '../../components/payments/CheckoutFeeBreakdown';
-import { useCheckoutFees } from '../../common/hooks/useCheckoutFees';
-
-// Mock Data
-const GIG = {
-  title: 'I will build a responsive modern React JS web application',
-  package: {
-    name: 'Standard App',
-    price: 450,
-    delivery: '7 Days',
-    revisions: 3,
-    features: ['5 Pages', 'Responsive Design', 'API Integration', 'Source Code']
-  },
-  seller: {
-    name: 'Alex Rivera',
-    avatar: 'https://i.pravatar.cc/150?u=alex'
-  },
-  image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80'
-};
+import { useFreelancerGigById, useCreateOrder } from '../services/freelancerHooks';
 
 const ADDONS = [
   { id: 'fast', title: 'Extra Fast Delivery', desc: 'Deliver in 3 days instead of 7', price: 100 },
@@ -32,13 +15,42 @@ const ADDONS = [
 ];
 
 export default function GigCheckoutPage() {
+  const { gigId } = useParams();
+  const navigate = useNavigate();
+  const { data: gigData, isLoading: loadingGig, error: gigError } = useFreelancerGigById(gigId);
+  const createOrder = useCreateOrder();
+
   const [selectedAddons, setSelectedAddons] = useState([]);
-  const [paymentMethod, setPaymentMethod] = useState('card'); // card, paypal, balance
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('card');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [createdOrderId, setCreatedOrderId] = useState(null);
+
+  const GIG = gigData?.gig ?? gigData?.data ?? gigData;
+
+  if (loadingGig) {
+    return (
+      <div className="min-h-screen bg-surface-soft flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-accent DEFAULT border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (gigError || !GIG) {
+    return (
+      <div className="min-h-screen bg-surface-soft flex items-center justify-center p-4">
+        <div className="bg-white border border-border rounded-2xl shadow-lg p-8 text-center max-w-md w-full">
+          <h2 className="font-display font-semibold text-xl text-brand-900 mb-2">Unable to load service</h2>
+          <p className="text-ink-secondary">Please refresh or choose another service.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const isProcessing = createOrder.isLoading;
+  const orderError = createOrder.error;
 
   const toggleAddon = (id) => {
-    setSelectedAddons(prev => 
+    setSelectedAddons(prev =>
       prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]
     );
   };
@@ -48,36 +60,45 @@ export default function GigCheckoutPage() {
     const addonsTotal = selectedAddons.reduce((sum, id) => {
       return sum + ADDONS.find(a => a.id === id).price;
     }, 0);
-    return { subtotal: base + addonsTotal };
+    return base + addonsTotal;
   };
 
-  const { subtotal } = calculateTotal();
-  const { breakdown } = useCheckoutFees(subtotal, 'HIRE_COMMITMENT');
-  const serviceFee = breakdown.platformFee;
-  const total = subtotal;
+  const subtotal = calculateTotal();
+  const serviceFee = Math.round(subtotal * 0.05); // 5% platform fee
+  const total = subtotal + serviceFee;
 
   const handleCheckout = () => {
-    setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
-      setIsSuccess(true);
-    }, 2500);
+    const orderPayload = {
+      gigId,
+      packageName: GIG.package?.name,
+      totalAmount: total,
+      paymentMethod,
+      addons: selectedAddons,
+    };
+
+    createOrder.mutate(orderPayload, {
+      onSuccess: (data) => {
+        setCreatedOrderId(data?.id || data?.orderId || null);
+        setIsSuccess(true);
+      },
+    });
   };
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-surface dark:bg-surface-dark flex flex-col items-center justify-center p-4">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-          className="bg-white dark:bg-surface-dark p-8 sm:p-12 rounded-3xl shadow-xl border border-zinc-200 dark:border-zinc-800 text-center max-w-md w-full"
+      <div className="min-h-screen bg-surface-soft flex flex-col items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-white rounded-2xl shadow-lg p-8 text-center max-w-md w-full border border-border"
         >
-          <div className="w-20 h-20 bg-emerald-100 dark:bg-success/20 text-success dark:text-success rounded-full flex items-center justify-center mx-auto mb-6">
-            <Check className="w-10 h-10" />
+          <div className="w-20 h-20 bg-accent-light rounded-full flex items-center justify-center mx-auto mb-5">
+            <Check className="w-10 h-10 text-accent DEFAULT" />
           </div>
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">Payment Successful!</h2>
-          <p className="text-zinc-500 mb-8">Your order has been placed. Please submit the requirements so the seller can start working.</p>
-          <button className="w-full py-3.5 bg-[#2bb75c] text-white font-bold rounded-xl shadow-sm hover:bg-[#1d8d38] transition-colors">
-            Submit Requirements
+          <h2 className="font-display font-bold text-2xl text-brand-900 mb-2">Payment successful!</h2>
+          <p className="text-ink-secondary mb-6">Your order has been placed. The seller will start working on your project.</p>
+          <button className="w-full py-3 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors">
+            Submit requirements
           </button>
         </motion.div>
       </div>
@@ -85,163 +106,245 @@ export default function GigCheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans py-12 px-4 sm:px-6">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="min-h-screen bg-surface-soft py-12 px-4 sm:px-6"
+    >
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8">
-        
-        {/* Left Column: Details & Payment */}
-        <div className="flex-1 space-y-8">
-          
-          <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">Checkout</h1>
 
-          {/* Upgrade your order (Add-ons) */}
-          <section className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 sm:p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-6">Customize your order</h2>
-            <div className="space-y-4">
+        {/* Left Column: Details & Payment */}
+        <div className="flex-1 space-y-6">
+
+          <h1 className="font-display font-bold text-3xl text-brand-900">Checkout</h1>
+
+          {/* Add-ons Section */}
+          <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+            <h2 className="font-display font-semibold text-lg text-brand-900 mb-5">Customize your order</h2>
+            <div className="space-y-3">
               {ADDONS.map(addon => {
                 const isSelected = selectedAddons.includes(addon.id);
                 return (
-                  <div 
+                  <div
                     key={addon.id}
                     onClick={() => toggleAddon(addon.id)}
-                    className={cn(
-                      "flex items-center justify-between p-4 rounded-2xl border-2 cursor-pointer transition-colors",
-                      isSelected ? "border-[#2bb75c]/20 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10" : "border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600"
-                    )}
+                    className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                      isSelected
+                        ? "border-accent DEFAULT bg-accent-light"
+                        : "border-border bg-white hover:border-border-strong"
+                    }`}
                   >
                     <div className="flex items-start gap-4">
-                      <div className={cn(
-                        "w-6 h-6 rounded flex items-center justify-center mt-0.5 transition-colors shrink-0",
-                        isSelected ? "bg-[#2bb75c] text-white" : "border-2 border-zinc-300 dark:border-zinc-600 bg-transparent"
-                      )}>
-                        {isSelected && <Check className="w-4 h-4" />}
+                      <div className={`w-5 h-5 rounded flex items-center justify-center mt-0.5 shrink-0 ${
+                        isSelected ? "bg-accent DEFAULT text-white" : "border-2 border-border bg-white"
+                      }`}>
+                        {isSelected && <Check className="w-3 h-3" />}
                       </div>
                       <div>
-                        <h4 className="font-bold text-zinc-900 dark:text-white">{addon.title}</h4>
-                        <p className="text-sm text-zinc-500">{addon.desc}</p>
+                        <h4 className="font-body font-semibold text-ink-primary">{addon.title}</h4>
+                        <p className="text-sm font-body text-ink-tertiary">{addon.desc}</p>
                       </div>
                     </div>
-                    <span className="font-bold text-zinc-900 dark:text-white">${addon.price}</span>
+                    <span className="font-mono font-semibold text-ink-primary">KES {addon.price}</span>
                   </div>
                 );
               })}
             </div>
-          </section>
+          </div>
 
-          {/* Payment Options */}
-          <section className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 sm:p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-6">Payment Method</h2>
-            
-            <div className="space-y-4 mb-8">
-              {/* Credit Card */}
-              <label className={cn(
-                "flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-colors",
-                paymentMethod === 'card' ? "border-[#2bb75c]/20 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10" : "border-zinc-200 dark:border-zinc-700"
-              )}>
+          {/* Payment Methods */}
+          <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+            <h2 className="font-display font-semibold text-lg text-brand-900 mb-5">Payment method</h2>
+
+            <div className="space-y-3 mb-6">
+              <label className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                paymentMethod === 'card'
+                  ? "border-accent DEFAULT bg-accent-light"
+                  : "border-border bg-white"
+              }`}>
                 <input type="radio" name="payment" className="hidden" checked={paymentMethod === 'card'} onChange={() => setPaymentMethod('card')} />
-                <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0", paymentMethod === 'card' ? "border-[#2bb75c]/20" : "border-zinc-300 dark:border-zinc-600")}>
-                  {paymentMethod === 'card' && <div className="w-2.5 h-2.5 rounded-full bg-[#2bb75c]" />}
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                  paymentMethod === 'card' ? "border-accent DEFAULT" : "border-border"
+                }`}>
+                  {paymentMethod === 'card' && <div className="w-2.5 h-2.5 rounded-full bg-accent DEFAULT" />}
                 </div>
-                <CreditCard className="w-6 h-6 text-zinc-400" />
-                <span className="font-bold text-zinc-900 dark:text-white flex-1">Credit / Debit Card</span>
+                <CreditCard className="w-5 h-5 text-ink-tertiary" />
+                <span className="font-body font-semibold text-ink-primary flex-1">Credit / Debit card</span>
               </label>
 
-              {/* PayPal */}
-              <label className={cn(
-                "flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-colors",
-                paymentMethod === 'paypal' ? "border-[#2bb75c]/20 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10" : "border-zinc-200 dark:border-zinc-700"
-              )}>
+              <label className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                paymentMethod === 'paypal'
+                  ? "border-accent DEFAULT bg-accent-light"
+                  : "border-border bg-white"
+              }`}>
                 <input type="radio" name="payment" className="hidden" checked={paymentMethod === 'paypal'} onChange={() => setPaymentMethod('paypal')} />
-                <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0", paymentMethod === 'paypal' ? "border-[#2bb75c]/20" : "border-zinc-300 dark:border-zinc-600")}>
-                  {paymentMethod === 'paypal' && <div className="w-2.5 h-2.5 rounded-full bg-[#2bb75c]" />}
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                  paymentMethod === 'paypal' ? "border-accent DEFAULT" : "border-border"
+                }`}>
+                  {paymentMethod === 'paypal' && <div className="w-2.5 h-2.5 rounded-full bg-accent DEFAULT" />}
                 </div>
-                <div className="w-6 h-6 bg-[#2bb75c] text-white font-black italic rounded flex items-center justify-center text-xs">P</div>
-                <span className="font-bold text-zinc-900 dark:text-white flex-1">PayPal</span>
+                <div className="w-5 h-5 bg-accent DEFAULT text-white font-black rounded flex items-center justify-center text-xs">P</div>
+                <span className="font-body font-semibold text-ink-primary flex-1">PayPal</span>
               </label>
             </div>
 
-            {/* Simulated Card Input Form */}
+            {/* Card Details Form */}
             <AnimatePresence>
               {paymentMethod === 'card' && (
-                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="space-y-4 overflow-hidden">
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-4 overflow-hidden"
+                >
                   <div>
-                    <label className="text-xs font-bold text-zinc-500 uppercase mb-2 block">Card Number</label>
-                    <input type="text" placeholder="0000 0000 0000 0000" className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 p-3 rounded-xl outline-none focus:border-[#2bb75c]/20 transition-colors text-zinc-900 dark:text-white font-medium" />
+                    <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1 block">
+                      Card number
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="0000 0000 0000 0000"
+                      className="w-full h-11 px-3 bg-white border border-border rounded-lg text-ink-primary text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900"
+                    />
                   </div>
                   <div className="flex gap-4">
                     <div className="flex-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase mb-2 block">Expiry Date</label>
-                      <input type="text" placeholder="MM/YY" className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 p-3 rounded-xl outline-none focus:border-[#2bb75c]/20 transition-colors text-zinc-900 dark:text-white font-medium" />
+                      <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1 block">
+                        Expiry date
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="MM/YY"
+                        className="w-full h-11 px-3 bg-white border border-border rounded-lg text-ink-primary text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900"
+                      />
                     </div>
                     <div className="flex-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase mb-2 block">CVC</label>
-                      <input type="text" placeholder="123" className="w-full bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 p-3 rounded-xl outline-none focus:border-[#2bb75c]/20 transition-colors text-zinc-900 dark:text-white font-medium" />
+                      <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1 block">
+                        CVC
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="123"
+                        className="w-full h-11 px-3 bg-white border border-border rounded-lg text-ink-primary text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900"
+                      />
                     </div>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
-          </section>
-
+          </div>
         </div>
 
-        {/* Right Column: Order Summary Sidebar */}
-        <div className="w-full lg:w-96 shrink-0 relative">
-          <div className="sticky top-8 bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 sm:p-8 shadow-xl shadow-zinc-200/50 dark:shadow-none">
-            
-            <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-6">Order Summary</h2>
+        {/* Right Column: Order Summary */}
+        <div className="w-full lg:w-96 shrink-0">
+          <div className="sticky top-8 bg-white border border-border rounded-2xl p-6 shadow-lg">
+
+            <h2 className="font-display font-semibold text-lg text-brand-900 mb-5">Order summary</h2>
 
             {/* Gig Info */}
-            <div className="flex items-center gap-4 mb-6 pb-6 border-b border-zinc-100 dark:border-zinc-800">
-              <img src={GIG.image} alt="Gig" className="w-16 h-12 rounded-lg object-cover" />
+            <div className="flex items-center gap-3 mb-5 pb-4 border-b border-border">
+              <img
+                src={GIG.image}
+                alt="Gig"
+                className="w-14 h-10 rounded-lg object-cover"
+                width={56}
+                height={40}
+              />
               <div>
-                <h3 className="text-sm font-bold text-zinc-900 dark:text-white line-clamp-1">{GIG.title}</h3>
-                <span className="text-xs text-zinc-500 font-medium">{GIG.package.name}</span>
+                <h3 className="text-sm font-body font-semibold text-ink-primary line-clamp-1">{GIG.title}</h3>
+                <span className="text-xs font-body text-ink-tertiary">{GIG.package.name}</span>
               </div>
             </div>
 
-            {/* Base Features */}
-            <div className="mb-6 pb-6 border-b border-zinc-100 dark:border-zinc-800">
-              <div className="flex justify-between items-center mb-4">
-                <span className="font-bold text-zinc-900 dark:text-white">{GIG.package.name}</span>
-                <span className="font-bold text-zinc-900 dark:text-white">${GIG.package.price}</span>
+            {/* Package Details */}
+            <div className="mb-5 pb-4 border-b border-border">
+              <div className="flex justify-between items-center mb-3">
+                <span className="font-body font-semibold text-ink-primary">{GIG.package.name}</span>
+                <span className="font-mono font-semibold text-ink-primary">KES {GIG.package.price}</span>
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-zinc-500"><Clock className="w-4 h-4" /> {selectedAddons.includes('fast') ? '3 Days Delivery' : GIG.package.delivery}</div>
-                <div className="flex items-center gap-2 text-sm text-zinc-500"><RefreshCw className="w-4 h-4" /> {GIG.package.revisions} Revisions</div>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2 text-sm font-body text-ink-tertiary">
+                  <Clock className="w-3.5 h-3.5" />
+                  {selectedAddons.includes('fast') ? '3 days delivery' : GIG.package.delivery}
+                </div>
+                <div className="flex items-center gap-2 text-sm font-body text-ink-tertiary">
+                  <RefreshCw className="w-3.5 h-3.5" /> {GIG.package.revisions} revisions
+                </div>
                 {GIG.package.features.map(f => (
-                  <div key={f} className="flex items-center gap-2 text-sm text-zinc-500"><Check className="w-4 h-4 text-success" /> {f}</div>
+                  <div key={f} className="flex items-center gap-2 text-sm font-body text-ink-tertiary">
+                    <Check className="w-3.5 h-3.5 text-accent DEFAULT" /> {f}
+                  </div>
                 ))}
               </div>
             </div>
 
-            <CheckoutFeeBreakdown subtotal={subtotal} appliesTo="HIRE_COMMITMENT" className="mb-6" />
+            {/* Add-ons Summary */}
+            {selectedAddons.length > 0 && (
+              <div className="mb-5 pb-4 border-b border-border">
+                <p className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-2">Add-ons</p>
+                {selectedAddons.map(id => {
+                  const addon = ADDONS.find(a => a.id === id);
+                  return (
+                    <div key={id} className="flex justify-between items-center text-sm mb-1">
+                      <span className="font-body text-ink-secondary">{addon.title}</span>
+                      <span className="font-mono font-semibold text-ink-primary">KES {addon.price}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
-            <div className="flex justify-between items-center mb-8 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-              <span className="text-lg font-bold text-zinc-900 dark:text-white">Total</span>
-              <span className="text-3xl font-black text-zinc-900 dark:text-white">${total.toFixed(2)}</span>
+            {/* Fees */}
+            <div className="mb-5 pb-4 border-b border-border">
+              <div className="flex justify-between items-center text-sm mb-2">
+                <span className="font-body text-ink-secondary">Subtotal</span>
+                <span className="font-mono font-semibold text-ink-primary">KES {subtotal}</span>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="font-body text-ink-secondary">Service fee (5%)</span>
+                <span className="font-mono font-semibold text-ink-primary">KES {serviceFee}</span>
+              </div>
             </div>
 
-            <button 
+            {/* Total */}
+            <div className="flex justify-between items-center mb-6 pt-2">
+              <span className="font-body font-semibold text-lg text-ink-primary">Total</span>
+              <span className="font-mono font-bold text-2xl text-brand-900">KES {total}</span>
+            </div>
+
+            {/* Checkout Button */}
+            <button
               onClick={handleCheckout}
               disabled={isProcessing}
-              className="w-full py-4 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-tranzinc-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full py-3 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-semibold text-sm transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-brand-900 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isProcessing ? (
-                <>Processing <span className="animate-pulse">...</span></>
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Processing...
+                </>
               ) : (
-                <>Confirm & Pay <ChevronRight className="w-4 h-4" /></>
+                <>
+                  Confirm & pay <ChevronRight className="w-4 h-4" />
+                </>
               )}
             </button>
 
-            <div className="mt-6 flex items-center justify-center gap-2 text-xs font-bold text-zinc-400">
-              <Lock className="w-3.5 h-3.5" /> SSL Secured Payment
-            </div>
+            {orderError && (
+              <div className="mt-4 rounded-2xl bg-danger/10 border border-danger p-3 text-sm text-danger">
+                {orderError?.message || 'Unable to place order. Please try again.'}
+              </div>
+            )}
 
+            {/* Secure Payment Badge */}
+            <div className="mt-5 flex items-center justify-center gap-2">
+              <Lock className="w-3.5 h-3.5 text-ink-tertiary" />
+              <span className="text-xs font-body font-medium text-ink-tertiary">SSL secured payment</span>
+            </div>
           </div>
         </div>
-
       </div>
-    </div>
+    </motion.div>
   );
 }
-

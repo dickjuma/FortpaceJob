@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronUp, ChevronDown, Filter, Download, MoreHorizontal } from 'lucide-react';
+import { ChevronUp, ChevronDown, Filter, MoreHorizontal } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 import UserTableRow from './UserTableRow';
 import Skeleton from '../../../components/ui/Skeleton';

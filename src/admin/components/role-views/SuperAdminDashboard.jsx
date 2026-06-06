@@ -7,8 +7,7 @@ import RevenueChart from '../charts/RevenueChart';
 import ActivityFeed from '../panels/ActivityFeed';
 import AlertsPanel from '../panels/AlertsPanel';
 import TransactionsTable from '../tables/TransactionsTable';
-import { ShieldCheck, Zap, Activity, Users as UsersIcon } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import { Zap, Activity, Users as UsersIcon } from 'lucide-react';
 
 const SuperAdminDashboard: React.FC = () => {
   const config = ROLE_CONFIG.super_admin;

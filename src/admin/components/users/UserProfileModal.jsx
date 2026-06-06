@@ -2,9 +2,8 @@ import React from 'react';
 import { 
   X, User, Mail, Shield, 
   Star, Award, CheckCircle2, MapPin, 
-  Calendar, Briefcase, ExternalLink 
+  Calendar, Briefcase
 } from 'lucide-react';
-import { cn } from '../../utils/cn';
 
 export default function UserProfileModal({ isOpen, onClose, user, onAction }) {
   if (!isOpen || !user) return null;

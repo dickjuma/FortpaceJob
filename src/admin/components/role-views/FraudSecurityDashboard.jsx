@@ -7,7 +7,7 @@ import AlertsPanel from '../panels/AlertsPanel';
 import QuickActions from '../panels/QuickActions';
 import Card from '../ui/Card';
 import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import { useUIStore } from '../../store/uiStore';
 

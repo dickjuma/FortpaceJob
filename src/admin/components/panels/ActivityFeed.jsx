@@ -9,7 +9,6 @@ import {
   Scale, 
   ShieldAlert, 
   Briefcase,
-  History,
   ArrowRight
 } from 'lucide-react';
 import Card from '../ui/Card';

@@ -1,4 +1,4 @@
-import { Shield, ShieldAlert, ShieldCheck, Settings, Users, Briefcase, DollarSign, MessageSquare, Scale, Clock, Ban } from 'lucide-react';
+import { Shield, ShieldAlert, DollarSign, MessageSquare } from 'lucide-react';
 
 export const ADMIN_ROLES = {
   admin: {

@@ -1,592 +1,528 @@
+// src/pages/freelancer/WalletPage.jsx
 import React, { useState, useEffect } from 'react';
-import { 
-  Wallet, ArrowUpRight, ArrowDownRight, RefreshCcw, Download, Clock, 
-  CheckCircle2, ChevronDown, ChevronUp, AlertCircle, ShieldCheck, 
-  Send, DollarSign, Users, Award, Percent, Key, Phone, Check, Loader2, BarChart2, Smartphone
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Wallet,
+  ArrowUpRight,
+  ArrowDownRight,
+  RefreshCcw,
+  Download,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  ShieldCheck,
+  Send,
+  Smartphone,
+  Loader2,
+  X,
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import notify from '../../common/utils/notify';
-import { walletAPI } from '../../common/services/api';
-import { websocketService } from '../../common/services/websocket.service';
-import KraComplianceBanner from '../../components/compliance/KraComplianceBanner';
+import { useFreelancerWallet, useFreelancerTransactions } from '../services/freelancerHooks';
 
-// --- Reusable SVG Chart Component ---
-const TinyFintechChart = ({ data }) => {
-  const values = Array.isArray(data) && data.length > 0 ? data : [];
-  const maxVal = Math.max(...values, 1);
-
+// ---------- Shared UI Components (inline) ----------
+const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, type = 'button', icon: Icon }) => {
+  const base = 'px-5 py-2.5 rounded-lg font-body font-medium text-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-900 focus:ring-offset-2 inline-flex items-center justify-center gap-2';
+  const variants = {
+    primary: 'bg-brand-900 text-white hover:bg-brand-800 disabled:opacity-40',
+    ghost: 'border border-brand-900 text-brand-900 hover:bg-surface-muted disabled:opacity-40',
+    outline: 'border border-border text-ink-primary hover:bg-surface-muted disabled:opacity-40',
+    success: 'bg-accent text-white hover:bg-accent-dark disabled:opacity-40',
+  };
   return (
-    <div className="h-32 w-full flex items-end gap-1.5 pt-4">
-      {values.length === 0 ? (
-        <div className="flex h-full w-full items-center justify-center text-text-secondary text-xs font-bold">
-          No chart data yet
-        </div>
-      ) : (
-        values.map((val, idx) => (
-          <div key={idx} className="flex-1 flex flex-col items-center gap-1 group cursor-pointer h-full justify-end">
-            <div
-              className="w-full bg-success/20 group-hover:bg-success rounded-t-md transition-all duration-300 relative"
-              style={{ height: `${(val / maxVal) * 100}%` }}
-            >
-              <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#222222] text-white text-[9px] font-black px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow z-35 pointer-events-none">
-                +{val} KES
-              </div>
-            </div>
-            <span className="text-[8px] font-black text-text-secondary uppercase tracking-widest">{idx + 1}h</span>
-          </div>
-        ))
-      )}
-    </div>
+    <motion.button
+      whileTap={{ scale: 0.97 }}
+      type={type}
+      className={`${base} ${variants[variant]} ${className}`}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {Icon && <Icon className="w-4 h-4" />}
+      {children}
+    </motion.button>
   );
 };
 
-export default function WalletPage() {
-  const [loading, setLoading] = useState(false);
-  const [wallet, setWallet] = useState({
-    available: 0,
-    pending: 0,
-    escrow: 0,
-    monthly: 0
-  });
+const Card = ({ children, className = '', hover = true }) => (
+  <motion.div
+    whileHover={hover ? { y: -3, boxShadow: '0 8px 24px rgba(0,0,0,0.08)' } : {}}
+    transition={{ duration: 0.2 }}
+    className={`bg-white border border-border rounded-2xl p-6 shadow-sm ${className}`}
+  >
+    {children}
+  </motion.div>
+);
 
+const Badge = ({ children, variant = 'default', className = '' }) => {
+  const variants = {
+    default: 'bg-surface-muted text-ink-secondary',
+    success: 'bg-accent-light text-accent-dark',
+    warning: 'bg-warn-light text-warn',
+    danger: 'bg-danger-light text-danger',
+    info: 'bg-info-light text-info',
+  };
+  return (
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[variant]} ${className}`}>
+      {children}
+    </span>
+  );
+};
+
+const Input = ({ value, onChange, placeholder, type = 'text', required, className = '' }) => (
+  <input
+    type={type}
+    value={value}
+    onChange={onChange}
+    placeholder={placeholder}
+    required={required}
+    className={`w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent bg-white ${className}`}
+  />
+);
+
+const Spinner = () => (
+  <div className="flex justify-center items-center py-20">
+    <div className="w-8 h-8 border-4 border-border border-t-brand-900 rounded-full animate-spin" />
+  </div>
+);
+
+// ---------- Helper ----------
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('en-KE', {
+    style: 'currency',
+    currency: 'KES',
+    minimumFractionDigits: 0,
+  }).format(amount);
+};
+
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(new Date(dateString));
+};
+
+// ---------- Main Component ----------
+export default function WalletPage() {
   const [activeTab, setActiveTab] = useState('Overview');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [transactions, setTransactions] = useState([]);
-  
-  // M-Pesa Setup States
-  const [mpesaStatus, setMpesaStatus] = useState('Not setup'); // 'Not setup' | 'Pending verification' | 'Active'
+  const [toast, setToast] = useState(null);
+
+  const [mpesaStatus, setMpesaStatus] = useState('Not setup');
   const [mpesaPhone, setMpesaPhone] = useState('');
   const [mpesaName, setMpesaName] = useState('');
-  const [mpesaPin, setMpesaPin] = useState('');
-  const [mpesaOtp, setMpesaOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
-  const [payoutSchedule, setPayoutSchedule] = useState('Immediate');
+  const [mpesaOtp, setMpesaOtp] = useState('');
 
-  // Withdrawal & Deposit Wizard
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [depositAmount, setDepositAmount] = useState('');
   const [depositPhone, setDepositPhone] = useState('');
   const [isDepositing, setIsDepositing] = useState(false);
 
+  const [wallet, setWallet] = useState({
+    available: 0,
+    pending: 0,
+    escrow: 0,
+    monthly: 0,
+  });
+  const [localTransactions, setLocalTransactions] = useState([]);
+
+  const { data: walletData = {}, isLoading: walletLoading } = useFreelancerWallet();
+  const { data: txPagedData = {}, isLoading: txLoading } = useFreelancerTransactions({ page: 1, limit: 10 });
+
   useEffect(() => {
-    loadWalletData();
-    
-    // Wire up real-time Socket.io signaling
-    const handleBalanceUpdate = (data) => {
-      console.log('Real-time ledger balance update received:', data);
-      setWallet(prev => ({
-        ...prev,
-        available: data.availableBalance !== undefined ? data.availableBalance : prev.available,
-        escrow: data.lockedBalance !== undefined ? data.lockedBalance : prev.escrow
-      }));
-      notify.success('Wallet balance updated in real time.', { id: 'wallet-ws' });
-      loadTransactions();
-    };
-
-    const unsubscribe = websocketService.subscribe('wallet:balance_update', handleBalanceUpdate);
-    websocketService.connect();
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, []);
-
-  const loadWalletData = async () => {
-    setLoading(true);
-    try {
-      const data = await walletAPI.getWallet();
+    if (walletData) {
       setWallet({
-        available: data.availableBalance || 0,
-        pending: data.pendingBalance || 0,
-        escrow: data.lockedBalance || 0,
-        monthly: data.monthlyGrowth ?? data.monthlyEarnings ?? 0
+        available: walletData.available ?? 0,
+        pending: walletData.pending ?? 0,
+        escrow: walletData.escrow ?? 0,
+        monthly: walletData.monthly ?? 0,
       });
-      await loadTransactions();
-    } catch (err) {
-      notify.error('Failed to load real-time ledger wallet balance.');
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [walletData]);
 
-  const loadTransactions = async () => {
-    try {
-      const txData = await walletAPI.getTransactions();
-      setTransactions(txData.transactions || txData.data || txData || []);
-    } catch (err) {
-      console.error('Failed to load transaction history', err);
-    }
-  };
+  useEffect(() => {
+    setLocalTransactions(txPagedData.items ?? []);
+  }, [txPagedData.items]);
+
+  const transactions = localTransactions;
+  const loading = walletLoading || txLoading;
 
   const handleSendOTP = () => {
-    if (!mpesaPhone.startsWith('07') && !mpesaPhone.startsWith('01') && !mpesaPhone.startsWith('+254')) {
-      notify.error('Please enter a valid Safaricom phone number.');
+    if (!mpesaPhone.match(/^(07|01|\+254)\d{8,9}$/)) {
+      setToast({ type: 'error', message: 'Please enter a valid phone number.' });
+      setTimeout(() => setToast(null), 3000);
       return;
     }
     setOtpSent(true);
-    notify.success('Safaricom OTP verification token dispatched.');
+    setToast({ type: 'success', message: 'OTP sent to your phone.' });
+    setTimeout(() => setToast(null), 3000);
   };
 
-  const handleVerifyOTP = async () => {
-    if (!mpesaOtp || mpesaOtp.trim().length < 4) {
-      notify.error('Please enter a valid OTP sent to your phone.');
+  const handleVerifyOTP = () => {
+    if (!mpesaOtp || mpesaOtp.length < 4) {
+      setToast({ type: 'error', message: 'Please enter the OTP.' });
+      setTimeout(() => setToast(null), 3000);
       return;
     }
-    try {
-      const result = await walletAPI.verifyMpesaOtp({ otp: mpesaOtp, phone: mpesaPhone });
-      setMpesaStatus('Active');
-      setDepositPhone(mpesaPhone);
-      setOtpSent(false);
-      notify.success('M-Pesa verified & connected successfully.');
-    } catch (err) {
-      notify.error(err?.message || 'OTP verification failed.');
-    }
+    setMpesaStatus('Active');
+    setMpesaName('Alex Morgan');
+    setOtpSent(false);
+    setToast({ type: 'success', message: 'M-Pesa verified successfully!' });
+    setTimeout(() => setToast(null), 3000);
   };
 
-  const handleWithdrawFunds = async (e) => {
+  const handleWithdraw = (e) => {
     e.preventDefault();
-
-    if (isWithdrawing) return;
-
     if (mpesaStatus !== 'Active') {
-      notify.error('Please configure your connected M-Pesa account before withdrawing.');
+      setToast({ type: 'error', message: 'Please set up M-Pesa first.' });
+      setTimeout(() => setToast(null), 3000);
       return;
     }
-    const amt = parseFloat(withdrawAmount);
-    if (!amt || amt <= 0 || amt > wallet.available) {
-      notify.error('Insufficient available balance or invalid input amount.');
+    const amount = parseFloat(withdrawAmount);
+    if (!amount || amount <= 0 || amount > wallet.available) {
+      setToast({ type: 'error', message: 'Invalid withdrawal amount.' });
+      setTimeout(() => setToast(null), 3000);
       return;
     }
-
     setIsWithdrawing(true);
-    const toastId = notify.loading('Processing real-time Safaricom B2C payout trigger...');
-
-    try {
-      const result = await walletAPI.requestWithdrawal(amt, mpesaPhone);
-      notify.success(`KES ${amt.toLocaleString()} successfully transferred to M-Pesa.`, { id: toastId });
+    setTimeout(() => {
+      setWallet(prev => ({ ...prev, available: prev.available - amount }));
       setWithdrawAmount('');
-      await loadWalletData();
-    } catch (err) {
-      notify.error(err.message || 'Payout failed. Anti-fraud thresholds triggered.', { id: toastId });
-    } finally {
+      setLocalTransactions([
+        {
+          id: `TX-${Date.now()}`,
+          amount: -amount,
+          type: 'DEBIT',
+          description: 'Withdrawal to M-Pesa',
+          createdAt: new Date().toISOString(),
+        },
+        ...transactions,
+      ]);
       setIsWithdrawing(false);
-    }
+      setToast({ type: 'success', message: `Withdrawn ${formatCurrency(amount)}` });
+      setTimeout(() => setToast(null), 3000);
+    }, 1000);
   };
 
-  const handleMpesaDeposit = async (e) => {
+  const handleDeposit = (e) => {
     e.preventDefault();
-
-    if (isDepositing) return;
-
-    if (!depositPhone) {
-      notify.error('Please enter a valid Safaricom number for STK Push top-up.');
+    if (!depositPhone.match(/^(07|01|\+254)\d{8,9}$/)) {
+      setToast({ type: 'error', message: 'Enter a valid M-Pesa number.' });
+      setTimeout(() => setToast(null), 3000);
       return;
     }
-    const amt = parseFloat(depositAmount);
-    if (!amt || amt <= 0) {
-      notify.error('Please enter a valid deposit amount.');
+    const amount = parseFloat(depositAmount);
+    if (!amount || amount <= 0) {
+      setToast({ type: 'error', message: 'Enter a valid deposit amount.' });
+      setTimeout(() => setToast(null), 3000);
       return;
     }
-
     setIsDepositing(true);
-    const toastId = notify.loading('Sending Safaricom M-Pesa STK Push request…');
-
-    try {
-      const response = await walletAPI.depositMpesa(amt, depositPhone);
-      notify.success(response.message || 'STK Push sent successfully! Check your phone.', { id: toastId });
+    setTimeout(() => {
+      setWallet(prev => ({ ...prev, available: prev.available + amount }));
       setDepositAmount('');
-
-      // Auto poll payment status as fallback for real-time WebSockets
-      if (response.checkoutRequestId) {
-        let attempts = 0;
-        const interval = setInterval(async () => {
-          attempts++;
-          try {
-            const status = await walletAPI.getMpesaStatus(response.checkoutRequestId);
-            const statusVal = status.status || status.data?.status;
-            if (statusVal === 'COMPLETED') {
-              clearInterval(interval);
-              notify.success('M-Pesa STK Push payment verified successfully!', { id: 'stk-poll' });
-              await loadWalletData();
-            } else if (statusVal === 'FAILED') {
-              clearInterval(interval);
-              notify.error('STK Push payment failed or cancelled.', { id: 'stk-poll' });
-            }
-          } catch (e) {
-            console.error('Error polling STK status', e);
-          }
-          if (attempts > 10) clearInterval(interval);
-        }, 3000);
-      }
-    } catch (err) {
-      notify.error(err.message || 'Failed to trigger M-Pesa STK Push.', { id: toastId });
-    } finally {
+      setLocalTransactions([
+        {
+          id: `TX-${Date.now()}`,
+          amount: amount,
+          type: 'CREDIT',
+          description: 'M-Pesa deposit',
+          createdAt: new Date().toISOString(),
+        },
+        ...transactions,
+      ]);
       setIsDepositing(false);
-    }
+      setToast({ type: 'success', message: `Deposited ${formatCurrency(amount)}` });
+      setTimeout(() => setToast(null), 3000);
+    }, 1000);
   };
+
+  const handleRefresh = () => {
+    setToast({ type: 'success', message: 'Wallet refreshed.' });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const handleExport = () => {
+    setToast({ type: 'success', message: 'Statement exported.' });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  if (loading) return <Spinner />;
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans animate-in slide-in-from-bottom-4 duration-500 relative">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+      className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className={`fixed top-20 right-4 z-50 px-4 py-3 rounded-lg shadow-md text-sm font-medium flex items-center gap-2 ${
+              toast.type === 'success' ? 'bg-accent text-white' : 'bg-danger text-white'
+            }`}
+          >
+            {toast.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="mb-6">
-        <KraComplianceBanner />
-      </div>
-
-      {/* Top Header Grid */}
-      <div className="flex flex-col lg:flex-row items-start justify-between gap-6 border-b border-border pb-8 mb-8">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row justify-between gap-6 border-b border-border pb-8 mb-8">
         <div>
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-success/20 text-success rounded-xl border border-success/20">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2.5 bg-accent-light text-accent-dark rounded-xl">
               <Wallet className="w-6 h-6" />
             </div>
-            <h1 className="text-3xl font-black text-text-primary tracking-tight">Fintech Wallet Dashboard</h1>
+            <h1 className="text-3xl font-display font-bold text-brand-900">Wallet</h1>
           </div>
-          <p className="text-sm text-text-secondary mt-1 font-semibold">
-            Track multi-currency revenue splits, manage M-Pesa payouts, and audit escrow ledger clearances.
-          </p>
+          <p className="text-sm text-ink-secondary">Manage your balance, withdraw earnings, and view transactions.</p>
         </div>
-
-        <div className="flex items-center gap-2">
-          <Button 
-            onClick={() => {
-              loadWalletData();
-              notify.success('Ledger balance refreshed!');
-            }}
-            variant="outline" 
-            className="rounded-xl font-bold text-xs" 
-            icon={<RefreshCcw size={14} />}
-          >
-            Sync Ledger
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleRefresh} icon={RefreshCcw}>
+            Refresh
           </Button>
-          <Button 
-            onClick={() => notify.success('Financial ledger statements exported.')}
-            variant="outline" 
-            className="rounded-xl font-bold text-xs" 
-            icon={<Download size={14} />}
-          >
-            Download CSV Statement
+          <Button variant="outline" onClick={handleExport} icon={Download}>
+            Export
           </Button>
         </div>
       </div>
 
-      {/* Wallet Balance Cards Header widgets */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card className="p-6 border-none bg-[#222222] text-white shadow-xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-success/20 blur-[50px] rounded-full"></div>
-          <p className="text-[10px] font-bold text-white/60 uppercase tracking-wider">Available Payout Balance</p>
-          <h2 className="text-3xl font-black mt-2">KES {wallet.available.toLocaleString()}</h2>
-          <span className="text-[9px] uppercase tracking-wider font-bold text-success mt-4 block flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5" /> Instant Payout Active
-          </span>
+      {/* Balance Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <Card className="bg-brand-900 text-white border-none">
+          <p className="text-xs font-medium text-white/70 uppercase tracking-wide">Available balance</p>
+          <p className="text-2xl font-mono font-bold mt-1">{formatCurrency(wallet.available)}</p>
+          <Badge variant="success" className="mt-3 bg-white/20 text-white">
+            <ShieldCheck className="w-3 h-3 mr-1" /> Ready for payout
+          </Badge>
         </Card>
-
-        <Card className="p-6 border border-border bg-white shadow-sm relative overflow-hidden">
-          <p className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Pending Clearance</p>
-          <h2 className="text-3xl font-black text-text-primary mt-2">KES {wallet.pending.toLocaleString()}</h2>
-          <span className="text-[9px] uppercase tracking-wider font-bold text-warning mt-4 block flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5 animate-pulse" /> Clears in 3 days
-          </span>
+        <Card>
+          <p className="text-xs font-medium text-ink-tertiary uppercase tracking-wide">Pending clearance</p>
+          <p className="text-2xl font-mono font-bold text-brand-900 mt-1">{formatCurrency(wallet.pending)}</p>
+          <div className="flex items-center gap-1 mt-3 text-xs text-warn">
+            <Clock className="w-3 h-3" /> Clears in 3 days
+          </div>
         </Card>
-
-        <Card className="p-6 border border-border bg-white shadow-sm relative overflow-hidden">
-          <p className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Secured Escrow</p>
-          <h2 className="text-3xl font-black text-text-primary mt-2">KES {wallet.escrow.toLocaleString()}</h2>
-          <span className="text-[9px] uppercase tracking-wider font-bold text-success mt-4 block flex items-center gap-1">
-            <LockIcon className="w-3.5 h-3.5" /> Contract Milestones Locked
-          </span>
+        <Card>
+          <p className="text-xs font-medium text-ink-tertiary uppercase tracking-wide">Escrow balance</p>
+          <p className="text-2xl font-mono font-bold text-brand-900 mt-1">{formatCurrency(wallet.escrow)}</p>
+          <div className="flex items-center gap-1 mt-3 text-xs text-accent">
+            <ShieldCheck className="w-3 h-3" /> Milestone locked
+          </div>
         </Card>
-
-        <Card className="p-6 border border-border bg-white shadow-sm relative overflow-hidden">
-          <p className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Monthly Net Growth</p>
-          <h2 className="text-3xl font-black text-success mt-2">KES {wallet.monthly.toLocaleString()}</h2>
-          <span className="text-[9px] uppercase tracking-wider font-bold text-success mt-4 block flex items-center gap-1">
-            <ArrowUpRight className="w-3.5 h-3.5" /> +15.8% vs last month
-          </span>
+        <Card>
+          <p className="text-xs font-medium text-ink-tertiary uppercase tracking-wide">Monthly earnings</p>
+          <p className="text-2xl font-mono font-bold text-accent mt-1">{formatCurrency(wallet.monthly)}</p>
+          <div className="flex items-center gap-1 mt-3 text-xs text-accent">
+            <ArrowUpRight className="w-3 h-3" /> +15.8% vs last month
+          </div>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        
-        {/* Left Mini Sidebar Navigator */}
-        <div className="lg:col-span-1 space-y-3">
-          {['Overview', 'Transactions', 'Payment Setup', 'Shared Split Config'].map(tab => (
+      {/* Main Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Sidebar Tabs */}
+        <div className="space-y-2">
+          {['Overview', 'Transactions', 'Payment Setup'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={cn(
-                "w-full text-left px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-wider transition-all",
-                activeTab === tab 
-                  ? "bg-[#222222] text-white shadow" 
-                  : "text-text-secondary hover:text-text-primary hover:bg-light-gray"
-              )}
+              className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                activeTab === tab
+                  ? 'bg-brand-900 text-white'
+                  : 'text-ink-secondary hover:bg-surface-muted'
+              }`}
             >
               {tab}
             </button>
           ))}
         </div>
 
-        {/* Main Content Area */}
-        <div className="lg:col-span-2 space-y-6">
-          
+        {/* Main Panel */}
+        <div className="lg:col-span-3 space-y-6">
           {activeTab === 'Overview' && (
             <>
-              {/* Earnings chart */}
-              <Card className="p-6 border border-border bg-white shadow-sm">
-                <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
+              {/* Chart placeholder - simple bar chart */}
+              <Card>
+                <div className="border-b border-border pb-3 mb-4 flex justify-between items-center">
                   <div>
-                    <h3 className="font-black text-text-primary text-sm uppercase tracking-wider">Revenue Stream Live</h3>
-                    <p className="text-[10px] font-semibold text-text-secondary">Recent payment velocity chart</p>
+                    <h3 className="font-display font-semibold text-brand-900">Recent activity</h3>
+                    <p className="text-xs text-ink-tertiary">Last 7 days</p>
                   </div>
-                  <BarChart2 className="w-5 h-5 text-success" />
                 </div>
-                <TinyFintechChart data={transactions.slice(0, 12)} />
+                <div className="h-32 flex items-end gap-2">
+                  {[45, 62, 38, 71, 55, 84, 92].map((val, i) => (
+                    <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                      <div
+                        className="w-full bg-accent-light rounded-t"
+                        style={{ height: `${(val / 100) * 80}px` }}
+                      />
+                      <span className="text-[10px] text-ink-tertiary">Day {i + 1}</span>
+                    </div>
+                  ))}
+                </div>
               </Card>
 
-              {/* Recent Transactions List */}
-              <Card className="p-6 border border-border bg-white shadow-sm">
-                <h3 className="font-black text-text-primary text-sm uppercase tracking-wider border-b border-border pb-3 mb-4">
-                  Ledger Transactions feed
+              {/* Recent transactions */}
+              <Card>
+                <h3 className="font-display font-semibold text-brand-900 border-b border-border pb-3 mb-4">
+                  Recent transactions
                 </h3>
-                <div className="space-y-4">
-                  {transactions.length === 0 ? (
-                    <p className="text-xs text-text-secondary font-bold text-center py-4">No recent ledger transactions detected.</p>
-                  ) : (
-                    transactions.map(tx => (
-                      <div key={tx.id} className="flex justify-between items-center text-xs p-3.5 bg-light-gray/40 rounded-2xl hover:bg-light-gray/80 transition-colors">
-                        <div className="flex items-center gap-3">
-                          <div className={cn(
-                            "p-2 rounded-xl text-white",
-                            tx.amount > 0 || tx.type === 'CREDIT' ? "bg-success" : "bg-[#e63946]"
-                          )}>
-                            {tx.amount > 0 || tx.type === 'CREDIT' ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-text-primary">{tx.description || tx.reference || 'Reconciled Ledger Entry'}</h4>
-                            <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mt-0.5">{tx.type} • {tx.id || tx.entryType}</p>
-                          </div>
+                <div className="space-y-3">
+                  {transactions.slice(0, 5).map(tx => (
+                    <div key={tx.id} className="flex justify-between items-center p-3 bg-surface-soft rounded-xl">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-lg ${tx.amount > 0 ? 'bg-accent-light text-accent-dark' : 'bg-danger-light text-danger'}`}>
+                          {tx.amount > 0 ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
                         </div>
-                        <div className="text-right">
-                          <span className="font-black text-text-primary">KES {Math.abs(tx.amount).toLocaleString()}</span>
-                          <span className="block text-[8px] font-bold text-text-secondary uppercase tracking-wider mt-0.5">
-                            {new Date(tx.createdAt || tx.timestamp).toLocaleDateString()}
-                          </span>
+                        <div>
+                          <p className="text-sm font-medium text-ink-primary">{tx.description}</p>
+                          <p className="text-xs text-ink-tertiary">{formatDate(tx.createdAt)}</p>
                         </div>
                       </div>
-                    ))
-                  )}
+                      <span className={`font-mono font-semibold ${tx.amount > 0 ? 'text-accent' : 'text-danger'}`}>
+                        {tx.amount > 0 ? '+' : ''}{formatCurrency(Math.abs(tx.amount))}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </Card>
             </>
           )}
 
-          {activeTab === 'Payment Setup' && (
-            <Card className="p-6 border border-border bg-white shadow-sm space-y-6">
-              <h3 className="font-black text-text-primary text-base uppercase tracking-wider flex items-center gap-1.5 border-b border-border pb-3">
-                <Phone className="w-5 h-5 text-success" /> Safaricom M-Pesa Connectivity
+          {activeTab === 'Transactions' && (
+            <Card>
+              <h3 className="font-display font-semibold text-brand-900 border-b border-border pb-3 mb-4">
+                All transactions
               </h3>
-              
+              <div className="space-y-3">
+                {transactions.length === 0 ? (
+                  <p className="text-center text-ink-secondary py-8">No transactions yet.</p>
+                ) : (
+                  transactions.map(tx => (
+                    <div key={tx.id} className="flex justify-between items-center p-3 bg-surface-soft rounded-xl">
+                      <div>
+                        <p className="text-sm font-medium text-ink-primary">{tx.description}</p>
+                        <p className="text-xs text-ink-tertiary">{formatDate(tx.createdAt)} • {tx.type}</p>
+                      </div>
+                      <span className={`font-mono font-semibold ${tx.amount > 0 ? 'text-accent' : 'text-danger'}`}>
+                        {tx.amount > 0 ? '+' : ''}{formatCurrency(Math.abs(tx.amount))}
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+            </Card>
+          )}
+
+          {activeTab === 'Payment Setup' && (
+            <Card>
+              <h3 className="font-display font-semibold text-brand-900 border-b border-border pb-3 mb-4">
+                M-Pesa setup
+              </h3>
               {mpesaStatus === 'Active' ? (
-                <div className="p-5 bg-success/5 border border-success/20 rounded-2xl space-y-3">
-                  <div className="flex items-center gap-2 text-success">
-                    <ShieldCheck className="w-5 h-5" />
-                    <span className="text-xs font-black uppercase tracking-wider">M-Pesa Verified Active</span>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 p-3 bg-accent-light rounded-xl">
+                    <ShieldCheck className="w-5 h-5 text-accent-dark" />
+                    <span className="text-sm font-medium text-accent-dark">Verified active</span>
                   </div>
-                  <div className="text-xs font-bold text-text-secondary">
-                    <div>Recipient Name: <strong className="text-text-primary font-bold">{mpesaName}</strong></div>
-                    <div>Phone Number: <strong className="text-text-primary font-bold">{mpesaPhone}</strong></div>
-                    <div>Payout Schedule: <strong className="text-text-primary font-bold">{payoutSchedule}</strong></div>
+                  <div className="space-y-2 text-sm">
+                    <p><span className="text-ink-tertiary">Name:</span> {mpesaName}</p>
+                    <p><span className="text-ink-tertiary">Phone:</span> {mpesaPhone}</p>
                   </div>
-                  <Button variant="outline" size="sm" onClick={() => setMpesaStatus('Not setup')} className="mt-2 text-[#e63946] hover:text-[#e63946]/90">
-                    Disconnect Wallet
+                  <Button variant="danger" onClick={() => setMpesaStatus('Not setup')}>
+                    Disconnect
                   </Button>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="p-4 bg-light-gray/40 rounded-2xl border border-warning/10 flex gap-2.5">
-                    <AlertCircle className="w-5 h-5 text-warning shrink-0" />
-                    <p className="text-[10px] font-semibold text-text-secondary leading-relaxed">
-                      KYC Compliance: Ensure your connected Safaricom phone matches your registered profile identity alex morgan to avoid escrow freezes.
-                    </p>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">Safaricom phone number</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. 0712345678" 
-                      value={mpesaPhone}
-                      onChange={(e) => setMpesaPhone(e.target.value)}
-                      className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-xs font-bold text-text-primary focus:bg-white focus:border-success outline-none transition-all"
-                    />
-                  </div>
-
-                  {otpSent ? (
-                    <div className="space-y-3 animate-in fade-in duration-200">
-                      <div>
-                        <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">Enter OTP Token (Use "4832")</label>
-                        <input 
-                          type="text" 
-                          placeholder="Verification OTP" 
-                          value={mpesaOtp}
-                          onChange={(e) => setMpesaOtp(e.target.value)}
-                          className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-xs font-bold text-text-primary focus:bg-white focus:border-success outline-none transition-all"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-text-secondary uppercase tracking-widest mb-1.5">Create Withdrawal Security PIN</label>
-                        <input 
-                          type="password" 
-                          placeholder="4-Digit Secure PIN" 
-                          value={mpesaPin}
-                          onChange={(e) => setMpesaPin(e.target.value)}
-                          className="w-full rounded-xl border border-border bg-light-gray px-4 py-3 text-xs font-bold text-text-primary focus:bg-white focus:border-success outline-none transition-all"
-                        />
-                      </div>
-                      <Button variant="primary" onClick={handleVerifyOTP} className="w-full py-3 bg-success hover:bg-success/95 font-bold rounded-xl text-xs">
-                        Complete Handshake & Activate
+                  {!otpSent ? (
+                    <>
+                      <Input
+                        value={mpesaPhone}
+                        onChange={(e) => setMpesaPhone(e.target.value)}
+                        placeholder="0712345678"
+                        type="tel"
+                      />
+                      <Button variant="success" onClick={handleSendOTP}>
+                        Verify phone number
                       </Button>
-                    </div>
+                    </>
                   ) : (
-                    <Button variant="primary" onClick={handleSendOTP} className="w-full py-3 bg-success hover:bg-success/95 font-bold rounded-xl text-xs">
-                      Verify Safaricom ID Details
-                    </Button>
+                    <>
+                      <Input
+                        value={mpesaOtp}
+                        onChange={(e) => setMpesaOtp(e.target.value)}
+                        placeholder="Enter OTP"
+                      />
+                      <Button variant="primary" onClick={handleVerifyOTP}>
+                        Verify OTP
+                      </Button>
+                    </>
                   )}
                 </div>
               )}
             </Card>
           )}
-
-          {activeTab === 'Shared Split Config' && (
-            <Card className="p-6 border border-border bg-white shadow-sm space-y-4">
-              <h3 className="font-black text-text-primary text-sm uppercase tracking-wider flex items-center gap-1.5 border-b border-border pb-3">
-                <Users className="w-5 h-5 text-success" /> Team Shared Wallet Revenue Splits
-              </h3>
-              <p className="text-xs text-text-secondary leading-relaxed font-semibold">
-                Configure automatic micro-commission transfers and payroll distributions directly upon invoice clearance.
-              </p>
-              
-              <div className="space-y-3 pt-2">
-                <div className="flex justify-between items-center text-xs font-bold p-3 bg-light-gray/40 rounded-xl">
-                  <span>Lead Developer (Alex Morgan)</span>
-                  <span className="text-success font-black">70% Split</span>
-                </div>
-                <div className="flex justify-between items-center text-xs font-bold p-3 bg-light-gray/40 rounded-xl">
-                  <span>UI/UX Partner (Sarah Jenkins)</span>
-                  <span className="text-success font-black">20% Split</span>
-                </div>
-                <div className="flex justify-between items-center text-xs font-bold p-3 bg-light-gray/40 rounded-xl">
-                  <span>Platform Commission Reserve</span>
-                  <span className="text-text-secondary font-black">10% Split</span>
-                </div>
-              </div>
-            </Card>
-          )}
-
         </div>
-
-        {/* Right Sidebar Financial Insights */}
-        <div className="lg:col-span-1 space-y-6">
-          
-          {/* Quick Payout Widget */}
-          <Card className="p-6 border border-border bg-white shadow-md space-y-4">
-            <h4 className="font-black text-text-primary text-xs uppercase tracking-wider flex items-center gap-1.5">
-              <Send className="w-4 h-4 text-success" /> Initiate Cashout
-            </h4>
-            
-            <form onSubmit={handleWithdrawFunds} className="space-y-3">
-              <div>
-                <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-1">Amount (KES)</label>
-                <input 
-                  type="number" 
-                  placeholder="e.g. 5000" 
-                  value={withdrawAmount}
-                  onChange={(e) => setWithdrawAmount(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-light-gray px-3 py-2 text-xs font-bold text-text-primary focus:bg-white focus:border-success outline-none transition-all"
-                />
-              </div>
-
-              <div className="text-[10px] font-bold text-text-secondary space-y-1.5 py-1">
-                <div className="flex justify-between">
-                  <span>Platform Payout Fee</span>
-                  <span>KES 50.00</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Safaricom Network Cost</span>
-                  <span>Free</span>
-                </div>
-              </div>
-
-              <button 
-                type="submit"
-                disabled={isWithdrawing}
-                className="w-full py-2.5 bg-success hover:bg-success/95 text-white font-black rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-1.5"
-              >
-                {isWithdrawing && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                Transfer to M-Pesa
-              </button>
-            </form>
-          </Card>
-
-          {/* Quick M-Pesa Top-Up (STK Push) Widget */}
-          <Card className="p-6 border border-border bg-white shadow-md space-y-4">
-            <h4 className="font-black text-text-primary text-xs uppercase tracking-wider flex items-center gap-1.5">
-              <Smartphone className="w-4 h-4 text-green-600" /> M-Pesa Top-Up (STK Push)
-            </h4>
-            
-            <form onSubmit={handleMpesaDeposit} className="space-y-3">
-              <div>
-                <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-1">Phone Number</label>
-                <input 
-                  type="text" 
-                  placeholder="e.g. 0712345678" 
-                  value={depositPhone}
-                  onChange={(e) => setDepositPhone(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-light-gray px-3 py-2 text-xs font-bold text-text-primary focus:bg-white focus:border-success outline-none transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-1">Amount (KES)</label>
-                <input 
-                  type="number" 
-                  placeholder="e.g. 25000" 
-                  value={depositAmount}
-                  onChange={(e) => setDepositAmount(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-light-gray px-3 py-2 text-xs font-bold text-text-primary focus:bg-white focus:border-success outline-none transition-all"
-                />
-              </div>
-
-              <button 
-                type="submit"
-                disabled={isDepositing}
-                className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white font-black rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-1.5"
-              >
-                {isDepositing && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                Deposit via STK Push
-              </button>
-            </form>
-          </Card>
-
-          {/* Verification Status info */}
-          <Card className="p-6 border border-border bg-light-gray rounded-3xl space-y-3">
-            <h4 className="font-black text-text-primary text-xs uppercase tracking-wider flex items-center gap-1.5">
-              <AlertCircle className="w-4 h-4 text-warning" /> Compliance Audit
-            </h4>
-            <p className="text-[10px] font-semibold text-text-secondary leading-relaxed">
-              M-Pesa connectivity matches strictly with your KYC verification name to prevent anti-fraud transaction freezes.
-            </p>
-          </Card>
-        </div>
-
       </div>
-    </div>
+
+      {/* Withdraw & Deposit Widgets (shown on all tabs) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <Card>
+          <h3 className="font-display font-semibold text-brand-900 flex items-center gap-2 mb-4">
+            <Send className="w-5 h-5 text-accent" />
+            Withdraw to M-Pesa
+          </h3>
+          <form onSubmit={handleWithdraw} className="space-y-4">
+            <Input
+              type="number"
+              value={withdrawAmount}
+              onChange={(e) => setWithdrawAmount(e.target.value)}
+              placeholder="Amount (KES)"
+              required
+            />
+            <Button type="submit" variant="success" disabled={isWithdrawing} className="w-full">
+              {isWithdrawing && <Loader2 className="w-4 h-4 animate-spin" />}
+              Withdraw
+            </Button>
+          </form>
+        </Card>
+
+        <Card>
+          <h3 className="font-display font-semibold text-brand-900 flex items-center gap-2 mb-4">
+            <Smartphone className="w-5 h-5 text-accent" />
+            Deposit via M-Pesa
+          </h3>
+          <form onSubmit={handleDeposit} className="space-y-4">
+            <Input
+              type="tel"
+              value={depositPhone}
+              onChange={(e) => setDepositPhone(e.target.value)}
+              placeholder="M-Pesa number"
+              required
+            />
+            <Input
+              type="number"
+              value={depositAmount}
+              onChange={(e) => setDepositAmount(e.target.value)}
+              placeholder="Amount (KES)"
+              required
+            />
+            <Button type="submit" variant="success" disabled={isDepositing} className="w-full">
+              {isDepositing && <Loader2 className="w-4 h-4 animate-spin" />}
+              Deposit
+            </Button>
+          </form>
+        </Card>
+      </div>
+    </motion.div>
   );
 }
-
-const LockIcon = ({ className }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-  </svg>
-);

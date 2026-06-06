@@ -1,31 +1,57 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from '../../../components/common/Card';
 import { Button } from '../../../components/common/Button';
 import { Badge } from '../../../components/common/Badge';
 import { Table, Column } from '../../../components/common/Table';
+import { api } from '../../../common/services/api';
 
 export const AccountSettings = () => {
-  const billingHistory = [
-    { id: 'INV-001', date: '2025-05-01', amount: '$49.00', status: 'Paid' },
-    { id: 'INV-002', date: '2025-04-01', amount: '$49.00', status: 'Paid' },
-    { id: 'INV-003', date: '2025-03-01', amount: '$49.00', status: 'Paid' },
-  ];
+  const [accountData, setAccountData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const columns: Column<typeof billingHistory[0]>[] = [
+  useEffect(() => {
+    let active = true;
+    setIsLoading(true);
+    setError(null);
+
+    api
+      .get('/admin_rbc/account')
+      .then(({ data }) => {
+        if (!active) return;
+        setAccountData(data);
+      })
+      .catch((err) => {
+        if (!active) return;
+        setError(err?.message || 'Unable to load account settings.');
+      })
+      .finally(() => {
+        if (!active) return;
+        setIsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const billingHistory = accountData?.billingHistory || [];
+
+  const columns: Column<any>[] = [
     { key: 'id', label: 'Invoice' },
     { key: 'date', label: 'Date' },
     { key: 'amount', label: 'Amount' },
-    { 
-      key: 'status', 
+    {
+      key: 'status',
       label: 'Status',
-      render: (value: string) => <Badge variant="success">{value}</Badge> 
+      render: (value: string) => <Badge variant={value === 'Paid' ? 'success' : 'warning'}>{value}</Badge>,
     },
-    { 
-      key: 'actions', 
-      label: '', 
-      render: () => <Button variant="ghost" size="sm" className="text-[#e63946]">Download</Button> 
-    }
+    {
+      key: 'actions',
+      label: '',
+      render: () => <Button variant="ghost" size="sm" className="text-[#e63946]">Download</Button>,
+    },
   ];
 
   return (
@@ -35,22 +61,37 @@ export const AccountSettings = () => {
         <p className="text-text-secondary mt-1">Manage your subscription, billing, and security.</p>
       </div>
 
+      {error && (
+        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+          {error}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card title="Current Subscription">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h4 className="text-lg font-bold text-[#222222]">Pro Plan</h4>
-              <p className="text-sm text-text-secondary">Billed monthly</p>
+          {isLoading ? (
+            <div className="rounded-lg border border-zinc-200 bg-zinc-100 p-8 text-center text-zinc-500 animate-pulse">
+              Loading subscription...
             </div>
-            <Badge variant="info">Active</Badge>
-          </div>
-          <div className="text-3xl font-bold text-[#222222] mb-6">
-            $49<span className="text-lg text-text-secondary font-normal">/mo</span>
-          </div>
-          <div className="flex space-x-3">
-            <Button variant="outline">Downgrade</Button>
-            <Button variant="primary">Upgrade Plan</Button>
-          </div>
+          ) : (
+            <>
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <h4 className="text-lg font-bold text-[#222222]">{accountData?.subscription?.plan || 'Pro Plan'}</h4>
+                  <p className="text-sm text-text-secondary">Billed {accountData?.subscription?.interval?.toLowerCase() || 'monthly'}</p>
+                </div>
+                <Badge variant="info">{accountData?.subscription?.status || 'Active'}</Badge>
+              </div>
+              <div className="text-3xl font-bold text-[#222222] mb-6">
+                {accountData?.subscription?.currency || '$'}{accountData?.subscription?.price ?? 49}
+                <span className="text-lg text-text-secondary font-normal">/{accountData?.subscription?.interval?.toLowerCase() || 'mo'}</span>
+              </div>
+              <div className="flex space-x-3">
+                <Button variant="outline">Downgrade</Button>
+                <Button variant="primary">Upgrade Plan</Button>
+              </div>
+            </>
+          )}
         </Card>
 
         <Card title="Security">
@@ -75,7 +116,13 @@ export const AccountSettings = () => {
 
       <Card title="Billing History" className="overflow-hidden">
         <div className="-mx-6 -mb-6 -mt-4">
-          <Table data={billingHistory} columns={columns} />
+          {isLoading ? (
+            <div className="rounded-lg border border-zinc-200 bg-zinc-100 p-8 text-center text-zinc-500 animate-pulse">
+              Loading billing history...
+            </div>
+          ) : (
+            <Table data={billingHistory} columns={columns} />
+          )}
         </div>
       </Card>
     </div>

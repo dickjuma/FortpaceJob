@@ -1,6 +1,5 @@
 import React from 'react';
 import { ShieldAlert, UserCheck, Download, Trash2, X } from 'lucide-react';
-import { cn } from '../../../utils/cn';
 import useUserManagementStore from '../../../store/userManagementStore';
 import Button from '../../../components/ui/Button';
 

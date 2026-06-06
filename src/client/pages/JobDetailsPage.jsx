@@ -1,10 +1,14 @@
+// JobDetailsPage.jsx
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, MapPin, Clock, Users, Star, MessageSquare, ChevronLeft, CheckCircle, XCircle } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 
+const cn = (...classes) => classes.filter(Boolean).join(' ');
+
 export default function JobDetailsPage() {
   const { id } = useParams();
-  
+
   const [proposals, setProposals] = useState([
     { id: 1, name: 'Alex Johnson', title: 'Senior React Engineer', rate: '$85/hr', score: 98, bid: '$85/hr', time: '1-3 months', status: 'Pending' },
     { id: 2, name: 'Elena Rodriguez', title: 'Full Stack Architect', rate: '$110/hr', score: 94, bid: '$100/hr', time: '3-6 months', status: 'Shortlisted' },
@@ -12,7 +16,7 @@ export default function JobDetailsPage() {
   ]);
 
   const handleShortlist = (proposalId) => {
-    setProposals(prev => prev.map(p => 
+    setProposals(prev => prev.map(p =>
       p.id === proposalId ? { ...p, status: 'Shortlisted' } : p
     ));
   };
@@ -21,123 +25,159 @@ export default function JobDetailsPage() {
     setProposals(prev => prev.filter(p => p.id !== proposalId));
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+  };
+  const buttonTap = { scale: 0.97 };
+
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="mb-6">
-        <Link to="/client/jobs" className="text-sm font-medium text-[#2bb75c] hover:text-[#2bb75c] mb-4 inline-flex items-center">
-          <ChevronLeft className="w-4 h-4 mr-1" /> Back to Jobs
-        </Link>
-        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Senior React Developer for Enterprise Dashboard</h1>
-            <div className="flex items-center gap-4 mt-2 text-sm text-gray-500 dark:text-gray-400">
-              <span className="flex items-center"><Clock className="w-4 h-4 mr-1" /> Posted 2 days ago</span>
-              <span className="flex items-center"><MapPin className="w-4 h-4 mr-1" /> Remote (Worldwide)</span>
-              <span className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded-full font-medium text-xs">Active</span>
+    <div className="min-h-screen bg-surface-soft font-body py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <Link to="/client/jobs" className="text-sm font-medium text-accent hover:text-accent-dark mb-4 inline-flex items-center gap-1">
+            <ChevronLeft className="w-4 h-4" /> Back to Jobs
+          </Link>
+          <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+            <div>
+              <h1 className="font-display text-3xl font-bold text-brand-900">Senior React Developer for Enterprise Dashboard</h1>
+              <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-ink-tertiary">
+                <span className="inline-flex items-center gap-1"><Clock className="w-4 h-4" /> Posted 2 days ago</span>
+                <span className="inline-flex items-center gap-1"><MapPin className="w-4 h-4" /> Remote (Worldwide)</span>
+                <span className="inline-flex px-2 py-0.5 rounded-full font-medium text-xs bg-accent-light text-accent-dark">Active</span>
+              </div>
             </div>
-          </div>
-          <div className="flex space-x-3">
-            <button className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-surface dark:hover:bg-gray-800 transition-colors">
-              Edit Job
-            </button>
-            <button className="px-4 py-2 bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 border border-red-200 dark:border-red-900/50 rounded-xl text-sm font-medium hover:bg-red-100 transition-colors">
-              Close Job
-            </button>
+            <div className="flex gap-3">
+              <button className="px-4 py-2 border border-border rounded-lg text-sm font-medium text-ink-primary hover:bg-surface-soft transition-colors">
+                Edit Job
+              </button>
+              <button className="px-4 py-2 bg-danger-light text-danger border border-danger/20 rounded-lg text-sm font-medium hover:bg-danger/10 transition-colors">
+                Close Job
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-gray-100 dark:border-gray-800">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
-                <Users className="w-5 h-5 mr-2 text-[#2bb75c]" /> Review Proposals ({proposals.length})
-              </h2>
-            </div>
-            <ul className="divide-y divide-gray-100 dark:divide-gray-800">
-              {proposals.map((proposal) => (
-                <li key={proposal.id} className="p-6 hover:bg-surface dark:hover:bg-gray-800/50 transition-colors">
-                  <div className="flex flex-col sm:flex-row justify-between">
-                    <div className="flex items-start mb-4 sm:mb-0">
-                      <div className="w-12 h-12 rounded-full bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 text-[#2bb75c] flex items-center justify-center font-bold text-xl mr-4 border border-[#2bb75c]/20 dark:border-[#2bb75c]/20">
-                        {proposal.name[0]}
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center">
-                          {proposal.name}
-                          {proposal.status === 'Shortlisted' && <span className="ml-3 px-2 py-0.5 bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 text-xs rounded-full border border-yellow-200">Shortlisted</span>}
-                        </h3>
-                        <p className="text-sm font-medium text-gray-600 dark:text-gray-300">{proposal.title}</p>
-                        <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                          <span className="font-bold text-gray-900 dark:text-white">Profile Rate: {proposal.rate}</span>
-                          <span className="flex items-center text-green-600 dark:text-green-400 font-bold"><Star className="w-4 h-4 mr-1 fill-current" /> AI Score: {proposal.score}%</span>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content - Proposals */}
+          <div className="lg:col-span-2 space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden"
+            >
+              <div className="p-5 border-b border-border bg-white">
+                <h2 className="font-display text-xl font-bold text-brand-900 flex items-center gap-2">
+                  <Users className="w-5 h-5 text-accent" /> Review Proposals ({proposals.length})
+                </h2>
+              </div>
+              <motion.ul
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="divide-y divide-border"
+              >
+                {proposals.map((proposal) => (
+                  <motion.li
+                    key={proposal.id}
+                    variants={itemVariants}
+                    className="p-5 hover:bg-surface-soft transition-colors"
+                  >
+                    <div className="flex flex-col sm:flex-row justify-between gap-4">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-full bg-accent-light text-accent-dark flex items-center justify-center font-bold text-xl shrink-0 border border-accent/20">
+                          {proposal.name[0]}
+                        </div>
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="font-bold text-ink-primary text-lg">{proposal.name}</h3>
+                            {proposal.status === 'Shortlisted' && (
+                              <span className="inline-flex px-2 py-0.5 bg-warn-light text-warn text-xs rounded-full border border-warn/20">Shortlisted</span>
+                            )}
+                          </div>
+                          <p className="text-sm font-medium text-ink-secondary">{proposal.title}</p>
+                          <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-ink-tertiary">
+                            <span className="font-semibold text-ink-primary">Profile Rate: {proposal.rate}</span>
+                            <span className="inline-flex items-center gap-1 text-accent font-semibold">
+                              <Star className="w-4 h-4 fill-accent" /> Match: {proposal.score}%
+                            </span>
+                          </div>
                         </div>
                       </div>
+                      <div className="text-left sm:text-right">
+                        <p className="text-xs text-ink-tertiary mb-0.5">Bid Amount</p>
+                        <p className="text-xl font-bold text-accent">{proposal.bid}</p>
+                        <p className="text-xs text-ink-tertiary mt-1">{proposal.time}</p>
+                      </div>
                     </div>
-                    <div className="text-left sm:text-right">
-                      <p className="text-sm text-gray-500 mb-1">Bid Amount</p>
-                      <p className="text-xl font-bold text-[#2bb75c] dark:text-[#2bb75c]">{proposal.bid}</p>
-                      <p className="text-xs text-gray-500 mt-1">{proposal.time}</p>
-                    </div>
-                  </div>
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <button className="flex items-center px-4 py-2 bg-[#2bb75c] text-white text-sm font-medium rounded-lg hover:bg-[#1d8d38] shadow-sm">
-                      <MessageSquare className="w-4 h-4 mr-2" /> Message
-                    </button>
-                    <button className="flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-surface">
-                      View Cover Letter
-                    </button>
-                    {proposal.status !== 'Shortlisted' && (
-                      <button 
-                        onClick={() => handleShortlist(proposal.id)}
-                        className="flex items-center px-4 py-2 text-green-600 bg-green-50 dark:bg-green-900/20 text-sm font-medium rounded-lg hover:bg-green-100 ml-auto transition-colors"
-                      >
-                        <CheckCircle className="w-4 h-4 mr-2" /> Shortlist
+                    <div className="mt-5 flex flex-wrap gap-3">
+                      <button className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-white text-sm font-medium rounded-lg hover:bg-accent-dark transition-colors shadow-sm">
+                        <MessageSquare className="w-4 h-4" /> Message
                       </button>
-                    )}
-                    <button 
-                      onClick={() => handleDecline(proposal.id)}
-                      className="flex items-center px-4 py-2 text-gray-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 text-sm font-medium rounded-lg transition-colors"
-                    >
-                      <XCircle className="w-4 h-4 mr-2" /> Decline
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                      <button className="inline-flex items-center gap-2 px-4 py-2 border border-border text-ink-primary text-sm font-medium rounded-lg hover:bg-surface-soft transition-colors">
+                        View Cover Letter
+                      </button>
+                      {proposal.status !== 'Shortlisted' && (
+                        <button
+                          onClick={() => handleShortlist(proposal.id)}
+                          className="inline-flex items-center gap-2 px-4 py-2 text-accent-dark bg-accent-light text-sm font-medium rounded-lg hover:bg-accent/20 transition-colors ml-auto"
+                        >
+                          <CheckCircle className="w-4 h-4" /> Shortlist
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleDecline(proposal.id)}
+                        className="inline-flex items-center gap-2 px-4 py-2 text-danger bg-danger-light text-sm font-medium rounded-lg hover:bg-danger/10 transition-colors"
+                      >
+                        <XCircle className="w-4 h-4" /> Decline
+                      </button>
+                    </div>
+                  </motion.li>
+                ))}
+              </motion.ul>
+            </motion.div>
           </div>
-        </div>
 
-        <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Job Overview</h3>
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-500">Budget Range</p>
-                <p className="font-bold text-gray-900 dark:text-white">$80 - $120 / hr</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Required Experience</p>
-                <p className="font-bold text-gray-900 dark:text-white">Expert (5+ years)</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Expected Duration</p>
-                <p className="font-bold text-gray-900 dark:text-white">3-6 Months</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Required Skills</p>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-xs font-medium rounded-md">React</span>
-                  <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-xs font-medium rounded-md">TypeScript</span>
-                  <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-xs font-medium rounded-md">Node.js</span>
+          {/* Sidebar - Job Overview */}
+          <div className="space-y-6">
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="bg-white border border-border rounded-2xl p-6 shadow-sm sticky top-6"
+            >
+              <h3 className="font-display text-lg font-bold text-brand-900 mb-4">Job Overview</h3>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-xs text-ink-tertiary uppercase tracking-wide">Budget Range</p>
+                  <p className="font-bold text-ink-primary">$80 - $120 / hr</p>
+                </div>
+                <div>
+                  <p className="text-xs text-ink-tertiary uppercase tracking-wide">Required Experience</p>
+                  <p className="font-bold text-ink-primary">Expert (5+ years)</p>
+                </div>
+                <div>
+                  <p className="text-xs text-ink-tertiary uppercase tracking-wide">Expected Duration</p>
+                  <p className="font-bold text-ink-primary">3-6 Months</p>
+                </div>
+                <div>
+                  <p className="text-xs text-ink-tertiary uppercase tracking-wide">Required Skills</p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <span className="px-2 py-1 bg-surface-soft text-ink-secondary text-xs font-medium rounded-md border border-border">React</span>
+                    <span className="px-2 py-1 bg-surface-soft text-ink-secondary text-xs font-medium rounded-md border border-border">TypeScript</span>
+                    <span className="px-2 py-1 bg-surface-soft text-ink-secondary text-xs font-medium rounded-md border border-border">Node.js</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
     </div>
   );
 }
-

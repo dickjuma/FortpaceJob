@@ -1,200 +1,337 @@
+// ClientMpesaSetupPage.jsx
+// Self-contained M-Pesa Daraja API Console with design tokens,
+// framer-motion animations, and local toast notifications.
 import React, { useState } from 'react';
-import { 
-  Smartphone, ShieldCheck, Key, RefreshCw, Send, 
-  Terminal, Globe, DollarSign, Database, AlertCircle 
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Smartphone,
+  ShieldCheck,
+  Key,
+  RefreshCw,
+  Send,
+  Terminal,
+  Globe,
+  DollarSign,
+  Database,
+  AlertCircle,
+  CheckCircle,
 } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
+
+// Helper for conditional classes
+const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export default function ClientMpesaSetupPage() {
-  const [credentials, setCredentials] = useState({ consumerKey: 'daraja_key_prod_898a', consumerSecret: '••••••••••••••••••••••••' });
-  const [callbackUrl, setCallbackUrl] = useState('https://api.fortespace.com/v1/payments/mpesa-callback');
+  const [credentials, setCredentials] = useState({
+    consumerKey: 'daraja_key_prod_898a',
+    consumerSecret: '••••••••••••••••••••••••',
+  });
+  const [callbackUrl, setCallbackUrl] = useState(
+    'https://api.fortespace.com/v1/payments/mpesa-callback'
+  );
   const [simPhone, setSimPhone] = useState('254711002233');
   const [simAmount, setSimAmount] = useState('1500');
   const [logs, setLogs] = useState([
     { time: '13:40:02', event: 'Webhooks verification status: CONNECTED (200 OK)', type: 'system' },
-    { time: '13:38:15', event: 'Daraja access_token refreshed successfully.', type: 'auth' }
+    { time: '13:38:15', event: 'Daraja access_token refreshed successfully.', type: 'auth' },
   ]);
   const [isSimulating, setIsSimulating] = useState(false);
+  const [toast, setToast] = useState(null);
 
-  const triggerStkSim = (e) => {
+  const showToast = (type, message, duration = 3000) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), duration);
+  };
+
+  const triggerStkSim = async (e) => {
     e.preventDefault();
     if (!simPhone.startsWith('254') || simPhone.length !== 12) {
-      toast.error('Please enter a valid phone number starting with 254 (e.g. 254711002233)');
+      showToast('error', 'Please enter a valid phone number starting with 254 (e.g. 254711002233)');
       return;
     }
 
     setIsSimulating(true);
     const trackingId = 'REQ-' + Math.floor(100000 + Math.random() * 900000);
 
-    setLogs(prev => [
-      { time: new Date().toLocaleTimeString(), event: `[STK Push Request] Dispatched payload tracking ID: ${trackingId} to ${simPhone} amount KES ${simAmount}`, type: 'request' },
-      ...prev
+    setLogs((prev) => [
+      {
+        time: new Date().toLocaleTimeString(),
+        event: `[STK Push Request] Dispatched payload tracking ID: ${trackingId} to ${simPhone} amount KES ${simAmount}`,
+        type: 'request',
+      },
+      ...prev,
     ]);
 
-    toast.promise(
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve();
-        }, 2000);
-      }),
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    setLogs((prev) => [
       {
-        loading: 'Dispatching Daraja M-Pesa STK Push sequence...',
-        success: () => {
-          setLogs(prev => [
-            { time: new Date().toLocaleTimeString(), event: `[Daraja Callback Success] Payment received! MerchantRequestID: ${trackingId}. Status: Completed (ResultCode: 0)`, type: 'callback' },
-            ...prev
-          ]);
-          setIsSimulating(false);
-          return 'M-Pesa STK Callback triggered successfully! Transaction settled. 💳';
-        },
-        error: 'Simulation sequence failed.'
-      }
-    );
+        time: new Date().toLocaleTimeString(),
+        event: `[Daraja Callback Success] Payment received! MerchantRequestID: ${trackingId}. Status: Completed (ResultCode: 0)`,
+        type: 'callback',
+      },
+      ...prev,
+    ]);
+    showToast('success', 'M-Pesa STK Callback triggered successfully! Transaction settled.');
+    setIsSimulating(false);
   };
 
   const handleSaveCreds = () => {
-    toast.success('M-Pesa Daraja credentials encrypted and updated.');
+    showToast('success', 'M-Pesa Daraja credentials encrypted and updated.');
   };
 
+  const handleClearLogs = () => {
+    setLogs([]);
+    showToast('info', 'Terminal logs cleared.');
+  };
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+    },
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  };
+  const buttonTap = { scale: 0.97 };
+  const cardHover = { y: -3, boxShadow: '0 8px 24px rgba(0,0,0,0.08)', transition: { duration: 0.2 } };
+
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans text-white">
-      <Toaster position="top-right" />
-
-      {/* Header Info */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-white/5 pb-6 mb-8">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight">M-Pesa Daraja API Console</h1>
-          <p className="text-xs font-semibold text-light-gray/50 mt-1">Configure Safaricom merchant integration credentials, validate callback hooks, and run local sandbox STK simulations.</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left Hand: Setup credentials fields */}
-        <div className="lg:col-span-1 space-y-6">
-          <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4">
-            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Key className="w-4 h-4 text-success" /> Daraja Key Credentials</h3>
-            
-            <div className="space-y-4 pt-2">
-              <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
-                <label>Consumer Key API</label>
-                <input 
-                  type="text" 
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success text-white/95"
-                  value={credentials.consumerKey}
-                  onChange={e => setCredentials({ ...credentials, consumerKey: e.target.value })}
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
-                <label>Consumer Secret Key</label>
-                <input 
-                  type="password" 
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success text-white/95"
-                  value={credentials.consumerSecret}
-                  onChange={e => setCredentials({ ...credentials, consumerSecret: e.target.value })}
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
-                <label>Callback Endpoint URL</label>
-                <input 
-                  type="text" 
-                  className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success text-white/95"
-                  value={callbackUrl}
-                  onChange={e => setCallbackUrl(e.target.value)}
-                />
-              </div>
-
-              <Button onClick={handleSaveCreds} className="w-full bg-success border-none rounded-xl text-xs font-bold py-2.5">
-                Save & Encrypt Credentials
-              </Button>
-            </div>
-          </Card>
-
-          <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-3">
-            <h4 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5 text-success">
-              <ShieldCheck className="w-4 h-4" /> Gateway Environment Status
-            </h4>
-            <div className="space-y-2 text-[10px] font-bold text-light-gray/60">
-              <div className="flex justify-between"><span>SSL Certification:</span> <span className="text-white">Active (Auto-Renew)</span></div>
-              <div className="flex justify-between"><span>API Gateway URL:</span> <span className="text-white font-mono">api.safaricom.co.ke</span></div>
-              <div className="flex justify-between"><span>Connection Ping:</span> <span className="text-success">14ms (Optimal)</span></div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Right Side: STK Simulator and Terminal Event Logger */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            {/* Simulation trigger console */}
-            <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4">
-              <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Smartphone className="w-4 h-4 text-success" /> STK Push Tester Tool</h3>
-              
-              <form onSubmit={triggerStkSim} className="space-y-4 pt-2">
-                <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
-                  <label>Simulator Mobile Number (254...)</label>
-                  <input 
-                    type="text" 
-                    placeholder="254711002233"
-                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success"
-                    value={simPhone}
-                    onChange={e => setSimPhone(e.target.value)}
-                  />
-                </div>
-
-                <div className="flex flex-col gap-1.5 text-xs font-bold text-light-gray/60">
-                  <label>Test Transaction Amount (KES)</label>
-                  <input 
-                    type="text" 
-                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-success"
-                    value={simAmount}
-                    onChange={e => setSimAmount(e.target.value)}
-                  />
-                </div>
-
-                <Button 
-                  type="submit"
-                  disabled={isSimulating}
-                  className="w-full bg-success hover:bg-success/90 border-none rounded-xl text-xs font-bold py-2.5 flex items-center justify-center gap-2"
-                >
-                  <Send size={14} /> {isSimulating ? 'Simulating Push...' : 'Simulate STK push'}
-                </Button>
-              </form>
-            </Card>
-
-            {/* Terminal Live logs output */}
-            <Card className="p-5 border border-white/10 bg-black/40 rounded-3xl flex flex-col justify-between min-h-[280px]">
-              <div className="flex justify-between items-center border-b border-white/5 pb-2 mb-3">
-                <h4 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5 text-success"><Terminal className="w-4 h-4" /> Live Webhook Log Feed</h4>
-                <button onClick={() => setLogs([])} className="text-[10px] font-bold text-light-gray/40 hover:text-white transition-colors">Clear</button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto space-y-2.5 font-mono text-[9px] text-light-gray pr-1 max-h-[220px]">
-                {logs.length === 0 ? (
-                  <div className="h-full flex items-center justify-center text-light-gray/30">Terminal listening for callback notifications...</div>
-                ) : (
-                  logs.map((log, idx) => (
-                    <div key={idx} className="flex gap-2 items-start leading-relaxed border-l-2 pl-2 border-white/10">
-                      <span className="text-light-gray/40 shrink-0">{log.time}</span>
-                      <span className={
-                        log.type === 'callback' ? 'text-success font-bold' : 
-                        log.type === 'request' ? 'text-success' : 
-                        log.type === 'auth' ? 'text-orange-400' : 'text-light-gray/60'
-                      }>{log.event}</span>
-                    </div>
-                  ))
-                )}
-              </div>
-            </Card>
-
+    <div className="min-h-screen bg-surface-soft font-body py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border pb-6 mb-8">
+          <div>
+            <h1 className="font-display text-3xl lg:text-4xl font-bold text-brand-900 tracking-tight">
+              M-Pesa Daraja API Console
+            </h1>
+            <p className="text-ink-secondary text-sm mt-1">
+              Configure Safaricom merchant integration credentials, validate callback hooks, and run local sandbox STK simulations.
+            </p>
           </div>
         </div>
 
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+        >
+          {/* Left Column: Credentials & Status */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Credentials Card */}
+            <motion.div
+              variants={itemVariants}
+              whileHover={cardHover}
+              className="bg-white border border-border rounded-2xl p-5 shadow-sm"
+            >
+              <h3 className="flex items-center gap-1.5 font-display font-bold text-brand-900 text-sm uppercase tracking-wide mb-4">
+                <Key size={16} className="text-accent" /> Daraja Key Credentials
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Consumer Key API
+                  </label>
+                  <input
+                    type="text"
+                    value={credentials.consumerKey}
+                    onChange={(e) =>
+                      setCredentials({ ...credentials, consumerKey: e.target.value })
+                    }
+                    className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Consumer Secret Key
+                  </label>
+                  <input
+                    type="password"
+                    value={credentials.consumerSecret}
+                    onChange={(e) =>
+                      setCredentials({ ...credentials, consumerSecret: e.target.value })
+                    }
+                    className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Callback Endpoint URL
+                  </label>
+                  <input
+                    type="text"
+                    value={callbackUrl}
+                    onChange={(e) => setCallbackUrl(e.target.value)}
+                    className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
+                  />
+                </div>
+                <motion.button
+                  whileTap={buttonTap}
+                  onClick={handleSaveCreds}
+                  className="w-full px-4 py-2.5 bg-accent text-white rounded-lg font-medium text-sm hover:bg-accent-dark transition-colors"
+                >
+                  Save & Encrypt Credentials
+                </motion.button>
+              </div>
+            </motion.div>
+
+            {/* Status Card */}
+            <motion.div
+              variants={itemVariants}
+              whileHover={cardHover}
+              className="bg-white border border-border rounded-2xl p-5 shadow-sm"
+            >
+              <h4 className="flex items-center gap-1.5 font-display font-bold text-accent text-sm uppercase tracking-wide mb-3">
+                <ShieldCheck size={16} /> Gateway Environment Status
+              </h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-ink-tertiary">SSL Certification:</span>
+                  <span className="font-medium text-ink-primary">Active (Auto-Renew)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-ink-tertiary">API Gateway URL:</span>
+                  <span className="font-mono text-ink-primary text-xs">api.safaricom.co.ke</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-ink-tertiary">Connection Ping:</span>
+                  <span className="font-medium text-accent">14ms (Optimal)</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right Column: STK Simulator & Logs */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* STK Simulator Card */}
+              <motion.div
+                variants={itemVariants}
+                whileHover={cardHover}
+                className="bg-white border border-border rounded-2xl p-5 shadow-sm"
+              >
+                <h3 className="flex items-center gap-1.5 font-display font-bold text-brand-900 text-sm uppercase tracking-wide mb-4">
+                  <Smartphone size={16} className="text-accent" /> STK Push Tester Tool
+                </h3>
+                <form onSubmit={triggerStkSim} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                      Simulator Mobile Number (254...)
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="254711002233"
+                      value={simPhone}
+                      onChange={(e) => setSimPhone(e.target.value)}
+                      className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                      Test Transaction Amount (KES)
+                    </label>
+                    <input
+                      type="number"
+                      value={simAmount}
+                      onChange={(e) => setSimAmount(e.target.value)}
+                      className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
+                    />
+                  </div>
+                  <motion.button
+                    whileTap={buttonTap}
+                    type="submit"
+                    disabled={isSimulating}
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-accent text-white rounded-lg font-medium text-sm hover:bg-accent-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Send size={14} />
+                    {isSimulating ? 'Simulating Push...' : 'Simulate STK push'}
+                  </motion.button>
+                </form>
+              </motion.div>
+
+              {/* Terminal Logs Card */}
+              <motion.div
+                variants={itemVariants}
+                className="bg-white border border-border rounded-2xl p-5 shadow-sm flex flex-col h-full"
+              >
+                <div className="flex justify-between items-center border-b border-border pb-2 mb-3">
+                  <h4 className="flex items-center gap-1.5 font-display font-bold text-brand-900 text-sm uppercase tracking-wide">
+                    <Terminal size={16} className="text-accent" /> Live Webhook Log Feed
+                  </h4>
+                  <button
+                    onClick={handleClearLogs}
+                    className="text-xs font-medium text-ink-tertiary hover:text-ink-primary transition-colors"
+                  >
+                    Clear
+                  </button>
+                </div>
+                <div className="flex-1 overflow-y-auto max-h-[280px] space-y-2.5 font-mono text-[11px]">
+                  {logs.length === 0 ? (
+                    <div className="h-full flex items-center justify-center text-ink-tertiary">
+                      Terminal listening for callback notifications...
+                    </div>
+                  ) : (
+                    logs.map((log, idx) => (
+                      <div key={idx} className="flex gap-2 items-start border-l-2 pl-2 border-border">
+                        <span className="text-ink-tertiary shrink-0">{log.time}</span>
+                        <span
+                          className={cn(
+                            log.type === 'callback'
+                              ? 'text-accent font-medium'
+                              : log.type === 'request'
+                              ? 'text-info'
+                              : log.type === 'auth'
+                              ? 'text-warn'
+                              : 'text-ink-secondary'
+                          )}
+                        >
+                          {log.event}
+                        </span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
       </div>
+
+      {/* Toast Notifications */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2 rounded-lg shadow-lg text-sm font-medium"
+            style={{
+              backgroundColor:
+                toast.type === 'success'
+                  ? 'rgb(220, 252, 231)'
+                  : toast.type === 'error'
+                  ? 'rgb(254, 226, 226)'
+                  : 'rgb(219, 234, 254)',
+              color:
+                toast.type === 'success'
+                  ? 'rgb(21, 128, 61)'
+                  : toast.type === 'error'
+                  ? 'rgb(185, 28, 28)'
+                  : 'rgb(29, 78, 216)',
+            }}
+          >
+            {toast.type === 'success' && <CheckCircle size={16} />}
+            {toast.type === 'error' && <AlertCircle size={16} />}
+            {toast.type === 'info' && <ShieldCheck size={16} />}
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

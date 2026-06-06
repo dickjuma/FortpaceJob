@@ -31,10 +31,10 @@ export default function CategoryNavBar({
 
   if (loading) {
     return (
-      <div className="border-b border-zinc-200 bg-white">
-        <div className="container mx-auto px-4 flex gap-4 py-3 overflow-hidden">
+      <div className="border-b border-zinc-200 bg-white/90 backdrop-blur-sm">
+        <div className="container mx-auto px-4 flex gap-4 py-4 overflow-hidden">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="h-8 w-24 bg-zinc-100 rounded-full animate-pulse shrink-0" />
+            <div key={i} className="h-9 w-28 rounded-full bg-zinc-100 animate-pulse shrink-0" />
           ))}
         </div>
       </div>
@@ -44,15 +44,15 @@ export default function CategoryNavBar({
   if (!categories.length) return null;
 
   return (
-    <nav className="border-b border-zinc-200 bg-white sticky top-0 z-30 shadow-sm">
+    <nav className="border-b border-zinc-200 bg-white/95 backdrop-blur-xl sticky top-0 z-30 shadow-sm">
       <div className="container mx-auto px-4 md:px-8">
-        <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-2">
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide py-3">
           <Link
             to={basePath}
-            className={`shrink-0 px-4 py-2 rounded-full text-sm font-bold transition-colors ${
+            className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200 ${
               !currentSection
-                ? 'bg-[#2bb75c] text-white'
-                : 'text-zinc-600 hover:bg-zinc-100'
+                ? 'bg-[#2bb75c] text-white shadow-sm'
+                : 'text-zinc-700 hover:bg-zinc-100'
             }`}
           >
             All
@@ -65,9 +65,9 @@ export default function CategoryNavBar({
                 key={slug}
                 href={`${basePath}?section=${encodeURIComponent(slug)}`}
                 onClick={(e) => handleClick(cat, e)}
-                className={`shrink-0 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${
+                className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold whitespace-nowrap transition duration-200 ${
                   active
-                    ? 'bg-[#2bb75c] text-white'
+                    ? 'bg-[#2bb75c] text-white shadow-sm'
                     : 'text-zinc-700 hover:bg-zinc-100'
                 }`}
               >

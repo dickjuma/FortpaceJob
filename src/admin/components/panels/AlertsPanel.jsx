@@ -1,12 +1,9 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchAlerts } from '../../api/dashboard.api';
 import { formatRelativeTime } from '../../utils/formatters';
 import { cn } from '../../utils/cn';
 import { 
   AlertTriangle, 
   Shield, 
-  Settings, 
   CreditCard, 
   Lock,
   ChevronRight,
@@ -14,7 +11,6 @@ import {
 } from 'lucide-react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
-import Skeleton from '../ui/Skeleton';
 import Badge from '../ui/Badge';
 import { useNotificationStore } from '../../store/notificationStore';
 

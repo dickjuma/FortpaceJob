@@ -20,7 +20,7 @@ const SidebarGroup = React.memo(({
     if (hasActiveChild && !isOpen && !isCollapsed) {
       onToggle();
     }
-  }, [hasActiveChild, isCollapsed]);
+  }, [hasActiveChild, isCollapsed, isOpen, onToggle]);
 
   return (
     <div className="space-y-1">

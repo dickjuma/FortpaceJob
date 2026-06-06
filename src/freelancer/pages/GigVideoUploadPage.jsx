@@ -1,18 +1,19 @@
+// src/pages/freelancer/GigVideoUploadPage.jsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Video, UploadCloud, PlayCircle, Settings, 
+import {
+  Video, UploadCloud, PlayCircle, Settings,
   Wand2, Subtitles, CheckCircle2, AlertCircle,
-  Clock, Trash2, Maximize2
+  Clock, Trash2, Maximize2, Check
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
 
 export default function GigVideoUploadPage() {
-  const [video, setVideo] = useState(null); // null, 'uploading', { url, name, duration }
+  const [video, setVideo] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [thumbnail, setThumbnail] = useState(0); // index 0, 1, 2
+  const [thumbnail, setThumbnail] = useState(0);
   const [subtitlesEnabled, setSubtitlesEnabled] = useState(false);
   const [aiAnalysis, setAiAnalysis] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(null);
 
   const handleUpload = () => {
     setVideo('uploading');
@@ -27,8 +28,7 @@ export default function GigVideoUploadPage() {
           name: 'promotional_video_final.mp4',
           duration: '01:14'
         });
-        
-        // Simulate AI analysis delay
+        setShowSuccess({ message: 'Video uploaded successfully' });
         setTimeout(() => {
           setAiAnalysis({
             quality: '1080p HD',
@@ -37,6 +37,7 @@ export default function GigVideoUploadPage() {
             pacing: 'Optimal'
           });
         }, 1500);
+        setTimeout(() => setShowSuccess(null), 3000);
       }
     }, 200);
   };
@@ -45,222 +46,276 @@ export default function GigVideoUploadPage() {
     setVideo(null);
     setUploadProgress(0);
     setAiAnalysis(null);
+    setShowSuccess({ message: 'Video removed' });
+    setTimeout(() => setShowSuccess(null), 2000);
   };
 
+  const thumbnails = [
+    'https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=400&q=80',
+    'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&q=80',
+    'https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&q=80'
+  ];
+
   return (
-    <div className="flex flex-col lg:flex-row gap-8 items-start w-full font-sans">
-      
+    <div className="flex flex-col lg:flex-row gap-8 items-start w-full">
+
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Main Form Area */}
-      <div className="flex-1 w-full space-y-8">
-        
-        {/* Header Block */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">Promotional Video</h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            A promotional video can increase your gig's visibility and conversion rate by up to 200%. It's your chance to personally pitch your services.
+      <div className="flex-1 w-full space-y-6">
+
+        {/* Header */}
+        <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-accent-light rounded-xl">
+              <Video className="w-5 h-5 text-accent DEFAULT" />
+            </div>
+            <h2 className="font-display font-semibold text-lg text-brand-900">Promotional video</h2>
+          </div>
+          <p className="text-sm font-body text-ink-secondary">
+            A promotional video can increase your gig's conversion rate by up to 200%. It's your chance to personally pitch your services.
           </p>
         </div>
 
-        {/* Studio Upload Section */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-          
+        {/* Upload Section */}
+        <div className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
+
           {/* Main Video Area */}
-          <div className="p-8 border-b border-zinc-100 dark:border-zinc-800 bg-surface/50 dark:bg-surface-dark/50">
+          <div className="p-6 border-b border-border bg-surface-soft">
             {!video ? (
-              <div 
+              <div
                 onClick={handleUpload}
-                className="aspect-video w-full rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:border-#2bb75c] group transition-all"
+                className="aspect-video w-full rounded-xl border-2 border-dashed border-border bg-white flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:border-accent DEFAULT group transition-all"
               >
-                <div className="w-16 h-16 bg-zinc-100 dark:bg-surface-dark rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <UploadCloud className="w-8 h-8 text-zinc-400 group-hover:text-#2bb75c] transition-colors" />
+                <div className="w-16 h-16 bg-surface-soft rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                  <UploadCloud className="w-8 h-8 text-ink-tertiary group-hover:text-accent DEFAULT transition-colors" />
                 </div>
-                <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">Upload Video</h3>
-                <p className="text-sm text-zinc-500 max-w-sm mb-4">Drag & drop your video file here or browse from your computer.</p>
-                <div className="flex items-center gap-4 text-xs font-bold text-zinc-400">
+                <h3 className="font-body font-semibold text-lg text-ink-primary mb-1">Upload video</h3>
+                <p className="text-sm text-ink-secondary max-w-sm mb-4">Drag & drop your video file here or browse</p>
+                <div className="flex items-center gap-4 text-xs font-body font-medium text-ink-tertiary">
                   <span>MP4 or AVI</span>
                   <span>Max 50MB</span>
                   <span>Under 75 seconds</span>
                 </div>
               </div>
             ) : video === 'uploading' ? (
-              <div className="aspect-video w-full rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-surface-dark flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-violet-900/40 to-transparent" />
+              <div className="aspect-video w-full rounded-xl border border-border bg-brand-900 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-800 to-transparent" />
                 <div className="relative z-10 w-full max-w-sm">
-                  <h3 className="text-white font-bold mb-4">Processing Video...</h3>
-                  <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden mb-2">
-                    <motion.div className="h-full bg-#2bb75c] rounded-full" animate={{ width: `${uploadProgress}%` }} />
+                  <h3 className="text-white font-body font-semibold mb-3">Processing video...</h3>
+                  <div className="w-full h-1.5 bg-white/20 rounded-full overflow-hidden mb-2">
+                    <motion.div className="h-full bg-accent DEFAULT rounded-full" animate={{ width: `${uploadProgress}%` }} />
                   </div>
-                  <span className="text-xs font-bold text-violet-300">{uploadProgress}% complete</span>
+                  <span className="text-xs font-mono text-accent-light">{uploadProgress}% complete</span>
                 </div>
               </div>
             ) : (
-              <div className="aspect-video w-full rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-black relative group overflow-hidden shadow-lg">
-                <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=1200&q=80" alt="Video Preview" className="w-full h-full object-cover opacity-80" />
-                
+              <div className="aspect-video w-full rounded-xl border border-border bg-black relative group overflow-hidden shadow-sm">
+                <img
+                  src={thumbnails[thumbnail]}
+                  alt="Video preview"
+                  className="w-full h-full object-cover opacity-80"
+                  width={800}
+                  height={450}
+                />
+
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <button className="w-16 h-16 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center transition-transform hover:scale-110">
-                    <PlayCircle className="w-8 h-8 text-white ml-1" />
+                  <button className="w-14 h-14 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-transform hover:scale-105">
+                    <PlayCircle className="w-7 h-7 text-white ml-0.5" />
                   </button>
                 </div>
 
-                <div className="absolute top-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={removeVideo} className="p-2 bg-rose-500/80 hover:bg-rose-500 backdrop-blur-md rounded-lg text-white transition-colors">
-                    <Trash2 className="w-4 h-4" />
+                <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={removeVideo} className="p-1.5 bg-danger/80 hover:bg-danger rounded-lg text-white transition-colors">
+                    <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg text-white text-xs font-bold flex items-center gap-2">
-                    <Clock className="w-3.5 h-3.5" /> {video.duration}
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="bg-black/60 px-2 py-1 rounded-md text-white text-xs font-body flex items-center gap-1.5">
+                    <Clock className="w-3 h-3" /> {video.duration}
                   </div>
-                  <button className="p-1.5 bg-black/60 backdrop-blur-md rounded-lg text-white transition-colors">
-                    <Maximize2 className="w-4 h-4" />
+                  <button className="p-1 bg-black/60 rounded-md text-white transition-colors">
+                    <Maximize2 className="w-3 h-3" />
                   </button>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Video Settings (Only show if video uploaded) */}
+          {/* Video Settings */}
           <AnimatePresence>
             {video && video !== 'uploading' && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="p-8">
-                <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-zinc-400" /> Video Settings
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="p-6"
+              >
+                <h3 className="font-body font-semibold text-lg text-ink-primary mb-5 flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-accent DEFAULT" /> Video settings
                 </h3>
 
-                <div className="space-y-8">
-                  
+                <div className="space-y-6">
+
                   {/* Thumbnails */}
                   <div>
-                    <label className="text-sm font-bold text-zinc-700 dark:text-zinc-300 block mb-3">Select Thumbnail</label>
-                    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                      {[
-                        'https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=400&q=80',
-                        'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&q=80',
-                        'https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&q=80'
-                      ].map((url, idx) => (
-                        <div 
+                    <label className="text-sm font-body font-medium text-ink-primary block mb-3">Select thumbnail</label>
+                    <div className="flex gap-3 overflow-x-auto pb-2">
+                      {thumbnails.map((url, idx) => (
+                        <div
                           key={idx}
                           onClick={() => setThumbnail(idx)}
-                          className={cn(
-                            "w-40 aspect-video rounded-xl border-2 overflow-hidden cursor-pointer shrink-0 transition-all",
-                            thumbnail === idx ? "border-#2bb75c] shadow-md scale-105" : "border-transparent opacity-60 hover:opacity-100"
-                          )}
+                          className={`w-32 aspect-video rounded-lg border-2 overflow-hidden cursor-pointer shrink-0 transition-all ${
+                            thumbnail === idx
+                              ? "border-accent DEFAULT shadow-sm"
+                              : "border-border opacity-60 hover:opacity-100"
+                          }`}
                         >
-                          <img src={url} alt={`Thumbnail ${idx+1}`} className="w-full h-full object-cover" />
+                          <img
+                            src={url}
+                            alt={`Thumbnail ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                            width={128}
+                            height={72}
+                          />
                         </div>
                       ))}
-                      <div className="w-40 aspect-video rounded-xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex flex-col items-center justify-center text-zinc-400 cursor-pointer hover:border-violet-400 hover:text-#2bb75c] shrink-0">
+                      <div className="w-32 aspect-video rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center text-ink-tertiary cursor-pointer hover:border-accent DEFAULT hover:text-accent DEFAULT shrink-0 transition-all">
                         <UploadCloud className="w-5 h-5 mb-1" />
-                        <span className="text-xs font-bold">Custom</span>
+                        <span className="text-xs font-body">Custom</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Subtitles Toggle */}
-                  <div className="flex items-center justify-between p-4 bg-surface dark:bg-zinc-800/50 rounded-2xl border border-zinc-200 dark:border-zinc-700">
+                  <div className="flex items-center justify-between p-4 bg-surface-soft rounded-xl border border-border">
                     <div className="flex items-start gap-3">
-                      <div className="p-2 bg-violet-100 dark:bg-#2bb75c]/20 rounded-lg shrink-0">
-                        <Subtitles className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+                      <div className="p-2 bg-accent-light rounded-lg shrink-0">
+                        <Subtitles className="w-5 h-5 text-accent DEFAULT" />
                       </div>
                       <div>
-                        <h4 className="text-sm font-bold text-zinc-900 dark:text-white">Auto-generate Subtitles</h4>
-                        <p className="text-xs text-zinc-500">Increase engagement for viewers watching on mute. (English only)</p>
+                        <h4 className="text-sm font-body font-semibold text-ink-primary">Auto-generate subtitles</h4>
+                        <p className="text-xs text-ink-tertiary">Increase engagement for viewers watching on mute</p>
                       </div>
                     </div>
-                    <div 
+                    <div
                       onClick={() => setSubtitlesEnabled(!subtitlesEnabled)}
-                      className={cn(
-                        "w-12 h-6 rounded-full transition-colors relative flex items-center p-1 cursor-pointer shrink-0",
-                        subtitlesEnabled ? "bg-#2bb75c]" : "bg-zinc-200 dark:bg-zinc-700"
-                      )}
+                      className={`w-10 h-5 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer shrink-0 ${
+                        subtitlesEnabled ? "bg-accent DEFAULT" : "bg-border"
+                      }`}
                     >
-                      <motion.div layout className="w-4 h-4 bg-white rounded-full shadow-sm" animate={{ x: subtitlesEnabled ? 24 : 0 }} />
+                      <motion.div
+                        className="w-4 h-4 bg-white rounded-full shadow-sm"
+                        animate={{ x: subtitlesEnabled ? 20 : 0 }}
+                      />
                     </div>
                   </div>
-
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
-
         </div>
       </div>
 
-      {/* Sidebar - AI Analysis & Tips */}
-      <div className="w-full lg:w-80 shrink-0 space-y-6">
-        
-        {/* AI Video Quality Analysis */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-#2bb75c]/10 rounded-bl-full pointer-events-none" />
-          
-          <div className="flex items-center gap-2 mb-6">
-            <Wand2 className="w-5 h-5 text-#2bb75c]" />
-            <h3 className="font-bold text-zinc-900 dark:text-white">AI Studio Analysis</h3>
+      {/* Sidebar */}
+      <div className="w-full lg:w-80 shrink-0 space-y-5">
+
+        {/* AI Analysis */}
+        <div className="bg-white border border-border rounded-2xl p-5 shadow-sm relative overflow-hidden">
+          <div className="flex items-center gap-2 mb-5">
+            <Wand2 className="w-5 h-5 text-accent DEFAULT" />
+            <h3 className="font-body font-semibold text-ink-primary">Video analysis</h3>
           </div>
 
           {!video || video === 'uploading' ? (
-            <div className="text-center py-6">
-              <div className="w-12 h-12 rounded-full border-2 border-dashed border-zinc-200 dark:border-zinc-700 animate-[spin_3s_linear_infinite] flex items-center justify-center mx-auto mb-3">
-                <Wand2 className="w-4 h-4 text-zinc-300 dark:text-zinc-600 animate-pulse" />
+            <div className="text-center py-8">
+              <div className="w-12 h-12 rounded-full border-2 border-dashed border-border animate-spin flex items-center justify-center mx-auto mb-3">
+                <Wand2 className="w-4 h-4 text-ink-tertiary" />
               </div>
-              <p className="text-xs font-medium text-zinc-500">Upload a video to get instant AI feedback on quality, lighting, and audio.</p>
+              <p className="text-xs font-body text-ink-tertiary">Upload a video to get feedback on quality and audio</p>
             </div>
           ) : !aiAnalysis ? (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {[1, 2, 3, 4].map(i => (
-                <div key={i} className="h-6 w-full bg-zinc-100 dark:bg-zinc-800 rounded animate-pulse" />
+                <div key={i} className="h-5 w-full bg-surface-muted rounded animate-pulse" />
               ))}
             </div>
           ) : (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-              <div className="flex justify-between items-center pb-3 border-b border-zinc-100 dark:border-zinc-800">
-                <span className="text-xs font-semibold text-zinc-500">Resolution</span>
-                <span className="text-xs font-bold text-success flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> {aiAnalysis.quality}</span>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+              <div className="flex justify-between items-center pb-2 border-b border-border">
+                <span className="text-xs font-body text-ink-secondary">Resolution</span>
+                <span className="text-xs font-body font-medium text-accent-dark bg-accent-light px-2 py-0.5 rounded-full">
+                  {aiAnalysis.quality}
+                </span>
               </div>
-              <div className="flex justify-between items-center pb-3 border-b border-zinc-100 dark:border-zinc-800">
-                <span className="text-xs font-semibold text-zinc-500">Lighting</span>
-                <span className="text-xs font-bold text-success flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> {aiAnalysis.lighting}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-border">
+                <span className="text-xs font-body text-ink-secondary">Lighting</span>
+                <span className="text-xs font-body font-medium text-accent-dark bg-accent-light px-2 py-0.5 rounded-full">
+                  {aiAnalysis.lighting}
+                </span>
               </div>
-              <div className="flex justify-between items-center pb-3 border-b border-zinc-100 dark:border-zinc-800">
-                <span className="text-xs font-semibold text-zinc-500">Audio Clarity</span>
-                <span className="text-xs font-bold text-success flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> {aiAnalysis.audio}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-border">
+                <span className="text-xs font-body text-ink-secondary">Audio clarity</span>
+                <span className="text-xs font-body font-medium text-accent-dark bg-accent-light px-2 py-0.5 rounded-full">
+                  {aiAnalysis.audio}
+                </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs font-semibold text-zinc-500">Pacing</span>
-                <span className="text-xs font-bold text-success flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> {aiAnalysis.pacing}</span>
+                <span className="text-xs font-body text-ink-secondary">Pacing</span>
+                <span className="text-xs font-body font-medium text-accent-dark bg-accent-light px-2 py-0.5 rounded-full">
+                  {aiAnalysis.pacing}
+                </span>
               </div>
 
-              <div className="mt-4 p-3 bg-violet-50 dark:bg-#2bb75c]/10 rounded-xl border border-violet-100 dark:border-#2bb75c]/20">
-                <p className="text-xs text-violet-700 dark:text-violet-300 font-medium">Your video meets all marketplace standards and is optimized for high conversion.</p>
+              <div className="mt-4 p-3 bg-accent-light rounded-lg border border-accent DEFAULT">
+                <p className="text-xs text-accent-dark font-body">
+                  Your video meets marketplace standards and is optimized for conversion.
+                </p>
               </div>
             </motion.div>
           )}
         </div>
 
-        {/* Studio Guidelines */}
-        <div className="bg-surface dark:bg-zinc-800/50 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-700/50">
-          <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-4">Video Guidelines</h3>
-          <div className="space-y-3">
+        {/* Guidelines */}
+        <div className="bg-surface-soft border border-border rounded-2xl p-5">
+          <h3 className="text-sm font-body font-semibold text-ink-primary mb-3">Video guidelines</h3>
+          <div className="space-y-2">
             <div className="flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-              <p className="text-xs text-zinc-600 dark:text-zinc-400">Keep it between <strong className="text-zinc-900 dark:text-white">30 to 75 seconds</strong>.</p>
+              <AlertCircle className="w-4 h-4 text-warn shrink-0 mt-0.5" />
+              <p className="text-xs text-ink-secondary">Keep it between <strong className="text-ink-primary">30 to 75 seconds</strong></p>
             </div>
             <div className="flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-              <p className="text-xs text-zinc-600 dark:text-zinc-400">Mention <strong className="text-zinc-900 dark:text-white">Forte Marketplace</strong> directly to build trust.</p>
+              <AlertCircle className="w-4 h-4 text-warn shrink-0 mt-0.5" />
+              <p className="text-xs text-ink-secondary">Show your face for <strong className="text-ink-primary">40% better conversion</strong></p>
             </div>
             <div className="flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-              <p className="text-xs text-zinc-600 dark:text-zinc-400">Show your face! Videos with a personal intro convert <strong className="text-zinc-900 dark:text-white">40% better</strong>.</p>
+              <AlertCircle className="w-4 h-4 text-warn shrink-0 mt-0.5" />
+              <p className="text-xs text-ink-secondary">Use good lighting and clear audio</p>
             </div>
           </div>
         </div>
 
+        {/* Quick Tip */}
+        <div className="bg-accent-light border border-accent DEFAULT rounded-xl p-4">
+          <h4 className="text-sm font-body font-semibold text-accent-dark mb-1">Pro tip</h4>
+          <p className="text-xs text-accent-dark">
+            Videos with a personal introduction and clear demonstration of your skills get the most orders.
+          </p>
+        </div>
       </div>
-
     </div>
   );
 }
-

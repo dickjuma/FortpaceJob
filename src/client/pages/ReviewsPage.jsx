@@ -1,23 +1,26 @@
+// ClientReviewsPage.jsx
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Star, MessageSquare, User, Calendar, ShieldCheck, ThumbsUp, MoreHorizontal, Filter, AlertCircle } from 'lucide-react';
 import { reviewAPI } from '../../common/services/api';
 import { useAuthStore } from '../../common/authStore';
-import toast, { Toaster } from 'react-hot-toast';
 
-export default function ReviewsPage() {
+const cn = (...classes) => classes.filter(Boolean).join(' ');
+
+export default function ClientReviewsPage() {
   const { user } = useAuthStore();
   const [reviews, setReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [filter, setFilter] = useState('ALL'); // ALL, 5_STAR, 4_STAR, etc.
+  const [filter, setFilter] = useState('ALL');
 
   useEffect(() => {
     if (user?.id) {
       loadReviews(user.id);
-      return;
+    } else {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, [user]);
 
   const loadReviews = async (userId) => {
@@ -26,7 +29,6 @@ export default function ReviewsPage() {
       setReviews(data.reviews || data.data || []);
     } catch (err) {
       setError('Failed to load reviews');
-      toast.error('Failed to load your reviews.');
     } finally {
       setIsLoading(false);
     }
@@ -42,22 +44,32 @@ export default function ReviewsPage() {
     ? (reviews.reduce((acc, r) => acc + (Number(r.rating) || 0), 0) / reviews.length).toFixed(1)
     : '0.0';
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+  };
+  const buttonTap = { scale: 0.97 };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-zinc-950 p-6 flex flex-col items-center justify-center">
-        <div className="w-10 h-10 border-4 border-zinc-800 border-t-success rounded-full animate-spin"></div>
-        <p className="text-zinc-400 mt-4 font-bold">Loading your reviews...</p>
+      <div className="min-h-screen bg-surface-soft flex flex-col items-center justify-center">
+        <div className="w-10 h-10 border-2 border-brand-900 border-t-accent rounded-full animate-spin"></div>
+        <p className="text-ink-secondary mt-4 font-medium">Loading your reviews...</p>
       </div>
     );
   }
 
   if (!user?.id) {
     return (
-      <div className="min-h-screen bg-zinc-950 p-6 flex flex-col items-center justify-center text-center">
-        <AlertCircle className="w-12 h-12 text-success mb-4" />
-        <h1 className="text-2xl font-black text-white">Sign in to view reviews</h1>
-        <p className="text-zinc-400 mt-2 max-w-md">Your client reviews are private. Please sign in to continue.</p>
-        <Link to="/auth/login" className="mt-6 inline-flex items-center justify-center rounded-xl bg-success px-5 py-3 font-semibold text-white hover:bg-emerald-700 transition-colors">
+      <div className="min-h-screen bg-surface-soft flex flex-col items-center justify-center text-center p-6">
+        <AlertCircle className="w-12 h-12 text-accent mb-4" />
+        <h1 className="font-display text-2xl font-bold text-brand-900">Sign in to view reviews</h1>
+        <p className="text-ink-secondary mt-2 max-w-md">Your client reviews are private. Please sign in to continue.</p>
+        <Link to="/auth/login" className="mt-6 inline-flex items-center justify-center rounded-lg bg-accent px-5 py-2.5 font-medium text-white hover:bg-accent-dark transition-colors">
           Sign in
         </Link>
       </div>
@@ -65,138 +77,153 @@ export default function ReviewsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-200 p-6 overflow-y-auto custom-scrollbar">
-      <Toaster position="top-right" />
-      <div className="max-w-6xl mx-auto space-y-6">
-
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-zinc-900 border border-zinc-800 rounded-3xl p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-success/5 blur-[100px] pointer-events-none rounded-full" />
-          
-          <div className="relative z-10">
-            <h1 className="text-3xl font-black text-white flex items-center gap-3">
-              <Star className="w-8 h-8 text-success" /> 
-              My Reviews
-            </h1>
-            <p className="text-sm font-semibold text-zinc-400 mt-2">
-              See what freelancers have to say about working with you.
-            </p>
-          </div>
-
-          <div className="relative z-10 flex items-center gap-6 bg-zinc-950/50 p-4 rounded-2xl border border-zinc-800">
-            <div className="text-center">
-              <p className="text-3xl font-black text-white">{averageRating}</p>
-              <div className="flex text-success mt-1">
-                {[1, 2, 3, 4, 5].map(star => (
-                  <Star key={star} className={`w-3 h-3 ${star <= Math.round(averageRating) ? 'fill-current' : 'text-zinc-700'}`} />
-                ))}
+    <div className="min-h-screen bg-surface-soft font-body py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white border border-border rounded-2xl p-6 relative overflow-hidden shadow-sm"
+        >
+          <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-3xl pointer-events-none rounded-full" />
+          <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div>
+              <h1 className="font-display text-3xl font-bold text-brand-900 flex items-center gap-3">
+                <Star className="w-8 h-8 text-accent" /> My Reviews
+              </h1>
+              <p className="text-sm font-medium text-ink-secondary mt-1">
+                See what freelancers have to say about working with you.
+              </p>
+            </div>
+            <div className="flex items-center gap-5 bg-surface-soft p-3 rounded-xl border border-border">
+              <div className="text-center">
+                <p className="text-3xl font-bold text-ink-primary">{averageRating}</p>
+                <div className="flex text-accent mt-1">
+                  {[1, 2, 3, 4, 5].map(star => (
+                    <Star key={star} className={`w-3 h-3 ${star <= Math.round(averageRating) ? 'fill-current' : 'text-ink-tertiary'}`} />
+                  ))}
+                </div>
+              </div>
+              <div className="w-px h-10 bg-border"></div>
+              <div className="text-center">
+                <p className="text-3xl font-bold text-ink-primary">{reviews.length}</p>
+                <p className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wide mt-1">Total Reviews</p>
               </div>
             </div>
-            <div className="w-px h-12 bg-zinc-800"></div>
-            <div className="text-center">
-              <p className="text-3xl font-black text-white">{reviews.length}</p>
-              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mt-1">Total Reviews</p>
-            </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Filters and List */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden flex flex-col md:flex-row min-h-[500px]">
-          
-          {/* Sidebar Filters */}
-          <div className="w-full md:w-64 bg-zinc-950/50 border-r border-zinc-800 p-6 shrink-0">
-            <div className="flex items-center gap-2 text-white font-black mb-6">
-              <Filter className="w-4 h-4 text-success" /> Filter by Rating
+        <div className="bg-white border border-border rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-sm">
+          <div className="w-full md:w-64 bg-surface-soft border-r border-border p-5 shrink-0">
+            <div className="flex items-center gap-2 font-display font-bold text-brand-900 mb-5">
+              <Filter className="w-4 h-4 text-accent" /> Filter by Rating
             </div>
-            <div className="space-y-2">
-              {['ALL', '5_STAR', '4_STAR', '3_STAR', '2_STAR', '1_STAR'].map(rating => (
-                <button
-                  key={rating}
-                  onClick={() => setFilter(rating)}
-                  className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
-                    filter === rating 
-                      ? 'bg-success/10 text-success border border-success/20' 
-                      : 'text-zinc-400 hover:bg-zinc-800 hover:text-white border border-transparent'
-                  }`}
-                >
-                  <span className="flex items-center gap-2">
-                    {rating === 'ALL' ? 'All Reviews' : (
-                      <>{rating.split('_')[0]} <Star className="w-3.5 h-3.5 fill-current" /></>
+            <div className="space-y-1.5">
+              {['ALL', '5_STAR', '4_STAR', '3_STAR', '2_STAR', '1_STAR'].map(rating => {
+                const starValue = rating === 'ALL' ? null : parseInt(rating.split('_')[0], 10);
+                const count = rating === 'ALL'
+                  ? reviews.length
+                  : reviews.filter(r => Math.round(r.rating) === starValue).length;
+                return (
+                  <button
+                    key={rating}
+                    onClick={() => setFilter(rating)}
+                    className={cn(
+                      "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-all",
+                      filter === rating
+                        ? "bg-accent-light text-accent-dark border border-accent/20"
+                        : "text-ink-secondary hover:bg-surface-muted hover:text-ink-primary border border-transparent"
                     )}
-                  </span>
-                  <span className="text-xs bg-zinc-800 px-2 py-0.5 rounded-full text-zinc-500">
-                    {rating === 'ALL' ? reviews.length : reviews.filter(r => Math.round(r.rating) === parseInt(rating.split('_')[0], 10)).length}
-                  </span>
-                </button>
-              ))}
+                  >
+                    <span className="flex items-center gap-2">
+                      {rating === 'ALL' ? 'All Reviews' : (
+                        <>{starValue} <Star className="w-3.5 h-3.5 fill-current" /></>
+                      )}
+                    </span>
+                    <span className="text-xs bg-white px-2 py-0.5 rounded-full text-ink-tertiary">
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Reviews List */}
-          <div className="flex-1 p-6">
+          <div className="flex-1 p-5">
             {error && (
-              <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm font-bold flex items-center gap-2 mb-6">
+              <div className="p-4 bg-danger-light border border-danger/20 rounded-xl text-danger text-sm font-medium flex items-center gap-2 mb-5">
                 <AlertCircle className="w-4 h-4" /> {error}
               </div>
             )}
 
             {filteredReviews.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center p-10">
-                <div className="w-20 h-20 bg-zinc-950 border border-zinc-800 rounded-full flex items-center justify-center mb-4">
-                  <MessageSquare className="w-8 h-8 text-zinc-600" />
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex flex-col items-center justify-center text-center py-16"
+              >
+                <div className="w-20 h-20 bg-surface-muted border border-border rounded-full flex items-center justify-center mb-4">
+                  <MessageSquare className="w-8 h-8 text-ink-tertiary" />
                 </div>
-                <h3 className="text-lg font-black text-white">No reviews found</h3>
-                <p className="text-sm font-semibold text-zinc-500 mt-2 max-w-sm">
-                  {filter === 'ALL' 
-                    ? "You haven't received any reviews from freelancers yet. Complete projects to build your reputation." 
+                <h3 className="font-display text-lg font-bold text-brand-900">No reviews found</h3>
+                <p className="text-sm text-ink-secondary mt-2 max-w-sm">
+                  {filter === 'ALL'
+                    ? "You haven't received any reviews from freelancers yet. Complete projects to build your reputation."
                     : `No ${filter.split('_')[0]}-star reviews available.`}
                 </p>
-              </div>
+              </motion.div>
             ) : (
-              <div className="grid gap-4">
-                {filteredReviews.map((review) => (
-                  <div key={review.id} className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 hover:border-zinc-700 transition-colors">
-                    <div className="flex justify-between items-start gap-4 mb-4">
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="grid gap-4"
+              >
+                {filteredReviews.map((review, idx) => (
+                  <motion.div
+                    key={review.id}
+                    variants={itemVariants}
+                    whileHover={{ y: -2, boxShadow: '0 8px 24px rgba(0,0,0,0.06)' }}
+                    transition={{ duration: 0.2 }}
+                    className="bg-white border border-border rounded-xl p-5 shadow-sm hover:border-accent/30 transition-all"
+                  >
+                    <div className="flex flex-wrap justify-between items-start gap-4 mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center shrink-0 border border-zinc-700 overflow-hidden">
+                        <div className="w-10 h-10 bg-surface-muted rounded-full flex items-center justify-center shrink-0 border border-border overflow-hidden">
                           {review.reviewer?.avatar ? (
                             <img src={review.reviewer.avatar} alt="Reviewer" className="w-full h-full object-cover" />
                           ) : (
-                            <User className="w-5 h-5 text-zinc-500" />
+                            <User className="w-4 h-4 text-ink-tertiary" />
                           )}
                         </div>
                         <div>
-                          <p className="font-bold text-white text-base">
+                          <p className="font-medium text-ink-primary text-sm">
                             {review.reviewer?.name || review.reviewer?.firstName || 'Freelancer'}
                           </p>
-                          <p className="text-xs font-semibold text-zinc-500 flex items-center gap-1.5 mt-0.5">
+                          <p className="text-xs text-ink-tertiary flex items-center gap-1.5 mt-0.5">
                             <Calendar className="w-3 h-3" /> {new Date(review.createdAt).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center bg-success/10 px-3 py-1.5 rounded-full border border-success/20">
-                        <Star className="w-4 h-4 text-success fill-current mr-1.5" />
-                        <span className="font-black text-success text-sm">{Number(review.rating).toFixed(1)}</span>
+                      <div className="flex items-center gap-1 bg-accent-light px-2.5 py-1 rounded-full border border-accent/20">
+                        <Star className="w-3.5 h-3.5 text-accent-dark fill-current" />
+                        <span className="font-bold text-accent-dark text-sm">{Number(review.rating).toFixed(1)}</span>
                       </div>
                     </div>
-
-                    <div className="pl-15">
-                      <p className="text-sm font-medium text-zinc-300 leading-relaxed mb-4">
+                    <div className="pl-13">
+                      <p className="text-sm text-ink-primary leading-relaxed mb-3">
                         "{review.comment}"
                       </p>
-                      
                       {review.contractId && (
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs font-bold text-zinc-400">
-                          <ShieldCheck className="w-3.5 h-3.5 text-success" /> Verified Contract
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-surface-soft border border-border rounded-lg text-xs font-medium text-ink-tertiary">
+                          <ShieldCheck className="w-3.5 h-3.5 text-accent" /> Verified Contract
                         </div>
                       )}
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             )}
           </div>
-
         </div>
       </div>
     </div>

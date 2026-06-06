@@ -1,28 +1,49 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Column } from '../../components/common/Table';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
 import { Badge } from '../../components/common/Badge';
 import { Avatar } from '../../components/common/Avatar';
 import { Search, Download, Trash2, Edit } from 'lucide-react';
-
-
-
-const mockUsers: User[] = [
-  { id: '1', name: 'John Doe', email: 'john@example.com', role: 'Provider', status: 'Active', joinDate: '2025-01-15' },
-  { id: '2', name: 'Jane Smith', email: 'jane@example.com', role: 'Client', status: 'Active', joinDate: '2025-02-20' },
-  { id: '3', name: 'Mike Johnson', email: 'mike@example.com', role: 'Provider', status: 'Suspended', joinDate: '2024-11-10' },
-  { id: '4', name: 'Sarah Williams', email: 'sarah@example.com', role: 'Client', status: 'Active', joinDate: '2025-03-05' },
-  { id: '5', name: 'David Brown', email: 'david@example.com', role: 'Provider', status: 'Pending', joinDate: '2025-05-20' },
-];
+import { api } from '../../common/services/api';
 
 export const UsersPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const columns: Column<User>[] = [
+  useEffect(() => {
+    let active = true;
+    setIsLoading(true);
+    setError(null);
+
+    api
+      .get('/admin_rbc/users')
+      .then((response) => {
+        if (!active) return;
+        const payload = response?.data ?? response;
+        const loadedUsers = payload.items || payload.users || [];
+        setUsers(loadedUsers);
+      })
+      .catch((err) => {
+        if (!active) return;
+        setError(err?.message || 'Unable to load users.');
+      })
+      .finally(() => {
+        if (!active) return;
+        setIsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const columns: Column<any>[] = [
     {
       key: 'name',
       label: 'User',
@@ -31,11 +52,11 @@ export const UsersPage = () => {
         <div className="flex items-center space-x-3">
           <Avatar name={row.name} size="sm" />
           <div className="flex flex-col">
-            <span className="font-medium text-[#222222]">{row.name}</span>
+            <span className="font-medium text-[#222222]">{row.name || row.email}</span>
             <span className="text-xs text-text-secondary">{row.email}</span>
           </div>
         </div>
-      )
+      ),
     },
     { key: 'role', label: 'Role', sortable: true },
     {
@@ -44,11 +65,16 @@ export const UsersPage = () => {
       sortable: true,
       render: (value: string) => (
         <Badge variant={value === 'Active' ? 'success' : value === 'Suspended' ? 'error' : 'warning'}>
-          {value}
+          {value || 'Unknown'}
         </Badge>
-      )
+      ),
     },
-    { key: 'joinDate', label: 'Join Date', sortable: true },
+    {
+      key: 'joinDate',
+      label: 'Join Date',
+      sortable: true,
+      render: (value: string, row) => row.joinDate || row.createdAt || 'Unknown',
+    },
     {
       key: 'actions',
       label: 'Actions',
@@ -61,13 +87,15 @@ export const UsersPage = () => {
             <Trash2 size={16} />
           </button>
         </div>
-      )
-    }
+      ),
+    },
   ];
 
-  const filteredUsers = mockUsers.filter(user => 
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = users.filter((user) =>
+    [user.name, user.email, user.role, user.id]
+      .join(' ')
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -81,27 +109,23 @@ export const UsersPage = () => {
           <Button variant="outline" icon={<Download size={16} />}>
             Export
           </Button>
-          <Button variant="primary">
-            Add User
-          </Button>
+          <Button variant="primary">Add User</Button>
         </div>
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-border p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="w-full max-w-sm">
-          <Input 
-            placeholder="Search users..." 
+          <Input
+            placeholder="Search users..."
             icon={<Search size={18} />}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="mb-0" // override default margin
+            className="mb-0"
           />
         </div>
         {selectedUsers.length > 0 && (
           <div className="flex items-center space-x-3">
-            <span className="text-sm font-medium text-[#222222]">
-              {selectedUsers.length} selected
-            </span>
+            <span className="text-sm font-medium text-[#222222]">{selectedUsers.length} selected</span>
             <Button variant="outline" size="sm" className="text-error border-error hover:bg-error hover:text-white">
               Delete Selected
             </Button>
@@ -109,20 +133,32 @@ export const UsersPage = () => {
         )}
       </div>
 
-      <Table
-        data={filteredUsers}
-        columns={columns}
-        selectable
-        selectedRows={selectedUsers}
-        onRowSelect={setSelectedUsers}
-        onSort={(key, dir) => console.log('Sort by', key, dir)}
-        pagination={{
-          total: filteredUsers.length,
-          page: currentPage,
-          pageSize: 10,
-          onPageChange: setCurrentPage
-        }}
-      />
+      {error && (
+        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+          {error}
+        </div>
+      )}
+
+      {isLoading ? (
+        <div className="rounded-2xl border border-zinc-200 bg-zinc-100 p-8 text-center text-zinc-500 animate-pulse">
+          Loading users...
+        </div>
+      ) : (
+        <Table
+          data={filteredUsers}
+          columns={columns}
+          selectable
+          selectedRows={selectedUsers}
+          onRowSelect={setSelectedUsers}
+          onSort={(key, dir) => console.log('Sort by', key, dir)}
+          pagination={{
+            total: filteredUsers.length,
+            page: currentPage,
+            pageSize: 10,
+            onPageChange: setCurrentPage,
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -1,6 +1,7 @@
+// src/pages/freelancer/FreelancerWalletDashboard.jsx
 import React from 'react';
-import { DollarSign, ArrowUpRight, TrendingUp, Clock, Download, Briefcase, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { DollarSign, ArrowUpRight, TrendingUp, Clock, Download, Briefcase, FileText, Check } from 'lucide-react';
 
 export default function FreelancerWalletDashboard() {
   const analytics = [
@@ -11,79 +12,137 @@ export default function FreelancerWalletDashboard() {
     { month: 'May', earnings: 2800 },
   ];
 
+  const maxEarnings = 4000;
+
+  const handleWithdraw = () => {
+    // Withdraw functionality would go here
+    console.log('Withdraw funds');
+  };
+
+  const handleDownloadCertificate = () => {
+    console.log('Downloading certificate of earnings');
+  };
+
+  const handleDownloadInvoice = () => {
+    console.log('Opening tax invoice generator');
+  };
+
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="flex justify-between items-center mb-8">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-surface-dark dark:text-white flex items-center gap-3">
-            <DollarSign className="w-8 h-8 text-[#2bb75c]" /> Earnings & Wallet
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">Track your income, view pending escrow, and withdraw funds to your local bank or M-Pesa.</p>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2.5 bg-accent-light rounded-xl">
+              <DollarSign className="w-6 h-6 text-accent DEFAULT" />
+            </div>
+            <h1 className="font-display font-bold text-4xl text-brand-900">Earnings & wallet</h1>
+          </div>
+          <p className="text-ink-secondary font-body mt-1">
+            Track your income, view pending escrow, and withdraw funds
+          </p>
         </div>
-        <div className="flex gap-3">
-          <button className="px-6 py-2 bg-surface-dark hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 dark:text-surface-dark text-white rounded-button text-sm font-bold shadow-card flex items-center transition-all">
-            <ArrowUpRight className="w-4 h-4 mr-2" /> Withdraw Funds
-          </button>
-        </div>
+        <button
+          onClick={handleWithdraw}
+          className="px-5 py-2.5 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-brand-900"
+        >
+          <ArrowUpRight className="w-4 h-4" /> Withdraw funds
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <motion.div whileHover={{ y: -2 }} className="bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border rounded-2xl p-6 shadow-card col-span-1 md:col-span-2">
-          <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Available for Withdrawal</h3>
-          <div className="text-4xl font-bold text-surface-dark dark:text-white mb-4">$4,250.00</div>
-          <div className="flex gap-3">
-            <div className="px-3 py-1.5 bg-success/10 text-success rounded-lg text-xs font-bold flex items-center">
-              <TrendingUp className="w-3 h-3 mr-1" /> +15% this month
-            </div>
-            <div className="px-3 py-1.5 bg-gray-100 dark:bg-surface-dark-secondary text-gray-600 dark:text-gray-400 rounded-lg text-xs font-medium">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          whileHover={{ y: -2 }}
+          className="bg-white border border-border rounded-2xl p-5 shadow-sm lg:col-span-2"
+        >
+          <p className="text-ink-tertiary text-xs font-body font-medium uppercase tracking-wide mb-1">
+            Available for withdrawal
+          </p>
+          <div className="font-mono font-bold text-4xl text-ink-primary mb-3">KES 4,250</div>
+          <div className="flex flex-wrap gap-2">
+            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-accent-light text-accent-dark text-xs font-body font-medium">
+              <TrendingUp className="w-3 h-3" /> +15% this month
+            </span>
+            <span className="inline-flex items-center px-2 py-1 rounded-md bg-surface-muted text-ink-tertiary text-xs font-body font-medium">
               Next payout: May 25
-            </div>
+            </span>
           </div>
         </motion.div>
 
-        <motion.div whileHover={{ y: -2 }} className="bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border rounded-2xl p-6 shadow-card">
-          <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Work in Progress (Escrow)</h3>
-          <div className="text-3xl font-bold text-surface-dark dark:text-white mb-4">$3,100.00</div>
-          <div className="text-sm text-[#2bb75c] flex items-center">
-            <Briefcase className="w-4 h-4 mr-1" /> 2 active contracts
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          whileHover={{ y: -2 }}
+          className="bg-white border border-border rounded-2xl p-5 shadow-sm"
+        >
+          <p className="text-ink-tertiary text-xs font-body font-medium uppercase tracking-wide mb-1">
+            Work in progress (escrow)
+          </p>
+          <div className="font-mono font-bold text-3xl text-ink-primary mb-2">KES 3,100</div>
+          <div className="text-xs font-body text-accent DEFAULT inline-flex items-center gap-1">
+            <Briefcase className="w-3.5 h-3.5" /> 2 active contracts
           </div>
         </motion.div>
 
-        <motion.div whileHover={{ y: -2 }} className="bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border rounded-2xl p-6 shadow-card">
-          <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">In Review</h3>
-          <div className="text-3xl font-bold text-surface-dark dark:text-white mb-4">$850.00</div>
-          <div className="text-sm text-warning flex items-center">
-            <Clock className="w-4 h-4 mr-1" /> Pending client approval
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          whileHover={{ y: -2 }}
+          className="bg-white border border-border rounded-2xl p-5 shadow-sm"
+        >
+          <p className="text-ink-tertiary text-xs font-body font-medium uppercase tracking-wide mb-1">
+            In review
+          </p>
+          <div className="font-mono font-bold text-3xl text-ink-primary mb-2">KES 850</div>
+          <div className="text-xs font-body text-warn inline-flex items-center gap-1">
+            <Clock className="w-3.5 h-3.5" /> Pending client approval
           </div>
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Chart & Reports Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Earnings Chart */}
         <div className="lg:col-span-2">
-          <div className="bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border rounded-2xl shadow-card p-6 h-[400px] flex flex-col">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-bold text-surface-dark dark:text-white">Earnings Overview</h2>
-              <select className="bg-surface-tertiary dark:bg-surface-dark-secondary border-none text-sm rounded-lg px-3 py-1.5 outline-none">
-                <option>Last 6 Months</option>
-                <option>This Year</option>
+          <div className="bg-white border border-border rounded-2xl shadow-sm p-5 h-[400px] flex flex-col">
+            <div className="flex justify-between items-center mb-5">
+              <h2 className="font-display font-semibold text-lg text-brand-900">Earnings overview</h2>
+              <select className="h-9 px-3 rounded-lg border border-border bg-white text-ink-primary text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900">
+                <option>Last 6 months</option>
+                <option>This year</option>
               </select>
             </div>
-            
-            {/* Mock Chart Area */}
-            <div className="flex-1 flex items-end justify-between gap-2 pt-10">
+
+            {/* Chart Bars */}
+            <div className="flex-1 flex items-end justify-between gap-2 pt-4">
               {analytics.map((data, i) => {
-                const max = 4000;
-                const height = `${(data.earnings / max) * 100}%`;
+                const heightPercent = (data.earnings / maxEarnings) * 100;
                 return (
                   <div key={i} className="flex flex-col items-center w-full group">
                     <div className="relative w-full flex justify-center h-full items-end">
-                      {/* Tooltip */}
-                      <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-dark text-white text-xs py-1 px-2 rounded-md font-bold z-10 pointer-events-none">
-                        ${data.earnings}
+                      <div className="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity bg-brand-900 text-white text-xs font-body font-medium py-1 px-2 rounded-md z-10 pointer-events-none whitespace-nowrap">
+                        KES {data.earnings.toLocaleString()}
                       </div>
-                      <div className="w-full max-w-[40px] bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 group-hover:bg-[#2bb75c] dark:group-hover:bg-[#2bb75c] rounded-t-sm transition-colors" style={{ height }}></div>
+                      <motion.div
+                        className="w-full max-w-[50px] bg-accent-light group-hover:bg-accent DEFAULT rounded-t-md transition-all cursor-pointer"
+                        initial={{ height: 0 }}
+                        animate={{ height: `${heightPercent}%` }}
+                        transition={{ duration: 0.6, delay: i * 0.05 }}
+                        style={{ minHeight: '4px' }}
+                      />
                     </div>
-                    <div className="text-xs text-gray-500 mt-3 font-medium">{data.month}</div>
+                    <div className="text-xs font-body text-ink-tertiary mt-2 font-medium">{data.month}</div>
                   </div>
                 );
               })}
@@ -91,37 +150,62 @@ export default function FreelancerWalletDashboard() {
           </div>
         </div>
 
+        {/* Tax & Reports */}
         <div>
-          <div className="bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border rounded-2xl shadow-card overflow-hidden">
-            <div className="px-6 py-5 border-b border-gray-200 dark:border-surface-dark-border bg-surface-secondary dark:bg-surface-dark-secondary">
-              <h2 className="text-lg font-bold text-surface-dark dark:text-white">Tax & Reports</h2>
+          <div className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-border bg-surface-soft">
+              <h2 className="font-display font-semibold text-lg text-brand-900">Tax & reports</h2>
             </div>
             <div className="p-2">
-              <button className="w-full flex items-center justify-between p-4 hover:bg-surface dark:hover:bg-surface-dark-secondary rounded-xl transition-colors">
+              <button
+                onClick={handleDownloadCertificate}
+                className="w-full flex items-center justify-between p-3 hover:bg-surface-soft rounded-xl transition-colors group focus:outline-none focus:ring-2 focus:ring-brand-900"
+              >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 text-[#2bb75c] rounded-lg"><FileText className="w-5 h-5" /></div>
+                  <div className="p-2 bg-accent-light rounded-lg">
+                    <FileText className="w-4 h-4 text-accent DEFAULT" />
+                  </div>
                   <div className="text-left">
-                    <p className="font-bold text-sm text-surface-dark dark:text-white">Certificate of Earnings</p>
-                    <p className="text-xs text-gray-500">Official document for visas/loans</p>
+                    <p className="font-body font-semibold text-sm text-ink-primary group-hover:text-accent DEFAULT transition-colors">
+                      Certificate of earnings
+                    </p>
+                    <p className="text-xs font-body text-ink-tertiary">Official document for visas/loans</p>
                   </div>
                 </div>
-                <Download className="w-4 h-4 text-gray-400" />
+                <Download className="w-4 h-4 text-ink-tertiary group-hover:text-accent DEFAULT transition-colors" />
               </button>
-              <button className="w-full flex items-center justify-between p-4 hover:bg-surface dark:hover:bg-surface-dark-secondary rounded-xl transition-colors">
+
+              <button
+                onClick={handleDownloadInvoice}
+                className="w-full flex items-center justify-between p-3 hover:bg-surface-soft rounded-xl transition-colors group focus:outline-none focus:ring-2 focus:ring-brand-900"
+              >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-green-50 dark:bg-green-900/20 text-green-600 rounded-lg"><FileText className="w-5 h-5" /></div>
+                  <div className="p-2 bg-accent-light rounded-lg">
+                    <FileText className="w-4 h-4 text-accent DEFAULT" />
+                  </div>
                   <div className="text-left">
-                    <p className="font-bold text-sm text-surface-dark dark:text-white">Tax Invoice Generator</p>
-                    <p className="text-xs text-gray-500">Auto-generate invoices for clients</p>
+                    <p className="font-body font-semibold text-sm text-ink-primary group-hover:text-accent DEFAULT transition-colors">
+                      Tax invoice generator
+                    </p>
+                    <p className="text-xs font-body text-ink-tertiary">Auto-generate invoices for clients</p>
                   </div>
                 </div>
-                <Download className="w-4 h-4 text-gray-400" />
+                <Download className="w-4 h-4 text-ink-tertiary group-hover:text-accent DEFAULT transition-colors" />
               </button>
+            </div>
+          </div>
+
+          {/* Quick Stats Card */}
+          <div className="mt-5 bg-gradient-to-br from-brand-900 to-brand-800 rounded-2xl p-5 text-white">
+            <h3 className="font-body font-semibold text-sm mb-2">Quick transfer</h3>
+            <p className="text-xs text-white/70 mb-3">Withdraw directly to your bank account or M-Pesa</p>
+            <div className="flex gap-2">
+              <span className="text-xs font-mono bg-white/20 px-2 py-0.5 rounded">Bank transfer</span>
+              <span className="text-xs font-mono bg-white/20 px-2 py-0.5 rounded">M-Pesa</span>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
-

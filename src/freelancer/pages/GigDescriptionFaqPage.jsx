@@ -1,13 +1,12 @@
+// src/pages/freelancer/GigDescriptionFaqPage.jsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bold, Italic, List, ListOrdered, Link as LinkIcon,
   Quote, Sparkles, Plus, Trash2, ChevronDown,
   ChevronUp, CheckCircle2, AlertCircle, HelpCircle,
-  FileText, Wand2, Type
+  FileText, Wand2, Type, X, Check
 } from 'lucide-react';
-import { Info } from 'react-feather';
-import { cn } from '../../admin/utils/cn';
 
 export default function GigDescriptionFaqPage() {
   const [description, setDescription] = useState('');
@@ -17,6 +16,7 @@ export default function GigDescriptionFaqPage() {
   const [newFaq, setNewFaq] = useState({ question: '', answer: '' });
   const [isFaqFormOpen, setIsFaqFormOpen] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState(1);
+  const [showSuccess, setShowSuccess] = useState(null);
 
   const [seoScore, setSeoScore] = useState(65);
 
@@ -24,7 +24,6 @@ export default function GigDescriptionFaqPage() {
     const val = e.target.value;
     setDescription(val);
 
-    // Simple mock SEO Readability calc
     let score = 40;
     if (val.length > 200) score += 20;
     if (val.length > 500) score += 15;
@@ -40,46 +39,97 @@ export default function GigDescriptionFaqPage() {
       setNewFaq({ question: '', answer: '' });
       setIsFaqFormOpen(false);
       setExpandedFaq(newId);
+      setShowSuccess({ message: 'FAQ added successfully' });
+      setTimeout(() => setShowSuccess(null), 2000);
     }
   };
 
   const removeFaq = (id) => {
     setFaqs(faqs.filter(f => f.id !== id));
+    setShowSuccess({ message: 'FAQ removed' });
+    setTimeout(() => setShowSuccess(null), 2000);
+  };
+
+  const handleAiRewrite = () => {
+    setShowSuccess({ message: 'AI rewrite feature would generate optimized content' });
+    setTimeout(() => setShowSuccess(null), 2000);
+  };
+
+  const getScoreColor = () => {
+    if (seoScore > 80) return 'bg-accent-light text-accent-dark';
+    if (seoScore > 50) return 'bg-warn-light text-warn';
+    return 'bg-danger-light text-danger';
+  };
+
+  const getScoreBarColor = () => {
+    if (seoScore > 80) return 'bg-accent DEFAULT';
+    if (seoScore > 50) return 'bg-warn';
+    return 'bg-danger';
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 items-start w-full font-sans">
+    <div className="flex flex-col lg:flex-row gap-8 items-start w-full">
+
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Main Form Area */}
-      <div className="flex-1 w-full space-y-8">
+      <div className="flex-1 w-full space-y-6">
 
         {/* Description Section */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
-          <div className="flex justify-between items-start mb-6">
+        <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+          <div className="flex justify-between items-start mb-5">
             <div>
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-1">Gig Description</h2>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Briefly describe your Gig. Be as detailed as possible so buyers know exactly what to expect.
+              <h2 className="font-display font-semibold text-lg text-brand-900 mb-1">Gig description</h2>
+              <p className="text-sm font-body text-ink-secondary">
+                Briefly describe your gig. Be detailed so buyers know exactly what to expect.
               </p>
             </div>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] dark:text-[#2bb75c] rounded-xl text-xs font-bold hover:bg-[#2bb75c]/10 transition-colors shrink-0">
-              <Sparkles className="w-3.5 h-3.5" /> AI Rewrite
+            <button
+              onClick={handleAiRewrite}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-light text-accent-dark rounded-lg text-xs font-body font-medium hover:bg-accent-light/80 transition-colors shrink-0 focus:outline-none focus:ring-2 focus:ring-brand-900"
+            >
+              <Sparkles className="w-3.5 h-3.5" /> AI rewrite
             </button>
           </div>
 
           {/* Editor Toolbar */}
-          <div className="border border-zinc-200 dark:border-zinc-700 rounded-t-xl bg-surface dark:bg-zinc-800/50 p-2 flex flex-wrap items-center gap-1">
-            <button className="p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-lg transition-colors"><Bold className="w-4 h-4" /></button>
-            <button className="p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-lg transition-colors"><Italic className="w-4 h-4" /></button>
-            <div className="w-px h-5 bg-zinc-300 dark:bg-zinc-600 mx-1" />
-            <button className="p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-lg transition-colors"><List className="w-4 h-4" /></button>
-            <button className="p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-lg transition-colors"><ListOrdered className="w-4 h-4" /></button>
-            <div className="w-px h-5 bg-zinc-300 dark:bg-zinc-600 mx-1" />
-            <button className="p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-lg transition-colors"><LinkIcon className="w-4 h-4" /></button>
-            <button className="p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-lg transition-colors"><Quote className="w-4 h-4" /></button>
-            <div className="ml-auto flex items-center gap-2 text-xs font-bold px-2">
-              <Type className="w-3.5 h-3.5 text-zinc-400" />
-              <span className={cn(description.length < 120 ? "text-rose-500" : "text-success")}>
+          <div className="border border-border rounded-t-lg bg-surface-soft p-2 flex flex-wrap items-center gap-1">
+            <button className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-white rounded-md transition-colors">
+              <Bold className="w-4 h-4" />
+            </button>
+            <button className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-white rounded-md transition-colors">
+              <Italic className="w-4 h-4" />
+            </button>
+            <div className="w-px h-5 bg-border mx-1" />
+            <button className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-white rounded-md transition-colors">
+              <List className="w-4 h-4" />
+            </button>
+            <button className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-white rounded-md transition-colors">
+              <ListOrdered className="w-4 h-4" />
+            </button>
+            <div className="w-px h-5 bg-border mx-1" />
+            <button className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-white rounded-md transition-colors">
+              <LinkIcon className="w-4 h-4" />
+            </button>
+            <button className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-white rounded-md transition-colors">
+              <Quote className="w-4 h-4" />
+            </button>
+            <div className="ml-auto flex items-center gap-2 text-xs font-body px-2">
+              <Type className="w-3.5 h-3.5 text-ink-tertiary" />
+              <span className={description.length < 120 ? "text-danger" : "text-accent DEFAULT"}>
                 {description.length} / 1200
               </span>
             </div>
@@ -87,34 +137,34 @@ export default function GigDescriptionFaqPage() {
 
           {/* Textarea */}
           <textarea
-            rows="12"
+            rows={12}
             value={description}
             onChange={handleDescriptionChange}
             placeholder="Welcome to my gig! Here's what I can do for you..."
-            className="w-full p-4 border-x border-b border-zinc-200 dark:border-zinc-700 rounded-b-xl bg-white dark:bg-surface-dark text-sm font-medium text-zinc-900 dark:text-white resize-none outline-none focus:ring-2 focus:ring-[#2bb75c] focus:border-[#2bb75c]/20 transition-all"
+            className="w-full p-4 border-x border-b border-border rounded-b-lg bg-white text-sm font-body text-ink-primary placeholder-ink-tertiary resize-none focus:outline-none focus:ring-2 focus:ring-brand-900"
           />
 
-          <div className="mt-4 flex items-start gap-2 p-3 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/30 rounded-xl">
-            <Info className="w-4 h-4 text-[#2bb75c] shrink-0 mt-0.5" />
-            <p className="text-xs text-[#2bb75c] dark:text-[#2bb75c] leading-relaxed font-medium">
-              Don't include any contact info (email, skype, phone). All communication must be kept within the platform to protect you.
+          <div className="mt-4 flex items-start gap-2 p-3 bg-accent-light border border-accent DEFAULT rounded-lg">
+            <AlertCircle className="w-4 h-4 text-accent-dark shrink-0 mt-0.5" />
+            <p className="text-xs text-accent-dark font-body leading-relaxed">
+              Don't include contact info (email, phone). Keep all communication on the platform to protect yourself.
             </p>
           </div>
         </div>
 
         {/* FAQ Section */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
-          <div className="flex justify-between items-start mb-6">
+        <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+          <div className="flex justify-between items-start mb-5">
             <div>
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-1">Frequently Asked Questions</h2>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Add Questions & Answers for your Buyers.
+              <h2 className="font-display font-semibold text-lg text-brand-900 mb-1">Frequently asked questions</h2>
+              <p className="text-sm font-body text-ink-secondary">
+                Add questions and answers for your buyers
               </p>
             </div>
             {!isFaqFormOpen && (
               <button
                 onClick={() => setIsFaqFormOpen(true)}
-                className="flex items-center gap-1.5 px-4 py-2 bg-surface-dark dark:bg-white text-white dark:text-zinc-900 rounded-xl text-sm font-bold shadow-sm hover:shadow-md transition-all shrink-0"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-brand-900 text-white hover:bg-brand-800 text-sm font-body font-medium transition-colors shrink-0 focus:outline-none focus:ring-2 focus:ring-brand-900"
               >
                 <Plus className="w-4 h-4" /> Add FAQ
               </button>
@@ -125,43 +175,49 @@ export default function GigDescriptionFaqPage() {
           <AnimatePresence>
             {isFaqFormOpen && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-                className="mb-6 bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-2xl p-5"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mb-5 bg-surface-soft border border-border rounded-xl p-5"
               >
                 <div className="space-y-4">
                   <div>
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1 block">Question</label>
+                    <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1 block">
+                      Question
+                    </label>
                     <input
                       type="text"
                       value={newFaq.question}
                       onChange={(e) => setNewFaq({...newFaq, question: e.target.value})}
-                      placeholder="e.g. Do you translate to English as well?"
-                      className="w-full p-3 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold outline-none focus:border-[#2bb75c]/20 focus:ring-1 focus:ring-[#2bb75c]"
+                      placeholder="e.g., Do you translate to English as well?"
+                      className="w-full h-10 px-3 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1 block">Answer</label>
+                    <label className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1 block">
+                      Answer
+                    </label>
                     <textarea
-                      rows="3"
+                      rows={3}
                       value={newFaq.answer}
                       onChange={(e) => setNewFaq({...newFaq, answer: e.target.value})}
-                      placeholder="e.g. Yes, I translate from French to English..."
-                      className="w-full p-3 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20 focus:ring-1 focus:ring-[#2bb75c] resize-none"
+                      placeholder="e.g., Yes, I translate from French to English..."
+                      className="w-full px-3 py-2 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900 resize-none"
                     />
                   </div>
-                  <div className="flex justify-end gap-2 pt-2">
+                  <div className="flex justify-end gap-3 pt-2">
                     <button
                       onClick={() => { setIsFaqFormOpen(false); setNewFaq({question:'', answer:''}); }}
-                      className="px-4 py-2 text-sm font-bold text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+                      className="px-4 py-1.5 text-sm font-body font-medium text-ink-secondary hover:text-ink-primary transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={addFaq}
                       disabled={!newFaq.question || !newFaq.answer}
-                      className="px-4 py-2 bg-[#2bb75c] disabled:bg-zinc-300 text-white text-sm font-bold rounded-xl transition-colors"
+                      className="px-4 py-1.5 rounded-lg bg-brand-900 text-white hover:bg-brand-800 text-sm font-body font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Add
+                      Add FAQ
                     </button>
                   </div>
                 </div>
@@ -177,34 +233,45 @@ export default function GigDescriptionFaqPage() {
                 return (
                   <motion.div
                     layout
-                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
                     key={faq.id}
-                    className={cn(
-                      "border rounded-xl overflow-hidden transition-colors duration-200",
-                      isExpanded ? "border-[#2bb75c]/20 dark:border-[#2bb75c]/20/30 bg-white dark:bg-surface-dark" : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-surface-dark"
-                    )}
+                    className={`border rounded-xl overflow-hidden transition-all ${
+                      isExpanded ? "border-accent DEFAULT bg-accent-light" : "border-border bg-white"
+                    }`}
                   >
-                    <div
+                    <button
                       onClick={() => setExpandedFaq(isExpanded ? null : faq.id)}
-                      className={cn(
-                        "w-full flex items-center justify-between p-4 cursor-pointer",
-                        isExpanded ? "bg-[#2bb75c]/5 dark:bg-[#2bb75c]/5" : "hover:bg-surface dark:hover:bg-zinc-800/50"
-                      )}
+                      className="w-full flex items-center justify-between p-4 cursor-pointer text-left"
                     >
-                      <h4 className="font-bold text-sm text-zinc-900 dark:text-white pr-4">{faq.question}</h4>
-                      {isExpanded ? <ChevronUp className="w-5 h-5 text-[#2bb75c] shrink-0" /> : <ChevronDown className="w-5 h-5 text-zinc-400 shrink-0" />}
-                    </div>
+                      <h4 className="font-body font-semibold text-sm text-ink-primary pr-4">
+                        {faq.question}
+                      </h4>
+                      {isExpanded ? (
+                        <ChevronUp className="w-4 h-4 text-accent DEFAULT shrink-0" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-ink-tertiary shrink-0" />
+                      )}
+                    </button>
 
                     <AnimatePresence>
                       {isExpanded && (
                         <motion.div
-                          initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                          className="px-4 pb-4 border-t border-zinc-100 dark:border-zinc-800"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="px-4 pb-4 pt-2 border-t border-accent DEFAULT/30"
                         >
-                          <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-4 leading-relaxed whitespace-pre-wrap">{faq.answer}</p>
-                          <div className="flex justify-end mt-4">
-                            <button onClick={() => removeFaq(faq.id)} className="text-xs font-bold flex items-center gap-1 text-rose-500 hover:text-rose-600 transition-colors p-2 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-500/10">
-                              <Trash2 className="w-3.5 h-3.5" /> Delete FAQ
+                          <p className="text-sm font-body text-ink-secondary leading-relaxed whitespace-pre-wrap">
+                            {faq.answer}
+                          </p>
+                          <div className="flex justify-end mt-3">
+                            <button
+                              onClick={() => removeFaq(faq.id)}
+                              className="text-xs font-body font-medium flex items-center gap-1 text-danger hover:text-danger/80 transition-colors p-1 rounded"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" /> Delete
                             </button>
                           </div>
                         </motion.div>
@@ -216,94 +283,109 @@ export default function GigDescriptionFaqPage() {
             </AnimatePresence>
 
             {faqs.length === 0 && !isFaqFormOpen && (
-              <div className="text-center py-8 border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl">
-                <HelpCircle className="w-8 h-8 text-zinc-300 dark:text-zinc-600 mx-auto mb-2" />
-                <p className="text-sm font-medium text-zinc-500">No FAQs added yet.</p>
-                <p className="text-xs text-zinc-400 mb-4">Adding FAQs saves time answering common messages.</p>
-                <button onClick={() => setIsFaqFormOpen(true)} className="text-sm font-bold text-[#2bb75c]">Add your first FAQ</button>
+              <div className="text-center py-10 border-2 border-dashed border-border rounded-xl">
+                <HelpCircle className="w-10 h-10 text-ink-tertiary mx-auto mb-2" />
+                <p className="text-sm font-body font-medium text-ink-secondary">No FAQs added yet</p>
+                <p className="text-xs text-ink-tertiary mb-4">Adding FAQs saves time answering common messages</p>
+                <button
+                  onClick={() => setIsFaqFormOpen(true)}
+                  className="text-sm font-body font-medium text-accent DEFAULT hover:text-accent-dark transition-colors"
+                >
+                  Add your first FAQ
+                </button>
               </div>
             )}
           </div>
         </div>
-
       </div>
 
-      {/* Sidebar - Analytics & Insights */}
-      <div className="w-full lg:w-80 shrink-0 space-y-6">
+      {/* Sidebar */}
+      <div className="w-full lg:w-80 shrink-0 space-y-5">
 
-        {/* Readability Score */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+        {/* SEO Readability Score */}
+        <div className="bg-white border border-border rounded-xl p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-              <FileText className="w-4 h-4 text-[#2bb75c]" /> SEO Readability
+            <h3 className="font-body font-semibold text-ink-primary flex items-center gap-2">
+              <FileText className="w-4 h-4 text-accent DEFAULT" /> SEO readability
             </h3>
-            <span className={cn(
-              "px-2.5 py-1 rounded-lg text-xs font-black",
-              seoScore > 80 ? "bg-emerald-100 text-emerald-700" : seoScore > 50 ? "bg-amber-100 text-amber-700" : "bg-rose-100 text-rose-700"
-            )}>
+            <span className={`px-2 py-0.5 rounded-lg text-xs font-mono font-semibold ${getScoreColor()}`}>
               {seoScore}/100
             </span>
           </div>
 
-          <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden mb-6">
+          <div className="h-1.5 w-full bg-border rounded-full overflow-hidden mb-5">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${seoScore}%` }}
-              className={cn(
-                "h-full rounded-full transition-colors duration-500",
-                seoScore > 80 ? "bg-success" : seoScore > 50 ? "bg-amber-500" : "bg-rose-500"
-              )}
+              className={`h-full rounded-full ${getScoreBarColor()}`}
             />
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <div className="flex items-start gap-2">
-              {description.length > 200 ? <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" /> : <AlertCircle className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />}
-              <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Length (min 200 chars)</span>
+              {description.length > 200 ? (
+                <CheckCircle2 className="w-4 h-4 text-accent DEFAULT shrink-0 mt-0.5" />
+              ) : (
+                <AlertCircle className="w-4 h-4 text-ink-tertiary shrink-0 mt-0.5" />
+              )}
+              <span className="text-xs font-body text-ink-secondary">Length (min 200 chars)</span>
             </div>
             <div className="flex items-start gap-2">
-              {description.includes('\n') ? <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" /> : <AlertCircle className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />}
-              <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Formatting & Paragraphs</span>
+              {description.includes('\n') ? (
+                <CheckCircle2 className="w-4 h-4 text-accent DEFAULT shrink-0 mt-0.5" />
+              ) : (
+                <AlertCircle className="w-4 h-4 text-ink-tertiary shrink-0 mt-0.5" />
+              )}
+              <span className="text-xs font-body text-ink-secondary">Formatting & paragraphs</span>
             </div>
             <div className="flex items-start gap-2">
-              {faqs.length >= 3 ? <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" /> : <AlertCircle className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />}
-              <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">3+ FAQs added</span>
+              {faqs.length >= 3 ? (
+                <CheckCircle2 className="w-4 h-4 text-accent DEFAULT shrink-0 mt-0.5" />
+              ) : (
+                <AlertCircle className="w-4 h-4 text-ink-tertiary shrink-0 mt-0.5" />
+              )}
+              <span className="text-xs font-body text-ink-secondary">3+ FAQs added</span>
             </div>
           </div>
         </div>
 
-        {/* AI Writing Tips */}
-        <div className="bg-gradient-to-br from-[#2bb75c] to-violet-600 rounded-3xl p-6 text-white shadow-xl shadow-[#2bb75c]/25/20">
+        {/* Writing Tips */}
+        <div className="bg-gradient-to-br from-brand-900 to-brand-800 rounded-xl p-5 text-white shadow-sm">
           <div className="flex items-center gap-2 mb-4">
-            <Wand2 className="w-5 h-5 text-[#2bb75c]" />
-            <h3 className="font-bold text-[#2bb75c]">Conversion Tips</h3>
+            <Wand2 className="w-5 h-5 text-accent-light" />
+            <h3 className="font-body font-semibold text-white">Conversion tips</h3>
           </div>
 
-          <div className="space-y-4">
-            <div className="bg-white/10 p-3 rounded-xl border border-white/10">
-              <h4 className="text-sm font-bold mb-1">State your value clearly</h4>
-              <p className="text-xs text-[#2bb75c] leading-relaxed">
+          <div className="space-y-3">
+            <div className="bg-white/10 p-3 rounded-lg border border-white/20">
+              <h4 className="text-sm font-body font-semibold text-white mb-1">State your value clearly</h4>
+              <p className="text-xs text-white/70 leading-relaxed">
                 Start with a strong opening sentence summarizing what you offer and why you are the best choice.
               </p>
             </div>
-            <div className="bg-white/10 p-3 rounded-xl border border-white/10">
-              <h4 className="text-sm font-bold mb-1">Use Bullet Points</h4>
-              <p className="text-xs text-[#2bb75c] leading-relaxed">
+            <div className="bg-white/10 p-3 rounded-lg border border-white/20">
+              <h4 className="text-sm font-body font-semibold text-white mb-1">Use bullet points</h4>
+              <p className="text-xs text-white/70 leading-relaxed">
                 Buyers skim descriptions. Bullet points summarizing what's included significantly increase conversions.
               </p>
             </div>
-            <div className="bg-white/10 p-3 rounded-xl border border-white/10">
-              <h4 className="text-sm font-bold mb-1">End with a CTA</h4>
-              <p className="text-xs text-[#2bb75c] leading-relaxed">
+            <div className="bg-white/10 p-3 rounded-lg border border-white/20">
+              <h4 className="text-sm font-body font-semibold text-white mb-1">End with a CTA</h4>
+              <p className="text-xs text-white/70 leading-relaxed">
                 Encourage buyers to contact you before ordering to discuss project specifics.
               </p>
             </div>
           </div>
         </div>
 
+        {/* Quick Stats */}
+        <div className="bg-accent-light border border-accent DEFAULT rounded-xl p-4">
+          <h4 className="text-sm font-body font-semibold text-accent-dark mb-2">Did you know?</h4>
+          <p className="text-xs text-accent-dark font-body">
+            Gigs with at least 3 FAQs receive <strong className="font-semibold">25% more orders</strong> on average.
+          </p>
+        </div>
       </div>
-
     </div>
   );
 }
-

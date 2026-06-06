@@ -1,9 +1,9 @@
+// src/pages/freelancer/PortfolioManagementPage.jsx
 import React, { useState } from 'react';
-import { Plus, Image as ImageIcon, Video, Link as LinkIcon, Edit, Trash2, FolderOpen, X, Sparkles, Eye, FileText } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import toast, { Toaster } from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Plus, Image as ImageIcon, Video, Link as LinkIcon, Edit, Trash2, FolderOpen, X, Sparkles, Eye, FileText, Check
+} from 'lucide-react';
 
 export default function PortfolioManagementPage() {
   const [projects, setProjects] = useState([
@@ -11,9 +11,10 @@ export default function PortfolioManagementPage() {
     { id: 2, title: 'Fintech Payment Gateway', type: 'Full Stack', date: 'Aug 2023', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80', description: 'Highly secure payment orchestration engine processing multi-currency settlements with sub-second latency.' }
   ]);
 
-  const [activeModal, setActiveModal] = useState(null); // 'add' | 'edit' | 'delete'
+  const [activeModal, setActiveModal] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
-  
+  const [showSuccess, setShowSuccess] = useState(null);
+
   const [projectForm, setProjectForm] = useState({
     title: '',
     type: 'React/Node',
@@ -53,227 +54,303 @@ export default function PortfolioManagementPage() {
   const saveProject = (e) => {
     e.preventDefault();
     if (activeModal === 'add') {
-      const newProj = {
-        id: Date.now(),
-        ...projectForm
-      };
+      const newProj = { id: Date.now(), ...projectForm };
       setProjects([...projects, newProj]);
-      toast.success('Successfully added portfolio project!');
+      setShowSuccess({ message: 'Project added successfully' });
     } else if (activeModal === 'edit' && selectedProject) {
       setProjects(projects.map(p => p.id === selectedProject.id ? { ...p, ...projectForm } : p));
-      toast.success('Successfully updated portfolio project!');
+      setShowSuccess({ message: 'Project updated successfully' });
     }
     setActiveModal(null);
+    setTimeout(() => setShowSuccess(null), 2000);
   };
 
   const deleteProject = () => {
     if (selectedProject) {
       setProjects(projects.filter(p => p.id !== selectedProject.id));
-      toast.success('Project removed from portfolio!');
+      setShowSuccess({ message: 'Project removed from portfolio' });
     }
     setActiveModal(null);
+    setTimeout(() => setShowSuccess(null), 2000);
   };
 
+  const typeOptions = ['React/Node', 'Full Stack', 'UI/UX Design', 'Mobile App', 'Web3 / Blockchain'];
+
   return (
-    <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500 pb-12 font-sans relative">
-      <Toaster position="top-right" />
-      
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-success/20 text-success rounded-xl shadow-sm border border-success/20">
-              <FolderOpen size={24} />
+            <div className="p-2.5 bg-accent-light rounded-xl">
+              <FolderOpen className="w-6 h-6 text-accent DEFAULT" />
             </div>
-            <h1 className="text-3xl font-black text-text-primary tracking-tight">Portfolio Management</h1>
+            <h1 className="font-display font-bold text-3xl text-brand-900">Portfolio management</h1>
           </div>
-          <p className="text-sm text-text-secondary font-medium">
-            Showcase your best work to win enterprise clients.
-          </p>
+          <p className="text-ink-secondary font-body">Showcase your best work to win enterprise clients</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="primary" icon={<Plus size={18} />} onClick={openAddModal}>
-            Add Project
-          </Button>
-        </div>
+        <button
+          onClick={openAddModal}
+          className="px-5 py-2.5 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors inline-flex items-center gap-2"
+        >
+          <Plus className="w-4 h-4" /> Add project
+        </button>
       </div>
 
-      {/* Quick Add Actions */}
-      <div className="bg-[#222222] border border-border rounded-[24px] p-8 shadow-sm relative overflow-hidden">
-        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-success/5 blur-[100px] rounded-full pointer-events-none"></div>
-        
-        <h2 className="text-sm font-black text-white tracking-widest uppercase mb-6 relative z-10 flex items-center gap-1.5">
-          <Sparkles className="w-4 h-4 text-success animate-pulse" />
-          Quick Add
+      {/* Quick Add Section */}
+      <div className="bg-gradient-to-br from-brand-900 to-brand-800 border border-border rounded-2xl p-6 shadow-sm relative overflow-hidden mb-8">
+        <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-accent-light/20 rounded-full blur-[100px] pointer-events-none" />
+        <h2 className="text-sm font-body font-semibold text-white mb-5 flex items-center gap-1.5">
+          <Sparkles className="w-4 h-4 text-accent-light" /> Quick add
         </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-          <button onClick={openAddModal} className="flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 border-dashed rounded-[20px] hover:border-success hover:bg-success/10 transition-colors group">
-            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-success/20 transition-all">
-              <ImageIcon className="w-5 h-5 text-white/50 group-hover:text-success" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10">
+          <button onClick={openAddModal} className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/10 rounded-xl hover:border-accent DEFAULT hover:bg-accent-light/20 transition-all group">
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-3 group-hover:scale-105 transition-all">
+              <ImageIcon className="w-5 h-5 text-white/60 group-hover:text-accent-light" />
             </div>
-            <span className="text-sm font-bold text-white group-hover:text-success">Upload Images</span>
+            <span className="text-sm font-body font-medium text-white/80 group-hover:text-white">Upload images</span>
           </button>
-          
-          <button onClick={openAddModal} className="flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 border-dashed rounded-[20px] hover:border-success hover:bg-success/10 transition-colors group">
-            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-success/20 transition-all">
-              <Video className="w-5 h-5 text-white/50 group-hover:text-success" />
+          <button onClick={openAddModal} className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/10 rounded-xl hover:border-accent DEFAULT hover:bg-accent-light/20 transition-all group">
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-3 group-hover:scale-105 transition-all">
+              <Video className="w-5 h-5 text-white/60 group-hover:text-accent-light" />
             </div>
-            <span className="text-sm font-bold text-white group-hover:text-success">Embed Video</span>
+            <span className="text-sm font-body font-medium text-white/80 group-hover:text-white">Embed video</span>
           </button>
-          
-          <button onClick={openAddModal} className="flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 border-dashed rounded-[20px] hover:border-success hover:bg-success/10 transition-colors group">
-            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-success/20 transition-all">
-              <LinkIcon className="w-5 h-5 text-white/50 group-hover:text-success" />
+          <button onClick={openAddModal} className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/10 rounded-xl hover:border-accent DEFAULT hover:bg-accent-light/20 transition-all group">
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-3 group-hover:scale-105 transition-all">
+              <LinkIcon className="w-5 h-5 text-white/60 group-hover:text-accent-light" />
             </div>
-            <span className="text-sm font-bold text-white group-hover:text-success">Link External URL</span>
+            <span className="text-sm font-body font-medium text-white/80 group-hover:text-white">Link URL</span>
           </button>
         </div>
       </div>
 
       {/* Projects Grid */}
-      <div className="pt-4">
-        <h2 className="text-xl font-black text-text-primary mb-6">Your Projects ({projects.length})</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project) => (
-            <Card key={project.id} className="p-0 overflow-hidden group hover:scale-[1.02] transition-transform shadow-sm relative bg-white border border-border">
-              <div className="aspect-[4/3] bg-light-gray flex items-center justify-center overflow-hidden relative border-b border-border">
-                <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-90 group-hover:opacity-100" />
+      <div>
+        <h2 className="font-display font-semibold text-xl text-brand-900 mb-5">Your projects ({projects.length})</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map((project, idx) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.05 }}
+              whileHover={{ y: -3 }}
+              className="bg-white border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group"
+            >
+              <div className="aspect-[4/3] bg-surface-muted relative overflow-hidden">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  width={800}
+                  height={600}
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
                   <p className="text-xs text-white line-clamp-2">{project.description}</p>
                 </div>
-              </div>
-              <div className="p-6 relative z-10 bg-white">
-                <h3 className="font-black text-lg text-text-primary mb-2 line-clamp-1">{project.title}</h3>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="px-2 py-1 bg-light-gray text-[10px] font-bold text-text-secondary rounded-md uppercase tracking-widest border border-border">{project.type}</span>
-                  <span className="text-xs font-bold text-text-secondary">• {project.date}</span>
-                </div>
-                
-                <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity tranzinc-y-2 group-hover:tranzinc-y-0 duration-300">
-                  <button onClick={() => openEditModal(project)} className="p-2.5 text-white bg-[#222222]/80 backdrop-blur-sm hover:bg-success rounded-xl transition-colors shadow-lg shadow-black/20"><Edit size={16} /></button>
-                  <button onClick={() => openDeleteModal(project)} className="p-2.5 text-white bg-[#222222]/80 backdrop-blur-sm hover:bg-[#e63946] rounded-xl transition-colors shadow-lg shadow-black/20"><Trash2 size={16} /></button>
+                <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={() => openEditModal(project)} className="p-1.5 bg-black/60 hover:bg-accent DEFAULT rounded-lg text-white transition-colors">
+                    <Edit className="w-3.5 h-3.5" />
+                  </button>
+                  <button onClick={() => openDeleteModal(project)} className="p-1.5 bg-black/60 hover:bg-danger rounded-lg text-white transition-colors">
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
-            </Card>
+              <div className="p-4">
+                <h3 className="font-body font-semibold text-base text-ink-primary mb-1 line-clamp-1">{project.title}</h3>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-2 py-0.5 bg-surface-muted text-ink-tertiary text-xs font-body font-medium rounded-md">
+                    {project.type}
+                  </span>
+                  <span className="text-xs text-ink-tertiary">• {project.date}</span>
+                </div>
+              </div>
+            </motion.div>
           ))}
-          
-          {/* Add New Placeholder Card */}
-          <div onClick={openAddModal} className="bg-light-gray/30 rounded-2xl border-2 border-dashed border-border overflow-hidden group hover:border-success hover:bg-light-gray/60 transition-all cursor-pointer min-h-[300px] flex flex-col items-center justify-center">
-            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-success/20 transition-all shadow-sm border border-border">
-              <Plus className="w-6 h-6 text-text-secondary group-hover:text-success" />
+
+          {/* Add New Card */}
+          <div
+            onClick={openAddModal}
+            className="bg-surface-soft border-2 border-dashed border-border rounded-xl overflow-hidden cursor-pointer hover:border-accent DEFAULT hover:bg-accent-light transition-all min-h-[280px] flex flex-col items-center justify-center"
+          >
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center mb-3 shadow-sm border border-border">
+              <Plus className="w-5 h-5 text-ink-tertiary group-hover:text-accent DEFAULT" />
             </div>
-            <h3 className="font-black text-text-secondary group-hover:text-success transition-colors">Add New Project</h3>
+            <h3 className="font-body font-semibold text-ink-primary">Add new project</h3>
           </div>
         </div>
       </div>
 
-      {/* --- MODALS --- */}
-      {(activeModal === 'add' || activeModal === 'edit') && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-          <Card className="w-full max-w-lg shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
-            <div className="flex justify-between items-center mb-4 border-b border-border pb-3">
-              <h3 className="text-lg font-black text-text-primary flex items-center gap-2">
-                {activeModal === 'add' ? <Plus className="w-5 h-5 text-success" /> : <Edit className="w-5 h-5 text-success" />}
-                {activeModal === 'add' ? 'Add Portfolio Project' : 'Edit Portfolio Project'}
-              </h3>
-              <button onClick={() => setActiveModal(null)} className="p-1.5 hover:bg-light-gray rounded-md transition-colors text-text-secondary"><X size={18} /></button>
-            </div>
-            
-            <form onSubmit={saveProject} className="space-y-4">
-              <div>
-                <label className="block text-xs font-black uppercase text-text-secondary tracking-widest mb-1">Project Title</label>
-                <input 
-                  type="text" 
-                  value={projectForm.title} 
-                  onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
-                  required
-                  placeholder="e.g. Enterprise SaaS Dashboard"
-                />
+      {/* Add/Edit Modal */}
+      <AnimatePresence>
+        {(activeModal === 'add' || activeModal === 'edit') && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-border"
+            >
+              <div className="flex justify-between items-center p-5 border-b border-border">
+                <h3 className="font-display font-semibold text-lg text-brand-900 flex items-center gap-2">
+                  {activeModal === 'add' ? <Plus className="w-5 h-5 text-accent DEFAULT" /> : <Edit className="w-5 h-5 text-accent DEFAULT" />}
+                  {activeModal === 'add' ? 'Add project' : 'Edit project'}
+                </h3>
+                <button onClick={() => setActiveModal(null)} className="p-1 rounded-lg hover:bg-surface-muted transition-colors">
+                  <X className="w-5 h-5 text-ink-tertiary" />
+                </button>
               </div>
-              
-              <div className="grid grid-cols-2 gap-4">
+
+              <form onSubmit={saveProject} className="p-5 space-y-4">
                 <div>
-                  <label className="block text-xs font-black uppercase text-text-secondary tracking-widest mb-1">Category / Tag</label>
-                  <select
-                    value={projectForm.type}
-                    onChange={(e) => setProjectForm({ ...projectForm, type: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary appearance-none"
-                  >
-                    <option value="React/Node">React/Node</option>
-                    <option value="Full Stack">Full Stack</option>
-                    <option value="UI/UX Design">UI/UX Design</option>
-                    <option value="Mobile App">Mobile App</option>
-                    <option value="Web3 / Blockchain">Web3 / Blockchain</option>
-                  </select>
+                  <label className="block text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1">
+                    Project title
+                  </label>
+                  <input
+                    type="text"
+                    value={projectForm.title}
+                    onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })}
+                    className="w-full h-11 px-4 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                    required
+                    placeholder="e.g., Enterprise SaaS Dashboard"
+                  />
                 </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1">
+                      Category
+                    </label>
+                    <select
+                      value={projectForm.type}
+                      onChange={(e) => setProjectForm({ ...projectForm, type: e.target.value })}
+                      className="w-full h-11 px-4 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                    >
+                      {typeOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1">
+                      Completion date
+                    </label>
+                    <input
+                      type="text"
+                      value={projectForm.date}
+                      onChange={(e) => setProjectForm({ ...projectForm, date: e.target.value })}
+                      className="w-full h-11 px-4 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                      placeholder="e.g., Oct 2023"
+                      required
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-xs font-black uppercase text-text-secondary tracking-widest mb-1">Completion Date</label>
-                  <input 
-                    type="text" 
-                    value={projectForm.date} 
-                    onChange={(e) => setProjectForm({ ...projectForm, date: e.target.value })} 
-                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
-                    placeholder="e.g. Oct 2023"
+                  <label className="block text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1">
+                    Image URL
+                  </label>
+                  <input
+                    type="text"
+                    value={projectForm.image}
+                    onChange={(e) => setProjectForm({ ...projectForm, image: e.target.value })}
+                    className="w-full h-11 px-4 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
                     required
                   />
                 </div>
+
+                <div>
+                  <label className="block text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-1">
+                    Description
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={projectForm.description}
+                    onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
+                    className="w-full px-4 py-2 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900 resize-none"
+                    placeholder="Describe your role and technologies used..."
+                    required
+                  />
+                </div>
+
+                <div className="flex gap-3 justify-end pt-4 border-t border-border">
+                  <button
+                    type="button"
+                    onClick={() => setActiveModal(null)}
+                    className="px-4 py-2 rounded-lg border border-border text-ink-primary hover:bg-surface-muted font-body font-medium text-sm transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors"
+                  >
+                    Save project
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Modal */}
+      <AnimatePresence>
+        {activeModal === 'delete' && selectedProject && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-border"
+            >
+              <div className="p-5 border-b border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <Trash2 className="w-5 h-5 text-danger" />
+                  <h3 className="font-display font-semibold text-lg text-brand-900">Remove project?</h3>
+                </div>
+                <p className="text-sm text-ink-secondary">
+                  Are you sure you want to remove <span className="font-semibold text-ink-primary">"{selectedProject.title}"</span> from your portfolio?
+                </p>
               </div>
-
-              <div>
-                <label className="block text-xs font-black uppercase text-text-secondary tracking-widest mb-1">Mock Image URL</label>
-                <input 
-                  type="text" 
-                  value={projectForm.image} 
-                  onChange={(e) => setProjectForm({ ...projectForm, image: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary"
-                  required
-                />
+              <div className="flex justify-end gap-3 p-5">
+                <button
+                  onClick={() => setActiveModal(null)}
+                  className="px-4 py-2 rounded-lg border border-border text-ink-primary hover:bg-surface-muted font-body font-medium text-sm transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={deleteProject}
+                  className="px-4 py-2 rounded-lg bg-danger text-white hover:bg-red-700 font-body font-medium text-sm transition-colors"
+                >
+                  Remove
+                </button>
               </div>
-
-              <div>
-                <label className="block text-xs font-black uppercase text-text-secondary tracking-widest mb-1">Project Description</label>
-                <textarea 
-                  rows={3} 
-                  value={projectForm.description} 
-                  onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })} 
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-light-gray focus:outline-none focus:border-success text-sm text-text-primary resize-none"
-                  placeholder="Describe your role and what technologies you used..."
-                  required
-                />
-              </div>
-
-              <div className="flex gap-3 justify-end pt-4 border-t border-border mt-6">
-                <Button type="button" variant="outline" onClick={() => setActiveModal(null)}>Cancel</Button>
-                <Button type="submit" variant="primary">Save Project</Button>
-              </div>
-            </form>
-          </Card>
-        </div>
-      )}
-
-      {activeModal === 'delete' && selectedProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-          <Card className="w-full max-w-md shadow-2xl relative bg-white border border-border p-6 rounded-2xl animate-in zoom-in-95 duration-200">
-            <h3 className="text-lg font-black text-text-primary mb-2 flex items-center gap-2">
-              <Trash2 className="w-5 h-5 text-[#e63946] animate-bounce" />
-              Remove Project?
-            </h3>
-            <p className="text-sm text-text-secondary mb-6 font-medium">
-              Are you sure you want to remove <span className="font-bold text-text-primary">"{selectedProject.title}"</span> from your portfolio? This action cannot be undone.
-            </p>
-            <div className="flex gap-3 justify-end">
-              <Button variant="outline" onClick={() => setActiveModal(null)}>Cancel</Button>
-              <button onClick={deleteProject} className="px-5 py-2.5 bg-[#e63946] hover:bg-red-600 text-white font-bold rounded-xl text-sm transition-colors shadow-sm">
-                Remove Project
-              </button>
-            </div>
-          </Card>
-        </div>
-      )}
-
-    </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }

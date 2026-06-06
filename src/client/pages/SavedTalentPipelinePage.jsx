@@ -1,59 +1,133 @@
-import React, { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+// ClientSavedTalentPipelinePage.jsx
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Search, Bookmark, Star, MoreVertical, MessageSquare,
-  LayoutGrid, List, ChevronRight, Loader2, AlertCircle, RefreshCw,
+  Search,
+  Bookmark,
+  Star,
+  MoreVertical,
+  MessageSquare,
+  LayoutGrid,
+  List,
+  ChevronRight,
+  Loader2,
+  AlertCircle,
+  RefreshCw,
 } from 'lucide-react';
 import { workAPI } from '../../common/services/api';
 
-const DEFAULT_STAGES = ['Sourced', 'Screening', 'Interview', 'Offer', 'Hired', 'Rejected'];
+const DEFAULT_PIPELINE = {
+  total: 0,
+  stages: [],
+  candidates: [],
+};
 
 function mapCandidate(c) {
   return {
     id: c.id,
-    name: c.name || c.freelancerId || 'Candidate',
-    role: c.jobId ? `Job ${c.jobId}` : 'Open role',
+    name: c.name || 'Candidate',
+    role: c.jobId || 'Open role',
     stage: c.stage || 'Sourced',
     score: c.score ?? 85,
     hourlyRate: c.bidAmount ? `$${c.bidAmount}/hr` : '—',
     notes: c.notes ?? 0,
-    avatar: c.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name || c.freelancerId || 'C')}&background=14a800&color=fff`,
+    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name || 'C')}&background=16A34A&color=fff`,
     skills: c.skills || [],
   };
 }
 
-export default function SavedTalentPipelinePage() {
-  const [viewMode, setViewMode] = useState('kanban');
+// Helper for conditional classes
+const cn = (...classes) => classes.filter(Boolean).join(' ');
+
+export default function ClientSavedTalentPipelinePage() {
+  const [viewMode, setViewMode] = useState('kanban'); // 'kanban' or 'list'
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [pipeline, setPipeline] = useState(DEFAULT_PIPELINE);
 
-  const { data: pipeline, isLoading, error, refetch, isFetching } = useQuery({
-    queryKey: ['client', 'work', 'pipeline'],
-    queryFn: () => workAPI.getPipeline(),
-    staleTime: 60_000,
-  });
+  const loadPipeline = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await workAPI.getPipeline();
+      setPipeline({
+        total: data?.total ?? data?.candidates?.length ?? 0,
+        stages: data?.stages ?? [],
+        candidates: data?.candidates ?? [],
+      });
+    } catch (err) {
+      setError(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const stages = pipeline?.stages?.length ? pipeline.stages : DEFAULT_STAGES;
+  useEffect(() => {
+    loadPipeline();
+  }, []);
+
+  const refetch = () => {
+    loadPipeline();
+  };
+
+  const stages = pipeline?.stages?.length ? pipeline.stages : [];
   const candidates = useMemo(
     () => (pipeline?.candidates || []).map(mapCandidate),
     [pipeline]
   );
 
-  const filteredCandidates = candidates.filter((c) =>
-    c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    c.role.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCandidates = candidates.filter(
+    (c) =>
+      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.2 } },
+  };
+  const buttonTap = { scale: 0.97 };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-surface-soft flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-accent animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-surface-soft flex flex-col items-center justify-center gap-4 p-6">
+        <AlertCircle className="w-12 h-12 text-danger opacity-60" />
+        <p className="text-ink-secondary">Failed to load pipeline.</p>
+        <button
+          onClick={() => refetch()}
+          className="px-4 py-2 bg-accent text-white rounded-lg text-sm font-medium"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-surface dark:bg-gray-950 font-sans text-gray-900 dark:text-gray-100 p-4 sm:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen bg-surface-soft font-body py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              <Bookmark className="w-8 h-8 text-[#2bb75c]" />
+            <h1 className="font-display text-3xl font-bold text-brand-900 flex items-center gap-3">
+              <Bookmark className="w-8 h-8 text-accent" />
               Talent Pipeline
             </h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-ink-secondary mt-1">
               Manage and track saved freelancers across hiring stages.
               {pipeline?.total != null && ` (${pipeline.total} total)`}
             </p>
@@ -61,31 +135,43 @@ export default function SavedTalentPipelinePage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => refetch()}
-              disabled={isFetching}
-              className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              className="p-2 rounded-lg text-ink-tertiary hover:text-accent transition-colors"
+              aria-label="Refresh"
             >
-              <RefreshCw className={`w-5 h-5 ${isFetching ? 'animate-spin' : ''}`} />
+              <RefreshCw className="w-5 h-5" />
             </button>
             <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-tertiary" />
               <input
                 type="text"
                 placeholder="Search candidates..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-4 py-2 w-full sm:w-64 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2bb75c] dark:text-white"
+                className="pl-9 pr-4 h-10 w-full sm:w-64 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent bg-white text-ink-primary"
               />
             </div>
-            <div className="flex bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
+            <div className="flex bg-white border border-border rounded-lg overflow-hidden">
               <button
                 onClick={() => setViewMode('kanban')}
-                className={`p-2 ${viewMode === 'kanban' ? 'bg-gray-100 dark:bg-gray-800 text-[#2bb75c]' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
+                className={cn(
+                  'p-2 transition-colors',
+                  viewMode === 'kanban'
+                    ? 'bg-accent-light text-accent-dark'
+                    : 'text-ink-tertiary hover:bg-surface-soft'
+                )}
+                aria-label="Kanban view"
               >
                 <LayoutGrid className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 ${viewMode === 'list' ? 'bg-gray-100 dark:bg-gray-800 text-[#2bb75c]' : 'text-gray-500 hover:bg-surface dark:hover:bg-gray-800'}`}
+                className={cn(
+                  'p-2 transition-colors',
+                  viewMode === 'list'
+                    ? 'bg-accent-light text-accent-dark'
+                    : 'text-ink-tertiary hover:bg-surface-soft'
+                )}
+                aria-label="List view"
               >
                 <List className="w-5 h-5" />
               </button>
@@ -93,31 +179,22 @@ export default function SavedTalentPipelinePage() {
           </div>
         </div>
 
-        {isLoading ? (
-          <div className="flex items-center justify-center h-48">
-            <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
-          </div>
-        ) : error ? (
-          <div className="flex flex-col items-center justify-center h-48 gap-3 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
-            <AlertCircle className="w-10 h-10 text-red-400" />
-            <p className="text-gray-500">Failed to load pipeline.</p>
-            <button onClick={() => refetch()} className="text-sm text-[#2bb75c] hover:underline">Retry</button>
-          </div>
-        ) : viewMode === 'kanban' ? (
-          <div className="flex gap-6 overflow-x-auto pb-4 custom-scrollbar">
+        {/* Kanban View */}
+        {viewMode === 'kanban' ? (
+          <div className="flex gap-6 overflow-x-auto pb-4">
             {stages.map((stage) => {
               const stageCandidates = filteredCandidates.filter((c) => c.stage === stage);
               return (
                 <div key={stage} className="flex-shrink-0 w-80 flex flex-col">
-                  <div className="flex items-center justify-between mb-4 px-1">
-                    <h3 className="font-semibold flex items-center gap-2">
+                  <div className="flex items-center justify-between mb-3 px-1">
+                    <h3 className="font-display font-semibold text-brand-900 text-sm uppercase tracking-wide flex items-center gap-2">
                       {stage}
-                      <span className="px-2 py-0.5 bg-gray-200 dark:bg-gray-800 rounded-full text-xs font-medium text-gray-600 dark:text-gray-300">
+                      <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium rounded-full bg-surface-muted text-ink-secondary">
                         {stageCandidates.length}
                       </span>
                     </h3>
                   </div>
-                  <div className="flex-1 space-y-3 min-h-[200px] bg-gray-100/50 dark:bg-gray-900/50 p-2 rounded-xl">
+                  <div className="flex-1 space-y-3 min-h-[200px] bg-surface-muted rounded-xl p-2">
                     <AnimatePresence>
                       {stageCandidates.map((candidate, idx) => (
                         <motion.div
@@ -127,36 +204,42 @@ export default function SavedTalentPipelinePage() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, scale: 0.95 }}
                           transition={{ duration: 0.2, delay: idx * 0.05 }}
-                          className="bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm cursor-pointer hover:border-[#2bb75c]/20 transition-colors group"
+                          className="bg-white p-4 rounded-xl border border-border shadow-sm cursor-pointer hover:border-accent/30 transition-colors group"
                         >
                           <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
-                              <img src={candidate.avatar} alt={candidate.name} className="w-10 h-10 rounded-full object-cover" />
+                              <img
+                                src={candidate.avatar}
+                                alt={candidate.name}
+                                className="w-10 h-10 rounded-full object-cover"
+                              />
                               <div>
-                                <h4 className="font-medium text-sm">{candidate.name}</h4>
-                                <p className="text-xs text-gray-500">{candidate.role}</p>
+                                <h4 className="font-medium text-ink-primary text-sm">
+                                  {candidate.name}
+                                </h4>
+                                <p className="text-xs text-ink-tertiary">{candidate.role}</p>
                               </div>
                             </div>
-                            <button className="text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button className="text-ink-tertiary hover:text-ink-primary opacity-0 group-hover:opacity-100 transition-opacity">
                               <MoreVertical className="w-4 h-4" />
                             </button>
                           </div>
-                          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-800 pt-3 mt-2">
+                          <div className="flex items-center justify-between text-xs text-ink-tertiary border-t border-border pt-3 mt-2">
                             <div className="flex items-center gap-3">
-                              <span className="flex items-center gap-1 text-yellow-600 dark:text-yellow-500 font-medium">
-                                <Star className="w-3 h-3 fill-current" /> {candidate.score}
+                              <span className="flex items-center gap-1 text-warn font-medium">
+                                <Star className="w-3 h-3 fill-warn" /> {candidate.score}
                               </span>
                               <span className="flex items-center gap-1">
                                 <MessageSquare className="w-3 h-3" /> {candidate.notes}
                               </span>
                             </div>
-                            <span className="font-medium">{candidate.hourlyRate}</span>
+                            <span className="font-medium text-accent-dark">{candidate.hourlyRate}</span>
                           </div>
                         </motion.div>
                       ))}
                     </AnimatePresence>
                     {stageCandidates.length === 0 && (
-                      <div className="h-full flex items-center justify-center text-sm text-gray-400 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-lg p-6 text-center">
+                      <div className="h-full flex items-center justify-center text-sm text-ink-tertiary border-2 border-dashed border-border rounded-lg p-6 text-center">
                         No candidates in this stage
                       </div>
                     )}
@@ -166,57 +249,72 @@ export default function SavedTalentPipelinePage() {
             })}
           </div>
         ) : (
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+          /* List View */
+          <div className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-surface dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400">
+                <thead className="bg-surface-soft text-ink-tertiary border-b border-border">
                   <tr>
-                    <th className="px-6 py-4 font-medium">Candidate</th>
-                    <th className="px-6 py-4 font-medium">Stage</th>
-                    <th className="px-6 py-4 font-medium">Score</th>
-                    <th className="px-6 py-4 font-medium">Rate</th>
-                    <th className="px-6 py-4 font-medium text-right">Actions</th>
+                    <th className="px-6 py-3 font-semibold text-xs uppercase tracking-wide">
+                      Candidate
+                    </th>
+                    <th className="px-6 py-3 font-semibold text-xs uppercase tracking-wide">
+                      Stage
+                    </th>
+                    <th className="px-6 py-3 font-semibold text-xs uppercase tracking-wide">
+                      Score
+                    </th>
+                    <th className="px-6 py-3 font-semibold text-xs uppercase tracking-wide">
+                      Rate
+                    </th>
+                    <th className="px-6 py-3 font-semibold text-xs uppercase tracking-wide text-right">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
+                <tbody className="divide-y divide-border">
                   {filteredCandidates.map((candidate, idx) => (
                     <motion.tr
                       key={candidate.id}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: idx * 0.05 }}
-                      className="hover:bg-surface dark:hover:bg-gray-800/50 transition-colors"
+                      className="hover:bg-surface-soft transition-colors"
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <img src={candidate.avatar} alt={candidate.name} className="w-10 h-10 rounded-full object-cover" />
+                          <img
+                            src={candidate.avatar}
+                            alt={candidate.name}
+                            className="w-10 h-10 rounded-full object-cover"
+                          />
                           <div>
-                            <div className="font-medium text-gray-900 dark:text-white">{candidate.name}</div>
-                            <div className="text-gray-500">{candidate.role}</div>
+                            <div className="font-medium text-ink-primary">{candidate.name}</div>
+                            <div className="text-ink-tertiary text-xs">{candidate.role}</div>
                           </div>
                         </div>
-                      </td>
+                       </td>
                       <td className="px-6 py-4">
-                        <span className="px-3 py-1 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/30 text-[#2bb75c] dark:text-[#2bb75c] text-xs font-medium rounded-full">
+                        <span className="inline-flex px-2.5 py-1 rounded-full text-xs font-medium bg-accent-light text-accent-dark">
                           {candidate.stage}
                         </span>
-                      </td>
+                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-1 text-yellow-600 dark:text-yellow-500 font-medium">
-                          <Star className="w-4 h-4 fill-current" /> {candidate.score}
+                        <div className="flex items-center gap-1 text-warn font-medium">
+                          <Star className="w-4 h-4 fill-warn" /> {candidate.score}
                         </div>
-                      </td>
-                      <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{candidate.hourlyRate}</td>
+                       </td>
+                      <td className="px-6 py-4 text-ink-secondary">{candidate.hourlyRate}</td>
                       <td className="px-6 py-4 text-right">
-                        <button className="text-gray-400 hover:text-[#2bb75c] transition-colors p-2 rounded-lg hover:bg-[#2bb75c]/5 dark:hover:bg-[#2bb75c]/20">
+                        <button className="text-ink-tertiary hover:text-accent transition-colors p-2 rounded-lg hover:bg-accent-light">
                           <ChevronRight className="w-5 h-5" />
                         </button>
-                      </td>
+                       </td>
                     </motion.tr>
                   ))}
                   {filteredCandidates.length === 0 && (
                     <tr>
-                      <td colSpan="5" className="px-6 py-8 text-center text-gray-500">
+                      <td colSpan="5" className="px-6 py-8 text-center text-ink-tertiary">
                         No candidates found matching your criteria.
                       </td>
                     </tr>
@@ -230,4 +328,3 @@ export default function SavedTalentPipelinePage() {
     </div>
   );
 }
-

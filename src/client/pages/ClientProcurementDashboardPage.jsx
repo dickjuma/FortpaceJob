@@ -1,226 +1,338 @@
+// ClientProcurementDashboardPage.jsx
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Building2, DollarSign, TrendingUp, PieChart, 
-  BarChart3, Download, Filter, Search, Users, 
-  Target, AlertTriangle, ArrowUpRight, ArrowDownRight
+import {
+  Building2,
+  DollarSign,
+  TrendingUp,
+  PieChart,
+  BarChart3,
+  Download,
+  Filter,
+  Search,
+  Users,
+  Target,
+  AlertTriangle,
+  ArrowUpRight,
+  ArrowDownRight,
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
+
+const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 const VENDORS = [
   { id: 'V-001', name: 'Sarah Mitchell', category: 'Software Development', spend: 45200, status: 'Active', trend: 'up' },
   { id: 'V-002', name: 'Global Design LLC', category: 'Design', spend: 28450, status: 'Active', trend: 'down' },
   { id: 'V-003', name: 'Alex Rivera', category: 'Content Creation', spend: 12100, status: 'Pending Approval', trend: 'up' },
-  { id: 'V-004', name: 'David Kim', category: 'Engineering', spend: 8500, status: 'Active', trend: 'neutral' }
+  { id: 'V-004', name: 'David Kim', category: 'Engineering', spend: 8500, status: 'Active', trend: 'neutral' },
 ];
 
 export default function ClientProcurementDashboardPage() {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredVendors = VENDORS.filter(
+    (v) =>
+      v.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      v.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+    },
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  };
+  const tableRowVariants = {
+    hidden: { opacity: 0, x: -8 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.2 } },
+  };
+  const buttonTap = { scale: 0.97 };
+  const cardHover = {
+    rest: { y: 0, boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)' },
+    hover: {
+      y: -3,
+      boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+      transition: { duration: 0.2, ease: 'easeOut' },
+    },
+  };
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans pb-24">
-      
-      {/* Header */}
-      <div className="bg-white dark:bg-surface-dark border-b border-zinc-200 dark:border-zinc-800 pt-12 pb-8 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="min-h-screen bg-surface-soft font-body">
+      {/* Sticky Header */}
+      <div className="bg-white border-b border-border sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:py-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-2 flex items-center gap-3">
-              <Building2 className="w-8 h-8 text-[#2bb75c]" /> Procurement Dashboard
+            <h1 className="font-display text-3xl lg:text-4xl font-bold text-brand-900 flex items-center gap-3">
+              <Building2 className="w-8 h-8 text-accent" /> Procurement Dashboard
             </h1>
-            <p className="text-zinc-500 font-medium">Enterprise visibility into freelancer spending and budget allocation.</p>
+            <p className="text-ink-secondary text-sm mt-1">
+              Enterprise visibility into freelancer spending and budget allocation.
+            </p>
           </div>
-          
-          <div className="flex gap-2">
-            <button className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-bold rounded-lg shadow-sm transition-all flex items-center gap-2 border border-zinc-200 dark:border-zinc-700">
-              <Filter className="w-4 h-4" /> Filter
-            </button>
-            <button className="px-4 py-2 bg-[#2bb75c] hover:bg-[#1d8d38] text-white font-bold rounded-lg shadow-sm transition-all flex items-center gap-2">
-              <Download className="w-4 h-4" /> Export Report
-            </button>
+          <div className="flex gap-3">
+            <motion.button
+              whileTap={buttonTap}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-border text-ink-primary font-medium rounded-lg text-sm hover:bg-surface-soft transition-colors"
+            >
+              <Filter size={16} /> Filter
+            </motion.button>
+            <motion.button
+              whileTap={buttonTap}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-white font-medium rounded-lg text-sm hover:bg-accent-dark transition-colors shadow-sm"
+            >
+              <Download size={16} /> Export Report
+            </motion.button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-        
-        {/* Top KPIs */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-2 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] rounded-lg"><DollarSign className="w-5 h-5" /></div>
-              <span className="text-xs font-bold text-success bg-emerald-50 dark:bg-success/10 px-2 py-1 rounded-md flex items-center gap-1"><ArrowDownRight className="w-3 h-3" /> 4.2%</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-12 space-y-8">
+        {/* KPI Cards */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+        >
+          {/* YTD Spend */}
+          <motion.div variants={itemVariants} whileHover={cardHover.hover} className="bg-white border border-border rounded-2xl p-5 shadow-sm">
+            <div className="flex justify-between items-start mb-3">
+              <div className="p-2 bg-accent-light rounded-lg text-accent">
+                <DollarSign size={20} />
+              </div>
+              <span className="inline-flex items-center gap-0.5 text-xs font-medium text-accent-dark bg-accent-light px-2 py-1 rounded-full">
+                <ArrowDownRight size={12} /> 4.2%
+              </span>
             </div>
-            <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">YTD Spend</p>
-            <h3 className="text-3xl font-black text-zinc-900 dark:text-white">$248,500</h3>
-            <p className="text-xs text-zinc-500 mt-2">vs $259,400 last year</p>
-          </div>
+            <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide mb-1">YTD Spend</p>
+            <h3 className="text-3xl font-bold text-ink-primary">$248,500</h3>
+            <p className="text-xs text-ink-tertiary mt-2">vs $259,400 last year</p>
+          </motion.div>
 
-          <div className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-2 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 text-[#2bb75c] rounded-lg"><Users className="w-5 h-5" /></div>
-              <span className="text-xs font-bold text-success bg-emerald-50 dark:bg-success/10 px-2 py-1 rounded-md flex items-center gap-1"><ArrowUpRight className="w-3 h-3" /> 12%</span>
+          {/* Active Vendors */}
+          <motion.div variants={itemVariants} whileHover={cardHover.hover} className="bg-white border border-border rounded-2xl p-5 shadow-sm">
+            <div className="flex justify-between items-start mb-3">
+              <div className="p-2 bg-accent-light rounded-lg text-accent">
+                <Users size={20} />
+              </div>
+              <span className="inline-flex items-center gap-0.5 text-xs font-medium text-accent-dark bg-accent-light px-2 py-1 rounded-full">
+                <ArrowUpRight size={12} /> 12%
+              </span>
             </div>
-            <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Active Vendors</p>
-            <h3 className="text-3xl font-black text-zinc-900 dark:text-white">42</h3>
-            <p className="text-xs text-zinc-500 mt-2">Freelancers & Agencies</p>
-          </div>
+            <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide mb-1">Active Vendors</p>
+            <h3 className="text-3xl font-bold text-ink-primary">42</h3>
+            <p className="text-xs text-ink-tertiary mt-2">Freelancers & Agencies</p>
+          </motion.div>
 
-          <div className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-2 bg-amber-50 dark:bg-amber-500/10 text-amber-500 rounded-lg"><Target className="w-5 h-5" /></div>
-              <span className="text-xs font-bold text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded-md">On Track</span>
+          {/* Budget Utilization */}
+          <motion.div variants={itemVariants} whileHover={cardHover.hover} className="bg-white border border-border rounded-2xl p-5 shadow-sm">
+            <div className="flex justify-between items-start mb-3">
+              <div className="p-2 bg-warn-light rounded-lg text-warn">
+                <Target size={20} />
+              </div>
+              <span className="text-xs font-medium text-ink-tertiary bg-surface-muted px-2 py-1 rounded-full">On Track</span>
             </div>
-            <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Budget Utilization</p>
-            <h3 className="text-3xl font-black text-zinc-900 dark:text-white">68%</h3>
-            <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden mt-3">
-              <div className="bg-[#2bb75c] h-full w-[68%] rounded-full"></div>
+            <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide mb-1">Budget Utilization</p>
+            <h3 className="text-3xl font-bold text-ink-primary">68%</h3>
+            <div className="w-full bg-surface-muted h-1.5 rounded-full overflow-hidden mt-3">
+              <div className="bg-accent h-full w-[68%] rounded-full"></div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-2 bg-rose-50 dark:bg-rose-500/10 text-rose-500 rounded-lg"><AlertTriangle className="w-5 h-5" /></div>
+          {/* Cost Savings */}
+          <motion.div variants={itemVariants} whileHover={cardHover.hover} className="bg-white border border-border rounded-2xl p-5 shadow-sm">
+            <div className="flex justify-between items-start mb-3">
+              <div className="p-2 bg-danger-light rounded-lg text-danger">
+                <AlertTriangle size={20} />
+              </div>
             </div>
-            <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Cost Savings Opport.</p>
-            <h3 className="text-3xl font-black text-zinc-900 dark:text-white">$14,200</h3>
-            <p className="text-xs text-[#2bb75c] dark:text-[#2bb75c] font-bold mt-2 cursor-pointer hover:underline">View Recommendations &rarr;</p>
-          </div>
-        </div>
+            <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide mb-1">Cost Savings Opportunities</p>
+            <h3 className="text-3xl font-bold text-ink-primary">$14,200</h3>
+            <button className="text-xs font-medium text-accent hover:text-accent-dark mt-2">View Recommendations →</button>
+          </motion.div>
+        </motion.div>
 
+        {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Main Content Area */}
+          {/* Left Column (2/3) */}
           <div className="lg:col-span-2 space-y-8">
-            
-            {/* Trend Chart (Mock) */}
-            <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-[#2bb75c]" /> Spend Forecast vs Actual
+            {/* Spend Chart Mock */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="bg-white border border-border rounded-2xl p-6 shadow-sm"
+            >
+              <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
+                <h2 className="font-display text-xl font-bold text-brand-900 flex items-center gap-2">
+                  <TrendingUp size={20} className="text-accent" /> Spend Forecast vs Actual
                 </h2>
-                <select className="bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-1.5 text-xs font-bold outline-none">
+                <select className="h-9 border border-border rounded-lg px-3 text-sm font-body bg-white text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900">
                   <option>2026 (YTD)</option>
                   <option>2025</option>
                 </select>
               </div>
-              <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-zinc-100 dark:border-zinc-800 rounded-2xl">
-                <BarChart3 className="w-12 h-12 text-zinc-300 dark:text-zinc-700 mb-2" />
-                <p className="text-sm font-medium text-zinc-500">Financial forecast chart renders here.</p>
+              <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-border rounded-xl bg-surface-soft">
+                <BarChart3 size={48} className="text-ink-tertiary mb-3" />
+                <p className="text-sm font-medium text-ink-tertiary">Financial forecast chart renders here.</p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Vendor Table */}
-            <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center bg-surface/50 dark:bg-surface-dark/50">
-                <h2 className="text-xl font-bold text-zinc-900 dark:text-white">Top Vendors</h2>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden"
+            >
+              <div className="p-5 border-b border-border flex flex-wrap justify-between items-center gap-4 bg-white">
+                <h2 className="font-display text-xl font-bold text-brand-900">Top Vendors</h2>
                 <div className="relative">
-                  <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -tranzinc-y-1/2" />
-                  <input type="text" placeholder="Search vendors..." className="pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#2bb75c]/20 w-64 shadow-sm" />
+                  <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-tertiary" />
+                  <input
+                    type="text"
+                    placeholder="Search vendors..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-9 pr-4 py-2 h-10 border border-border rounded-lg text-sm w-64 focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
+                  />
                 </div>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-zinc-100 dark:border-zinc-800">
-                      <th className="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider">Vendor</th>
-                      <th className="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider">Category</th>
-                      <th className="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider">Spend (YTD)</th>
-                      <th className="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider">Status</th>
+                <table className="w-full text-left">
+                  <thead className="bg-surface-soft text-ink-tertiary">
+                    <tr className="border-b border-border">
+                      <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide">Vendor</th>
+                      <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide">Category</th>
+                      <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide">Spend (YTD)</th>
+                      <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide">Status</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {VENDORS.map(v => (
-                      <tr key={v.id} className="border-b border-zinc-100 dark:border-zinc-800 hover:bg-surface dark:hover:bg-zinc-800/50 transition-colors cursor-pointer">
-                        <td className="py-4 px-6">
-                          <p className="text-sm font-bold text-zinc-900 dark:text-white">{v.name}</p>
-                          <p className="text-xs font-mono text-zinc-500">{v.id}</p>
+                  <tbody className="divide-y divide-border">
+                    {filteredVendors.map((vendor, idx) => (
+                      <motion.tr
+                        key={vendor.id}
+                        variants={tableRowVariants}
+                        initial="hidden"
+                        animate="visible"
+                        transition={{ delay: idx * 0.05 }}
+                        className="hover:bg-surface-soft transition-colors cursor-pointer"
+                      >
+                        <td className="px-5 py-4">
+                          <p className="text-sm font-medium text-ink-primary">{vendor.name}</p>
+                          <p className="text-xs font-mono text-ink-tertiary">{vendor.id}</p>
                         </td>
-                        <td className="py-4 px-6 text-sm font-medium text-zinc-600 dark:text-zinc-300">{v.category}</td>
-                        <td className="py-4 px-6">
-                          <p className="text-sm font-black text-zinc-900 dark:text-white flex items-center gap-2">
-                            ${v.spend.toLocaleString()}
-                            {v.trend === 'up' && <ArrowUpRight className="w-3 h-3 text-success" />}
-                            {v.trend === 'down' && <ArrowDownRight className="w-3 h-3 text-rose-500" />}
+                        <td className="px-5 py-4 text-sm text-ink-secondary">{vendor.category}</td>
+                        <td className="px-5 py-4">
+                          <p className="text-sm font-bold text-ink-primary flex items-center gap-2">
+                            ${vendor.spend.toLocaleString()}
+                            {vendor.trend === 'up' && <ArrowUpRight size={14} className="text-accent" />}
+                            {vendor.trend === 'down' && <ArrowDownRight size={14} className="text-danger" />}
                           </p>
                         </td>
-                        <td className="py-4 px-6">
-                          <span className={cn(
-                            "px-2 py-1 text-xs font-bold rounded-md",
-                            v.status === 'Active' ? "bg-emerald-100 text-emerald-700 dark:bg-success/20 dark:text-success" : "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400"
-                          )}>
-                            {v.status}
+                        <td className="px-5 py-4">
+                          <span
+                            className={cn(
+                              'inline-flex px-2 py-1 text-xs font-medium rounded-full',
+                              vendor.status === 'Active'
+                                ? 'bg-accent-light text-accent-dark'
+                                : 'bg-warn-light text-warn'
+                            )}
+                          >
+                            {vendor.status}
                           </span>
                         </td>
-                      </tr>
+                      </motion.tr>
                     ))}
+                    {filteredVendors.length === 0 && (
+                      <tr>
+                        <td colSpan="4" className="px-5 py-8 text-center text-ink-tertiary">
+                          No vendors found
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
-            </div>
-
+            </motion.div>
           </div>
 
-          {/* Right Column: Allocation & Budgets */}
+          {/* Right Column (1/3) */}
           <div className="space-y-8">
-            
             {/* Department Allocation */}
-            <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
-                <PieChart className="w-5 h-5 text-[#2bb75c]" /> Dept. Allocation
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="bg-white border border-border rounded-2xl p-6 shadow-sm"
+            >
+              <h2 className="font-display text-xl font-bold text-brand-900 mb-5 flex items-center gap-2">
+                <PieChart size={20} className="text-accent" /> Dept. Allocation
               </h2>
-              
-              <div className="flex justify-center mb-8">
-                <div className="w-40 h-40 rounded-full border-[16px] border-zinc-100 dark:border-zinc-800 border-t-#2bb75c] border-r-#2bb75c] border-b-amber-500 relative">
+              <div className="flex justify-center mb-6">
+                {/* Fixed pie chart using arbitrary Tailwind colors */}
+                <div className="relative w-32 h-32 rounded-full border-[12px] border-surface-muted border-t-[#16A34A] border-r-[#16A34A] border-b-[#D97706]">
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-[10px] font-bold text-zinc-400 uppercase">Total</span>
-                    <span className="text-lg font-black text-zinc-900 dark:text-white">$248k</span>
+                    <span className="text-[10px] font-semibold text-ink-tertiary uppercase">Total</span>
+                    <span className="text-lg font-bold text-ink-primary">$248k</span>
                   </div>
                 </div>
               </div>
-
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {[
-                  { name: 'Engineering', amount: 120000, color: 'bg-[#2bb75c]' },
-                  { name: 'Marketing', amount: 85000, color: 'bg-[#2bb75c]' },
-                  { name: 'Design', amount: 43500, color: 'bg-amber-500' }
-                ].map(dept => (
+                  { name: 'Engineering', amount: 120000, color: 'bg-[#16A34A]' },
+                  { name: 'Marketing', amount: 85000, color: 'bg-[#16A34A]' },
+                  { name: 'Design', amount: 43500, color: 'bg-[#D97706]' },
+                ].map((dept) => (
                   <div key={dept.name} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className={cn("w-3 h-3 rounded-full", dept.color)} />
-                      <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300">{dept.name}</span>
+                      <div className={cn('w-3 h-3 rounded-full', dept.color)} />
+                      <span className="text-sm font-medium text-ink-primary">{dept.name}</span>
                     </div>
-                    <span className="text-sm font-black text-zinc-900 dark:text-white">${dept.amount.toLocaleString()}</span>
+                    <span className="text-sm font-bold text-ink-primary">${dept.amount.toLocaleString()}</span>
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
-            {/* Approvals Needed */}
-            <div className="bg-amber-50/50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 rounded-3xl p-8">
-              <h2 className="text-xl font-bold text-amber-900 dark:text-amber-500 mb-4 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5" /> Pending Approvals
+            {/* Pending Approvals */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+              className="bg-warn-light border border-warn/20 rounded-2xl p-6"
+            >
+              <h2 className="font-display text-xl font-bold text-warn mb-4 flex items-center gap-2">
+                <AlertTriangle size={20} /> Pending Approvals
               </h2>
-              
               <div className="space-y-3">
-                <div className="bg-white dark:bg-surface-dark p-4 rounded-xl border border-amber-200/50 dark:border-amber-700/30 shadow-sm">
+                <div className="bg-white border border-warn/30 rounded-xl p-4 shadow-sm">
                   <div className="flex justify-between items-start mb-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">Budget Increase</span>
-                    <span className="text-sm font-black text-zinc-900 dark:text-white">+$5,000</span>
+                    <span className="text-xs font-semibold uppercase tracking-wide text-warn">Budget Increase</span>
+                    <span className="text-sm font-bold text-ink-primary">+$5,000</span>
                   </div>
-                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3">Requested by Marketing for "Q3 Campaign Design"</p>
+                  <p className="text-sm text-ink-secondary mb-3">
+                    Requested by Marketing for "Q3 Campaign Design"
+                  </p>
                   <div className="flex gap-2">
-                    <button className="flex-1 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-md">Approve</button>
-                    <button className="flex-1 py-1.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-bold rounded-md">Review</button>
+                    <button className="flex-1 py-1.5 bg-warn text-white text-xs font-medium rounded-lg hover:bg-warn-dark transition-colors">
+                      Approve
+                    </button>
+                    <button className="flex-1 py-1.5 border border-border bg-white text-ink-primary text-xs font-medium rounded-lg hover:bg-surface-soft transition-colors">
+                      Review
+                    </button>
                   </div>
                 </div>
               </div>
-            </div>
-
+            </motion.div>
           </div>
         </div>
-
       </div>
     </div>
   );
 }
-

@@ -3,19 +3,10 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Users } from 'lucide-react';
 import { useSiteSettings } from '../../common/hooks/useSiteSettings';
 
-const FALLBACK_TEAM = [
-  {
-    id: 1,
-    name: 'Dickson Juma',
-    role: 'Lead Software Engineer',
-    bio: 'Leads platform architecture, engineering standards, and delivery across the Fortespace ecosystem.',
-  },
-];
-
 export default function AboutPage() {
   const { data, isLoading } = useSiteSettings();
   const about = data?.about || {};
-  const team = about.team?.length ? about.team : FALLBACK_TEAM;
+  const team = about.team?.length ? about.team : [];
 
   return (
     <div className="min-h-screen bg-zinc-50 pt-28 pb-20">
@@ -58,35 +49,81 @@ export default function AboutPage() {
         <section className="mb-16">
           <h2 className="text-2xl font-black text-zinc-900 mb-4">Our Vision</h2>
           <p className="text-zinc-700 leading-relaxed">
-            To create a world where people can make a living doing what they love to do and what they know how to do best.
+            To create a world where people can make a living doing what they love and where every client can find trusted, verified expertise with confidence.
           </p>
         </section>
+
+        <section className="mb-16 bg-white rounded-3xl border border-zinc-200 p-8 shadow-sm">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {[
+              { title: 'Verified talent', description: 'Professionals and teams are vetted, rated, and ready to deliver.' },
+              { title: 'Escrow security', description: 'Your funds are protected until work is completed and approved.' },
+              { title: 'Category taxonomy', description: 'Find talent using marketplace categories and role-level matching.' },
+              { title: 'Local + remote', description: 'Hire online, onsite, or hybrid professionals across every project type.' },
+            ].map((item) => (
+              <div key={item.title} className="rounded-3xl border border-zinc-100 p-6">
+                <h3 className="font-black text-zinc-900 mb-2">{item.title}</h3>
+                <p className="text-sm text-zinc-600 leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {about.stats?.length ? (
+          <section className="mb-16">
+            <h2 className="text-2xl font-black text-zinc-900 mb-6">Our Impact</h2>
+            <div className="grid gap-6 sm:grid-cols-3">
+              {about.stats.map((stat) => (
+                <div key={stat.label} className="bg-[#f8faf8] rounded-3xl p-6 text-center">
+                  <div className="text-3xl font-black text-zinc-900">{stat.value}</div>
+                  <p className="text-sm text-zinc-500 mt-2">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <section className="mb-16">
+            <h2 className="text-2xl font-black text-zinc-900 mb-6">Our impact so far</h2>
+            <div className="grid gap-6 sm:grid-cols-3">
+              {[
+                { value: '5K+', label: 'Talents onboarded' },
+                { value: '12K+', label: 'Projects completed' },
+                { value: '98%', label: 'Client satisfaction' },
+              ].map((stat) => (
+                <div key={stat.label} className="bg-[#f8faf8] rounded-3xl p-6 text-center">
+                  <div className="text-3xl font-black text-zinc-900">{stat.value}</div>
+                  <p className="text-sm text-zinc-500 mt-2">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="mb-16">
           <h2 className="text-2xl font-black text-zinc-900 mb-4">What Makes Us Different</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
-              <h3 className="font-black text-zinc-900 mb-2">Service breadth</h3>
+              <h3 className="font-black text-zinc-900 mb-2">Talent and teams</h3>
               <p className="text-sm text-zinc-600">
-                Fortespace focuses exclusively on services and talent labor. We offer a vast marketplace covering all skill categories — digital, professional, and practical.
+                We match individual freelancers, SMEs, and boutique teams so clients can hire the right type of delivery model for every project.
               </p>
             </div>
             <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
-              <h3 className="font-black text-zinc-900 mb-2">KYC Vetted</h3>
+              <h3 className="font-black text-zinc-900 mb-2">Process-first hiring</h3>
               <p className="text-sm text-zinc-600">
-                Every professional and SME is verified with National ID, ensuring you hire a human.
+                Our platform combines marketplace discovery with proposal management, contracts, and secure payments in one experience.
               </p>
             </div>
             <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
-              <h3 className="font-black text-zinc-900 mb-2">Escrow Protected</h3>
+              <h3 className="font-black text-zinc-900 mb-2">Built for growth</h3>
               <p className="text-sm text-zinc-600">
-                All funds are secured in an intermediary account before a job or gig starts. No more non-payment anxiety.
+                Freelancers scale from individual gigs to thriving agencies, while clients scale from one project to long-term teams.
               </p>
             </div>
             <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
-              <h3 className="font-black text-zinc-900 mb-2">Fortescore</h3>
+              <h3 className="font-black text-zinc-900 mb-2">Trust and transparency</h3>
               <p className="text-sm text-zinc-600">
-                Our proprietary, data-backed rating system that gives Clients the precision to hire based on proven, verified performance and contract success.
+                Clear pricing, verified profiles, and platform protections mean fewer surprises and better outcomes.
               </p>
             </div>
           </div>

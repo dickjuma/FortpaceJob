@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  X, AlertTriangle, ShieldAlert, 
+  AlertTriangle, ShieldAlert, 
   Trash2, Flag, MessageSquare 
 } from 'lucide-react';
 import toast from 'react-hot-toast';

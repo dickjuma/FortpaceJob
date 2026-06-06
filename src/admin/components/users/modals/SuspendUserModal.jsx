@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { AlertTriangle, Clock, X, Info } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { AlertTriangle, X, Info } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 import useUserManagementStore from '../../../store/userManagementStore';
 import { useUserActions } from '../../../hooks/users/useUserActions';

@@ -1,141 +1,312 @@
+// ClientProcurementEcosystemPage.jsx
 import React, { useState } from 'react';
-import { 
-  Briefcase, ShieldCheck, Users, TrendingUp, Search, 
-  Award, FileText, CheckCircle, Clock, Truck, ArrowRight 
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Briefcase,
+  ShieldCheck,
+  Users,
+  TrendingUp,
+  Search,
+  Award,
+  FileText,
+  CheckCircle,
+  Clock,
+  Truck,
+  ArrowRight,
+  AlertCircle,
 } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
+
+// Helper
+const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export default function ClientProcurementEcosystemPage() {
   const [rfqs, setRfqs] = useState([
-    { id: 'RFQ-8821', title: 'Fiber Splicing Nairobi East', budget: 'KES 250,000', bidsCount: 3, status: 'Bidding Active' },
-    { id: 'RFQ-7640', title: 'Pipeline Substation Concrete Auditing', budget: 'KES 180,000', bidsCount: 2, status: 'Awaiting Award' }
+    {
+      id: 'RFQ-8821',
+      title: 'Fiber Splicing Nairobi East',
+      budget: 'KES 250,000',
+      bidsCount: 3,
+      status: 'Bidding Active',
+    },
+    {
+      id: 'RFQ-7640',
+      title: 'Pipeline Substation Concrete Auditing',
+      budget: 'KES 180,000',
+      bidsCount: 2,
+      status: 'Awaiting Award',
+    },
   ]);
 
-  const [vendors, setVendors] = useState([
-    { id: 1, name: 'Safaricom Telecomm Logistics', score: '98%', bids: 'KES 245,000', delivery: '5 Days', compliance: 'Verified KRA' },
-    { id: 2, name: 'East Africa Infrastructure Ltd', score: '94%', bids: 'KES 260,000', delivery: '4 Days', compliance: 'Verified KRA' },
-    { id: 3, name: 'Apex Surveyor Systems', score: '88%', bids: 'KES 230,000', delivery: '8 Days', compliance: 'Pending Audit' }
+  const [vendors] = useState([
+    {
+      id: 1,
+      name: 'Safaricom Telecomm Logistics',
+      score: '98%',
+      bids: 'KES 245,000',
+      delivery: '5 Days',
+      compliance: 'Verified KRA',
+    },
+    {
+      id: 2,
+      name: 'East Africa Infrastructure Ltd',
+      score: '94%',
+      bids: 'KES 260,000',
+      delivery: '4 Days',
+      compliance: 'Verified KRA',
+    },
+    {
+      id: 3,
+      name: 'Apex Surveyor Systems',
+      score: '88%',
+      bids: 'KES 230,000',
+      delivery: '8 Days',
+      compliance: 'Pending Audit',
+    },
   ]);
 
   const [selectedRfq, setSelectedRfq] = useState('RFQ-8821');
+  const [toast, setToast] = useState(null);
 
-  const handleAward = (vendorName, bidAmount) => {
-    toast.promise(
-      new Promise(resolve => setTimeout(resolve, 1800)),
-      {
-        loading: `Awarding contract and generating purchase order for ${vendorName}...`,
-        success: () => {
-          setRfqs(prev => prev.map(r => r.id === selectedRfq ? { ...r, status: 'Awarded' } : r));
-          return `Contract awarded successfully! Purchase order dispatched to ${vendorName}. 📜`;
-        },
-        error: 'Contract award sequence failed.'
-      }
+  const showToast = (type, message, duration = 3000) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), duration);
+  };
+
+  const handleAward = async (vendorName, bidAmount) => {
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1800));
+    setRfqs((prev) =>
+      prev.map((r) => (r.id === selectedRfq ? { ...r, status: 'Awarded' } : r))
+    );
+    showToast(
+      'success',
+      `Contract awarded successfully! Purchase order dispatched to ${vendorName}.`
     );
   };
 
+  const handleCreateRFQ = () => {
+    showToast('info', 'New RFQ template generated.');
+  };
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+    },
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  };
+  const tableRowVariants = {
+    hidden: { opacity: 0, x: -8 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.2 } },
+  };
+  const buttonTap = { scale: 0.97 };
+  const cardHover = {
+    rest: { y: 0, boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)' },
+    hover: {
+      y: -3,
+      boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+      transition: { duration: 0.2, ease: 'easeOut' },
+    },
+  };
+
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans text-white bg-zinc-950/20 rounded-3xl animate-in fade-in duration-500">
-      <Toaster position="top-right" />
-
-      {/* Title */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-white/5 pb-6 mb-8">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight">Procurement & Vendor Command</h1>
-          <p className="text-xs font-semibold text-light-gray/50 mt-1">Audit active requests for quotes (RFQs), analyze multi-vendor compliance matrices, and authorize purchase orders.</p>
+    <div className="min-h-screen bg-surface-soft font-body py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border pb-6 mb-8">
+          <div>
+            <h1 className="font-display text-3xl lg:text-4xl font-bold text-brand-900 tracking-tight">
+              Procurement & Vendor Command
+            </h1>
+            <p className="text-ink-secondary text-sm mt-1">
+              Audit active requests for quotes (RFQs), analyze multi-vendor compliance matrices, and authorize
+              purchase orders.
+            </p>
+          </div>
+          <motion.button
+            whileTap={buttonTap}
+            onClick={handleCreateRFQ}
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-accent text-white rounded-lg font-medium text-sm hover:bg-accent-dark transition-colors shadow-sm"
+          >
+            Create New RFQ
+          </motion.button>
         </div>
 
-        <Button onClick={() => toast.success('New RFQ template generated.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#2bb75c]/20">
-          Create New RFQ
-        </Button>
-      </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column: RFQs List */}
+          <div className="lg:col-span-1 space-y-6">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover={cardHover.hover}
+              className="bg-white border border-border rounded-2xl p-5 shadow-sm"
+            >
+              <h3 className="flex items-center gap-1.5 font-display font-bold text-brand-900 text-sm uppercase tracking-wide mb-4">
+                <Briefcase size={16} className="text-accent" /> Active RFQ Postings
+              </h3>
+              <div className="space-y-3">
+                {rfqs.map((rfq) => (
+                  <motion.div
+                    key={rfq.id}
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.01 }}
+                    onClick={() => setSelectedRfq(rfq.id)}
+                    className={cn(
+                      'p-4 rounded-xl border cursor-pointer transition-all',
+                      selectedRfq === rfq.id
+                        ? 'border-accent bg-accent-light'
+                        : 'border-border bg-white hover:border-accent/30'
+                    )}
+                  >
+                    <div className="flex justify-between items-start">
+                      <span className="text-[10px] font-mono font-semibold text-accent">{rfq.id}</span>
+                      <span
+                        className={cn(
+                          'px-2 py-0.5 rounded text-[8px] font-semibold uppercase tracking-wide',
+                          rfq.status === 'Awarded'
+                            ? 'bg-accent-light text-accent-dark'
+                            : 'bg-warn-light text-warn'
+                        )}
+                      >
+                        {rfq.status}
+                      </span>
+                    </div>
+                    <h4 className="text-sm font-medium text-ink-primary mt-2">{rfq.title}</h4>
+                    <div className="flex justify-between mt-4 text-[10px] font-medium text-ink-tertiary border-t border-border pt-2">
+                      <span>Target Budget: {rfq.budget}</span>
+                      <span>{rfq.bidsCount} Bids Received</span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left Side: RFQs Listing */}
-        <div className="lg:col-span-1 space-y-6">
-          <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4">
-            <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Briefcase className="w-4 h-4 text-success" /> Active RFQ Postings</h3>
-            
-            <div className="space-y-3">
-              {rfqs.map(rfq => (
-                <div 
-                  key={rfq.id}
-                  onClick={() => setSelectedRfq(rfq.id)}
-                  className={`p-4 rounded-2xl border cursor-pointer transition-all ${
-                    selectedRfq === rfq.id 
-                      ? 'border-success bg-success/10' 
-                      : 'border-white/5 bg-white/5 hover:border-white/10'
-                  }`}
-                >
-                  <div className="flex justify-between items-start">
-                    <span className="text-[10px] font-mono font-bold text-success">{rfq.id}</span>
-                    <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
-                      rfq.status === 'Awarded' ? 'bg-success/20 text-success' : 'bg-orange-400/20 text-orange-400'
-                    }`}>{rfq.status}</span>
-                  </div>
-                  <h4 className="text-xs font-bold text-white mt-2">{rfq.title}</h4>
-                  <div className="flex justify-between mt-4 text-[9px] font-bold text-light-gray/50 border-t border-white/5 pt-2">
-                    <span>Target Budget: {rfq.budget}</span>
-                    <span>{rfq.bidsCount} Bids Received</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-        {/* Right Side: Multi-Vendor Bidding & Comparison */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="border border-white/10 bg-white/5 p-6 rounded-3xl">
-            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><Users className="w-4 h-4 text-success" /> Vendor Proposal Bid Matrix ({selectedRfq})</h3>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-medium">
-                <thead>
-                  <tr className="border-b border-white/5 text-light-gray/40 text-[10px] uppercase tracking-wider font-black">
-                    <th className="pb-3">Bidder Identity</th>
-                    <th className="pb-3">KRA Compliance</th>
-                    <th className="pb-3">Delivery Estimate</th>
-                    <th className="pb-3">Quality Score</th>
-                    <th className="pb-3">Financial Quote</th>
-                    <th className="pb-3 text-right">Award Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {vendors.map(v => (
-                    <tr key={v.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="py-4 font-bold text-white flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-success/20 text-success flex items-center justify-center font-bold text-xs"><Truck size={14} /></div>
-                        <span>{v.name}</span>
-                      </td>
-                      <td className="py-4">
-                        <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase ${
-                          v.compliance === 'Verified KRA' ? 'bg-success/20 text-success' : 'bg-orange-400/20 text-orange-400'
-                        }`}>{v.compliance}</span>
-                      </td>
-                      <td className="py-4 font-mono text-light-gray">{v.delivery}</td>
-                      <td className="py-4 font-bold text-success">{v.score}</td>
-                      <td className="py-4 font-black text-white">{v.bids}</td>
-                      <td className="py-4 text-right">
-                        <Button 
-                          onClick={() => handleAward(v.name, v.bids)}
-                          className="bg-success hover:bg-success/90 border-none font-bold text-[9px] py-1.5 px-3 rounded-lg"
-                        >
-                          Award & Escrow
-                        </Button>
-                      </td>
+          {/* Right Column: Vendor Proposal Matrix */}
+          <div className="lg:col-span-2 space-y-6">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden"
+            >
+              <div className="p-5 border-b border-border">
+                <h3 className="flex items-center gap-2 font-display font-bold text-brand-900 text-sm uppercase tracking-wide">
+                  <Users size={16} className="text-accent" /> Vendor Proposal Bid Matrix ({selectedRfq})
+                </h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-surface-soft text-ink-tertiary">
+                    <tr className="border-b border-border">
+                      <th className="px-5 py-3 font-semibold text-xs uppercase tracking-wide">
+                        Bidder Identity
+                      </th>
+                      <th className="px-5 py-3 font-semibold text-xs uppercase tracking-wide">
+                        KRA Compliance
+                      </th>
+                      <th className="px-5 py-3 font-semibold text-xs uppercase tracking-wide">
+                        Delivery Estimate
+                      </th>
+                      <th className="px-5 py-3 font-semibold text-xs uppercase tracking-wide">
+                        Quality Score
+                      </th>
+                      <th className="px-5 py-3 font-semibold text-xs uppercase tracking-wide">
+                        Financial Quote
+                      </th>
+                      <th className="px-5 py-3 font-semibold text-xs uppercase tracking-wide text-right">
+                        Award Action
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Card>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {vendors.map((vendor, idx) => (
+                      <motion.tr
+                        key={vendor.id}
+                        variants={tableRowVariants}
+                        initial="hidden"
+                        animate="visible"
+                        transition={{ delay: idx * 0.05 }}
+                        className="hover:bg-surface-soft transition-colors"
+                      >
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-full bg-accent-light text-accent-dark flex items-center justify-center">
+                              <Truck size={14} />
+                            </div>
+                            <span className="font-medium text-ink-primary">{vendor.name}</span>
+                          </div>
+                        </td>
+                        <td className="px-5 py-4">
+                          <span
+                            className={cn(
+                              'inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium',
+                              vendor.compliance === 'Verified KRA'
+                                ? 'bg-accent-light text-accent-dark'
+                                : 'bg-warn-light text-warn'
+                            )}
+                          >
+                            {vendor.compliance}
+                          </span>
+                        </td>
+                        <td className="px-5 py-4 font-mono text-ink-secondary">{vendor.delivery}</td>
+                        <td className="px-5 py-4 font-semibold text-accent">{vendor.score}</td>
+                        <td className="px-5 py-4 font-bold text-ink-primary">{vendor.bids}</td>
+                        <td className="px-5 py-4 text-right">
+                          <motion.button
+                            whileTap={buttonTap}
+                            onClick={() => handleAward(vendor.name, vendor.bids)}
+                            className="inline-flex px-3 py-1.5 bg-accent text-white rounded-lg text-xs font-medium hover:bg-accent-dark transition-colors"
+                          >
+                            Award & Escrow
+                          </motion.button>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          </div>
         </div>
-
       </div>
+
+      {/* Toast Notifications */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2 rounded-lg shadow-lg text-sm font-medium"
+            style={{
+              backgroundColor:
+                toast.type === 'success'
+                  ? 'rgb(220, 252, 231)'
+                  : toast.type === 'error'
+                  ? 'rgb(254, 226, 226)'
+                  : 'rgb(219, 234, 254)',
+              color:
+                toast.type === 'success'
+                  ? 'rgb(21, 128, 61)'
+                  : toast.type === 'error'
+                  ? 'rgb(185, 28, 28)'
+                  : 'rgb(29, 78, 216)',
+            }}
+          >
+            {toast.type === 'success' && <CheckCircle size={16} />}
+            {toast.type === 'error' && <AlertCircle size={16} />}
+            {toast.type === 'info' && <ShieldCheck size={16} />}
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
-

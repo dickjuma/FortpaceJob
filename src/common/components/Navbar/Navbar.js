@@ -89,7 +89,7 @@ const Navbar = () => {
       setIsLoggingOut(true);
       await authAPI.logout();
       setUser(null);
-      navigate("/signin");
+      navigate("/auth/login");
     } finally {
       setIsLoggingOut(false);
       setShowUserMenu(false);
@@ -132,10 +132,10 @@ const Navbar = () => {
       <div className="nav-right">
         {!isAuthenticated ? (
           <>
-            <button className="sign-in" onClick={() => navigate("/signin")}>
+            <button className="sign-in" onClick={() => navigate("/auth/login")}>
               Sign In
             </button>
-            <button className="join-btn" onClick={() => navigate("/signup")}>
+            <button className="join-btn" onClick={() => navigate("/auth/register")}>
               Join Now
             </button>
           </>
@@ -191,7 +191,7 @@ const Navbar = () => {
               <button
                 className="sign-in mobile-auth-btn"
                 onClick={() => {
-                  navigate("/signin");
+                  navigate("/auth/login");
                   setMenuOpen(false);
                 }}
               >
@@ -200,7 +200,7 @@ const Navbar = () => {
               <button
                 className="join-btn"
                 onClick={() => {
-                  navigate("/signup");
+                  navigate("/auth/register");
                   setMenuOpen(false);
                 }}
               >

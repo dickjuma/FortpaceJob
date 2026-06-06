@@ -18,20 +18,6 @@ import Avatar from "../components/ui/Avatar";
 import UserManagementModals from "../components/users/modals/UserManagementModals";
 import apiClient from "../api/apiClient";
 
-const readAdminToken = () => {
-  const explicitAdminToken = localStorage.getItem("admin-token");
-  if (explicitAdminToken) return explicitAdminToken;
-
-  const accessToken = localStorage.getItem("accessToken");
-  if (accessToken) return accessToken;
-
-  try {
-    return JSON.parse(localStorage.getItem("auth-storage") || "{}")?.state?.token || null;
-  } catch (_) {
-    return null;
-  }
-};
-
 const AdminLayout = () => {
   const { sidebarOpen, toggleSidebar, closeSidebar, theme, toggleTheme } = useUIStore();
   const { user } = useAuthStore();

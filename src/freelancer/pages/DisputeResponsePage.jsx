@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+// src/pages/freelancer/DisputeResponsePage.jsx
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -26,97 +27,79 @@ import {
   Eye,
   Check,
   AlertCircle,
-  Loader2,
 } from "lucide-react";
 
-import { useDisputeById, useSubmitEvidence } from "../services/freelancerHooks";
-
-function mapDisputeFromApi(raw) {
-  const d = raw?.dispute || raw?.data || raw;
-  if (!d || typeof d !== "object") return null;
-  const contract = d.contract || {};
-  return {
-    id: d.id ? `#DSP-${d.id}` : "—",
-    status: d.status || "OPEN",
-    openedDate: d.createdAt ? new Date(d.createdAt).toLocaleDateString() : "—",
-    escalationLevel: d.escalationLevel || d.level || "—",
-    contract: {
-      project: contract.title || contract.projectName || d.projectTitle || "Contract",
-      budget: contract.amount ?? d.amount ?? d.resolutionAmount ?? 0,
-      clientName: contract.client?.name || d.clientName || "Client",
-      deliveryStatus: contract.status || d.deliveryStatus || "—",
-      milestones: contract.milestones || [],
-    },
-    complaint: {
-      category: d.reason || d.category || "Dispute",
-      explanation: d.description || d.details || "",
-      evidence: (d.evidence || d.attachments || []).map((f) => ({
-        name: f.name || f.filename || "file",
-        type: f.type || "file",
-        size: f.size || "",
-      })),
-    },
-    timeline: (d.timeline || d.events || []).map((ev) => ({
-      date: ev.date || (ev.createdAt ? new Date(ev.createdAt).toLocaleDateString() : ""),
-      event: ev.event || ev.type || "Update",
-      description: ev.description || ev.message || "",
-      color: "bg-[#2bb75c]",
-      dot: "border-[#2bb75c]/20",
-    })),
-  };
-}
+import { useDisputeById, useDisputeEvidence, useSubmitEvidence } from "../services/freelancerHooks";
 
 const SETTLEMENT_OPTIONS = [
   {
     id: "partial_refund",
     icon: DollarSign,
-    iconBg: "bg-yellow-100 dark:bg-yellow-900/30",
-    iconColor: "text-yellow-600",
-    title: "Offer Partial Refund",
-    description: "Refund the undelivered milestone portion to resolve the dispute.",
+    iconBg: "bg-warn-light",
+    iconColor: "text-warn",
+    title: "Offer partial refund",
+    description: "Refund the undelivered milestone portion to resolve the dispute",
     badge: "$900 (20%)",
-    badgeColor: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400",
+    badgeColor: "bg-warn-light text-warn",
   },
   {
     id: "full_refund",
     icon: RefreshCw,
-    iconBg: "bg-red-100 dark:bg-red-900/30",
-    iconColor: "text-red-600",
-    title: "Offer Full Refund",
-    description: "Return the complete contract amount to close this dispute.",
+    iconBg: "bg-danger-light",
+    iconColor: "text-danger",
+    title: "Offer full refund",
+    description: "Return the complete contract amount to close this dispute",
     badge: "$4,500",
-    badgeColor: "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400",
+    badgeColor: "bg-danger-light text-danger",
   },
   {
     id: "request_revision",
     icon: Clock,
-    iconBg: "bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30",
-    iconColor: "text-[#2bb75c]",
-    title: "Request Revision Period",
-    description: "Propose a 14-day extension to deliver the final milestone.",
+    iconBg: "bg-accent-light",
+    iconColor: "text-accent DEFAULT",
+    title: "Request revision period",
+    description: "Propose a 14-day extension to deliver the final milestone",
     badge: "14-day extension",
-    badgeColor: "bg-[#2bb75c]/10 dark:bg-[#2bb75c]/30 text-[#2bb75c] dark:text-[#2bb75c]",
+    badgeColor: "bg-accent-light text-accent-dark",
   },
   {
     id: "reject_dispute",
     icon: XCircle,
-    iconBg: "bg-gray-100 dark:bg-gray-800",
-    iconColor: "text-gray-600",
-    title: "Reject Dispute",
-    description: "Contest the client's claim and explain your reasoning.",
+    iconBg: "bg-surface-muted",
+    iconColor: "text-ink-secondary",
+    title: "Reject dispute",
+    description: "Contest the client's claim and explain your reasoning",
     badge: "Provide reason",
-    badgeColor: "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400",
+    badgeColor: "bg-surface-muted text-ink-secondary",
   },
 ];
 
-// ─── Evidence File Icon ───────────────────────────────────────────────────────
+const defaultDispute = {
+  id: '',
+  status: 'OPEN',
+  openedDate: 'N/A',
+  escalationLevel: 'Level 1',
+  contract: {
+    project: 'Contract details unavailable',
+    budget: 0,
+    clientName: 'Client',
+    deliveryStatus: 'Pending',
+    milestones: [],
+  },
+  complaint: {
+    category: 'Dispute details unavailable',
+    explanation: 'No dispute details available yet.',
+    evidence: [],
+  },
+  timeline: [],
+};
+
 function EvidenceIcon({ type, size = "w-8 h-8" }) {
-  if (type === "image") return <ImageIcon className={`${size} text-[#2bb75c]`} />;
-  if (type === "pdf") return <FileText className={`${size} text-red-500`} />;
-  return <FileText className={`${size} text-gray-500`} />;
+  if (type === "image") return <ImageIcon className={`${size} text-accent DEFAULT`} />;
+  if (type === "pdf") return <FileText className={`${size} text-danger`} />;
+  return <FileText className={`${size} text-ink-tertiary`} />;
 }
 
-// ─── Toast Banner ─────────────────────────────────────────────────────────────
 function SuccessToast({ onClose }) {
   useEffect(() => {
     const t = setTimeout(onClose, 5000);
@@ -128,26 +111,47 @@ function SuccessToast({ onClose }) {
       initial={{ opacity: 0, y: -60 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -60 }}
-      className="fixed top-6 left-1/2 -tranzinc-x-1/2 z-50 flex items-center gap-3 bg-green-600 text-white rounded-2xl shadow-2xl px-6 py-4 max-w-md w-full mx-4"
+      className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-3 bg-accent-dark text-white rounded-2xl shadow-xl px-6 py-4 max-w-md w-full mx-4"
     >
       <CheckCircle className="w-5 h-5 flex-shrink-0" />
       <div className="flex-1">
-        <p className="font-semibold text-sm">Response Submitted</p>
-        <p className="text-xs text-green-100">Our team will review your response within 24 hours.</p>
+        <p className="font-body font-semibold text-sm">Response submitted</p>
+        <p className="text-xs text-accent-light">Our team will review your response within 24 hours</p>
       </div>
-      <button onClick={onClose} className="p-1 rounded-lg hover:bg-green-700 transition-colors">
+      <button onClick={onClose} className="p-1 rounded-lg hover:bg-white/10 transition-colors">
         <X className="w-4 h-4" />
       </button>
     </motion.div>
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
 export default function DisputeResponsePage() {
   const { id } = useParams();
-  const { data, isLoading, error } = useDisputeById(id);
+  const { data: disputeData, isLoading: disputeLoading, error } = useDisputeById(id);
+  const { data: evidenceData, isLoading: evidenceLoading } = useDisputeEvidence(id);
   const submitEvidence = useSubmitEvidence();
-  const dispute = mapDisputeFromApi(data);
+
+  const isLoading = disputeLoading || evidenceLoading;
+  const disputeBody = disputeData || {};
+  const dispute = {
+    id: disputeBody.id || defaultDispute.id,
+    status: disputeBody.status || defaultDispute.status,
+    openedDate: disputeBody.createdAt ? new Date(disputeBody.createdAt).toLocaleDateString() : defaultDispute.openedDate,
+    escalationLevel: disputeBody.escalationLevel || disputeBody.level || defaultDispute.escalationLevel,
+    contract: {
+      project: disputeBody.contract?.project || disputeBody.contract?.title || disputeBody.title || defaultDispute.contract.project,
+      budget: disputeBody.contract?.budget || disputeBody.amount || 0,
+      clientName: disputeBody.contract?.clientName || disputeBody.client?.name || defaultDispute.contract.clientName,
+      deliveryStatus: disputeBody.contract?.deliveryStatus || disputeBody.contract?.status || disputeBody.status || defaultDispute.contract.deliveryStatus,
+      milestones: disputeBody.contract?.milestones || defaultDispute.contract.milestones,
+    },
+    complaint: {
+      category: disputeBody.complaint?.category || disputeBody.reason || defaultDispute.complaint.category,
+      explanation: disputeBody.complaint?.explanation || disputeBody.description || defaultDispute.complaint.explanation,
+      evidence: evidenceData || disputeBody.complaint?.evidence || defaultDispute.complaint.evidence,
+    },
+    timeline: disputeBody.timeline || defaultDispute.timeline,
+  };
 
   const [responseText, setResponseText] = useState("");
   const [selectedSettlement, setSelectedSettlement] = useState(null);
@@ -160,7 +164,6 @@ export default function DisputeResponsePage() {
 
   const canSubmit = responseText.trim().length >= 100 && selectedSettlement !== null;
 
-  // ─── Formatting Toolbar ────────────────────────────────────────────────────
   const applyFormat = useCallback((type) => {
     const ta = textareaRef.current;
     if (!ta) return;
@@ -179,7 +182,6 @@ export default function DisputeResponsePage() {
     }, 0);
   }, [responseText]);
 
-  // ─── File Attachment ───────────────────────────────────────────────────────
   const addAttachments = (files) => {
     const entries = Array.from(files).map((f) => ({
       id: `${Date.now()}-${Math.random()}`,
@@ -190,25 +192,32 @@ export default function DisputeResponsePage() {
     setAttachedFiles((prev) => [...prev, ...entries]);
   };
 
-  // ─── Submit ────────────────────────────────────────────────────────────────
   const handleSubmit = async () => {
     if (!canSubmit) return;
+
     try {
       await submitEvidence.mutateAsync({
         disputeId: id,
         data: {
-          type: "freelancer_response",
-          content: responseText,
-          description: selectedSettlement
-        }
+          message: responseText,
+          settlement: selectedSettlement,
+          attachments: attachedFiles.map((file) => ({
+            name: file.name,
+            size: file.size,
+            type: file.type,
+          })),
+        },
       });
-      setShowSuccess(true);
-    } catch (error) {
-      console.error(error);
+
+      setResponseText("");
+      setSelectedSettlement(null);
+      setAttachedFiles([]);
+      setShowSuccess({ message: 'Response submitted successfully' });
+    } catch (submitError) {
+      setShowSuccess({ message: submitError?.message || 'Failed to submit response' });
     }
   };
 
-  // ─── Save Draft ────────────────────────────────────────────────────────────
   const handleSaveDraft = () => {
     setSavingDraft(true);
     setTimeout(() => setSavingDraft(false), 1500);
@@ -222,18 +231,18 @@ export default function DisputeResponsePage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-[#2bb75c]" />
+      <div className="flex justify-center items-center min-h-[400px]">
+        <div className="w-8 h-8 border-2 border-accent DEFAULT border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
-  if (error || !dispute) {
+  if (error || (!disputeData && !isLoading)) {
     return (
       <div className="max-w-5xl mx-auto py-8 px-4 text-center">
-        <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
-        <p className="text-zinc-600 mb-4">Dispute not found or unavailable.</p>
-        <Link to="/freelancer/disputes" className="text-[#2bb75c] font-bold">
+        <AlertCircle className="w-10 h-10 text-danger mx-auto mb-3" />
+        <p className="text-ink-secondary mb-4">Dispute not found or unavailable</p>
+        <Link to="/freelancer/disputes" className="text-accent DEFAULT font-body font-medium hover:text-accent-dark">
           Back to disputes
         </Link>
       </div>
@@ -241,112 +250,115 @@ export default function DisputeResponsePage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans">
-
-      {/* ── Toast ── */}
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
       <AnimatePresence>
         {showSuccess && <SuccessToast onClose={() => setShowSuccess(false)} />}
       </AnimatePresence>
 
-      {/* ── Breadcrumb ── */}
+      {/* Breadcrumb */}
       <motion.nav
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 mb-6"
+        className="flex items-center gap-1 text-sm font-body text-ink-secondary mb-6"
       >
-        <Link to="/freelancer/dashboard" className="hover:text-[#2bb75c] transition-colors">Dashboard</Link>
+        <Link to="/freelancer/dashboard" className="hover:text-accent DEFAULT transition-colors">Dashboard</Link>
         <ChevronRight className="w-4 h-4" />
-        <Link to="/freelancer/disputes" className="hover:text-[#2bb75c] transition-colors">Disputes</Link>
+        <Link to="/freelancer/disputes" className="hover:text-accent DEFAULT transition-colors">Disputes</Link>
         <ChevronRight className="w-4 h-4" />
-        <span className="text-gray-900 dark:text-white font-medium">{dispute.id}</span>
+        <span className="text-ink-primary font-medium">{dispute.id}</span>
       </motion.nav>
 
-      {/* ── Dispute Header ── */}
+      {/* Dispute Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 mb-8"
+        className="bg-white border border-border rounded-2xl shadow-sm p-6 mb-8"
       >
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-3 flex-wrap mb-2">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{dispute.id}</h1>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800">
-                <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
+              <h1 className="font-display font-bold text-2xl text-brand-900">{dispute.id}</h1>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-body font-medium bg-warn-light text-warn border border-warn DEFAULT">
+                <span className="w-1.5 h-1.5 rounded-full bg-warn animate-pulse" />
                 {dispute.status}
               </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-800">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-body font-medium bg-warn-light text-warn border border-warn DEFAULT">
                 <Shield className="w-3 h-3" />
                 {dispute.escalationLevel}
               </span>
             </div>
-            <div className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-1.5 text-sm font-body text-ink-secondary">
               <CalendarDays className="w-4 h-4" />
               <span>Opened {dispute.openedDate}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-5 h-5 text-orange-500" />
-            <span className="text-sm text-orange-600 dark:text-orange-400 font-medium">Response due in 3 days</span>
+            <AlertTriangle className="w-5 h-5 text-warn" />
+            <span className="text-sm text-warn font-body font-medium">Response due in 3 days</span>
           </div>
         </div>
       </motion.div>
 
-      {/* ── Two Column Layout ── */}
+      {/* Two Column Layout */}
       <div className="flex flex-col lg:flex-row gap-8">
 
-        {/* ── Main Content ── */}
-        <div className="flex-1 min-w-0 space-y-8">
+        {/* Main Content */}
+        <div className="flex-1 min-w-0 space-y-6">
 
-          {/* ── Contract Info ── */}
+          {/* Contract Info */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6"
+            className="bg-white border border-border rounded-2xl shadow-sm p-6"
           >
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-5">Contract Overview</h2>
+            <h2 className="font-display font-semibold text-lg text-brand-900 mb-5">Contract overview</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Project</p>
-                <p className="font-semibold text-gray-900 dark:text-white">{dispute.contract.project}</p>
+                <p className="text-xs font-body font-medium text-ink-tertiary mb-1">Project</p>
+                <p className="font-body font-semibold text-ink-primary">{dispute.contract.project}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Budget</p>
-                <p className="font-semibold text-gray-900 dark:text-white">${dispute.contract.budget.toLocaleString()}</p>
+                <p className="text-xs font-body font-medium text-ink-tertiary mb-1">Budget</p>
+                <p className="font-mono font-semibold text-ink-primary">KES {dispute.contract.budget.toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Client</p>
+                <p className="text-xs font-body font-medium text-ink-tertiary mb-1">Client</p>
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-pink-400 to-[#1d8d38] flex items-center justify-center text-white text-xs font-bold">
-                    SM
+                  <div className="w-7 h-7 rounded-full bg-accent-light flex items-center justify-center text-accent-dark text-xs font-mono font-semibold">
+                    {dispute.contract.clientName.charAt(0)}
                   </div>
-                  <p className="font-semibold text-gray-900 dark:text-white">{dispute.contract.clientName}</p>
+                  <p className="font-body font-semibold text-ink-primary">{dispute.contract.clientName}</p>
                 </div>
               </div>
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Delivery Status</p>
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400">
+                <p className="text-xs font-body font-medium text-ink-tertiary mb-1">Delivery status</p>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-body font-medium bg-warn-light text-warn">
                   {dispute.contract.deliveryStatus}
                 </span>
               </div>
             </div>
 
             <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">Milestones</p>
+              <p className="text-xs font-body font-medium text-ink-tertiary mb-3">Milestones</p>
               <div className="space-y-2">
                 {dispute.contract.milestones.map((m, i) => (
                   <div key={i} className="flex items-center gap-3">
                     {m.delivered ? (
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-accent DEFAULT flex-shrink-0" />
                     ) : (
-                      <XCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                      <XCircle className="w-4 h-4 text-danger flex-shrink-0" />
                     )}
-                    <span className={`text-sm ${m.delivered ? "text-gray-700 dark:text-gray-300" : "text-red-500 dark:text-red-400"}`}>
+                    <span className={`text-sm font-body ${m.delivered ? "text-ink-secondary" : "text-danger"}`}>
                       {m.name}
                     </span>
                     {!m.delivered && (
-                      <span className="text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2 py-0.5 rounded-full">
+                      <span className="text-xs bg-danger-light text-danger px-2 py-0.5 rounded-full">
                         Not delivered
                       </span>
                     )}
@@ -356,54 +368,48 @@ export default function DisputeResponsePage() {
             </div>
           </motion.div>
 
-          {/* ── Client Complaint ── */}
+          {/* Client Complaint */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6"
+            className="bg-white border border-border rounded-2xl shadow-sm p-6"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Client Complaint</h2>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800">
+              <h2 className="font-display font-semibold text-lg text-brand-900">Client complaint</h2>
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-body font-medium bg-danger-light text-danger border border-danger DEFAULT">
                 <AlertTriangle className="w-3 h-3" />
                 {dispute.complaint.category}
               </span>
             </div>
-            <div className="bg-surface dark:bg-gray-800 rounded-xl p-4 mb-5">
-              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            <div className="bg-surface-soft rounded-xl p-4 mb-5">
+              <p className="text-sm font-body text-ink-primary leading-relaxed">
                 {dispute.complaint.explanation}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">Attached Evidence ({dispute.complaint.evidence.length} files)</p>
+              <p className="text-xs font-body font-medium text-ink-tertiary mb-3">
+                Attached evidence ({dispute.complaint.evidence.length} files)
+              </p>
               <div className="space-y-2">
                 {dispute.complaint.evidence.map((ev, i) => (
                   <motion.div
                     key={i}
                     whileHover={{ x: 2 }}
-                    className="flex items-center gap-3 bg-surface dark:bg-gray-800 rounded-xl p-3 cursor-pointer group"
+                    className="flex items-center gap-3 bg-surface-soft rounded-xl p-3 cursor-pointer group"
                     onClick={() => setPreviewEvidence(ev)}
                   >
-                    <EvidenceIcon type={ev.type} size="w-6 h-6" />
+                    <EvidenceIcon type={ev.type} size="w-5 h-5" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{ev.name}</p>
-                      <p className="text-xs text-gray-500">{ev.size}</p>
+                      <p className="text-sm font-body font-medium text-ink-primary truncate">{ev.name}</p>
+                      <p className="text-xs font-body text-ink-tertiary">{ev.size}</p>
                     </div>
                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setPreviewEvidence(ev); }}
-                        className="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-                        title="Preview"
-                      >
-                        <Eye className="w-4 h-4" />
+                      <button className="p-1.5 rounded-lg hover:bg-surface-muted transition-colors">
+                        <Eye className="w-4 h-4 text-ink-tertiary" />
                       </button>
-                      <button
-                        onClick={(e) => e.stopPropagation()}
-                        className="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-                        title="Download"
-                      >
-                        <Download className="w-4 h-4" />
+                      <button className="p-1.5 rounded-lg hover:bg-surface-muted transition-colors">
+                        <Download className="w-4 h-4 text-ink-tertiary" />
                       </button>
                     </div>
                   </motion.div>
@@ -412,75 +418,72 @@ export default function DisputeResponsePage() {
             </div>
           </motion.div>
 
-          {/* ── Timeline ── */}
+          {/* Timeline */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6"
+            className="bg-white border border-border rounded-2xl shadow-sm p-6"
           >
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Contract Timeline</h2>
+            <h2 className="font-display font-semibold text-lg text-brand-900 mb-5">Contract timeline</h2>
             <div className="relative">
               {dispute.timeline.map((ev, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.08 * i }}
+                  transition={{ delay: i * 0.08 }}
                   className="flex gap-4"
                 >
                   <div className="flex flex-col items-center">
-                    <div className={`w-4 h-4 rounded-full border-2 ${ev.dot} bg-white dark:bg-gray-900 z-10 flex-shrink-0 mt-0.5`} />
+                    <div className={`w-3 h-3 rounded-full border-2 border-accent DEFAULT bg-white z-10 flex-shrink-0 mt-1`} />
                     {i < dispute.timeline.length - 1 && (
-                      <div className="w-0.5 flex-1 bg-gray-200 dark:bg-gray-700 mt-1 mb-1" />
+                      <div className="w-0.5 flex-1 bg-border mt-1 mb-1" />
                     )}
                   </div>
-                  <div className={`pb-${i < dispute.timeline.length - 1 ? "6" : "0"}`} style={{ paddingBottom: i < dispute.timeline.length - 1 ? "1.5rem" : 0 }}>
+                  <div className="pb-6">
                     <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                      <span className="text-sm font-semibold text-gray-900 dark:text-white">{ev.event}</span>
-                      <span className="text-xs text-gray-400">{ev.date}</span>
+                      <span className="text-sm font-body font-semibold text-ink-primary">{ev.event}</span>
+                      <span className="text-xs font-body text-ink-tertiary">{ev.date}</span>
                     </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{ev.description}</p>
+                    <p className="text-xs font-body text-ink-tertiary">{ev.description}</p>
                   </div>
                 </motion.div>
               ))}
             </div>
           </motion.div>
 
-          {/* ── Response Form ── */}
+          {/* Response Form */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6"
+            className="bg-white border border-border rounded-2xl shadow-sm p-6"
           >
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Your Response</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            <h2 className="font-display font-semibold text-lg text-brand-900 mb-1">Your response</h2>
+            <p className="text-sm font-body text-ink-secondary mb-4">
               Provide a detailed explanation of your perspective. Minimum 100 characters required.
             </p>
 
             {/* Formatting Toolbar */}
-            <div className="flex items-center gap-1 p-2 bg-surface dark:bg-gray-800 rounded-t-xl border border-b-0 border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-1 p-2 bg-surface-soft rounded-t-xl border border-b-0 border-border">
               <button
                 onClick={() => applyFormat("bold")}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
-                title="Bold"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-body font-medium text-ink-secondary hover:bg-white hover:text-ink-primary transition-colors"
               >
                 <Bold className="w-3.5 h-3.5" />
                 Bold
               </button>
               <button
                 onClick={() => applyFormat("italic")}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
-                title="Italic"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-body font-medium text-ink-secondary hover:bg-white hover:text-ink-primary transition-colors"
               >
                 <Italic className="w-3.5 h-3.5" />
                 Italic
               </button>
               <button
                 onClick={() => applyFormat("quote")}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
-                title="Quote"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-body font-medium text-ink-secondary hover:bg-white hover:text-ink-primary transition-colors"
               >
                 <Quote className="w-3.5 h-3.5" />
                 Quote
@@ -493,32 +496,24 @@ export default function DisputeResponsePage() {
               onChange={(e) => setResponseText(e.target.value)}
               rows={9}
               placeholder="Explain your side of the story. Include relevant context, what was delivered, any communication issues, and how you'd like to resolve this..."
-              className="w-full rounded-b-xl border border-gray-200 dark:border-gray-700 px-4 py-3 text-sm text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-[#2bb75c] transition-colors font-mono"
+              className="w-full rounded-b-xl border border-border px-4 py-3 text-sm font-body text-ink-primary bg-white placeholder-ink-tertiary resize-none focus:outline-none focus:ring-2 focus:ring-brand-900 transition-colors"
             />
 
             <div className="flex items-center justify-between mt-2 mb-4">
               <AnimatePresence>
                 {responseText.length > 0 && responseText.length < 100 && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-xs text-yellow-500"
-                  >
+                  <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs text-warn">
                     {100 - responseText.length} more characters needed
                   </motion.p>
                 )}
                 {responseText.length >= 100 && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-xs text-green-500 flex items-center gap-1"
-                  >
+                  <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs text-accent DEFAULT flex items-center gap-1">
                     <CheckCircle className="w-3 h-3" /> Response looks good
                   </motion.p>
                 )}
                 {responseText.length === 0 && <span />}
               </AnimatePresence>
-              <span className={`text-xs ml-auto ${responseText.length > 4500 ? "text-red-500" : "text-gray-400"}`}>
+              <span className={`text-xs ml-auto ${responseText.length > 4500 ? "text-danger" : "text-ink-tertiary"}`}>
                 {responseText.length} / 5000
               </span>
             </div>
@@ -534,10 +529,10 @@ export default function DisputeResponsePage() {
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 text-sm text-gray-500 dark:text-gray-400 hover:border-[#2bb75c]/20 hover:text-[#2bb75c] hover:bg-[#2bb75c]/5 dark:hover:bg-[#2bb75c]/10 transition-all"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-dashed border-border text-sm font-body text-ink-secondary hover:border-accent DEFAULT hover:text-accent DEFAULT hover:bg-accent-light transition-all"
               >
                 <Paperclip className="w-4 h-4" />
-                Attach Supporting Files
+                Attach supporting files
               </button>
               <AnimatePresence>
                 {attachedFiles.length > 0 && (
@@ -552,14 +547,14 @@ export default function DisputeResponsePage() {
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 10 }}
-                        className="flex items-center gap-2 bg-surface dark:bg-gray-800 rounded-lg px-3 py-2"
+                        className="flex items-center gap-2 bg-surface-soft rounded-lg px-3 py-2"
                       >
-                        <Paperclip className="w-3.5 h-3.5 text-gray-400" />
-                        <span className="text-xs text-gray-700 dark:text-gray-300 truncate flex-1">{f.name}</span>
-                        <span className="text-xs text-gray-400">{formatBytes(f.size)}</span>
+                        <Paperclip className="w-3.5 h-3.5 text-ink-tertiary" />
+                        <span className="text-xs font-body text-ink-primary truncate flex-1">{f.name}</span>
+                        <span className="text-xs font-mono text-ink-tertiary">{formatBytes(f.size)}</span>
                         <button
                           onClick={() => setAttachedFiles((p) => p.filter((a) => a.id !== f.id))}
-                          className="p-0.5 rounded hover:bg-red-100 dark:hover:bg-red-900/20 text-gray-400 hover:text-red-500 transition-colors"
+                          className="p-0.5 rounded hover:bg-danger-light text-ink-tertiary hover:text-danger transition-colors"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -571,16 +566,16 @@ export default function DisputeResponsePage() {
             </div>
           </motion.div>
 
-          {/* ── Settlement Options ── */}
+          {/* Settlement Options */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6"
+            className="bg-white border border-border rounded-2xl shadow-sm p-6"
           >
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Settlement Proposal</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">
-              Choose how you'd like to resolve this dispute.
+            <h2 className="font-display font-semibold text-lg text-brand-900 mb-1">Settlement proposal</h2>
+            <p className="text-sm font-body text-ink-secondary mb-5">
+              Choose how you'd like to resolve this dispute
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {SETTLEMENT_OPTIONS.map((opt, i) => {
@@ -591,14 +586,14 @@ export default function DisputeResponsePage() {
                     key={opt.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.06 * i }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    transition={{ delay: i * 0.06 }}
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
                     onClick={() => setSelectedSettlement(opt.id)}
                     className={`relative flex flex-col gap-3 p-5 rounded-xl border-2 text-left cursor-pointer transition-all ${
                       isSelected
-                        ? "border-[#2bb75c]/20 bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20"
-                        : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                        ? "border-accent DEFAULT bg-accent-light"
+                        : "border-border hover:border-border-strong"
                     }`}
                   >
                     <div className="flex items-start justify-between">
@@ -611,7 +606,7 @@ export default function DisputeResponsePage() {
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             exit={{ scale: 0 }}
-                            className="w-5 h-5 rounded-full bg-[#2bb75c] flex items-center justify-center"
+                            className="w-5 h-5 rounded-full bg-accent DEFAULT flex items-center justify-center"
                           >
                             <Check className="w-3 h-3 text-white" />
                           </motion.div>
@@ -619,12 +614,12 @@ export default function DisputeResponsePage() {
                       </AnimatePresence>
                     </div>
                     <div>
-                      <p className={`font-semibold text-sm ${isSelected ? "text-[#2bb75c] dark:text-[#2bb75c]" : "text-gray-900 dark:text-white"}`}>
+                      <p className={`font-body font-semibold text-sm ${isSelected ? "text-accent DEFAULT" : "text-ink-primary"}`}>
                         {opt.title}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-snug">{opt.description}</p>
+                      <p className="text-xs font-body text-ink-secondary mt-1 leading-snug">{opt.description}</p>
                     </div>
-                    <span className={`self-start text-xs font-medium px-2.5 py-1 rounded-full ${opt.badgeColor}`}>
+                    <span className={`self-start text-xs font-body font-medium px-2.5 py-1 rounded-full ${opt.badgeColor}`}>
                       {opt.badge}
                     </span>
                   </motion.button>
@@ -633,97 +628,94 @@ export default function DisputeResponsePage() {
             </div>
           </motion.div>
 
-          {/* ── Mobile Submit (visible on mobile only) ── */}
+          {/* Mobile Submit */}
           <div className="lg:hidden space-y-3 pb-8">
-            <motion.button
-              whileHover={canSubmit ? { scale: 1.01 } : {}}
-              whileTap={canSubmit ? { scale: 0.99 } : {}}
+            <button
               onClick={handleSubmit}
               disabled={!canSubmit}
-              className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all ${
+              className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-body font-semibold text-sm transition-all ${
                 canSubmit
-                  ? "bg-[#2bb75c] hover:bg-[#1d8d38] text-white shadow-sm"
-                  : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                  ? "bg-brand-900 text-white hover:bg-brand-800"
+                  : "bg-surface-muted text-ink-tertiary cursor-not-allowed"
               }`}
             >
               <Send className="w-4 h-4" />
-              Submit Response
-            </motion.button>
+              Submit response
+            </button>
             <button
               onClick={handleSaveDraft}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-surface dark:hover:bg-gray-800 transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border text-sm font-body font-medium text-ink-primary hover:bg-surface-muted transition-colors"
             >
               {savingDraft ? (
-                <><Check className="w-4 h-4 text-green-500" /> Saved!</>
+                <><Check className="w-4 h-4 text-accent DEFAULT" /> Saved!</>
               ) : (
-                <><Save className="w-4 h-4" /> Save Draft</>
+                <><Save className="w-4 h-4" /> Save draft</>
               )}
             </button>
           </div>
         </div>
 
-        {/* ── Sticky Sidebar ── */}
+        {/* Sticky Sidebar */}
         <div className="hidden lg:block w-80 flex-shrink-0">
           <div className="sticky top-6 space-y-5">
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5"
+              className="bg-white border border-border rounded-2xl shadow-sm p-5"
             >
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Dispute Summary</h3>
+              <h3 className="font-body font-semibold text-sm text-ink-primary mb-4">Dispute summary</h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center gap-2 text-ink-secondary">
                     <DollarSign className="w-4 h-4" />
-                    <span className="text-sm">Amount at Stake</span>
+                    <span className="text-sm font-body">Amount at stake</span>
                   </div>
-                  <span className="text-sm font-bold text-gray-900 dark:text-white">$4,500</span>
+                  <span className="text-sm font-mono font-semibold text-ink-primary">KES 4,500</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center gap-2 text-ink-secondary">
                     <CalendarDays className="w-4 h-4" />
-                    <span className="text-sm">Days Since Opened</span>
+                    <span className="text-sm font-body">Days since opened</span>
                   </div>
-                  <span className="text-sm font-bold text-gray-900 dark:text-white">7</span>
+                  <span className="text-sm font-mono font-semibold text-ink-primary">7</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center gap-2 text-ink-secondary">
                     <Clock className="w-4 h-4" />
-                    <span className="text-sm">Response Deadline</span>
+                    <span className="text-sm font-body">Response deadline</span>
                   </div>
-                  <span className="text-sm font-bold text-red-600">3 days</span>
+                  <span className="text-sm font-mono font-semibold text-danger">3 days</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center gap-2 text-ink-secondary">
                     <Shield className="w-4 h-4" />
-                    <span className="text-sm">Escalation</span>
+                    <span className="text-sm font-body">Escalation</span>
                   </div>
-                  <span className="text-sm font-bold text-orange-600">Level 2</span>
+                  <span className="text-sm font-mono font-semibold text-warn">Level 2</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center gap-2 text-ink-secondary">
                     <Users className="w-4 h-4" />
-                    <span className="text-sm">Settlement</span>
+                    <span className="text-sm font-body">Settlement</span>
                   </div>
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  <span className="text-sm font-body font-medium text-ink-primary">
                     {selectedSettlement
                       ? SETTLEMENT_OPTIONS.find((s) => s.id === selectedSettlement)?.title.split(" ").slice(0, 2).join(" ")
-                      : <span className="text-gray-400">None</span>}
+                      : <span className="text-ink-tertiary">None selected</span>}
                   </span>
                 </div>
               </div>
 
-              {/* Response Progress */}
-              <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-                <div className="flex justify-between text-xs text-gray-500 mb-1.5">
+              <div className="mt-4 pt-4 border-t border-border">
+                <div className="flex justify-between text-xs font-body text-ink-tertiary mb-1.5">
                   <span>Response length</span>
                   <span>{responseText.length}/100 min</span>
                 </div>
-                <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-border rounded-full overflow-hidden">
                   <motion.div
                     animate={{ width: `${Math.min((responseText.length / 100) * 100, 100)}%` }}
-                    className={`h-full rounded-full ${responseText.length >= 100 ? "bg-green-500" : "bg-[#2bb75c]"}`}
+                    className={`h-full rounded-full ${responseText.length >= 100 ? "bg-accent DEFAULT" : "bg-accent-light"}`}
                   />
                 </div>
               </div>
@@ -736,35 +728,33 @@ export default function DisputeResponsePage() {
               transition={{ delay: 0.15 }}
               className="space-y-3"
             >
-              <motion.button
-                whileHover={canSubmit ? { scale: 1.02 } : {}}
-                whileTap={canSubmit ? { scale: 0.98 } : {}}
+              <button
                 onClick={handleSubmit}
                 disabled={!canSubmit}
-                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all ${
+                className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-body font-semibold text-sm transition-all ${
                   canSubmit
-                    ? "bg-[#2bb75c] hover:bg-[#1d8d38] text-white shadow-sm"
-                    : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                    ? "bg-brand-900 text-white hover:bg-brand-800"
+                    : "bg-surface-muted text-ink-tertiary cursor-not-allowed"
                 }`}
               >
                 <Send className="w-4 h-4" />
-                Submit Response
-              </motion.button>
+                Submit response
+              </button>
 
               <button
                 onClick={handleSaveDraft}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-surface dark:hover:bg-gray-800 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border text-sm font-body font-medium text-ink-primary hover:bg-surface-muted transition-colors"
               >
                 {savingDraft ? (
-                  <><Check className="w-4 h-4 text-green-500" /> Draft Saved!</>
+                  <><Check className="w-4 h-4 text-accent DEFAULT" /> Draft saved!</>
                 ) : (
-                  <><Save className="w-4 h-4" /> Save Draft</>
+                  <><Save className="w-4 h-4" /> Save draft</>
                 )}
               </button>
 
-              <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-[#2bb75c] dark:hover:text-[#2bb75c] hover:bg-[#2bb75c]/5 dark:hover:bg-[#2bb75c]/10 transition-colors">
+              <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-body font-medium text-ink-secondary hover:text-accent DEFAULT hover:bg-accent-light transition-colors">
                 <Users className="w-4 h-4" />
-                Request Mediation
+                Request mediation
               </button>
             </motion.div>
 
@@ -773,13 +763,13 @@ export default function DisputeResponsePage() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-200 dark:border-amber-800 p-4"
+                className="bg-warn-light rounded-xl border border-warn DEFAULT p-4"
               >
                 <div className="flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+                  <AlertCircle className="w-4 h-4 text-warn flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 mb-1">To submit:</p>
-                    <ul className="text-xs text-amber-600 dark:text-amber-500 space-y-0.5">
+                    <p className="text-xs font-body font-semibold text-warn mb-1">To submit:</p>
+                    <ul className="text-xs text-warn space-y-0.5">
                       {responseText.length < 100 && (
                         <li>• Write at least 100 characters</li>
                       )}
@@ -797,13 +787,13 @@ export default function DisputeResponsePage() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.25 }}
-              className="bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 rounded-xl border border-[#2bb75c]/20 dark:border-[#2bb75c]/20 p-4"
+              className="bg-accent-light rounded-xl border border-accent DEFAULT p-4"
             >
               <div className="flex items-start gap-2">
-                <Shield className="w-4 h-4 text-[#2bb75c] flex-shrink-0 mt-0.5" />
+                <Shield className="w-4 h-4 text-accent DEFAULT flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-xs font-semibold text-[#2bb75c] dark:text-[#2bb75c] mb-1">Forte Protects You</p>
-                  <p className="text-xs text-[#2bb75c] dark:text-[#2bb75c] leading-snug">
+                  <p className="text-xs font-body font-semibold text-accent-dark mb-1">Forte protects you</p>
+                  <p className="text-xs text-accent-dark leading-snug">
                     Your response will be reviewed by our team. All evidence is considered before any decision is made.
                   </p>
                 </div>
@@ -813,7 +803,7 @@ export default function DisputeResponsePage() {
         </div>
       </div>
 
-      {/* ── Evidence Preview Modal ── */}
+      {/* Evidence Preview Modal */}
       <AnimatePresence>
         {previewEvidence && (
           <motion.div
@@ -827,47 +817,42 @@ export default function DisputeResponsePage() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 max-w-lg w-full overflow-hidden"
+              className="bg-white rounded-2xl shadow-2xl border border-border max-w-lg w-full overflow-hidden"
             >
-              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-border">
                 <div className="flex items-center gap-3">
                   <EvidenceIcon type={previewEvidence.type} size="w-5 h-5" />
                   <div>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{previewEvidence.name}</p>
-                    <p className="text-xs text-gray-500">{previewEvidence.size}</p>
+                    <p className="text-sm font-body font-semibold text-ink-primary">{previewEvidence.name}</p>
+                    <p className="text-xs font-body text-ink-tertiary">{previewEvidence.size}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#2bb75c]/5 dark:bg-[#2bb75c]/20 text-[#2bb75c] hover:bg-[#2bb75c]/10 transition-colors">
+                  <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-body font-medium bg-accent-light text-accent-dark hover:bg-accent-light/80 transition-colors">
                     <Download className="w-3.5 h-3.5" />
                     Download
                   </button>
                   <button
                     onClick={() => setPreviewEvidence(null)}
-                    className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-surface-muted transition-colors"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-4 h-4 text-ink-tertiary" />
                   </button>
                 </div>
               </div>
-              <div className="p-8 flex flex-col items-center justify-center min-h-60 bg-surface dark:bg-gray-800">
-                <div className="w-20 h-20 rounded-2xl bg-white dark:bg-gray-700 shadow-sm flex items-center justify-center mb-4">
+              <div className="p-8 flex flex-col items-center justify-center min-h-60 bg-surface-soft">
+                <div className="w-20 h-20 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4">
                   <EvidenceIcon type={previewEvidence.type} size="w-10 h-10" />
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                  {previewEvidence.type === "image"
-                    ? "Image preview not available in this environment."
-                    : "Document preview not available in this environment."}
+                <p className="text-sm font-body text-ink-secondary text-center">
+                  Preview not available. Download to view the file.
                 </p>
-                <p className="text-xs text-gray-400 mt-1 text-center">Download the file to view its contents.</p>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
-

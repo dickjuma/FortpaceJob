@@ -51,7 +51,7 @@ const getErrorMessage = (payload, fallback = "An error occurred") => {
 // API Client with auth handling
 const apiClient = async (endpoint, options = {}) => {
   const token = getToken();
-  
+
   const config = {
     ...options,
     headers: {
@@ -75,13 +75,13 @@ const apiClient = async (endpoint, options = {}) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ refreshToken }),
         });
-        
+
         if (refreshResponse.ok) {
           const rawRefreshData = await parseJsonSafely(refreshResponse);
           const refreshData = unwrapApiResponse(rawRefreshData);
 
           setTokens(refreshData?.accessToken, refreshData?.refreshToken);
-          
+
           // Retry original request with new token
           config.headers.Authorization = `Bearer ${refreshData.accessToken}`;
           response = await fetch(`${API_BASE_URL}${endpoint}`, config);
@@ -100,7 +100,7 @@ const apiClient = async (endpoint, options = {}) => {
 
   const rawData = await parseJsonSafely(response);
   const data = unwrapApiResponse(rawData);
-  
+
   if (!response.ok) {
     const fallbackMessage = response.status === 429
       ? "Too many attempts. Please wait a moment and try again."
@@ -111,7 +111,7 @@ const apiClient = async (endpoint, options = {}) => {
   if (rawData?.success === false) {
     throw new Error(getErrorMessage(rawData));
   }
-  
+
   return data;
 };
 
@@ -288,12 +288,12 @@ export const authAPI = {
   refreshToken: async () => {
     const refreshToken = getRefreshToken();
     if (!refreshToken) throw new Error("No refresh token");
-    
+
     const data = await apiClient("/auth/refresh-token", {
       method: "POST",
       body: JSON.stringify({ refreshToken }),
     });
-    
+
     if (data.accessToken) {
       setTokens(data.accessToken, data.refreshToken);
     }
@@ -452,6 +452,22 @@ export const profileAPI = {
     return { success: true, user: updatedUser };
   },
 
+  uploadTaxCertificate: async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const data = await fetch(`${API_BASE_URL}/profilesystem/upload/tax-certificate`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${getToken()}` },
+      body: formData,
+    }).then(res => res.json());
+
+    if (!data?.success && !data?.url) {
+      throw new Error(data?.message || 'Failed to upload tax certificate');
+    }
+
+    return { success: true, data };
+  },
+
   getMissingFields: async () => {
     return apiClient("/profilesystem/onboarding/status", { method: "GET" });
   },
@@ -493,7 +509,7 @@ export const profileAPI = {
       headers: { Authorization: `Bearer ${getToken()}` },
       body: formData,
     }).then(res => res.json());
-    
+
     return { success: true, urls: data.urls };
   },
 };
@@ -946,9 +962,9 @@ export const proposalAPI = {
       return apiClient(`/proposals/${proposalId}/accept`, { method: "PATCH" });
     }
     if (status === 'rejected') {
-      return apiClient(`/proposals/${proposalId}/reject`, { 
-        method: "PATCH", 
-        body: JSON.stringify({ reason: "Not a good fit at this time" }) 
+      return apiClient(`/proposals/${proposalId}/reject`, {
+        method: "PATCH",
+        body: JSON.stringify({ reason: "Not a good fit at this time" })
       });
     }
     // Fallback for general status updates if it still exists
@@ -1053,16 +1069,31 @@ export const cmsAPI = {
 
 export const publicAPI = {
   searchFreelancers: async (params = {}) => {
-    const queryString = new URLSearchParams(params).toString();
+    const normalizedParams = { ...params };
+    if (normalizedParams.q !== undefined && normalizedParams.query === undefined) {
+      normalizedParams.query = normalizedParams.q;
+      delete normalizedParams.q;
+    }
+    const queryString = new URLSearchParams(normalizedParams).toString();
     return apiClient(`/search/freelancers?${queryString}`);
   },
   searchJobs: async (params = {}) => {
-    const queryString = new URLSearchParams(params).toString();
+    const normalizedParams = { ...params };
+    if (normalizedParams.q !== undefined && normalizedParams.query === undefined) {
+      normalizedParams.query = normalizedParams.q;
+      delete normalizedParams.q;
+    }
+    const queryString = new URLSearchParams(normalizedParams).toString();
     return apiClient(`/search/jobs?${queryString}`);
   },
   getJobById: async (jobId) => apiClient(`/jobs/${jobId}`),
   searchGigs: async (params = {}) => {
-    const queryString = new URLSearchParams(params).toString();
+    const normalizedParams = { ...params };
+    if (normalizedParams.q !== undefined && normalizedParams.query === undefined) {
+      normalizedParams.query = normalizedParams.q;
+      delete normalizedParams.q;
+    }
+    const queryString = new URLSearchParams(normalizedParams).toString();
     return apiClient(`/search/gigs?${queryString}`);
   },
   getTrendingCategories: async () => {

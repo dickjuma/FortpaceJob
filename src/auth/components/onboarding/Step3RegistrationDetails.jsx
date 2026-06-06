@@ -31,9 +31,9 @@ const createSchema = (accountType, businessStructure) => {
 
 const Step3RegistrationDetails = () => {
   const { accountType, businessStructure, prevStep } = useOnboardingStore();
-  
+
   const schema = createSchema(accountType, businessStructure);
-  
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(schema),
     mode: 'onTouched'
@@ -60,15 +60,15 @@ const Step3RegistrationDetails = () => {
       };
 
       const res = await authAPI.register(payload);
-      
+
       if (res?.accessToken && res?.user) {
         setAuth(res.user, res.accessToken, res.refreshToken);
       }
-      
+
       toast.success('Registration successful!');
       sessionStorage.setItem('pendingVerificationEmail', payload.email);
-      navigate('/auth/verify-email');
-      
+      navigate('/dashboard');
+
     } catch (error) {
       console.error('Registration failed:', error);
       toast.error(error.response?.data?.message || error.message || 'Registration failed. Please try again.');
@@ -76,7 +76,7 @@ const Step3RegistrationDetails = () => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
@@ -106,7 +106,7 @@ const Step3RegistrationDetails = () => {
                 <p className="text-sm text-white/90">Bank-grade encryption & protection</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-4 bg-white/10 p-4 rounded-2xl backdrop-blur-sm border border-white/10">
               <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                 <Zap className="w-6 h-6 text-white" />
@@ -140,7 +140,7 @@ const Step3RegistrationDetails = () => {
 
       {/* Right Panel - Form */}
       <div className="w-full lg:w-7/12 p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
-        <button 
+        <button
           onClick={prevStep}
           className="self-start flex items-center text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white mb-8 transition-colors"
         >
@@ -157,48 +157,48 @@ const Step3RegistrationDetails = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
-            <FormInput 
-              label="Full Name" 
-              {...register('fullName')} 
-              error={errors.fullName} 
+            <FormInput
+              label="Full Name"
+              {...register('fullName')}
+              error={errors.fullName}
             />
           </div>
 
-          <FormInput 
-            label="Email Address" 
-            type="email" 
-            {...register('email')} 
-            error={errors.email} 
+          <FormInput
+            label="Email Address"
+            type="email"
+            {...register('email')}
+            error={errors.email}
           />
 
           {businessStructure !== 'individual' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
-              <FormInput 
-                label="Company Name" 
-                {...register('companyName')} 
-                error={errors.companyName} 
+              <FormInput
+                label="Company Name"
+                {...register('companyName')}
+                error={errors.companyName}
               />
-              <FormInput 
-                label="Industry" 
-                {...register('industry')} 
-                error={errors.industry} 
+              <FormInput
+                label="Industry"
+                {...register('industry')}
+                error={errors.industry}
               />
             </div>
           )}
 
           {accountType === 'freelancer' && (
-            <FormInput 
-              label="Primary Skill / Category" 
-              {...register('primarySkill')} 
-              error={errors.primarySkill} 
+            <FormInput
+              label="Primary Skill / Category"
+              {...register('primarySkill')}
+              error={errors.primarySkill}
             />
           )}
 
-          <FormInput 
-            label="Password" 
-            type="password" 
-            {...register('password')} 
-            error={errors.password} 
+          <FormInput
+            label="Password"
+            type="password"
+            {...register('password')}
+            error={errors.password}
           />
 
           <div className="mt-8 flex items-start gap-3">
@@ -219,8 +219,8 @@ const Step3RegistrationDetails = () => {
             type="submit"
             disabled={isSubmitting}
             className={`mt-8 w-full flex items-center justify-center px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
-              isSubmitting 
-                ? 'bg-zinc-400 cursor-wait' 
+              isSubmitting
+                ? 'bg-zinc-400 cursor-wait'
                 : 'bg-[#2bb75c] hover:bg-[#1d8d38] text-white shadow-lg shadow-[#2bb75c]/25 hover:shadow-[#2bb75c]/25 hover:-tranzinc-y-0.5'
             }`}
           >

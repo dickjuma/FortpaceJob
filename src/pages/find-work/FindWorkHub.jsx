@@ -64,9 +64,26 @@ export default function FindWorkHub() {
             <p className="text-xl text-zinc-300 max-w-3xl mx-auto">
               Explore high-signal remote contracts and local gigs with better classification, verified clients, and proposal-ready detail pages.
             </p>
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
+              {[
+                { label: 'Remote jobs', value: stats.onlineJobs, icon: Globe },
+                { label: 'Local gigs', value: stats.localJobs, icon: MapPin },
+                { label: 'Verified clients', value: stats.verifiedJobs, icon: Briefcase },
+              ].map(({ label, value, icon: Icon }) => (
+                <div key={label} className="rounded-3xl bg-white/10 border border-white/15 px-5 py-4">
+                  <div className="flex items-center gap-3 text-[#d7f9e3] mb-2">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white/15 text-[#2bb75c]">
+                      <Icon className="w-5 h-5" />
+                    </span>
+                    <span className="text-sm uppercase tracking-[0.21em] font-semibold">{label}</span>
+                  </div>
+                  <div className="text-3xl font-black text-white">{value}</div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <form onSubmit={handleSearch} className="bg-white rounded-2xl p-2 shadow-2xl flex flex-col md:flex-row gap-2 max-w-5xl mx-auto">
+          <form onSubmit={handleSearch} className="bg-white rounded-3xl p-3 md:p-4 shadow-2xl flex flex-col md:flex-row gap-3 max-w-5xl mx-auto">
             <div className="flex-1 relative flex items-center">
               <Search className="absolute left-4 w-5 h-5 text-zinc-400" />
               <input
@@ -103,23 +120,18 @@ export default function FindWorkHub() {
             </button>
           </form>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 max-w-4xl mx-auto">
-            <div className="bg-white/10 border border-white/10 rounded-2xl p-4 text-left">
-              <div className="text-xs uppercase tracking-wider text-zinc-300 mb-1">Online Jobs</div>
-              <div className="text-2xl font-black">{stats.onlineJobs}</div>
-            </div>
-            <div className="bg-white/10 border border-white/10 rounded-2xl p-4 text-left">
-              <div className="text-xs uppercase tracking-wider text-zinc-300 mb-1">Local Gigs</div>
-              <div className="text-2xl font-black">{stats.localJobs}</div>
-            </div>
-            <div className="bg-white/10 border border-white/10 rounded-2xl p-4 text-left">
-              <div className="text-xs uppercase tracking-wider text-zinc-300 mb-1">Verified Clients</div>
-              <div className="text-2xl font-black">{stats.verifiedJobs}</div>
-            </div>
-            <div className="bg-white/10 border border-white/10 rounded-2xl p-4 text-left">
-              <div className="text-xs uppercase tracking-wider text-zinc-300 mb-1">Urgent Dispatches</div>
-              <div className="text-2xl font-black">{stats.urgentJobs}</div>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-10 max-w-5xl mx-auto">
+            {[
+              { label: 'Online Jobs', value: stats.onlineJobs, accent: 'from-[#58d47b] to-[#2bb75c]' },
+              { label: 'Local Gigs', value: stats.localJobs, accent: 'from-[#0ea5e9] to-[#6366f1]' },
+              { label: 'Verified Clients', value: stats.verifiedJobs, accent: 'from-[#facc15] to-[#f97316]' },
+              { label: 'Urgent Dispatches', value: stats.urgentJobs, accent: 'from-[#f43f5e] to-[#ec4899]' },
+            ].map(({ label, value, accent }) => (
+              <div key={label} className={`rounded-[2rem] bg-gradient-to-br ${accent} p-5 text-white shadow-2xl`}>
+                <div className="text-xs uppercase tracking-[0.28em] font-semibold text-white/80 mb-3">{label}</div>
+                <div className="text-3xl font-black">{value}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -133,12 +145,12 @@ export default function FindWorkHub() {
       <div className="bg-surface min-h-screen py-16">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
           <div className="mb-16">
-            <div className="flex justify-between items-end mb-8 gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
               <div>
-                <h2 className="text-2xl font-bold text-zinc-900 mb-2">Browse Categories</h2>
-                <p className="text-zinc-600">Real categories, consistent counts, and working detail pages.</p>
+                <h2 className="text-3xl font-black text-zinc-900 mb-2">Browse categories designed for discovery</h2>
+                <p className="text-zinc-600 max-w-xl">Explore work categories that map directly to client briefs, role taxonomies, and search-ready job filters.</p>
               </div>
-              <Link to="/find-work/categories" className="text-[#2bb75c] font-bold text-sm hover:underline">
+              <Link to="/find-work/categories" className="text-[#2bb75c] font-bold text-sm uppercase tracking-[0.18em] hover:underline">
                 View All
               </Link>
             </div>

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { 
-  Search, Briefcase, UserCircle, MessageSquare, BarChart2, 
-  ChevronDown, Bell, Wallet, LayoutDashboard, FileText, ShoppingCart, Calendar, 
-  DollarSign, Star, Receipt, Layers, PlusSquare, Heart, Send, 
-  Users, FolderKanban, Building2, Building, Shield, Folder, Upload, Share2, 
-  Download, BadgeCheck, Lock, Blocks, Palette, HelpCircle, Ticket, 
+import {
+  Search, Briefcase, UserCircle, MessageSquare, BarChart2,
+  ChevronDown, Bell, Wallet, LayoutDashboard, FileText, ShoppingCart, Calendar,
+  DollarSign, Star, Receipt, Layers, PlusSquare, Heart, Send,
+  Users, FolderKanban, Building2, Building, Shield, ShieldCheck, Folder, Upload, Share2,
+  Download, BadgeCheck, Lock, Blocks, Palette, HelpCircle, Ticket,
   MessageCircle, GraduationCap, Zap, Gift, LogOut, PanelLeftClose, PanelLeft, Plus,
-  MapPin, CalendarCheck, Compass, Map, Video
+  MapPin, CalendarCheck, Compass, Map, Video, ArrowUpRight, Smartphone, Globe, Bookmark
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
 import { useFreelancer } from '../context/FreelancerContext';
@@ -19,14 +19,12 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
   const { user, logout } = useAuthStore();
   const { data: walletData } = useFreelancerWallet();
   const availableBalance = walletData?.availableBalance || walletData?.available || 0;
-  
+
   // Track open dropdowns (desktop & mobile)
   const [openDropdowns, setOpenDropdowns] = useState({
     main: true,
     business: false,
     marketplace: false,
-    team: false,
-    files: false,
     account: false,
     support: false,
     offline: true,
@@ -37,7 +35,6 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
     setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // Nav configuration based on prompt
   const getNavSections = () => {
     const sections = [
       {
@@ -47,10 +44,10 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
         links: [
           { name: 'Dashboard', path: '/freelancer/dashboard', icon: LayoutDashboard },
           { name: 'Find Work', path: '/freelancer/jobs', icon: Search },
-          { name: 'My Jobs', path: '/freelancer/my-jobs', icon: Briefcase },
+          { name: 'Work History', path: '/freelancer/my-jobs', icon: Briefcase },
+          { name: 'Orders', path: '/freelancer/orders', icon: ShoppingCart },
           { name: 'Contracts', path: '/freelancer/contracts', icon: FileText },
           { name: 'Disputes', path: '/freelancer/disputes', icon: Shield },
-          { name: 'Orders', path: '/freelancer/orders', icon: ShoppingCart },
           { name: 'Messages', path: '/freelancer/messages', icon: MessageSquare },
           { name: 'Calendar', path: '/freelancer/calendar', icon: Calendar },
         ]
@@ -61,9 +58,12 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
         icon: Briefcase,
         links: [
           { name: 'Wallet', path: '/freelancer/wallet', icon: Wallet },
+          { name: 'Escrow', path: '/freelancer/escrow', icon: ShieldCheck },
+          { name: 'Withdrawals', path: '/freelancer/withdrawal', icon: ArrowUpRight },
+          { name: 'Payment Setup', path: '/freelancer/payment-setup', icon: Smartphone },
           { name: 'Earnings', path: '/freelancer/earnings', icon: DollarSign },
           { name: 'Analytics', path: '/freelancer/analytics', icon: BarChart2 },
-          { name: 'Reviews & Ratings', path: '/freelancer/reviews', icon: Star },
+          { name: 'Reviews', path: '/freelancer/reviews', icon: Star },
           { name: 'Invoices', path: '/freelancer/tax-invoices', icon: Receipt },
         ]
       },
@@ -73,55 +73,14 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
         icon: Layers,
         links: [
           { name: 'My Services', path: '/freelancer/gigs', icon: Layers },
-          { name: 'Portfolio', path: '/freelancer/portfolio', icon: Upload },
           { name: 'Create Service', path: '/freelancer/gigs/create', icon: PlusSquare },
-          { name: 'Saved Jobs', path: '/freelancer/saved', icon: Heart },
+          { name: 'Portfolio', path: '/freelancer/portfolio', icon: Upload },
+          { name: 'Saved Jobs', path: '/freelancer/saved-jobs', icon: Heart },
           { name: 'Proposals', path: '/freelancer/proposals', icon: Send },
-          { name: 'Plans & Pricing', path: '/pricing', icon: Zap },
-           { name: 'Video Calls', path: '/freelancer/bookings', icon: Video },
-        ]
-      }
-    ];
-
-    if (isOfflineProvider) {
-      sections.push({
-        key: 'offline',
-        title: 'LOCAL & OFFLINE',
-        icon: MapPin,
-        links: [
-          { name: 'Nearby Jobs', path: '/freelancer/nearby', icon: MapPin },
-          { name: 'Booking Requests', path: '/freelancer/booking-requests', icon: CalendarCheck },
-          { name: 'Service Radius', path: '/freelancer/radius', icon: Compass },
-          { name: 'Physical Appointments', path: '/freelancer/appointments', icon: Map },
-        ]
-      });
-    }
-
-    if (accountType === 'SME' || accountType === 'CORPORATE') {
-      sections.push({
-        key: 'team',
-        title: 'TEAM & WORKSPACE',
-        icon: Users,
-        links: [
-          { name: 'Team Members', path: '/freelancer/team', icon: Users },
-          { name: 'Shared Projects', path: '/freelancer/projects', icon: FolderKanban },
-          { name: 'Workspace', path: '/freelancer/workspace', icon: Building2 },
-          { name: 'Departments', path: '/freelancer/departments', icon: Building },
-          { name: 'Permissions', path: '/freelancer/permissions', icon: Shield },
-        ]
-      });
-    }
-
-    sections.push(
-      {
-        key: 'files',
-        title: 'FILES & RESOURCES',
-        icon: Folder,
-        links: [
-          { name: 'File Manager', path: '/freelancer/files', icon: Folder },
-          { name: 'Upload Center', path: '/freelancer/upload', icon: Upload },
-          { name: 'Shared Assets', path: '/freelancer/assets', icon: Share2 },
-          { name: 'Downloads', path: '/freelancer/downloads', icon: Download },
+          { name: 'Remote Jobs', path: '/freelancer/remote-jobs', icon: Globe },
+          { name: 'Hybrid Jobs', path: '/freelancer/hybrid-jobs', icon: MapPin },
+          { name: 'Global Search', path: '/freelancer/global-search-results', icon: Search },
+          { name: 'Bookmarks', path: '/freelancer/global-bookmarks', icon: Bookmark },
         ]
       },
       {
@@ -130,7 +89,6 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
         icon: UserCircle,
         links: [
           { name: 'My Profile', path: '/freelancer/profile', icon: UserCircle },
-          { name: 'Profile Intelligence', path: '/freelancer/profile-intelligence', icon: BadgeCheck },
           { name: 'Verification', path: '/freelancer/verification-center', icon: BadgeCheck },
           { name: 'Notification Settings', path: '/freelancer/notifications', icon: Bell },
           { name: 'Privacy & Security', path: '/freelancer/security', icon: Lock },
@@ -145,11 +103,22 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
         links: [
           { name: 'Help Center', path: '/freelancer/help', icon: HelpCircle },
           { name: 'Support Tickets', path: '/freelancer/tickets', icon: Ticket },
-          { name: 'Community', path: '/freelancer/community', icon: MessageCircle },
+          { name: 'Community', path: '/freelancer/community-forum', icon: MessageCircle },
           { name: 'Tutorials', path: '/freelancer/tutorials', icon: GraduationCap },
         ]
       }
-    );
+    ];
+
+    if (isOfflineProvider) {
+      sections.push({
+        key: 'offline',
+        title: 'LOCAL & OFFLINE',
+        icon: MapPin,
+        links: [
+          { name: 'Nearby Jobs', path: '/freelancer/nearby-jobs', icon: MapPin },
+        ]
+      });
+    }
 
     return sections;
   };
@@ -160,7 +129,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
     <>
       {/* Mobile Overlay */}
       {isMobileOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-[#222222]/20 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setIsMobileOpen(false)}
         />
@@ -172,7 +141,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
         isMobileOpen ? "tranzinc-x-0" : "-tranzinc-x-full lg:tranzinc-x-0",
         isCollapsed ? "w-20" : "w-72"
       )}>
-        
+
         {/* Header Area */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-border shrink-0 bg-white">
           <Link to="/freelancer" className={cn("flex items-center gap-2 overflow-hidden transition-all duration-300", isCollapsed ? "w-8" : "w-auto")}>
@@ -181,7 +150,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
             </div>
             {!isCollapsed && <span className="font-black text-lg tracking-tight text-[#222222] whitespace-nowrap">Forte Space</span>}
           </Link>
-          <button 
+          <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="hidden lg:flex p-1.5 text-text-secondary hover:text-[#222222] hover:bg-light-gray rounded-md transition-colors"
           >
@@ -196,14 +165,14 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
         )}>
           <div className="flex items-center gap-3">
             <div className="relative shrink-0 mx-auto">
-              <img 
-                src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop"} 
-                alt="Profile" 
+              <img
+                src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop"}
+                alt="Profile"
                 className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
               />
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-success border-2 border-white rounded-full"></div>
             </div>
-            
+
             {!isCollapsed && (
               <div className="flex-1 min-w-0">
                 <h3 className="text-sm font-bold text-text-primary truncate">{user?.firstName || 'User'} {user?.lastName || ''}</h3>
@@ -237,7 +206,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
             return (
               <div key={section.key} className="space-y-1">
                 {!isCollapsed && (
-                  <button 
+                  <button
                     onClick={() => toggleDropdown(section.key)}
                     className="w-full flex items-center justify-between px-4 py-2 hover:bg-light-gray/50 transition-colors group"
                   >
@@ -258,8 +227,8 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
                     {section.links.map(link => {
                       const LinkIcon = link.icon;
                       return (
-                        <NavLink 
-                          key={link.name} 
+                        <NavLink
+                          key={link.name}
                           to={link.path}
                           className={({ isActive }) => cn(
                             "flex items-center gap-3 py-2 rounded-lg transition-all relative group",
@@ -270,7 +239,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
                           {({ isActive }) => (
                             <>
                               <LinkIcon size={isCollapsed ? 20 : 18} className={cn("shrink-0 transition-colors", isActive ? "text-success" : "text-text-secondary group-hover:text-[#222222]")} />
-                              
+
                               {!isCollapsed && (
                                 <span className="text-sm truncate">{link.name}</span>
                               )}
@@ -281,7 +250,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
                                   {link.name}
                                 </div>
                               )}
-                              
+
                               {/* Active indicator bar */}
                               {isActive && !isCollapsed && (
                                 <div className="absolute left-0 top-1/2 -tranzinc-y-1/2 w-1 h-5 bg-success rounded-r-full" />
@@ -300,7 +269,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
 
         {/* Bottom Section */}
         <div className="p-4 border-t border-border bg-white space-y-1 shrink-0">
-          <NavLink 
+          <NavLink
             to="/freelancer/upgrade"
             className={({ isActive }) => cn(
               "flex items-center gap-3 py-2 rounded-lg transition-all relative group",
@@ -316,7 +285,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
               </div>
             )}
           </NavLink>
-          <NavLink 
+          <NavLink
             to="/freelancer/referrals"
             className={({ isActive }) => cn(
               "flex items-center gap-3 py-2 rounded-lg transition-all relative group",
@@ -332,7 +301,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
               </div>
             )}
           </NavLink>
-          <button 
+          <button
             onClick={logout}
             className={cn(
               "w-full flex items-center gap-3 py-2 rounded-lg transition-all relative group text-text-secondary hover:text-[#e63946] hover:bg-[#e63946]/5 font-medium",

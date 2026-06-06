@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate, Routes, Route } from "react-router-dom";
 import { useAuthStore } from "../../admin/store/authStore";
-import { 
-  Home, 
-  Package, 
-  Briefcase, 
-  MessageSquare, 
-  BarChart, 
-  User, 
+import {
+  Home,
+  Package,
+  Briefcase,
+  MessageSquare,
+  BarChart,
+  User,
   Settings,
   Wallet,
   FileText,
@@ -108,7 +108,7 @@ const ClientDashboard = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate("/signin");
+    navigate("/auth/login");
   };
 
   const menuItems = [

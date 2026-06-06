@@ -294,7 +294,7 @@ export function getClientPostedJobs() {
 
 export function getRelatedFindWorkJobs(job, limit = 3) {
    if (!job || !job.categoryId) return [];
-   
+
    // Find jobs in the same category, excluding the current job
    const related = FIND_WORK_JOBS
       .filter(j => j.id !== job.id && j.categoryId === job.categoryId)
@@ -304,7 +304,7 @@ export function getRelatedFindWorkJobs(job, limit = 3) {
          return b.applicants - a.applicants;
       })
       .slice(0, limit);
-   
+
    return related;
  }
 
@@ -315,7 +315,7 @@ export function getFindWorkStats() {
    const verifiedJobs = FIND_WORK_JOBS.filter(job => job.client?.verified).length;
    const urgentJobs = FIND_WORK_JOBS.filter(job => job.urgent).length;
    const totalApplicants = FIND_WORK_JOBS.reduce((sum, job) => sum + (job.applicants || 0), 0);
-   
+
    return {
       totalJobs,
       onlineJobs,
@@ -348,7 +348,7 @@ async function fetchBackendJobs(filters = {}) {
   const { query = '', categoryId = '', workMode = 'all', limit = 50, sortBy = 'recommended' } = filters;
   const params = { limit };
 
-  if (query) params.q = query;
+  if (query) params.query = query;
   if (categoryId) params.category = categoryId;
   if (workMode !== 'all') params.type = workMode === 'local' ? 'ONSITE' : 'REMOTE';
 

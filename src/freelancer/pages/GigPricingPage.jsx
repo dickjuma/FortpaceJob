@@ -1,11 +1,10 @@
+// src/pages/freelancer/GigPricingPage.jsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  DollarSign, Check, Plus, Trash2, Zap, BarChart3, 
-  Target, Info, ArrowUpRight, TrendingUp, Clock
+import {
+  DollarSign, Check, Plus, Trash2, Zap, BarChart3,
+  Target, Info, ArrowUpRight, TrendingUp, Clock, X
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
-import toast, { Toaster } from 'react-hot-toast';
 
 // Mock Addons Database
 const ADDON_SUGGESTIONS = [
@@ -17,15 +16,13 @@ const ADDON_SUGGESTIONS = [
 
 export default function GigPricingPage() {
   const [packagesEnabled, setPackagesEnabled] = useState(true);
-
-  // State for the 3 packages
   const [packages, setPackages] = useState({
     basic: { name: 'Basic', title: '', desc: '', delivery: 3, revisions: 1, price: 5000, features: [true, false, false] },
     standard: { name: 'Standard', title: '', desc: '', delivery: 5, revisions: 3, price: 12000, features: [true, true, false] },
     premium: { name: 'Premium', title: '', desc: '', delivery: 7, revisions: -1, price: 25000, features: [true, true, true] }
   });
-
   const [addons, setAddons] = useState([]);
+  const [showSuccess, setShowSuccess] = useState(null);
 
   const featureLabels = ['Responsive Design', 'Source Code', 'Deployment Setup'];
 
@@ -40,7 +37,6 @@ export default function GigPricingPage() {
     setPackages(prev => {
       const newFeatures = [...prev[pkg].features];
       newFeatures[featureIndex] = !newFeatures[featureIndex];
-      if (newFeatures[featureIndex]) toast.success('Feature enabled');
       return { ...prev, [pkg]: { ...prev[pkg], features: newFeatures } };
     });
   };
@@ -48,227 +44,245 @@ export default function GigPricingPage() {
   const addAddon = (suggestion) => {
     if (!addons.find(a => a.id === suggestion.id)) {
       setAddons([...addons, { ...suggestion }]);
-      toast.success('Add-on applied');
+      setShowSuccess({ message: `Added: ${suggestion.title}` });
+      setTimeout(() => setShowSuccess(null), 2000);
     }
   };
 
   const removeAddon = (id) => {
     setAddons(addons.filter(a => a.id !== id));
-    toast('Add-on removed', { icon: '🗑️' });
+    setShowSuccess({ message: 'Add-on removed' });
+    setTimeout(() => setShowSuccess(null), 1500);
+  };
+
+  const getRevisionText = (revisions) => {
+    if (revisions === -1) return 'Unlimited Revisions';
+    if (revisions === 0) return '0 Revisions';
+    if (revisions === 1) return '1 Revision';
+    return `${revisions} Revisions`;
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 items-start w-full font-sans">
-      <Toaster position="top-center" />
-      
-      {/* Main Form Area */}
-      <div className="flex-1 w-full space-y-8">
-        
-        {/* Toggle 3 Packages */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">Offer Packages</h2>
-            <p className="text-sm text-zinc-500">Offering 3 packages increases your chances of getting a higher-value order by 64%.</p>
-          </div>
-          <div 
-            onClick={() => setPackagesEnabled(!packagesEnabled)}
-            className={cn(
-              "w-12 h-6 rounded-full transition-colors relative flex items-center p-1 cursor-pointer shrink-0",
-              packagesEnabled ? "bg-[#2bb75c]" : "bg-zinc-200 dark:bg-zinc-700"
-            )}
+    <div className="flex flex-col lg:flex-row gap-8 items-start w-full">
+
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
           >
-            <motion.div layout className="w-4 h-4 bg-white rounded-full shadow-sm" animate={{ x: packagesEnabled ? 24 : 0 }} />
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Main Form Area */}
+      <div className="flex-1 w-full space-y-6">
+
+        {/* Toggle Packages */}
+        <div className="bg-white border border-border rounded-2xl p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <h2 className="font-display font-semibold text-lg text-brand-900 mb-1">Offer packages</h2>
+            <p className="text-sm font-body text-ink-secondary">Offering 3 packages increases your chances of higher-value orders</p>
+          </div>
+          <div
+            onClick={() => setPackagesEnabled(!packagesEnabled)}
+            className={`w-11 h-6 rounded-full transition-colors relative flex items-center p-1 cursor-pointer shrink-0 ${
+              packagesEnabled ? "bg-accent DEFAULT" : "bg-border"
+            }`}
+          >
+            <motion.div
+              layout
+              className="w-4 h-4 bg-white rounded-full shadow-sm"
+              animate={{ x: packagesEnabled ? 20 : 0 }}
+            />
           </div>
         </div>
 
-        {/* Pricing Table / Cards */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-          
+        {/* Pricing Table */}
+        <div className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
+
           {/* Header Row */}
-          <div className="grid grid-cols-4 border-b border-zinc-200 dark:border-zinc-800 bg-surface dark:bg-zinc-800/30">
-            <div className="col-span-1 p-6 border-r border-zinc-200 dark:border-zinc-800 flex flex-col justify-end">
-              <h3 className="font-bold text-zinc-900 dark:text-white">Package Details</h3>
+          <div className="grid grid-cols-4 border-b border-border bg-surface-soft">
+            <div className="col-span-1 p-5 border-r border-border">
+              <h3 className="font-body font-semibold text-ink-primary">Package details</h3>
             </div>
-            
-            {['basic', 'standard', 'premium'].map((pkgType, idx) => (
-              <div key={pkgType} className={cn(
-                "col-span-1 p-6 text-center relative transition-all",
-                idx !== 2 && "border-r border-zinc-200 dark:border-zinc-800",
-                pkgType === 'standard' && packagesEnabled ? "bg-[#2bb75c]/5/50 dark:bg-[#2bb75c]/5" : "",
-                !packagesEnabled && pkgType !== 'basic' ? "opacity-30 pointer-events-none grayscale" : ""
-              )}>
-                {pkgType === 'standard' && packagesEnabled && (
-                  <div className="absolute top-0 left-1/2 -tranzinc-x-1/2 bg-[#2bb75c] text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-b-lg">
-                    Recommended
+
+            {['basic', 'standard', 'premium'].map((pkgType, idx) => {
+              const isDisabled = !packagesEnabled && pkgType !== 'basic';
+              return (
+                <div
+                  key={pkgType}
+                  className={`col-span-1 p-5 text-center relative ${
+                    idx !== 2 && "border-r border-border"
+                  } ${isDisabled ? "opacity-40" : ""}`}
+                >
+                  {pkgType === 'standard' && packagesEnabled && (
+                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-accent DEFAULT text-white text-xs font-body font-medium px-3 py-0.5 rounded-full">
+                      Recommended
+                    </div>
+                  )}
+                  <h4 className={`font-body font-semibold text-base mb-2 ${
+                    pkgType === 'basic' ? "text-ink-primary" :
+                    pkgType === 'standard' ? "text-accent DEFAULT" : "text-ink-primary"
+                  }`}>
+                    {packages[pkgType].name}
+                  </h4>
+                  <div className="flex items-center justify-center gap-1">
+                    <span className="text-sm font-mono font-medium text-ink-tertiary">KES</span>
+                    <input
+                      type="number"
+                      value={packages[pkgType].price}
+                      onChange={(e) => handlePackageChange(pkgType, 'price', parseInt(e.target.value) || 0)}
+                      className="w-24 bg-transparent font-mono font-bold text-xl text-ink-primary outline-none text-center focus:ring-2 focus:ring-brand-900 rounded"
+                      disabled={isDisabled}
+                    />
                   </div>
-                )}
-                <h4 className={cn(
-                  "text-lg font-black uppercase tracking-wide mb-1",
-                  pkgType === 'basic' ? "text-zinc-700 dark:text-zinc-300" : pkgType === 'standard' ? "text-[#2bb75c] dark:text-[#2bb75c]" : "text-violet-600 dark:text-violet-400"
-                )}>
-                  {packages[pkgType].name}
-                </h4>
-                <div className="flex items-center justify-center gap-1">
-                  <span className="text-sm font-bold text-zinc-400">KES</span>
-                  <input 
-                    type="number" 
-                    value={packages[pkgType].price}
-                    onChange={(e) => handlePackageChange(pkgType, 'price', e.target.value)}
-                    className="w-24 bg-transparent text-2xl font-black text-zinc-900 dark:text-white outline-none text-center"
-                  />
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          {/* Inputs Row - Titles & Description */}
-          <div className="grid grid-cols-4 border-b border-zinc-200 dark:border-zinc-800">
-            <div className="col-span-1 p-6 border-r border-zinc-200 dark:border-zinc-800">
-              <span className="text-xs font-bold text-zinc-500 uppercase">Title & Description</span>
+          {/* Title & Description Row */}
+          <div className="grid grid-cols-4 border-b border-border">
+            <div className="col-span-1 p-5 border-r border-border">
+              <span className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide">Title & description</span>
             </div>
-            {['basic', 'standard', 'premium'].map((pkgType, idx) => (
-              <div key={pkgType} className={cn(
-                "col-span-1 p-4 space-y-3",
-                idx !== 2 && "border-r border-zinc-200 dark:border-zinc-800",
-                pkgType === 'standard' && packagesEnabled ? "bg-[#2bb75c]/5/30 dark:bg-[#2bb75c]/5" : "",
-                !packagesEnabled && pkgType !== 'basic' ? "opacity-30 pointer-events-none" : ""
-              )}>
-                <input 
-                  type="text" 
-                  placeholder="Name your package"
-                  value={packages[pkgType].title}
-                  onChange={(e) => handlePackageChange(pkgType, 'title', e.target.value)}
-                  className="w-full text-sm font-bold bg-zinc-100 dark:bg-zinc-800 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-[#2bb75c] text-zinc-900 dark:text-white placeholder:text-zinc-400"
-                />
-                <textarea 
-                  rows="4"
-                  placeholder="Describe the details of your offering..."
-                  value={packages[pkgType].desc}
-                  onChange={(e) => handlePackageChange(pkgType, 'desc', e.target.value)}
-                  className="w-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-[#2bb75c] resize-none text-zinc-700 dark:text-zinc-300 placeholder:text-zinc-400"
-                />
-              </div>
-            ))}
+            {['basic', 'standard', 'premium'].map((pkgType, idx) => {
+              const isDisabled = !packagesEnabled && pkgType !== 'basic';
+              return (
+                <div key={pkgType} className={`col-span-1 p-4 space-y-3 ${idx !== 2 && "border-r border-border"} ${isDisabled ? "opacity-40" : ""}`}>
+                  <input
+                    type="text"
+                    placeholder="Package name"
+                    value={packages[pkgType].title}
+                    onChange={(e) => handlePackageChange(pkgType, 'title', e.target.value)}
+                    className="w-full h-10 px-3 text-sm font-body bg-white border border-border rounded-lg text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                    disabled={isDisabled}
+                  />
+                  <textarea
+                    rows={3}
+                    placeholder="Describe what's included..."
+                    value={packages[pkgType].desc}
+                    onChange={(e) => handlePackageChange(pkgType, 'desc', e.target.value)}
+                    className="w-full px-3 py-2 text-sm font-body bg-white border border-border rounded-lg text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900 resize-none"
+                    disabled={isDisabled}
+                  />
+                </div>
+              );
+            })}
           </div>
 
           {/* Features Row */}
-          <div className="grid grid-cols-4 border-b border-zinc-200 dark:border-zinc-800">
-            <div className="col-span-1 border-r border-zinc-200 dark:border-zinc-800">
+          <div className="grid grid-cols-4 border-b border-border">
+            <div className="col-span-1 border-r border-border">
               {featureLabels.map((label, i) => (
-                <div key={i} className={cn("px-6 py-4 text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center h-14", i !== featureLabels.length -1 && "border-b border-zinc-100 dark:border-zinc-800/50")}>
+                <div key={i} className="px-5 py-3 text-sm font-body font-medium text-ink-primary flex items-center h-12 border-b border-border last:border-b-0">
                   {label}
                 </div>
               ))}
             </div>
-            
-            {['basic', 'standard', 'premium'].map((pkgType, idx) => (
-              <div key={pkgType} className={cn(
-                "col-span-1",
-                idx !== 2 && "border-r border-zinc-200 dark:border-zinc-800",
-                pkgType === 'standard' && packagesEnabled ? "bg-[#2bb75c]/5/30 dark:bg-[#2bb75c]/5" : "",
-                !packagesEnabled && pkgType !== 'basic' ? "opacity-30 pointer-events-none" : ""
-              )}>
-                {packages[pkgType].features.map((feature, fIdx) => (
-                  <div key={fIdx} className={cn("px-6 py-4 flex items-center justify-center h-14", fIdx !== packages[pkgType].features.length -1 && "border-b border-zinc-100 dark:border-zinc-800/50")}>
-                    <input 
-                      type="checkbox" 
-                      checked={feature}
-                      onChange={() => handleFeatureToggle(pkgType, fIdx)}
-                      className="w-5 h-5 text-[#2bb75c] rounded border-zinc-300 focus:ring-[#2bb75c] cursor-pointer"
-                    />
-                  </div>
-                ))}
-              </div>
-            ))}
+
+            {['basic', 'standard', 'premium'].map((pkgType, idx) => {
+              const isDisabled = !packagesEnabled && pkgType !== 'basic';
+              return (
+                <div key={pkgType} className={`col-span-1 ${idx !== 2 && "border-r border-border"} ${isDisabled ? "opacity-40" : ""}`}>
+                  {packages[pkgType].features.map((feature, fIdx) => (
+                    <div key={fIdx} className="px-5 py-3 flex items-center justify-center h-12 border-b border-border last:border-b-0">
+                      <input
+                        type="checkbox"
+                        checked={feature}
+                        onChange={() => handleFeatureToggle(pkgType, fIdx)}
+                        className="w-4 h-4 text-accent DEFAULT rounded border-border focus:ring-accent DEFAULT cursor-pointer"
+                        disabled={isDisabled}
+                      />
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
           </div>
 
           {/* Delivery & Revisions Row */}
-          <div className="grid grid-cols-4 bg-surface dark:bg-zinc-800/30">
-            <div className="col-span-1 p-6 border-r border-zinc-200 dark:border-zinc-800 space-y-8">
-              <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2"><Clock className="w-4 h-4 text-zinc-400" /> Delivery Time</span>
-              <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2 pt-2"><Check className="w-4 h-4 text-zinc-400" /> Revisions</span>
-            </div>
-            {['basic', 'standard', 'premium'].map((pkgType, idx) => (
-              <div key={pkgType} className={cn(
-                "col-span-1 p-6 space-y-6",
-                idx !== 2 && "border-r border-zinc-200 dark:border-zinc-800",
-                pkgType === 'standard' && packagesEnabled ? "bg-[#2bb75c]/5/50 dark:bg-[#2bb75c]/10" : "",
-                !packagesEnabled && pkgType !== 'basic' ? "opacity-30 pointer-events-none" : ""
-              )}>
-                <select 
-                  value={packages[pkgType].delivery}
-                  onChange={(e) => handlePackageChange(pkgType, 'delivery', parseInt(e.target.value))}
-                  className="w-full p-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#2bb75c]/20"
-                >
-                  <option value={1}>1 Day Delivery</option>
-                  <option value={2}>2 Days Delivery</option>
-                  <option value={3}>3 Days Delivery</option>
-                  <option value={5}>5 Days Delivery</option>
-                  <option value={7}>7 Days Delivery</option>
-                  <option value={14}>14 Days Delivery</option>
-                </select>
-
-                <select 
-                  value={packages[pkgType].revisions}
-                  onChange={(e) => handlePackageChange(pkgType, 'revisions', parseInt(e.target.value))}
-                  className="w-full p-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-zinc-900 dark:text-white outline-none focus:border-[#2bb75c]/20 mt-2"
-                >
-                  <option value={0}>0 Revisions</option>
-                  <option value={1}>1 Revision</option>
-                  <option value={2}>2 Revisions</option>
-                  <option value={3}>3 Revisions</option>
-                  <option value={-1}>Unlimited Revisions</option>
-                </select>
+          <div className="grid grid-cols-4 bg-surface-soft">
+            <div className="col-span-1 p-5 border-r border-border space-y-6">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-ink-tertiary" />
+                <span className="text-sm font-body font-medium text-ink-primary">Delivery</span>
               </div>
-            ))}
-          </div>
+              <div className="flex items-center gap-2 pt-2">
+                <Check className="w-4 h-4 text-ink-tertiary" />
+                <span className="text-sm font-body font-medium text-ink-primary">Revisions</span>
+              </div>
+            </div>
+            {['basic', 'standard', 'premium'].map((pkgType, idx) => {
+              const isDisabled = !packagesEnabled && pkgType !== 'basic';
+              return (
+                <div key={pkgType} className={`col-span-1 p-5 space-y-5 ${idx !== 2 && "border-r border-border"} ${isDisabled ? "opacity-40" : ""}`}>
+                  <select
+                    value={packages[pkgType].delivery}
+                    onChange={(e) => handlePackageChange(pkgType, 'delivery', parseInt(e.target.value))}
+                    className="w-full h-10 px-3 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                    disabled={isDisabled}
+                  >
+                    <option value={1}>1 day</option>
+                    <option value={2}>2 days</option>
+                    <option value={3}>3 days</option>
+                    <option value={5}>5 days</option>
+                    <option value={7}>7 days</option>
+                    <option value={14}>14 days</option>
+                  </select>
 
+                  <select
+                    value={packages[pkgType].revisions}
+                    onChange={(e) => handlePackageChange(pkgType, 'revisions', parseInt(e.target.value))}
+                    className="w-full h-10 px-3 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                    disabled={isDisabled}
+                  >
+                    <option value={0}>0 revisions</option>
+                    <option value={1}>1 revision</option>
+                    <option value={2}>2 revisions</option>
+                    <option value={3}>3 revisions</option>
+                    <option value={-1}>Unlimited revisions</option>
+                  </select>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Add-ons Section */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 shadow-sm">
-          <div className="flex items-start justify-between mb-6">
-            <div>
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-1">Extra Services (Add-ons)</h2>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Boost your order value by offering additional services.
-              </p>
-            </div>
+        <div className="bg-white border border-border rounded-2xl p-5 shadow-sm">
+          <div className="mb-5">
+            <h2 className="font-display font-semibold text-lg text-brand-900 mb-1">Extra services (add-ons)</h2>
+            <p className="text-sm font-body text-ink-secondary">Boost your order value by offering additional services</p>
           </div>
 
           {/* Current Addons */}
-          <div className="space-y-3 mb-6">
+          <div className="space-y-2 mb-5">
             <AnimatePresence>
               {addons.map(addon => (
-                <motion.div 
+                <motion.div
                   key={addon.id}
-                  initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-                  className="flex items-center gap-4 p-4 bg-surface dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-2xl"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="flex items-center gap-3 p-3 bg-surface-soft border border-border rounded-xl"
                 >
                   <div className="flex-1">
-                    <input 
-                      type="text" 
-                      value={addon.title} 
-                      readOnly
-                      className="bg-transparent font-bold text-zinc-900 dark:text-white outline-none w-full"
-                    />
+                    <span className="font-body font-semibold text-sm text-ink-primary">{addon.title}</span>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-zinc-500 font-semibold">For an extra</span>
-                      <div className="flex items-center bg-white dark:bg-surface-dark px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700">
-                        <span className="text-zinc-400 font-bold">KES</span>
-                        <input type="number" value={addon.price} readOnly className="w-16 bg-transparent text-sm font-bold outline-none text-center ml-1" />
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-zinc-500 font-semibold">and an additional</span>
-                      <select disabled className="bg-white dark:bg-surface-dark px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 text-sm font-bold outline-none">
-                        <option>{addon.days < 0 ? 'Reduces time' : `${addon.days} Days`}</option>
-                      </select>
-                    </div>
-                    <button onClick={() => removeAddon(addon.id)} className="p-2 text-zinc-400 hover:text-rose-500 transition-colors">
-                      <Trash2 className="w-5 h-5" />
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-mono font-semibold text-ink-primary">KES {addon.price.toLocaleString()}</span>
+                    <button
+                      onClick={() => removeAddon(addon.id)}
+                      className="p-1.5 text-ink-tertiary hover:text-danger transition-colors rounded"
+                    >
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </motion.div>
@@ -278,91 +292,97 @@ export default function GigPricingPage() {
 
           {/* Suggestions */}
           <div>
-            <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">Suggested Add-ons</h4>
+            <h4 className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide mb-2">
+              Suggested add-ons
+            </h4>
             <div className="flex flex-wrap gap-2">
               {ADDON_SUGGESTIONS.map(sug => {
                 const isAdded = addons.some(a => a.id === sug.id);
                 return (
-                  <button 
+                  <button
                     key={sug.id}
                     onClick={() => addAddon(sug)}
                     disabled={isAdded}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border transition-all disabled:opacity-50 disabled:cursor-not-allowed border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-[#2bb75c]/20 hover:text-[#2bb75c]"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-body font-medium border transition-all disabled:opacity-50 disabled:cursor-not-allowed border-border bg-white text-ink-primary hover:border-accent DEFAULT hover:text-accent DEFAULT"
                   >
-                    <Plus className="w-4 h-4" /> {sug.title} (+KES {sug.price})
+                    <Plus className="w-3.5 h-3.5" /> {sug.title} (+KES {sug.price.toLocaleString()})
                   </button>
                 );
               })}
             </div>
           </div>
         </div>
-
       </div>
 
-      {/* Sidebar - Analytics & Insights */}
-      <div className="w-full lg:w-80 shrink-0 space-y-6">
-        
-        {/* Pricing Recommendation Widget */}
-        <div className="bg-gradient-to-br from-[#2bb75c] to-violet-600 rounded-3xl p-6 text-white shadow-xl shadow-[#2bb75c]/25/20">
+      {/* Sidebar */}
+      <div className="w-full lg:w-80 shrink-0 space-y-5">
+
+        {/* Pricing Insights */}
+        <div className="bg-gradient-to-br from-brand-900 to-brand-800 rounded-2xl p-5 text-white shadow-sm">
           <div className="flex items-center gap-2 mb-4">
-            <Target className="w-5 h-5 text-[#2bb75c]" />
-            <h3 className="font-bold text-[#2bb75c]">Pricing Insights</h3>
+            <Target className="w-5 h-5 text-accent-light" />
+            <h3 className="font-body font-semibold">Pricing insights</h3>
           </div>
-          
-          <h4 className="text-3xl font-black mb-1">KES 8,500</h4>
-          <p className="text-sm text-[#2bb75c] font-semibold mb-6">Average order value in your category</p>
-          
-          <div className="space-y-4">
-            <div className="bg-white/10 p-3 rounded-xl border border-white/10 flex items-start gap-3">
-              <Check className="w-4 h-4 text-emerald-300 shrink-0 mt-0.5" />
-              <p className="text-xs leading-relaxed text-[#2bb75c] font-medium">Your <span className="font-bold text-white">Basic (KES 5000)</span> package is competitively priced to attract new buyers.</p>
+
+          <h4 className="font-mono font-bold text-2xl mb-1">KES 8,500</h4>
+          <p className="text-sm text-accent-light font-body mb-5">Average order value in your category</p>
+
+          <div className="space-y-3">
+            <div className="bg-white/10 p-3 rounded-lg border border-white/20">
+              <div className="flex items-start gap-2">
+                <Check className="w-4 h-4 text-accent-light shrink-0 mt-0.5" />
+                <p className="text-xs text-white/80 leading-relaxed">
+                  Your <span className="font-semibold text-white">Basic (KES 5,000)</span> package is competitively priced
+                </p>
+              </div>
             </div>
-            <div className="bg-white/10 p-3 rounded-xl border border-white/10 flex items-start gap-3">
-              <TrendingUp className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
-              <p className="text-xs leading-relaxed text-[#2bb75c] font-medium">Consider raising your <span className="font-bold text-white">Premium (KES 25000)</span> package. Top sellers average KES 40000 for full solutions.</p>
+            <div className="bg-white/10 p-3 rounded-lg border border-white/20">
+              <div className="flex items-start gap-2">
+                <TrendingUp className="w-4 h-4 text-accent-light shrink-0 mt-0.5" />
+                <p className="text-xs text-white/80 leading-relaxed">
+                  Top sellers average <span className="font-semibold text-white">KES 40,000</span> for premium solutions
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Competitor Insights Box */}
-        <div className="bg-white dark:bg-surface-dark rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+        {/* Market Standards */}
+        <div className="bg-white border border-border rounded-2xl p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-[#2bb75c]" /> Market Standard
+            <h3 className="font-body font-semibold text-ink-primary flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-accent DEFAULT" /> Market standards
             </h3>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Web Dev</span>
+            <span className="text-xs font-body font-medium text-ink-tertiary">Web Dev</span>
           </div>
-          
+
           <div className="space-y-3">
-            <div className="flex justify-between items-center pb-3 border-b border-zinc-100 dark:border-zinc-800">
-              <span className="text-xs font-semibold text-zinc-500">Avg. Delivery</span>
-              <span className="text-xs font-bold text-zinc-900 dark:text-white">4 Days</span>
+            <div className="flex justify-between items-center pb-2 border-b border-border">
+              <span className="text-xs font-body text-ink-secondary">Avg. delivery</span>
+              <span className="text-xs font-mono font-semibold text-ink-primary">4 days</span>
             </div>
-            <div className="flex justify-between items-center pb-3 border-b border-zinc-100 dark:border-zinc-800">
-              <span className="text-xs font-semibold text-zinc-500">Avg. Revisions</span>
-              <span className="text-xs font-bold text-zinc-900 dark:text-white">2</span>
+            <div className="flex justify-between items-center pb-2 border-b border-border">
+              <span className="text-xs font-body text-ink-secondary">Avg. revisions</span>
+              <span className="text-xs font-mono font-semibold text-ink-primary">2</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-xs font-semibold text-zinc-500">Top Add-on</span>
-              <span className="text-xs font-bold text-success dark:text-success">Extra Fast</span>
+              <span className="text-xs font-body text-ink-secondary">Top add-on</span>
+              <span className="text-xs font-mono font-semibold text-accent DEFAULT">Fast delivery</span>
             </div>
           </div>
         </div>
 
-        {/* Tips Box */}
-        <div className="bg-[#2bb75c]/5 dark:bg-[#2bb75c]/10 rounded-3xl border border-[#2bb75c]/20 dark:border-[#2bb75c]/20/30 p-6">
+        {/* Tip */}
+        <div className="bg-accent-light border border-accent DEFAULT rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Info className="w-4 h-4 text-[#2bb75c]" />
-            <h3 className="text-sm font-bold text-[#2bb75c] dark:text-[#2bb75c]">Upselling Strategy</h3>
+            <Info className="w-4 h-4 text-accent-dark" />
+            <h3 className="text-sm font-body font-semibold text-accent-dark">Upselling strategy</h3>
           </div>
-          <p className="text-xs text-[#2bb75c] dark:text-[#2bb75c] leading-relaxed">
-            Name your packages creatively (e.g. "Silver, Gold, Platinum" or "Starter, Growth, Scale"). It builds brand value and increases Standard/Premium tier selections.
+          <p className="text-xs text-accent-dark leading-relaxed">
+            Name your packages creatively (e.g., "Starter, Growth, Scale") to increase premium tier selections.
           </p>
         </div>
-
       </div>
-
     </div>
   );
 }
-

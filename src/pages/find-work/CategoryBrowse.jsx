@@ -16,6 +16,11 @@ export default function CategoryBrowse() {
   const { categoryId } = useParams();
   const [, setSynced] = useState(0);
   const categories = getFindWorkCategories();
+  const jobsTotal = categories.reduce((sum, category) => sum + (category.openJobs || 0), 0);
+  const specializationsTotal = categories.reduce(
+    (count, category) => count + (category.specializations?.length || 0),
+    0
+  );
   const activeCategory = categoryId ? getFindWorkCategoryById(categoryId) : null;
   const activeJobs = activeCategory ? getFindWorkJobs({ categoryId: activeCategory.id, sortBy: 'recommended' }).slice(0, 6) : [];
 
@@ -36,9 +41,23 @@ export default function CategoryBrowse() {
               <span className="text-white">Categories</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-black mb-4">Browse work by category</h1>
-            <p className="text-xl text-zinc-300 max-w-3xl">
+            <p className="text-xl text-zinc-300 max-w-3xl mx-auto">
               Every category now has real counts, specializations, and route-level detail pages that feed into search and job discovery.
             </p>
+            <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
+              <div className="rounded-3xl bg-white/10 border border-white/15 px-5 py-4">
+                <div className="text-sm uppercase tracking-[0.22em] font-semibold text-white/80 mb-2">Categories</div>
+                <div className="text-3xl font-black text-white">{categories.length}</div>
+              </div>
+              <div className="rounded-3xl bg-white/10 border border-white/15 px-5 py-4">
+                <div className="text-sm uppercase tracking-[0.22em] font-semibold text-white/80 mb-2">Open jobs</div>
+                <div className="text-3xl font-black text-white">{jobsTotal}</div>
+              </div>
+              <div className="rounded-3xl bg-white/10 border border-white/15 px-5 py-4">
+                <div className="text-sm uppercase tracking-[0.22em] font-semibold text-white/80 mb-2">Live specializations</div>
+                <div className="text-3xl font-black text-white">{specializationsTotal}</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -51,18 +70,19 @@ export default function CategoryBrowse() {
               <Link
                 key={category.id}
                 to={category.path}
-                className="group bg-white rounded-lg border border-gray-200 p-5 hover:border-[#2bb75c]/50 hover:shadow-md transition-all duration-200"
+                className="group bg-white rounded-[1.75rem] border border-zinc-200 p-6 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-200"
               >
-                <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 ${category.accentClass} group-hover:scale-110 transition-transform duration-200`}>
+                <div className={`w-14 h-14 rounded-3xl flex items-center justify-center mb-5 ${category.accentClass} group-hover:scale-110 transition-transform duration-200`}>
                   <Icon className="w-6 h-6" />
                 </div>
-                <div className="flex items-center justify-between gap-4 mb-2">
-                  <h2 className="text-base font-bold text-gray-900 group-hover:text-[#1d8d38] transition-colors leading-snug">{category.name}</h2>
-                  <span className="text-sm font-bold text-[#2bb75c] whitespace-nowrap">{category.openJobs}</span>
+                <div className="flex items-start justify-between gap-4 mb-3">
+                  <h2 className="text-lg font-bold text-zinc-900 group-hover:text-[#1d8d38] transition-colors leading-tight">{category.name}</h2>
+                  <span className="text-sm font-semibold text-zinc-700 whitespace-nowrap">{category.openJobs} jobs</span>
                 </div>
-                <p className="text-sm text-gray-600 mb-4 line-clamp-2 leading-relaxed">{category.summary}</p>
-                <div className="flex items-center gap-1 text-sm font-semibold text-[#2bb75c] group-hover:gap-2 transition-all">
-                  Explore category <ArrowRight className="w-4 h-4" />
+                <p className="text-sm text-zinc-500 mb-5 line-clamp-3 leading-relaxed">{category.summary}</p>
+                <div className="flex items-center gap-2 text-sm font-semibold text-[#2bb75c] group-hover:gap-3 transition-all">
+                  <span>Explore category</span>
+                  <ArrowRight className="w-4 h-4" />
                 </div>
               </Link>
             );

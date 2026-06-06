@@ -7,14 +7,12 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer,
-  Legend
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import { fetchRevenueChart } from '../../api/dashboard.api';
 import { formatCurrency } from '../../utils/formatters';
 import { useUIStore } from '../../store/uiStore';
 import Card from '../ui/Card';
-import Button from '../ui/Button';
 import Skeleton from '../ui/Skeleton';
 
 const RevenueChart = () => {

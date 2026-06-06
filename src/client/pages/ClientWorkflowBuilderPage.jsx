@@ -1,11 +1,12 @@
+// ClientWorkflowBuilderPage.jsx
 import React, { useState } from 'react';
-import { 
-  GitBranch, Play, Plus, Trash, CheckCircle, 
-  Settings, AlertTriangle, RefreshCw, Zap, ArrowRight 
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  GitBranch, Play, Plus, Trash, CheckCircle,
+  Settings, AlertTriangle, RefreshCw, Zap, ArrowRight
 } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
+
+const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export default function ClientWorkflowBuilderPage() {
   const [workflows, setWorkflows] = useState([
@@ -13,119 +14,186 @@ export default function ClientWorkflowBuilderPage() {
     { id: 'WF-2', name: 'Geofence Breach -> Lock Payroll', active: true, trigger: 'Geofence Boundary breach', action: 'Dispatch Warning SMS & Lock Release' },
     { id: 'WF-3', name: 'M-Pesa STK Completed -> Generate Tax Receipt', active: false, trigger: 'M-Pesa STK Push Success', action: 'Send KRA Withholding Record' }
   ]);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (type, message, duration = 3000) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), duration);
+  };
 
   const toggleWorkflow = (id) => {
     setWorkflows(prev => prev.map(w => w.id === id ? { ...w, active: !w.active } : w));
-    toast.success('Workflow configuration state toggled.');
+    showToast('success', 'Workflow configuration state toggled.');
   };
 
-  const triggerTest = (name) => {
-    toast.promise(
-      new Promise(resolve => setTimeout(resolve, 1500)),
-      {
-        loading: `Simulating trigger node for "${name}"...`,
-        success: 'Workflow triggered successfully! Actions dispatched. 🚀',
-        error: 'Simulation failed.'
-      }
-    );
+  const triggerTest = async (name) => {
+    showToast('info', `Simulating trigger node for "${name}"...`);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    showToast('success', 'Workflow triggered successfully! Actions dispatched.');
   };
+
+  const handleCreateAutomation = () => {
+    showToast('info', 'New workflow node instantiated.');
+  };
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1 } }
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } }
+  };
+  const nodeVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.3, delay: 0.2 } }
+  };
+  const buttonTap = { scale: 0.97 };
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans text-white">
-      <Toaster position="top-right" />
-
-      {/* Header title */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-white/5 pb-6 mb-8">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight">Automation & Workflow Builder</h1>
-          <p className="text-xs font-semibold text-light-gray/50 mt-1">Design drag-n-drop automation sequences, connect field worker telemetry to fintech releases, and configure notification rules.</p>
+    <div className="min-h-screen bg-surface-soft font-body py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border pb-6 mb-8">
+          <div>
+            <h1 className="font-display text-3xl font-bold text-brand-900 tracking-tight">
+              Automation & Workflow Builder
+            </h1>
+            <p className="text-ink-secondary text-sm mt-1">
+              Design automation sequences, connect field worker telemetry to fintech releases, and configure notification rules.
+            </p>
+          </div>
+          <motion.button
+            whileTap={buttonTap}
+            onClick={handleCreateAutomation}
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-accent hover:bg-accent-dark text-white rounded-lg text-sm font-medium transition-colors shadow-sm"
+          >
+            <Plus className="w-4 h-4" /> Create Automation
+          </motion.button>
         </div>
 
-        <Button onClick={() => toast.success('New workflow node instantiated.')} className="bg-success border-none rounded-xl text-xs font-bold py-2.5 flex items-center gap-1.5 shadow-lg shadow-[#2bb75c]/20">
-          <Plus className="w-4 h-4" /> Create Automation
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left Hand: Configured Rules list */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="border border-white/10 bg-white/5 p-6 rounded-3xl">
-            <h3 className="font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><GitBranch className="w-4 h-4 text-success" /> Configured Automation Sequences</h3>
-            
-            <div className="space-y-4">
-              {workflows.map(wf => (
-                <div key={wf.id} className="p-4 bg-white/5 border border-white/5 rounded-2xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono font-bold text-success">{wf.id}</span>
-                      <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
-                        wf.active ? 'bg-success/20 text-success' : 'bg-white/10 text-light-gray/40'
-                      }`}>{wf.active ? 'Active' : 'Disabled'}</span>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column: Workflow List */}
+          <div className="lg:col-span-2 space-y-6">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="bg-white border border-border rounded-2xl p-6 shadow-sm"
+            >
+              <h3 className="flex items-center gap-2 font-display font-bold text-brand-900 text-sm uppercase tracking-wide mb-4">
+                <GitBranch className="w-4 h-4 text-accent" /> Configured Automation Sequences
+              </h3>
+              <div className="space-y-4">
+                {workflows.map((wf) => (
+                  <motion.div
+                    key={wf.id}
+                    variants={itemVariants}
+                    whileHover={{ y: -2, boxShadow: '0 8px 24px rgba(0,0,0,0.06)' }}
+                    className="p-4 border border-border rounded-xl bg-white transition-all"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-mono font-semibold text-accent">{wf.id}</span>
+                          <span className={cn(
+                            "inline-flex px-2 py-0.5 rounded text-[8px] font-semibold uppercase tracking-wide",
+                            wf.active ? "bg-accent-light text-accent-dark" : "bg-surface-muted text-ink-tertiary"
+                          )}>
+                            {wf.active ? 'Active' : 'Disabled'}
+                          </span>
+                        </div>
+                        <h4 className="text-sm font-semibold text-ink-primary">{wf.name}</h4>
+                        <div className="flex flex-wrap items-center gap-2 text-[10px] text-ink-tertiary mt-1">
+                          <span className="bg-surface-soft px-2 py-0.5 rounded text-ink-primary font-mono">{wf.trigger}</span>
+                          <ArrowRight size={10} />
+                          <span className="bg-accent-light px-2 py-0.5 rounded text-accent-dark font-mono">{wf.action}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 shrink-0 justify-between sm:justify-end">
+                        <button
+                          onClick={() => toggleWorkflow(wf.id)}
+                          className="text-xs font-medium text-ink-tertiary hover:text-accent transition-colors"
+                        >
+                          {wf.active ? 'Disable' : 'Enable'}
+                        </button>
+                        <button
+                          onClick={() => triggerTest(wf.name)}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-accent-light text-accent-dark rounded-lg text-[10px] font-medium transition-colors hover:bg-accent/20"
+                        >
+                          <Play size={10} /> Dry Run
+                        </button>
+                      </div>
                     </div>
-                    <h4 className="text-sm font-bold text-white mt-1">{wf.name}</h4>
-                    
-                    <div className="flex flex-wrap items-center gap-2 text-[10px] text-light-gray/50 mt-2 font-semibold">
-                      <span className="bg-white/5 px-2 py-0.5 rounded text-white font-mono">{wf.trigger}</span>
-                      <ArrowRight size={10} />
-                      <span className="bg-success/20 px-2 py-0.5 rounded text-success font-mono">{wf.action}</span>
-                    </div>
-                  </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
 
-                  <div className="flex items-center gap-3 shrink-0 justify-between sm:justify-end">
-                    <button 
-                      onClick={() => toggleWorkflow(wf.id)}
-                      className="text-xs font-bold text-light-gray/50 hover:text-white transition-colors"
-                    >
-                      {wf.active ? 'Disable' : 'Enable'}
-                    </button>
-                    
-                    <Button 
-                      onClick={() => triggerTest(wf.name)}
-                      className="bg-success hover:bg-success/90 border-none font-bold text-[9px] py-1.5 px-3 rounded-lg flex items-center gap-1"
-                    >
-                      <Play size={10} /> Dry Run
-                    </Button>
-                  </div>
+          {/* Right Column: Visual Node Map */}
+          <div className="space-y-6">
+            <motion.div
+              variants={nodeVariants}
+              initial="hidden"
+              animate="visible"
+              className="bg-white border border-border rounded-2xl p-5 shadow-sm relative overflow-hidden min-h-[380px] flex flex-col justify-between"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 blur-3xl rounded-full" />
+              <div className="border-b border-border pb-3">
+                <h3 className="flex items-center gap-1.5 font-display font-bold text-brand-900 text-xs uppercase tracking-wide">
+                  <Zap className="w-4 h-4 text-accent" /> Live Execution Node Map
+                </h3>
+                <p className="text-[9px] text-ink-tertiary mt-0.5">Visual graph simulator for field triggers</p>
+              </div>
+              <div className="flex-1 py-5 flex flex-col items-center justify-center gap-3 relative z-10">
+                <div className="w-48 p-3 bg-surface-soft border border-accent/30 text-center rounded-xl font-semibold text-[10px] tracking-wide text-accent shadow-sm">
+                  ⚡ Check-In QR Scanned
                 </div>
-              ))}
-            </div>
-          </Card>
+                <div className="w-0.5 h-6 bg-border"></div>
+                <div className="w-48 p-3 bg-surface-soft border border-accent/30 text-center rounded-xl font-semibold text-[10px] tracking-wide text-accent shadow-sm">
+                  ⚙️ Check GPS Centroid
+                </div>
+                <div className="w-0.5 h-6 bg-border"></div>
+                <div className="w-48 p-3 bg-accent text-white text-center rounded-xl font-bold text-[10px] tracking-wide shadow-sm">
+                  💸 Release Travel Escrow
+                </div>
+              </div>
+              <div className="bg-surface-soft p-3 rounded-xl border border-border text-[9px] font-medium text-ink-tertiary flex items-center justify-between">
+                <span>Simulation Status:</span>
+                <span className="text-accent flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                  LISTENING
+                </span>
+              </div>
+            </motion.div>
+          </div>
         </div>
-
-        {/* Right Hand: Visual Nodes Diagram simulation */}
-        <div className="lg:col-span-1 space-y-6">
-          <Card className="p-5 border border-white/10 bg-white/5 rounded-3xl space-y-4 relative overflow-hidden min-h-[380px] flex flex-col justify-between">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-success/10 blur-[50px] rounded-full"></div>
-            
-            <div className="border-b border-white/5 pb-3">
-              <h3 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5 text-success"><Zap className="w-4 h-4" /> Live Execution Node Map</h3>
-              <p className="text-[9px] text-light-gray/50 mt-1">Visual graph simulator for field triggers</p>
-            </div>
-
-            <div className="flex-1 py-4 flex flex-col items-center justify-center gap-4 relative z-10">
-              <div className="w-48 p-3 bg-zinc-900 border border-success text-center rounded-xl font-bold text-[10px] tracking-wide text-success shadow">
-                ⚡ Check-In QR Scanned
-              </div>
-              <div className="w-0.5 h-6 bg-white/20"></div>
-              <div className="w-48 p-3 bg-zinc-900 border border-success text-center rounded-xl font-bold text-[10px] tracking-wide text-success shadow">
-                ⚙️ Check GPS Centroid
-              </div>
-              <div className="w-0.5 h-6 bg-white/20"></div>
-              <div className="w-48 p-3 bg-success text-zinc-950 text-center rounded-xl font-black text-[10px] tracking-wide shadow-lg">
-                💸 Release Travel Escrow
-              </div>
-            </div>
-
-            <div className="bg-white/5 p-3 rounded-xl border border-white/5 text-[9px] font-bold text-light-gray/60 flex items-center justify-between">
-              <span>Simulation Status:</span>
-              <span className="text-success flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-success animate-ping"></span> LISTENING</span>
-            </div>
-          </Card>
-        </div>
-
       </div>
+
+      {/* Toast Notifications */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2 rounded-lg shadow-lg text-sm font-medium"
+            style={{
+              backgroundColor: toast.type === 'success' ? 'rgb(220, 252, 231)' :
+                               toast.type === 'error' ? 'rgb(254, 226, 226)' : 'rgb(219, 234, 254)',
+              color: toast.type === 'success' ? 'rgb(21, 128, 61)' :
+                     toast.type === 'error' ? 'rgb(185, 28, 28)' : 'rgb(29, 78, 216)'
+            }}
+          >
+            {toast.type === 'success' && <CheckCircle className="w-4 h-4" />}
+            {toast.type === 'error' && <AlertTriangle className="w-4 h-4" />}
+            {toast.type === 'info' && <Zap className="w-4 h-4" />}
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
-

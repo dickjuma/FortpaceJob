@@ -1,7 +1,7 @@
 import {
   Briefcase, ShoppingBag, Send, FileText, CheckCircle, Clock,
-  AlertCircle, Star, TrendingUp, Eye, Lock, AlertTriangle,
-  Ban, Award, BarChart3, Zap
+  AlertCircle, Lock, AlertTriangle,
+  Ban, Award, Zap
 } from 'lucide-react';
 
 export const JOB_STATUSES = {

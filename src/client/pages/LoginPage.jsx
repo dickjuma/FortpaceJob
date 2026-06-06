@@ -1,5 +1,7 @@
+// LoginPage.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuthStore } from '../../common/authStore';
 import { validateEmail, validateRequired } from '../../common/utils/validation';
 
@@ -10,7 +12,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const login = useAuthStore(state => state.login);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const emailErr = validateEmail(email);
     const passwordErr = validateRequired(password, 'Password');
@@ -31,44 +33,71 @@ export default function LoginPage() {
     }
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  };
+  const buttonTap = { scale: 0.97 };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#2bb75c] to-[#1d8d38] dark:from-[#2bb75c] dark:to-[#1d8d38]">
-      <div className="w-full max-w-md rounded-xl bg-surface-secondary dark:bg-surface-dark p-8 shadow-card">
-        <h2 className="mb-6 text-center text-2xl font-bold text-[#2bb75c] dark:text-[#2bb75c]">Client Login</h2>
-        {error && <p className="mb-4 text-red-600">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-accent to-accent-dark p-4">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+        className="w-full max-w-md bg-white border border-border rounded-2xl shadow-lg p-6 sm:p-8"
+      >
+        <div className="text-center mb-6">
+          <h2 className="font-display text-2xl font-bold text-brand-900">Client Login</h2>
+          <p className="text-sm text-ink-secondary mt-1">Sign in to manage your projects and team</p>
+        </div>
+
+        {error && (
+          <div className="mb-4 p-3 rounded-lg bg-danger-light text-danger text-sm font-medium border border-danger/20">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+            <label className="block text-xs font-semibold text-ink-secondary mb-1.5">Email</label>
             <input
               type="email"
               required
               value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-surface-white dark:bg-surface-dark focus:border-[#2bb75c]/20 focus:ring-[#2bb75c]"
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent bg-white text-ink-primary"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+            <label className="block text-xs font-semibold text-ink-secondary mb-1.5">Password</label>
             <input
               type="password"
               required
               value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-surface-white dark:bg-surface-dark focus:border-[#2bb75c]/20 focus:ring-[#2bb75c]"
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent bg-white text-ink-primary"
             />
           </div>
-          <button
+          <motion.button
+            whileTap={buttonTap}
             type="submit"
-            className="w-full rounded-md bg-[#2bb75c] hover:bg-[#2bb75c] text-white py-2 transition-colors"
+            className="w-full h-11 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg text-sm transition-colors"
           >
             Sign In
-          </button>
+          </motion.button>
         </form>
-        <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-          Don't have an account? <a href="/register" className="text-[#2bb75c] hover:underline">Register</a>
-        </p>
-      </div>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm text-ink-secondary">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-accent hover:text-accent-dark font-medium">
+              Register
+            </Link>
+          </p>
+        </div>
+      </motion.div>
     </div>
   );
 }
-

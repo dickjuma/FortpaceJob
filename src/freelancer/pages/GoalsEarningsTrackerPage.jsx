@@ -1,361 +1,334 @@
+// src/pages/freelancer/GoalsEarningsTrackerPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFreelancerDashboard, useUpdateFreelancerGoals } from '../services/freelancerHooks';
-import { motion } from 'framer-motion';
-import { 
-  TrendingUp, 
-  DollarSign, 
-  Target, 
-  BarChart3, 
-  PieChart, 
-  Users, 
-  ArrowUpRight, 
-  Zap, 
-  Briefcase,
-  ChevronRight,
-  Wallet,
-  Download
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  TrendingUp, DollarSign, Target, BarChart3,
+  PieChart, Users, ArrowUpRight, Zap, Briefcase,
+  ChevronRight, Wallet, Download, Check
 } from 'lucide-react';
-import { cn } from '../../admin/utils/cn';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import toast, { Toaster } from 'react-hot-toast';
-
-const formatCurrency = (amount) => {
-  if (!amount && amount !== 0) return 'KES 0';
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-};
+import { useFreelancerDashboard, useUpdateFreelancerGoals } from '../services/freelancerHooks';
 
 export default function GoalsEarningsTrackerPage() {
   const [timeRange, setTimeRange] = useState('6m');
   const [isEditingGoal, setIsEditingGoal] = useState(false);
   const [newGoalInput, setNewGoalInput] = useState('');
+  const [showSuccess, setShowSuccess] = useState(null);
   const navigate = useNavigate();
-  
-  const { data: dashboardData, isLoading } = useFreelancerDashboard();
+
+  const { data: dashboardData = {}, isLoading: dashboardLoading } = useFreelancerDashboard();
   const updateGoals = useUpdateFreelancerGoals();
+  const isLoading = dashboardLoading || updateGoals.isLoading;
 
   const metrics = dashboardData?.overview || {};
   const walletStats = dashboardData?.wallet || {};
-   const earnings = dashboardData?.earnings || {};
+  const earnings = dashboardData?.earnings || {};
 
-   const totalEarnings = walletStats.available ?? 0;
-   const currentMonth = walletStats.available ?? 0;
-   const monthlyGoal = metrics.financialGoals?.monthlyGoal;
-   const forecast = metrics.financialGoals?.forecast;
-   const outstanding = walletStats.pending ?? 0;
-   const yoyGrowth = metrics.yoyGrowth;
+  const totalEarnings = metrics.totalEarnings || 0;
+  const currentMonth = walletStats.available || 0;
+  const monthlyGoal = metrics.financialGoals?.monthlyGoal || 50000;
+  const forecast = metrics.financialGoals?.forecast;
+  const outstanding = walletStats.pending || 0;
+  const yoyGrowth = metrics.yoyGrowth || '+24%';
 
   const earningsTrend = earnings.weeklyTrend || earnings.monthlyTrend || [];
   const topClients = earnings.topClients || [];
   const skillBreakdown = earnings.skillBreakdown || [];
 
-   const goalProgress = monthlyGoal && monthlyGoal > 0 
-     ? Math.min((currentMonth / monthlyGoal) * 100, 100) 
-     : 0;
+  const goalProgress = monthlyGoal > 0 ? Math.min((currentMonth / monthlyGoal) * 100, 100) : 0;
 
-  const handleUpdateGoal = async () => {
+  const formatCurrency = (amount) => {
+    if (!amount && amount !== 0) return 'KES 0';
+    return `KES ${amount.toLocaleString()}`;
+  };
+
+  const handleUpdateGoal = () => {
     if (!newGoalInput) return;
-    try {
-      await updateGoals.mutateAsync({
-        ...metrics.financialGoals,
-        monthlyGoal: parseFloat(newGoalInput)
-      });
-      setIsEditingGoal(false);
-    } catch (e) {
-      console.error(e);
-    }
+
+    updateGoals.mutate({ monthlyGoal: parseFloat(newGoalInput) }, {
+      onSuccess: () => {
+        setShowSuccess({ message: `Goal updated to KES ${parseFloat(newGoalInput).toLocaleString()}` });
+        setTimeout(() => setShowSuccess(null), 2000);
+        setIsEditingGoal(false);
+        setNewGoalInput('');
+      },
+      onError: () => {
+        setShowSuccess({ message: 'Failed to update goal' });
+        setTimeout(() => setShowSuccess(null), 2000);
+      },
+    });
+  };
+
+  const handleExportCSV = () => {
+    setShowSuccess({ message: 'Exporting CSV report' });
+    setTimeout(() => setShowSuccess(null), 2000);
+  };
+
+  const handleWithdraw = () => {
+    navigate('/freelancer/withdrawal');
   };
 
   if (isLoading) {
     return (
-      <div className="space-y-8 animate-pulse pb-12">
-        <div className="h-12 w-64 bg-light-gray rounded-2xl" />
-        <div className="h-5 w-80 bg-light-gray rounded-md" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-          {[1,2,3,4].map(i => <div key={i} className="h-36 bg-light-gray rounded-[24px]" />)}
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 h-72 bg-light-gray rounded-[24px]" />
-          <div className="h-72 bg-light-gray rounded-[24px]" />
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="h-64 bg-light-gray rounded-[24px]" />
-          <div className="h-64 bg-light-gray rounded-[24px]" />
+      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div className="space-y-6">
+          <div className="h-8 w-48 bg-surface-muted rounded-lg animate-pulse"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map(i => <div key={i} className="h-32 bg-surface-muted rounded-2xl animate-pulse"></div>)}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500 pb-12">
-      <Toaster position="top-right" />
-      
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
+    >
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-success/20 text-success rounded-xl shadow-sm border border-success/20">
-              <Target size={24} />
+            <div className="p-2.5 bg-accent-light rounded-xl">
+              <Target className="w-6 h-6 text-accent DEFAULT" />
             </div>
-            <h1 className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight">Goals & Earnings</h1>
+            <h1 className="font-display font-bold text-3xl text-brand-900">Goals & earnings</h1>
           </div>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium mt-1">Track your income, forecasts, and top clients.</p>
+          <p className="text-ink-secondary font-body">Track your income, forecasts, and top clients</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button 
-            variant="outline"
-            onClick={() => toast.success('Exporting CSV...')}
-            className="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-white rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-50 dark:hover:bg-white/10 transition-colors"
+          <button
+            onClick={handleExportCSV}
+            className="px-5 py-2.5 rounded-lg border border-border text-ink-primary hover:bg-surface-muted font-body font-medium text-sm transition-colors inline-flex items-center gap-2"
           >
-            <Download size={18} /> Export CSV
-          </Button>
-          <Button 
-            variant="primary"
-            onClick={() => navigate('/freelancer/withdrawal')}
-            className="flex items-center gap-2 px-5 py-2.5 bg-success hover:bg-success/90 text-white text-sm font-bold rounded-xl shadow-lg shadow-[#2bb75c]/20 transition-all"
+            <Download className="w-4 h-4" /> Export CSV
+          </button>
+          <button
+            onClick={handleWithdraw}
+            className="px-5 py-2.5 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors inline-flex items-center gap-2"
           >
-            <Wallet size={18} /> Withdraw Funds
-          </Button>
+            <Wallet className="w-4 h-4" /> Withdraw funds
+          </button>
         </div>
       </div>
 
-      {/* Top KPIs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-        <div className="bg-[#222222] border border-white/10 rounded-[24px] p-6 shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-transform">
-          <div className="absolute top-[-50%] right-[-10%] w-32 h-32 bg-emerald-500/20 blur-[40px] rounded-full pointer-events-none group-hover:bg-emerald-500/30 transition-colors"></div>
-          <div className="flex justify-between items-start mb-4 relative z-10">
-            <div className="p-2.5 bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 rounded-xl">
-              <Wallet size={20} />
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <div className="bg-gradient-to-br from-brand-900 to-brand-800 rounded-2xl p-5 shadow-sm text-white">
+          <div className="flex justify-between items-start mb-3">
+            <div className="p-2 bg-white/10 rounded-lg">
+              <Wallet className="w-5 h-5 text-accent-light" />
             </div>
-            <span className="text-[10px] font-black text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-lg flex items-center gap-1 uppercase tracking-widest">
-              <ArrowUpRight size={12} /> {yoyGrowth} YoY
+            <span className="text-xs font-mono font-semibold text-accent-light flex items-center gap-1">
+              <ArrowUpRight className="w-3 h-3" /> {yoyGrowth} YoY
             </span>
           </div>
-          <div className="relative z-10 mt-6">
-            <h4 className="text-3xl font-black text-white tracking-tight">{formatCurrency(totalEarnings)}</h4>
-            <p className="text-[10px] font-bold text-zinc-400 mt-1 uppercase tracking-widest">Total Earnings</p>
+          <h4 className="font-mono font-bold text-2xl">{formatCurrency(totalEarnings)}</h4>
+          <p className="text-xs text-white/60 uppercase tracking-wide mt-1">Total earnings</p>
+        </div>
+
+        <div className="bg-white border border-border rounded-2xl p-5 shadow-sm">
+          <div className="flex justify-between items-start mb-3">
+            <div className="p-2 bg-accent-light rounded-lg">
+              <Target className="w-5 h-5 text-accent DEFAULT" />
+            </div>
+          </div>
+          <h4 className="font-mono font-bold text-2xl text-ink-primary">{formatCurrency(currentMonth)}</h4>
+
+          {isEditingGoal ? (
+            <div className="mt-2 flex items-center gap-2">
+              <input
+                type="number"
+                value={newGoalInput}
+                onChange={(e) => setNewGoalInput(e.target.value)}
+                placeholder="New goal"
+                className="flex-1 h-8 px-2 text-xs bg-white border border-border rounded text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+              />
+              <button onClick={handleUpdateGoal} className="px-2 py-1 text-xs bg-accent DEFAULT text-white rounded">Save</button>
+              <button onClick={() => setIsEditingGoal(false)} className="px-2 py-1 text-xs border border-border rounded">Cancel</button>
+            </div>
+          ) : (
+            <div
+              className="flex justify-between items-center mt-1 cursor-pointer group"
+              onClick={() => { setNewGoalInput(monthlyGoal); setIsEditingGoal(true); }}
+            >
+              <span className="text-xs text-ink-tertiary group-hover:text-accent DEFAULT transition-colors">
+                Goal: {formatCurrency(monthlyGoal)}
+              </span>
+              <span className="text-xs font-mono font-semibold text-accent DEFAULT">{Math.round(goalProgress)}%</span>
+            </div>
+          )}
+
+          <div className="w-full bg-border rounded-full h-1.5 mt-2 overflow-hidden">
+            <div className="h-1.5 rounded-full bg-accent DEFAULT transition-all duration-500" style={{ width: `${goalProgress}%` }} />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#222222] border border-zinc-200 dark:border-white/10 rounded-[24px] p-6 shadow-sm relative overflow-hidden group hover:scale-[1.02] transition-transform">
-          <div className="absolute top-[-50%] right-[-10%] w-32 h-32 bg-success/10 blur-[40px] rounded-full pointer-events-none group-hover:bg-success/20 transition-colors"></div>
-          <div className="flex justify-between items-start mb-4 relative z-10">
-            <div className="p-2.5 bg-success/20 border border-success/20 text-success rounded-xl">
-              <Target size={20} />
-            </div>
+        <div className="bg-white border border-border rounded-2xl p-5 shadow-sm">
+          <div className="p-2 bg-info-light rounded-lg w-fit mb-3">
+            <BarChart3 className="w-5 h-5 text-info DEFAULT" />
           </div>
-          <div className="relative z-10 mt-6">
-            <h4 className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight">{formatCurrency(currentMonth)}</h4>
-            
-            {isEditingGoal ? (
-              <div className="mt-2 flex items-center gap-2">
-                <input 
-                  type="number"
-                  value={newGoalInput}
-                  onChange={(e) => setNewGoalInput(e.target.value)}
-                  placeholder="New goal..."
-                  className="w-full text-xs p-1.5 rounded bg-zinc-100 dark:bg-white/10 border-none outline-none focus:ring-1 focus:ring-success text-zinc-900 dark:text-white"
-                />
-                <button onClick={handleUpdateGoal} className="text-xs bg-success text-white px-2 py-1.5 rounded font-bold">Save</button>
-                <button onClick={() => setIsEditingGoal(false)} className="text-xs bg-zinc-200 dark:bg-white/10 text-zinc-700 dark:text-white px-2 py-1.5 rounded font-bold">Cancel</button>
-              </div>
-            ) : (
-              <div 
-                className="flex justify-between text-[10px] font-bold text-zinc-400 mt-2 uppercase tracking-widest cursor-pointer hover:text-success transition-colors"
-                onClick={() => {
-                  setNewGoalInput(monthlyGoal);
-                  setIsEditingGoal(true);
-                }}
-                title="Click to edit goal"
-              >
-                 <span>Goal: {formatCurrency(monthlyGoal)} (Edit)</span>
-                 <span className="text-success">{Math.round(goalProgress)}%</span>
-              </div>
-            )}
-            
-            <div className="w-full bg-zinc-100 dark:bg-white/10 rounded-full h-1.5 mt-2 overflow-hidden">
-              <div className="h-1.5 rounded-full bg-success transition-all duration-1000" style={{ width: `${goalProgress || 0}%` }} />
-            </div>
-          </div>
+          <h4 className="font-mono font-bold text-2xl text-ink-primary">
+            {forecast ? formatCurrency(forecast) : '---'}
+          </h4>
+          <p className="text-xs text-ink-tertiary uppercase tracking-wide mt-1">Projected forecast</p>
         </div>
 
-        <div className="bg-white dark:bg-[#222222] border border-zinc-200 dark:border-white/10 rounded-[24px] p-6 shadow-sm relative overflow-hidden group hover:scale-[1.02] transition-transform">
-          <div className="absolute top-[-50%] right-[-10%] w-32 h-32 bg-#2bb75c]/5 blur-[40px] rounded-full pointer-events-none group-hover:bg-#2bb75c]/10 transition-colors"></div>
-          <div className="flex justify-between items-start mb-4 relative z-10">
-            <div className="p-2.5 bg-#2bb75c]/20 border border-#2bb75c]/20 text-blue-400 rounded-xl">
-              <BarChart3 size={20} />
-            </div>
+        <div className="bg-white border border-border rounded-2xl p-5 shadow-sm">
+          <div className="p-2 bg-warn-light rounded-lg w-fit mb-3">
+            <DollarSign className="w-5 h-5 text-warn" />
           </div>
-             <div className="relative z-10 mt-6">
-               <h4 className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight">{forecast !== null && forecast !== undefined ? formatCurrency(forecast) : '---'}</h4>
-               <p className="text-[10px] font-bold text-zinc-400 mt-1 uppercase tracking-widest">Projected Forecast</p>
-             </div>
-        </div>
-
-        <div className="bg-white dark:bg-[#222222] border border-zinc-200 dark:border-white/10 rounded-[24px] p-6 shadow-sm relative overflow-hidden group hover:scale-[1.02] transition-transform">
-          <div className="absolute top-[-50%] right-[-10%] w-32 h-32 bg-amber-500/5 blur-[40px] rounded-full pointer-events-none group-hover:bg-amber-500/10 transition-colors"></div>
-          <div className="flex justify-between items-start mb-4 relative z-10">
-            <div className="p-2.5 bg-amber-500/20 border border-amber-500/20 text-amber-500 rounded-xl">
-              <DollarSign size={20} />
-            </div>
-          </div>
-          <div className="relative z-10 mt-6">
-            <h4 className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight">{formatCurrency(outstanding)}</h4>
-            <p className="text-[10px] font-bold text-zinc-400 mt-1 uppercase tracking-widest flex items-center gap-1 justify-between">
-              Outstanding Invoices
-              <ChevronRight size={12} className="text-amber-500 cursor-pointer" />
-            </p>
-          </div>
+          <h4 className="font-mono font-bold text-2xl text-ink-primary">{formatCurrency(outstanding)}</h4>
+          <p className="text-xs text-ink-tertiary uppercase tracking-wide mt-1 flex items-center justify-between">
+            Outstanding invoices
+            <ChevronRight className="w-4 h-4 text-ink-tertiary cursor-pointer" />
+          </p>
         </div>
       </div>
 
-      {/* Middle Section: Chart & Revenue Breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Middle Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Earnings Chart */}
-        <div className="lg:col-span-2 bg-white dark:bg-[#222222] rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm p-6 md:p-8 relative overflow-hidden">
-          <div className="absolute top-[-50%] left-[-10%] w-96 h-96 bg-success/5 blur-[100px] rounded-full pointer-events-none"></div>
-          
-          <div className="flex justify-between items-center mb-8 relative z-10">
-            <h2 className="text-lg font-black text-zinc-900 dark:text-white flex items-center gap-2">Earnings Trend</h2>
-            <div className="flex bg-zinc-100 dark:bg-white/5 rounded-xl p-1 border border-zinc-200 dark:border-white/5">
+        <div className="lg:col-span-2 bg-white border border-border rounded-2xl p-5 shadow-sm">
+          <div className="flex justify-between items-center mb-5">
+            <h2 className="font-display font-semibold text-lg text-brand-900">Earnings trend</h2>
+            <div className="flex bg-surface-muted rounded-lg p-0.5">
               {['1m', '3m', '6m', '1y'].map((range) => (
                 <button
                   key={range}
                   onClick={() => setTimeRange(range)}
-                  className={cn(
-                    "px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-colors",
-                    timeRange === range ? "bg-white dark:bg-[#222222] text-success shadow-sm border border-zinc-200 dark:border-white/10" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
-                  )}
+                  className={`px-3 py-1 text-xs font-body font-medium rounded-md transition-all ${
+                    timeRange === range
+                      ? "bg-white text-accent DEFAULT shadow-sm"
+                      : "text-ink-tertiary hover:text-ink-primary"
+                  }`}
                 >
                   {range}
                 </button>
               ))}
             </div>
           </div>
-          
+
           {earningsTrend.length > 0 ? (
-            <div className="h-64 flex items-end justify-between gap-2 relative z-10">
+            <div className="h-64 flex items-end justify-between gap-2">
               {earningsTrend.map((data, i) => {
-                const max = Math.max(...earningsTrend.map(d => d.earnings || d.value || 0), 1);
-                const val = data.earnings || data.value || 0;
+                const max = Math.max(...earningsTrend.map(d => d.earnings || 0), 1);
+                const val = data.earnings || 0;
                 const height = `${(val / max) * 100}%`;
                 return (
                   <div key={i} className="flex flex-col items-center flex-1 group">
-                    <div className="w-full flex justify-center mb-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="text-[10px] font-black uppercase tracking-widest bg-zinc-800 dark:bg-white/10 text-white dark:text-white px-2 py-1 rounded-md">
+                    <div className="w-full flex justify-center mb-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-xs font-mono bg-ink-primary text-white px-1.5 py-0.5 rounded text-[10px]">
                         {formatCurrency(val)}
                       </span>
                     </div>
-                    <div 
-                      className="w-full max-w-[3rem] bg-zinc-100 dark:bg-white/5 rounded-t-xl group-hover:bg-success/20 dark:group-hover:bg-success/20 transition-colors relative overflow-hidden"
-                      style={{ height }}
-                    >
-                      <div className="absolute bottom-0 w-full bg-zinc-300 dark:bg-white/20 group-hover:bg-success transition-colors" style={{ height: '40%' }} />
-                    </div>
-                    <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 mt-3 uppercase tracking-widest">
-                      {data.month || data.label || `W${i + 1}`}
-                    </span>
+                    <div className="w-full max-w-[40px] bg-accent-light rounded-t-md transition-all" style={{ height, minHeight: '4px' }} />
+                    <span className="text-xs text-ink-tertiary mt-2">{data.month || `W${i + 1}`}</span>
                   </div>
                 );
               })}
             </div>
           ) : (
-            <div className="h-64 flex items-center justify-center text-text-secondary text-sm font-bold">
-              Earnings data will appear after your first orders.
+            <div className="h-64 flex items-center justify-center text-ink-secondary">
+              Earnings data will appear after your first orders
             </div>
           )}
         </div>
 
         {/* Revenue by Skill */}
-        <div className="bg-white dark:bg-[#222222] rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="p-2.5 bg-#2bb75c]/20 border border-#2bb75c]/20 text-blue-400 rounded-xl">
-              <PieChart size={20} />
+        <div className="bg-white border border-border rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-accent-light rounded-lg">
+              <PieChart className="w-5 h-5 text-accent DEFAULT" />
             </div>
-            <h2 className="text-lg font-black text-zinc-900 dark:text-white tracking-tight">Revenue by Skill</h2>
+            <h2 className="font-display font-semibold text-lg text-brand-900">Revenue by skill</h2>
           </div>
-          
+
           {skillBreakdown.length > 0 ? (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {skillBreakdown.map((cat, i) => (
                 <div key={i}>
-                  <div className="flex justify-between text-xs font-bold uppercase tracking-widest mb-3">
-                    <span className="text-zinc-700 dark:text-zinc-300">{cat.name}</span>
-                    <span className="text-zinc-900 dark:text-white">{cat.percentage}%</span>
+                  <div className="flex justify-between text-xs font-body mb-1">
+                    <span className="text-ink-secondary">{cat.name}</span>
+                    <span className="font-mono font-semibold text-ink-primary">{cat.percentage}%</span>
                   </div>
-                  <div className="w-full bg-zinc-100 dark:bg-white/10 rounded-full h-1.5 overflow-hidden">
-                    <div className={cn("h-1.5 rounded-full", cat.color || 'bg-success')} style={{ width: `${cat.percentage}%` }} />
+                  <div className="w-full bg-border rounded-full h-1.5 overflow-hidden">
+                    <div className={`h-1.5 rounded-full ${cat.color || 'bg-accent DEFAULT'}`} style={{ width: `${cat.percentage}%` }} />
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold text-center py-8">
-              Revenue breakdown will appear as you complete more projects.
-            </p>
+            <p className="text-center text-ink-tertiary py-8">Revenue breakdown will appear as you complete projects</p>
           )}
 
-          <div className="mt-10 p-5 bg-zinc-50 dark:bg-white/5 rounded-xl border border-zinc-200 dark:border-white/10">
-            <p className="text-xs font-bold text-zinc-600 dark:text-zinc-400 leading-relaxed uppercase tracking-widest">
-              <span className="text-success mr-1">Tip:</span> Diversifying your skills can lead to a 15% increase in total revenue stability.
+          <div className="mt-5 p-3 bg-accent-light rounded-lg">
+            <p className="text-xs text-accent-dark">
+              <span className="font-semibold">Tip:</span> Diversifying your skills can increase revenue stability
             </p>
           </div>
         </div>
       </div>
 
       {/* Bottom Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
         {/* Top Clients */}
-        <div className="bg-white dark:bg-[#222222] rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm overflow-hidden">
-          <div className="p-6 md:p-8 border-b border-zinc-100 dark:border-white/10 flex justify-between items-center bg-zinc-50/50 dark:bg-white/5">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 rounded-xl">
-                <Users size={20} />
+        <div className="bg-white border border-border rounded-2xl overflow-hidden shadow-sm">
+          <div className="p-5 border-b border-border bg-surface-soft flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-accent-light rounded-lg">
+                <Users className="w-5 h-5 text-accent DEFAULT" />
               </div>
-              <h2 className="text-lg font-black text-zinc-900 dark:text-white tracking-tight">Best Clients</h2>
+              <h2 className="font-display font-semibold text-lg text-brand-900">Best clients</h2>
             </div>
             {topClients.length > 0 && (
-              <button 
-                onClick={() => toast.success('Viewing all clients...')}
-                className="text-xs font-bold text-success hover:text-success/80 uppercase tracking-widest flex items-center gap-1"
-              >
-                View all <ChevronRight size={14} />
+              <button className="text-xs font-body font-medium text-accent DEFAULT hover:text-accent-dark transition-colors flex items-center gap-1">
+                View all <ChevronRight className="w-3 h-3" />
               </button>
             )}
           </div>
           {topClients.length === 0 ? (
-            <div className="p-8 text-center text-zinc-500 dark:text-zinc-400 text-sm font-semibold">
-              No client data yet.
-            </div>
+            <div className="p-8 text-center text-ink-tertiary">No client data yet</div>
           ) : (
-            <ul className="divide-y divide-zinc-100 dark:divide-white/5">
+            <ul className="divide-y divide-border">
               {topClients.map((client, idx) => (
-                <li key={client.id || idx} className="p-6 md:px-8 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-white/5 transition-colors group cursor-pointer">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-zinc-100 dark:bg-white/10 flex items-center justify-center font-black text-zinc-700 dark:text-zinc-300 group-hover:bg-success/20 group-hover:text-success transition-colors">
-                      {(client.name || 'C').charAt(0)}
+                <li key={client.id} className="p-5 flex items-center justify-between hover:bg-surface-soft transition-colors group cursor-pointer">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-accent-light flex items-center justify-center font-mono font-semibold text-accent-dark group-hover:bg-accent DEFAULT group-hover:text-white transition-colors">
+                      {client.name.charAt(0)}
                     </div>
                     <div>
-                      <h4 className="font-bold text-zinc-900 dark:text-white group-hover:text-success transition-colors">{client.name}</h4>
-                      <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 mt-1 uppercase tracking-widest flex items-center gap-1.5">
-                        <Briefcase size={12} /> {client.projects || 0} Projects
+                      <h4 className="font-body font-semibold text-ink-primary group-hover:text-accent DEFAULT transition-colors">
+                        {client.name}
+                      </h4>
+                      <p className="text-xs text-ink-tertiary flex items-center gap-1">
+                        <Briefcase className="w-3 h-3" /> {client.projects} projects
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-black text-zinc-900 dark:text-white">{formatCurrency(client.amount)}</div>
-                    <span className={cn(
-                      "text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg mt-1.5 inline-block",
-                      client.status === 'Active' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-zinc-100 dark:bg-white/10 text-zinc-500 dark:text-zinc-400'
-                    )}>
-                      {client.status || 'Active'}
+                    <div className="font-mono font-semibold text-ink-primary">{formatCurrency(client.amount)}</div>
+                    <span className="text-xs font-body font-medium text-accent-dark bg-accent-light px-2 py-0.5 rounded-full">
+                      {client.status}
                     </span>
                   </div>
                 </li>
@@ -364,63 +337,32 @@ export default function GoalsEarningsTrackerPage() {
           )}
         </div>
 
-        {/* AI Growth Recommendations - removed mock, showing empty state */}
-        <div className="bg-white dark:bg-[#222222] rounded-[24px] border border-zinc-200 dark:border-white/10 shadow-sm p-6 md:p-8 relative overflow-hidden">
-          <div className="absolute top-[-50%] right-[-10%] w-64 h-64 bg-success/5 blur-[80px] rounded-full pointer-events-none"></div>
-
-          <div className="flex items-center gap-3 mb-8 relative z-10">
-            <div className="p-2.5 bg-success/20 border border-success/20 text-success rounded-xl">
-              <Zap size={20} />
+        {/* Growth Recommendations */}
+        <div className="bg-white border border-border rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-accent-light rounded-lg">
+              <Zap className="w-5 h-5 text-accent DEFAULT" />
             </div>
-            <h2 className="text-lg font-black text-zinc-900 dark:text-white tracking-tight">Growth Recommendations</h2>
+            <h2 className="font-display font-semibold text-lg text-brand-900">Growth recommendations</h2>
           </div>
-          
-          {!dashboardData?.recommendations || (dashboardData.recommendations.length === 0) ? (
-            <div className="text-center py-12 relative z-10">
-              <Zap size={32} className="mx-auto text-zinc-300 dark:text-zinc-600 mb-3" />
-              <p className="text-sm text-zinc-500 dark:text-zinc-400 font-semibold">No recommendations at this time.</p>
-              <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">Keep completing projects to unlock personalized tips.</p>
-            </div>
-          ) : (
-            <div className="space-y-4 relative z-10">
-              {dashboardData.recommendations.map((rec, idx) => (
-                <div key={rec.id || idx} className="p-5 border border-zinc-200 dark:border-white/10 rounded-2xl hover:border-success/50 hover:bg-zinc-50 dark:hover:bg-white/5 transition-colors group cursor-pointer">
-                  <div className="flex items-start gap-4">
-                    <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border", rec.colorClass || 'text-success bg-success/10 border-success/20')}>
-                      <rec.icon size={20} />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-bold text-zinc-900 dark:text-white mb-2 group-hover:text-success transition-colors">{rec.title}</h4>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium mb-3 leading-relaxed">{rec.desc}</p>
-                      <button className="text-[10px] font-black text-success uppercase tracking-widest flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        Take Action <ArrowUpRight size={12} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
 
-          <div className="mt-6 p-6 md:p-8 bg-success rounded-2xl text-white shadow-xl shadow-[#2bb75c]/20 relative overflow-hidden group">
-            <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none translate-x-1/4 translate-y-1/4 group-hover:scale-110 transition-transform duration-700">
-              <Target size={120} />
-            </div>
-            <h4 className="font-black text-xl mb-3 relative z-10 tracking-tight">Premium Insights</h4>
-            <p className="text-white/90 text-sm font-medium mb-6 relative z-10 max-w-[80%] leading-relaxed">
-              Unlock deep market analysis, rate optimization, and automated proposal generation with Forte Pro.
+          <div className="text-center py-10">
+            <Zap className="w-10 h-10 text-ink-tertiary mx-auto mb-2" />
+            <p className="text-ink-secondary">No recommendations at this time</p>
+            <p className="text-xs text-ink-tertiary mt-1">Complete more projects to unlock personalized tips</p>
+          </div>
+
+          <div className="mt-4 p-4 bg-gradient-to-br from-brand-900 to-brand-800 rounded-xl text-white">
+            <h4 className="font-body font-semibold text-lg mb-2">Premium insights</h4>
+            <p className="text-white/80 text-sm mb-4">
+              Unlock deep market analysis, rate optimization, and advanced analytics with Forte Pro
             </p>
-            <Button 
-              variant="primary"
-              onClick={() => toast.success('Upgrading to Pro...')}
-              className="bg-white text-success px-5 py-2.5 rounded-xl text-xs font-black shadow-sm hover:bg-zinc-50 transition-colors relative z-10 uppercase tracking-widest border-none"
-            >
+            <button className="px-4 py-2 rounded-lg bg-white text-brand-900 hover:bg-surface-soft font-body font-medium text-sm transition-colors">
               Upgrade to Pro
-            </Button>
+            </button>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
-
