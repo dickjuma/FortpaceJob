@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { CheckCircle2, Clock, Filter, MapPin, Search, Star, Zap, ArrowRight, Users } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useAuthStore } from '../../common/authStore';
+import { isEligibleForFindWork } from '../../common/utils/profile';
 import { getFindWorkJobs, subscribeToFindWorkData, syncJobsWithBackend } from './findWorkData';
 
 export default function SearchResults() {
@@ -14,7 +16,12 @@ export default function SearchResults() {
   const [experienceLevels, setExperienceLevels] = useState([]);
   const [urgentOnly, setUrgentOnly] = useState(false);
   const [sortBy, setSortBy] = useState('recommended');
+  const [isSearching, setIsSearching] = useState(false);
   const [, setDataVersion] = useState(0);
+  const { isAuthenticated, user } = useAuthStore();
+  const profile = user?.profile || {};
+  const isFreelancer = String(user?.role || '').toUpperCase() === 'FREELANCER';
+  const hasFindWorkAccess = !isFreelancer || isEligibleForFindWork(user, profile);
 
   useEffect(() => {
     setQuery(searchParams.get('q') || '');
@@ -26,6 +33,21 @@ export default function SearchResults() {
     syncJobsWithBackend();
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    let active = true;
+    setIsSearching(true);
+
+    syncJobsWithBackend({ query, workMode: activeTab, sortBy, limit: 100 })
+      .catch(() => {})
+      .finally(() => {
+        if (active) setIsSearching(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [query, activeTab, sortBy]);
 
   const results = getFindWorkJobs({
     query,
@@ -219,23 +241,45 @@ export default function SearchResults() {
             </div>
 
             <div className="flex-1 space-y-4">
-              <div className="flex justify-between items-center bg-white rounded-2xl border border-zinc-200 p-4 shadow-sm">
-                <div className="text-sm text-zinc-500">
-                  <span className="font-bold text-zinc-900">{results.length}</span> matching opportunities
+              {isAuthenticated && isFreelancer && !hasFindWorkAccess ? (
+                <div className="rounded-3xl border border-rose-200 bg-rose-50 p-10 text-center shadow-sm">
+                  <h2 className="text-2xl font-bold text-rose-900">Complete your freelancer profile to access Find Work</h2>
+                  <p className="mt-4 text-sm text-rose-700 max-w-2xl mx-auto">
+                    Add your skills, upload a profile photo, verify your email and phone number, and finish your profile information in the freelancer profile section to unlock full access to jobs.
+                  </p>
+                  <Link
+                    to="/freelancer/profile"
+                    className="mt-6 inline-flex items-center justify-center rounded-full bg-[#4C1D95] px-8 py-3 text-sm font-bold text-white transition-colors hover:bg-[#22C55E]"
+                  >
+                    Update profile
+                  </Link>
                 </div>
-                <select
-                  value={sortBy}
-                  onChange={(event) => setSortBy(event.target.value)}
-                  className="bg-transparent text-sm font-bold text-zinc-700 outline-none cursor-pointer"
-                >
-                  <option value="recommended">Sort by: Recommended</option>
-                  <option value="newest">Sort by: Newest</option>
-                  <option value="highest-budget">Sort by: Highest Budget</option>
-                  <option value="most-applicants">Sort by: Most Applicants</option>
-                </select>
-              </div>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-3 bg-white rounded-2xl border border-zinc-200 p-4 shadow-sm">
+                    <div className="flex justify-between items-center">
+                      <div className="text-sm text-zinc-500">
+                        <span className="font-bold text-zinc-900">{results.length}</span> matching opportunities
+                      </div>
+                      <select
+                        value={sortBy}
+                        onChange={(event) => setSortBy(event.target.value)}
+                        className="bg-transparent text-sm font-bold text-zinc-700 outline-none cursor-pointer"
+                      >
+                        <option value="recommended">Sort by: Recommended</option>
+                        <option value="newest">Sort by: Newest</option>
+                        <option value="highest-budget">Sort by: Highest Budget</option>
+                        <option value="most-applicants">Sort by: Most Applicants</option>
+                      </select>
+                    </div>
+                    {isSearching && (
+                      <div className="rounded-3xl bg-[#effaf3] border border-[#d7f9e3] p-3 text-sm font-medium text-[#1f7b46]">
+                        Searching jobs on the backend. Results will update shortly.
+                      </div>
+                    )}
+                  </div>
 
-              {results.length === 0 ? (
+                  {results.length === 0 ? (
                 <div className="bg-white border border-zinc-200 rounded-2xl p-10 text-center shadow-sm">
                   <Search className="w-12 h-12 text-zinc-300 mx-auto mb-4" />
                   <h2 className="text-xl font-bold text-zinc-900 mb-2">No results matched this search.</h2>
@@ -281,6 +325,7 @@ export default function SearchResults() {
                   ))}
                 </div>
               )}
+                </>
             </div>
           </div>
         </div>

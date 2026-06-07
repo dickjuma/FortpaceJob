@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { proposalAPI } from '../../common/services/api';
 import { useAuthStore } from '../../common/authStore';
+import { isEligibleForFindWork } from '../../common/utils/profile';
 import { useFindWorkJob } from '../../common/services/findWorkHooks';
 import { useCheckoutFees } from '../../common/hooks/useCheckoutFees';
 import QuotaPaywallModal from '../../components/subscription/QuotaPaywallModal';
@@ -23,6 +24,9 @@ export default function WorkProposal() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, user } = useAuthStore();
+  const profile = user?.profile || {};
+  const isFreelancer = String(user?.role || '').toUpperCase() === 'FREELANCER';
+  const hasFindWorkAccess = !isFreelancer || isEligibleForFindWork(user, profile);
   const { data: job, isLoading, isError } = useFindWorkJob(workId);
   const [bidAmount, setBidAmount] = useState('');
   const [deliveryEstimate, setDeliveryEstimate] = useState('1 - 2 weeks');
@@ -66,6 +70,12 @@ export default function WorkProposal() {
 
     if (String(user?.role || '').toUpperCase() !== 'FREELANCER') {
       toast.error('Only freelancer accounts can submit proposals.');
+      return;
+    }
+
+    if (!hasFindWorkAccess) {
+      toast.error('Complete your profile photo, skills, and verification before submitting a proposal.');
+      navigate('/freelancer/profile');
       return;
     }
 
@@ -131,6 +141,19 @@ export default function WorkProposal() {
             <h2 className="font-bold text-lg text-zinc-900 mb-1">{job.title}</h2>
             <p className="text-sm text-zinc-500">{job.category?.name} · {job.budgetLabel}</p>
           </div>
+
+          {isAuthenticated && isFreelancer && !hasFindWorkAccess && (
+            <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 mb-6 text-center">
+              <h3 className="text-lg font-bold text-rose-900">Action required</h3>
+              <p className="mt-2 text-sm text-rose-700">Your freelancer profile is not fully verified. Upload a profile photo, add skills, and verify your account before submitting.</p>
+              <Link
+                to="/freelancer/profile"
+                className="mt-4 inline-flex items-center justify-center rounded-full bg-[#4C1D95] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[#22C55E]"
+              >
+                Update profile
+              </Link>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm">

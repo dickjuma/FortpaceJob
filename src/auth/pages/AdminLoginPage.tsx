@@ -67,7 +67,7 @@ export default function AdminLoginPage() {
             <Input
               label="Administrator Email"
               type="email"
-              placeholder="admin@forte.com"
+              placeholder="dickjuma292gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required

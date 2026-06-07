@@ -14,6 +14,7 @@ export default function OnlineWorkListings() {
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [establishedOnly, setEstablishedOnly] = useState(false);
   const [sortBy, setSortBy] = useState('recommended');
+  const [isSearching, setIsSearching] = useState(false);
   const [, setDataVersion] = useState(0);
 
   useEffect(() => {
@@ -25,6 +26,27 @@ export default function OnlineWorkListings() {
     syncJobsWithBackend();
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    let active = true;
+    setIsSearching(true);
+
+    syncJobsWithBackend({
+      workMode: 'online',
+      query,
+      sortBy,
+      limit: 100,
+      categoryIds: selectedCategories,
+    })
+      .catch(() => {})
+      .finally(() => {
+        if (active) setIsSearching(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [query, sortBy, selectedCategories]);
 
   const jobs = getFindWorkJobs({
     workMode: 'online',
@@ -181,6 +203,11 @@ export default function OnlineWorkListings() {
               <div>
                 <div className="font-bold text-zinc-900">{jobs.length} remote roles found</div>
                 <div className="text-sm text-zinc-500">Filtered by classification, client trust, and search relevance.</div>
+                {isSearching && (
+                  <div className="mt-2 inline-flex items-center rounded-full bg-[#effaf3] px-3 py-2 text-xs font-semibold text-[#1f7b46]">
+                    Searching backend listings…
+                  </div>
+                )}
               </div>
               <div className="flex items-center gap-2 text-sm font-medium text-zinc-600">
                 Sort by:

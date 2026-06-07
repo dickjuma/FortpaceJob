@@ -7,7 +7,8 @@ import {
   Users, FolderKanban, Building2, Building, Shield, ShieldCheck, Folder, Upload, Share2,
   Download, BadgeCheck, Lock, Blocks, Palette, HelpCircle, Ticket,
   MessageCircle, GraduationCap, Zap, Gift, LogOut, PanelLeftClose, PanelLeft, Plus,
-  MapPin, CalendarCheck, Compass, Map, Video, ArrowUpRight, Smartphone, Globe, Bookmark
+  MapPin, CalendarCheck, Compass, Map, Video, ArrowUpRight, Smartphone, Globe, Bookmark,
+  X
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
 import { useFreelancer } from '../context/FreelancerContext';
@@ -150,12 +151,20 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
             </div>
             {!isCollapsed && <span className="font-black text-lg tracking-tight text-[#222222] whitespace-nowrap">Forte Space</span>}
           </Link>
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden lg:flex p-1.5 text-text-secondary hover:text-[#222222] hover:bg-light-gray rounded-md transition-colors"
-          >
-            {isCollapsed ? <PanelLeft size={20} /> : <PanelLeftClose size={20} />}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="hidden lg:flex p-1.5 text-text-secondary hover:text-[#222222] hover:bg-light-gray rounded-md transition-colors"
+            >
+              {isCollapsed ? <PanelLeft size={20} /> : <PanelLeftClose size={20} />}
+            </button>
+            <button
+              onClick={() => setIsMobileOpen(false)}
+              className="lg:hidden p-1.5 text-text-secondary hover:text-[#222222] hover:bg-light-gray rounded-md transition-colors"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {/* Top Profile Area */}
@@ -253,7 +262,7 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
 
                               {/* Active indicator bar */}
                               {isActive && !isCollapsed && (
-                                <div className="absolute left-0 top-1/2 -tranzinc-y-1/2 w-1 h-5 bg-success rounded-r-full" />
+                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-success rounded-r-full" />
                               )}
                             </>
                           )}

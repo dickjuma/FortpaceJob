@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from './common/authStore';
-import { profileAPI } from './common/services/api';
 import LoginPage from './admin/pages/LoginPage';
 import AdminRoutes from './admin/AdminRoutes';
 
@@ -286,106 +285,11 @@ import FreelancerUploadCenterPage from './agency/pages/UploadCenterPage';
 import FreelancerSharedAssetsPage from './agency/pages/SharedAssetsPage';
 import FreelancerDownloadsPage from './agency/pages/DownloadsPage';
 
-const PROFILE_BYPASS_PATHS = [
-  '/auth/profile-completion',
-  '/auth/profile-setup',
-  '/auth/role-selection',
-  '/auth/skills',
-  '/auth/experience-level',
-  '/auth/availability',
-  '/auth/rate-setup',
-  '/dashboard',
-  '/client/dashboard',
-  '/client/profile',
-  '/client/company-profile',
-  '/client/setup-wizard',
-  '/client/',
-  '/freelancer/dashboard',
-  '/freelancer/profile',
-  '/freelancer/personal-details',
-  '/freelancer/',
-];
-
-const isPathBypassed = (pathname) =>
-  PROFILE_BYPASS_PATHS.some((allowedPath) => pathname === allowedPath || pathname.startsWith(`${allowedPath}/`));
-
-const GuardLoading = ({ label = 'Checking your profile' }) => (
-  <div className="flex min-h-screen items-center justify-center bg-surface dark:bg-surface-dark px-6">
-    <div className="rounded-3xl border border-zinc-200 bg-white px-6 py-5 text-sm font-semibold text-zinc-600 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
-      {label}...
-    </div>
-  </div>
-);
-
-const useProfileCompletionStatus = (enabled) => {
-  const user = useAuthStore((state) => state.user);
-  const [status, setStatus] = useState({
-    loading: Boolean(enabled),
-    complete: false,
-  });
-
-  useEffect(() => {
-    let active = true;
-
-    if (!enabled) {
-      setStatus({ loading: false, complete: true });
-      return () => {
-        active = false;
-      };
-    }
-
-    const explicitCompletion = user?.profileCompleted ?? user?.profile?.profileCompleted;
-    if (explicitCompletion === true) {
-      setStatus({ loading: false, complete: true });
-      return () => {
-        active = false;
-      };
-    }
-
-    setStatus({ loading: true, complete: false });
-
-    profileAPI
-      .getMissingFields()
-      .then((response) => {
-        if (!active) return;
-        const data = response?.data ?? response;
-        setStatus({
-          loading: false,
-          complete: Boolean(data?.isComplete),
-        });
-      })
-      .catch(() => {
-        if (!active) return;
-        const explicitCompletion = user?.profileCompleted ?? user?.profile?.profileCompleted;
-        setStatus({
-          loading: false,
-          complete: explicitCompletion === true,
-        });
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [enabled, user?.id, user?.role, user?.profileCompleted, user?.profile?.profileCompleted]);
-
-  return status;
-};
-
 const RoleProtectedRoute = ({ role, children }) => {
-  const location = useLocation();
   const { isAuthenticated, user } = useAuthStore();
-  const profileStatus = useProfileCompletionStatus(isAuthenticated && String(user?.role || '').toUpperCase() === role);
 
   if (!isAuthenticated || String(user?.role || '').toUpperCase() !== role) {
     return <Navigate to="/auth/login" replace />;
-  }
-
-  if (profileStatus.loading) {
-    return <GuardLoading />;
-  }
-
-  if (!profileStatus.complete && !isPathBypassed(location.pathname)) {
-    return <Navigate to="/auth/profile-completion" replace state={{ from: location.pathname }} />;
   }
 
   return <>{children}</>;

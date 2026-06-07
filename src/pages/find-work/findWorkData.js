@@ -345,11 +345,35 @@ function matchesQuery(job, query) {
 }
 
 async function fetchBackendJobs(filters = {}) {
-  const { query = '', categoryId = '', workMode = 'all', limit = 50, sortBy = 'recommended' } = filters;
+  const {
+    query = '',
+    categoryId = '',
+    categoryIds = [],
+    workMode = 'all',
+    locationQuery = '',
+    limit = 50,
+    sortBy = 'recommended',
+  } = filters;
+
+  const selectedCategoryIds = Array.isArray(categoryIds)
+    ? categoryIds.filter(Boolean)
+    : [];
+  if (categoryId) selectedCategoryIds.push(categoryId);
+
   const params = { limit };
 
-  if (query) params.query = query;
-  if (categoryId) params.category = categoryId;
+  if (query) {
+    params.query = query;
+  }
+  if (locationQuery) {
+    params.location = locationQuery;
+  }
+  if (selectedCategoryIds.length) {
+    params.categories = Array.from(new Set(selectedCategoryIds)).join(',');
+  }
+  if (categoryId && !selectedCategoryIds.length) {
+    params.category = categoryId;
+  }
   if (workMode !== 'all') params.type = workMode === 'local' ? 'ONSITE' : 'REMOTE';
 
   switch (sortBy) {
@@ -372,9 +396,10 @@ async function fetchBackendJobs(filters = {}) {
 
 export async function syncJobsWithBackend(filters = {}) {
   try {
+    if (CATEGORY_CONFIG.length === 0) {
+      await loadFindWorkCategories();
+    }
     const backendJobs = await fetchBackendJobs(filters);
-
-    if (backendJobs.length === 0) return;
 
     const mappedJobs = backendJobs.map((job) => {
       const category = CATEGORY_CONFIG.find((c) => c.id === job.category || c.slug === job.category) || {
@@ -435,7 +460,11 @@ export async function syncJobsWithBackend(filters = {}) {
         budgetValue: job.budgetMin || job.budget || 0,
         durationLabel: job.durationLabel || job.duration || 'Open',
         locationLabel: job.location || job.locationLabel || 'Remote',
-        postedHoursAgo: job.postedHoursAgo || Math.max(1, (Date.now() - (new Date(job.createdAt).getTime() || Date.now())) / 3600000),
+        postedHoursAgo: job.postedHoursAgo || (() => {
+          const createdAt = new Date(job.createdAt).getTime();
+          if (Number.isNaN(createdAt)) return 1;
+          return Math.max(1, Math.round((Date.now() - createdAt) / 3600000));
+        })(),
         applicants: job.proposalsCount || job.applicants || 0,
         proposalsCount: job.proposalsCount || 0,
         experienceLevel: job.experienceLevel || 'Expert',

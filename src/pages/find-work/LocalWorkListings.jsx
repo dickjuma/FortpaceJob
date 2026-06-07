@@ -12,6 +12,7 @@ export default function LocalWorkListings() {
   const [activeCard, setActiveCard] = useState(null);
   const [, setDataVersion] = useState(0);
   const [syncing, setSyncing] = useState(true);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const unsubscribe = subscribeToFindWorkData(() => setDataVersion((v) => v + 1));
@@ -20,6 +21,21 @@ export default function LocalWorkListings() {
     );
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    let active = true;
+    setIsSearching(true);
+
+    syncJobsWithBackend({ workMode: 'local', query, locationQuery, limit: 100 })
+      .catch(() => {})
+      .finally(() => {
+        if (active) setIsSearching(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [query, urgentOnly, locationQuery, selectedSpecialization]);
 
   useEffect(() => {
     setQuery(searchParams.get('q') || '');
@@ -147,7 +163,8 @@ export default function LocalWorkListings() {
                       <button type="submit" className="rounded-3xl bg-[#4C1D95] px-6 py-4 text-sm font-bold text-white shadow-lg hover:bg-[#22C55E] transition-colors">
                         Refresh local matches
                       </button>
-                      <span className="inline-flex items-center justify-center rounded-3xl border border-zinc-200 bg-zinc-50 px-4 py-4 text-sm text-zinc-600">
+                      <span className="inline-flex items-center justify-center rounded-3xl border border-zinc-200 bg-zinc-50 px-4 py-4 text-sm text-zinc-600 gap-2">
+                        {isSearching && <Loader2 className="w-4 h-4 animate-spin" />}
                         {localJobs.length} gigs found • {selectedSpecialization === 'all' ? 'all specialties' : selectedSpecialization}
                       </span>
                     </div>

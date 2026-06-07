@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../../common/authStore';
 import { walletAPI } from '../../common/services/api';
-import { 
-  Search, 
-  Bell, 
+import {
+  Search,
+  Bell,
   HelpCircle,
   Menu,
   Wallet,
   ArrowRightLeft
 } from 'lucide-react';
 
-export default function ClientHeader() {
+export default function ClientHeader({ onOpenSidebar = () => {} }) {
   const { user } = useAuthStore();
   const [walletBalance, setWalletBalance] = useState(0);
 
@@ -32,10 +32,14 @@ export default function ClientHeader() {
 
   return (
     <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 shrink-0 sticky top-0 z-20">
-      
+
       {/* Mobile Menu Toggle & Global Context */}
       <div className="flex items-center gap-4">
-        <button className="md:hidden text-gray-500 hover:text-gray-900">
+        <button
+          onClick={onOpenSidebar}
+          className="md:hidden text-gray-500 hover:text-gray-900"
+          aria-label="Open menu"
+        >
           <Menu className="w-6 h-6" />
         </button>
         <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md">
@@ -64,7 +68,7 @@ export default function ClientHeader() {
 
       {/* Action Icons */}
       <div className="flex items-center gap-5">
-        
+
         {/* Quick Wallet Summary */}
         <div className="hidden lg:flex items-center gap-3 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-md cursor-pointer hover:bg-emerald-500/20 transition-colors">
           <Wallet className="w-4 h-4 text-emerald-400" />
@@ -87,7 +91,7 @@ export default function ClientHeader() {
             <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500 border-2 border-white"></span>
           </span>
         </button>
-        
+
       </div>
     </header>
   );

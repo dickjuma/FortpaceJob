@@ -66,7 +66,13 @@ export default function ResetPasswordPage() {
     setError('');
 
     try {
-      await authAPI.resetPassword(isOtpReset ? { email, otp, password } : { token, password });
+      await authAPI.resetPassword(
+        isOtpReset
+          ? { email, otp, password }
+          : email
+          ? { token, password, email }
+          : { token, password }
+      );
       sessionStorage.removeItem('passwordResetEmail');
       setIsSuccess(true);
     } catch (err) {
@@ -169,7 +175,7 @@ export default function ResetPasswordPage() {
                 />
 
                 {error && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="p-3 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 rounded-xl text-sm font-medium text-center border border-red-100 dark:border-red-500/20"
@@ -205,7 +211,7 @@ export default function ResetPasswordPage() {
               <p className="text-zinc-500 dark:text-zinc-400 mb-8">
                 Your password has been successfully reset. You can now log in with your new password.
               </p>
-              
+
               <Button
                 variant="primary"
                 onClick={() => navigate('/auth/login')}

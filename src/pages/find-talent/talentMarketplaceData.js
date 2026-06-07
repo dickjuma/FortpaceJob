@@ -338,14 +338,13 @@ async function fetchBackendTalentsAndJobs(filters = {}) {
   } = filters;
   const params = { limit, sort: sortBy };
 
-  if (query) params.q = query;
   if (filters.sectionSlug) params.section = filters.sectionSlug;
   if (categoryId) params.category = categoryId;
   if (categoryIds.length) params.categories = Array.from(new Set(categoryIds)).join(',');
   if (mode === 'online') params.onlineOnly = 'true';
   if (mode === 'onsite') params.offlineOnly = 'true';
   if (mode === 'hybrid') params.mode = 'hybrid';
-
+  if (query) params.query = query;
   const res = await publicAPI.searchFreelancers(params);
   return Array.isArray(res?.talents) ? res.talents : Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
 }

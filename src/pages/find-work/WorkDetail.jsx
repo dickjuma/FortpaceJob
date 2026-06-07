@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Bookmark, CheckCircle2, ChevronRight, Clock, FileText, MapPin, Share2, Star } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
+import { useAuthStore } from '../../common/authStore';
+import { isEligibleForFindWork } from '../../common/utils/profile';
 import { getFindWorkJobById, getRelatedFindWorkJobs, subscribeToFindWorkData, syncJobsWithBackend } from './findWorkData';
 
 export default function WorkDetail() {
@@ -14,6 +16,10 @@ export default function WorkDetail() {
   }, []);
 
   const job = getFindWorkJobById(id);
+  const { isAuthenticated, user } = useAuthStore();
+  const profile = user?.profile || {};
+  const isFreelancer = String(user?.role || '').toUpperCase() === 'FREELANCER';
+  const hasFindWorkAccess = !isFreelancer || isEligibleForFindWork(user, profile);
 
   if (!job) {
     return (
@@ -148,9 +154,22 @@ export default function WorkDetail() {
                   <div className="text-sm text-zinc-500 mt-2">Estimated timeline: {job.durationLabel}</div>
                 </div>
 
-                <Link to={job.proposalPath} className="w-full py-4 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl shadow-md transition-colors text-lg mb-4 block text-center">
-                  Submit a Proposal
-                </Link>
+                {isAuthenticated && isFreelancer && !hasFindWorkAccess ? (
+                  <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-center mb-4">
+                    <h3 className="text-lg font-bold text-rose-900">Profile incomplete</h3>
+                    <p className="mt-2 text-sm text-rose-700">Complete your freelancer profile, upload a profile photo, verify your email and phone, and add skills to apply for this work.</p>
+                    <Link
+                      to="/freelancer/profile"
+                      className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#4C1D95] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[#22C55E]"
+                    >
+                      Update profile
+                    </Link>
+                  </div>
+                ) : (
+                  <Link to={job.proposalPath} className="w-full py-4 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl shadow-md transition-colors text-lg mb-4 block text-center">
+                    Submit a Proposal
+                  </Link>
+                )}
                 <div className="text-center text-sm font-bold text-zinc-500">{job.applicants} proposals submitted so far</div>
               </div>
 

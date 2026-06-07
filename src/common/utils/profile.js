@@ -76,6 +76,27 @@ export const getProfileSummary = (user = {}, profile = {}) => {
   };
 };
 
+export const isEligibleForFindWork = (user = {}, profile = {}) => {
+  const hasEmailVerified = Boolean(profile.emailVerified || user.emailVerified);
+  const hasPhoneVerified = Boolean(profile.phoneVerified || user.phoneVerified);
+  const name = clean(profile.name) || clean(user.name) || [clean(user.firstName), clean(user.lastName)].filter(Boolean).join(' ');
+  const skills = Array.isArray(profile.skills)
+    ? profile.skills
+    : Array.isArray(user.skills)
+    ? user.skills
+    : [];
+  const hasProfilePicture = Boolean(
+    clean(profile.avatar) ||
+    clean(profile.profilePicture) ||
+    clean(profile.photo) ||
+    clean(user.avatar) ||
+    clean(user.profilePicture) ||
+    clean(user.photo)
+  );
+
+  return Boolean(hasEmailVerified && hasPhoneVerified && hasProfilePicture && name && skills.length > 0);
+};
+
 export const getTalentTypeLabel = (item = {}) => {
   const accountType = normalizeAccountType(item, item.profile || {});
   if (accountType === 'CORPORATE') return 'Corporate';

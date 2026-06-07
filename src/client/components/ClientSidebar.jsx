@@ -16,7 +16,8 @@ import {
   Building2,
   Users,
   Video,
-  User
+  User,
+  X
 } from 'lucide-react';
 
 const flatNavModules = [
@@ -41,7 +42,7 @@ const flatNavModules = [
   { id: 'support', label: 'Support', icon: HelpCircle, path: '/client/support' }
 ];
 
-export default function ClientSidebar() {
+export default function ClientSidebar({ isMobileOpen = false, setIsMobileOpen }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
@@ -64,9 +65,9 @@ export default function ClientSidebar() {
   const roleDisplay = user?.role === 'CLIENT' ? 'Client Workspace' : (user?.role || 'Corporate Client');
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 h-screen flex flex-col font-sans shrink-0 overflow-y-auto custom-scrollbar">
+    <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col font-sans overflow-y-auto custom-scrollbar transform transition-transform duration-300 md:static md:translate-x-0 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'} md:w-64`}>
       {/* Brand & Workspace Selector */}
-      <div className="p-5 border-b border-gray-200 sticky top-0 bg-white z-10">
+      <div className="p-5 border-b border-gray-200 sticky top-0 bg-white z-10 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-success rounded-lg flex items-center justify-center shadow-lg shadow-[#4C1D95]/20">
             <Building2 className="w-5 h-5 text-white" />
@@ -78,6 +79,14 @@ export default function ClientSidebar() {
             </div>
           </div>
         </div>
+        <button
+          type="button"
+          onClick={() => setIsMobileOpen(false)}
+          className="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+          aria-label="Close sidebar"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Main Navigation */}
