@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import {
   Search, Briefcase, UserCircle, MessageSquare, BarChart2,
   ChevronDown, Bell, Wallet, LayoutDashboard, FileText, ShoppingCart, Calendar,
@@ -18,6 +18,7 @@ import { useFreelancerWallet } from '../services/freelancerHooks';
 export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCollapsed, setIsCollapsed }) {
   const { accountType, isOfflineProvider } = useFreelancer();
   const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
   const { data: walletData } = useFreelancerWallet();
   const availableBalance = walletData?.availableBalance || walletData?.available || 0;
 
@@ -311,7 +312,11 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
             )}
           </NavLink>
           <button
-            onClick={logout}
+            type="button"
+            onClick={async () => {
+              await logout();
+              navigate('/auth/login', { replace: true });
+            }}
             className={cn(
               "w-full flex items-center gap-3 py-2 rounded-lg transition-all relative group text-text-secondary hover:text-[#e63946] hover:bg-[#e63946]/5 font-medium",
               isCollapsed ? "justify-center px-0" : "px-3"
@@ -331,5 +336,4 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
     </>
   );
 }
-
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate, Routes, Route } from "react-router-dom";
-import { useAuthStore } from "../../admin/store/authStore";
+import { useAuthStore } from "../../common/authStore";
 import {
   Home,
   Package,

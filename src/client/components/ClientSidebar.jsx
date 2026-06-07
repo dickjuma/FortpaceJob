@@ -51,7 +51,7 @@ export default function ClientSidebar({ isMobileOpen = false, setIsMobileOpen })
 
   const handleLogout = async () => {
     await logout();
-    navigate('/login');
+    navigate('/auth/login', { replace: true });
   };
 
   const getInitials = (name) => {
@@ -133,5 +133,4 @@ export default function ClientSidebar({ isMobileOpen = false, setIsMobileOpen })
     </aside>
   );
 }
-
 
