@@ -31,7 +31,15 @@ const UserRiskTable = ({ data, isLoading, onAction }) => {
             onClick={() => onAction('profile', row.original)}
           >
             <div className="h-10 w-10 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center font-black text-zinc-400 text-xs shadow-inner group-hover/user:border-[#4C1D95]/20 transition-colors">
-              {row.original.avatar ? <img src={row.original.avatar} alt="" className="h-full w-full rounded-full object-cover" /> : row.original.name.charAt(0)}
+              {row.original.avatar ? (
+                <img
+                  src={row.original.avatar}
+                  alt={`${row.original.name} avatar`}
+                  className="h-full w-full rounded-full object-cover"
+                />
+              ) : (
+                row.original.name.charAt(0)
+              )}
             </div>
             <div>
               <p className="text-sm font-bold text-white leading-none mb-1 group-hover/user:text-[#4C1D95] transition-colors">{row.original.name}</p>

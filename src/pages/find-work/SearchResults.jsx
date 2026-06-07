@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CheckCircle2, Clock, Filter, MapPin, Search, Star, Zap, ArrowRight, Users } from 'lucide-react';
+import { CheckCircle2, Filter, Search } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../common/authStore';
 import { isEligibleForFindWork } from '../../common/utils/profile';
@@ -256,7 +256,7 @@ export default function SearchResults() {
                 </div>
               ) : (
                 <>
-                  <div className="flex flex-col gap-3 bg-white rounded-2xl border border-zinc-200 p-4 shadow-sm">
+                  <div className="flex flex-col gap-3 bg-white rounded-2xl border border-zinc-200 p-4 shadow-sm mb-6">
                     <div className="flex justify-between items-center">
                       <div className="text-sm text-zinc-500">
                         <span className="font-bold text-zinc-900">{results.length}</span> matching opportunities
@@ -280,52 +280,53 @@ export default function SearchResults() {
                   </div>
 
                   {results.length === 0 ? (
-                <div className="bg-white border border-zinc-200 rounded-2xl p-10 text-center shadow-sm">
-                  <Search className="w-12 h-12 text-zinc-300 mx-auto mb-4" />
-                  <h2 className="text-xl font-bold text-zinc-900 mb-2">No results matched this search.</h2>
-                  <p className="text-zinc-600 mb-6">Try a broader keyword, another tab, or fewer active filters.</p>
-                  <button type="button" onClick={resetFilters} className="px-6 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl">
-                    Reset Filters
-                  </button>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-                  {results.map((job) => (
-                    <Link key={job.id} to={job.detailPath} className="group block bg-white rounded-3xl border border-zinc-200 overflow-hidden hover:shadow-2xl hover:border-[#4C1D95]/50 transition-all duration-200 h-full">
-                      <div className="p-6 flex flex-col h-full">
-                        <div className="flex items-center justify-between mb-4 gap-3">
-                          <span className="text-xs font-bold uppercase tracking-[0.24em] text-[#4C1D95]">{job.category.name}</span>
-                          {job.urgent && (
-                            <span className="px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.18em] rounded-full bg-rose-50 text-rose-700 border border-rose-200">
-                              Urgent
-                            </span>
-                          )}
-                        </div>
+                    <div className="bg-white border border-zinc-200 rounded-2xl p-10 text-center shadow-sm">
+                      <Search className="w-12 h-12 text-zinc-300 mx-auto mb-4" />
+                      <h2 className="text-xl font-bold text-zinc-900 mb-2">No results matched this search.</h2>
+                      <p className="text-zinc-600 mb-6">Try a broader keyword, another tab, or fewer active filters.</p>
+                      <button type="button" onClick={resetFilters} className="px-6 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl">
+                        Reset Filters
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                      {results.map((job) => (
+                        <Link key={job.id} to={job.detailPath} className="group block bg-white rounded-3xl border border-zinc-200 overflow-hidden hover:shadow-2xl hover:border-[#4C1D95]/50 transition-all duration-200 h-full">
+                          <div className="p-6 flex flex-col h-full">
+                            <div className="flex items-center justify-between mb-4 gap-3">
+                              <span className="text-xs font-bold uppercase tracking-[0.24em] text-[#4C1D95]">{job.category.name}</span>
+                              {job.urgent && (
+                                <span className="px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.18em] rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+                                  Urgent
+                                </span>
+                              )}
+                            </div>
 
-                        <h3 className="font-bold text-xl text-zinc-900 mb-3 leading-snug transition-colors group-hover:text-[#22C55E]">{job.title}</h3>
+                            <h3 className="font-bold text-xl text-zinc-900 mb-3 leading-snug transition-colors group-hover:text-[#22C55E]">{job.title}</h3>
 
-                        <p className="text-sm text-zinc-600 mb-5 line-clamp-3 leading-relaxed flex-1">{job.summary}</p>
+                            <p className="text-sm text-zinc-600 mb-5 line-clamp-3 leading-relaxed flex-1">{job.summary}</p>
 
-                        <div className="flex flex-wrap gap-2 items-center text-xs font-semibold text-zinc-600 mb-5">
-                          <span className={`px-3 py-2 rounded-full ${job.workMode === 'local' ? 'bg-amber-50 text-amber-800' : 'bg-blue-50 text-blue-800'}`}>
-                            {job.workMode === 'local' ? 'Local' : 'Online'}
-                          </span>
-                          <span className="px-3 py-2 rounded-full bg-[#eef6ff] text-blue-700">{job.budgetType}</span>
-                          <span className="px-3 py-2 rounded-full bg-[#f3fdf4] text-[#1f7b46]">{job.budgetLabel}</span>
-                        </div>
+                            <div className="flex flex-wrap gap-2 items-center text-xs font-semibold text-zinc-600 mb-5">
+                              <span className={`px-3 py-2 rounded-full ${job.workMode === 'local' ? 'bg-amber-50 text-amber-800' : 'bg-blue-50 text-blue-800'}`}>
+                                {job.workMode === 'local' ? 'Local' : 'Online'}
+                              </span>
+                              <span className="px-3 py-2 rounded-full bg-[#eef6ff] text-blue-700">{job.budgetType}</span>
+                              <span className="px-3 py-2 rounded-full bg-[#f3fdf4] text-[#1f7b46]">{job.budgetLabel}</span>
+                            </div>
 
-                        <div className="mt-auto pt-4 border-t border-zinc-100">
-                          <div className="flex items-center justify-between text-sm text-zinc-500">
-                            <span>{job.client.name}</span>
-                            <span>{job.postedLabel}</span>
+                            <div className="mt-auto pt-4 border-t border-zinc-100">
+                              <div className="flex items-center justify-between text-sm text-zinc-500">
+                                <span>{job.client.name}</span>
+                                <span>{job.postedLabel}</span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </>
+              )}
             </div>
           </div>
         </div>
@@ -333,5 +334,3 @@ export default function SearchResults() {
     </>
   );
 }
-
-

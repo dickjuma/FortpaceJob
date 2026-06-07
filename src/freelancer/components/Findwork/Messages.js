@@ -48,6 +48,7 @@ export default function Messages() {
 
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
+  const activeMessages = useMemo(() => messages[activeId] || [], [messages, activeId]);
 
   // Fetch conversations and messages on mount
   useEffect(() => {
@@ -88,7 +89,7 @@ export default function Messages() {
   // Scroll to bottom when messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages[activeId]]);
+  }, [activeMessages]);
 
   // Listen for new messages
   useEffect(() => {
@@ -237,7 +238,7 @@ export default function Messages() {
   }, [conversations, searchQuery]);
 
   const activeThread = conversations.find((item) => item.id === activeId);
-  const threadMessages = messages[activeId] || [];
+  const threadMessages = activeMessages;
   const unreadTotal = conversations.reduce((sum, item) => sum + (item.unreadCount || 0), 0);
 
   return (

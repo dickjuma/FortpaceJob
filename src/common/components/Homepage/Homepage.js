@@ -33,7 +33,7 @@ const HomePage = () => {
       }
     }, 45);
     return () => clearInterval(interval);
-  }, []);
+  }, [title]);
 
   // Rotating taglines
   useEffect(() => {
@@ -41,7 +41,7 @@ const HomePage = () => {
       setTagIndex((prev) => (prev + 1) % taglines.length);
     }, 4000);
     return () => clearInterval(rotate);
-  }, []);
+  }, [taglines.length]);
 
   return (
     <div className="w-full overflow-x-hidden bg-[#F2F2F2] font-sans antialiased">
@@ -140,7 +140,7 @@ const HomePage = () => {
       </section>
 
       {/* Call to Action */}
-      <CTA />
+      {showCTA && <CTA />}
     </div>
   );
 };
