@@ -241,6 +241,11 @@ export async function initiateWithdrawal(data) {
 // PROFILE & PORTFOLIO
 // ══════════════════════════════════════════════════════════════════════════════
 
+export async function getNotifications(params = { limit: 20 }) {
+  const qs = new URLSearchParams(params).toString();
+  return unwrapList(await apiFetch(`/notifications?${qs}`));
+}
+
 export async function getFreelancerProfile() {
   return unwrap(await apiFetch('/profilesystem/profile'));
 }

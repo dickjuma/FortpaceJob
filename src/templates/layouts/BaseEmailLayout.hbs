@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    body {font-family: 'Inter', sans-serif; margin:0; padding:0; background:#f5f7fa;}
+    .container {max-width:600px; margin:auto; background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+    .header {background:#1e293b; color:#fff; padding:24px; text-align:center;}
+    .content {padding:24px; color:#333;}
+    .footer {background:#f1f5f9; color:#555; padding:16px; text-align:center; font-size:12px;}
+    a {color:#2563eb; text-decoration:none;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="{{logoUrl}}" alt="Logo" style="max-height:48px;"/>
+    </div>
+    <div class="content">
+      {{{body}}}
+    </div>
+    <div class="footer">
+      © {{year}} {{companyName}}. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>

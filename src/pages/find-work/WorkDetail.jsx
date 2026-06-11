@@ -81,20 +81,24 @@ export default function WorkDetail() {
                   </div>
                 </div>
 
-                <div className="mb-8">
-                  <h3 className="text-lg font-bold text-zinc-900 mb-4">Job Description</h3>
-                  <div className="text-zinc-700 leading-relaxed space-y-4">
-                    {job.description.map((paragraph) => (
-                      <p key={paragraph}>{paragraph}</p>
-                    ))}
-                    <p><strong>Responsibilities:</strong></p>
-                    <ul className="list-disc pl-5 space-y-2">
-                      {job.responsibilities.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+<div className="mb-8">
+                   <h3 className="text-lg font-bold text-zinc-900 mb-4">Job Description</h3>
+                   <div className="text-zinc-700 leading-relaxed space-y-4">
+                     {Array.isArray(job.description) ? (
+                       job.description.map((paragraph) => <p key={paragraph}>{paragraph}</p>)
+                     ) : (
+                       <p>{job.description}</p>
+                     )}
+                     {job.responsibilities && job.responsibilities.length > 0 && (
+                       <>
+                         <p><strong>Responsibilities:</strong></p>
+                         <ul className="list-disc pl-5 space-y-2">
+                           {job.responsibilities.map((item) => <li key={item}>{item}</li>)}
+                         </ul>
+                       </>
+                     )}
+                   </div>
+                 </div>
 
                 <hr className="border-zinc-100 mb-8" />
 

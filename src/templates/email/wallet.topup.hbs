@@ -1,0 +1,8 @@
+// src/templates/email/wallet.topup.hbs
+{{> ../layouts/BaseEmailLayout }}
+{{#*inline "body"}}
+  <h2>Wallet Top‑Up Successful</h2>
+  <p>Hello {{name}},</p>
+  <p>Your wallet has been topped up with {{amount}} {{currency}}.</p>
+  <p>New balance: {{newBalance}} {{currency}}.</p>
+{{/inline}}

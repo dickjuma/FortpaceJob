@@ -9,6 +9,7 @@ import { getDashboardPathForRole } from '../utils/authRouting';
 import SocialLoginButtons from '../components/SocialLoginButtons';
 import { resolveAuthReturnTo } from '../../common/utils/authRedirect';
 import { validateEmail, validateRequired } from '../../common/utils/validation';
+import { initSocket } from '../../services/websocket';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ export default function LoginPage() {
       return;
     }
 
-    try {
+try {
       const result = await login(email, password, rememberMe);
 
       if (result?.requiresTwoFactor && result?.userId) {
@@ -61,6 +62,12 @@ export default function LoginPage() {
       }
 
       const destination = returnTo || getDashboardPathForRole(result.user?.role);
+      
+      // Initialize WebSocket connection on successful login
+      if (result?.accessToken) {
+        initSocket(result.accessToken);
+      }
+      
       navigate(destination, { replace: true });
     } catch (err) {
       // Error is handled by store

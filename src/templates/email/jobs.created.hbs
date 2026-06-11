@@ -1,0 +1,9 @@
+// src/templates/email/jobs.created.hbs
+{{> ../layouts/BaseEmailLayout }}
+{{#*inline "body"}}
+  <h2>New Job Posted</h2>
+  <p>Hello {{clientName}},</p>
+  <p>Your job "{{title}}" has been successfully posted on {{companyName}}.</p>
+  <p>Job ID: {{jobId}}</p>
+  <p>We will notify you when freelancers apply.</p>
+{{/inline}}

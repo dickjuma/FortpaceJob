@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useAuthStore } from './common/authStore';
+import { useAuthStore } from './common/authStore.js';
+import useChatStore from './store/chatStore';
 import LoginPage from './admin/pages/LoginPage';
 import AdminRoutes from './admin/AdminRoutes';
 
@@ -328,6 +329,8 @@ const RoleDashboardRedirect = () => {
 function AuthBootstrap({ children }) {
   useEffect(() => {
     useAuthStore.getState().hydrateFromStorage();
+    // Initialize chat socket after auth is hydrated
+    useChatStore.getState().initSocket();
   }, []);
   return (
     <>

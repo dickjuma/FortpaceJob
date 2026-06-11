@@ -24,6 +24,8 @@ import {
   AreaChart,
   Area,
 } from 'recharts';
+import { useQuery } from '@tanstack/react-query';
+import { analyticsAPI, walletAPI } from '../../common/services/api';
 
 // ---------- Shared UI Components (inline) ----------
 const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, icon: Icon }) => {
@@ -80,80 +82,38 @@ const formatCurrency = (amount) => {
   }).format(amount);
 };
 
-// ---------- Chart Data ----------
-const monthlyData = [
-  { month: 'Jan', revenue: 45000 },
-  { month: 'Feb', revenue: 60000 },
-  { month: 'Mar', revenue: 50000 },
-  { month: 'Apr', revenue: 75000 },
-  { month: 'May', revenue: 90000 },
-  { month: 'Jun', revenue: 85000 },
-  { month: 'Jul', revenue: 110000 },
-  { month: 'Aug', revenue: 95000 },
-  { month: 'Sep', revenue: 120000 },
-  { month: 'Oct', revenue: 135000 },
-  { month: 'Nov', revenue: 115000 },
-  { month: 'Dec', revenue: 140000 },
-];
-
 // ---------- Main Component ----------
 export default function RevenueReportsPage() {
   const [selectedService, setSelectedService] = useState('All');
   const [toast, setToast] = useState(null);
 
+  const { data: earningsData, isLoading: earningsLoading } = useQuery({
+    queryKey: ['freelancer', 'analytics', 'earnings'],
+    queryFn: () => analyticsAPI.getFreelancerEarnings(),
+  });
+
+  const { data: transactionData, isLoading: txLoading } = useQuery({
+    queryKey: ['freelancer', 'transactions', 'ledger', selectedService],
+    queryFn: () => walletAPI.getTransactions({ limit: 100 }),
+  });
+
   const earnings = {
-    total: 1620000,
-    monthly: 145000,
-    pending: 45000,
-    escrow: 125000,
-    gigRevenue: 850000,
-    offlineJobs: 420000,
-    bookings: 350000,
+    total: earningsData?.totalRevenue ?? 0,
+    monthly: earningsData?.monthlyRevenue ?? 0,
+    pending: earningsData?.pendingBalance ?? 0,
+    escrow: earningsData?.escrowBalance ?? 0,
+    gigRevenue: earningsData?.gigRevenue ?? 0,
+    offlineJobs: earningsData?.offlineJobs ?? 0,
+    bookings: earningsData?.bookings ?? 0,
   };
 
-  const records = [
-    {
-      id: 'REC-901',
-      client: 'Global Finance Corp',
-      service: 'Fullstack App',
-      amount: 150000,
-      type: 'Gig Revenue',
-      status: 'Cleared',
-      date: '2026-05-20',
-    },
-    {
-      id: 'REC-902',
-      client: 'Symmetric Telecom',
-      service: 'Fibre Inspection',
-      amount: 45000,
-      type: 'Offline Job',
-      status: 'Pending',
-      date: '2026-05-18',
-    },
-    {
-      id: 'REC-903',
-      client: 'Nexus Tech Solutions',
-      service: 'Video Consultation',
-      amount: 80000,
-      type: 'Consultation Booking',
-      status: 'Escrow Lock',
-      date: '2026-05-12',
-    },
-    {
-      id: 'REC-904',
-      client: 'Apex Labs Inc',
-      service: 'UI Redesign Contract',
-      amount: 120000,
-      type: 'Gig Revenue',
-      status: 'Cleared',
-      date: '2026-05-01',
-    },
-  ];
+  const records = transactionData?.items ?? [];
+  const monthlyData = earningsData?.monthlyTrend ?? [];
 
   const filteredRecords = useMemo(() => {
     if (selectedService === 'All') return records;
     return records.filter((rec) => rec.type === selectedService);
-  }, [selectedService]);
+  }, [records, selectedService]);
 
   const handleExportPDF = () => {
     setToast({ type: 'success', message: 'Earnings statement exported successfully!' });
@@ -344,36 +304,36 @@ export default function RevenueReportsPage() {
                 <th className="px-6 py-4 text-center">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
-              {filteredRecords.map((record) => (
-                <tr key={record.id} className="hover:bg-surface-soft transition-colors">
-                  <td className="px-6 py-4 font-mono text-xs text-ink-secondary">{record.id}</td>
-                  <td className="px-6 py-4 text-sm font-medium text-ink-primary">{record.client}</td>
-                  <td className="px-6 py-4 text-sm text-ink-secondary">{record.service}</td>
-                  <td className="px-6 py-4">
-                    <Badge variant="info" className="text-xs">
-                      {record.type}
-                    </Badge>
-                  </td>
-                  <td className="px-6 py-4 text-right font-mono font-semibold text-brand-900">
-                    {formatCurrency(record.amount)}
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <Badge
-                      variant={
-                        record.status === 'Cleared'
-                          ? 'success'
-                          : record.status === 'Pending'
-                          ? 'warning'
-                          : 'info'
-                      }
-                    >
-                      {record.status}
-                    </Badge>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+<tbody className="divide-y divide-border">
+               {filteredRecords.map((record) => (
+                 <tr key={record.id} className="hover:bg-surface-soft transition-colors">
+                   <td className="px-6 py-4 font-mono text-xs text-ink-secondary">{record.id}</td>
+                   <td className="px-6 py-4 text-sm font-medium text-ink-primary">{record.counterparty || record.client || '-'}</td>
+                   <td className="px-6 py-4 text-sm text-ink-secondary">{record.description || '-'}</td>
+                   <td className="px-6 py-4">
+                     <Badge variant="info" className="text-xs">
+                       {record.type || 'CREDIT'}
+                     </Badge>
+                   </td>
+                   <td className="px-6 py-4 text-right font-mono font-semibold text-brand-900">
+                     {formatCurrency(Math.abs(record.amount || 0))}
+                   </td>
+                   <td className="px-6 py-4 text-center">
+                     <Badge
+                       variant={
+                         record.status === 'Cleared' || record.status === 'COMPLETED'
+                           ? 'success'
+                           : record.status === 'Pending'
+                           ? 'warning'
+                           : 'info'
+                       }
+                     >
+                       {record.status || 'CLEARED'}
+                     </Badge>
+                   </td>
+                 </tr>
+               ))}
+             </tbody>
           </table>
           {filteredRecords.length === 0 && (
             <div className="text-center py-12">

@@ -1,10 +1,12 @@
 // src/pages/freelancer/FreelancerAnalyticsPage.jsx
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   TrendingUp, Eye, MousePointer, DollarSign, Download, Filter, Zap,
   ArrowUpRight, ArrowDownRight, Target, Share2, Award, Calendar, BarChart2, Star, Check
 } from 'lucide-react';
+import { analyticsAPI } from '../../common/services/api';
+import { useQuery } from '@tanstack/react-query';
 
 // Custom Progress Ring Component
 const CustomProgressRing = ({ percent, colorClass }) => {
@@ -46,13 +48,10 @@ const CustomProgressRing = ({ percent, colorClass }) => {
 export default function FreelancerAnalyticsPage() {
   const [datePeriod, setDatePeriod] = useState('Last 30 Days');
   const [showSuccess, setShowSuccess] = useState(null);
-
-  const stats = [
-    { title: 'Search impressions', value: '18,294', change: '+14.2%', isPositive: true, icon: Eye },
-    { title: 'Profile clicks', value: '1,485', change: '+8.7%', isPositive: true, icon: MousePointer },
-    { title: 'Proposal success', value: '42.8%', change: '+3.1%', isPositive: true, icon: Target },
-    { title: 'Job success score', value: '99.4%', change: '+0.2%', isPositive: true, icon: Award }
-  ];
+  const { data: analyticsData, isLoading } = useQuery({
+    queryKey: ['freelancer', 'analytics', datePeriod],
+    queryFn: () => analyticsAPI.getFreelancerDashboard(),
+  });
 
   const handleExport = () => {
     setShowSuccess({ message: 'Analytics report exported' });
@@ -75,7 +74,7 @@ export default function FreelancerAnalyticsPage() {
           isPositive ? 'bg-accent-light text-accent-dark' : 'bg-danger-light text-danger'
         }`}>
           {isPositive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-          {change}
+          {change || '+0%'}
         </span>
       </div>
       <p className="text-xs font-body font-medium text-ink-secondary uppercase tracking-wide">
@@ -87,6 +86,13 @@ export default function FreelancerAnalyticsPage() {
     </motion.div>
   );
 
+  const stats = [
+    { title: 'Search impressions', value: analyticsData?.impressions?.toLocaleString() || '0', change: '+' + (analyticsData?.impressionsGrowth || '0') + '%', isPositive: true, icon: Eye },
+    { title: 'Profile clicks', value: analyticsData?.profileViews?.toLocaleString() || '0', change: '+' + (analyticsData?.profileViewsGrowth || '0') + '%', isPositive: true, icon: MousePointer },
+    { title: 'Proposal success', value: analyticsData?.proposalSuccessRate ? analyticsData.proposalSuccessRate + '%' : '0%', change: '+0%', isPositive: true, icon: Target },
+    { title: 'Job success score', value: analyticsData?.jobSuccessScore ? analyticsData.jobSuccessScore + '%' : '0%', change: '+0%', isPositive: true, icon: Award }
+  ];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -95,17 +101,19 @@ export default function FreelancerAnalyticsPage() {
       className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
     >
       {/* Success Toast */}
-      {showSuccess && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
-        >
-          <Check className="w-4 h-4" />
-          {showSuccess.message}
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {showSuccess.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6 mb-8">

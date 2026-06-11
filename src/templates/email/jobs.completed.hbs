@@ -1,0 +1,8 @@
+// src/templates/email/jobs.completed.hbs
+{{> ../layouts/BaseEmailLayout }}
+{{#*inline "body"}}
+  <h2>Job Completed</h2>
+  <p>Hello {{clientName}},</p>
+  <p>Your job "{{title}}" (ID: {{jobId}}) has been marked as completed.</p>
+  <p>Payment will be processed shortly.</p>
+{{/inline}}

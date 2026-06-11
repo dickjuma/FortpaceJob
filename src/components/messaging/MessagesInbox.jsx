@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Search, Send, MessageSquare, ChevronLeft, Loader2, Video } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
+import MessageItem from './MessageItem';
 
 function timeAgo(d) {
   if (!d) return '';
@@ -184,25 +185,14 @@ export default function MessagesInbox({
                   <Loader2 className="w-6 h-6 animate-spin text-[#4C1D95]" />
                 </div>
               )}
-              {messages.map((msg) => {
-                const senderId = msg.senderId || msg.userId || msg.fromUserId;
-                const isMe = senderId && currentUserId && String(senderId) === String(currentUserId);
-                return (
-                  <div key={msg.id} className={cn('flex', isMe ? 'justify-end' : 'justify-start')}>
-                    <div
-                      className={cn(
-                        'max-w-[75%] px-4 py-2.5 rounded-2xl text-sm',
-                        isMe ? 'bg-[#4C1D95] text-white rounded-br-md' : 'bg-white border border-zinc-200 text-zinc-800 rounded-bl-md'
-                      )}
-                    >
-                      <p>{msg.content || msg.message || msg.text}</p>
-                      <p className={cn('text-[10px] mt-1', isMe ? 'text-white/70' : 'text-zinc-400')}>
-                        {timeAgo(msg.createdAt || msg.sentAt)}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
+              {messages.map((msg) => (
+                <MessageItem
+                  key={msg.id}
+                  message={msg}
+                  currentUserId={currentUserId}
+                  conversationId={selectedId}
+                />
+              ))}
               <div ref={endRef} />
             </div>
 

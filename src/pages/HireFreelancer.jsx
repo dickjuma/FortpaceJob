@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Calendar, ChevronRight, Clock, Lock, MapPin, Plus, ShieldCheck, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar, ChevronRight, Clock, Lock, MapPin, Plus, ShieldCheck, Trash2, Loader2 } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { getClientOpenings, getFeaturedTalent, getTalentById } from './find-talent/talentMarketplaceData';
+import { getFeaturedTalent, getTalentById, syncTalentWithBackend } from './find-talent/talentMarketplaceData';
 import { useAuthRedirect } from '../common/utils/authRedirect';
+import { workAPI, contractAPI } from '../common/services/api';
 import CheckoutFeeBreakdown from '../components/payments/CheckoutFeeBreakdown';
 import { useCheckoutFees } from '../common/hooks/useCheckoutFees';
 
@@ -10,14 +11,44 @@ const HireFreelancer = () => {
   const { talentId } = useParams();
   const navigate = useNavigate();
   const { requireAuth } = useAuthRedirect();
-  const talent = getTalentById(talentId) || getFeaturedTalent()[0];
-  const openings = getClientOpenings();
+  const [talent, setTalent] = useState(null);
+  const [openings, setOpenings] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    syncTalentWithBackend().then(() => {
+      const t = getTalentById(talentId) || getFeaturedTalent()[0];
+      setTalent(t);
+    });
+    workAPI.getPipeline().then((res) => {
+      setOpenings(res?.openings || []);
+    }).catch(() => {
+      setOpenings([]);
+    }).finally(() => {
+      setIsLoading(false);
+    });
+  }, [talentId]);
+
   const [contractType, setContractType] = useState('fixed');
-  const [selectedJobId, setSelectedJobId] = useState(openings[0]?.id || '');
+  const [selectedJobId, setSelectedJobId] = useState('');
   const [milestones, setMilestones] = useState([
     { id: 1, name: 'Discovery and planning', amount: 1200, date: 'Week 1' },
     { id: 2, name: 'Implementation and QA', amount: 3200, date: 'Week 3' },
   ]);
+
+  const { breakdown } = useCheckoutFees(0, 'HIRE_COMMITMENT');
+
+  if (isLoading || !talent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-surface">
+        <Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" />
+      </div>
+    );
+  }
+
+  const totalAmount = milestones.reduce((sum, milestone) => sum + Number(milestone.amount || 0), 0);
+  const platformFee = Math.round(breakdown.platformFee);
+  const estimatedTax = Math.round(totalAmount * 0.02);
 
   const addMilestone = () => {
     setMilestones([...milestones, { id: Date.now(), name: '', amount: 0, date: '' }]);
@@ -27,10 +58,6 @@ const HireFreelancer = () => {
     setMilestones(milestones.filter((milestone) => milestone.id !== id));
   };
 
-  const totalAmount = milestones.reduce((sum, milestone) => sum + Number(milestone.amount || 0), 0);
-  const { breakdown } = useCheckoutFees(totalAmount, 'HIRE_COMMITMENT');
-  const platformFee = Math.round(breakdown.platformFee);
-  const estimatedTax = Math.round(totalAmount * 0.02);
   const selectedJob = openings.find((job) => job.id === selectedJobId) || openings[0];
 
   return (
@@ -234,5 +261,3 @@ const HireFreelancer = () => {
 };
 
 export default HireFreelancer;
-
-

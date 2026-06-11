@@ -4,7 +4,7 @@ import { Card } from '../../../components/common/Card';
 import { Input } from '../../../components/common/Input';
 import { Button } from '../../../components/common/Button';
 import { Select } from '../../../components/common/Select';
-import { api } from '../../../common/services/api';
+import { marketplaceAPI, publicAPI } from '../../../common/services/api';
 
 export const PostJob = () => {
   const [title, setTitle] = useState('');
@@ -14,6 +14,8 @@ export const PostJob = () => {
   const [budget, setBudget] = useState('');
   const [description, setDescription] = useState('');
   const [skills, setSkills] = useState('');
+  const [budgetMin, setBudgetMin] = useState('');
+  const [budgetMax, setBudgetMax] = useState('');
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,19 +24,26 @@ export const PostJob = () => {
 
   useEffect(() => {
     let active = true;
-    api
-      .get('/admin_rbc/marketplace/categories')
-      .then(({ data }) => {
+    publicAPI.getCategoryTree()
+      .then((res) => {
         if (!active) return;
-        const items = data?.items || data?.categories || [];
-        setCategories(items.map((item) => ({ label: item.name, value: item.id || item.slug || item.name })));
+        const tree = Array.isArray(res?.tree) ? res.tree : [];
+        const flat = [];
+        const flatten = (nodes) => {
+          for (const node of nodes) {
+            flat.push({ label: node.name, value: node.slug || node.id });
+            if (node.children) flatten(node.children);
+          }
+        };
+        flatten(tree);
+        setCategories(flat.length ? flat : [{ label: 'General', value: 'general' }]);
       })
       .catch(() => {
         if (!active) return;
+        setCategories([{ label: 'General', value: 'general' }]);
       })
       .finally(() => {
-        if (!active) return;
-        setIsLoading(false);
+        if (active) setIsLoading(false);
       });
 
     return () => {
@@ -54,22 +63,27 @@ export const PostJob = () => {
 
     setIsSubmitting(true);
     try {
-      await api.post('/admin_rbc/marketplace/jobs', {
+      const jobPayload = {
         title,
         category,
         duration,
         budgetType,
         budget,
+        budgetMin: budgetType === 'fixed' ? Number(budget) : Number(budgetMin) || Number(budget),
+        budgetMax: budgetType === 'fixed' ? Number(budget) : Number(budgetMax) || Number(budget),
         description,
         skills: skills.split(',').map((skill) => skill.trim()).filter(Boolean),
         status,
-      });
+      };
+      await marketplaceAPI.createJob(jobPayload);
       setSuccessMessage(`Job ${status === 'DRAFT' ? 'saved as draft' : 'published'} successfully.`);
       setTitle('');
       setCategory('');
       setDuration('ongoing');
       setBudgetType('fixed');
       setBudget('');
+      setBudgetMin('');
+      setBudgetMax('');
       setDescription('');
       setSkills('');
     } catch (err) {

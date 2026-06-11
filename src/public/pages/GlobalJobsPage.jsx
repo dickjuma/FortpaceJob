@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Search, SlidersHorizontal, ChevronDown,
-  Clock, Heart, Building2, Globe, Loader2
+  Heart, Building2, Globe, Loader2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '../../admin/utils/cn';

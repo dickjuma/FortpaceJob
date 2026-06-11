@@ -1,28 +1,51 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, CheckCircle, FileText, AlertTriangle, DollarSign, X } from 'lucide-react';
+import { Bell, CheckCircle, FileText, AlertTriangle, DollarSign, X, MessageSquare, Briefcase } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import useChatStore from '../../store/chatStore';
+
+// Map notification type → icon & colour
+const TYPE_STYLE = {
+  payment:      { icon: DollarSign,    colour: 'text-emerald-500 bg-emerald-100 dark:bg-emerald-500/20' },
+  message:      { icon: MessageSquare, colour: 'text-[#4C1D95] bg-[#4C1D95]/10' },
+  contract:     { icon: FileText,      colour: 'text-[#4C1D95] bg-[#4C1D95]/10' },
+  job:          { icon: Briefcase,     colour: 'text-[#4C1D95] bg-[#4C1D95]/10' },
+  milestone:    { icon: CheckCircle,   colour: 'text-emerald-500 bg-emerald-100 dark:bg-emerald-500/20' },
+  alert:        { icon: AlertTriangle, colour: 'text-amber-500 bg-amber-100 dark:bg-amber-500/20' },
+  default:      { icon: Bell,          colour: 'text-gray-500 bg-gray-100 dark:bg-gray-800' },
+};
+
+function getTypeStyle(type = '') {
+  const key = (type || '').toLowerCase();
+  return TYPE_STYLE[key] || TYPE_STYLE.default;
+}
+
+function timeAgo(dateStr) {
+  if (!dateStr) return '';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins  = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days  = Math.floor(diff / 86400000);
+  if (mins  <  1) return 'just now';
+  if (mins  < 60) return `${mins}m ago`;
+  if (hours < 24) return `${hours}h ago`;
+  return `${days}d ago`;
+}
 
 export default function NotificationCenter({ isOpen, onClose }) {
-  const [notifications, setNotifications] = useState([
-    { id: 1, type: 'success', icon: CheckCircle, title: 'Milestone Approved', text: 'Client has approved M2. Funds are released.', time: '2m ago', unread: true },
-    { id: 2, type: 'info', icon: FileText, title: 'New Contract Signed', text: 'You and Alex Client signed CON-9921.', time: '1h ago', unread: true },
-    { id: 3, type: 'warning', icon: AlertTriangle, title: 'Dispute Update', text: 'Admin requested more evidence on DSP-4921.', time: '4h ago', unread: false },
-    { id: 4, type: 'success', icon: DollarSign, title: 'Payment Sent', text: 'Withdrawal of $4,500.00 is processing.', time: '1d ago', unread: false },
-  ]);
+  const navigate = useNavigate();
+  const notifications         = useChatStore((s) => s.notifications);
+  const markNotificationRead  = useChatStore((s) => s.markNotificationRead);
+  const markAllNotificationsRead = useChatStore((s) => s.markAllNotificationsRead);
 
   if (!isOpen) return null;
 
-  const markAllRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, unread: false })));
-  };
+  // Show latest 10 in the dropdown
+  const recent = notifications.slice(0, 10);
 
-  const getIconColor = (type) => {
-    switch (type) {
-      case 'success': return 'text-success bg-success/10';
-      case 'warning': return 'text-warning bg-warning/10';
-      case 'info': return 'text-[#4C1D95] bg-[#4C1D95]/5 dark:bg-[#4C1D95]/20 dark:text-[#4C1D95]';
-      default: return 'text-gray-500 bg-gray-100 dark:bg-gray-800';
-    }
+  const handleViewAll = () => {
+    onClose?.();
+    navigate('/notifications');
   };
 
   return (
@@ -34,37 +57,58 @@ export default function NotificationCenter({ isOpen, onClose }) {
           exit={{ opacity: 0, y: -10, scale: 0.95 }}
           className="bg-white dark:bg-surface-dark border border-gray-200 dark:border-surface-dark-border rounded-2xl shadow-dropdown overflow-hidden"
         >
+          {/* Header */}
           <div className="flex justify-between items-center p-4 border-b border-gray-100 dark:border-surface-dark-border bg-surface dark:bg-surface-dark-secondary">
             <h3 className="font-bold text-gray-900 dark:text-white flex items-center">
               <Bell className="w-4 h-4 mr-2" /> Notifications
             </h3>
             <div className="flex gap-3">
-              <button onClick={markAllRead} className="text-xs font-medium text-[#4C1D95] dark:text-[#4C1D95] hover:text-[#4C1D95]">Mark all read</button>
-              <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X className="w-4 h-4" /></button>
+              {notifications.some((n) => !n.isRead) && (
+                <button
+                  onClick={markAllNotificationsRead}
+                  className="text-xs font-medium text-[#4C1D95] hover:underline"
+                >
+                  Mark all read
+                </button>
+              )}
+              <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+                <X className="w-4 h-4" />
+              </button>
             </div>
           </div>
 
+          {/* List */}
           <div className="max-h-96 overflow-y-auto">
-            {notifications.length > 0 ? (
+            {recent.length > 0 ? (
               <div className="divide-y divide-gray-100 dark:divide-surface-dark-border">
-                {notifications.map((notif) => {
-                  const Icon = notif.icon;
+                {recent.map((notif) => {
+                  const { icon: Icon, colour } = getTypeStyle(notif.type);
                   return (
-                    <div key={notif.id} className={`p-4 hover:bg-surface dark:hover:bg-surface-dark-secondary transition-colors cursor-pointer flex gap-4 ${notif.unread ? 'bg-[#4C1D95]/5/50 dark:bg-[#4C1D95]/10' : ''}`}>
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${getIconColor(notif.type)}`}>
+                    <div
+                      key={notif.id}
+                      onClick={() => markNotificationRead(notif.id)}
+                      className={`p-4 hover:bg-surface dark:hover:bg-surface-dark-secondary transition-colors cursor-pointer flex gap-4 ${
+                        !notif.isRead ? 'bg-[#4C1D95]/5 dark:bg-[#4C1D95]/10' : ''
+                      }`}
+                    >
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${colour}`}>
                         <Icon className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start mb-1">
-                          <p className={`text-sm font-bold truncate ${notif.unread ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
-                            {notif.title}
+                          <p className={`text-sm font-bold truncate ${!notif.isRead ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
+                            {notif.title || notif.type || 'Notification'}
                           </p>
-                          <span className="text-xs text-gray-400 shrink-0 ml-2">{notif.time}</span>
+                          <span className="text-xs text-gray-400 shrink-0 ml-2">
+                            {timeAgo(notif.createdAt || notif.timestamp)}
+                          </span>
                         </div>
-                        <p className="text-sm text-gray-500 line-clamp-2">{notif.text}</p>
+                        <p className="text-sm text-gray-500 line-clamp-2">
+                          {notif.message || notif.body || notif.text || ''}
+                        </p>
                       </div>
-                      {notif.unread && (
-                        <div className="w-2 h-2 rounded-full bg-[#4C1D95] mt-2 shrink-0"></div>
+                      {!notif.isRead && (
+                        <div className="w-2 h-2 rounded-full bg-[#4C1D95] mt-2 shrink-0" />
                       )}
                     </div>
                   );
@@ -77,8 +121,12 @@ export default function NotificationCenter({ isOpen, onClose }) {
               </div>
             )}
           </div>
-          
-          <div className="p-3 border-t border-gray-100 dark:border-surface-dark-border text-center bg-surface dark:bg-surface-dark-secondary hover:bg-gray-100 dark:hover:bg-surface-dark-tertiary transition-colors cursor-pointer">
+
+          {/* Footer */}
+          <div
+            onClick={handleViewAll}
+            className="p-3 border-t border-gray-100 dark:border-surface-dark-border text-center bg-surface dark:bg-surface-dark-secondary hover:bg-gray-100 dark:hover:bg-surface-dark-tertiary transition-colors cursor-pointer"
+          >
             <span className="text-sm font-bold text-gray-600 dark:text-gray-400">View All Activity</span>
           </div>
         </motion.div>
@@ -86,5 +134,3 @@ export default function NotificationCenter({ isOpen, onClose }) {
     </AnimatePresence>
   );
 }
-
-

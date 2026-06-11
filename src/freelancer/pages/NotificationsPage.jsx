@@ -1,31 +1,37 @@
 // src/pages/common/NotificationsPage.jsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, CheckCircle2, Info, AlertCircle, X, Check } from 'lucide-react';
+import { Bell, CheckCircle2, Info, AlertCircle, Check } from 'lucide-react';
+import { useNotifications } from '../services/freelancerHooks';
+import { api } from '../../common/services/api';
 
 export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState([
-    { id: 1, type: 'info', message: 'Welcome to Forte Marketplace!', date: new Date().toISOString(), read: false },
-    { id: 2, type: 'success', message: 'Your freelancer application was approved.', date: new Date().toISOString(), read: false }
-  ]);
-  const [showSuccess, setShowSuccess] = useState(null);
+  const [toast, setToast] = useState(null);
+  const { data: notifications = [], isLoading, refetch } = useNotifications();
 
-  const markAsRead = (id) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
-    setShowSuccess({ message: 'Marked as read' });
-    setTimeout(() => setShowSuccess(null), 1500);
+  const showToast = (message) => {
+    setToast({ message });
+    setTimeout(() => setToast(null), 1500);
   };
 
-  const markAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-    setShowSuccess({ message: 'All notifications marked as read' });
-    setTimeout(() => setShowSuccess(null), 1500);
+  const markAsRead = async (id) => {
+    try {
+      await api.patch(`/notifications/${id}/read`);
+      refetch();
+      showToast('Marked as read');
+    } catch (err) {
+      console.error('Failed to mark as read:', err);
+    }
   };
 
-  const clearAll = () => {
-    setNotifications([]);
-    setShowSuccess({ message: 'All notifications cleared' });
-    setTimeout(() => setShowSuccess(null), 1500);
+  const markAllAsRead = async () => {
+    try {
+      await api.patch('/notifications/read-all');
+      refetch();
+      showToast('All notifications marked as read');
+    } catch (err) {
+      console.error('Failed to mark all as read:', err);
+    }
   };
 
   const getTypeStyles = (type) => {
@@ -37,7 +43,7 @@ export default function NotificationsPage() {
     }
   };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter(n => !n.isRead && !n.read).length;
 
   return (
     <motion.div
@@ -48,17 +54,17 @@ export default function NotificationsPage() {
     >
       {/* Success Toast */}
       <AnimatePresence>
-        {showSuccess && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
-          >
-            <Check className="w-4 h-4" />
-            {showSuccess.message}
-          </motion.div>
-        )}
+{toast && (
+           <motion.div
+             initial={{ opacity: 0, y: -20 }}
+             animate={{ opacity: 1, y: 0 }}
+             exit={{ opacity: 0, y: -20 }}
+             className="fixed top-20 right-4 z-50 bg-accent-dark text-white px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2"
+           >
+             <Check className="w-4 h-4" />
+             {toast.message}
+           </motion.div>
+         )}
       </AnimatePresence>
 
       {/* Header */}
@@ -80,12 +86,6 @@ export default function NotificationsPage() {
               className="px-4 py-2 rounded-lg border border-border text-ink-primary hover:bg-surface-muted font-body font-medium text-sm transition-colors"
             >
               Mark all read
-            </button>
-            <button
-              onClick={clearAll}
-              className="px-4 py-2 rounded-lg border border-border text-ink-primary hover:bg-surface-muted font-body font-medium text-sm transition-colors"
-            >
-              Clear all
             </button>
           </div>
         )}

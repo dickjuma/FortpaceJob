@@ -2,38 +2,28 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Scale, FileText, Clock, AlertTriangle,
+  Scale, FileText, Clock3, AlertTriangle,
   CheckCircle2, Upload, MessageSquare, ChevronRight,
   ShieldAlert, DollarSign, Check
 } from 'lucide-react';
-
-const DISPUTES = [
-  {
-    id: '#DSP-0921',
-    contract: 'Mobile App Redesign',
-    client: 'Global Tech LLC',
-    amount: 2400,
-    status: 'In Review',
-    deadline: 'May 24, 2026',
-    date: 'May 14, 2026',
-    isActive: true,
-    timeline: 2
-  },
-  {
-    id: '#DSP-0845',
-    contract: 'E-commerce API Integration',
-    client: 'Sarah Mitchell',
-    amount: 1200,
-    status: 'Resolved in your favor',
-    date: 'Apr 02, 2026',
-    isActive: false,
-    ruling: 'Based on the evidence provided (commit logs and delivery timestamp), the mediator found that all milestone requirements were met. Full funds have been released to your wallet.'
-  }
-];
+import { useMyDisputes } from '../services/freelancerHooks';
 
 export default function FreelancerDisputeHistoryPage() {
   const [activeTab, setActiveTab] = useState('active');
   const [showSuccess, setShowSuccess] = useState(null);
+  const { data: disputeData = {}, isLoading } = useMyDisputes({ limit: 50 });
+
+  const disputes = disputeData?.items ?? [];
+  const activeDisputes = disputes.filter(d => d.status !== 'resolved' && d.status !== 'closed');
+  const resolvedDisputes = disputes.filter(d => d.status === 'resolved' || d.status === 'closed');
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-surface-soft pb-16 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-border border-t-accent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   const handleRespond = (disputeId) => {
     setShowSuccess({ message: `Responding to dispute ${disputeId}` });
@@ -50,8 +40,7 @@ export default function FreelancerDisputeHistoryPage() {
     setTimeout(() => setShowSuccess(null), 2000);
   };
 
-  const activeDisputes = DISPUTES.filter(d => d.isActive);
-  const resolvedDisputes = DISPUTES.filter(d => !d.isActive);
+  const activeList = activeTab === 'active' ? activeDisputes : resolvedDisputes;
 
   return (
     <motion.div
@@ -89,28 +78,28 @@ export default function FreelancerDisputeHistoryPage() {
               <p className="text-ink-secondary font-body">Track active disputes, upload evidence, and view resolution history</p>
             </div>
 
-            <div className="flex bg-surface-muted p-1 rounded-lg">
-              <button
-                onClick={() => setActiveTab('active')}
-                className={`px-5 py-1.5 rounded-md text-sm font-body font-medium transition-all ${
-                  activeTab === 'active'
-                    ? 'bg-white text-ink-primary shadow-sm'
-                    : 'text-ink-tertiary hover:text-ink-secondary'
-                }`}
-              >
-                Active ({activeDisputes.length})
-              </button>
-              <button
-                onClick={() => setActiveTab('resolved')}
-                className={`px-5 py-1.5 rounded-md text-sm font-body font-medium transition-all ${
-                  activeTab === 'resolved'
-                    ? 'bg-white text-ink-primary shadow-sm'
-                    : 'text-ink-tertiary hover:text-ink-secondary'
-                }`}
-              >
-                Resolved ({resolvedDisputes.length})
-              </button>
-            </div>
+<div className="flex bg-surface-muted p-1 rounded-lg">
+            <button
+              onClick={() => setActiveTab('active')}
+              className={`px-5 py-1.5 rounded-md text-sm font-body font-medium transition-all ${
+                activeTab === 'active'
+                  ? 'bg-white text-ink-primary shadow-sm'
+                  : 'text-ink-tertiary hover:text-ink-secondary'
+              }`}
+            >
+              Active ({activeDisputes.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('resolved')}
+              className={`px-5 py-1.5 rounded-md text-sm font-body font-medium transition-all ${
+                activeTab === 'resolved'
+                  ? 'bg-white text-ink-primary shadow-sm'
+                  : 'text-ink-tertiary hover:text-ink-secondary'
+              }`}
+            >
+              Resolved ({resolvedDisputes.length})
+            </button>
+          </div>
           </div>
         </div>
       </div>
@@ -119,7 +108,7 @@ export default function FreelancerDisputeHistoryPage() {
 
         {/* Left Column: Dispute List */}
         <div className="flex-1 space-y-5">
-          {(activeTab === 'active' ? activeDisputes : resolvedDisputes).map((dispute, idx) => (
+          {(activeList).map((dispute, idx) => (
             <motion.div
               key={dispute.id}
               initial={{ opacity: 0, y: 20 }}
@@ -190,7 +179,7 @@ export default function FreelancerDisputeHistoryPage() {
 
                   {/* Action Required Banner */}
                   <div className="bg-warn-light border border-warn DEFAULT rounded-xl p-4 flex gap-3 mb-5">
-                    <Clock className="w-5 h-5 text-warn flex-shrink-0 mt-0.5" />
+                    <Clock3 className="w-5 h-5 text-warn flex-shrink-0 mt-0.5" />
                     <div>
                       <h4 className="text-sm font-body font-semibold text-warn">Action required: submit evidence</h4>
                       <p className="text-xs font-body text-warn/80 mt-1">
@@ -237,7 +226,7 @@ export default function FreelancerDisputeHistoryPage() {
             </motion.div>
           ))}
 
-          {(activeTab === 'active' ? activeDisputes : resolvedDisputes).length === 0 && (
+          {activeList.length === 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

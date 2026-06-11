@@ -345,6 +345,7 @@ async function fetchBackendTalentsAndJobs(filters = {}) {
   if (mode === 'onsite') params.offlineOnly = 'true';
   if (mode === 'hybrid') params.mode = 'hybrid';
   if (query) params.query = query;
+
   const res = await publicAPI.searchFreelancers(params);
   return Array.isArray(res?.talents) ? res.talents : Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
 }
@@ -440,6 +441,7 @@ export async function syncTalentWithBackend(filters = {}) {
         reviewsList: [{ author: 'Verified Client', rating: 5, quote: 'Highly professional, great delivery.' }],
         savedFolderIds: [],
         recentViewedHoursAgo: 2,
+        matchScore: freelancer.matchScore !== undefined ? freelancer.matchScore : (freelancer.topRated ? 92 : 85),
         matchKeywords: skillsArray.map((s) => (typeof s === 'string' ? s.toLowerCase() : '')),
       };
     });

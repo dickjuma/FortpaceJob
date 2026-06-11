@@ -7,6 +7,8 @@ import { FREELANCER_WORK_MODES } from '../common/constants/accountTypes';
 import { SocketProvider } from '../common/context/SocketContext';
 import { getToken } from '../common/services/api';
 import { cn } from '../admin/utils/cn';
+import useChatStore from '../store/chatStore';
+import { useNotificationSocket } from '../common/hooks/useNotificationSocket';
 
 // Inner layout component that consumes context
 function FreelancerLayoutInner({ children }) {
@@ -16,6 +18,10 @@ function FreelancerLayoutInner({ children }) {
   const [headerSearch, setHeaderSearch] = useState('');
   const { accountType, switchAccountType, workMode, setWorkMode } = useFreelancer();
   const [showSimulator, setShowSimulator] = useState(false);
+  const unreadCount = useChatStore((s) => s.unreadNotificationCount);
+
+  // Bridge SocketContext socket → chatStore notifications + toast
+  useNotificationSocket();
 
   return (
     <div className="flex h-screen overflow-hidden bg-light-gray font-sans text-text-primary">
@@ -74,8 +80,17 @@ function FreelancerLayoutInner({ children }) {
             >
               <Video size={20} />
             </Link>
-            <button className="p-2 text-text-secondary hover:text-[#222222] hover:bg-light-gray rounded-full transition-colors">
+            <button
+              onClick={() => navigate('/notifications')}
+              className="p-2 text-text-secondary hover:text-[#222222] hover:bg-light-gray rounded-full transition-colors relative"
+              aria-label="Notifications"
+            >
               <Bell size={20} />
+              {unreadCount > 0 && (
+                <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white border-2 border-white">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
             </button>
             
             <div className="w-px h-6 bg-border mx-1 hidden sm:block"></div>

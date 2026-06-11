@@ -1,22 +1,11 @@
 // src/pages/freelancer/WalletPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Wallet,
-  ArrowUpRight,
-  ArrowDownRight,
-  RefreshCcw,
-  Download,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  ShieldCheck,
-  Send,
-  Smartphone,
-  Loader2,
-  X,
+  Wallet, ArrowUpRight, ArrowDownRight, RefreshCcw, Download, Clock, CheckCircle2, AlertCircle, ShieldCheck, Send, Smartphone, Loader2, X,
 } from 'lucide-react';
-import { useFreelancerWallet, useFreelancerTransactions } from '../services/freelancerHooks';
+import { useFreelancerWallet, useFreelancerTransactions, useInitiateWithdrawal } from '../services/freelancerHooks';
+import { walletAPI } from '../../common/services/api';
 
 // ---------- Shared UI Components (inline) ----------
 const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, type = 'button', icon: Icon }) => {
@@ -118,33 +107,17 @@ export default function WalletPage() {
   const [depositPhone, setDepositPhone] = useState('');
   const [isDepositing, setIsDepositing] = useState(false);
 
-  const [wallet, setWallet] = useState({
-    available: 0,
-    pending: 0,
-    escrow: 0,
-    monthly: 0,
-  });
-  const [localTransactions, setLocalTransactions] = useState([]);
-
   const { data: walletData = {}, isLoading: walletLoading } = useFreelancerWallet();
   const { data: txPagedData = {}, isLoading: txLoading } = useFreelancerTransactions({ page: 1, limit: 10 });
+  const withdrawMutation = useInitiateWithdrawal();
 
-  useEffect(() => {
-    if (walletData) {
-      setWallet({
-        available: walletData.available ?? 0,
-        pending: walletData.pending ?? 0,
-        escrow: walletData.escrow ?? 0,
-        monthly: walletData.monthly ?? 0,
-      });
-    }
-  }, [walletData]);
-
-  useEffect(() => {
-    setLocalTransactions(txPagedData.items ?? []);
-  }, [txPagedData.items]);
-
-  const transactions = localTransactions;
+  const wallet = {
+    available: walletData.available ?? 0,
+    pending: walletData.pending ?? 0,
+    escrow: walletData.escrow ?? 0,
+    monthly: walletData.monthly ?? 0,
+  };
+  const transactions = txPagedData.items ?? [];
   const loading = walletLoading || txLoading;
 
   const handleSendOTP = () => {
@@ -171,7 +144,7 @@ export default function WalletPage() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const handleWithdraw = (e) => {
+  const handleWithdraw = async (e) => {
     e.preventDefault();
     if (mpesaStatus !== 'Active') {
       setToast({ type: 'error', message: 'Please set up M-Pesa first.' });
@@ -185,26 +158,20 @@ export default function WalletPage() {
       return;
     }
     setIsWithdrawing(true);
-    setTimeout(() => {
-      setWallet(prev => ({ ...prev, available: prev.available - amount }));
+    try {
+      await withdrawMutation.mutateAsync({ amount, phoneNumber: mpesaPhone });
       setWithdrawAmount('');
-      setLocalTransactions([
-        {
-          id: `TX-${Date.now()}`,
-          amount: -amount,
-          type: 'DEBIT',
-          description: 'Withdrawal to M-Pesa',
-          createdAt: new Date().toISOString(),
-        },
-        ...transactions,
-      ]);
-      setIsWithdrawing(false);
-      setToast({ type: 'success', message: `Withdrawn ${formatCurrency(amount)}` });
+      setToast({ type: 'success', message: `Withdrawal request submitted` });
       setTimeout(() => setToast(null), 3000);
-    }, 1000);
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'Withdrawal failed' });
+      setTimeout(() => setToast(null), 3000);
+    } finally {
+      setIsWithdrawing(false);
+    }
   };
 
-  const handleDeposit = (e) => {
+  const handleDeposit = async (e) => {
     e.preventDefault();
     if (!depositPhone.match(/^(07|01|\+254)\d{8,9}$/)) {
       setToast({ type: 'error', message: 'Enter a valid M-Pesa number.' });
@@ -218,23 +185,17 @@ export default function WalletPage() {
       return;
     }
     setIsDepositing(true);
-    setTimeout(() => {
-      setWallet(prev => ({ ...prev, available: prev.available + amount }));
+    try {
+      await walletAPI.depositMpesa(amount, depositPhone);
       setDepositAmount('');
-      setLocalTransactions([
-        {
-          id: `TX-${Date.now()}`,
-          amount: amount,
-          type: 'CREDIT',
-          description: 'M-Pesa deposit',
-          createdAt: new Date().toISOString(),
-        },
-        ...transactions,
-      ]);
-      setIsDepositing(false);
-      setToast({ type: 'success', message: `Deposited ${formatCurrency(amount)}` });
+      setToast({ type: 'success', message: `Deposit request submitted` });
       setTimeout(() => setToast(null), 3000);
-    }, 1000);
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'Deposit failed' });
+      setTimeout(() => setToast(null), 3000);
+    } finally {
+      setIsDepositing(false);
+    }
   };
 
   const handleRefresh = () => {

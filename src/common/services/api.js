@@ -149,6 +149,8 @@ export const api = {
 export const analyticsAPI = {
   getClientDashboard: () => apiClient('/analytics_reports/dashboard/client'),
   getFreelancerDashboard: () => apiClient('/analytics_reports/dashboard/freelancer'),
+  getFreelancerEarnings: () => apiClient('/analytics_reports/freelancer/earnings'),
+  getMonthlyTrend: (months = 12) => apiClient(`/analytics_reports/freelancer/monthly-trend?months=${months}`),
 };
 
 
@@ -1075,7 +1077,7 @@ export const publicAPI = {
       delete normalizedParams.q;
     }
     const queryString = new URLSearchParams(normalizedParams).toString();
-    return apiClient(`/search/freelancers?${queryString}`);
+    return apiClient(`/search?${queryString}`);
   },
   searchJobs: async (params = {}) => {
     const normalizedParams = { ...params };
@@ -1086,7 +1088,7 @@ export const publicAPI = {
     const queryString = new URLSearchParams(normalizedParams).toString();
     return apiClient(`/search/jobs?${queryString}`);
   },
-  getJobById: async (jobId) => apiClient(`/jobs/${jobId}`),
+  getJobById: async (jobId) => apiClient(`/search/find-work/job/${jobId}`),
   searchGigs: async (params = {}) => {
     const normalizedParams = { ...params };
     if (normalizedParams.q !== undefined && normalizedParams.query === undefined) {
@@ -1103,7 +1105,7 @@ export const publicAPI = {
     return apiClient(`/categories/tree`);
   },
   getPlatformReviews: async () => {
-    return apiClient(`/reviews/platform`); // Will fallback gracefully if backend doesn't support
+    return apiClient(`/reviews/platform`);
   },
   getTrustedClients: async () => {
     return apiClient(`/search/trusted-clients`);
@@ -1112,6 +1114,44 @@ export const publicAPI = {
     apiClient(`/search/find-work/job/${jobId}/save`, { method: 'POST' }),
   unsaveFindWorkJob: async (jobId) =>
     apiClient(`/search/find-work/job/${jobId}/save`, { method: 'DELETE' }),
+};
+
+export const marketplaceAPI = {
+  createJob: async (jobData) => {
+    return apiClient('/admin_rbc/marketplace/jobs', {
+      method: 'POST',
+      body: JSON.stringify(jobData),
+    });
+  },
+  createGig: async (gigData) => {
+    return gigAPI.createGig(gigData);
+  },
+  getJobDetail: async (jobId) => {
+    return publicAPI.getJobById(jobId);
+  },
+  getGigDetail: async (gigId) => {
+    return gigAPI.getGig(gigId);
+  },
+  getRecommendedJobs: async (userId) => {
+    return apiClient(`/search/find-work/recommended?userId=${userId}`);
+  },
+  getRecommendedTalent: async (clientId) => {
+    return apiClient(`/search/find-talent/recommended?clientId=${clientId}`);
+  },
+  getJobFeed: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    return apiClient(`/search/find-work/feed?${queryString}`);
+  },
+  getTalentFeed: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    return apiClient(`/search/find-talent/feed?${queryString}`);
+  },
+  semanticSearchJobs: async (query, limit = 20) => {
+    return apiClient(`/search/semantic/jobs?query=${encodeURIComponent(query)}&limit=${limit}`);
+  },
+  semanticSearchTalent: async (query, limit = 20) => {
+    return apiClient(`/search/semantic/freelancers?query=${encodeURIComponent(query)}&limit=${limit}`);
+  },
 };
 
 export const workAPI = {
@@ -1161,4 +1201,5 @@ export default {
   audit: auditAPI,
   public: publicAPI,
   work: workAPI,
+  marketplace: marketplaceAPI,
 };

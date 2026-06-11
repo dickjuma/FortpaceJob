@@ -10,6 +10,8 @@ import {
   TaxCompliancePage
 } from "../modules/financial-control";
 import DisputeResolution from "./pages/DisputeResolution";
+import AdminMessagesPage from "../pages/admin/Messages";
+import { UsersPage } from "../pages/admin/Users";
 import { UserManagementRoutes } from "./UserManagementModule";
 import UserRiskPage from "./pages/marketplace/UserRiskPage";
 import MarketplaceDashboardPage from "./pages/marketplace/MarketplaceDashboardPage";
@@ -306,7 +308,8 @@ const AdminRoutes = () => {
           />
 
           {/* User Management Module - MOUNTED HERE */}
-          <Route path="users/*" element={<UserManagementRoutes />} />
+          <Route path="users-management/*" element={<UserManagementRoutes />} />
+          <Route path="users" element={<UsersPage />} />
 
           {/* Marketplace Management System */}
           <Route path="marketplace" element={<MarketplaceDashboardPage />} />
@@ -454,10 +457,7 @@ const AdminRoutes = () => {
             path="chat/automod"
             element={<ChatAutomodPage />}
           />
-          <Route
-            path="messages"
-            element={<ProductionDataPage title="Message Oversight" endpoint="/chat/conversations" />}
-          />
+          <Route path="messages" element={<AdminMessagesPage />} />
           <Route
             path="interviews"
             element={<ProductionDataPage title="Interview Oversight" endpoint="/hiring/interviews" />}

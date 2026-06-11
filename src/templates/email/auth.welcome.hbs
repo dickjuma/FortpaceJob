@@ -1,0 +1,6 @@
+{{> ../layouts/BaseEmailLayout}}
+{{#*inline "body"}}
+  <h2>Welcome, {{name}}!</h2>
+  <p>Thanks for joining {{companyName}}. Please verify your email:</p>
+  <a href="{{verificationLink}}">Verify Email</a>
+{{/inline}}

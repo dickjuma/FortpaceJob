@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../../common/authStore';
 import { walletAPI } from '../../common/services/api';
+import { useNavigate } from 'react-router-dom';
+import useChatStore from '../../store/chatStore';
 import {
   Search,
   Bell,
@@ -12,7 +14,9 @@ import {
 
 export default function ClientHeader({ onOpenSidebar = () => {} }) {
   const { user } = useAuthStore();
+  const navigate  = useNavigate();
   const [walletBalance, setWalletBalance] = useState(0);
+  const unreadCount = useChatStore((s) => s.unreadNotificationCount);
 
   useEffect(() => {
     const fetchWallet = async () => {
@@ -84,12 +88,17 @@ export default function ClientHeader({ onOpenSidebar = () => {} }) {
           <HelpCircle className="w-5 h-5" />
         </button>
 
-        <button className="text-gray-500 hover:text-gray-900 transition-colors relative">
+        <button
+          onClick={() => navigate('/notifications')}
+          className="text-gray-500 hover:text-gray-900 transition-colors relative"
+          aria-label="Notifications"
+        >
           <Bell className="w-5 h-5" />
-          <span className="absolute -top-1 -right-1 flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500 border-2 border-white"></span>
-          </span>
+          {unreadCount > 0 && (
+            <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white border-2 border-white">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
         </button>
 
       </div>

@@ -1,21 +1,59 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
 import { Avatar } from '../../components/common/Avatar';
-import { Search, Star, MoreVertical, Send, Paperclip, MessageSquare } from 'lucide-react';
+import { Search, Star, MoreVertical, Send, Paperclip, MessageSquare, X } from 'lucide-react';
 import clsx from 'clsx';
 import { api } from '../../common/services/api';
+import { initSocket, getSocket, disconnectSocket, onSocketEvent, offSocketEvent, emitSocketEvent } from '../../services/websocket';
+import { useAuthStore } from '../../common/authStore';
 
 export const MessagesPage = () => {
   const [conversations, setConversations] = useState([]);
   const [selectedConversationId, setSelectedConversationId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [messageText, setMessageText] = useState('');
   const [loadingList, setLoadingList] = useState(true);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState(null);
   const [detailError, setDetailError] = useState(null);
+  const [typingUsers, setTypingUsers] = useState([]);
+  const messagesEndRef = useRef(null);
+  const { token } = useAuthStore();
+
+  // Initialize WebSocket connection
+  useEffect(() => {
+    const socket = getSocket() || initSocket(token);
+    
+    // Listen for real-time message events
+    onSocketEvent('MESSAGE_SENT', (msg) => {
+      if (msg.conversationId === selectedConversationId) {
+        setMessages(prev => [...prev, msg]);
+        scrollToBottom();
+      }
+    });
+
+    onSocketEvent('TYPING_INDICATOR', (data) => {
+      if (data.conversationId === selectedConversationId && data.userId !== null) {
+        setTypingUsers(prev => [...new Set([...prev, data.userId])]);
+        setTimeout(() => {
+          setTypingUsers(prev => prev.filter(id => id !== data.userId));
+        }, 3000);
+      }
+    });
+
+    // Cleanup on unmount
+    return () => {
+      offSocketEvent('MESSAGE_SENT');
+      offSocketEvent('TYPING_INDICATOR');
+    };
+  }, [selectedConversationId, token]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
     let active = true;
@@ -23,7 +61,7 @@ export const MessagesPage = () => {
     setError(null);
 
     api
-      .get('/chat/conversations')
+      .get('/admin_rbc/chat/conversations')
       .then((response) => {
         if (!active) return;
         const payload = response?.data ?? response;
@@ -58,11 +96,12 @@ export const MessagesPage = () => {
     setDetailError(null);
 
     api
-      .get(`/chat/conversations/${selectedConversationId}/messages`)
+      .get(`/admin_rbc/chat/conversations/${selectedConversationId}`)
       .then((response) => {
         if (!active) return;
         const payload = response?.data ?? response;
-        setMessages(payload.items || []);
+        setMessages(payload.messages || []);
+        setTimeout(scrollToBottom, 100);
       })
       .catch((err) => {
         if (!active) return;
@@ -95,6 +134,68 @@ export const MessagesPage = () => {
         .map((p) => p.user?.name || p.user?.email || 'Unknown')
         .join(', ')
     : '';
+
+  const handleSendMessage = async () => {
+    if (!messageText.trim() || !selectedConversationId) return;
+
+    const tempId = `temp-${Date.now()}`;
+    const optimisticMessage = {
+      id: tempId,
+      content: messageText,
+      sender: { id: 'current', name: 'You' },
+      createdAt: new Date().toISOString(),
+      isMine: true,
+    };
+
+    setMessages(prev => [...prev, optimisticMessage]);
+    setMessageText('');
+    scrollToBottom();
+
+    try {
+      const response = await api.post(`/admin_rbc/chat/conversations/${selectedConversationId}/messages`, {
+        content: messageText,
+      });
+      
+      // Replace optimistic message with real one
+      setMessages(prev => prev.filter(m => m.id !== tempId));
+      if (response?.data || response?.id) {
+        setMessages(prev => [...prev, response.data || response]);
+      }
+    } catch (err) {
+      // Remove optimistic message on error
+      setMessages(prev => prev.filter(m => m.id !== tempId));
+      // Fallback to regular chat endpoint if admin endpoint fails
+      try {
+        const response = await api.post(`/chat/conversations/${selectedConversationId}/messages`, {
+          message: messageText,
+        });
+        setMessages(prev => prev.filter(m => m.id !== tempId));
+        if (response?.data || response?.id) {
+          setMessages(prev => [...prev, response.data || response]);
+        }
+      } catch (fallbackErr) {
+        setDetailError(fallbackErr?.message || 'Failed to send message.');
+      }
+    }
+  };
+
+  const handleTyping = () => {
+    if (selectedConversationId && getSocket()?.connected) {
+      emitSocketEvent('TYPING_INDICATOR', {
+        conversationId: selectedConversationId,
+        userId: 'current',
+      });
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    } else {
+      handleTyping();
+    }
+  };
 
   return (
     <div className="h-[calc(100vh-8rem)] bg-white rounded-lg shadow-sm border border-border flex overflow-hidden">
@@ -186,27 +287,38 @@ export const MessagesPage = () => {
           ) : detailError ? (
             <div className="py-16 text-center text-rose-600">{detailError}</div>
           ) : selectedConversation ? (
-            messages.map((message) => {
-              const isMine = message.isMine || message.sender?.name?.toLowerCase().includes('admin') || message.sender?.email?.toLowerCase().includes('admin');
-              return (
-                <div
-                  key={message.id}
-                  className={clsx(
-                    'flex items-start max-w-[80%]',
-                    isMine ? 'ml-auto justify-end' : 'justify-start'
-                  )}
-                >
-                  {!isMine && <Avatar name={message.sender?.name || message.sender?.email || 'User'} size="sm" />}
-                  <div className={clsx(
-                    'rounded-2xl p-4 shadow-sm',
-                    isMine ? 'bg-success border border-success/20 text-[#222222]' : 'bg-white border border-border text-text-primary'
-                  )}>
-                    <p className="text-sm">{message.content}</p>
-                    <p className="text-[10px] text-text-secondary mt-2 text-right">{new Date(message.createdAt).toLocaleString()}</p>
+            <>
+              {messages.map((message) => {
+                const isMine = message.isMine || message.sender?.name?.toLowerCase().includes('admin') || message.sender?.email?.toLowerCase().includes('admin');
+                return (
+                  <div
+                    key={message.id}
+                    className={clsx(
+                      'flex items-start max-w-[80%]',
+                      isMine ? 'ml-auto justify-end' : 'justify-start'
+                    )}
+                  >
+                    {!isMine && <Avatar name={message.sender?.name || message.sender?.email || 'User'} size="sm" />}
+                    <div className={clsx(
+                      'rounded-2xl p-4 shadow-sm',
+                      isMine ? 'bg-success border border-success/20 text-[#222222]' : 'bg-white border border-border text-text-primary'
+                    )}>
+                      <p className="text-sm">{message.content}</p>
+                      <p className="text-[10px] text-text-secondary mt-2 text-right">{new Date(message.createdAt).toLocaleString()}</p>
+                    </div>
+                  </div>
+                );
+              })}
+              {typingUsers.length > 0 && (
+                <div className="flex items-start max-w-[80%] justify-start">
+                  <Avatar name="User" size="sm" />
+                  <div className="bg-white border border-border rounded-2xl px-4 py-2">
+                    <p className="text-sm text-text-secondary italic">typing...</p>
                   </div>
                 </div>
-              );
-            })
+              )}
+              <div ref={messagesEndRef} />
+            </>
           ) : (
             <div className="py-16 text-center text-text-secondary">Select a conversation to open the thread.</div>
           )}
@@ -221,12 +333,18 @@ export const MessagesPage = () => {
               <textarea
                 className="w-full bg-transparent p-3 text-sm focus:outline-none resize-none min-h-[60px] custom-scrollbar"
                 placeholder="Type your message here..."
-                value={''}
-                onChange={() => {}}
-                disabled
+                value={messageText}
+                onChange={(e) => setMessageText(e.target.value)}
+                onKeyPress={handleKeyPress}
+                disabled={!selectedConversationId}
               />
             </div>
-            <Button variant="primary" className="h-[60px] w-[60px] rounded-lg shrink-0" disabled>
+            <Button 
+              variant="primary" 
+              className="h-[60px] w-[60px] rounded-lg shrink-0" 
+              onClick={handleSendMessage}
+              disabled={!selectedConversationId || !messageText.trim()}
+            >
               <Send size={20} />
             </Button>
           </div>

@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Star, Clock, RefreshCw, CheckCircle2, ChevronDown,
-  ChevronRight, Heart, Share2, ShieldCheck, Play, Loader2,
+  ChevronRight, ShieldCheck, Play, Loader2,
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
 import { gigAPI, publicAPI } from '../../common/services/api';

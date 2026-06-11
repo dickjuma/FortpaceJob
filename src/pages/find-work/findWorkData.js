@@ -374,8 +374,13 @@ async function fetchBackendJobs(filters = {}) {
   if (categoryId && !selectedCategoryIds.length) {
     params.category = categoryId;
   }
-  if (workMode !== 'all') params.type = workMode === 'local' ? 'ONSITE' : 'REMOTE';
+  // Map workMode: frontend 'online' -> backend 'online', 'local' -> 'onsite'
+  if (workMode === 'online') params.onlineOnly = 'true';
+  if (workMode === 'local') params.offlineOnly = 'true';
+  if (workMode === 'onsite') params.offlineOnly = 'true';
+  if (workMode === 'hybrid') params.mode = 'hybrid';
 
+  // Map sortBy to backend sort parameter
   switch (sortBy) {
     case 'newest':
       params.sort = 'newest';
@@ -386,6 +391,7 @@ async function fetchBackendJobs(filters = {}) {
     case 'most-applicants':
       params.sort = 'applicants';
       break;
+    case 'recommended':
     default:
       params.sort = 'recommended';
   }
@@ -401,82 +407,88 @@ export async function syncJobsWithBackend(filters = {}) {
     }
     const backendJobs = await fetchBackendJobs(filters);
 
-    const mappedJobs = backendJobs.map((job) => {
-      const category = CATEGORY_CONFIG.find((c) => c.id === job.category || c.slug === job.category) || {
-        id: job.category || 'general',
-        name: job.category || 'General',
-      };
+const mappedJobs = backendJobs.map((job) => {
+       const category = CATEGORY_CONFIG.find((c) => c.id === job.category || c.slug === job.category) || {
+         id: job.category || 'general',
+         name: job.category || 'General',
+       };
 
-      let skillsArray = [];
-      try {
-        skillsArray = typeof job.skills === 'string' ? JSON.parse(job.skills) : Array.isArray(job.skills) ? job.skills : [];
-      } catch (_) {
-        skillsArray = Array.isArray(job.skills) ? job.skills : [];
-      }
+       let skillsArray = [];
+       try {
+         skillsArray = typeof job.skills === 'string' ? JSON.parse(job.skills) : Array.isArray(job.skills) ? job.skills : [];
+       } catch (_) {
+         skillsArray = Array.isArray(job.skills) ? job.skills : [];
+       }
 
-      const clientKey = String(job.clientId || 'anon');
-      if (!CLIENTS[clientKey]) {
-        CLIENTS[clientKey] = {
-          name: job.client?.name || 'Verified Client',
-          verified: !!job.client?.verified,
-          rating: job.client?.rating || 4.9,
-          location: job.location || 'Remote',
-          country: job.client?.country || 'Global',
-          localTime: 'Active now',
-          jobsPosted: job.client?.jobsPosted || 1,
-          openJobs: 1,
-          hireRate: '80%',
-          totalSpent: '$10K+',
-          activeHires: 1,
-        };
-      }
+       const clientKey = String(job.clientId || 'anon');
+       if (!CLIENTS[clientKey]) {
+         CLIENTS[clientKey] = {
+           name: job.client?.name || 'Verified Client',
+           verified: !!job.client?.verified,
+           rating: job.client?.rating || 4.9,
+           location: job.location || 'Remote',
+           country: job.client?.country || 'Global',
+           localTime: 'Active now',
+           jobsPosted: job.client?.jobsPosted || 1,
+           openJobs: 1,
+           hireRate: '80%',
+           totalSpent: '$10K+',
+           activeHires: 1,
+         };
+       }
 
-      const workMode =
-        String(job.type || '').toUpperCase() === 'ONSITE' ||
-        String(job.workMode || '').toLowerCase() === 'onsite'
-          ? 'local'
-          : 'online';
-      const budgetLabel = job.budget && job.budgetMin && job.budgetMax
-        ? `$${job.budgetMin} - $${job.budgetMax}`
-        : job.budget
-          ? `$${job.budget}`
-          : 'TBD';
+       const workMode =
+         String(job.type || '').toUpperCase() === 'ONSITE' ||
+         String(job.workMode || '').toLowerCase() === 'onsite'
+           ? 'local'
+           : 'online';
+       const budgetLabel = job.budget && job.budgetMin && job.budgetMax
+         ? `$${job.budgetMin} - $${job.budgetMax}`
+         : job.budget
+           ? `$${job.budget}`
+           : 'TBD';
 
-      return {
-        ...job,
-        id: String(job.id),
-        title: job.title,
-        summary: (job.description || job.summary || '').slice(0, 180),
-        description: job.description || job.summary || '',
-        specialization: skillsArray[0] || category.name || 'General',
-        categoryId: category.id,
-        category,
-        clientId: clientKey,
-        client: CLIENTS[clientKey],
-        workMode,
-        workModeLabel: workMode === 'local' ? 'Local / Onsite' : 'Remote / Online',
-        budgetType: job.budgetType || (job.budgetMin && job.budgetMax ? 'Fixed' : 'Hourly'),
-        budgetLabel,
-        budgetValue: job.budgetMin || job.budget || 0,
-        durationLabel: job.durationLabel || job.duration || 'Open',
-        locationLabel: job.location || job.locationLabel || 'Remote',
-        postedHoursAgo: job.postedHoursAgo || (() => {
-          const createdAt = new Date(job.createdAt).getTime();
-          if (Number.isNaN(createdAt)) return 1;
-          return Math.max(1, Math.round((Date.now() - createdAt) / 3600000));
-        })(),
-        applicants: job.proposalsCount || job.applicants || 0,
-        proposalsCount: job.proposalsCount || 0,
-        experienceLevel: job.experienceLevel || 'Expert',
-        skills: skillsArray,
-        featured: !!job.featured,
-        urgent: !!job.urgent,
-        saved: false,
-        detailPath: `/find-work/work/${job.id}`,
-        proposalPath: `/find-work/work/${job.id}/apply`,
-        categoryPath: `/find-work/category/${category.id}`,
-      };
-    });
+       // Handle description: can be string or array
+       const desc = job.description || job.summary || '';
+       const descriptionArray = typeof desc === 'string' ? [desc] : Array.isArray(desc) ? desc : [];
+
+       return {
+         ...job,
+         id: String(job.id),
+         title: job.title,
+         summary: (job.description || job.summary || '').slice(0, 180),
+         description: descriptionArray,
+         specialization: skillsArray[0] || category.name || 'General',
+         categoryId: category.id,
+         category,
+         clientId: clientKey,
+         client: CLIENTS[clientKey],
+         workMode,
+         workModeLabel: workMode === 'local' ? 'Local / Onsite' : 'Remote / Online',
+         budgetType: job.budgetType || (job.budgetMin && job.budgetMax ? 'Fixed' : 'Hourly'),
+         budgetLabel,
+         budgetValue: job.budgetMin || job.budget || 0,
+         durationLabel: job.durationLabel || job.duration || 'Open',
+         locationLabel: job.location || job.locationLabel || 'Remote',
+         postedHoursAgo: job.postedHoursAgo || (() => {
+           const createdAt = new Date(job.createdAt).getTime();
+           if (Number.isNaN(createdAt)) return 1;
+           return Math.max(1, Math.round((Date.now() - createdAt) / 3600000));
+         })(),
+         applicants: job.proposalsCount || job.applicants || 0,
+         proposalsCount: job.proposalsCount || 0,
+         experienceLevel: job.experienceLevel || 'Expert',
+         skills: skillsArray,
+         featured: !!job.featured,
+         urgent: !!job.urgent,
+         saved: false,
+         // Map matchScore from backend recommendation engine
+         matchScore: typeof job.matchScore === 'number' ? job.matchScore : undefined,
+         detailPath: `/find-work/work/${job.id}`,
+         proposalPath: `/find-work/work/${job.id}/apply`,
+         categoryPath: `/find-work/category/${category.id}`,
+       };
+     });
 
     FIND_WORK_JOBS.length = 0;
     FIND_WORK_JOBS.push(...mappedJobs);
