@@ -1,0 +1,14 @@
+{{> ../layouts/BaseEmailLayout}}
+{{#*inline "body"}}
+  <h2>Verify New Login Attempt</h2>
+  <p>Hello {{name}},</p>
+  <p>We detected a sign-in attempt from a new device. Use the code below to continue.</p>
+  <div style="font-size:32px;letter-spacing:8px;font-weight:800;color:#4C1D95;">{{code}}</div>
+  <p><strong>Device:</strong> {{deviceInfo.deviceName}}</p>
+  <p><strong>Browser:</strong> {{deviceInfo.browser}}</p>
+  <p><strong>Operating System:</strong> {{deviceInfo.operatingSystem}}</p>
+  <p><strong>IP Address:</strong> {{deviceInfo.ipAddress}}</p>
+  <p><strong>Location:</strong> {{deviceInfo.location}} {{deviceInfo.country}}</p>
+  <p><strong>Date & Time:</strong> {{now}}</p>
+  <p>If this was not you, secure your account immediately by changing your password and revoking sessions.</p>
+{{/inline}}

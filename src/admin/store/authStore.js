@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { authAPI } from '../../common/services/api';
+import { adminAuthAPI } from '../api/adminAuth.api';
 
 const ADMIN_ROLES = new Set([
   'ADMIN',
@@ -39,36 +39,61 @@ export const useAuthStore = create()(
       isAuthenticated: false,
       isLoading: false,
 
-      login: async (identifier, password) => {
+      login: async (email, password) => {
         set({ isLoading: true });
         try {
-          const data = await authAPI.login(identifier, password);
-          if (data?.requiresTwoFactor) {
-            set({ isLoading: false });
-            return data;
-          }
+          const data = await adminAuthAPI.login({ email, password });
+          return data.data;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-          if (data.accessToken) {
-            if (!isAdminUser(data.user)) {
-              await authAPI.logout().catch(() => {});
-              throw new Error('This account does not have admin access.');
-            }
+      setupStart: async (email, password) => {
+        set({ isLoading: true });
+        try {
+          const data = await adminAuthAPI.setupStart({ email, password });
+          return data.data;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-            persistAdminToken(data.accessToken);
-            if (data.accessToken) {
-              localStorage.setItem('accessToken', data.accessToken);
-            }
-            if (data.refreshToken) {
-              localStorage.setItem('refreshToken', data.refreshToken);
-            }
-            set({ 
-              user: data.user, 
-              token: data.accessToken,
-              isAuthenticated: true,
-              isLoading: false 
-            });
-          }
-          return data;
+      setupConfirm: async (payload) => {
+        set({ isLoading: true });
+        try {
+          const data = await adminAuthAPI.setupConfirm(payload);
+          return data.data;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      verifyTotp: async (payload) => {
+        set({ isLoading: true });
+        try {
+          const data = await adminAuthAPI.verifyTotp(payload);
+          return data.data;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      verifyEmailOtp: async (payload) => {
+        set({ isLoading: true });
+        try {
+          const data = await adminAuthAPI.verifyEmailOtp(payload);
+          return data.data;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      verifyRecoveryCode: async (payload) => {
+        set({ isLoading: true });
+        try {
+          const data = await adminAuthAPI.verifyRecoveryCode(payload);
+          return data.data;
         } finally {
           set({ isLoading: false });
         }
@@ -77,15 +102,8 @@ export const useAuthStore = create()(
       register: async (userData) => {
         set({ isLoading: true });
         try {
-          const data = await authAPI.register(userData);
-          if (data.accessToken) {
-            set({ 
-              user: data.user, 
-              token: data.accessToken,
-              isAuthenticated: true 
-            });
-          }
-          return data;
+          const data = await adminAuthAPI.createAdmin(userData);
+          return data.data;
         } finally {
           set({ isLoading: false });
         }
@@ -93,7 +111,7 @@ export const useAuthStore = create()(
 
       logout: async () => {
         try {
-          await authAPI.logout();
+          await adminAuthAPI.logout();
         } catch (e) {
           // Ignore logout errors
         }
@@ -121,8 +139,8 @@ export const useAuthStore = create()(
             persistAdminToken(existingToken);
           }
 
-          const me = await authAPI.getMe();
-          const user = me?.user || me;
+          const me = await adminAuthAPI.me();
+          const user = me?.data || me;
           if (!isAdminUser(user)) {
             persistAdminToken(null);
             set({ user: null, token: null, isAuthenticated: false });

@@ -59,6 +59,7 @@ const apiClient = async (endpoint, options = {}) => {
       ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
+    credentials: "include",
     // Pass the AbortSignal if provided in options
     signal: options.signal,
   };
@@ -188,6 +189,18 @@ export const authAPI = {
     const data = await apiClient("/auth/verify-email", {
       method: "POST",
       body: JSON.stringify({ token: otp, email }),
+    });
+    if (data?.accessToken) {
+      setTokens(data.accessToken, data.refreshToken);
+      setUser(data.user);
+    }
+    return data;
+  },
+
+  verifyLoginOTP: async (email, otp) => {
+    const data = await apiClient("/auth/verify-login", {
+      method: "POST",
+      body: JSON.stringify({ email, otp }),
     });
     if (data?.accessToken) {
       setTokens(data.accessToken, data.refreshToken);

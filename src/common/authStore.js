@@ -35,13 +35,14 @@ export const useAuthStore = create(
           }
           try {
             const user = JSON.parse(storedUser);
-            set({
-              isAuthenticated: true,
-              user,
-              token,
-              refreshToken,
-              sessionExpired: false,
-            });
+          const emailVerified = user?.emailVerified !== false;
+          set({
+            isAuthenticated: emailVerified,
+            user,
+            token,
+            refreshToken,
+            sessionExpired: false,
+          });
           } catch {
             removeTokens();
           }

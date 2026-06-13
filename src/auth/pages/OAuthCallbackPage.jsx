@@ -19,7 +19,6 @@ export default function OAuthCallbackPage() {
       try {
         const accessToken = searchParams.get('accessToken');
         const refreshToken = searchParams.get('refreshToken');
-        const provider = searchParams.get('provider') || 'social';
         const oauthError = searchParams.get('oauthError');
         const returnTo = searchParams.get('returnTo');
 
@@ -27,22 +26,44 @@ export default function OAuthCallbackPage() {
           throw new Error(oauthError);
         }
 
-        if (!accessToken) {
-          throw new Error(`Missing ${provider} access token.`);
+        if (!accessToken && !refreshToken) {
+          setStatus('Loading your profile from secure cookies...');
+        } else {
+          setStatus('Loading your profile...');
         }
 
-        localStorage.setItem('accessToken', accessToken);
-        if (refreshToken) {
-          localStorage.setItem('refreshToken', refreshToken);
-        }
-
-        setStatus('Loading your profile...');
         const meResponse = await authAPI.getMe();
-        const user = meResponse?.user || meResponse;
+        const data = meResponse?.user || meResponse;
+        const user = data?.user || data;
+        const requiresEmailVerification = data?.requiresEmailVerification || meResponse?.requiresEmailVerification;
+        const requiresLoginVerification = data?.requiresLoginVerification || meResponse?.requiresLoginVerification;
+
+        if (requiresEmailVerification) {
+          sessionStorage.setItem('pendingVerificationEmail', user?.email || '');
+          sessionStorage.setItem('pendingVerificationRole', user?.role || '');
+          navigate('/auth/verify-email', {
+            state: { email: user?.email, role: user?.role, returnTo },
+            replace: true,
+          });
+          return;
+        }
+
+        if (requiresLoginVerification) {
+          sessionStorage.setItem('pendingLoginVerificationEmail', user?.email || '');
+          navigate('/auth/verify-login', {
+            state: { userId: user?.id, email: user?.email, returnTo },
+            replace: true,
+          });
+          return;
+        }
 
         if (cancelled) return;
 
-        setAuth(user, accessToken, refreshToken || null);
+        if (accessToken || refreshToken) {
+          setAuth(user, accessToken || null, refreshToken || null);
+        } else {
+          setAuth(user, null, null);
+        }
         const safeReturnTo = returnTo && returnTo.startsWith('/') ? returnTo : '';
         navigate(safeReturnTo || getDashboardPathForRole(user?.role), { replace: true });
       } catch (err) {

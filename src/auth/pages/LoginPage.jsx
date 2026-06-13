@@ -50,6 +50,28 @@ export default function LoginPage() {
 try {
       const result = await login(email, password, rememberMe);
 
+      if (result?.requiresEmailVerification) {
+        sessionStorage.setItem('pendingVerificationEmail', email.trim().toLowerCase());
+        navigate('/auth/verify-email', {
+          state: { email: email.trim().toLowerCase(), role: result?.user?.role },
+          replace: true,
+        });
+        return;
+      }
+
+      if (result?.requiresLoginVerification && result?.userId) {
+        sessionStorage.setItem('pendingLoginVerificationEmail', email.trim().toLowerCase());
+        navigate('/auth/verify-login', {
+          state: {
+            userId: result.userId,
+            email: email.trim().toLowerCase(),
+            returnTo,
+          },
+          replace: true,
+        });
+        return;
+      }
+
       if (result?.requiresTwoFactor && result?.userId) {
         navigate('/auth/admin/verify', {
           state: {
@@ -70,7 +92,15 @@ try {
       
       navigate(destination, { replace: true });
     } catch (err) {
-      // Error is handled by store
+      if (err?.code === 'EMAIL_NOT_VERIFIED') {
+        sessionStorage.setItem('pendingVerificationEmail', email.trim().toLowerCase());
+        navigate('/auth/verify-email', {
+          state: { email: email.trim().toLowerCase(), role: err?.metadata?.role },
+          replace: true,
+        });
+        return;
+      }
+      setFormError(err?.message || 'Login failed. Please try again.');
     }
   };
 

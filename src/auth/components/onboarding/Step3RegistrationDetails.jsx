@@ -8,18 +8,22 @@ import useOnboardingStore from '../../../store/useOnboardingStore';
 import FormInput from './FormInput';
 import SocialLoginButtons from './SocialLoginButtons';
 import { authAPI } from '../../../common/services/api';
-import { useAuthStore } from '../../../common/authStore';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../../common/context/ToastContext';
 
 const schema = z.object({
+  fullName: z.string().min(2, 'Full name is required'),
   email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain an uppercase letter')
+    .regex(/[a-z]/, 'Password must contain a lowercase letter')
+    .regex(/\d/, 'Password must contain a number')
+    .regex(/[^A-Za-z0-9]/, 'Password must contain a special character'),
 });
 
 const Step3RegistrationDetails = () => {
   const { accountType, businessStructure, prevStep } = useOnboardingStore();
-  const { setAuth } = useAuthStore();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -35,21 +39,22 @@ const Step3RegistrationDetails = () => {
   const onSubmit = async (data) => {
     try {
       const payload = {
+        fullName: data.fullName,
         email: data.email.toLowerCase(),
         password: data.password,
         role: accountType === 'freelancer' ? 'FREELANCER' : 'CLIENT',
-        accountType: businessStructure === 'individual' ? 'INDIVIDUAL' : 'SME',
+        accountType: businessStructure === 'individual' ? 'INDIVIDUAL' : businessStructure === 'corporate' ? 'CORPORATE' : 'SME',
       };
 
       const res = await authAPI.register(payload);
 
-      if (res?.accessToken && res?.user) {
-        setAuth(res.user, res.accessToken, res.refreshToken);
-      }
-
-      toast.success('Registration successful!');
+      toast.success('Registration successful. Please verify your email.');
       sessionStorage.setItem('pendingVerificationEmail', payload.email);
-      navigate('/auth/profile-completion');
+      sessionStorage.setItem('pendingVerificationRole', payload.role);
+      navigate('/auth/verify-email', {
+        state: { email: payload.email, role: payload.role },
+        replace: true,
+      });
     } catch (error) {
       console.error('Registration failed:', error);
       toast.error(error.response?.data?.message || error.message || 'Registration failed. Please try again.');
@@ -116,6 +121,13 @@ const Step3RegistrationDetails = () => {
         <SocialLoginButtons />
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
+          <FormInput
+            label="Full Name"
+            type="text"
+            {...register('fullName')}
+            error={errors.fullName}
+          />
+
           <FormInput
             label="Email Address"
             type="email"

@@ -14,7 +14,7 @@ export default function VerifyEmailPage() {
   const navigate = useNavigate();
   const { user, updateUser } = useAuthStore();
   const email = location.state?.email || user?.email || sessionStorage.getItem('pendingVerificationEmail') || '';
-  const nextPath = getPostVerificationPathForRole(location.state?.role || user?.role);
+  const nextPath = getPostVerificationPathForRole(location.state?.role || user?.role || sessionStorage.getItem('pendingVerificationRole'));
   
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -27,8 +27,8 @@ export default function VerifyEmailPage() {
   }, [email, navigate]);
 
   const handleVerify = async (method, otp) => {
-    await authAPI.verifyEmailOTP(email, otp);
-    updateUser?.({ emailVerified: true });
+    const data = await authAPI.verifyEmailOTP(email, otp);
+    updateUser?.({ emailVerified: true, ...(data?.user || {}) });
     sessionStorage.removeItem('pendingVerificationEmail');
     setIsSuccess(true);
   };

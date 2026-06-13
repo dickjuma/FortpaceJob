@@ -150,6 +150,7 @@ import FreelancerLayout from './freelancer/FreelancerLayout';
 import AuthLoginPage from './pages/auth/Login';
 import RegisterPage from './pages/RegisterPage';
 import VerifyEmailPage from './auth/pages/VerifyEmailPage';
+import VerifyLoginOTPPage from './auth/pages/VerifyLoginOTPPage';
 import ForgotPasswordPage from './auth/pages/ForgotPasswordPage';
 import ResetPasswordPage from './auth/pages/ResetPasswordPage';
 import OTPVerificationPage from './auth/pages/OTPVerificationPage';
@@ -305,8 +306,8 @@ const FreelancerProtectedRoute = ({ children }) => {
 };
 
 const AuthenticatedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuthStore();
-  if (!isAuthenticated) {
+  const { isAuthenticated, user } = useAuthStore();
+  if (!isAuthenticated || user?.emailVerified === false) {
     return <Navigate to="/auth/login" replace />;
   }
   return <>{children}</>;
@@ -377,7 +378,8 @@ function App() {
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
         <Route path="/auth/oauth/callback" element={<OAuthCallbackPage />} />
-        <Route path="/auth/verify-email" element={<AuthenticatedRoute><VerifyEmailPage /></AuthenticatedRoute>} />
+        <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/auth/verify-login" element={<VerifyLoginOTPPage />} />
         <Route path="/auth/verify-otp" element={<OTPVerificationPage />} />
         <Route path="/auth/verify-2fa" element={<Verify2FAPage />} />
         <Route path="/auth/admin" element={<AdminLoginPage />} />
