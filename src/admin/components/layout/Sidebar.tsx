@@ -29,7 +29,8 @@ const Sidebar: React.FC = () => {
   
   const { user, logout } = useAuthStore();
   const location = useLocation();
-  const config = user ? ROLE_CONFIG[user.role] : null;
+  const roleKey = user?.role?.toLowerCase();
+  const config = user ? ROLE_CONFIG[roleKey] || ROLE_CONFIG['super_admin'] : null;
 
   if (!config) return null;
 

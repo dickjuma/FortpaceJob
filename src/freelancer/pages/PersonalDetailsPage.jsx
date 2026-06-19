@@ -4,8 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   User, Briefcase, Globe, Home, CheckCircle2, Save, MapPin, CreditCard, Smartphone, Building2, Check
 } from 'lucide-react';
+import { useFreelancerProfile, useUpdateFreelancerProfile } from '../services/freelancerHooks';
 
 export default function PersonalDetailsPage() {
+  const { data: profile } = useFreelancerProfile();
+  const updateProfile = useUpdateFreelancerProfile();
   const [workModality, setWorkModality] = useState('ONLINE');
   const [formData, setFormData] = useState({
     name: '',
@@ -20,18 +23,43 @@ export default function PersonalDetailsPage() {
   const [isSaved, setIsSaved] = useState(false);
   const [showSuccess, setShowSuccess] = useState(null);
 
+  React.useEffect(() => {
+    if (profile) {
+      setFormData({
+        name: profile.name || profile.companyName || `${profile.firstName || ''} ${profile.lastName || ''}`.trim(),
+        titleOrCrn: profile.title || profile.professionalTitle || '',
+        baseCity: profile.location || profile.baseCity || '',
+        travelRadius: profile.travelRadius || '',
+        preferredPaymentMethod: profile.preferredPaymentMethod || 'mpesa',
+        phoneNumber: profile.phoneNumber || '',
+        bankName: profile.bankName || 'KCB',
+        bankAccount: profile.bankAccount || ''
+      });
+      setWorkModality(profile.workModality || 'ONLINE');
+    }
+  }, [profile]);
+
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setIsSaved(false);
   };
 
-  const handleSave = () => {
-    setIsSaved(true);
-    setShowSuccess({ message: 'Details saved successfully' });
-    setTimeout(() => {
-      setIsSaved(false);
-      setShowSuccess(null);
-    }, 2000);
+  const handleSave = async () => {
+    try {
+      await updateProfile.mutateAsync({
+        ...formData,
+        workModality
+      });
+      setIsSaved(true);
+      setShowSuccess({ message: 'Details saved successfully' });
+      setTimeout(() => {
+        setIsSaved(false);
+        setShowSuccess(null);
+      }, 2000);
+    } catch (err) {
+      setShowSuccess({ message: 'Failed to save details', isError: true });
+      setTimeout(() => setShowSuccess(null), 2000);
+    }
   };
 
   const handleClear = () => {

@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 // ClientSavedTalentPipelinePage.jsx
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,7 +15,7 @@ import {
   AlertCircle,
   RefreshCw,
 } from 'lucide-react';
-import { workAPI } from '../../common/services/api';
+import { workAPI } from '../../platform/common/services/api';
 
 const DEFAULT_PIPELINE = {
   total: 0,
@@ -42,34 +43,19 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
 export default function ClientSavedTalentPipelinePage() {
   const [viewMode, setViewMode] = useState('kanban'); // 'kanban' or 'list'
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [pipeline, setPipeline] = useState(DEFAULT_PIPELINE);
-
-  const loadPipeline = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
+  const { data: pipelineData, isLoading, error, refetch } = useQuery({
+    queryKey: ['client', 'pipeline'],
+    queryFn: async () => {
       const data = await workAPI.getPipeline();
-      setPipeline({
+      return {
         total: data?.total ?? data?.candidates?.length ?? 0,
         stages: data?.stages ?? [],
         candidates: data?.candidates ?? [],
-      });
-    } catch (err) {
-      setError(err);
-    } finally {
-      setIsLoading(false);
+      };
     }
-  };
+  });
 
-  useEffect(() => {
-    loadPipeline();
-  }, []);
-
-  const refetch = () => {
-    loadPipeline();
-  };
+  const pipeline = pipelineData || DEFAULT_PIPELINE;
 
   const stages = pipeline?.stages?.length ? pipeline.stages : [];
   const candidates = useMemo(
@@ -328,3 +314,4 @@ export default function ClientSavedTalentPipelinePage() {
     </div>
   );
 }
+

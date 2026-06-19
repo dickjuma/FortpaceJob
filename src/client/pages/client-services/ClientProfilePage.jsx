@@ -1,5 +1,5 @@
 import React from "react";
-import MyProfile from "../../../common/pages/MyProfile";
+import MyProfile from "../../../platform/common/pages/MyProfile";
 
 export default function ClientProfilePage() {
   return (

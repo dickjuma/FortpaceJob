@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BriefcaseBusiness, Clock3, Eye, MessageSquare, PencilLine, ShieldCheck, Sparkles, XCircle, CheckCircle } from "lucide-react";
-import { clientWorkspaceAPI } from "../../../common/services/clientWorkspaceAPI";
+import { clientWorkspaceAPI } from "../../../platform/common/services/clientWorkspaceAPI";
 import toast from "react-hot-toast";
-import { useConfirm } from "../../../common/context/ConfirmContext";
+import { useConfirm } from "../../../platform/common/context/ConfirmContext";
 
 const statusPill = {
   open: "bg-success/10 text-success border border-success/20",

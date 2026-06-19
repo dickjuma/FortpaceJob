@@ -8,8 +8,8 @@ import {
   CheckCircle2, Heart, Share2, MessageSquare, ShieldCheck,
   ChevronDown, MessageCircle, Pencil, Check
 } from 'lucide-react';
-import { gigAPI } from '../../common/services/api';
-// import { useSavedGigIds, useToggleSaveGig } from '../../common/hooks/useSavedGig';
+import { gigAPI } from '../../platform/common/services/api';
+// import { useSavedGigIds, useToggleSaveGig } from '../../platform/common/hooks/useSavedGig';
 const SAMPLE_GIG = {
   rating: 4.9,
   reviews: 128,

@@ -9,9 +9,9 @@ import {
   useMyJobs, useProposalsForJob, useAcceptProposal,
   useRejectProposal, useShortlistProposal
 } from '../services/clientHooks';
-import ConfirmModal from '../../components/ui/ConfirmModal';
-import { useConfirm } from '../../common/context/ConfirmContext';
-import notify from '../../common/utils/notify';
+import ConfirmModal from '../../platform/components/ui/ConfirmModal';
+import { useConfirm } from '../../platform/common/context/ConfirmContext';
+import notify from '../../platform/common/utils/notify';
 
 const PIPELINE_COLUMNS = [
   { key: 'SUBMITTED',  label: 'New',        color: 'border-t-blue-400',   dot: 'bg-blue-400' },

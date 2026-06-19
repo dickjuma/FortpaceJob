@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShieldCheck, ShieldAlert, Key, Globe, LogOut, CheckCircle2, X, Plus, AlertTriangle, Check
 } from 'lucide-react';
+import { useUpdateFreelancerSettings } from '../services/freelancerHooks';
 
 export default function PrivacySecuritySettingsPage() {
   const [sessions, setSessions] = useState([
@@ -18,6 +19,8 @@ export default function PrivacySecuritySettingsPage() {
   });
   const [mfaEnabled, setMfaEnabled] = useState(true);
   const [showSuccess, setShowSuccess] = useState(null);
+  
+  const updateSettings = useUpdateFreelancerSettings();
 
   const handlePasswordChange = (e) => {
     e.preventDefault();
@@ -31,10 +34,23 @@ export default function PrivacySecuritySettingsPage() {
       setTimeout(() => setShowSuccess(null), 2000);
       return;
     }
+    
+    updateSettings.mutate({ passwordForm }, {
+      onSuccess: () => {
+        setShowSuccess({ message: 'Password updated successfully' });
+        setTimeout(() => setShowSuccess(null), 2000);
+        setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      }
+    });
+  };
 
-    setShowSuccess({ message: 'Password updated successfully' });
-    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    setTimeout(() => setShowSuccess(null), 2000);
+  const handleLogoutAll = () => {
+    updateSettings.mutate({ action: 'logoutAll' }, {
+      onSuccess: () => {
+        setShowSuccess({ message: 'All other sessions logged out' });
+        setTimeout(() => setShowSuccess(null), 2000);
+      }
+    });
   };
 
   const handleToggleMfa = () => {

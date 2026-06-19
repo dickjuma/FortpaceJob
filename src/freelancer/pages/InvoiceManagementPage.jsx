@@ -5,8 +5,12 @@ import {
   FileText, Download, Filter, Search, Plus, FileSignature, CheckCircle2,
   AlertCircle, DollarSign, Send, Calculator, Building, Receipt, Check, X
 } from 'lucide-react';
+import { useGetInvoices, useGenerateInvoice } from '../services/freelancerHooks';
 
 export default function InvoiceManagementPage() {
+  const { data: response, isLoading } = useGetInvoices();
+  const apiInvoices = response?.data || response || [];
+  
   const [filter, setFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [showGenModal, setShowGenModal] = useState(false);
@@ -14,13 +18,17 @@ export default function InvoiceManagementPage() {
   const [invoiceAmount, setInvoiceAmount] = useState('');
   const [includeVAT, setIncludeVAT] = useState(false);
   const [showSuccess, setShowSuccess] = useState(null);
+  
+  const generateInvoice = useGenerateInvoice();
 
-  const [invoices, setInvoices] = useState([
+  const fallbackInvoices = [
     { id: 'INV-2026-0042', client: 'Global Finance Corp', date: 'May 20, 2026', dueDate: 'Jun 05, 2026', amount: 150000, vat: 24000, status: 'Paid', method: 'M-Pesa Express' },
     { id: 'INV-2026-0041', client: 'HealthSync App Development', date: 'May 18, 2026', dueDate: 'May 25, 2026', amount: 45000, vat: 7200, status: 'Pending', method: 'Escrow Lock' },
     { id: 'INV-2026-0039', client: 'Nexus Tech Systems', date: 'May 01, 2026', dueDate: 'May 15, 2026', amount: 80000, vat: 12800, status: 'Overdue', method: 'Bank Wire' },
     { id: 'INV-2026-0038', client: 'Startup Inc Solutions', date: 'Apr 28, 2026', dueDate: 'May 12, 2026', amount: 120000, vat: 19200, status: 'Paid', method: 'M-Pesa STK' }
-  ]);
+  ];
+
+  const invoices = apiInvoices.length > 0 ? apiInvoices : fallbackInvoices;
 
   const totalPaid = invoices.filter(i => i.status === 'Paid').reduce((sum, i) => sum + i.amount + i.vat, 0);
   const totalOutstanding = invoices.filter(i => i.status === 'Pending').reduce((sum, i) => sum + i.amount + i.vat, 0);
@@ -28,38 +36,22 @@ export default function InvoiceManagementPage() {
 
   const handleGenerateInvoiceSubmit = (e) => {
     e.preventDefault();
-    if (!clientName || !invoiceAmount) {
-      setShowSuccess({ message: 'Please fill all fields', isError: true });
-      setTimeout(() => setShowSuccess(null), 2000);
-      return;
-    }
-    const amt = parseFloat(invoiceAmount);
-    const calculatedVAT = includeVAT ? amt * 0.16 : 0;
+    if (!clientName || !invoiceAmount) return;
 
-    const newInv = {
-      id: 'INV-2026-' + Math.floor(1000 + Math.random() * 9000),
-      client: clientName,
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      amount: amt,
-      vat: calculatedVAT,
-      status: 'Pending',
-      method: 'M-Pesa STK'
-    };
-
-    setInvoices([newInv, ...invoices]);
-    setShowGenModal(false);
-    setClientName('');
-    setInvoiceAmount('');
-    setIncludeVAT(false);
-    setShowSuccess({ message: `Invoice ${newInv.id} created successfully` });
-    setTimeout(() => setShowSuccess(null), 3000);
+    generateInvoice.mutate({ clientName, invoiceAmount, includeVAT }, {
+      onSuccess: () => {
+        setShowGenModal(false);
+        setClientName('');
+        setInvoiceAmount('');
+        setShowSuccess({ message: 'Invoice generated and sent to client!' });
+        setTimeout(() => setShowSuccess(null), 3000);
+      }
+    });
   };
 
   const triggerSTKPush = (id, amount, client) => {
     setShowSuccess({ message: `STK Push sent to ${client}` });
     setTimeout(() => {
-      setInvoices(prev => prev.map(inv => inv.id === id ? { ...inv, status: 'Paid' } : inv));
       setShowSuccess({ message: `Payment of KES ${amount.toLocaleString()} confirmed from ${client}` });
       setTimeout(() => setShowSuccess(null), 2000);
     }, 1500);
@@ -313,9 +305,10 @@ export default function InvoiceManagementPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors"
+                  disabled={generateInvoice.isPending}
+                  className="w-full py-2.5 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-brand-900 focus:ring-offset-2 flex items-center justify-center gap-2"
                 >
-                  Create invoice
+                  {generateInvoice.isPending ? 'Generating...' : <><Send className="w-4 h-4" /> Generate Invoice</>}
                 </button>
               </form>
             </motion.div>

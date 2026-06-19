@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { useAuthStore } from '../../common/authStore';
-import { profileAPI } from '../../common/services/api';
-import { normalizeWorkMode, workModeToFlags } from '../../common/constants/accountTypes';
+import { useAuthStore } from '../../platform/common/authStore';
+import { profileAPI } from '../../platform/common/services/api';
+import { normalizeWorkMode, workModeToFlags } from '../../platform/common/constants/accountTypes';
 
 const FreelancerContext = createContext();
 

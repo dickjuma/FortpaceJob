@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import ClientSidebar from './components/ClientSidebar';
 import ClientHeader from './components/ClientHeader';
-import { SocketProvider } from '../common/context/SocketContext';
-import { getToken } from '../common/services/api';
-import { useNotificationSocket } from '../common/hooks/useNotificationSocket';
+import { SocketProvider } from '../platform/common/context/SocketContext';
+import { getToken } from '../platform/common/services/api';
+import { useNotificationSocket } from '../platform/common/hooks/useNotificationSocket';
 
 // Inner component — lives inside SocketProvider so it can use useSocket
 function ClientLayoutInner({ children, isSidebarOpen, setIsSidebarOpen }) {

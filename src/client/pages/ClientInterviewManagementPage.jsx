@@ -1,3 +1,4 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 // ClientInterviewManagementPage.jsx
 // Self-contained Interview Management page with design tokens,
 // framer-motion animations, and local mock data. No external dependencies.
@@ -9,15 +10,11 @@ import {
   Clock,
   Star,
   FileText,
-  Link as LinkIcon,
-  Plus,
   ChevronLeft,
   ChevronRight,
   PlayCircle,
-  MessageSquare,
   X,
   Check,
-  User,
   AlertCircle,
 } from 'lucide-react';
 import { getInterviews, scheduleInterview, getShortlist } from '../services/clientApi';
@@ -25,59 +22,7 @@ import { getInterviews, scheduleInterview, getShortlist } from '../services/clie
 // ----------------------------------------------------------------------
 // Mock Data
 // ----------------------------------------------------------------------
-const mockInterviews = [
-  {
-    id: 'int-1',
-    freelancer: {
-      id: 'fl-1',
-      name: 'Sarah Jenkins',
-      avatar: null,
-    },
-    role: 'Senior React Developer',
-    date: 'May 30, 2026 · 2:00 PM',
-    duration: '45 min',
-    status: 'Upcoming',
-    link: 'https://zoom.us/j/123456789',
-    score: null,
-    notes: null,
-  },
-  {
-    id: 'int-2',
-    freelancer: {
-      id: 'fl-2',
-      name: 'Michael Chen',
-      avatar: null,
-    },
-    role: 'Backend Engineer',
-    date: 'Jun 2, 2026 · 10:30 AM',
-    duration: '30 min',
-    status: 'Scheduled',
-    link: 'https://meet.google.com/abc-defg',
-    score: null,
-    notes: null,
-  },
-  {
-    id: 'int-3',
-    freelancer: {
-      id: 'fl-3',
-      name: 'Grace Mutua',
-      avatar: null,
-    },
-    role: 'UI/UX Designer',
-    date: 'May 25, 2026 · 3:00 PM',
-    duration: '60 min',
-    status: 'Completed',
-    link: 'https://zoom.us/j/987654321',
-    score: 4.8,
-    notes: 'Strong portfolio, excellent communication. Ready for onboarding.',
-  },
-];
 
-const mockProposals = [
-  { id: 'prop-1', freelancerId: 'fl-1', freelancer: { user: { firstName: 'Sarah', lastName: 'Jenkins', id: 'fl-1' } } },
-  { id: 'prop-2', freelancerId: 'fl-2', freelancer: { user: { firstName: 'Michael', lastName: 'Chen', id: 'fl-2' } } },
-  { id: 'prop-3', freelancerId: 'fl-3', freelancer: { user: { firstName: 'Grace', lastName: 'Mutua', id: 'fl-3' } } },
-];
 
 // Helper to get unique candidates from shortlist items
 const getCandidates = (items) => {
@@ -106,8 +51,7 @@ export default function ClientInterviewManagementPage() {
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [toast, setToast] = useState(null);
 
-  const [interviews, setInterviews] = useState([]);
-  const [shortlistItems, setShortlistItems] = useState([]);
+  const queryClient = useQueryClient();
 
   // UI state for scheduling form
   const [selectedFreelancerId, setSelectedFreelancerId] = useState('');
@@ -115,27 +59,29 @@ export default function ClientInterviewManagementPage() {
   const [duration, setDuration] = useState('45');
   const [interviewType, setInterviewType] = useState('Technical Interview');
   const [meetingLink, setMeetingLink] = useState('');
-  const [isScheduling, setIsScheduling] = useState(false);
+
+  const { data: interviewsData } = useQuery({
+    queryKey: ['client', 'interviews'],
+    queryFn: async () => {
+      const res = await getInterviews({ limit: 50, sort: 'createdAt:desc' });
+      return res?.items || res || [];
+    }
+  });
+  const interviews = interviewsData || [];
+
+  const { data: shortlistData } = useQuery({
+    queryKey: ['client', 'shortlist'],
+    queryFn: async () => {
+      const res = await getShortlist({ limit: 50 });
+      return res?.items || res || [];
+    }
+  });
+  const shortlistItems = shortlistData || [];
 
   const candidates = getCandidates(shortlistItems);
   const upcomingInterviews = interviews.filter(i => i.status === 'Upcoming' || i.status === 'Scheduled');
   const completedInterviews = interviews.filter(i => i.status === 'Completed');
   const activeList = activeTab === 'upcoming' ? upcomingInterviews : completedInterviews;
-
-  useEffect(() => {
-    const loadInterviewData = async () => {
-      try {
-        const interviewsRes = await getInterviews({ limit: 50, sort: 'createdAt:desc' });
-        const shortlistRes = await getShortlist({ limit: 50 });
-
-        setInterviews(interviewsRes?.items || interviewsRes || []);
-        setShortlistItems(shortlistRes?.items || shortlistRes || []);
-      } catch (err) {
-        showToast('error', err?.message || 'Failed to load interview data.');
-      }
-    };
-    loadInterviewData();
-  }, []);
 
   // Auto-select first interview when list changes
   useEffect(() => {
@@ -144,54 +90,44 @@ export default function ClientInterviewManagementPage() {
     } else {
       setSelectedInterview(null);
     }
-  }, [activeTab, interviews]);
+  }, [activeTab, interviews, activeList]);
 
   const showToast = (type, message, durationMs = 3000) => {
     setToast({ type, message });
     setTimeout(() => setToast(null), durationMs);
   };
 
-  const handleScheduleSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedFreelancerId) {
-      showToast('error', 'Please select a freelancer');
-      return;
-    }
-    if (!interviewDate) {
-      showToast('error', 'Please select a date and time');
-      return;
-    }
-
-    setIsScheduling(true);
-
-    try {
-      const payload = {
-        freelancerId: selectedFreelancerId,
-        scheduledAt: new Date(interviewDate).toISOString(),
-        duration: Number(duration) || 45,
-        type: interviewType,
-        meetingLink: meetingLink.trim() || undefined,
-      };
-      const result = await scheduleInterview(payload);
-      const scheduledInterview = result?.data || result;
-      setInterviews((prev) => [scheduledInterview, ...prev]);
+  const scheduleMutation = useMutation({
+    mutationFn: async (payload) => scheduleInterview(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['client', 'interviews'] });
       setShowScheduleModal(false);
       setSelectedFreelancerId('');
       setInterviewDate('');
       setMeetingLink('');
       showToast('success', 'Interview scheduled successfully!');
-    } catch (err) {
+    },
+    onError: (err) => {
       showToast('error', err?.message || 'Failed to schedule interview.');
-    } finally {
-      setIsScheduling(false);
     }
+  });
+
+  const handleScheduleSubmit = (e) => {
+    e.preventDefault();
+    if (!selectedFreelancerId) { showToast('error', 'Please select a freelancer'); return; }
+    if (!interviewDate) { showToast('error', 'Please select a date and time'); return; }
+
+    scheduleMutation.mutate({
+      freelancerId: selectedFreelancerId,
+      scheduledAt: new Date(interviewDate).toISOString(),
+      duration: Number(duration) || 45,
+      type: interviewType,
+      meetingLink: meetingLink.trim() || undefined,
+    });
   };
 
   // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
-  };
+
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
@@ -595,10 +531,10 @@ export default function ClientInterviewManagementPage() {
                 </div>
                 <button
                   type="submit"
-                  disabled={isScheduling}
+                  disabled={scheduleMutation.isPending}
                   className="w-full py-2.5 bg-accent text-white rounded-lg font-medium text-sm hover:bg-accent-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                 >
-                  {isScheduling ? 'Scheduling...' : 'Schedule Interview'}
+                  {scheduleMutation.isPending ? 'Scheduling...' : 'Schedule Interview'}
                 </button>
               </form>
             </motion.div>
@@ -627,3 +563,4 @@ export default function ClientInterviewManagementPage() {
     </div>
   );
 }
+

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate, Routes, Route } from "react-router-dom";
-import { useAuthStore } from "../../common/authStore";
+import { useAuthStore } from "../../platform/common/authStore";
 import {
   Home,
   Package,
@@ -18,8 +18,8 @@ import {
   LogOut
 } from "lucide-react";
 import { motion } from "framer-motion";
-import FinancePage from "../../common/pages/FinancePage";
-import MessagesPage from "../../common/pages/MessagesPage";
+import FinancePage from "../../platform/common/pages/FinancePage";
+import MessagesPage from "../../platform/common/pages/MessagesPage";
 
 // Placeholder Components
 const ClientOverview = () => (

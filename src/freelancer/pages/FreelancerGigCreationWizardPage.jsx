@@ -6,6 +6,7 @@ import {
   CheckCircle2, Sparkles, ChevronRight, ChevronLeft,
   UploadCloud, AlertCircle, Save, Check, X
 } from 'lucide-react';
+import { useCreateGig } from '../services/freelancerHooks';
 
 const STEPS = [
   { id: 1, name: 'Overview', icon: FileText },
@@ -19,6 +20,8 @@ export default function FreelancerGigCreationWizardPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [title, setTitle] = useState('');
   const [showSuccess, setShowSuccess] = useState(null);
+  
+  const createGig = useCreateGig();
 
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, STEPS.length));
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
@@ -29,8 +32,12 @@ export default function FreelancerGigCreationWizardPage() {
   };
 
   const handlePublish = () => {
-    setShowSuccess({ message: 'Gig published successfully!' });
-    setTimeout(() => setShowSuccess(null), 2000);
+    createGig.mutate({ title, status: 'PUBLISHED' }, {
+      onSuccess: () => {
+        setShowSuccess({ message: 'Gig published successfully!' });
+        setTimeout(() => setShowSuccess(null), 2000);
+      }
+    });
   };
 
   const isLastStep = currentStep === STEPS.length;

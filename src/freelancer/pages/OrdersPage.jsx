@@ -1,316 +1,293 @@
-// src/pages/freelancer/OrdersPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import {
-  ShoppingCart, Clock, CheckCircle2, AlertTriangle, MessageSquare, Download, UploadCloud, FileText, XCircle, Search, Check, X
+  Package, Clock, CheckCircle2, UploadCloud, MessageSquare,
+  XCircle, Search, X, ShieldAlert
 } from 'lucide-react';
-import { useFreelancerOrders, useUpdateOrderStatus } from '../services/freelancerHooks';
+import {
+  useFreelancerOrders,
+  useAcceptOrder,
+  useRejectOrder,
+  useDeliverOrder,
+  useCancelOrder,
+  useDisputeOrder
+} from '../services/freelancerHooks';
+
+const cn = (...classes) => classes.filter(Boolean).join(' ');
+
+const STATUS_STYLE = {
+  PENDING: 'bg-amber-50 text-amber-700 border-amber-200',
+  ACTIVE: 'bg-success/10 text-success border-success/20',
+  REVISION: 'bg-danger/10 text-danger border-danger/20',
+  DELIVERED: 'bg-blue-50 text-blue-700 border-blue-200',
+  COMPLETED: 'bg-success/10 text-success border-success/20',
+  CANCELLED: 'bg-zinc-100 text-zinc-600 border-zinc-200',
+  DISPUTED: 'bg-danger/10 text-danger border-danger/20',
+  REFUNDED: 'bg-zinc-100 text-zinc-600 border-zinc-200'
+};
+
+const TABS = ['All', 'PENDING', 'ACTIVE', 'DELIVERED', 'COMPLETED', 'CANCELLED', 'REVISION', 'DISPUTED'];
+
+function Modal({ open, title, children, onClose }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
+      <motion.div
+        initial={{ opacity: 0, y: 16, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        className="w-full max-w-lg rounded-2xl bg-white p-5 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-4 border-b border-border pb-3">
+          <h3 className="font-display text-lg font-bold text-brand-900">{title}</h3>
+          <button onClick={onClose} className="rounded-lg p-1 text-ink-tertiary hover:bg-surface-muted"><X size={18} /></button>
+        </div>
+        <div className="pt-4">{children}</div>
+      </motion.div>
+    </div>
+  );
+}
 
 export default function OrdersPage() {
-  const { data, isLoading: loading } = useFreelancerOrders();
-  const updateOrder = useUpdateOrderStatus();
+  const { data, isLoading, refetch } = useFreelancerOrders({ limit: 50 });
+  const accept = useAcceptOrder();
+  const reject = useRejectOrder();
+  const deliver = useDeliverOrder();
+  const cancel = useCancelOrder();
+  const dispute = useDisputeOrder();
 
-  const [deliveryModalOpen, setDeliveryModalOpen] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState(null);
-  const [deliveryNotes, setDeliveryNotes] = useState('');
   const [activeTab, setActiveTab] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showSuccess, setShowSuccess] = useState(null);
-  const baseOrders = data?.items || [];
-  const [orders, setOrders] = useState(baseOrders);
+  const [search, setSearch] = useState('');
+  const [modal, setModal] = useState(null);
+  const [deliveryNotes, setDeliveryNotes] = useState('');
+  const [reason, setReason] = useState('');
+  const [requestInfo, setRequestInfo] = useState('');
 
-  useEffect(() => {
-    setOrders(baseOrders);
-  }, [baseOrders]);
+  const orders = useMemo(() => data?.orders || data?.data || data?.items || [], [data]);
+  const pagination = data?.pagination || { total: 0, page: 1, totalPages: 1 };
 
-  const getFilteredOrders = () => {
-    let filtered = orders;
-    if (activeTab !== 'All') {
-      if (activeTab === 'Active') {
-        filtered = filtered.filter(o => o.status === 'Active' || o.status === 'Revision');
-      } else {
-        filtered = filtered.filter(o => o.status === activeTab);
-      }
-    }
-    if (searchTerm) {
-      filtered = filtered.filter(o =>
-        o.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        o.client?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        o.gig?.title?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    return filtered;
+  const filteredOrders = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return orders.filter((order) => {
+      const matchesTab = activeTab === 'All' || order.status === activeTab;
+      const matchesSearch = !q || `${order.id} ${order.gig?.title || ''} ${order.client?.name || ''}`.toLowerCase().includes(q);
+      return matchesTab && matchesSearch;
+    });
+  }, [orders, activeTab, search]);
+
+  const openModal = (type, order) => {
+    setModal({ type, order });
+    setDeliveryNotes('');
+    setReason('');
+    setRequestInfo('');
   };
 
-  const handleDeliver = (id, e) => {
-    e.stopPropagation();
-    setSelectedOrderId(id);
-    setDeliveryModalOpen(true);
+  const runAction = async (fn, successMessage) => {
+    try {
+      await fn();
+      toast.success(successMessage);
+      setModal(null);
+      refetch();
+    } catch (error) {
+      toast.error(error.message || 'Action failed');
+    }
   };
 
   const submitDelivery = () => {
-    if (!deliveryNotes) {
-      setShowSuccess({ message: 'Please add delivery notes', isError: true });
-      setTimeout(() => setShowSuccess(null), 2000);
+    if (!modal || deliveryNotes.trim().length < 10) {
+      toast.error('Add at least 10 characters of delivery notes');
       return;
     }
-    setOrders(prev => prev.map(o =>
-      o.id === selectedOrderId ? { ...o, status: 'Delivered' } : o
-    ));
-    setDeliveryModalOpen(false);
-    setDeliveryNotes('');
-    setShowSuccess({ message: 'Order delivered successfully' });
-    setTimeout(() => setShowSuccess(null), 2000);
-  };
-
-  const getStatusStyles = (status) => {
-    switch(status) {
-      case 'Active': return 'bg-accent-light text-accent-dark border border-accent DEFAULT';
-      case 'Revision': return 'bg-danger-light text-danger border border-danger DEFAULT animate-pulse';
-      case 'Delivered': return 'bg-warn-light text-warn border border-warn DEFAULT';
-      case 'Completed': return 'bg-accent-light text-accent-dark border border-accent DEFAULT';
-      default: return 'bg-surface-muted text-ink-secondary border border-border';
-    }
-  };
-
-  const getStatusIcon = (status) => {
-    switch(status) {
-      case 'Revision': return <AlertTriangle className="w-3 h-3" />;
-      case 'Completed': return <CheckCircle2 className="w-3 h-3" />;
-      default: return null;
-    }
-  };
-
-  const getProgressWidth = (status) => {
-    switch(status) {
-      case 'Completed': return '100%';
-      case 'Delivered': return '80%';
-      case 'Revision': return '50%';
-      default: return '30%';
-    }
-  };
-
-  const tabs = ['All', 'Active', 'Delivered', 'Completed', 'Cancelled'];
-
-  if (loading && orders.length === 0) {
-    return (
-      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="space-y-6">
-          <div className="h-8 w-48 bg-surface-muted rounded-lg animate-pulse"></div>
-          <div className="flex gap-4">
-            {[1,2,3,4].map(i => <div key={i} className="h-8 w-20 bg-surface-muted rounded-lg animate-pulse"></div>)}
-          </div>
-          <div className="space-y-4">
-            {[1,2,3].map(i => <div key={i} className="h-32 bg-surface-muted rounded-2xl animate-pulse"></div>)}
-          </div>
-        </div>
-      </div>
+    runAction(
+      () => deliver.mutateAsync({ orderId: modal.order.id, data: { message: deliveryNotes } }),
+      'Order delivered successfully'
     );
-  }
+  };
+
+  const submitReasonAction = (message) => {
+    const messageText = modal?.type === 'requestInfo' ? requestInfo : reason;
+    if (!modal || messageText.trim().length < 5) {
+      toast.error('Please provide a reason');
+      return;
+    }
+    if (modal.type === 'reject') runAction(() => reject.mutateAsync({ orderId: modal.order.id, reason }), message);
+    if (modal.type === 'cancel') runAction(() => cancel.mutateAsync({ orderId: modal.order.id, reason }), message);
+    if (modal.type === 'dispute') runAction(() => dispute.mutateAsync({ orderId: modal.order.id, data: { reason } }), message);
+    if (modal.type === 'requestInfo') runAction(() => deliver.mutateAsync({ orderId: modal.order.id, data: { message: requestInfo } }), message);
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
-    >
-      {/* Success/Error Toast */}
-      <AnimatePresence>
-        {showSuccess && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className={`fixed top-20 right-4 z-50 px-4 py-3 rounded-lg shadow-md font-body text-sm flex items-center gap-2 ${
-              showSuccess.isError ? 'bg-danger text-white' : 'bg-accent-dark text-white'
-            }`}
-          >
-            <Check className="w-4 h-4" />
-            {showSuccess.message}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Header */}
+    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-danger-light rounded-xl">
-              <ShoppingCart className="w-6 h-6 text-danger" />
+            <div className="p-2.5 bg-[#4C1D95]/10 rounded-xl"><Package className="w-6 h-6 text-[#4C1D95]" /></div>
+            <div>
+              <h1 className="font-display font-bold text-3xl text-brand-900">Orders</h1>
+              <p className="text-ink-secondary">Accept, deliver, revise, complete, or escalate gig orders.</p>
             </div>
-            <h1 className="font-display font-bold text-3xl text-brand-900">Manage orders</h1>
           </div>
-          <p className="text-ink-secondary font-body">Track your service deliveries and handle revisions</p>
         </div>
+        <div className="text-sm text-ink-secondary">{pagination.total} total orders</div>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white p-2 rounded-xl border border-border shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <div className="flex overflow-x-auto gap-1 p-1">
-          {tabs.map(tab => (
+      <div className="bg-white border border-border rounded-2xl shadow-sm p-3 mb-6 flex flex-col md:flex-row gap-3 md:items-center justify-between">
+        <div className="flex gap-2 overflow-x-auto">
+          {TABS.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-3 py-1.5 text-xs font-body font-medium rounded-lg transition-all whitespace-nowrap ${
-                activeTab === tab
-                  ? "bg-brand-900 text-white"
-                  : "text-ink-secondary hover:text-ink-primary hover:bg-surface-muted"
-              }`}
+              className={cn(
+                'px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border',
+                activeTab === tab ? 'bg-brand-900 text-white border-brand-900' : 'text-ink-secondary border-border hover:bg-surface-muted'
+              )}
             >
               {tab}
-              {tab === 'Active' && <span className="ml-1 px-1.5 py-0.5 bg-danger text-white rounded text-xs">2</span>}
             </button>
           ))}
         </div>
-
-        <div className="relative w-full md:w-64">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-ink-tertiary" />
+        <div className="relative md:w-72">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-tertiary" />
           <input
-            type="text"
-            placeholder="Search order ID..."
-            className="w-full pl-9 pr-4 h-10 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search order, gig, or client"
+            className="w-full rounded-lg border border-border bg-white py-2 pl-9 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-900"
           />
         </div>
       </div>
 
-      {/* Orders List */}
-      <div className="space-y-4">
-        {getFilteredOrders().length === 0 ? (
-          <div className="bg-white border border-border rounded-2xl text-center py-20 px-4">
-            <ShoppingCart className="w-16 h-16 text-ink-tertiary mx-auto mb-4" />
-            <h3 className="font-body font-semibold text-lg text-ink-primary mb-1">No orders found</h3>
-            <p className="text-ink-secondary">No orders match your current filters</p>
-          </div>
-        ) : (
-          getFilteredOrders().map((order, idx) => (
-            <motion.div
-              key={order.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.05 }}
-              whileHover={{ y: -2 }}
-              className="bg-white border border-border rounded-xl shadow-sm overflow-hidden transition-all"
-            >
-              <div className="flex flex-col lg:flex-row">
-                {/* Order Info */}
-                <div className="flex-1 p-5 border-b lg:border-b-0 lg:border-r border-border">
-                  <div className="flex flex-wrap justify-between items-start gap-3 mb-3">
+      {isLoading ? (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => <div key={i} className="h-40 rounded-2xl bg-surface-muted animate-pulse" />)}
+        </div>
+      ) : filteredOrders.length === 0 ? (
+        <div className="rounded-2xl border border-border bg-white p-12 text-center text-ink-secondary">No orders match your filters.</div>
+      ) : (
+        <div className="space-y-4">
+          {filteredOrders.map((order) => (
+            <motion.div key={order.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-border bg-white shadow-sm overflow-hidden">
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px]">
+                <div className="p-5 border-b lg:border-b-0 lg:border-r border-border">
+                  <div className="flex flex-wrap justify-between gap-3">
                     <div>
-                      <span className="text-xs font-mono font-semibold text-ink-tertiary block mb-1">
-                        {order.id}
-                      </span>
-                      <h3 className="font-body font-semibold text-base text-ink-primary">
-                        {order.gig?.title || 'Unknown gig'}
-                      </h3>
-                      <p className="text-sm text-ink-secondary mt-1">
-                        Buyer: <span className="font-medium text-ink-primary">{order.client?.name || 'Unknown buyer'}</span>
-                      </p>
+                      <p className="text-xs font-mono text-ink-tertiary">#{order.id}</p>
+                      <h3 className="font-display text-lg font-bold text-brand-900">{order.gig?.title || 'Gig order'}</h3>
+                      <p className="text-sm text-ink-secondary mt-1">Buyer: {order.client?.name || 'Unknown client'}</p>
                     </div>
-                    <span className="font-mono font-bold text-lg text-ink-primary bg-surface-muted px-3 py-1 rounded-lg">
-                      {order.currency} {order.amount?.toLocaleString()}
-                    </span>
+                    <div className="text-right">
+                      <div className="font-display text-xl font-bold text-brand-900">{order.currency || 'USD'} {(order.amount || order.gig?.price || 0).toLocaleString()}</div>
+                      <div className="text-xs text-ink-secondary">{new Date(order.createdAt).toLocaleDateString()}</div>
+                    </div>
                   </div>
-
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-body font-medium ${getStatusStyles(order.status)}`}>
-                      {getStatusIcon(order.status)}
+                  <div className="flex flex-wrap items-center gap-2 mt-4">
+                    <span className={cn('inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-bold', STATUS_STYLE[order.status] || STATUS_STYLE.PENDING)}>
+                      {order.status === 'ACTIVE' ? <Clock size={14} /> : order.status === 'COMPLETED' ? <CheckCircle2 size={14} /> : order.status === 'DISPUTED' ? <ShieldAlert size={14} /> : <Package size={14} />}
                       {order.status}
                     </span>
-
-                    {(order.status === 'Active' || order.status === 'Revision') && (
-                      <span className="inline-flex items-center gap-1 text-xs font-body text-ink-tertiary">
-                        <Clock className="w-3 h-3" />
-                        Due: {order.dueDate ? new Date(order.dueDate).toLocaleDateString() : 'N/A'}
-                      </span>
-                    )}
+                    {order.deliveries?.length > 0 && <span className="text-xs text-ink-secondary">{order.deliveries.length} deliveries</span>}
+                    {order.revisions?.length > 0 && <span className="text-xs text-ink-secondary">{order.revisions.length} revisions</span>}
                   </div>
+                  {order.metadata && typeof order.metadata === 'string' && order.metadata.includes('requirements') && (
+                    <p className="mt-4 rounded-xl bg-surface-soft p-3 text-sm text-ink-secondary">{JSON.parse(order.metadata).requirements || 'No requirements provided.'}</p>
+                  )}
                 </div>
 
-                {/* Actions */}
-                <div className="w-full lg:w-72 bg-surface-soft p-5 flex flex-col justify-center">
-                  <div className="mb-3">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide">Progress</span>
-                      <span className="text-xs font-mono font-semibold text-ink-primary">{order.status}</span>
-                    </div>
-                    <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
-                      <div className={`h-full rounded-full transition-all duration-500 ${getProgressWidth(order.status)}`}
-                           style={{ width: getProgressWidth(order.status) }} />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-2 mt-auto">
-                    {(order.status === 'Active' || order.status === 'Revision') && (
-                      <button
-                        onClick={(e) => handleDeliver(order.id, e)}
-                        className="w-full py-2 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors inline-flex items-center justify-center gap-2"
-                      >
-                        <UploadCloud className="w-4 h-4" /> Deliver now
-                      </button>
+                <div className="p-5 bg-surface-soft flex flex-col gap-2">
+                  {order.status === 'PENDING' && (
+                    <>
+                      <button onClick={() => openModal('accept', order)} className="rounded-xl bg-brand-900 py-2 text-sm font-bold text-white">Accept order</button>
+                      <button onClick={() => openModal('reject', order)} className="rounded-xl border border-border py-2 text-sm font-bold text-ink-primary hover:bg-surface-muted">Reject</button>
+                    </>
+                  )}
+                    {['ACTIVE', 'REVISION'].includes(order.status) && (
+                      <>
+                        <button onClick={() => openModal('deliver', order)} className="rounded-xl bg-brand-900 py-2 text-sm font-bold text-white inline-flex items-center justify-center gap-2"><UploadCloud size={16} /> Deliver</button>
+                        <button onClick={() => openModal('requestInfo', order)} className="rounded-xl border border-border py-2 text-sm font-bold text-ink-primary hover:bg-surface-muted inline-flex items-center justify-center gap-2"><MessageSquare size={16} /> Request info</button>
+                      </>
                     )}
-                    {order.status === 'Delivered' && (
-                      <button className="w-full py-2 rounded-lg border border-warn text-warn hover:bg-warn-light font-body font-medium text-sm transition-colors">
-                        Pending approval
-                      </button>
-                    )}
-                    <button className="w-full py-2 rounded-lg border border-border text-ink-primary hover:bg-surface-muted font-body font-medium text-sm transition-colors">
-                      View requirements
-                    </button>
-                  </div>
+                  {order.status === 'DELIVERED' && <button disabled className="rounded-xl border border-success/30 bg-success/10 py-2 text-sm font-bold text-success">Awaiting client approval</button>}
+                  {['PENDING', 'ACTIVE'].includes(order.status) && (
+                    <button onClick={() => openModal('cancel', order)} className="rounded-xl border border-danger/30 py-2 text-sm font-bold text-danger hover:bg-danger/5 inline-flex items-center justify-center gap-2"><XCircle size={16} /> Cancel</button>
+                  )}
+                  {['ACTIVE', 'DELIVERED', 'REVISION'].includes(order.status) && (
+                    <button onClick={() => openModal('dispute', order)} className="rounded-xl border border-danger/30 py-2 text-sm font-bold text-danger hover:bg-danger/5 inline-flex items-center justify-center gap-2"><ShieldAlert size={16} /> Dispute</button>
+                  )}
+                  <button className="rounded-xl border border-border py-2 text-sm font-bold text-ink-primary hover:bg-surface-muted inline-flex items-center justify-center gap-2"><MessageSquare size={16} /> View chat</button>
                 </div>
               </div>
             </motion.div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* Delivery Modal */}
       <AnimatePresence>
-        {deliveryModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-border"
-            >
-              <div className="flex justify-between items-center p-5 border-b border-border">
-                <h3 className="font-display font-semibold text-lg text-brand-900">Deliver order</h3>
-                <button onClick={() => setDeliveryModalOpen(false)} className="p-1 rounded-lg hover:bg-surface-muted transition-colors">
-                  <X className="w-5 h-5 text-ink-tertiary" />
-                </button>
+        {modal && (
+          <Modal
+            open
+            title={
+              modal.type === 'deliver' ? 'Deliver order' :
+              modal.type === 'reject' ? 'Reject order' :
+              modal.type === 'cancel' ? 'Cancel order' :
+              modal.type === 'dispute' ? 'Dispute order' :
+              modal.type === 'requestInfo' ? 'Request information' :
+              'Accept order'
+            }
+            onClose={() => setModal(null)}
+          >
+            {modal.type === 'accept' && (
+              <div className="flex justify-end gap-2">
+                <button onClick={() => setModal(null)} className="rounded-lg border border-border px-4 py-2 text-sm font-bold">Cancel</button>
+                <button onClick={() => runAction(() => accept.mutateAsync(modal.order.id), 'Order accepted')} className="rounded-lg bg-brand-900 px-4 py-2 text-sm font-bold text-white">Accept</button>
               </div>
-              <div className="p-5">
-                <label className="block text-sm font-body font-medium text-ink-primary mb-2">
-                  Delivery notes
-                </label>
+            )}
+
+            {modal.type === 'deliver' && (
+              <div className="space-y-3">
                 <textarea
-                  className="w-full px-3 py-2 bg-white border border-border rounded-lg text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900 resize-none"
-                  rows={4}
-                  placeholder="Describe your delivery (e.g., here is the final file...)"
                   value={deliveryNotes}
                   onChange={(e) => setDeliveryNotes(e.target.value)}
+                  placeholder="Describe what was delivered..."
+                  className="min-h-32 w-full rounded-xl border border-border p-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-900"
                 />
+                <div className="flex justify-end gap-2">
+                  <button onClick={() => setModal(null)} className="rounded-lg border border-border px-4 py-2 text-sm font-bold">Cancel</button>
+                  <button onClick={submitDelivery} className="rounded-lg bg-brand-900 px-4 py-2 text-sm font-bold text-white inline-flex items-center gap-2"><UploadCloud size={16} /> Submit delivery</button>
+                </div>
               </div>
-              <div className="flex justify-end gap-3 p-5 border-t border-border">
-                <button
-                  onClick={() => setDeliveryModalOpen(false)}
-                  className="px-4 py-2 rounded-lg border border-border text-ink-primary hover:bg-surface-muted font-body font-medium text-sm transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={submitDelivery}
-                  className="px-4 py-2 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors"
-                >
-                  Submit delivery
-                </button>
+            )}
+
+            {modal.type === 'requestInfo' && (
+              <div className="space-y-3">
+                <textarea
+                  value={requestInfo}
+                  onChange={(e) => setRequestInfo(e.target.value)}
+                  placeholder="Ask the buyer for missing details..."
+                  className="min-h-28 w-full rounded-xl border border-border p-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-900"
+                />
+                <div className="flex justify-end gap-2">
+                  <button onClick={() => setModal(null)} className="rounded-lg border border-border px-4 py-2 text-sm font-bold">Cancel</button>
+                  <button onClick={() => submitReasonAction('Information requested')} className="rounded-lg bg-brand-900 px-4 py-2 text-sm font-bold text-white inline-flex items-center gap-2"><MessageSquare size={16} /> Request info</button>
+                </div>
               </div>
-            </motion.div>
-          </div>
+            )}
+
+            {['reject', 'cancel', 'dispute'].includes(modal.type) && (
+              <div className="space-y-3">
+                <textarea
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  placeholder="Explain why..."
+                  className="min-h-28 w-full rounded-xl border border-border p-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-900"
+                />
+                <div className="flex justify-end gap-2">
+                  <button onClick={() => setModal(null)} className="rounded-lg border border-border px-4 py-2 text-sm font-bold">Cancel</button>
+                  <button onClick={() => submitReasonAction(modal.type === 'reject' ? 'Order rejected' : modal.type === 'cancel' ? 'Order cancelled' : 'Order disputed')} className="rounded-lg bg-danger px-4 py-2 text-sm font-bold text-white">{modal.type === 'dispute' ? 'Open dispute' : modal.type === 'reject' ? 'Reject order' : 'Cancel order'}</button>
+                </div>
+              </div>
+            )}
+          </Modal>
         )}
       </AnimatePresence>
     </motion.div>

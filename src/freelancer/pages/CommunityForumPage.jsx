@@ -5,8 +5,8 @@ import {
   Users, MessageSquare, Plus, Search, ThumbsUp, Heart, X, Send,
   ArrowRight, ShieldCheck, Tag, Star, Activity, Clock, Check, Loader2
 } from 'lucide-react';
-import { cmsAPI } from '../../common/services/api';
-import { extractList } from '../../common/utils/apiHelpers';
+import { cmsAPI } from '../../platform/common/services/api';
+import { extractList } from '../../platform/common/utils/apiHelpers';
 
 export default function CommunityForumPage() {
   // Keep original API hooks commented - preserve structure

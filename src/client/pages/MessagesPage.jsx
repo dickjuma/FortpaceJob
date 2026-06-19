@@ -3,26 +3,25 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useConversations, useMessages, useSendMessage } from '../services/clientHooks';
-import { useAuthStore } from '../../common/authStore';
-import { messagingAPI } from '../../common/services/messagingApi';
-import MessagesInbox from '../../components/messaging/MessagesInbox';
-import VideoCallModal from '../../components/ui/VideoCallModal';
-import { useMessagingSocket } from '../../common/hooks/useMessagingSocket';
-import { useSocket } from '../../common/context/SocketContext';
+import { useAuthStore } from '../../platform/common/authStore';
+import { messagingAPI } from '../../platform/common/services/messagingApi';
+import MessagesInbox from '../../platform/components/messaging/MessagesInbox';
+import VideoCallModal from '../../platform/components/ui/VideoCallModal';
+import { useMessagingSocket } from '../../platform/common/hooks/useMessagingSocket';
+import { useSocket } from '../../platform/common/context/SocketContext';
 
 export default function MessagesPage() {
   const { user } = useAuthStore();
   const [selectedConvId, setSelectedConvId] = useState(null);
   const [localMessages, setLocalMessages] = useState([]);
   const [videoOpen, setVideoOpen] = useState(false);
-  const { isConnected } = useSocket();
 
   const { data: convData, isLoading, error, refetch } = useConversations({ limit: 50 });
   const { data: msgData, isLoading: msgsLoading, refetch: refetchMsgs } = useMessages(selectedConvId, { limit: 80 });
   const sendMessage = useSendMessage(selectedConvId);
 
-  const conversations = convData?.items || [];
-  const apiMessages = msgData?.items || [];
+  const conversations = React.useMemo(() => convData?.items || [], [convData?.items]);
+  const apiMessages = React.useMemo(() => msgData?.items || [], [msgData?.items]);
 
   useEffect(() => {
     setLocalMessages(apiMessages);
@@ -71,11 +70,7 @@ export default function MessagesPage() {
       variants={pageVariants}
       className="p-4 md:p-6 max-w-6xl mx-auto font-body"
     >
-      {!isConnected && (
-        <div className="text-xs text-warn bg-warn-light border border-warn/20 rounded-lg px-3 py-2 mb-3">
-          Real-time connection offline — messages still sync via API.
-        </div>
-      )}
+
       <MessagesInbox
         backLink={
           <Link to="/client/dashboard" className="text-sm font-medium text-accent hover:underline">
@@ -90,8 +85,12 @@ export default function MessagesPage() {
         messagesLoading={msgsLoading}
         selectedId={selectedConvId}
         onSelectConversation={setSelectedConvId}
-        onSendMessage={async (text) => {
-          await sendMessage.mutateAsync({ content: text, type: 'TEXT' });
+        onSendMessage={async (text, attachments) => {
+          await sendMessage.mutateAsync({ 
+            content: text || '', 
+            type: attachments?.length ? 'FILE' : 'TEXT',
+            attachmentsJson: attachments?.length ? JSON.stringify(attachments) : undefined
+          });
           refetchMsgs();
           refetch();
         }}

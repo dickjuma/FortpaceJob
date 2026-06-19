@@ -12,6 +12,7 @@ import {
   Clock,
   Zap,
 } from 'lucide-react';
+import { useSuccessScore } from '../services/freelancerHooks';
 
 // ---------- Shared UI Components (inline) ----------
 const Card = ({ children, className = '', hover = true }) => (
@@ -58,12 +59,17 @@ const Button = ({ children, variant = 'primary', className = '', ...props }) => 
 
 // ---------- Main Component ----------
 export default function RankingDashboard() {
-  const scores = [
+  const { data: response, isLoading } = useSuccessScore();
+  const rankData = response?.data || response || {};
+
+  const fallbackScores = [
     { label: 'Overall rank score', value: 94, max: 100, color: 'brand' },
     { label: 'Visibility index', value: 88, max: 100, color: 'accent' },
     { label: 'Trust score', value: 99, max: 100, color: 'accent' },
     { label: 'Match rate', value: 76, max: 100, color: 'warn' },
   ];
+
+  const scores = rankData.scores || fallbackScores;
 
   const getColorClass = (color) => {
     switch (color) {

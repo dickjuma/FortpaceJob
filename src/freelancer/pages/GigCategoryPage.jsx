@@ -4,8 +4,9 @@ import { motion } from 'framer-motion';
 import {
   MonitorPlay, Code2, PenTool, Search,
   Smartphone, Database, Layout, ChevronRight,
-  Star, Heart, Clock
+  Star, Heart, Clock, Loader2
 } from 'lucide-react';
+import { useFreelancerGigs } from '../services/freelancerHooks';
 
 const CATEGORY = {
   name: 'Programming & Tech',
@@ -28,22 +29,10 @@ const SUBCATEGORIES = [
   { name: 'Support & IT', icon: Search, count: '5,600' },
 ];
 
-const POPULAR_GIGS = Array(8).fill(null).map((_, i) => ({
-  id: i,
-  title: 'I will build a responsive modern React JS web application',
-  seller: {
-    name: 'Alex Rivera',
-    avatar: `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop`,
-    level: 'Top Rated',
-  },
-  image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80',
-  rating: 5.0,
-  reviews: 124,
-  price: 150,
-  delivery: '3d'
-}));
-
 export default function GigCategoryPage() {
+  const { data, isLoading } = useFreelancerGigs({ category: 'Programming & Tech', limit: 8 });
+  const gigs = Array.isArray(data) ? data : data?.items ?? data?.gigs ?? [];
+
   return (
     <div className="min-h-screen bg-white font-body flex flex-col">
 
@@ -138,69 +127,77 @@ export default function GigCategoryPage() {
 
         {/* Popular Services Grid */}
         <div>
-          <div className="flex justify-between items-end mb-6">
-            <div>
-              <h2 className="font-display font-semibold text-2xl text-brand-900">Popular in {CATEGORY.name}</h2>
-              <p className="text-ink-secondary text-sm mt-1">Highly rated services chosen by businesses</p>
-            </div>
-            <button className="hidden sm:flex items-center gap-1 text-sm font-body font-medium text-accent DEFAULT hover:text-accent-dark transition-colors">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="font-display font-bold text-2xl text-brand-900">Popular in {CATEGORY.name}</h2>
+            <button className="text-accent DEFAULT font-body font-medium hover:text-accent-dark flex items-center gap-1">
               View all <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {POPULAR_GIGS.map((gig, idx) => (
-              <motion.div
-                key={gig.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.03 }}
-                whileHover={{ y: -3 }}
-                className="bg-white border border-border rounded-2xl overflow-hidden hover:shadow-md transition-all cursor-pointer flex flex-col"
-              >
-                <div className="aspect-[4/3] w-full relative bg-surface-muted">
-                  <img
-                    src={gig.image}
-                    alt={gig.title}
-                    className="w-full h-full object-cover"
-                    width={800}
-                    height={600}
-                  />
-                  <button className="absolute top-3 right-3 p-2 bg-black/20 hover:bg-black/40 rounded-full transition-colors z-10">
-                    <Heart className="w-4 h-4 text-white" />
-                  </button>
-                  <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
-                    <Clock className="w-3 h-3 text-ink-tertiary" />
-                    <span className="text-xs font-mono font-medium text-ink-primary">{gig.delivery}</span>
-                  </div>
-                </div>
-                <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-center gap-2 mb-3">
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="w-8 h-8 text-accent animate-spin" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {gigs.map((gig, idx) => (
+                <motion.div
+                  key={gig.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.03 }}
+                  whileHover={{ y: -3 }}
+                  className="bg-white border border-border rounded-2xl overflow-hidden hover:shadow-md transition-all cursor-pointer flex flex-col"
+                >
+                  <div className="aspect-[4/3] w-full relative bg-surface-muted">
                     <img
-                      src={gig.seller.avatar}
-                      alt={gig.seller.name}
-                      className="w-6 h-6 rounded-full object-cover"
-                      width={24}
-                      height={24}
+                      src={gig.image}
+                      alt={gig.title}
+                      className="w-full h-full object-cover"
+                      width={800}
+                      height={600}
                     />
-                    <span className="text-xs font-body font-semibold text-ink-primary">{gig.seller.name}</span>
+                    <button className="absolute top-3 right-3 p-2 bg-black/20 hover:bg-black/40 rounded-full transition-colors z-10">
+                      <Heart className="w-4 h-4 text-white" />
+                    </button>
                   </div>
-                  <h3 className="text-sm font-body font-semibold text-ink-primary leading-snug mb-3 line-clamp-2 hover:text-accent DEFAULT transition-colors">
-                    {gig.title}
-                  </h3>
-                  <div className="flex items-center gap-1.5 mb-4">
-                    <Star className="w-4 h-4 fill-accent DEFAULT text-accent DEFAULT" />
-                    <span className="text-sm font-body font-semibold text-ink-primary">{gig.rating}</span>
-                    <span className="text-xs font-body text-ink-tertiary">({gig.reviews})</span>
+                  
+                  <div className="p-4 border-t border-border flex items-center gap-3">
+                    <img
+                      src={gig.seller?.avatar || 'https://via.placeholder.com/150'}
+                      alt={gig.seller?.name || 'Seller'}
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <div>
+                      <h4 className="font-body font-semibold text-sm text-ink-primary">{gig.seller?.name || 'Seller'}</h4>
+                      <span className="text-xs font-body text-ink-secondary">{gig.seller?.level || 'Level 1'}</span>
+                    </div>
                   </div>
-                  <div className="pt-3 border-t border-border flex justify-between items-center mt-auto">
-                    <span className="text-xs font-body font-medium text-ink-tertiary uppercase tracking-wide">Starting at</span>
-                    <span className="font-mono font-bold text-lg text-ink-primary">KES {gig.price}</span>
+
+                  <div className="p-4 pt-0">
+                    <h3 className="font-body font-medium text-ink-primary line-clamp-2 mb-2 group-hover:text-accent DEFAULT transition-colors cursor-pointer">
+                      {gig.title}
+                    </h3>
+                    
+                    <div className="flex items-center gap-1 mb-4 text-sm font-body">
+                      <Star className="w-4 h-4 fill-accent DEFAULT text-accent DEFAULT" />
+                      <span className="font-semibold text-ink-primary">{(gig.rating || 0).toFixed(1)}</span>
+                      <span className="text-ink-secondary">({gig.reviews || 0})</span>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-border pt-3">
+                      <div className="flex items-center gap-2 text-ink-secondary text-xs font-body">
+                        <Clock className="w-3.5 h-3.5" />
+                        {gig.delivery || '3d'}
+                      </div>
+                      <div className="font-body text-sm text-ink-tertiary">
+                        STARTING AT <span className="font-mono font-semibold text-ink-primary text-base ml-1">KES {(gig.price || gig.startingPrice || 0).toLocaleString()}</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
 
           <button className="sm:hidden w-full mt-6 py-2.5 bg-surface-muted rounded-xl text-sm font-body font-medium text-ink-primary transition-colors">
             View all services

@@ -1,13 +1,32 @@
 // GigPurchaseScreen.jsx
+import toast from 'react-hot-toast';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, ShieldCheck, CreditCard, ChevronRight, Package, Clock } from 'lucide-react';
-import CheckoutFeeBreakdown from '../../components/payments/CheckoutFeeBreakdown';
+import CheckoutFeeBreakdown from '../../platform/components/payments/CheckoutFeeBreakdown';
 
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export default function GigPurchaseScreen({ gigTitle = "Full-Stack MVP Development", freelancerName = "Sarah Jenkins" }) {
+  const navigate = useNavigate();
   const [selectedPackage, setSelectedPackage] = useState('standard');
+
+  const purchaseMutation = useMutation({
+    mutationFn: async (pkgInfo) => {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      return pkgInfo;
+    },
+    onSuccess: () => {
+      toast.success('Escrow funded successfully!');
+      navigate('/client/dashboard');
+    }
+  });
+
+  const handlePurchase = () => {
+    purchaseMutation.mutate(packages[selectedPackage]);
+  };
 
   const packages = {
     basic: { price: 1500, delivery: '14 days', revisions: 2, features: ['Backend API', 'Basic Frontend', 'Database Setup'] },
@@ -132,10 +151,12 @@ export default function GigPurchaseScreen({ gigTitle = "Full-Stack MVP Developme
 
               <motion.button
                 whileTap={buttonTap}
-                className="w-full py-3.5 bg-accent hover:bg-accent-dark text-white rounded-xl font-semibold text-base transition-colors flex justify-center items-center gap-2 shadow-sm mb-4"
+                onClick={handlePurchase}
+                disabled={purchaseMutation.isPending}
+                className="w-full py-3.5 bg-accent hover:bg-accent-dark text-white rounded-xl font-semibold text-base transition-colors flex justify-center items-center gap-2 shadow-sm mb-4 disabled:opacity-50"
               >
-                Fund Escrow & Start <ChevronRight className="w-5 h-5" />
-              </motion.button>
+                {purchaseMutation.isPending ? 'Processing...' :
+                <>Fund Escrow & Start <ChevronRight className="w-5 h-5" /></>}</motion.button>
 
               <div className="flex items-start gap-3 p-4 bg-accent-light rounded-xl border border-accent/20">
                 <ShieldCheck className="w-5 h-5 text-accent-dark shrink-0 mt-0.5" />
@@ -150,3 +171,4 @@ export default function GigPurchaseScreen({ gigTitle = "Full-Stack MVP Developme
     </div>
   );
 }
+

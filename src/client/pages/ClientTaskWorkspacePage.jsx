@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { 
   KanbanSquare, 
   MoreHorizontal, 
@@ -11,41 +13,21 @@ import {
   MapPin
 } from 'lucide-react';
 
-const initialColumns = [
-  {
-    id: 'col-1',
-    title: 'Backlog / Pending',
-    tasks: [
-      { id: 't-1', title: 'Survey site B coordinates', assignee: 'Horizon Ops', tags: ['Onsite'], priority: 'Medium', comments: 2 },
-      { id: 't-2', title: 'Draft Phase 2 Designs', assignee: 'Sarah J.', tags: ['Remote'], priority: 'Low', comments: 0 }
-    ]
-  },
-  {
-    id: 'col-2',
-    title: 'In Progress (Active)',
-    tasks: [
-      { id: 't-3', title: 'Install CCTV Racks', assignee: 'TechTeam X', tags: ['Onsite', 'Geofenced'], priority: 'High', comments: 5 },
-      { id: 't-4', title: 'Backend API Integration', assignee: 'Dev Squad', tags: ['Remote'], priority: 'High', comments: 12 }
-    ]
-  },
-  {
-    id: 'col-3',
-    title: 'In Review / QA',
-    tasks: [
-      { id: 't-5', title: 'Security Audit Report', assignee: 'Alex M.', tags: ['Compliance'], priority: 'Critical', comments: 8 }
-    ]
-  },
-  {
-    id: 'col-4',
-    title: 'Completed (Awaiting Escrow Release)',
-    tasks: [
-      { id: 't-6', title: 'Initial Server Setup', assignee: 'CloudWorks', tags: ['Remote'], priority: 'Medium', comments: 1 }
-    ]
-  }
-];
-
 export default function ClientTaskWorkspacePage() {
-  const [columns] = useState(initialColumns);
+  const { contractId } = useParams();
+  const { data: columnsData } = useQuery({
+    queryKey: ['client', 'taskWorkspace', contractId],
+    queryFn: async () => {
+      return [
+        { id: 'col-1', title: 'Backlog / Pending', tasks: [ { id: 't-1', title: 'Survey site B coordinates', assignee: 'Horizon Ops', tags: ['Onsite'], priority: 'Medium', comments: 2 }, { id: 't-2', title: 'Draft Phase 2 Designs', assignee: 'Sarah J.', tags: ['Remote'], priority: 'Low', comments: 0 } ] },
+        { id: 'col-2', title: 'In Progress (Active)', tasks: [ { id: 't-3', title: 'Install CCTV Racks', assignee: 'TechTeam X', tags: ['Onsite', 'Geofenced'], priority: 'High', comments: 5 }, { id: 't-4', title: 'Backend API Integration', assignee: 'Dev Squad', tags: ['Remote'], priority: 'High', comments: 12 } ] },
+        { id: 'col-3', title: 'In Review / QA', tasks: [ { id: 't-5', title: 'Security Audit Report', assignee: 'Alex M.', tags: ['Compliance'], priority: 'Critical', comments: 8 } ] },
+        { id: 'col-4', title: 'Completed (Awaiting Escrow Release)', tasks: [ { id: 't-6', title: 'Initial Server Setup', assignee: 'CloudWorks', tags: ['Remote'], priority: 'Medium', comments: 1 } ] }
+      ];
+    }
+  });
+
+  const columns = columnsData || [];
 
   const getPriorityColor = (p) => {
     switch(p) {
@@ -168,5 +150,6 @@ export default function ClientTaskWorkspacePage() {
     </div>
   );
 }
+
 
 

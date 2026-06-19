@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App.jsx';
 import './index.css';
-import { ToastProvider } from './common/context/ToastContext';
+import { ToastProvider } from './platform/common/context/ToastContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {

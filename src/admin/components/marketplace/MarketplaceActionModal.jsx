@@ -6,7 +6,7 @@ import {
 import toast from 'react-hot-toast';
 import { cn } from '../../utils/cn';
 
-export default function MarketplaceActionModal({ isOpen, onClose, data, type = 'delist' }) {
+export default function MarketplaceActionModal({ isOpen, onClose, data, type = 'delist', onAction }) {
   const [reason, setReason] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -48,20 +48,20 @@ export default function MarketplaceActionModal({ isOpen, onClose, data, type = '
     }
 
     setIsProcessing(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsProcessing(false);
-    toast.success(`${active.title} executed successfully`, {
-      icon: '✅',
-      style: {
-        borderRadius: '12px',
-        background: '#0f172a',
-        color: '#fff',
-      },
-    });
-    onClose();
-    setReason('');
+    try {
+      if (onAction) {
+        await onAction(reason);
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+      toast.success(`${active.title} executed successfully`);
+      onClose();
+      setReason('');
+    } catch (error) {
+      toast.error(error.message || `${active.title} failed`);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (

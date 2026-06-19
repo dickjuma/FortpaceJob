@@ -1,10 +1,10 @@
 // ReportFreelancerPage.jsx
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
-import { userAPI } from '../../common/services/api';
+import { userAPI } from '../../platform/common/services/api';
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
-import { disputeDescriptionRule } from "../../common/utils/validationRules";
+import { disputeDescriptionRule } from "../../platform/common/utils/validationRules";
 import {
   AlertTriangle,
   Package,

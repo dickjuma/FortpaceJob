@@ -1,18 +1,18 @@
 // src/pages/freelancer/ProfilePage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   MapPin, Clock, ShieldCheck, Star,
   Award, Edit, Languages, Users,
-  X, Plus, Save, Settings, Link2, GraduationCap, DollarSign, Check
+  X, Plus, Save, Settings, Link2, GraduationCap, DollarSign, Check, Camera
 } from 'lucide-react';
-import { useFreelancerProfile } from '../services/freelancerHooks';
+import { useFreelancerProfile, useUpdateFreelancerProfile } from '../services/freelancerHooks';
 
 // Keep original API structure - preserve for actual implementation
 // import { useFreelancer } from '../context/FreelancerContext';
-// import { FREELANCER_WORK_MODES, FREELANCER_ACCOUNT_TYPES } from '../../common/constants/accountTypes';
-// import { profileAPI } from '../../common/services/api';
-// import { getProfileSummary } from '../../common/utils/profile';
+// import { FREELANCER_WORK_MODES, FREELANCER_ACCOUNT_TYPES } from '../../platform/common/constants/accountTypes';
+import { profileAPI } from '../../platform/common/services/api';
+// import { getProfileSummary } from '../../platform/common/utils/profile';
 
 const defaultProfileData = {
   firstName: '',
@@ -44,6 +44,7 @@ const commonData = {
 
 export default function ProfilePage() {
   const { data: backendProfile = {} } = useFreelancerProfile();
+  const updateProfile = useUpdateFreelancerProfile();
   const [profileData, setProfileData] = useState(defaultProfileData);
   const [activeTab, setActiveTab] = useState('gigs');
   const [activeModal, setActiveModal] = useState(null);
@@ -52,6 +53,10 @@ export default function ProfilePage() {
   const [showSuccess, setShowSuccess] = useState(null);
   const [accountType] = useState('INDIVIDUAL');
   const [workMode, setWorkMode] = useState('ONLINE');
+
+  const [uploadingImage, setUploadingImage] = useState(null);
+  const avatarInputRef = useRef(null);
+  const coverInputRef = useRef(null);
 
   useEffect(() => {
     if (!backendProfile) return;
@@ -79,15 +84,20 @@ export default function ProfilePage() {
     setActiveModal('location');
   };
 
-  const saveLocation = (e) => {
+  const saveLocation = async (e) => {
     e.preventDefault();
-    setProfileData(prev => ({ ...prev, location: tempLocation }));
-    setShowSuccess({ message: 'Location updated' });
-    setActiveModal(null);
+    try {
+      await updateProfile.mutateAsync({ location: tempLocation });
+      setProfileData(prev => ({ ...prev, location: tempLocation }));
+      setShowSuccess({ message: 'Location updated' });
+      setActiveModal(null);
+    } catch (err) {
+      setShowSuccess({ message: 'Failed to update location', isError: true });
+    }
     setTimeout(() => setShowSuccess(null), 2000);
   };
 
-  const addSkill = (e) => {
+  const addSkill = async (e) => {
     e.preventDefault();
     if (!tempSkill.trim()) return;
     if (profileData.skills.includes(tempSkill.trim())) {
@@ -95,15 +105,27 @@ export default function ProfilePage() {
       setTimeout(() => setShowSuccess(null), 2000);
       return;
     }
-    setProfileData(prev => ({ ...prev, skills: [...prev.skills, tempSkill.trim()] }));
-    setTempSkill('');
-    setShowSuccess({ message: 'Skill added' });
+    try {
+      const newSkills = [...profileData.skills, tempSkill.trim()];
+      await updateProfile.mutateAsync({ skills: newSkills });
+      setProfileData(prev => ({ ...prev, skills: newSkills }));
+      setTempSkill('');
+      setShowSuccess({ message: 'Skill added' });
+    } catch (err) {
+      setShowSuccess({ message: 'Failed to add skill', isError: true });
+    }
     setTimeout(() => setShowSuccess(null), 2000);
   };
 
-  const removeSkill = (skillToRemove) => {
-    setProfileData(prev => ({ ...prev, skills: prev.skills.filter(s => s !== skillToRemove) }));
-    setShowSuccess({ message: 'Skill removed' });
+  const removeSkill = async (skillToRemove) => {
+    try {
+      const newSkills = profileData.skills.filter(s => s !== skillToRemove);
+      await updateProfile.mutateAsync({ skills: newSkills });
+      setProfileData(prev => ({ ...prev, skills: newSkills }));
+      setShowSuccess({ message: 'Skill removed' });
+    } catch (err) {
+      setShowSuccess({ message: 'Failed to remove skill', isError: true });
+    }
     setTimeout(() => setShowSuccess(null), 2000);
   };
 
@@ -123,6 +145,43 @@ export default function ProfilePage() {
     { id: 'OFFLINE', label: 'Offline', description: 'On-site work only' },
     { id: 'HYBRID', label: 'Hybrid', description: 'Mix of remote and on-site' }
   ];
+
+  const handleImageUpload = async (type, file) => {
+    setUploadingImage(type);
+    try {
+      const response =
+        type === "avatar"
+          ? await profileAPI.uploadAvatar(file)
+          : await profileAPI.uploadCoverPhoto(file);
+
+      const imageUrl =
+        type === 'avatar'
+          ? response?.user?.profile?.avatar || response?.user?.avatar || response?.url
+          : response?.user?.profile?.coverPhoto || response?.user?.coverPhoto || response?.url;
+
+      const stateKey = type === 'avatar' ? 'avatar' : 'coverPhoto';
+      setProfileData((prev) => ({ ...prev, [stateKey]: imageUrl }));
+      setShowSuccess({ message: `${type === 'avatar' ? 'Profile picture' : 'Cover photo'} updated` });
+      setTimeout(() => setShowSuccess(null), 3000);
+    } catch (error) {
+      setShowSuccess({ message: `Failed to upload ${type}`, isError: true });
+      setTimeout(() => setShowSuccess(null), 3000);
+    } finally {
+      setUploadingImage(null);
+    }
+  };
+
+  const onAvatarChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      handleImageUpload("avatar", e.target.files[0]);
+    }
+  };
+
+  const onCoverChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      handleImageUpload("cover", e.target.files[0]);
+    }
+  };
 
   return (
     <motion.div
@@ -149,8 +208,34 @@ export default function ProfilePage() {
       </AnimatePresence>
 
       {/* Banner */}
-      <div className="h-40 rounded-2xl bg-gradient-to-r from-brand-900 to-accent DEFAULT relative overflow-hidden shadow-sm mb-12">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,transparent_1px)] [background-size:24px_24px]" />
+      <div className="h-40 rounded-2xl bg-gradient-to-r from-brand-900 to-accent DEFAULT relative overflow-hidden shadow-sm mb-12 group">
+        {profileData.coverPhoto ? (
+          <img
+            src={profileData.coverPhoto}
+            alt="Cover"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,transparent_1px)] [background-size:24px_24px]" />
+        )}
+        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <button
+            onClick={() => coverInputRef.current?.click()}
+            disabled={uploadingImage === 'cover'}
+            className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-lg text-white text-sm font-medium transition-all"
+          >
+            <Camera className="w-4 h-4" />
+            {uploadingImage === 'cover' ? 'Uploading...' : 'Update Cover Photo'}
+          </button>
+          <input
+            type="file"
+            ref={coverInputRef}
+            onChange={onCoverChange}
+            accept="image/*"
+            className="hidden"
+          />
+        </div>
+        
         <div className="absolute top-4 right-4 flex gap-2">
           <button
             onClick={handleEditProfile}
@@ -166,17 +251,27 @@ export default function ProfilePage() {
         {/* Left Column */}
         <div className="lg:col-span-1 space-y-5">
           <div className="bg-white border border-border rounded-2xl p-6 shadow-sm text-center">
-            <div className="relative inline-block mb-4">
-              <div className="w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-white shadow-sm">
+            <div className="relative inline-block mb-4 group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
+              <div className="w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-white shadow-sm relative">
                 <img
-                  src={profileData.avatar}
+                  src={profileData.avatar || `https://ui-avatars.com/api/?name=${profileData.firstName}+${profileData.lastName}&background=172554&color=fff`}
                   alt="Profile"
                   className="w-full h-full object-cover"
                   width={112}
                   height={112}
                 />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Camera className="w-6 h-6 text-white" />
+                </div>
               </div>
               <div className="absolute bottom-1 right-1 w-4 h-4 bg-accent DEFAULT border-2 border-white rounded-full" />
+              <input
+                type="file"
+                ref={avatarInputRef}
+                onChange={onAvatarChange}
+                accept="image/*"
+                className="hidden"
+              />
             </div>
 
             <h1 className="font-body font-semibold text-xl text-ink-primary">

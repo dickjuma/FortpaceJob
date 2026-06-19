@@ -4,8 +4,8 @@ import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 import App from './App.jsx';
-import { ToastProvider } from './common/context/ToastContext';
-import { ConfirmProvider } from './common/context/ConfirmContext';
+import { ToastProvider } from './platform/common/context/ToastContext';
+import { ConfirmProvider } from './platform/common/context/ConfirmContext';
 
 
 

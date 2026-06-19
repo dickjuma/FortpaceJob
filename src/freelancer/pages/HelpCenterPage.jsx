@@ -4,23 +4,33 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   HelpCircle, Search, ChevronRight, FileText, Settings, ShieldCheck, Mail, MessageSquare, Check
 } from 'lucide-react';
+import { useGetHelpCenter } from '../services/freelancerHooks';
 
 export default function HelpCenterPage() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showSuccess, setShowSuccess] = useState(null);
+  const { data: response, isLoading } = useGetHelpCenter();
+  const apiData = response?.data || response;
 
-  const faqs = [
+  const fallbackFaqs = [
     { q: 'How does the platform Milestone escrow work?', c: 'Billing', a: 'When a contract is initialized, clients deposit milestone funds into a secure escrow. Once deliverables are reviewed and approved, funds are safely disbursed.' },
     { q: 'How do I upgrade from an individual to an Agency workspace?', c: 'Agency', a: 'Navigate to Workspace settings, select Upgrade Profile, complete basic organization validation registry, and invite team members.' },
     { q: 'What criteria determines a "Top Rated Plus" verification badge?', c: 'Identity', a: 'Maintaining a 4.8+ job success score, earning $10k+ in revenue, completing 5+ verified skills certifications, and following site guidelines.' },
     { q: 'How do I resolve a milestone contract dispute with a client?', c: 'Billing', a: 'File an official inquiry within the Escrow management portal. A dedicated coordinator will audit logs and resolve payments safely.' }
   ];
 
-  const categories = [
-    { label: 'Escrow & Payouts', icon: FileText, desc: 'Setup invoice credentials, payouts, and taxes.' },
-    { label: 'Agency Collaborations', icon: Settings, desc: 'Manage team invites, workspaces, and RBAC.' },
-    { label: 'Security & Badges', icon: ShieldCheck, desc: 'Learn about verified credentials and MFA locks.' }
+  const fallbackCategories = [
+    { label: 'Escrow & Payouts', icon: 'FileText', desc: 'Setup invoice credentials, payouts, and taxes.' },
+    { label: 'Agency Collaborations', icon: 'Settings', desc: 'Manage team invites, workspaces, and RBAC.' },
+    { label: 'Security & Badges', icon: 'ShieldCheck', desc: 'Learn about verified credentials and MFA locks.' }
   ];
+
+  const faqs = apiData?.faqs || fallbackFaqs;
+  const categoriesRaw = apiData?.categories || fallbackCategories;
+  
+  const iconMap = { FileText, Settings, ShieldCheck };
+  const categories = categoriesRaw.map(c => ({ ...c, icon: iconMap[c.icon] || FileText }));
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showSuccess, setShowSuccess] = useState(null);
 
   const filteredFaqs = faqs.filter(f =>
     f.q.toLowerCase().includes(searchTerm.toLowerCase()) ||

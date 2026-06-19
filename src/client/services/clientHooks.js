@@ -7,7 +7,7 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import * as api from './clientApi.js';
-import { authAPI } from '../../common/services/api';
+import { authAPI } from '../../platform/common/services/api';
 
 // ── Keys ─────────────────────────────────────────────────────────────────────
 export const QK = {
@@ -36,6 +36,11 @@ export const QK = {
   messages: (id, f) => ['client', 'messages', id, f],
   notifications: (f) => ['client', 'notifications', f],
   unreadCount: ['client', 'unread-count'],
+  skillTests: ['client', 'skill-tests'],
+  skillTestResults: ['client', 'skill-test-results'],
+  referral: ['client', 'referral'],
+  nda: (f) => ['client', 'nda', f],
+  activityLog: (f) => ['client', 'activity-log', f],
   profile: ['client', 'profile'],
   tickets: (f) => ['client', 'tickets', f],
   ticket: (id) => ['client', 'ticket', id],
@@ -456,13 +461,37 @@ export const useMarkAllRead = () => {
   return useMutation({
     mutationFn: api.markAllNotificationsRead,
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QK.notifications({}) });
+      qc.invalidateQueries({ queryKey: ['client', 'notifications'] });
       qc.invalidateQueries({ queryKey: QK.unreadCount });
       toast.success('All notifications marked as read.');
     },
     onError,
   });
 };
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SKILL ASSESSMENTS
+// ══════════════════════════════════════════════════════════════════════════════
+export const useSkillTests = () =>
+  useQuery({ queryKey: QK.skillTests, queryFn: api.getSkillTests, ...opts() });
+
+export const useSkillTestResults = () =>
+  useQuery({ queryKey: QK.skillTestResults, queryFn: api.getSkillTestResults, ...opts() });
+
+// ══════════════════════════════════════════════════════════════════════════════
+// REFERRALS / AFFILIATES
+// ══════════════════════════════════════════════════════════════════════════════
+export const useReferralSummary = () =>
+  useQuery({ queryKey: QK.referral, queryFn: api.getReferralSummary, ...opts() });
+
+// ══════════════════════════════════════════════════════════════════════════════
+// NDA / ACTIVITY / AUDIT
+// ══════════════════════════════════════════════════════════════════════════════
+export const useNdaDocuments = (filters = {}) =>
+  useQuery({ queryKey: QK.nda(filters), queryFn: () => api.getNdaDocuments(filters), ...opts() });
+
+export const useWorkspaceActivityLog = (filters = {}) =>
+  useQuery({ queryKey: QK.activityLog(filters), queryFn: () => api.getWorkspaceActivityLog(filters), ...shortOpts() });
 
 // ══════════════════════════════════════════════════════════════════════════════
 // PROFILE
@@ -628,3 +657,7 @@ export { useMyJobs as useClientJobs };
 export { useWallet as useClientWallet };
 export { useTransactions as useClientTransactions };
 export { useMyProposals as useClientProposals };
+
+export const useClientPublicProfile = (id) => useQuery({ queryKey: ['client', 'public-profile', id], queryFn: () => api.getClientPublicProfile(id), enabled: !!id });
+
+export const useInviteFreelancer = () => { const qc = useQueryClient(); return useMutation({ mutationFn: ({jobId, payload}) => api.inviteFreelancer(jobId, payload), onSuccess: () => { qc.invalidateQueries({ queryKey: ['client', 'jobs'] }); } }); };

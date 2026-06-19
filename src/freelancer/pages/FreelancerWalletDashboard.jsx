@@ -2,15 +2,23 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { DollarSign, ArrowUpRight, TrendingUp, Clock, Download, Briefcase, FileText, Check } from 'lucide-react';
+import { useFreelancerWallet } from '../services/freelancerHooks';
 
 export default function FreelancerWalletDashboard() {
-  const analytics = [
+  const { data: walletData, isLoading } = useFreelancerWallet();
+  const fallbackAnalytics = [
     { month: 'Jan', earnings: 1200 },
     { month: 'Feb', earnings: 2100 },
     { month: 'Mar', earnings: 1800 },
     { month: 'Apr', earnings: 3400 },
     { month: 'May', earnings: 2800 },
   ];
+  const analytics = Array.isArray(walletData?.analytics) ? walletData.analytics : fallbackAnalytics;
+  const metrics = walletData?.metrics || {
+    balance: 2450.00,
+    escrow: 1200.00,
+    withdrawn: 8400.00
+  };
 
   const maxEarnings = 4000;
 
@@ -67,7 +75,7 @@ export default function FreelancerWalletDashboard() {
           <p className="text-ink-tertiary text-xs font-body font-medium uppercase tracking-wide mb-1">
             Available for withdrawal
           </p>
-          <div className="font-mono font-bold text-4xl text-ink-primary mb-3">KES 4,250</div>
+          <div className="font-mono font-bold text-4xl text-ink-primary mb-3">KES {metrics.balance.toLocaleString()}</div>
           <div className="flex flex-wrap gap-2">
             <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-accent-light text-accent-dark text-xs font-body font-medium">
               <TrendingUp className="w-3 h-3" /> +15% this month
@@ -88,7 +96,7 @@ export default function FreelancerWalletDashboard() {
           <p className="text-ink-tertiary text-xs font-body font-medium uppercase tracking-wide mb-1">
             Work in progress (escrow)
           </p>
-          <div className="font-mono font-bold text-3xl text-ink-primary mb-2">KES 3,100</div>
+          <div className="font-mono font-bold text-3xl text-ink-primary mb-2">KES {metrics.escrow.toLocaleString()}</div>
           <div className="text-xs font-body text-accent DEFAULT inline-flex items-center gap-1">
             <Briefcase className="w-3.5 h-3.5" /> 2 active contracts
           </div>
@@ -104,7 +112,7 @@ export default function FreelancerWalletDashboard() {
           <p className="text-ink-tertiary text-xs font-body font-medium uppercase tracking-wide mb-1">
             In review
           </p>
-          <div className="font-mono font-bold text-3xl text-ink-primary mb-2">KES 850</div>
+          <div className="font-mono font-bold text-3xl text-ink-primary mb-2">KES {metrics.withdrawn.toLocaleString()}</div>
           <div className="text-xs font-body text-warn inline-flex items-center gap-1">
             <Clock className="w-3.5 h-3.5" /> Pending client approval
           </div>

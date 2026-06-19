@@ -1,4 +1,5 @@
 // ClientCollaborationHubPage.jsx
+import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -30,65 +31,47 @@ const useAuthStore = () => ({
 // ----------------------------------------------------------------------
 export default function ClientCollaborationHubPage() {
   const { user } = useAuthStore();
-  const [conversations, setConversations] = useState([]);
+  const queryClient = useQueryClient();
   const [activeChannel, setActiveChannel] = useState(null);
-  const [messages, setMessages] = useState([]);
   const [showRightPane, setShowRightPane] = useState(true);
   const [newMessage, setNewMessage] = useState('');
-  const [loadingMsgs, setLoadingMsgs] = useState(false);
-  const [loadingConversations, setLoadingConversations] = useState(true);
-  const [sending, setSending] = useState(false);
 
-  useEffect(() => {
-    const loadConversations = async () => {
-      try {
-        const convRes = await getConversations({ limit: 50 });
-        const items = convRes?.items || convRes || [];
-        setConversations(items);
-        if (items.length > 0 && !activeChannel) {
-          setActiveChannel(items[0].id);
-        }
-      } catch (err) {
-        console.error('Failed to load conversations', err);
-      } finally {
-        setLoadingConversations(false);
-      }
-    };
-    loadConversations();
-  }, []);
-
-  useEffect(() => {
-    const loadMessages = async () => {
-      if (!activeChannel) return;
-      setLoadingMsgs(true);
-      try {
-        const msgRes = await getMessages(activeChannel, { limit: 100, sort: 'createdAt:asc' });
-        const items = msgRes?.items || msgRes || [];
-        setMessages(items);
-        await markMessagesRead(activeChannel);
-      } catch (err) {
-        console.error('Failed to load messages', err);
-      } finally {
-        setLoadingMsgs(false);
-      }
-    };
-    loadMessages();
-  }, [activeChannel]);
-
-  const handleSend = async () => {
-    if (!newMessage.trim() || !activeChannel) return;
-    setSending(true);
-    try {
-      await sendMessage(activeChannel, newMessage.trim());
-      setNewMessage('');
-      const msgRes = await getMessages(activeChannel, { limit: 100, sort: 'createdAt:asc' });
-      setMessages(msgRes?.items || msgRes || []);
-    } catch (err) {
-      console.error('Failed to send message', err);
-    } finally {
-      setSending(false);
+  const { data: convData, isLoading: loadingConversations } = useQuery({
+    queryKey: ['client', 'conversations'],
+    queryFn: async () => {
+      const res = await getConversations({ limit: 50 });
+      const items = res?.items || res || [];
+      if (items.length > 0 && !activeChannel) setActiveChannel(items[0].id);
+      return items;
     }
+  });
+  const conversations = convData || [];
+
+  const { data: msgData, isLoading: loadingMsgs } = useQuery({
+    queryKey: ['client', 'messages', activeChannel],
+    queryFn: async () => {
+      if (!activeChannel) return [];
+      const msgRes = await getMessages(activeChannel, { limit: 100, sort: 'createdAt:asc' });
+      await markMessagesRead(activeChannel);
+      return msgRes?.items || msgRes || [];
+    },
+    enabled: !!activeChannel
+  });
+  const messages = msgData || [];
+
+  const sendMutation = useMutation({
+    mutationFn: async (msg) => sendMessage(activeChannel, msg),
+    onSuccess: () => {
+      setNewMessage('');
+      queryClient.invalidateQueries({ queryKey: ['client', 'messages', activeChannel] });
+    }
+  });
+
+  const handleSend = () => {
+    if (!newMessage.trim() || !activeChannel) return;
+    sendMutation.mutate(newMessage.trim());
   };
+  const sending = sendMutation.isPending;
 
   const getOtherParticipant = (conv) => {
     return (
@@ -405,3 +388,4 @@ export default function ClientCollaborationHubPage() {
     </div>
   );
 }
+

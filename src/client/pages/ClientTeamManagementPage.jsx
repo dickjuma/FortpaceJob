@@ -7,7 +7,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '../services/clientApi';
 import toast, { Toaster } from 'react-hot-toast';
-import ConfirmModal from '../../components/ui/ConfirmModal';
+import ConfirmModal from '../../platform/components/ui/ConfirmModal';
 
 // ── API Functions ─────────────────────────────────────────────────────────────
 async function getTeamMembers() {

@@ -118,6 +118,27 @@ export default function JobDetailsPage() {
     );
   }
 
+  // Safely map backend data
+  const safeJob = {
+    ...job,
+    createdAt: new Date(job.createdAt).toLocaleDateString(),
+    type: job.type === 'REMOTE' ? 'Remote' : (job.type || 'Job'),
+    budget: job.budgetRange || (job.budgetMin && job.budgetMax ? `$${job.budgetMin}-$${job.budgetMax}` : 'Negotiable'),
+    skills: (typeof job.skills === 'string' ? (() => { try { return JSON.parse(job.skills); } catch { return []; } })() : job.skills) || [],
+    client: {
+      name: job.client?.name || 'Unknown Client',
+      verified: job.client?.verified || false,
+      rating: job.client?.rating || 'New',
+      location: job.client?.location || 'Unknown Location',
+      createdAt: job.client?.createdAt,
+      paymentVerified: job.client?.paymentVerified || false,
+    },
+    milestones: job.milestones || [],
+    attachments: job.attachments || [],
+    projectLength: job.duration || 'Flexible',
+    experienceLevel: job.experienceLevel || 'Intermediate'
+  };
+
   const handleScrollToProposal = () => {
     document.getElementById('proposal-form')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -159,29 +180,29 @@ export default function JobDetailsPage() {
 
           {/* Job Header */}
           <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
-            <h1 className="font-display font-bold text-2xl text-brand-900 mb-4 leading-tight">{job.title}</h1>
+            <h1 className="font-display font-bold text-2xl text-brand-900 mb-4 leading-tight">{safeJob.title}</h1>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-body text-ink-secondary pb-5 mb-5 border-b border-border">
               <span className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-ink-tertiary" /> {job.createdAt}
+                <Clock className="w-4 h-4 text-ink-tertiary" /> {safeJob.createdAt}
               </span>
               <span className="flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-ink-tertiary" /> {job.location}
+                <MapPin className="w-4 h-4 text-ink-tertiary" /> {safeJob.location || 'Remote'}
               </span>
               <span className="flex items-center gap-1.5">
-                <Briefcase className="w-4 h-4 text-ink-tertiary" /> {job.type}
+                <Briefcase className="w-4 h-4 text-ink-tertiary" /> {safeJob.type}
               </span>
             </div>
 
             <div className="text-ink-secondary font-body leading-relaxed whitespace-pre-wrap mb-6">
-              {job.description}
+              {safeJob.description}
             </div>
 
             {/* Attachments */}
-            {job.attachments && job.attachments.length > 0 && (
+            {safeJob.attachments && safeJob.attachments.length > 0 && (
               <div className="mb-6">
                 <h3 className="font-body font-semibold text-ink-primary mb-3">Attachments</h3>
                 <div className="flex flex-wrap gap-3">
-                  {job.attachments.map((file, i) => (
+                  {safeJob.attachments.map((file, i) => (
                     <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg border border-border bg-surface-soft cursor-pointer hover:border-accent DEFAULT transition-all">
                       <div className="p-1.5 bg-white rounded-md border border-border">
                         <FileText className="w-4 h-4 text-accent DEFAULT" />
@@ -197,11 +218,11 @@ export default function JobDetailsPage() {
             )}
 
             {/* Skills */}
-            {job.skills && job.skills.length > 0 && (
+            {safeJob.skills && safeJob.skills.length > 0 && (
               <div>
                 <h3 className="font-body font-semibold text-ink-primary mb-3">Required skills</h3>
                 <div className="flex flex-wrap gap-2">
-                  {job.skills.map(skill => (
+                  {safeJob.skills.map(skill => (
                     <span key={skill} className="text-xs font-body font-medium bg-accent-light text-accent-dark px-3 py-1 rounded-full">
                       {skill}
                     </span>
@@ -212,13 +233,13 @@ export default function JobDetailsPage() {
           </div>
 
           {/* Milestones */}
-          {job.milestones && job.milestones.length > 0 && (
+          {safeJob.milestones && safeJob.milestones.length > 0 && (
             <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
               <h3 className="font-body font-semibold text-lg text-ink-primary mb-5 flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 text-accent DEFAULT" /> Project milestones
               </h3>
               <div className="space-y-4">
-                {job.milestones.map((milestone, i) => (
+                {safeJob.milestones.map((milestone, i) => (
                   <div key={i} className="flex items-center justify-between p-4 bg-surface-soft rounded-xl border border-border">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-accent-light flex items-center justify-center font-mono font-semibold text-accent-dark text-sm">
@@ -295,22 +316,22 @@ export default function JobDetailsPage() {
             <div className="mt-5 pt-5 border-t border-border">
               <div className="text-center mb-4">
                 <DollarSign className="w-6 h-6 text-accent DEFAULT mx-auto mb-1" />
-                <span className="font-mono font-bold text-xl text-ink-primary">{job.budget}</span>
-                <p className="text-xs text-ink-tertiary uppercase tracking-wide mt-0.5">{job.type}</p>
+                <span className="font-mono font-bold text-xl text-ink-primary">{safeJob.budget}</span>
+                <p className="text-xs text-ink-tertiary uppercase tracking-wide mt-0.5">{safeJob.type}</p>
               </div>
               <div className="grid grid-cols-2 gap-3 p-3 bg-surface-soft rounded-lg border border-border">
                 <div className="flex items-center gap-2">
                   <Briefcase className="w-4 h-4 text-ink-tertiary" />
                   <div>
                     <p className="text-xs text-ink-tertiary uppercase tracking-wide">Experience</p>
-                    <p className="text-sm font-body font-semibold text-ink-primary">{job.experienceLevel}</p>
+                    <p className="text-sm font-body font-semibold text-ink-primary">{safeJob.experienceLevel}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-ink-tertiary" />
                   <div>
                     <p className="text-xs text-ink-tertiary uppercase tracking-wide">Duration</p>
-                    <p className="text-sm font-body font-semibold text-ink-primary">{job.projectLength}</p>
+                    <p className="text-sm font-body font-semibold text-ink-primary">{safeJob.projectLength}</p>
                   </div>
                 </div>
               </div>
@@ -318,35 +339,35 @@ export default function JobDetailsPage() {
           </div>
 
           {/* Client Profile */}
-          {job.client && (
+          {safeJob.client && (
             <div className="bg-white border border-border rounded-2xl p-5 shadow-sm">
               <h3 className="font-body font-semibold text-ink-primary mb-4 text-sm uppercase tracking-wide">About the client</h3>
               <div className="space-y-3">
                 <div>
                   <p className="font-body font-semibold text-ink-primary flex items-center gap-2">
-                    {job.client.name}
-                    {job.client.verified && <ShieldCheck className="w-4 h-4 text-accent DEFAULT" />}
+                    {safeJob.client.name}
+                    {safeJob.client.verified && <ShieldCheck className="w-4 h-4 text-accent DEFAULT" />}
                   </p>
                   <div className="flex items-center gap-1 mt-1">
                     <Star className="w-3.5 h-3.5 fill-accent DEFAULT text-accent DEFAULT" />
-                    <span className="text-sm font-body font-semibold text-ink-primary">{job.client.rating || 'New'}</span>
+                    <span className="text-sm font-body font-semibold text-ink-primary">{safeJob.client.rating}</span>
                   </div>
                 </div>
 
                 <div className="pt-3 border-t border-border">
                   <div className="flex justify-between items-center text-xs mb-2">
                     <span className="text-ink-tertiary">Location</span>
-                    <span className="font-body font-medium text-ink-primary">{job.client.location}</span>
+                    <span className="font-body font-medium text-ink-primary">{safeJob.client.location}</span>
                   </div>
                   <div className="flex justify-between items-center text-xs">
                     <span className="text-ink-tertiary">Member since</span>
                     <span className="font-body font-medium text-ink-primary">
-                      {job.client.createdAt ? new Date(job.client.createdAt).getFullYear() : 'Recent'}
+                      {safeJob.client.createdAt ? new Date(safeJob.client.createdAt).getFullYear() : 'Recent'}
                     </span>
                   </div>
                 </div>
 
-                {job.client.paymentVerified && (
+                {safeJob.client.paymentVerified && (
                   <div className="mt-3 p-3 bg-accent-light rounded-lg flex items-start gap-2">
                     <ShieldCheck className="w-4 h-4 text-accent DEFAULT shrink-0 mt-0.5" />
                     <div>

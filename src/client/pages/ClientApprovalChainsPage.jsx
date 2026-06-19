@@ -1,36 +1,47 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
-  ShieldCheck, AlertTriangle, UserCheck, Plus, 
-  Settings, Users, DollarSign, ArrowRight, CheckCircle 
+  UserCheck, Plus, Settings 
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
+import Card from '../../platform/components/common/Card';
+import Button from '../../platform/components/common/Button';
 
 export default function ClientApprovalChainsPage() {
-  const [thresholds, setThresholds] = useState([
-    { id: 1, tier: 'Level 1: Auto-Release', limit: 'Up to KES 50,000', approver: 'Direct Manager / Auto' },
-    { id: 2, tier: 'Level 2: Department Head', limit: 'KES 50,001 - KES 150,000', approver: 'Product Director' },
-    { id: 3, tier: 'Level 3: Executive Board', limit: 'KES 150,001+', approver: 'Chief Financial Officer' }
-  ]);
+    const queryClient = useQueryClient();
+  const { data: thresholds } = useQuery({
+    queryKey: ['client', 'approvalThresholds'],
+    queryFn: () => [
+      { id: 1, tier: 'Level 1: Auto-Release', limit: 'Up to KES 50,000', approver: 'Direct Manager / Auto' },
+      { id: 2, tier: 'Level 2: Department Head', limit: 'KES 50,001 - KES 150,000', approver: 'Product Director' },
+      { id: 3, tier: 'Level 3: Executive Board', limit: 'KES 150,001+', approver: 'Chief Financial Officer' }
+    ]
+  });
 
-  const [pendingApprovals, setPendingApprovals] = useState([
-    { id: 'APP-092', contract: 'Substation Site Construction Allowance', amount: 125000, requestedBy: 'Sarah Jenkins (Ops)', tier: 'Level 2' },
-    { id: 'APP-074', contract: 'Emergency Structural Repairs Survey', amount: 180000, requestedBy: 'Elena Rostova (QA)', tier: 'Level 3' }
-  ]);
+  const { data: pendingApprovalsData } = useQuery({
+    queryKey: ['client', 'pendingApprovals'],
+    queryFn: () => [
+      { id: 'APP-092', contract: 'Substation Site Construction Allowance', amount: 125000, requestedBy: 'Sarah Jenkins (Ops)', tier: 'Level 2' },
+      { id: 'APP-074', contract: 'Emergency Structural Repairs Survey', amount: 180000, requestedBy: 'Elena Rostova (QA)', tier: 'Level 3' }
+    ]
+  });
+  const pendingApprovals = pendingApprovalsData || [];
+
+  const approveMutation = useMutation({
+    mutationFn: async ({ id, contract, amount }) => {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      return id;
+    },
+    onSuccess: (id, { contract, amount }) => {
+      toast.success(`Budget authorization successful! Escrow contract initialized. ??`);
+      queryClient.setQueryData(['client', 'pendingApprovals'], (old) => old.filter(a => a.id !== id));
+    },
+    onError: () => toast.error('Authorization failed.')
+  });
 
   const handleApprove = (id, contract, amount) => {
-    toast.promise(
-      new Promise(resolve => setTimeout(resolve, 1500)),
-      {
-        loading: `Authorizing KES ${amount.toLocaleString()} allocation for ${contract}...`,
-        success: () => {
-          setPendingApprovals(prev => prev.filter(a => a.id !== id));
-          return `Budget authorization successful! Escrow contract initialized. 🔒`;
-        },
-        error: 'Authorization failed.'
-      }
-    );
+    toast.loading('Authorizing KES allocation for...', { id: 'auth' });
+    approveMutation.mutateAsync({ id, contract, amount }).finally(() => toast.dismiss('auth'));
   };
 
   return (
@@ -57,7 +68,7 @@ export default function ClientApprovalChainsPage() {
             <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-1.5"><Settings className="w-4 h-4 text-success" /> Threshold Matrix</h3>
             
             <div className="space-y-4">
-              {thresholds.map(rule => (
+              {(thresholds || []).map(rule => (
                 <div key={rule.id} className="p-4 bg-white/5 border border-white/5 rounded-2xl space-y-2">
                   <h4 className="text-xs font-black text-white">{rule.tier}</h4>
                   <div className="flex justify-between text-[10px] font-bold text-light-gray/60">
@@ -114,5 +125,6 @@ export default function ClientApprovalChainsPage() {
     </div>
   );
 }
+
 
 

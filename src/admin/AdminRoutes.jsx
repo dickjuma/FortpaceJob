@@ -4,14 +4,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AdminLayout from "./layouts/AdminLayout";
 import AdminAuthGuard from "./components/AdminAuthGuard";
 import DashboardPage from "./pages/DashboardPage";
-import { 
-  FinancialHubPage, 
-  FeeStructurePage, 
+import {
+  FinancialHubPage,
+  FeeStructurePage,
   TaxCompliancePage
-} from "../modules/financial-control";
+} from "./finance";
 import DisputeResolution from "./pages/DisputeResolution";
-import AdminMessagesPage from "../pages/admin/Messages";
-import { UsersPage } from "../pages/admin/Users";
+import AdminMessagesPage from "./pages/Messages";
 import { UserManagementRoutes } from "./UserManagementModule";
 import UserRiskPage from "./pages/marketplace/UserRiskPage";
 import MarketplaceDashboardPage from "./pages/marketplace/MarketplaceDashboardPage";
@@ -59,18 +58,41 @@ const queryClient = new QueryClient({
 // ─── Marketplace Action Configs ────────────────────────────────────────────────
 const marketplaceJobActions = [
   {
-    label: "Approve",
-    endpoint: (row) => `/marketplace/jobs/${row.id || row._id}/approve`,
-    successMessage: "Job approved.",
-    confirmMessage: "Approve this marketplace job?",
+    label: "Feature",
+    endpoint: (row) => `/jobs/admin/${row.id || row._id}/feature`,
+    method: "post",
+    successMessage: "Job featured.",
+    confirmMessage: "Feature this job?",
+  },
+  {
+    label: "Flag",
+    endpoint: (row) => `/jobs/admin/${row.id || row._id}/intervene`,
+    method: "post",
+    variant: "warning",
+    requireReason: true,
+    body: (_row, reason) => ({ action: "FLAG", notes: reason }),
+    successMessage: "Job flagged.",
+    confirmMessage: "Flag this job?",
   },
   {
     label: "Reject",
-    endpoint: (row) => `/marketplace/jobs/${row.id || row._id}/reject`,
+    endpoint: (row) => `/jobs/admin/${row.id || row._id}/intervene`,
+    method: "post",
     variant: "danger",
     requireReason: true,
+    body: (_row, reason) => ({ action: "REJECT", notes: reason }),
     successMessage: "Job rejected.",
-    confirmMessage: "Reject this marketplace job?",
+    confirmMessage: "Reject this job?",
+  },
+  {
+    label: "Close",
+    endpoint: (row) => `/jobs/admin/${row.id || row._id}/force-status`,
+    method: "patch",
+    variant: "warning",
+    requireReason: true,
+    body: (_row, reason) => ({ status: "CLOSED", reason }),
+    successMessage: "Job closed.",
+    confirmMessage: "Force-close this job?",
   },
 ];
 
@@ -217,6 +239,18 @@ const refundActions = [
   },
 ];
 
+const orderActions = [
+  {
+    label: "Refund",
+    endpoint: (row) => `/orders/admin/${row.id || row._id || row.orderId}/refund`,
+    method: "post",
+    requireReason: true,
+    body: (_row, reason) => ({ reason }),
+    successMessage: "Order refunded.",
+    confirmMessage: "Refund this order?",
+  },
+];
+
 const subscriptionActions = [
   {
     label: "Cancel",
@@ -308,16 +342,16 @@ const AdminRoutes = () => {
           />
 
           {/* User Management Module - MOUNTED HERE */}
-          <Route path="users-management/*" element={<UserManagementRoutes />} />
-          <Route path="users" element={<UsersPage />} />
+          <Route path="users/*" element={<UserManagementRoutes />} />
 
           {/* Marketplace Management System */}
           <Route path="marketplace" element={<MarketplaceDashboardPage />} />
           <Route
             path="marketplace/jobs"
-            element={<ProductionDataPage title="Project Review Queue" endpoint="/marketplace/jobs" actions={marketplaceJobActions} />}
+            element={<ProductionDataPage title="Project Review Queue" endpoint="/jobs/admin/all" actions={marketplaceJobActions} />}
           />
           <Route path="marketplace/gigs" element={<GigsManagementPage />} />
+          <Route path="marketplace/orders" element={<ProductionDataPage title="Gig Orders" endpoint="/orders/admin/all" actions={orderActions} />} />
           <Route path="marketplace/proposals" element={<ProposalsReviewPage />} />
           <Route path="marketplace/contracts" element={<MarketplaceContractsPage />} />
           <Route
@@ -341,7 +375,7 @@ const AdminRoutes = () => {
           <Route path="marketplace/proposal-moderation" element={<ProposalModerationDashboard />} />
           <Route path="marketplace/fraud-center" element={<FraudDetectionCenter />} />
           <Route path="marketplace/proposal-audit" element={<ProposalAuditLogsPage />} />
-          
+
           {/* Legacy/Specific Marketplace Pages */}
           <Route path="marketplace/user-risk" element={<UserRiskPage />} />
           <Route path="marketplace/moderation" element={<ModerationDashboard />} />

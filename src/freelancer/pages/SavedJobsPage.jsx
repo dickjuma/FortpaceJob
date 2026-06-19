@@ -217,7 +217,7 @@ export default function SavedJobsPage() {
             const job = item.job || item;
             const skills = job.skills
               ? typeof job.skills === 'string'
-                ? JSON.parse(job.skills)
+                ? (() => { try { return JSON.parse(job.skills); } catch { return []; } })()
                 : job.skills
               : job.tags || [];
             const savedDate = item.createdAt || job.savedAt || new Date().toISOString();

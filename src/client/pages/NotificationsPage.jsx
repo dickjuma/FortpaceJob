@@ -1,10 +1,32 @@
 // NotificationsPage.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQueryClient } from '@tanstack/react-query';
 import {
-  Bell, CheckCircle, AlertCircle, DollarSign, Briefcase, MessageSquare, Star, Info, Check, Trash2, RefreshCw,
+  Bell, CheckCircle, AlertCircle, DollarSign, Briefcase, MessageSquare, Star, Info, Check, RefreshCw,
 } from 'lucide-react';
 import { useNotifications, useMarkNotificationRead, useMarkAllRead } from '../services/clientHooks';
+import EventBus from '../../platform/notification/EventBus';
+
+const MARKETPLACE_EVENTS = [
+  'ORDER_CREATED',
+  'ORDER_ACCEPTED',
+  'ORDER_REJECTED',
+  'ORDER_DELIVERED',
+  'ORDER_REVISION_REQUESTED',
+  'ORDER_REVISION_APPROVED',
+  'ORDER_COMPLETED',
+  'ORDER_CANCELLED',
+  'ORDER_DISPUTED',
+  'JOB_CREATED',
+  'JOB_PUBLISHED',
+  'JOB_BID_SUBMITTED',
+  'JOB_ASSIGNED',
+  'JOB_CLOSED',
+  'GIG_CREATED',
+  'GIG_ORDERED',
+  'GIG_DELIVERED',
+];
 
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
@@ -32,20 +54,20 @@ function timeAgo(dateStr) {
   return `${Math.floor(hrs / 24)}d ago`;
 }
 
-// Animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
-};
-const itemVariants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
-};
-const buttonTap = { scale: 0.97 };
-
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState('All');
   const [page, setPage] = useState(1);
+  const qc = useQueryClient();
+
+  useEffect(() => {
+    const handlers = MARKETPLACE_EVENTS.map((event) => [
+      event,
+      () => qc.invalidateQueries({ queryKey: ['client', 'notifications'] }),
+    ]);
+
+    handlers.forEach(([event, handler]) => EventBus.on(event, handler));
+    return () => handlers.forEach(([event, handler]) => EventBus.off(event, handler));
+  }, [qc]);
 
   const filters = {
     page,
@@ -162,7 +184,6 @@ export default function NotificationsPage() {
           </div>
         ) : (
           <motion.div
-            variants={containerVariants}
             initial="hidden"
             animate="visible"
             className="space-y-2"
@@ -174,7 +195,6 @@ export default function NotificationsPage() {
                 return (
                   <motion.div
                     key={notif.id}
-                    variants={itemVariants}
                     whileHover={{ y: -2, boxShadow: '0 8px 24px rgba(0,0,0,0.06)' }}
                     className={cn(
                       'relative flex items-start gap-4 p-4 rounded-xl border transition-all cursor-default',

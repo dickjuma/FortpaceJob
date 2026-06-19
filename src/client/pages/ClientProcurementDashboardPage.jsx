@@ -1,4 +1,5 @@
 // ClientProcurementDashboardPage.jsx
+import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -19,15 +20,23 @@ import {
 
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
-const VENDORS = [
-  { id: 'V-001', name: 'Sarah Mitchell', category: 'Software Development', spend: 45200, status: 'Active', trend: 'up' },
-  { id: 'V-002', name: 'Global Design LLC', category: 'Design', spend: 28450, status: 'Active', trend: 'down' },
-  { id: 'V-003', name: 'Alex Rivera', category: 'Content Creation', spend: 12100, status: 'Pending Approval', trend: 'up' },
-  { id: 'V-004', name: 'David Kim', category: 'Engineering', spend: 8500, status: 'Active', trend: 'neutral' },
-];
+
 
 export default function ClientProcurementDashboardPage() {
   const [searchTerm, setSearchTerm] = useState('');
+
+  const { data: vendorsData } = useQuery({
+    queryKey: ['client', 'vendors'],
+    queryFn: async () => {
+      return [
+        { id: 'V-001', name: 'Sarah Mitchell', category: 'Software Development', spend: 45200, status: 'Active', trend: 'up' },
+        { id: 'V-002', name: 'Global Design LLC', category: 'Design', spend: 28450, status: 'Active', trend: 'down' },
+        { id: 'V-003', name: 'Alex Rivera', category: 'Content Creation', spend: 12100, status: 'Pending Approval', trend: 'up' },
+        { id: 'V-004', name: 'David Kim', category: 'Engineering', spend: 8500, status: 'Active', trend: 'neutral' }
+      ];
+    }
+  });
+  const VENDORS = vendorsData || [];
 
   const filteredVendors = VENDORS.filter(
     (v) =>
@@ -336,3 +345,4 @@ export default function ClientProcurementDashboardPage() {
     </div>
   );
 }
+

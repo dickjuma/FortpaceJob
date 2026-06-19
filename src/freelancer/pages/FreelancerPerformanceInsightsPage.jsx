@@ -6,8 +6,11 @@ import {
   Clock, Zap, Trophy, Target, Award, Sparkles,
   BarChart3, PieChart, Check
 } from 'lucide-react';
+import { useFreelancerPerformanceInsights } from '../services/freelancerHooks';
 
 export default function FreelancerPerformanceInsightsPage() {
+  const { data: response, isLoading } = useFreelancerPerformanceInsights();
+  const insightsData = response?.data || response || {};
   const [timeRange, setTimeRange] = useState('This Month');
   const [showSuccess, setShowSuccess] = useState(null);
 
@@ -16,19 +19,25 @@ export default function FreelancerPerformanceInsightsPage() {
     setTimeout(() => setShowSuccess(null), 2000);
   };
 
-  const kpis = [
+  const fallbackKpis = [
     { label: 'Profile views', value: '3,240', trend: '+12%', icon: Eye, trendPositive: true },
     { label: 'Proposal success', value: '28%', trend: '+4%', icon: MousePointerClick, trendPositive: true },
     { label: 'Response time', value: '1.2 hr', trend: '-0.5h', icon: Clock, trendPositive: true },
     { label: 'Client satisfaction', value: '4.9/5', trend: 'Top 5%', icon: Star, trendPositive: true }
   ];
 
-  const rankingFactors = [
+
+  const fallbackRankingFactors = [
     { label: 'Job success score', score: 98, weight: '40%' },
     { label: 'Profile completeness', score: 100, weight: '20%' },
     { label: 'Responsiveness', score: 85, weight: '20%' },
     { label: 'Recent earnings', score: 90, weight: '20%' }
   ];
+
+
+  const kpis = insightsData.kpis || fallbackKpis;
+  const rankingFactors = insightsData.rankingFactors || fallbackRankingFactors;
+
 
   return (
     <motion.div

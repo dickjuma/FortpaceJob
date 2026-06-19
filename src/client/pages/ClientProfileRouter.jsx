@@ -1,7 +1,7 @@
 import React from 'react';
 import { Loader2 } from 'lucide-react';
 import { useMyProfile } from '../services/clientHooks';
-import { normalizeClientType } from '../../common/constants/accountTypes';
+import { normalizeClientType } from '../../platform/common/constants/accountTypes';
 import ClientProfilePage from './ClientProfilePage';
 import ClientCompanyProfilePage from './ClientCompanyProfilePage';
 

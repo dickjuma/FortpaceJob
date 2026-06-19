@@ -4,13 +4,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   MapPin, Search, Plus, X, Award, Briefcase, ChevronRight, Star, DollarSign, Clock, Eye, Check
 } from 'lucide-react';
+import { useGetJobs } from '../services/freelancerHooks';
 
 export default function NearbyJobsPage() {
-  const [jobs, setJobs] = useState([
+  const { data: response, isLoading } = useGetJobs({ type: 'nearby' });
+  const apiJobs = response?.data || response || [];
+
+  const fallbackJobs = [
     { id: 1, title: 'On-site Network infrastructure Upgrade', client: 'Apex Holdings', distance: '2.4 miles', budget: 1800, type: 'Fixed Price', duration: '3 days', location: 'San Francisco, CA' },
     { id: 2, title: 'Corporate Video Production & Photography', client: 'Cloudfront Media', distance: '5.1 miles', budget: 3500, type: 'Fixed Price', duration: '5 days', location: 'Oakland, CA' },
     { id: 3, title: 'Enterprise Firewall Security Audit', client: 'Bay Area Cyberlabs', distance: '0.8 miles', budget: 150, type: 'Hourly Rate', duration: '20 hours', location: 'San Francisco, CA' }
-  ]);
+  ];
+
+  const jobs = apiJobs.length > 0 ? apiJobs : fallbackJobs;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuccess, setShowSuccess] = useState(null);

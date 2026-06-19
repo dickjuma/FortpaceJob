@@ -21,6 +21,7 @@ export const adminAuthAPI = {
   setupStart: (payload) => api.post('/setup/start', payload).then(unwrap),
   setupConfirm: (payload) => api.post('/setup/confirm', payload).then(unwrap),
   login: (payload) => api.post('/login', payload).then(unwrap),
+  sendEmailOtp: (payload) => api.post('/send-email-otp', payload).then(unwrap),
   verifyTotp: (payload) => api.post('/verify-totp', payload).then(unwrap),
   verifyEmailOtp: (payload) => api.post('/verify-email-otp', payload).then(unwrap),
   verifyRecoveryCode: (payload) => api.post('/verify-recovery-code', payload).then(unwrap),

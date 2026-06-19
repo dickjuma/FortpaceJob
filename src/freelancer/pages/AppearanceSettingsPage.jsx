@@ -2,12 +2,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, Sun, Moon, Laptop, Layout, Check, Palette, Sparkles } from 'lucide-react';
+import { useUpdateFreelancerSettings } from '../services/freelancerHooks';
 
 export default function AppearanceSettingsPage() {
   const [theme, setTheme] = useState('system'); // 'light' | 'dark' | 'system'
   const [sidebarLayout, setSidebarLayout] = useState('expanded'); // 'expanded' | 'collapsed'
   const [accentColor, setAccentColor] = useState('green'); // 'green' | 'blue' | 'amber' | 'rose'
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
+  
+  const updateSettings = useUpdateFreelancerSettings();
 
   const handleSelectTheme = (mode) => {
     setTheme(mode);
@@ -18,8 +21,12 @@ export default function AppearanceSettingsPage() {
   };
 
   const handleSave = () => {
-    setShowSaveSuccess(true);
-    setTimeout(() => setShowSaveSuccess(false), 3000);
+    updateSettings.mutate({ theme, accentColor, sidebarLayout }, {
+      onSuccess: () => {
+        setShowSaveSuccess(true);
+        setTimeout(() => setShowSaveSuccess(false), 3000);
+      }
+    });
   };
 
   const accentColors = [

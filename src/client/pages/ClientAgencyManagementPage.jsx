@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { 
   Users, 
   Briefcase, 
@@ -13,14 +14,20 @@ import {
   Plus
 } from 'lucide-react';
 
-const agenciesData = [
-  { id: 'AG-1001', name: 'Apex Digital Solutions', type: 'Software Development', rating: 4.9, activeWorkers: 12, escrow: 45000, status: 'Active' },
-  { id: 'AG-1002', name: 'Horizon Field Ops', type: 'Site Surveying', rating: 4.7, activeWorkers: 34, escrow: 125000, status: 'Active' },
-  { id: 'AG-1003', name: 'Global Marketing Hub', type: 'Marketing', rating: 4.5, activeWorkers: 8, escrow: 12000, status: 'Pending Review' },
-];
+
 
 export default function ClientAgencyManagementPage() {
-  const [agencies] = useState(agenciesData);
+    const { data: agenciesData } = useQuery({
+    queryKey: ['client', 'agencies'],
+    queryFn: async () => {
+      return [
+        { id: 'AG-1001', name: 'Apex Digital Solutions', type: 'Software Development', rating: 4.9, activeWorkers: 12, escrow: 45000, status: 'Active' },
+        { id: 'AG-1002', name: 'Horizon Field Ops', type: 'Site Surveying', rating: 4.7, activeWorkers: 34, escrow: 125000, status: 'Active' },
+        { id: 'AG-1003', name: 'Global Marketing Hub', type: 'Marketing', rating: 4.5, activeWorkers: 8, escrow: 12000, status: 'Pending Review' }
+      ];
+    }
+  });
+  const agencies = agenciesData || [];
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-200 p-6 font-sans">
@@ -221,5 +228,6 @@ export default function ClientAgencyManagementPage() {
     </div>
   );
 }
+
 
 

@@ -7,12 +7,19 @@ import {
   ChevronUp, CheckCircle2, AlertCircle, HelpCircle,
   FileText, Wand2, Type, X, Check
 } from 'lucide-react';
+import { useGetGigFaqs, useUpdateGigFaqs } from '../services/freelancerHooks';
 
 export default function GigDescriptionFaqPage() {
-  const [description, setDescription] = useState('');
-  const [faqs, setFaqs] = useState([
+  const { data: response, isLoading } = useGetGigFaqs();
+  const apiData = response?.data || response;
+  const updateFaqs = useUpdateGigFaqs();
+
+  const [description, setDescription] = useState(apiData?.description || '');
+  
+  const fallbackFaqs = [
     { id: 1, question: 'Do you provide the source files?', answer: 'Yes, the source files are included in the Standard and Premium packages.' }
-  ]);
+  ];
+  const faqs = apiData?.faqs || fallbackFaqs;
   const [newFaq, setNewFaq] = useState({ question: '', answer: '' });
   const [isFaqFormOpen, setIsFaqFormOpen] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState(1);
@@ -35,19 +42,28 @@ export default function GigDescriptionFaqPage() {
   const addFaq = () => {
     if (newFaq.question.trim() && newFaq.answer.trim()) {
       const newId = Date.now();
-      setFaqs([...faqs, { ...newFaq, id: newId }]);
-      setNewFaq({ question: '', answer: '' });
-      setIsFaqFormOpen(false);
-      setExpandedFaq(newId);
-      setShowSuccess({ message: 'FAQ added successfully' });
-      setTimeout(() => setShowSuccess(null), 2000);
+      const updatedFaqs = [...faqs, { ...newFaq, id: newId }];
+      
+      updateFaqs.mutate({ faqs: updatedFaqs }, {
+        onSuccess: () => {
+          setNewFaq({ question: '', answer: '' });
+          setIsFaqFormOpen(false);
+          setExpandedFaq(newId);
+          setShowSuccess({ message: 'FAQ added successfully' });
+          setTimeout(() => setShowSuccess(null), 2000);
+        }
+      });
     }
   };
 
   const removeFaq = (id) => {
-    setFaqs(faqs.filter(f => f.id !== id));
-    setShowSuccess({ message: 'FAQ removed' });
-    setTimeout(() => setShowSuccess(null), 2000);
+    const updatedFaqs = faqs.filter(f => f.id !== id);
+    updateFaqs.mutate({ faqs: updatedFaqs }, {
+      onSuccess: () => {
+        setShowSuccess({ message: 'FAQ removed' });
+        setTimeout(() => setShowSuccess(null), 2000);
+      }
+    });
   };
 
   const handleAiRewrite = () => {

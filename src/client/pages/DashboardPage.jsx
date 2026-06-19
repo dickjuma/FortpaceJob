@@ -6,7 +6,7 @@ import {
   Users, Activity, BellRing, UserCheck, AlertTriangle,
   Calendar, ShieldCheck, Download, Video, ChevronRight, Plus, Star
 } from 'lucide-react';
-import { useAuthStore } from '../../common/authStore';
+import { useAuthStore } from '../../platform/common/authStore';
 import { useClientDashboard, useWallet, useInterviews, useMyContracts } from '../services/clientHooks';
 
 const cn = (...classes) => classes.filter(Boolean).join(' ');

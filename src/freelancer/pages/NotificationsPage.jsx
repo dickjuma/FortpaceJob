@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, CheckCircle2, Info, AlertCircle, Check } from 'lucide-react';
 import { useNotifications } from '../services/freelancerHooks';
-import { api } from '../../common/services/api';
+import { api } from '../../platform/common/services/api';
 
 export default function NotificationsPage() {
   const [toast, setToast] = useState(null);
-  const { data: notifications = [], isLoading, refetch } = useNotifications();
+  const [filter, setFilter] = useState('All');
+  const { data: notifications = [], refetch } = useNotifications();
 
   const showToast = (message) => {
     setToast({ message });
@@ -44,6 +45,7 @@ export default function NotificationsPage() {
   };
 
   const unreadCount = notifications.filter(n => !n.isRead && !n.read).length;
+  const filteredNotifications = filter === 'All' ? notifications : notifications.filter((notification) => String(notification.type || '').toLowerCase() === filter.toLowerCase());
 
   return (
     <motion.div
@@ -81,6 +83,15 @@ export default function NotificationsPage() {
 
         {notifications.length > 0 && (
           <div className="flex gap-3">
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="rounded-lg border border-border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-900"
+            >
+              {['All', 'success', 'info', 'warning'].map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
             <button
               onClick={markAllAsRead}
               className="px-4 py-2 rounded-lg border border-border text-ink-primary hover:bg-surface-muted font-body font-medium text-sm transition-colors"
@@ -93,7 +104,7 @@ export default function NotificationsPage() {
 
       {/* Notifications List */}
       <div className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
-        {notifications.length === 0 ? (
+        {filteredNotifications.length === 0 ? (
           <div className="text-center py-16">
             <Bell className="w-16 h-16 text-ink-tertiary mx-auto mb-4" />
             <h3 className="font-body font-semibold text-lg text-ink-primary mb-1">No notifications</h3>
@@ -109,7 +120,7 @@ export default function NotificationsPage() {
               </div>
             )}
             <ul className="divide-y divide-border">
-              {notifications.map((notif, idx) => {
+              {filteredNotifications.map((notif, idx) => {
                 const styles = getTypeStyles(notif.type);
                 const Icon = styles.icon;
                 return (

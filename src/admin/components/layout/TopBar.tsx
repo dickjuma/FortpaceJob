@@ -22,7 +22,8 @@ const TopBar: React.FC = () => {
   const { toggleSidebar, toggleCommandPalette } = useUIStore();
   const { user, logout } = useAuthStore();
   const { unreadCount } = useNotificationStore();
-  const config = user ? ROLE_CONFIG[user.role] : null;
+  const roleKey = user?.role?.toLowerCase();
+  const config = user ? ROLE_CONFIG[roleKey] || ROLE_CONFIG['super_admin'] : null;
 
   return (
     <header className="h-16 shrink-0 flex items-center justify-between px-4 md:px-8 border-b border-surface-border dark:border-surface-dark-border bg-surface/80 dark:bg-surface-dark/80 backdrop-blur-md sticky top-0 z-40">

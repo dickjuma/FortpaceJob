@@ -10,26 +10,33 @@ import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis,
   CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell
 } from 'recharts';
-
-const TRAFFIC_DATA = [
-  { date: 'Mon', impressions: 4000, clicks: 240 },
-  { date: 'Tue', impressions: 3000, clicks: 139 },
-  { date: 'Wed', impressions: 2000, clicks: 980 },
-  { date: 'Thu', impressions: 2780, clicks: 390 },
-  { date: 'Fri', impressions: 1890, clicks: 480 },
-  { date: 'Sat', impressions: 2390, clicks: 380 },
-  { date: 'Sun', impressions: 3490, clicks: 430 },
-];
-
-const DEMOGRAPHICS_DATA = [
-  { name: 'United States', value: 45, color: '#2563EB' },
-  { name: 'United Kingdom', value: 25, color: '#16A34A' },
-  { name: 'Canada', value: 15, color: '#D97706' },
-  { name: 'Australia', value: 15, color: '#DC2626' },
-];
+import { useGigAnalytics } from '../services/freelancerHooks';
 
 export default function GigAnalyticsPage() {
-  const [timeRange, setTimeRange] = useState('30d');
+  const { data: response, isLoading } = useGigAnalytics();
+  const analyticsData = response?.data || response || {};
+  const [timeRange, setTimeRange] = useState('Last 7 Days');
+  const [activeGig, setActiveGig] = useState('All Gigs');
+  
+  const fallbackTraffic = [
+    { date: 'Mon', impressions: 4000, clicks: 240 },
+    { date: 'Tue', impressions: 3000, clicks: 139 },
+    { date: 'Wed', impressions: 2000, clicks: 980 },
+    { date: 'Thu', impressions: 2780, clicks: 390 },
+    { date: 'Fri', impressions: 1890, clicks: 480 },
+    { date: 'Sat', impressions: 2390, clicks: 380 },
+    { date: 'Sun', impressions: 3490, clicks: 430 },
+  ];
+
+  const fallbackDemographics = [
+    { name: 'United States', value: 45, color: '#2563EB' },
+    { name: 'United Kingdom', value: 25, color: '#16A34A' },
+    { name: 'Canada', value: 15, color: '#D97706' },
+    { name: 'Australia', value: 15, color: '#DC2626' },
+  ];
+
+  const TRAFFIC_DATA = analyticsData.traffic || fallbackTraffic;
+  const DEMOGRAPHICS_DATA = analyticsData.demographics || fallbackDemographics;
 
   const stats = [
     { label: 'Impressions', value: '18.4K', trend: '+12%', isUp: true, icon: Eye, bg: 'bg-accent-light', color: 'text-accent DEFAULT' },

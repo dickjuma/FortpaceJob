@@ -1,3 +1,5 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 // ClientWalletPage.jsx
 // Self-contained Client Wallet page with design tokens, framer-motion animations,
 // and local mock data. No external dependencies.
@@ -34,90 +36,71 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
 // Main Component
 // ----------------------------------------------------------------------
 export default function ClientWalletPage() {
-  const [wallet, setWallet] = useState(null);
-  const [transactions, setTransactions] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const queryClient = useQueryClient();
   const [depositAmount, setDepositAmount] = useState('');
   const [depositPhone, setDepositPhone] = useState('');
-  const [isDepositing, setIsDepositing] = useState(false);
   const [toast, setToast] = useState(null);
 
-  // Show toast notification
-  const showToast = (type, message, duration = 3000) => {
-    setToast({ type, message });
-    setTimeout(() => setToast(null), duration);
-  };
-
-  // Load wallet data and transactions
-  const loadWalletData = async () => {
-    try {
-      const walletData = await getWallet();
-      setWallet(walletData || {});
-      const txData = await getTransactions({ limit: 50, sort: 'createdAt:desc' });
-      setTransactions(txData?.items || txData || []);
-      setError('');
-    } catch (err) {
-      setError('Failed to load wallet data');
-      showToast('error', 'Failed to load wallet data');
+  const { data: walletData, isLoading: isWalletLoading, error: walletError, refetch: refetchWallet } = useQuery({
+    queryKey: ['client', 'wallet'],
+    queryFn: async () => {
+      const data = await getWallet();
+      return data || {};
     }
-  };
+  });
 
-  const loadTransactions = async () => {
-    try {
-      const txData = await getTransactions({ limit: 50, sort: 'createdAt:desc' });
-      setTransactions(txData?.items || txData || []);
-    } catch (err) {
-      console.error('Failed to load transactions', err);
+  const { data: transactionsData, isLoading: isTxLoading, refetch: refetchTx } = useQuery({
+    queryKey: ['client', 'transactions'],
+    queryFn: async () => {
+      const data = await getTransactions({ limit: 50, sort: 'createdAt:desc' });
+      return data?.items || data || [];
     }
-  };
+  });
 
-  useEffect(() => {
-    loadWalletData();
-  }, []);
+  const isLoading = isWalletLoading || isTxLoading;
+  const error = walletError ? walletError.message : '';
+  const wallet = walletData;
+  const transactions = transactionsData || [];
 
-  // Handle M-Pesa deposit
-  const handleMpesaDeposit = async (e) => {
+  const depositMutation = useMutation({
+    mutationFn: async ({ amount, phone }) => {
+      return await depositToWallet({ provider: 'MPESA', amount, phone });
+    },
+    onSuccess: () => {
+      toast.success('STK Push sent successfully!');
+      setDepositAmount('');
+      setDepositPhone('');
+      refetchWallet();
+      refetchTx();
+    },
+    onError: (err) => {
+      toast.error(err?.message || 'Failed to trigger M-Pesa STK Push.');
+    }
+  });
+
+  const handleMpesaDeposit = (e) => {
     e.preventDefault();
     if (!depositPhone.trim()) {
-      showToast('error', 'Safaricom number is required.');
+      toast.error('Safaricom number is required.');
       return;
     }
     const amt = parseFloat(depositAmount);
     if (!amt || amt <= 0) {
-      showToast('error', 'Invalid deposit amount.');
+      toast.error('Invalid deposit amount.');
       return;
     }
-
-    // Simple confirm dialog (no external UI)
-    const ok = window.confirm(
-      `Deposit KES ${amt.toLocaleString()} via M-Pesa STK Push to ${depositPhone}?`
-    );
+    const ok = window.confirm("Deposit KES  via M-Pesa STK Push to ?");
     if (!ok) return;
-
-    setIsDepositing(true);
-    showToast('info', 'Sending M-Pesa STK Push request...');
-
-    try {
-      await depositToWallet({ provider: 'MPESA', amount: amt, phone: depositPhone });
-      showToast('success', 'STK Push sent successfully!');
-      setDepositAmount('');
-      setDepositPhone('');
-      await loadWalletData();
-      await loadTransactions();
-    } catch (err) {
-      showToast('error', err?.message || 'Failed to trigger M-Pesa STK Push.');
-    } finally {
-      setIsDepositing(false);
-    }
+    toast.success('info', 'Sending M-Pesa STK Push request...');
+    depositMutation.mutate({ amount: amt, phone: depositPhone });
   };
 
-  // Manual refresh
+  const isDepositing = depositMutation.isPending;
+
   const handleRefresh = async () => {
-    setIsLoading(true);
-    await loadWalletData();
-    setIsLoading(false);
-    showToast('success', 'Wallet balance refreshed');
+    await refetchWallet();
+    await refetchTx();
+    toast.success('Wallet balance refreshed');
   };
 
   // Animation variants
@@ -383,3 +366,4 @@ export default function ClientWalletPage() {
     </div>
   );
 }
+

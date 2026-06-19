@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Calendar, MapPin, Clock, Globe, Save, Check, Plus, Trash2, CalendarDays, X
 } from 'lucide-react';
+import { useUpdateAvailability } from '../services/freelancerHooks';
 
 export default function AvailabilitySchedulingPage() {
   const [capacity, setCapacity] = useState('full_time');
@@ -20,7 +21,8 @@ export default function AvailabilitySchedulingPage() {
     sunday: { active: false, start: '10:00', end: '14:00' }
   });
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  
+  const updateAvailability = useUpdateAvailability();
 
   const handleDayToggle = (day) => {
     setWorkDays(prev => ({
@@ -37,12 +39,12 @@ export default function AvailabilitySchedulingPage() {
   };
 
   const handleSave = () => {
-    setIsSaving(true);
-    setTimeout(() => {
-      setIsSaving(false);
-      setShowSaveSuccess(true);
-      setTimeout(() => setShowSaveSuccess(false), 3000);
-    }, 800);
+    updateAvailability.mutate({ capacity, timezone, acceptRemote, acceptOnsite, workDays }, {
+      onSuccess: () => {
+        setShowSaveSuccess(true);
+        setTimeout(() => setShowSaveSuccess(false), 3000);
+      }
+    });
   };
 
   const totalWeeklyHours = Object.values(workDays).reduce((total, day) => {
@@ -295,18 +297,18 @@ export default function AvailabilitySchedulingPage() {
 
             {/* Save Button */}
             <div className="border-t border-border pt-5">
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="w-full px-5 py-2.5 rounded-lg font-body font-medium text-sm bg-brand-900 text-white hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-900 focus:ring-offset-2 disabled:opacity-40 cursor-not-allowed inline-flex items-center justify-center gap-2 transition-all"
-              >
-                {isSaving ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <Save className="w-4 h-4" />
-                )}
-                {isSaving ? 'Saving...' : 'Save preferences'}
-              </button>
+                <button
+                  onClick={handleSave}
+                  disabled={updateAvailability.isPending}
+                  className="w-full px-5 py-2.5 rounded-lg font-body font-medium text-sm bg-brand-900 text-white hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-900 focus:ring-offset-2 disabled:opacity-40 cursor-not-allowed inline-flex items-center justify-center gap-2 transition-all"
+                >
+                  {updateAvailability.isPending ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4" />
+                  )}
+                  {updateAvailability.isPending ? 'Saving...' : 'Save preferences'}
+                </button>
             </div>
           </motion.div>
 

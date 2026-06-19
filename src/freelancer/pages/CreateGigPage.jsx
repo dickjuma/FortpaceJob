@@ -6,6 +6,7 @@ import {
   Image as ImageIcon, Plus, X, Check
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCreateGig } from '../services/freelancerHooks';
 
 export default function CreateGigPage() {
   const [step, setStep] = useState(1);
@@ -26,14 +27,21 @@ export default function CreateGigPage() {
     images: []
   });
 
-  const handlePublish = () => {
+  const { mutateAsync: createGig } = useCreateGig();
+
+  const handlePublish = async () => {
     setIsPublishing(true);
-    setTimeout(() => {
+    try {
+      await createGig(gigData);
       setIsPublishing(false);
       setIsPublished(true);
       setShowSuccess({ message: 'Gig published successfully' });
       setTimeout(() => setShowSuccess(null), 3000);
-    }, 1500);
+    } catch (error) {
+      setIsPublishing(false);
+      setShowSuccess({ message: error.message || 'Failed to publish gig', isError: true });
+      setTimeout(() => setShowSuccess(null), 3000);
+    }
   };
 
   const handleNext = () => {

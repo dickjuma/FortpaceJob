@@ -3,12 +3,12 @@ import { Menu, Search, Bell, MessageSquare, Settings2, Video } from 'lucide-reac
 import { Link, useNavigate } from 'react-router-dom';
 import FreelancerSidebar from './components/FreelancerSidebar';
 import { FreelancerProvider, useFreelancer } from './context/FreelancerContext';
-import { FREELANCER_WORK_MODES } from '../common/constants/accountTypes';
-import { SocketProvider } from '../common/context/SocketContext';
-import { getToken } from '../common/services/api';
+import { FREELANCER_WORK_MODES } from '../platform/common/constants/accountTypes';
+import { SocketProvider } from '../platform/common/context/SocketContext';
+import { getToken } from '../platform/common/services/api';
 import { cn } from '../admin/utils/cn';
-import useChatStore from '../store/chatStore';
-import { useNotificationSocket } from '../common/hooks/useNotificationSocket';
+import useChatStore from '../platform/store/chatStore';
+import { useNotificationSocket } from '../platform/common/hooks/useNotificationSocket';
 
 // Inner layout component that consumes context
 function FreelancerLayoutInner({ children }) {
@@ -126,16 +126,10 @@ function FreelancerLayoutInner({ children }) {
                   👤 Individual Freelancer
                 </button>
                 <button 
-                  onClick={() => switchAccountType('SME')}
-                  className={cn("w-full text-left px-3 py-2 rounded-md text-sm font-bold transition-colors", accountType === 'SME' ? "bg-[#222222] text-white" : "hover:bg-light-gray text-text-primary")}
+                  onClick={() => switchAccountType('BUSINESS')}
+                  className={cn("w-full text-left px-3 py-2 rounded-md text-sm font-bold transition-colors", accountType === 'BUSINESS' ? "bg-[#222222] text-white" : "hover:bg-light-gray text-text-primary")}
                 >
-                  🏢 SME
-                </button>
-                <button 
-                  onClick={() => switchAccountType('CORPORATE')}
-                  className={cn("w-full text-left px-3 py-2 rounded-md text-sm font-bold transition-colors", accountType === 'CORPORATE' ? "bg-[#222222] text-white" : "hover:bg-light-gray text-text-primary")}
-                >
-                  🏛️ Corporate Studio
+                  🏢 Business
                 </button>
                 <div className="h-px bg-border my-2"></div>
                 <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest px-1 mb-1">Work mode</p>

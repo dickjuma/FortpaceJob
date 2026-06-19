@@ -7,6 +7,7 @@ import {
   Plus, Check, X, UploadCloud, Trash2, AlertCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useCreateGig } from '../services/freelancerHooks';
 
 const WIZARD_STEPS = [
   { id: 'overview', title: 'Overview', icon: FileText },
@@ -27,6 +28,7 @@ export default function CreateGigWizardPage() {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(null);
   const navigate = useNavigate();
+  const createGigMutation = useCreateGig();
 
   // Step 1: Overview States
   const [title, setTitle] = useState('');
@@ -142,15 +144,40 @@ export default function CreateGigWizardPage() {
       setCurrentStep(curr => curr + 1);
       window.scrollTo(0, 0);
     } else {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        setShowSuccess({ message: 'Gig published successfully!' });
-        setTimeout(() => {
-          setShowSuccess(null);
-          navigate('/freelancer/gigs');
-        }, 1500);
-      }, 1500);
+      const gigData = {
+        title,
+        category,
+        description,
+        price: parseFloat(packages.Basic.price),
+        deliveryTime: parseInt(packages.Basic.delivery, 10),
+        packages: {
+          create: Object.entries(packages).map(([tier, pkg]) => ({
+            name: tier,
+            description: pkg.title,
+            price: parseFloat(pkg.price),
+            deliveryTime: parseInt(pkg.delivery, 10),
+            revisions: 1,
+            features: {}
+          }))
+        },
+        gallery: {
+          create: galleryImages.map(img => ({ url: img }))
+        }
+      };
+
+      createGigMutation.mutate(gigData, {
+        onSuccess: () => {
+          setShowSuccess({ message: 'Gig published successfully!' });
+          setTimeout(() => {
+            setShowSuccess(null);
+            navigate('/freelancer/gigs');
+          }, 1500);
+        },
+        onError: (err) => {
+          setShowSuccess({ message: err.message || 'Failed to publish gig', isError: true });
+          setTimeout(() => setShowSuccess(null), 3000);
+        }
+      });
     }
   };
 
@@ -590,14 +617,14 @@ export default function CreateGigWizardPage() {
 
           <button
             onClick={handleNext}
-            disabled={loading}
+            disabled={createGigMutation.isPending}
             className={`px-5 py-2.5 rounded-lg font-body font-medium text-sm transition-colors inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
               currentStep === WIZARD_STEPS.length - 1
                 ? 'bg-accent DEFAULT text-white hover:bg-accent-dark focus:ring-accent DEFAULT'
                 : 'bg-brand-900 text-white hover:bg-brand-800 focus:ring-brand-900'
-            } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            } ${createGigMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {loading ? (
+            {createGigMutation.isPending ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 Publishing...

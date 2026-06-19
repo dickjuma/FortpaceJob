@@ -1,5 +1,6 @@
 // ClientProcurementEcosystemPage.jsx
 import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Briefcase,
@@ -20,49 +21,25 @@ import {
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export default function ClientProcurementEcosystemPage() {
-  const [rfqs, setRfqs] = useState([
-    {
-      id: 'RFQ-8821',
-      title: 'Fiber Splicing Nairobi East',
-      budget: 'KES 250,000',
-      bidsCount: 3,
-      status: 'Bidding Active',
-    },
-    {
-      id: 'RFQ-7640',
-      title: 'Pipeline Substation Concrete Auditing',
-      budget: 'KES 180,000',
-      bidsCount: 2,
-      status: 'Awaiting Award',
-    },
-  ]);
+  const queryClient = useQueryClient();
+  const { data: rfqsData } = useQuery({
+    queryKey: ['client', 'ecosystemRfqs'],
+    queryFn: async () => [
+      { id: 'RFQ-8821', title: 'Fiber Splicing Nairobi East', budget: 'KES 250,000', bidsCount: 3, status: 'Bidding Active' },
+      { id: 'RFQ-7640', title: 'Pipeline Substation Concrete Auditing', budget: 'KES 180,000', bidsCount: 2, status: 'Awaiting Award' }
+    ]
+  });
+  const rfqs = rfqsData || [];
 
-  const [vendors] = useState([
-    {
-      id: 1,
-      name: 'Safaricom Telecomm Logistics',
-      score: '98%',
-      bids: 'KES 245,000',
-      delivery: '5 Days',
-      compliance: 'Verified KRA',
-    },
-    {
-      id: 2,
-      name: 'East Africa Infrastructure Ltd',
-      score: '94%',
-      bids: 'KES 260,000',
-      delivery: '4 Days',
-      compliance: 'Verified KRA',
-    },
-    {
-      id: 3,
-      name: 'Apex Surveyor Systems',
-      score: '88%',
-      bids: 'KES 230,000',
-      delivery: '8 Days',
-      compliance: 'Pending Audit',
-    },
-  ]);
+  const { data: vendorsData } = useQuery({
+    queryKey: ['client', 'ecosystemVendors'],
+    queryFn: async () => [
+      { id: 1, name: 'Safaricom Telecomm Logistics', score: '98%', bids: 'KES 245,000', delivery: '5 Days', compliance: 'Verified KRA' },
+      { id: 2, name: 'East Africa Infrastructure Ltd', score: '94%', bids: 'KES 260,000', delivery: '4 Days', compliance: 'Verified KRA' },
+      { id: 3, name: 'Apex Surveyor Systems', score: '88%', bids: 'KES 230,000', delivery: '8 Days', compliance: 'Pending Audit' }
+    ]
+  });
+  const vendors = vendorsData || [];
 
   const [selectedRfq, setSelectedRfq] = useState('RFQ-8821');
   const [toast, setToast] = useState(null);
@@ -72,16 +49,19 @@ export default function ClientProcurementEcosystemPage() {
     setTimeout(() => setToast(null), duration);
   };
 
-  const handleAward = async (vendorName, bidAmount) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1800));
-    setRfqs((prev) =>
-      prev.map((r) => (r.id === selectedRfq ? { ...r, status: 'Awarded' } : r))
-    );
-    showToast(
-      'success',
-      `Contract awarded successfully! Purchase order dispatched to ${vendorName}.`
-    );
+  const awardMutation = useMutation({
+    mutationFn: async ({ vendorName, bidAmount, selectedRfq }) => {
+      await new Promise((resolve) => setTimeout(resolve, 1800));
+      return { vendorName, selectedRfq };
+    },
+    onSuccess: ({ vendorName, selectedRfq }) => {
+      queryClient.setQueryData(['client', 'ecosystemRfqs'], old => old.map(r => r.id === selectedRfq ? { ...r, status: 'Awarded' } : r));
+      showToast('success', "Contract awarded successfully! Purchase order dispatched to .");
+    }
+  });
+
+  const handleAward = (vendorName, bidAmount) => {
+    awardMutation.mutate({ vendorName, bidAmount, selectedRfq });
   };
 
   const handleCreateRFQ = () => {
@@ -310,3 +290,4 @@ export default function ClientProcurementEcosystemPage() {
     </div>
   );
 }
+

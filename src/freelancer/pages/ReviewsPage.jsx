@@ -17,7 +17,7 @@ import {
   Loader2,
   AlertCircle,
 } from 'lucide-react';
-import { useMyReceivedReviews, useReplyToReview } from '../../common/hooks/useReviews';
+import { useMyReceivedReviews, useReplyToReview } from '../../platform/common/hooks/useReviews';
 
 // ---------- Shared UI Components (inline) ----------
 const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, icon: Icon }) => {

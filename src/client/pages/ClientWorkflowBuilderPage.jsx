@@ -1,5 +1,6 @@
 // ClientWorkflowBuilderPage.jsx
 import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   GitBranch, Play, Plus, Trash, CheckCircle,
@@ -9,11 +10,18 @@ import {
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export default function ClientWorkflowBuilderPage() {
-  const [workflows, setWorkflows] = useState([
-    { id: 'WF-1', name: 'On Site Check-In -> Fund Escrow', active: true, trigger: 'Site Check-In', action: 'Auto-Release Travel Allowance' },
-    { id: 'WF-2', name: 'Geofence Breach -> Lock Payroll', active: true, trigger: 'Geofence Boundary breach', action: 'Dispatch Warning SMS & Lock Release' },
-    { id: 'WF-3', name: 'M-Pesa STK Completed -> Generate Tax Receipt', active: false, trigger: 'M-Pesa STK Push Success', action: 'Send KRA Withholding Record' }
-  ]);
+    const queryClient = useQueryClient();
+  const { data: workflowsData } = useQuery({
+    queryKey: ['client', 'workflows'],
+    queryFn: async () => {
+      return [
+        { id: 'WF-1', name: 'On Site Check-In -> Fund Escrow', active: true, trigger: 'Site Check-In', action: 'Auto-Release Travel Allowance' },
+        { id: 'WF-2', name: 'Geofence Breach -> Lock Payroll', active: true, trigger: 'Geofence Boundary breach', action: 'Dispatch Warning SMS & Lock Release' },
+        { id: 'WF-3', name: 'M-Pesa STK Completed -> Generate Tax Receipt', active: false, trigger: 'M-Pesa STK Push Success', action: 'Send KRA Withholding Record' }
+      ];
+    }
+  });
+  const workflows = workflowsData || [];
   const [toast, setToast] = useState(null);
 
   const showToast = (type, message, duration = 3000) => {
@@ -21,9 +29,19 @@ export default function ClientWorkflowBuilderPage() {
     setTimeout(() => setToast(null), duration);
   };
 
+  const toggleMutation = useMutation({
+    mutationFn: async (id) => {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return id;
+    },
+    onSuccess: (id) => {
+      queryClient.setQueryData(['client', 'workflows'], old => old?.map(w => w.id === id ? { ...w, active: !w.active } : w));
+      showToast('success', 'Workflow configuration state toggled.');
+    }
+  });
+
   const toggleWorkflow = (id) => {
-    setWorkflows(prev => prev.map(w => w.id === id ? { ...w, active: !w.active } : w));
-    showToast('success', 'Workflow configuration state toggled.');
+    toggleMutation.mutate(id);
   };
 
   const triggerTest = async (name) => {
@@ -197,3 +215,4 @@ export default function ClientWorkflowBuilderPage() {
     </div>
   );
 }
+

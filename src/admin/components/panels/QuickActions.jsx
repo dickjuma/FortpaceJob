@@ -7,7 +7,8 @@ import { toast } from 'react-hot-toast';
 
 const QuickActions: React.FC = () => {
   const { user } = useAuthStore();
-  const config = user ? ROLE_CONFIG[user.role] : null;
+  const roleKey = user?.role?.toLowerCase();
+  const config = user ? ROLE_CONFIG[roleKey] || ROLE_CONFIG['super_admin'] : null;
 
   if (!config || config.quickActions.length === 0) return null;
 

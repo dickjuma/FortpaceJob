@@ -6,6 +6,7 @@ import {
   UserMinus, Plane, ChevronLeft, ChevronRight, Settings,
   Briefcase, Save, Check, X
 } from 'lucide-react';
+import { useUpdateAvailability } from '../services/freelancerHooks';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const TIME_SLOTS = ['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'];
@@ -26,9 +27,10 @@ export default function AvailabilitySchedulerPage() {
   const [timezone, setTimezone] = useState('UTC-05:00 Eastern Time (US & Canada)');
   const [projectSize, setProjectSize] = useState('Any Size');
   const [maxHours, setMaxHours] = useState(40);
-  const [isSaving, setIsSaving] = useState(false);
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
   const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
+
+  const updateAvailability = useUpdateAvailability();
 
   const toggleTimeSlot = (day, time) => {
     if (status === 'vacation') return;
@@ -44,12 +46,12 @@ export default function AvailabilitySchedulerPage() {
   };
 
   const handleSave = () => {
-    setIsSaving(true);
-    setTimeout(() => {
-      setIsSaving(false);
-      setShowSaveSuccess(true);
-      setTimeout(() => setShowSaveSuccess(false), 3000);
-    }, 800);
+    updateAvailability.mutate({ status, schedule, timezone, projectSize, maxHours }, {
+      onSuccess: () => {
+        setShowSaveSuccess(true);
+        setTimeout(() => setShowSaveSuccess(false), 3000);
+      }
+    });
   };
 
   const totalHours = Object.values(schedule).flat().length;
@@ -90,15 +92,15 @@ export default function AvailabilitySchedulerPage() {
 
         <button
           onClick={handleSave}
-          disabled={isSaving}
+          disabled={updateAvailability.isPending}
           className="px-5 py-2.5 rounded-lg font-body font-medium text-sm bg-brand-900 text-white hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-900 focus:ring-offset-2 disabled:opacity-40 cursor-not-allowed inline-flex items-center gap-2 transition-all"
         >
-          {isSaving ? (
+          {updateAvailability.isPending ? (
             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
           ) : (
             <Save className="w-4 h-4" />
           )}
-          {isSaving ? 'Saving...' : 'Save changes'}
+          {updateAvailability.isPending ? 'Saving...' : 'Save changes'}
         </button>
       </div>
 

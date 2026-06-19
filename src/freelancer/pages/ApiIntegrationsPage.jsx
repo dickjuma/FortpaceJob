@@ -3,8 +3,8 @@ import {
   Code, Key, Plus, RefreshCw, Eye, EyeOff, X, Globe, CheckCircle2, Trash2, ShieldCheck, PlayCircle
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
+import Card from '../../platform/components/common/Card';
+import Button from '../../platform/components/common/Button';
 import { cn } from '../../admin/utils/cn';
 
 export default function ApiIntegrationsPage() {

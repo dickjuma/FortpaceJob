@@ -9,8 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import { useFreelancerContracts } from '../services/freelancerHooks';
 
 // Keep original API hooks - preserve structure
-// import { contractAPI } from '../../common/services/api';
-// import { useConfirm } from '../../common/context/ConfirmContext';
+// import { contractAPI } from '../../platform/common/services/api';
+// import { useConfirm } from '../../platform/common/context/ConfirmContext';
 
 function mapContractStatus(status) {
   const s = String(status || '').toUpperCase();

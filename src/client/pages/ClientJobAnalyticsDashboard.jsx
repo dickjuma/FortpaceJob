@@ -2,6 +2,7 @@
 // Self-contained Job Analytics Dashboard with design tokens,
 // framer-motion animations, and recharts for visualizations.
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import {
   TrendingUp,
@@ -27,21 +28,9 @@ import {
 // ----------------------------------------------------------------------
 // Mock Data
 // ----------------------------------------------------------------------
-const hiringData = [
-  { name: 'Jan', jobs: 4, hires: 2, spend: 2400 },
-  { name: 'Feb', jobs: 3, hires: 3, spend: 5398 },
-  { name: 'Mar', jobs: 5, hires: 4, spend: 8800 },
-  { name: 'Apr', jobs: 2, hires: 2, spend: 3908 },
-  { name: 'May', jobs: 6, hires: 5, spend: 9800 },
-  { name: 'Jun', jobs: 4, hires: 3, spend: 6800 },
-];
 
-const statsData = [
-  { name: 'Total Spend (YTD)', value: '$37.1K', change: '+14%', trend: 'up', icon: DollarSign },
-  { name: 'Active Contracts', value: '8', change: '+2', trend: 'up', icon: Briefcase },
-  { name: 'Total Hires', value: '19', change: '+5', trend: 'up', icon: Users },
-  { name: 'Avg. Time to Hire', value: '4 Days', change: '-12%', trend: 'down', icon: TrendingUp },
-];
+
+
 
 // ----------------------------------------------------------------------
 // Animation Variants
@@ -70,6 +59,31 @@ const buttonTap = { scale: 0.97 };
 // Main Component
 // ----------------------------------------------------------------------
 export default function ClientJobAnalyticsDashboard() {
+  const { data: analyticsData } = useQuery({
+    queryKey: ['client', 'jobAnalytics'],
+    queryFn: async () => {
+      return {
+        hiringData: [
+          { name: 'Jan', jobs: 4, hires: 2, spend: 2400 },
+          { name: 'Feb', jobs: 3, hires: 3, spend: 5398 },
+          { name: 'Mar', jobs: 5, hires: 4, spend: 8800 },
+          { name: 'Apr', jobs: 2, hires: 2, spend: 3908 },
+          { name: 'May', jobs: 6, hires: 5, spend: 9800 },
+          { name: 'Jun', jobs: 4, hires: 3, spend: 6800 }
+        ],
+        statsData: [
+          { name: 'Total Spend (YTD)', value: '.1K', change: '+14%', trend: 'up', icon: DollarSign },
+          { name: 'Active Contracts', value: '8', change: '+2', trend: 'up', icon: Briefcase },
+          { name: 'Total Hires', value: '19', change: '+5', trend: 'up', icon: Users },
+          { name: 'Avg. Time to Hire', value: '4 Days', change: '-12%', trend: 'down', icon: TrendingUp }
+        ]
+      };
+    }
+  });
+
+  const hiringData = analyticsData?.hiringData || [];
+  const statsData = analyticsData?.statsData || [];
+
   const handleBack = () => {
     // Navigate back – in a real app use useNavigate or Link
     window.history.back();
@@ -266,3 +280,4 @@ export default function ClientJobAnalyticsDashboard() {
     </div>
   );
 }
+

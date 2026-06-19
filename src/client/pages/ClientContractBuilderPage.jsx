@@ -1,5 +1,6 @@
 // ClientContractBuilderPage.jsx
 import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FileText,
@@ -23,7 +24,7 @@ export default function ClientContractBuilderPage() {
   const [scopeOfWork, setScopeOfWork] = useState(
     'Create premium interactive CSS animations and geofenced telemetry panels.'
   );
-  const [isGenerating, setIsGenerating] = useState(false);
+  
   const [toast, setToast] = useState(null);
 
   const showToast = (type, message, duration = 3000) => {
@@ -31,18 +32,23 @@ export default function ClientContractBuilderPage() {
     setTimeout(() => setToast(null), duration);
   };
 
+  const generateMutation = useMutation({
+    mutationFn: async (payload) => {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      return payload;
+    },
+    onSuccess: () => {
+      showToast('success', 'Contract drafted successfully! Dispatched for signature center approval.');
+    }
+  });
+
   const handleGenerate = async (e) => {
     e.preventDefault();
     if (!vendorName.trim() || !scopeOfWork.trim()) {
       showToast('error', 'Please complete all credential fields.');
       return;
     }
-
-    setIsGenerating(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    showToast('success', 'Contract drafted successfully! Dispatched for signature center approval.');
-    setIsGenerating(false);
+    generateMutation.mutateAsync({ template, vendorName, scopeOfWork });
   };
 
   // Animation variants
@@ -133,10 +139,10 @@ export default function ClientContractBuilderPage() {
                 <motion.button
                   whileTap={buttonTap}
                   type="submit"
-                  disabled={isGenerating}
+                  disabled={generateMutation.isPending}
                   className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-accent text-white rounded-lg font-medium text-sm hover:bg-accent-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isGenerating ? (
+                  {generateMutation.isPending ? (
                     <>Processing...</>
                   ) : (
                     <>Generate Legal Agreement</>
@@ -220,3 +226,4 @@ export default function ClientContractBuilderPage() {
     </div>
   );
 }
+

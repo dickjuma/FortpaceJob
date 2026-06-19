@@ -1,6 +1,7 @@
 // JobDetailsPage.jsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useJobDetails, useProposalsForJob, useShortlistProposal, useRejectProposal } from '../services/clientHooks';
 import { Briefcase, MapPin, Clock, Users, Star, MessageSquare, ChevronLeft, CheckCircle, XCircle } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 
@@ -9,20 +10,24 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
 export default function JobDetailsPage() {
   const { id } = useParams();
 
-  const [proposals, setProposals] = useState([
-    { id: 1, name: 'Alex Johnson', title: 'Senior React Engineer', rate: '$85/hr', score: 98, bid: '$85/hr', time: '1-3 months', status: 'Pending' },
-    { id: 2, name: 'Elena Rodriguez', title: 'Full Stack Architect', rate: '$110/hr', score: 94, bid: '$100/hr', time: '3-6 months', status: 'Shortlisted' },
-    { id: 3, name: 'Marcus Chen', title: 'Frontend Developer', rate: '$65/hr', score: 82, bid: '$60/hr', time: 'Less than 1 month', status: 'Pending' },
-  ]);
+const { data: job } = useJobDetails(id);
+  const { data: proposalsData } = useProposalsForJob(id);
+  
+  const shortlistMutation = useShortlistProposal();
+  const declineMutation = useRejectProposal();
+
+  const proposals = proposalsData?.items || [
+    { id: 1, name: 'Alex Johnson', title: 'Senior React Engineer', rate: '/hr', score: 98, bid: '/hr', time: '1-3 months', status: 'Pending' },
+    { id: 2, name: 'Elena Rodriguez', title: 'Full Stack Architect', rate: '/hr', score: 94, bid: '/hr', time: '3-6 months', status: 'Shortlisted' },
+    { id: 3, name: 'Marcus Chen', title: 'Frontend Developer', rate: '/hr', score: 82, bid: '/hr', time: 'Less than 1 month', status: 'Pending' },
+  ];
 
   const handleShortlist = (proposalId) => {
-    setProposals(prev => prev.map(p =>
-      p.id === proposalId ? { ...p, status: 'Shortlisted' } : p
-    ));
+    shortlistMutation.mutateAsync(proposalId);
   };
 
   const handleDecline = (proposalId) => {
-    setProposals(prev => prev.filter(p => p.id !== proposalId));
+    declineMutation.mutateAsync(proposalId);
   };
 
   // Animation variants
@@ -46,7 +51,7 @@ export default function JobDetailsPage() {
           </Link>
           <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
             <div>
-              <h1 className="font-display text-3xl font-bold text-brand-900">Senior React Developer for Enterprise Dashboard</h1>
+              <h1 className="font-display text-3xl font-bold text-brand-900">{job?.title || 'Senior React Developer for Enterprise Dashboard'}</h1>
               <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-ink-tertiary">
                 <span className="inline-flex items-center gap-1"><Clock className="w-4 h-4" /> Posted 2 days ago</span>
                 <span className="inline-flex items-center gap-1"><MapPin className="w-4 h-4" /> Remote (Worldwide)</span>
@@ -181,3 +186,4 @@ export default function JobDetailsPage() {
     </div>
   );
 }
+

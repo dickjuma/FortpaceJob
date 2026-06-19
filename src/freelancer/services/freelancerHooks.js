@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as api from './freelancerApi';
-import { orderAPI, gigAPI, bookingAPI, skillTestAPI, certificationAPI, disputeAPI } from '../../common/services/api';
+import { orderAPI, gigAPI, bookingAPI, skillTestAPI, certificationAPI, disputeAPI } from '../../platform/common/services/api';
 
 /**
  * ============================================================
@@ -334,6 +334,83 @@ export const useCreateOrder = () => {
   });
 };
 
+export const useAcceptOrder = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: orderAPI.acceptOrder,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders'] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'dashboard'] });
+    },
+  });
+};
+
+export const useRejectOrder = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ orderId, reason }) => orderAPI.rejectOrder(orderId, reason),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders'] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'dashboard'] });
+    },
+  });
+};
+
+export const useDeliverOrder = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ orderId, data }) => orderAPI.deliverOrder(orderId, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders'] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders', 'detail'] });
+    },
+  });
+};
+
+export const useRequestOrderRevision = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ orderId, data }) => orderAPI.requestRevision(orderId, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders'] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders', 'detail'] });
+    },
+  });
+};
+
+export const useApproveOrderRevision = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ orderId, revisionId, data }) => orderAPI.approveRevision(orderId, revisionId, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders'] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders', 'detail'] });
+    },
+  });
+};
+
+export const useCompleteOrder = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: orderAPI.completeOrder,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders'] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders', 'detail'] });
+    },
+  });
+};
+
+export const useCancelOrder = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ orderId, reason }) => orderAPI.cancelOrder(orderId, reason),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders'] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders', 'detail'] });
+    },
+  });
+};
+
 export const useUpdateOrderStatus = () => {
   const qc = useQueryClient();
   return useMutation({
@@ -345,46 +422,24 @@ export const useUpdateOrderStatus = () => {
   });
 };
 
+export const useDisputeOrder = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ orderId, data }) => orderAPI.disputeOrder(orderId, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders'] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'orders', 'detail'] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'disputes'] });
+    },
+  });
+};
+
+
 // ══════════════════════════════════════════════════════════════════════════════
 // GIGS
 // ══════════════════════════════════════════════════════════════════════════════
 
-export const useFreelancerGigs = () => {
-  return useQuery({
-    queryKey: ['freelancer', 'gigs', 'my'],
-    queryFn: () => gigAPI.getMyGigs(),
-    keepPreviousData: true,
-  });
-};
 
-export const useFreelancerGigById = (gigId) => {
-  return useQuery({
-    queryKey: ['freelancer', 'gigs', gigId],
-    queryFn: () => gigAPI.getGig(gigId),
-    enabled: !!gigId,
-  });
-};
-
-export const useUpdateFreelancerGig = () => {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: ({ gigId, data }) => gigAPI.updateGig(gigId, data),
-    onSuccess: (_, variables) => {
-      qc.invalidateQueries({ queryKey: ['freelancer', 'gigs', variables.gigId] });
-      qc.invalidateQueries({ queryKey: ['freelancer', 'gigs', 'my'] });
-    },
-  });
-};
-
-export const useCreateGig = () => {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (gigData) => gigAPI.createGig(gigData),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['freelancer', 'gigs', 'my'] });
-    },
-  });
-};
 
 export const usePauseGig = () => {
   const qc = useQueryClient();
@@ -534,3 +589,131 @@ export const useSubmitEvidence = () => {
     },
   });
 };
+
+// ------------------------------------------------------------------------------
+// GIGS (NEW)
+// ------------------------------------------------------------------------------
+
+export const useFreelancerGigs = (params = { page: 1, limit: 10 }) => {
+  return useQuery({
+    queryKey: ['freelancer', 'gigs', params],
+    queryFn: () => api.getFreelancerGigs(params),
+  });
+};
+
+export const useFreelancerGigById = (gigId) => {
+  return useQuery({
+    queryKey: ['freelancer', 'gigs', gigId],
+    queryFn: () => api.getFreelancerGigById(gigId),
+    enabled: !!gigId,
+  });
+};
+
+export const useSaveGig = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: api.saveGig,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'gigs'] });
+    },
+  });
+};
+
+export const useCreateGig = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: api.createGig,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'gigs'] });
+    },
+  });
+};
+
+export const useUpdateGig = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ gigId, data }) => api.updateGig(gigId, data),
+    onSuccess: (_, variables) => {
+      qc.invalidateQueries({ queryKey: ['freelancer', 'gigs'] });
+      qc.invalidateQueries({ queryKey: ['freelancer', 'gigs', variables.gigId] });
+    },
+  });
+};
+
+// ------------------------------------------------------------------------------
+// ANALYTICS & DISCOVERY (NEW)
+// ------------------------------------------------------------------------------
+
+export const useGigAnalytics = (params = {}) => {
+  return useQuery({
+    queryKey: ['freelancer', 'analytics', 'gigs', params],
+    queryFn: () => api.getGigAnalytics(params),
+  });
+};
+
+export const useProposalAnalytics = (params = {}) => {
+  return useQuery({
+    queryKey: ['freelancer', 'analytics', 'proposals', params],
+    queryFn: () => api.getProposalAnalytics(params),
+  });
+};
+
+export const useSuccessScore = () => {
+  return useQuery({
+    queryKey: ['freelancer', 'success-score'],
+    queryFn: () => api.getSuccessScore(),
+  });
+};
+
+export const useFreelancerPortfolio = (params) => useQuery({ queryKey: ['freelancer', 'portfolio', params], queryFn: () => api.getFreelancerPortfolio(params) });
+export const useFreelancerReviews = (params) => useQuery({ queryKey: ['freelancer', 'reviews', params], queryFn: () => api.getFreelancerReviews(params) });
+export const useFreelancerSettings = (params) => useQuery({ queryKey: ['freelancer', 'settings', params], queryFn: () => api.getFreelancerSettings(params) });
+export const useUpdateFreelancerSettings = () => { const qc = useQueryClient(); return useMutation({ mutationFn: api.updateFreelancerSettings, onSuccess: () => { qc.invalidateQueries({ queryKey: ['freelancer', 'settings'] }); } }); };
+
+
+
+export const useFreelancerPerformanceInsights = (params) => useQuery({ queryKey: ['freelancer', 'performance-insights', params], queryFn: () => api.getFreelancerPerformanceInsights(params) });
+
+export const useBoostProfile = () => { const qc = useQueryClient(); return useMutation({ mutationFn: api.boostFreelancerProfile, onSuccess: () => { qc.invalidateQueries({ queryKey: ['freelancer'] }); } }); };
+
+export const useGetPortfolio = () => { return useQuery({ queryKey: ['freelancer', 'portfolio'], queryFn: api.getPortfolio }); };
+export const useCreatePortfolioProject = () => { const qc = useQueryClient(); return useMutation({ mutationFn: api.createPortfolioProject, onSuccess: () => { qc.invalidateQueries({ queryKey: ['freelancer', 'portfolio'] }); } }); };
+
+export const useUpdateSubscription = () => { const qc = useQueryClient(); return useMutation({ mutationFn: api.updateSubscription, onSuccess: () => { qc.invalidateQueries({ queryKey: ['freelancer'] }); } }); };
+
+export const useGetInvoices = () => { return useQuery({ queryKey: ['freelancer', 'invoices'], queryFn: api.getInvoices }); };
+export const useGenerateInvoice = () => { const qc = useQueryClient(); return useMutation({ mutationFn: api.generateInvoice, onSuccess: () => { qc.invalidateQueries({ queryKey: ['freelancer', 'invoices'] }); } }); };
+
+export const useUpdateAvailability = () => { const qc = useQueryClient(); return useMutation({ mutationFn: api.updateAvailability, onSuccess: () => { qc.invalidateQueries({ queryKey: ['freelancer'] }); } }); };
+
+export const useGetCalendarEvents = () => { return useQuery({ queryKey: ['freelancer', 'calendar'], queryFn: api.getCalendarEvents }); };
+
+export const useGetBuyerRequests = () => { return useQuery({ queryKey: ['freelancer', 'buyer-requests'], queryFn: api.getBuyerRequests }); };
+export const useSubmitOffer = () => { const qc = useQueryClient(); return useMutation({ mutationFn: api.submitOffer, onSuccess: () => { qc.invalidateQueries({ queryKey: ['freelancer', 'buyer-requests'] }); } }); };
+
+export const useGlobalSearch = (q) => { return useQuery({ queryKey: ['freelancer', 'search', q], queryFn: () => api.globalSearch(q), enabled: !!q }); };
+
+export const useGetBookmarks = () => { return useQuery({ queryKey: ['freelancer', 'bookmarks'], queryFn: api.getBookmarks }); };
+export const useToggleBookmark = () => { const qc = useQueryClient(); return useMutation({ mutationFn: api.toggleBookmark, onSuccess: () => { qc.invalidateQueries({ queryKey: ['freelancer', 'bookmarks'] }); } }); };
+
+export const useGetJobs = (params) => { return useQuery({ queryKey: ['freelancer', 'jobs', params], queryFn: () => api.getJobs(params) }); };
+
+export const useDiscoveryAiChat = () => { return useMutation({ mutationFn: api.sendDiscoveryAiMessage }); };
+
+export const useGetLearningData = () => { return useQuery({ queryKey: ['freelancer', 'learning'], queryFn: api.getLearningData }); };
+
+export const useGetReferrals = () => { return useQuery({ queryKey: ['freelancer', 'referrals'], queryFn: api.getReferrals }); };
+
+export const useGetGigFaqs = () => { return useQuery({ queryKey: ['freelancer', 'gig-faqs'], queryFn: api.getGigFaqs }); };
+export const useUpdateGigFaqs = () => { const qc = useQueryClient(); return useMutation({ mutationFn: api.updateGigFaqs, onSuccess: () => { qc.invalidateQueries({ queryKey: ['freelancer', 'gig-faqs'] }); } }); };
+
+export const useGetHelpCenter = () => { return useQuery({ queryKey: ['freelancer', 'help-center'], queryFn: api.getHelpCenter }); };
+
+export const useVerifyOtp = () => { return useMutation({ mutationFn: api.verifyOtp }); };
+export const useResendOtp = () => { return useMutation({ mutationFn: api.resendOtp }); };
+
+export const useGetSkillsCertifications = () => { return useQuery({ queryKey: ['freelancer', 'skills-certifications'], queryFn: api.getSkillsCertifications }); };
+export const useUpdateSkillsCertifications = () => { const qc = useQueryClient(); return useMutation({ mutationFn: api.updateSkillsCertifications, onSuccess: () => { qc.invalidateQueries({ queryKey: ['freelancer', 'skills-certifications'] }); } }); };
+
+export const useGetSupportTickets = () => { return useQuery({ queryKey: ['freelancer', 'support-tickets'], queryFn: api.getSupportTickets }); };
+export const useCreateSupportTicket = () => { const qc = useQueryClient(); return useMutation({ mutationFn: api.createSupportTicket, onSuccess: () => { qc.invalidateQueries({ queryKey: ['freelancer', 'support-tickets'] }); } }); };

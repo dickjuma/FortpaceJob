@@ -5,7 +5,7 @@ const useMarketplaceStore = create(
   persist(
     (set, get) => ({
       // Active tab
-      activeTab: 'overview', // 'overview' | 'jobs' | 'gigs' | 'proposals' | 'contracts' | 'rankings' | 'reviews' | 'quality'
+        activeTab: 'overview', // 'overview' | 'jobs' | 'gigs' | 'orders' | 'proposals' | 'contracts' | 'rankings' | 'reviews' | 'quality'
       setActiveTab: (tab) => set({ activeTab: tab }),
 
       // Selected items for bulk actions
@@ -23,6 +23,7 @@ const useMarketplaceStore = create(
       filters: {
         jobs: { search: '', status: '', category: '', budget_min: '', budget_max: '', experience_level: '', sortBy: 'newest', sortOrder: 'desc' },
         gigs: { search: '', status: '', category: '', price_min: '', price_max: '', rating_min: '', sortBy: 'newest', sortOrder: 'desc' },
+        orders: { search: '', status: '', sortBy: 'newest', sortOrder: 'desc' },
         proposals: { search: '', status: '', job_id: '', freelancer_id: '', sortBy: 'newest', sortOrder: 'desc' },
         contracts: { search: '', status: '', freelancer_id: '', client_id: '', sortBy: 'newest', sortOrder: 'desc' },
         reviews: { search: '', status: '', rating: '', flagged: false, sortBy: 'newest', sortOrder: 'desc' },
@@ -35,7 +36,7 @@ const useMarketplaceStore = create(
       })),
 
       // Pagination per section
-      pagination: { jobs: 1, gigs: 1, proposals: 1, contracts: 1, reviews: 1 },
+        pagination: { jobs: 1, gigs: 1, orders: 1, proposals: 1, contracts: 1, reviews: 1 },
       setPage: (section, page) => set(s => ({ pagination: { ...s.pagination, [section]: page } })),
 
       // Active modals

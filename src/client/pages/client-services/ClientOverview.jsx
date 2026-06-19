@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, BadgeCheck, BriefcaseBusiness, FilePlus2, Layers3, MessagesSquare, UserCircle2, Video, WalletCards } from "lucide-react";
-import { profileAPI } from "../../../common/services/api";
-import { clientWorkspaceAPI } from "../../../common/services/clientWorkspaceAPI";
+import { profileAPI } from "../../../platform/common/services/api";
+import { clientWorkspaceAPI } from "../../../platform/common/services/clientWorkspaceAPI";
 
 export default function ClientOverview() {
   const [profile, setProfile] = useState(null);

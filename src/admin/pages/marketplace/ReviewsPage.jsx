@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Star, Search, Filter, MoreVertical, ThumbsUp, Flag, CheckCircle, Trash2
+  Star, Search, MoreVertical, ThumbsUp, Flag, CheckCircle, Trash2
 } from 'lucide-react';
 import { useReviews, useMarketplaceActions } from '../../hooks/useMarketplace';
 import useMarketplaceStore from '../../store/marketplaceStore';
@@ -13,6 +13,10 @@ import UserFlagModal from '../../components/users/UserFlagModal';
 
 const StatusBadge = ({ status }) => {
   const configs = {
+    VERIFIED: { bg: 'bg-emerald-100 dark:bg-emerald-900/30', color: 'text-success dark:text-success', label: 'Verified' },
+    PUBLISHED: { bg: 'bg-emerald-100 dark:bg-emerald-900/30', color: 'text-success dark:text-success', label: 'Published' },
+    PENDING: { bg: 'bg-amber-100 dark:bg-amber-900/30', color: 'text-amber-600 dark:text-amber-400', label: 'Pending' },
+    FLAGGED: { bg: 'bg-red-100 dark:bg-red-900/30', color: 'text-red-600 dark:text-red-400', label: 'Flagged' },
     verified: { bg: 'bg-emerald-100 dark:bg-emerald-900/30', color: 'text-success dark:text-success', label: 'Verified' },
     pending: { bg: 'bg-amber-100 dark:bg-amber-900/30', color: 'text-amber-600 dark:text-amber-400', label: 'Pending' },
     flagged: { bg: 'bg-red-100 dark:bg-red-900/30', color: 'text-red-600 dark:text-red-400', label: 'Flagged' },
@@ -209,7 +213,7 @@ export default function ReviewsPage() {
                     </td>
                     <td className="p-4 text-right align-top pt-4">
                       <div className="flex items-center justify-end gap-2">
-                        {review.status === 'pending' && (
+                        {['pending', 'PENDING'].includes(review.status) && (
                           <button 
                             onClick={() => handleAction('Verify', review.id)}
                             className="p-1.5 text-success bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 rounded-lg transition-colors tooltip-trigger" title="Verify Review"

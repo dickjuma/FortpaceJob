@@ -12,6 +12,7 @@ import {
   Send,
   ChevronRight,
 } from 'lucide-react';
+import { useGetSupportTickets, useCreateSupportTicket } from '../services/freelancerHooks';
 
 // ---------- Shared UI Components (inline) ----------
 const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, type = 'button', icon: Icon }) => {
@@ -137,7 +138,11 @@ const formatDate = (dateString) => {
 
 // ---------- Main Component ----------
 export default function SupportTicketsPage() {
-  const [tickets, setTickets] = useState([
+  const { data: response, isLoading } = useGetSupportTickets();
+  const apiData = response?.data || response;
+  const createTicketMutation = useCreateSupportTicket();
+
+  const fallbackTickets = [
     {
       id: '#TK-4821',
       title: 'Escrow release dispute on Nexis project',
@@ -148,24 +153,17 @@ export default function SupportTicketsPage() {
       desc: 'Milestone 2 deliverable has been fully approved but the funds have not been released by the system coordinator.',
     },
     {
-      id: '#TK-2908',
-      title: 'Profile name verification fail',
-      category: 'Verification',
-      status: 'Open',
-      priority: 'Medium',
-      date: 'Yesterday',
-      desc: 'Attempted name verification via driver\'s license but received generic auth failures.',
-    },
-    {
-      id: '#TK-1044',
-      title: 'Custom Invoice styling adjustments',
-      category: 'General',
+      id: '#TK-4819',
+      title: 'How to update tax details for 2026',
+      category: 'Account',
       status: 'Resolved',
       priority: 'Low',
-      date: '2 weeks ago',
-      desc: 'Need custom formatting toggles for tax-compliant PDF downloads.',
+      date: '2 days ago',
+      desc: 'Need guidance on updating my W-8BEN form for the new financial year.',
     },
-  ]);
+  ];
+
+  const tickets = apiData?.tickets || fallbackTickets;
 
   const [activeModal, setActiveModal] = useState(null); // 'create' or 'detail'
   const [selectedTicket, setSelectedTicket] = useState(null);
@@ -187,25 +185,18 @@ export default function SupportTicketsPage() {
       return;
     }
 
-    const newTicket = {
-      id: `#TK-${Math.floor(1000 + Math.random() * 9000)}`,
-      title: ticketForm.title.trim(),
-      category: ticketForm.category,
-      status: 'Open',
-      priority: ticketForm.priority,
-      date: 'Just now',
-      desc: ticketForm.desc.trim(),
-    };
-
-    setTickets([newTicket, ...tickets]);
-    setActiveModal(null);
-    setTicketForm({ title: '', category: 'Billing & Escrow', priority: 'Medium', desc: '' });
-    setToast({ type: 'success', message: `Ticket ${newTicket.id} created successfully.` });
-    setTimeout(() => setToast(null), 3000);
+    createTicketMutation.mutate(ticketForm, {
+      onSuccess: () => {
+        setToast({ type: 'success', message: 'Support ticket submitted successfully.' });
+        setTimeout(() => setToast(null), 3000);
+        setTicketForm({ title: '', category: 'Billing & Escrow', priority: 'Medium', desc: '' });
+        setActiveModal(null);
+      }
+    });
   };
 
   const deleteTicket = (id) => {
-    setTickets(tickets.filter(t => t.id !== id));
+    // setTickets(tickets.filter(t => t.id !== id));
     setToast({ type: 'success', message: 'Ticket removed.' });
     setTimeout(() => setToast(null), 3000);
   };

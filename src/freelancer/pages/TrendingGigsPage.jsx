@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Flame, Star, Loader2, TrendingUp } from 'lucide-react';
-import { useFeaturedGigs } from '../../common/hooks/useGigsMarketplace';
+import { useFeaturedGigs } from '../../platform/common/hooks/useGigsMarketplace';
 
 // ---------- Shared UI Components (inline) ----------
 const Card = ({ children, className = '', hover = true }) => (

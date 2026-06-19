@@ -9,6 +9,7 @@ import {
   Sparkles,
   AlertCircle,
 } from 'lucide-react';
+import { useUpdateSubscription } from '../services/freelancerHooks';
 
 // ---------- Shared UI Components (inline) ----------
 const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, type = 'button' }) => {
@@ -45,6 +46,8 @@ const Card = ({ children, className = '', hover = true }) => (
 // ---------- Main Component ----------
 export default function UpgradePlanPage() {
   const [selectedPlan, setSelectedPlan] = useState('Professional');
+  const [billingCycle, setBillingCycle] = useState('monthly');
+  const updateSubscription = useUpdateSubscription();
   const [toast, setToast] = useState(null);
 
   const plans = [
@@ -91,19 +94,28 @@ export default function UpgradePlanPage() {
 
   const handleUpgrade = (planName, price) => {
     if (price === 0) {
-      setSelectedPlan(planName);
-      setToast({ type: 'success', message: 'Downgraded to Free plan.' });
-      setTimeout(() => setToast(null), 3000);
+      updateSubscription.mutate({ plan: planName, billingCycle }, {
+        onSuccess: () => {
+          setSelectedPlan(planName);
+          setToast({ type: 'success', message: 'Downgraded to Free plan.' });
+          setTimeout(() => setToast(null), 3000);
+        }
+      });
       return;
     }
 
-    // Simulate payment processing
     setToast({ type: 'loading', message: `Processing ${planName} plan...` });
-    setTimeout(() => {
-      setSelectedPlan(planName);
-      setToast({ type: 'success', message: `Successfully subscribed to ${planName} plan!` });
-      setTimeout(() => setToast(null), 3000);
-    }, 1200);
+    updateSubscription.mutate({ plan: planName, billingCycle }, {
+      onSuccess: () => {
+        setSelectedPlan(planName);
+        setToast({ type: 'success', message: `Successfully upgraded to ${planName}!` });
+        setTimeout(() => setToast(null), 3000);
+      },
+      onError: () => {
+        setToast({ type: 'error', message: 'Payment failed. Please try again.' });
+        setTimeout(() => setToast(null), 3000);
+      }
+    });
   };
 
   return (

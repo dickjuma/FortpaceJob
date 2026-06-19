@@ -1,3 +1,5 @@
+import { useParams, useNavigate } from 'react-router-dom';
+import { useContractDetails, useRejectMilestone } from '../services/clientHooks';
 // ClientRevisionRequestPage.jsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -32,6 +34,21 @@ const ORDER = {
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export default function ClientRevisionRequestPage() {
+  const { contractId, milestoneId } = useParams();
+  const navigate = useNavigate();
+  const { data: contract } = useContractDetails(contractId || 'mock');
+  const rejectMutation = useRejectMilestone(contractId);
+  
+  const ORDER = {
+    id: contract?.id || '#ORD-9821',
+    seller: { name: contract?.talent?.name || 'Alex Rivera', avatar: contract?.talent?.avatar || 'https://i.pravatar.cc/150?u=alex' },
+    revisionsRemaining: contract?.revisionsRemaining ?? 2,
+    revisionsTotal: contract?.revisionsTotal ?? 3,
+    delivery: {
+      message: 'Here is the final delivery...',
+      files: [{ name: 'react-app-source-v1.zip', size: '24.5 MB', type: 'zip' }],
+    },
+  };
   const [feedback, setFeedback] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -51,7 +68,7 @@ export default function ClientRevisionRequestPage() {
       return;
     }
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await rejectMutation.mutateAsync({ milestoneId: milestoneId || 'mock_m_id', feedback });
     setIsSubmitting(false);
     setIsSuccess(true);
   };
@@ -87,7 +104,7 @@ export default function ClientRevisionRequestPage() {
           <p className="text-ink-secondary font-medium mb-8">
             The seller has been notified of your changes. The order delivery time has been paused until the revision is provided.
           </p>
-          <button className="w-full py-3.5 bg-brand-900 text-white font-semibold rounded-xl shadow-sm hover:bg-brand-800 transition-colors">
+          <button onClick={() => navigate('/client/contracts/')} className="w-full py-3.5 bg-brand-900 text-white font-semibold rounded-xl shadow-sm hover:bg-brand-800 transition-colors">
             Return to Order Tracking
           </button>
         </motion.div>
@@ -276,9 +293,10 @@ export default function ClientRevisionRequestPage() {
               <div className="text-center">
                 <button
                   type="button"
+                  onClick={() => navigate('/client/contracts/')}
                   className="text-sm font-medium text-ink-tertiary hover:text-ink-primary transition-colors"
                 >
-                  Actually, I accept the delivery
+                  Back to Contract
                 </button>
               </div>
             </form>
@@ -288,3 +306,4 @@ export default function ClientRevisionRequestPage() {
     </div>
   );
 }
+

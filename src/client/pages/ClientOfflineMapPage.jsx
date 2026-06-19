@@ -2,6 +2,7 @@
 // Self-contained Nearby Field Workforce Map with design tokens,
 // framer-motion animations, and local toast notifications.
 import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   MapPin,
@@ -26,56 +27,18 @@ export default function ClientOfflineMapPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [toast, setToast] = useState(null);
 
-  const workers = [
-    {
-      id: 1,
-      name: 'Kiprotich Arap',
-      role: 'Concrete Inspector',
-      lat: 120,
-      lng: 180,
-      distance: 4.2,
-      rate: 'KES 2,500/hr',
-      status: 'Available',
-      transportCost: 800,
-      phone: '+254711002233',
-    },
-    {
-      id: 2,
-      name: 'Grace Mutua',
-      role: 'Fiber Splicer Onsite',
-      lat: 240,
-      lng: 150,
-      distance: 9.8,
-      rate: 'KES 3,200/hr',
-      status: 'On Route',
-      transportCost: 1500,
-      phone: '+254722334455',
-    },
-    {
-      id: 3,
-      name: 'Abebe Bekele',
-      role: 'Structural Engineer',
-      lat: 160,
-      lng: 320,
-      distance: 12.5,
-      rate: 'KES 4,500/hr',
-      status: 'Available',
-      transportCost: 2000,
-      phone: '+254733445566',
-    },
-    {
-      id: 4,
-      name: 'Hassan Farah',
-      role: 'Survey Assistant',
-      lat: 80,
-      lng: 280,
-      distance: 1.8,
-      rate: 'KES 1,800/hr',
-      status: 'Checked In',
-      transportCost: 400,
-      phone: '+254744556677',
-    },
-  ];
+  const { data: workersData } = useQuery({
+    queryKey: ['client', 'offlineMap'],
+    queryFn: async () => {
+      return [
+        { id: 1, name: 'Kiprotich Arap', role: 'Concrete Inspector', lat: 120, lng: 180, distance: 4.2, rate: 'KES 2,500/hr', status: 'Available', transportCost: 800, phone: '+254711002233' },
+        { id: 2, name: 'Grace Mutua', role: 'Fiber Splicer Onsite', lat: 240, lng: 150, distance: 9.8, rate: 'KES 3,200/hr', status: 'On Route', transportCost: 1500, phone: '+254722334455' },
+        { id: 3, name: 'Abebe Bekele', role: 'Structural Engineer', lat: 160, lng: 320, distance: 12.5, rate: 'KES 4,500/hr', status: 'Available', transportCost: 2000, phone: '+254733445566' },
+        { id: 4, name: 'Hassan Farah', role: 'Survey Assistant', lat: 80, lng: 280, distance: 1.8, rate: 'KES 1,800/hr', status: 'Checked In', transportCost: 400, phone: '+254744556677' }
+      ];
+    }
+  });
+  const workers = workersData || [];
 
   const showToast = (type, message, duration = 3000) => {
     setToast({ type, message });
@@ -376,3 +339,4 @@ export default function ClientOfflineMapPage() {
     </div>
   );
 }
+

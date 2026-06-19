@@ -1,3 +1,5 @@
+import { useContractMilestones, useApproveMilestone, useRejectMilestone } from '../services/clientHooks';
+import { useParams, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -6,7 +8,7 @@ import {
   Star, ThumbsUp, DollarSign, ChevronRight, Check
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
-import { useAuthRedirect } from '../../common/utils/authRedirect';
+import { useAuthRedirect } from '../../platform/common/utils/authRedirect';
 
 const SUBMITTED_FILES = [
   { id: 1, name: 'Final_App_Build_v1.zip', size: '145 MB', type: 'zip', icon: FileText, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
@@ -15,9 +17,31 @@ const SUBMITTED_FILES = [
 ];
 
 export default function ClientReviewApprovalPage() {
-  const [activeModal, setActiveModal] = useState(null); // 'approve', 'revision', null
+  const { contractId, milestoneId } = useParams();
+  const navigate = useNavigate();
+  const [activeModal, setActiveModal] = useState(null);
   const [rating, setRating] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+  const [revisionFeedback, setRevisionFeedback] = useState('');
   const { requireAuth } = useAuthRedirect();
+  
+  const { data: milestones } = useContractMilestones(contractId || 'mock');
+  const approveMutation = useApproveMilestone(contractId);
+  const rejectMutation = useRejectMilestone(contractId);
+
+  const handleApprove = async () => {
+    await approveMutation.mutateAsync(milestoneId || 'mock_m_id');
+    // In real app, submit review API as well
+    setActiveModal(null);
+    navigate('/client/contracts');
+  };
+
+  const handleReject = async () => {
+    await rejectMutation.mutateAsync({ milestoneId: milestoneId || 'mock_m_id', feedback: revisionFeedback });
+    setActiveModal(null);
+    navigate('/client/contracts');
+  };
+  
 
   return (
     <div className="min-h-screen bg-surface dark:bg-surface-dark font-sans pb-24">
@@ -179,6 +203,8 @@ export default function ClientReviewApprovalPage() {
                   <label className="block text-sm font-bold text-zinc-900 dark:text-white mb-2">Leave a public review</label>
                   <textarea 
                     rows="4" 
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value)}
                     placeholder="Alex was great to work with! The code was clean..."
                     className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#4C1D95]/20 resize-none"
                   ></textarea>
@@ -186,8 +212,8 @@ export default function ClientReviewApprovalPage() {
 
                 <div className="flex gap-4">
                   <button onClick={() => setActiveModal(null)} className="flex-1 py-3 font-bold text-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors">Cancel</button>
-                  <button className="flex-1 py-3 bg-success hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition-colors flex items-center justify-center gap-2">
-                    <DollarSign className="w-4 h-4" /> Release Payment
+                  <button onClick={handleApprove} disabled={approveMutation.isPending} className="flex-1 py-3 bg-success hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
+                    <DollarSign className="w-4 h-4" /> {approveMutation.isPending ? 'Processing...' : 'Release Payment'}
                   </button>
                 </div>
               </div>
@@ -215,6 +241,8 @@ export default function ClientReviewApprovalPage() {
                   <label className="block text-sm font-bold text-zinc-900 dark:text-white mb-2">Details of what needs fixing</label>
                   <textarea 
                     rows="5" 
+                    value={revisionFeedback}
+                    onChange={(e) => setRevisionFeedback(e.target.value)}
                     placeholder="Please update the colors on the dashboard to match the new brand guidelines..."
                     className="w-full p-4 bg-surface dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium outline-none focus:border-[#4C1D95]/20 resize-none"
                   ></textarea>
@@ -227,8 +255,8 @@ export default function ClientReviewApprovalPage() {
 
                 <div className="flex gap-4 pt-4">
                   <button onClick={() => setActiveModal(null)} className="flex-1 py-3 font-bold text-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors">Cancel</button>
-                  <button className="flex-1 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl shadow-lg shadow-[#4C1D95]/25/20 transition-colors">
-                    Send Request
+                  <button onClick={handleReject} disabled={rejectMutation.isPending} className="flex-1 py-3 bg-[#4C1D95] hover:bg-[#22C55E] text-white font-bold rounded-xl shadow-lg shadow-[#4C1D95]/25/20 transition-colors disabled:opacity-50">
+                    {rejectMutation.isPending ? 'Sending...' : 'Send Request'}
                   </button>
                 </div>
               </div>
@@ -239,5 +267,6 @@ export default function ClientReviewApprovalPage() {
     </div>
   );
 }
+
 
 

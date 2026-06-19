@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Search, X, Send, MapPin, CheckCircle } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
+import { useGetBuyerRequests, useSubmitOffer } from "../../../services/freelancerHooks";
 
 const categories = [
   { id: "all", name: "All categories" },
@@ -8,70 +9,79 @@ const categories = [
   { id: "design", name: "Design" },
   { id: "marketing", name: "Marketing" },
   { id: "writing", name: "Writing" },
-  { id: "video", name: "Video" }
-];
-
-const requests = [
-  {
-    id: 1,
-    buyer: "TechFlow Solutions",
-    title: "Full-stack React & Node.js Developer for SaaS Dashboard",
-    description: "Need a clean dashboard with Stripe + PostgreSQL. Experience with Tailwind and Framer Motion preferred.",
-    budget: "KES 120,000 - KES 180,000",
-    budgetMin: 1200,
-    budgetMax: 1800,
-    offers: 12,
-    date: "2 hours ago",
-    tags: ["React", "Node.js", "Stripe", "PostgreSQL"],
-    category: "web",
-    location: "Remote",
-    verified: true,
-    urgent: false,
-    matchScore: 94
-  },
-  {
-    id: 2,
-    buyer: "Studio Orbit",
-    title: "Logo & Brand Identity for Organic Coffee Brand",
-    description: "Minimal, earthy aesthetic. Need logo, palette, and templates. Portfolio required.",
-    budget: "KES 25,000 - KES 50,000",
-    budgetMin: 250,
-    budgetMax: 500,
-    offers: 45,
-    date: "5 hours ago",
-    tags: ["Branding", "Logo", "Identity"],
-    category: "design",
-    location: "New York, USA",
-    verified: true,
-    urgent: true,
-    matchScore: 88
-  },
-  {
-    id: 3,
-    buyer: "GrowthHive",
-    title: "SEO-Optimized Blog Content for Tech Startup",
-    description: "Need 10 long-form articles on AI/SaaS. SEO expertise required.",
-    budget: "KES 50,000 - KES 75,000",
-    budgetMin: 500,
-    budgetMax: 750,
-    offers: 23,
-    date: "1 day ago",
-    tags: ["SEO", "Content", "SaaS"],
-    category: "writing",
-    location: "Remote",
-    verified: false,
-    urgent: false,
-    matchScore: 81
-  }
+  { id: "video", name: "Video"  }
 ];
 
 export default function ViewRequests() {
-  const [selectedRequest, setSelectedRequest] = useState(null);
+  const { data: response, isLoading } = useGetBuyerRequests();
+  const apiRequests = response?.data || response || [];
+  
+  const submitOffer = useSubmitOffer();
+
+  const fallbackRequests = [
+    {
+      id: 1,
+      buyer: "TechFlow Solutions",
+      title: "Full-stack React & Node.js Developer for SaaS Dashboard",
+      description: "Need a clean dashboard with Stripe + PostgreSQL. Experience with Tailwind and Framer Motion preferred.",
+      budget: "KES 120,000 - KES 180,000",
+      budgetMin: 1200,
+      budgetMax: 1800,
+      offers: 12,
+      date: "2 hours ago",
+      tags: ["React", "Node.js", "Stripe", "PostgreSQL"],
+      category: "web",
+      location: "Remote",
+      verified: true,
+      urgent: false,
+      matchScore: 94
+    },
+    {
+      id: 2,
+      buyer: "Local Startup",
+      title: "Brand Identity & Logo Design",
+      description: "Looking for a modern logo, typography, and color palette for a sustainable coffee brand.",
+      budget: "KES 40,000",
+      budgetMin: 400,
+      budgetMax: 400,
+      offers: 5,
+      date: "5 hours ago",
+      tags: ["Logo Design", "Branding", "Illustrator"],
+      category: "design",
+      location: "Nairobi",
+      verified: false,
+      urgent: true,
+      matchScore: 82
+    },
+    {
+      id: 3,
+      buyer: "E-Commerce Ltd",
+      title: "Social Media Manager (Part-time)",
+      description: "Manage our Instagram and TikTok. Create 3 posts per week and engage with followers.",
+      budget: "KES 35,000 / month",
+      budgetMin: 350,
+      budgetMax: 350,
+      offers: 28,
+      date: "1 day ago",
+      tags: ["Social Media", "Content Creation", "Instagram", "TikTok"],
+      category: "marketing",
+      location: "Remote",
+      verified: true,
+      urgent: false,
+      matchScore: 75
+    }
+  ];
+
+  const requests = apiRequests.length > 0 ? apiRequests : fallbackRequests;
+
   const [activeFilter, setActiveFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("recent");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedRequest, setSelectedRequest] = useState(null);
   const [savedRequests, setSavedRequests] = useState([]);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [sortBy, setSortBy] = useState("recent");
+  
+  const [proposalText, setProposalText] = useState("");
+  const [proposalPrice, setProposalPrice] = useState("");
 
   const filteredRequests = useMemo(() => {
     let list = [...requests];
@@ -108,7 +118,7 @@ export default function ViewRequests() {
     }
 
     return list;
-  }, [activeFilter, searchQuery, sortBy]);
+  }, [activeFilter, searchQuery, sortBy, requests]);
 
   const toggleSave = (id) => {
     setSavedRequests((prev) => {
@@ -135,22 +145,33 @@ export default function ViewRequests() {
             </div>
             <textarea
               rows="5"
+              value={proposalText}
+              onChange={(e) => setProposalText(e.target.value)}
               placeholder="Write your proposal..."
               className="w-full border border-[#E7E1DE] rounded-lg p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#22C55E] focus:border-[#22C55E]"
             />
             <input
               type="text"
+              value={proposalPrice}
+              onChange={(e) => setProposalPrice(e.target.value)}
               placeholder="Your price (e.g. KES 90,000)"
               className="w-full border border-[#E7E1DE] rounded-lg p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#22C55E] focus:border-[#22C55E]"
             />
             <button
-              className="px-4 py-2 bg-[#22C55E] text-white rounded-lg text-sm hover:bg-[#B53A27]"
+              disabled={submitOffer.isPending}
+              className="px-4 py-2 bg-[#22C55E] text-white rounded-lg text-sm hover:bg-[#B53A27] disabled:opacity-50"
               onClick={() => {
-                toast.success('Proposal sent successfully!');
-                setSelectedRequest(null);
+                submitOffer.mutate({ requestId: selectedRequest.id, proposalText, proposalPrice }, {
+                  onSuccess: () => {
+                    toast.success('Proposal sent successfully!');
+                    setSelectedRequest(null);
+                    setProposalText("");
+                    setProposalPrice("");
+                  }
+                });
               }}
             >
-              Send proposal
+              {submitOffer.isPending ? 'Sending...' : 'Send Proposal'}
             </button>
           </div>
         </div>

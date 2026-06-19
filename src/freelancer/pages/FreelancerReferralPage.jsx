@@ -6,20 +6,27 @@ import {
   CheckCircle2, Trophy, ArrowRight, Mail,
   Twitter, Linkedin, MessageCircle, Check
 } from 'lucide-react';
+import { useGetReferrals } from '../services/freelancerHooks';
 
-const LEADERBOARD = [
+const fallbackLeaderboard = [
   { rank: 1, name: 'Alex Rivera', invites: 42, earnings: 4200, avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop' },
   { rank: 2, name: 'Sarah Mitchell', invites: 38, earnings: 3800, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop' },
   { rank: 3, name: 'You', invites: 12, earnings: 1200, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop', isYou: true },
   { rank: 4, name: 'David Kim', invites: 8, earnings: 800, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop' },
 ];
 
-const HISTORY = [
+const fallbackHistory = [
   { id: 1, user: 'john.doe@example.com', status: 'Completed', reward: 100, date: 'May 18, 2026' },
   { id: 2, user: 'jane.smith@design.io', status: 'Pending', reward: 100, date: 'May 20, 2026' },
 ];
 
 export default function FreelancerReferralPage() {
+  const { data: response, isLoading } = useGetReferrals();
+  const apiData = response?.data || response;
+  
+  const LEADERBOARD = apiData?.leaderboard || fallbackLeaderboard;
+  const HISTORY = apiData?.history || fallbackHistory;
+  
   const [copied, setCopied] = useState(false);
   const [showSuccess, setShowSuccess] = useState(null);
   const referralLink = 'https://forte.com/ref/freelancer123';

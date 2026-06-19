@@ -22,7 +22,7 @@ import {
   AlertCircle,
   DollarSign,
 } from 'lucide-react';
-import { profileAPI } from '../../common/services/api';
+import { useMyProfile, useUpdateProfile } from '../services/clientHooks';
 
 // ----------------------------------------------------------------------
 // Client Account Types (mock, originally from constants)
@@ -41,41 +41,10 @@ const normalizeClientType = (type) => {
 // Helper for conditional classes
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
-// ----------------------------------------------------------------------
-// Mock Profile Data (replace with real API when ready)
-// ----------------------------------------------------------------------
-const MOCK_PROFILE = {
-  id: 'client-1',
-  firstName: 'Alex',
-  lastName: 'Morgan',
-  username: 'alexmorgan',
-  email: 'alex@acme.com',
-  phone: '+254711223344',
-  bio: 'Experienced client looking for top-tier freelancers to build innovative products.',
-  role: 'client',
-  isVerified: true,
-  createdAt: '2024-03-15T10:00:00Z',
-  avatar: null,
-  clientProfile: {
-    companyName: 'Acme Innovations',
-    companyBio: 'We build digital solutions for African enterprises.',
-    location: 'Nairobi, Kenya',
-    website: 'https://acme.com',
-    industry: 'Technology',
-    companySize: '11-50',
-    totalJobsPosted: 12,
-    totalHires: 19,
-    activeJobsCount: 4,
-  },
-};
 
-// ----------------------------------------------------------------------
-// Main Component
-// ----------------------------------------------------------------------
 export default function ClientProfilePage() {
-  const [profile, setProfile] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { data: profile, isLoading, error } = useMyProfile();
+  const updateProfile = useUpdateProfile();
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState(null);
   const [clientType, setClientType] = useState('INDIVIDUAL');
@@ -84,22 +53,12 @@ export default function ClientProfilePage() {
   const [toast, setToast] = useState(null);
   const [isDepositing, setIsDepositing] = useState(false);
 
-  useEffect(() => {
-    const load = async () => {
-      setIsLoading(true);
-      try {
-        const { user } = await profileAPI.getMyProfile();
-        setProfile(user);
-        const defaultType = normalizeClientType(user?.accountType || user?.profile?.clientType || user?.clientProfile?.clientType);
-        setClientType(defaultType);
-      } catch (err) {
-        setError(err?.message || 'Failed to load profile');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    load();
-  }, []);
+useEffect(() => {
+    if (profile) {
+      const defaultType = normalizeClientType(profile?.accountType || profile?.clientType || profile?.clientProfile?.accountType);
+      setClientType(defaultType);
+    }
+  }, [profile]);
 
   const showToast = (type, message, duration = 3000) => {
     setToast({ type, message });
@@ -109,7 +68,7 @@ export default function ClientProfilePage() {
   const startEdit = () => {
     const p = profile;
     const cp = p?.clientProfile || {};
-    setClientType(normalizeClientType(p?.accountType || cp?.clientType));
+    setClientType(normalizeClientType(p?.accountType || cp?.clientType || p?.clientType));
     setEditForm({
       firstName: p?.firstName || '',
       lastName: p?.lastName || '',
@@ -167,8 +126,7 @@ export default function ClientProfilePage() {
         companySize: editForm.companySize,
         companyBio: editForm.bio,
       };
-      const result = await profileAPI.updateMyProfile(payload);
-      setProfile(result.user || result);
+      await updateProfile.mutateAsync(payload);
       setEditing(false);
       setEditForm(null);
       showToast('success', 'Profile saved successfully.');
@@ -641,3 +599,4 @@ export default function ClientProfilePage() {
     </div>
   );
 }
+

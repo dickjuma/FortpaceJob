@@ -6,6 +6,7 @@ import {
   Settings, Eye, Heart, MessageSquare, MoreHorizontal,
   X, UploadCloud, Check
 } from 'lucide-react';
+import { useGetPortfolio, useCreatePortfolioProject } from '../services/freelancerHooks';
 
 const PROJECTS = [
   { id: 1, title: 'Fintech Mobile App UI', category: 'App Design', views: 1240, likes: 342, image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80', featured: true },
@@ -16,18 +17,28 @@ const PROJECTS = [
 ];
 
 export default function FreelancerPortfolioPage() {
+  const { data: response, isLoading } = useGetPortfolio();
+  const portfolioData = response?.data || response || [];
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('All');
   const [showSuccess, setShowSuccess] = useState(null);
+  
+  const createProject = useCreatePortfolioProject();
 
   const categories = ['All', 'App Design', 'Web Development', 'Web Design', 'Branding', 'Backend'];
 
-  const filteredProjects = activeCategory === 'All' ? PROJECTS : PROJECTS.filter(p => p.category === activeCategory);
+  const projects = portfolioData.length > 0 ? portfolioData : PROJECTS;
+  const filteredProjects = activeCategory === 'All' ? projects : projects.filter(p => p.category === activeCategory);
 
   const handlePublishProject = () => {
-    setIsModalOpen(false);
-    setShowSuccess({ message: 'Project published successfully' });
-    setTimeout(() => setShowSuccess(null), 3000);
+    createProject.mutate({ title: 'New Project', category: 'Web Development' }, {
+      onSuccess: () => {
+        setIsModalOpen(false);
+        setShowSuccess({ message: 'Project published successfully' });
+        setTimeout(() => setShowSuccess(null), 3000);
+      }
+    });
   };
 
   return (
@@ -261,12 +272,13 @@ export default function FreelancerPortfolioPage() {
                 >
                   Cancel
                 </button>
-                <button
-                  onClick={handlePublishProject}
-                  className="px-6 py-2 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-brand-900"
-                >
-                  Publish project
-                </button>
+                  <button
+                    onClick={handlePublishProject}
+                    disabled={createProject.isPending}
+                    className="px-6 py-2.5 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-semibold text-sm transition-colors flex items-center gap-2"
+                  >
+                    {createProject.isPending ? 'Publishing...' : <><Check className="w-4 h-4" /> Publish Project</>}
+                  </button>
               </div>
             </motion.div>
           </div>

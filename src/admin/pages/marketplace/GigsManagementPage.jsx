@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { 
-  ShoppingBag, Search, Filter, MoreVertical, 
-  ChevronDown, Star, Activity, AlertTriangle, 
-  CheckCircle, ArrowUpDown, Lock, Clock, Zap, Eye, Edit3, ShieldOff
+  ShoppingBag, Search, MoreVertical, 
+  Star, Activity, AlertTriangle, 
+  ArrowUpDown, Zap, Eye, Edit3, ShieldOff
 } from 'lucide-react';
-import { useGigs } from '../../hooks/useMarketplace';
+import { useGigs, useMarketplaceActions } from '../../hooks/useMarketplace';
 import useMarketplaceStore from '../../store/marketplaceStore';
-import { GIG_STATUSES, CATEGORIES } from '../../config/marketplaceConfig';
-import { format } from 'date-fns';
+import { GIG_STATUSES } from '../../config/marketplaceConfig';
 import Avatar from '../../components/ui/Avatar';
 import { cn } from '../../utils/cn';
 import toast from 'react-hot-toast';
@@ -36,6 +35,7 @@ const StatusBadge = ({ status }) => {
 
 export default function GigsManagementPage() {
   const { data: gigsData, isLoading } = useGigs();
+  const { removeItem: removeGigAction } = useMarketplaceActions();
   const { filters, setFilter, setPage } = useMarketplaceStore();
   const [selectedIds, setSelectedIds] = useState([]);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -398,6 +398,7 @@ export default function GigsManagementPage() {
         onClose={() => setIsActionModalOpen(false)}
         data={selectedGig}
         type="delist"
+        onAction={(reason) => removeGigAction.mutateAsync({ id: selectedGig.id, type: 'gig', reason })}
       />
 
       <UserProfileModal 

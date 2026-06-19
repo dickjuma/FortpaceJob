@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import {
   AlertTriangle, Database, RefreshCw, ShieldCheck,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight,
-  Filter, Search
+  Search
 } from "lucide-react";
 import apiClient, { unwrapAdminResponse } from "../api/apiClient";
 import { ConfirmModal, SuccessOverlay, PrimaryActionModal } from "../components/ui/AdminModals";
@@ -51,7 +51,7 @@ const getRows = (data) => {
   if (Array.isArray(data)) return data;
   const keys = [
     "items", "results", "records", "data",
-    "transactions", "users", "jobs", "gigs", "proposals",
+    "transactions", "users", "jobs", "gigs", "orders", "proposals",
     "disputes", "deposits", "refunds", "subscriptions", "payouts",
     "wallets", "withdrawals", "entries", "rules", "conversations",
     "messages", "logs", "contracts", "categories", "rankings",
@@ -78,7 +78,7 @@ const getColumns = (rows, columns) => {
 };
 
 const getRowId = (row) =>
-  row?.id || row?._id || row?.jobId || row?.gigId || row?.proposalId ||
+  row?.id || row?._id || row?.jobId || row?.gigId || row?.orderId ||
   row?.contentId || row?.caseId || row?.disputeId || row?.wdId ||
   row?.walletId || row?.escrowId || row?.messageId || row?.ruleId;
 

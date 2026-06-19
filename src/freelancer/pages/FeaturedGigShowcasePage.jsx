@@ -3,40 +3,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import {
   Sparkles, ShieldCheck, Star, ChevronRight,
-  ArrowRight, Award, Zap
+  ArrowRight, Award, Zap, Loader2
 } from 'lucide-react';
-
-const FEATURED_GIGS = [
-  {
-    id: 1,
-    title: 'Enterprise SaaS Application Architecture',
-    seller: { name: 'David Chen', title: 'Ex-Google Engineer', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop' },
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=1000&fit=crop',
-    tags: ['React', 'Node.js', 'AWS'],
-    rating: 5.0,
-    price: 3500
-  },
-  {
-    id: 2,
-    title: 'Award-Winning Brand Identity Design',
-    seller: { name: 'Elena R.', title: 'Creative Director', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop' },
-    image: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?w=800&h=1000&fit=crop',
-    tags: ['Branding', 'UI/UX', 'Strategy'],
-    rating: 4.9,
-    price: 2800
-  },
-  {
-    id: 3,
-    title: 'High-Converting B2B Copywriting',
-    seller: { name: 'Marcus L.', title: 'B2B Tech Writer', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop' },
-    image: 'https://images.unsplash.com/photo-1455390582262-044cdead27d8?w=800&h=1000&fit=crop',
-    tags: ['SEO', 'Sales Copy', 'Tech'],
-    rating: 5.0,
-    price: 1200
-  }
-];
+import { useFreelancerGigs } from '../services/freelancerHooks';
 
 export default function FeaturedGigShowcasePage() {
+  const { data, isLoading } = useFreelancerGigs({ isFeatured: true, limit: 3 });
+  
+  // Use data items or empty array
+  const gigs = Array.isArray(data) ? data : data?.items ?? data?.gigs ?? [];
   return (
     <div className="min-h-screen bg-white font-body overflow-hidden">
       {/* Top Navbar */}
@@ -109,8 +84,13 @@ export default function FeaturedGigShowcasePage() {
 
       {/* Main Showcase Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 relative z-10">
+        {isLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="w-8 h-8 text-accent animate-spin" />
+          </div>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {FEATURED_GIGS.map((gig, idx) => (
+          {gigs.map((gig, idx) => (
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -141,19 +121,19 @@ export default function FeaturedGigShowcasePage() {
                 <div className="absolute bottom-5 left-5 right-5">
                   <div className="flex items-center gap-3 mb-3">
                     <img
-                      src={gig.seller.avatar}
-                      alt={gig.seller.name}
+                      src={gig.seller?.avatar || 'https://via.placeholder.com/150'}
+                      alt={gig.seller?.name || 'Seller'}
                       className="w-10 h-10 rounded-full border-2 border-white object-cover"
                       width={40}
                       height={40}
                     />
                     <div>
-                      <h4 className="text-white font-body font-semibold text-sm">{gig.seller.name}</h4>
-                      <p className="text-xs font-body font-medium text-accent-light">{gig.seller.title}</p>
+                      <h4 className="text-white font-body font-semibold text-sm">{gig.seller?.name || 'Verified Pro'}</h4>
+                      <p className="text-xs font-body font-medium text-accent-light">{gig.seller?.title || 'Forte Expert'}</p>
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {gig.tags.map(tag => (
+                    {(gig.tags || []).slice(0, 3).map(tag => (
                       <span
                         key={tag}
                         className="px-2.5 py-1 rounded-md bg-white/10 backdrop-blur-sm border border-white/10 text-xs font-body font-medium text-white/90"
@@ -173,12 +153,12 @@ export default function FeaturedGigShowcasePage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 text-accent DEFAULT font-body font-semibold text-sm">
                     <Star className="w-4 h-4 fill-accent DEFAULT text-accent DEFAULT" />
-                    <span>{gig.rating.toFixed(1)}</span>
+                    <span>{(gig.rating || 0).toFixed(1)}</span>
                   </div>
                   <div className="text-ink-tertiary text-sm font-body">
                     Starting at{' '}
                     <span className="text-ink-primary font-mono font-semibold text-lg ml-1">
-                      KES {gig.price.toLocaleString()}
+                      KES {(gig.price || gig.startingPrice || 0).toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -186,6 +166,7 @@ export default function FeaturedGigShowcasePage() {
             </motion.div>
           ))}
         </div>
+        )}
 
         {/* View All CTA */}
         <div className="mt-16 flex justify-center">

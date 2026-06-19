@@ -4,6 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { TrendingUp, Eye, DollarSign, Package, ChevronLeft, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useGigAnalytics } from '../services/freelancerHooks';
 
 const salesData = [
   { name: 'Jan', sales: 400, views: 2400 },
@@ -15,12 +16,24 @@ const salesData = [
 ];
 
 export default function GigAnalyticsDashboard() {
-  const stats = [
+  const { data: analyticsData, isLoading } = useGigAnalytics();
+
+  // Map API data or fallback to mock
+  const salesChart = analyticsData?.salesData || salesData;
+  const overviewStats = analyticsData?.stats || [
     { name: 'Total revenue', value: 'KES 12.4K', change: '+24%', icon: DollarSign },
     { name: 'Active orders', value: '5', change: '+2', icon: ShoppingCart },
     { name: 'Gig views (30d)', value: '14.2K', change: '+45%', icon: Eye },
     { name: 'Conversion rate', value: '4.8%', change: '+1.2%', icon: TrendingUp },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-surface-soft flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-border border-t-brand-900 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -77,15 +90,15 @@ export default function GigAnalyticsDashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-        {stats.map((stat, idx) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {overviewStats.map((stat, index) => {
           const Icon = stat.icon;
           return (
             <motion.div
               key={stat.name}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.05 }}
+              transition={{ delay: index * 0.05 }}
               whileHover={{ y: -2 }}
               className="bg-white border border-border rounded-2xl p-5 shadow-sm"
             >
@@ -118,7 +131,7 @@ export default function GigAnalyticsDashboard() {
           <h2 className="font-display font-semibold text-lg text-brand-900 mb-5">Revenue trend</h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={salesData} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
+              <LineChart data={salesChart} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E7E5E4" />
                 <XAxis
                   dataKey="name"
@@ -157,7 +170,7 @@ export default function GigAnalyticsDashboard() {
           <h2 className="font-display font-semibold text-lg text-brand-900 mb-5">Gig views</h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={salesData} margin={{ top: 20, right: 20, left: 0, bottom: 10 }}>
+              <BarChart data={salesChart} margin={{ top: 20, right: 20, left: 0, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E7E5E4" />
                 <XAxis
                   dataKey="name"

@@ -1,19 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import {
-  Search, Briefcase, UserCircle, MessageSquare, BarChart2,
-  ChevronDown, Bell, Wallet, LayoutDashboard, FileText, ShoppingCart, Calendar,
-  DollarSign, Star, Receipt, Layers, PlusSquare, Heart, Send,
-  Users, FolderKanban, Building2, Building, Shield, ShieldCheck, Folder, Upload, Share2,
-  Download, BadgeCheck, Lock, Blocks, Palette, HelpCircle, Ticket,
-  MessageCircle, GraduationCap, Zap, Gift, LogOut, PanelLeftClose, PanelLeft, Plus,
-  MapPin, CalendarCheck, Compass, Map, Video, ArrowUpRight, Smartphone, Globe, Bookmark,
-  X
-} from 'lucide-react';
+import { ChevronDown, PanelLeftClose, PanelLeft, X, Plus, Zap, Gift, LogOut } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
 import { useFreelancer } from '../context/FreelancerContext';
-import { useAuthStore } from '../../common/authStore';
+import { useAuthStore } from '../../platform/common/authStore';
 import { useFreelancerWallet } from '../services/freelancerHooks';
+import { getFreelancerNavSections } from '../config/freelancerNavigation';
 
 export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCollapsed, setIsCollapsed }) {
   const { accountType, isOfflineProvider } = useFreelancer();
@@ -22,110 +14,37 @@ export default function FreelancerSidebar({ isMobileOpen, setIsMobileOpen, isCol
   const { data: walletData } = useFreelancerWallet();
   const availableBalance = walletData?.availableBalance || walletData?.available || 0;
 
-  // Track open dropdowns (desktop & mobile)
-  const [openDropdowns, setOpenDropdowns] = useState({
-    main: true,
-    business: false,
-    marketplace: false,
-    account: false,
-    support: false,
-    offline: true,
-  });
+  const [openDropdowns, setOpenDropdowns] = useState({});
 
   const toggleDropdown = (key) => {
     if (isCollapsed) return; // Prevent dropdown toggle when collapsed
     setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const getNavSections = () => {
-    const sections = [
-      {
-        key: 'main',
-        title: 'MAIN',
-        icon: LayoutDashboard,
-        links: [
-          { name: 'Dashboard', path: '/freelancer/dashboard', icon: LayoutDashboard },
-          { name: 'Find Work', path: '/freelancer/jobs', icon: Search },
-          { name: 'Work History', path: '/freelancer/my-jobs', icon: Briefcase },
-          { name: 'Orders', path: '/freelancer/orders', icon: ShoppingCart },
-          { name: 'Contracts', path: '/freelancer/contracts', icon: FileText },
-          { name: 'Disputes', path: '/freelancer/disputes', icon: Shield },
-          { name: 'Messages', path: '/freelancer/messages', icon: MessageSquare },
-          { name: 'Calendar', path: '/freelancer/calendar', icon: Calendar },
-        ]
-      },
-      {
-        key: 'business',
-        title: 'BUSINESS',
-        icon: Briefcase,
-        links: [
-          { name: 'Wallet', path: '/freelancer/wallet', icon: Wallet },
-          { name: 'Escrow', path: '/freelancer/escrow', icon: ShieldCheck },
-          { name: 'Withdrawals', path: '/freelancer/withdrawal', icon: ArrowUpRight },
-          { name: 'Payment Setup', path: '/freelancer/payment-setup', icon: Smartphone },
-          { name: 'Earnings', path: '/freelancer/earnings', icon: DollarSign },
-          { name: 'Analytics', path: '/freelancer/analytics', icon: BarChart2 },
-          { name: 'Reviews', path: '/freelancer/reviews', icon: Star },
-          { name: 'Invoices', path: '/freelancer/tax-invoices', icon: Receipt },
-        ]
-      },
-      {
-        key: 'marketplace',
-        title: 'MARKETPLACE',
-        icon: Layers,
-        links: [
-          { name: 'My Services', path: '/freelancer/gigs', icon: Layers },
-          { name: 'Create Service', path: '/freelancer/gigs/create', icon: PlusSquare },
-          { name: 'Portfolio', path: '/freelancer/portfolio', icon: Upload },
-          { name: 'Saved Jobs', path: '/freelancer/saved-jobs', icon: Heart },
-          { name: 'Proposals', path: '/freelancer/proposals', icon: Send },
-          { name: 'Remote Jobs', path: '/freelancer/remote-jobs', icon: Globe },
-          { name: 'Hybrid Jobs', path: '/freelancer/hybrid-jobs', icon: MapPin },
-          { name: 'Global Search', path: '/freelancer/global-search-results', icon: Search },
-          { name: 'Bookmarks', path: '/freelancer/global-bookmarks', icon: Bookmark },
-        ]
-      },
-      {
-        key: 'account',
-        title: 'ACCOUNT',
-        icon: UserCircle,
-        links: [
-          { name: 'My Profile', path: '/freelancer/profile', icon: UserCircle },
-          { name: 'Verification', path: '/freelancer/verification-center', icon: BadgeCheck },
-          { name: 'Notification Settings', path: '/freelancer/notifications', icon: Bell },
-          { name: 'Privacy & Security', path: '/freelancer/security', icon: Lock },
-          { name: 'API Integrations', path: '/freelancer/api', icon: Blocks },
-          { name: 'Appearance Settings', path: '/freelancer/appearance', icon: Palette },
-        ]
-      },
-      {
-        key: 'support',
-        title: 'SUPPORT',
-        icon: HelpCircle,
-        links: [
-          { name: 'Help Center', path: '/freelancer/help', icon: HelpCircle },
-          { name: 'Support Tickets', path: '/freelancer/tickets', icon: Ticket },
-          { name: 'Community', path: '/freelancer/community-forum', icon: MessageCircle },
-          { name: 'Tutorials', path: '/freelancer/tutorials', icon: GraduationCap },
-        ]
-      }
-    ];
+  const navSections = useMemo(
+    () => getFreelancerNavSections(accountType, isOfflineProvider),
+    [accountType, isOfflineProvider],
+  );
 
-    if (isOfflineProvider) {
-      sections.push({
-        key: 'offline',
-        title: 'LOCAL & OFFLINE',
-        icon: MapPin,
-        links: [
-          { name: 'Nearby Jobs', path: '/freelancer/nearby-jobs', icon: MapPin },
-        ]
+  useEffect(() => {
+    setOpenDropdowns((prev) => {
+      const next = { ...prev };
+
+      navSections.forEach((section) => {
+        if (!(section.key in next)) {
+          next[section.key] = section.key === 'dashboard';
+        }
       });
-    }
 
-    return sections;
-  };
+      Object.keys(next).forEach((key) => {
+        if (!navSections.some((section) => section.key === key)) {
+          delete next[key];
+        }
+      });
 
-  const navSections = getNavSections();
+      return next;
+    });
+  }, [navSections]);
 
   return (
     <>

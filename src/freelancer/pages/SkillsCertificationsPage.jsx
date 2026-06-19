@@ -1,7 +1,8 @@
 // src/pages/freelancer/SkillsCertificationsPage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Award, CheckCircle, Search, Plus, X, AlertCircle, Trash2 } from 'lucide-react';
+import { useGetSkillsCertifications, useUpdateSkillsCertifications } from '../services/freelancerHooks';
 
 // ---------- Shared UI Components (inline) ----------
 const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, type = 'button' }) => {
@@ -65,9 +66,17 @@ const Input = ({ value, onChange, placeholder, className = '', icon: Icon }) => 
 
 // ---------- Main Component ----------
 export default function SkillsCertificationsPage() {
+  const { data: response, isLoading } = useGetSkillsCertifications();
+  const apiData = response?.data || response;
+  const updateSkillsMutation = useUpdateSkillsCertifications();
+
   const [skills, setSkills] = useState(['React', 'Node.js', 'TypeScript', 'GraphQL']);
   const [newSkill, setNewSkill] = useState('');
   const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    if (apiData?.skills) setSkills(apiData.skills);
+  }, [apiData]);
 
   const addSkill = (e) => {
     e.preventDefault();
@@ -81,27 +90,46 @@ export default function SkillsCertificationsPage() {
       setTimeout(() => setToast(null), 3000);
       return;
     }
-    setSkills([...skills, newSkill.trim()]);
-    setNewSkill('');
-    setToast({ type: 'success', message: 'Skill added successfully' });
-    setTimeout(() => setToast(null), 3000);
+    const updatedSkills = [...skills, newSkill.trim()];
+    updateSkillsMutation.mutate({ skills: updatedSkills }, {
+      onSuccess: () => {
+        setSkills(updatedSkills);
+        setNewSkill('');
+        setToast({ type: 'success', message: 'Skill added' });
+        setTimeout(() => setToast(null), 3000);
+      }
+    });
   };
 
   const removeSkill = (skillToRemove) => {
-    setSkills(skills.filter(s => s !== skillToRemove));
-    setToast({ type: 'success', message: 'Skill removed' });
-    setTimeout(() => setToast(null), 3000);
+    const updatedSkills = skills.filter(s => s !== skillToRemove);
+    updateSkillsMutation.mutate({ skills: updatedSkills }, {
+      onSuccess: () => {
+        setSkills(updatedSkills);
+        setToast({ type: 'success', message: 'Skill removed' });
+        setTimeout(() => setToast(null), 3000);
+      }
+    });
   };
 
-  const certifications = [
+  const fallbackCertifications = [
     {
       id: 1,
       name: 'AWS Certified Solutions Architect',
       issuer: 'Amazon Web Services (AWS)',
       date: 'Jan 2023',
-      verified: true,
+      credentialId: 'AWS-12345678'
     },
+    {
+      id: 2,
+      name: 'React Developer Certification',
+      issuer: 'Meta',
+      date: 'Mar 2024',
+      credentialId: 'META-98765432'
+    }
   ];
+  
+  const certifications = apiData?.certifications || fallbackCertifications;
 
   return (
     <motion.div

@@ -3,15 +3,21 @@ import toast from 'react-hot-toast';
 import useMarketplaceStore from '../store/marketplaceStore';
 import { 
   fetchJobs, 
-  fetchGigs, 
+  fetchGigs,
+  fetchOrders,
   fetchProposals, 
   fetchContracts, 
   fetchReviews, 
   fetchMarketplaceStats,
   approveJob,
   rejectJob,
+  forceJobStatus,
   approveGig,
   removeGig,
+  featureGig,
+  unfeatureGig,
+  flagGig,
+  refundOrder,
   resolveFlaggedContent,
 } from '../api/marketplace.api';
 
@@ -68,6 +74,19 @@ export function useContracts() {
   });
 }
 
+export function useOrders() {
+  const { filters, pagination } = useMarketplaceStore();
+  const params = { ...filters.orders, page: pagination.orders, limit: 20 };
+
+  return useQuery({
+    queryKey: ['marketplace', 'orders', params],
+    queryFn: () => fetchOrders(params),
+    staleTime: 60_000,
+    gcTime: 300_000,
+    placeholderData: (prev) => prev,
+  });
+}
+
 export function useReviews() {
   const { filters, pagination } = useMarketplaceStore();
   const params = { ...filters.reviews, page: pagination.reviews, limit: 20 };
@@ -103,6 +122,10 @@ export function useMarketplaceActions() {
       if (type === 'review' || type === 'content') {
         return resolveFlaggedContent(id, { action: 'FLAG', reason: notes || reason });
       }
+      if (type === 'gig') return flagGig(id, notes || reason);
+      if (type === 'job') {
+        return resolveFlaggedContent(id, { type: 'job', action: 'FLAG', reason: notes || reason });
+      }
       throw new Error('Flagging this item type is not exposed by the current backend API.');
     },
     onSuccess: () => {
@@ -114,7 +137,7 @@ export function useMarketplaceActions() {
 
   const approveItem = useMutation({
     mutationFn: async ({ id, type, reason }) => {
-      if (type === 'job') return approveJob(id, { reason });
+      if (type === 'job') return approveJob(id);
       if (type === 'gig') return approveGig(id);
       if (type === 'review' || type === 'content') {
         return resolveFlaggedContent(id, { action: 'ALLOW', reason });
@@ -132,6 +155,7 @@ export function useMarketplaceActions() {
     mutationFn: async ({ id, type, reason }) => {
       if (type === 'job') return rejectJob(id, { reason });
       if (type === 'gig') return removeGig(id, { reason });
+      if (type === 'order') return refundOrder(id, reason);
       if (type === 'review' || type === 'content') {
         return resolveFlaggedContent(id, { action: 'REMOVE', reason });
       }
@@ -144,10 +168,51 @@ export function useMarketplaceActions() {
     onError: (error) => toast.error(error.message || 'Failed to delete item'),
   });
 
+  const featureItem = useMutation({
+    mutationFn: async ({ id, type }) => {
+      if (type === 'job') return approveJob(id);
+      if (type === 'gig') return featureGig(id);
+      throw new Error('Featuring this item type is not exposed by the current backend API.');
+    },
+    onSuccess: () => {
+      invalidateMarketplace();
+      toast.success('Item successfully featured');
+    },
+    onError: (error) => toast.error(error.message || 'Failed to feature item'),
+  });
+
+  const unfeatureItem = useMutation({
+    mutationFn: async ({ id, type }) => {
+      if (type === 'gig') return unfeatureGig(id);
+      throw new Error('Unfeaturing this item type is not exposed by the current backend API.');
+    },
+    onSuccess: () => {
+      invalidateMarketplace();
+      toast.success('Item successfully unfeatured');
+    },
+    onError: (error) => toast.error(error.message || 'Failed to unfeature item'),
+  });
+
+  const forceStatus = useMutation({
+    mutationFn: async ({ id, type, status, reason }) => {
+      if (type === 'job') return forceJobStatus(id, status, reason);
+      throw new Error('Forcing status on this item type is not exposed by the current backend API.');
+    },
+    onSuccess: () => {
+      invalidateMarketplace();
+      toast.success('Item status updated');
+    },
+    onError: (error) => toast.error(error.message || 'Failed to update item status'),
+  });
+
   return {
     flagItem,
     approveItem,
     deleteItem,
+    removeItem: deleteItem,
+    featureItem,
+    unfeatureItem,
+    forceStatus,
     invalidateMarketplace
   };
 }

@@ -5,6 +5,7 @@ import {
   Bell, Mail, MessageSquare, ShieldCheck, Clock, Zap,
   ToggleLeft, ToggleRight, Save, Shield, Check
 } from 'lucide-react';
+import { useUpdateFreelancerSettings } from '../services/freelancerHooks';
 
 export default function NotificationSettingsPage() {
   const [preferences, setPreferences] = useState({
@@ -17,6 +18,7 @@ export default function NotificationSettingsPage() {
     securityMfa: true
   });
   const [showSuccess, setShowSuccess] = useState(null);
+  const updateSettings = useUpdateFreelancerSettings();
 
   const togglePreference = (key) => {
     setPreferences(prev => ({ ...prev, [key]: !prev[key] }));
@@ -25,8 +27,12 @@ export default function NotificationSettingsPage() {
   };
 
   const handleSave = () => {
-    setShowSuccess({ message: 'Preferences saved successfully' });
-    setTimeout(() => setShowSuccess(null), 2000);
+    updateSettings.mutate({ notifications: preferences }, {
+      onSuccess: () => {
+        setShowSuccess({ message: 'Preferences saved successfully' });
+        setTimeout(() => setShowSuccess(null), 2000);
+      }
+    });
   };
 
   const PreferenceRow = ({ title, description, isEnabled, onToggle }) => (

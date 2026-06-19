@@ -10,8 +10,8 @@ import {
   Star,
   Video,
 } from 'lucide-react';
-import { useSocket } from '../../../common/context/SocketContext';
-import api from '../../../common/services/api'; // shared API client
+import { useSocket } from '../../../platform/common/context/SocketContext';
+import api from '../../../platform/common/services/api'; // shared API client
 
 // Helper functions (same as before)
 const formatTime = (iso) => {

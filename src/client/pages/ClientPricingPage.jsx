@@ -15,8 +15,8 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react";
-import { getToken, getUser } from "../../common/services/api";
-import pricingPattern from "../../common/assets/hire-manage.jpg";
+import { getToken, getUser } from "../../platform/common/services/api";
+import pricingPattern from "../../platform/common/assets/hire-manage.jpg";
 
 const plans = [
   {

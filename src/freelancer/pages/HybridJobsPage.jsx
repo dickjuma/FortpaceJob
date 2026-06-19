@@ -4,13 +4,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Building, Search, Plus, X, Award, Briefcase, ChevronRight, Star, DollarSign, Clock, Eye, MapPin, Check
 } from 'lucide-react';
+import { useGetJobs } from '../services/freelancerHooks';
 
 export default function HybridJobsPage() {
-  const [jobs, setJobs] = useState([
+  const { data: response, isLoading } = useGetJobs({ type: 'hybrid' });
+  const apiJobs = response?.data || response || [];
+
+  const fallbackJobs = [
     { id: 1, title: 'Lead Product UX/UI Designer', client: 'Oracle Systems', budget: 90, type: 'Hourly Rate', frequency: '2 days/week on-site', location: 'San Francisco, CA' },
     { id: 2, title: 'Full Stack Node/React Architect', client: 'Fintech Hub Inc', budget: 14500, type: 'Fixed Price', frequency: '3 days/week on-site', location: 'San Jose, CA' },
     { id: 3, title: 'QA Automated Testing Specialist', client: 'Webflow Partner agency', budget: 75, type: 'Hourly Rate', frequency: '1 day/week on-site', location: 'Oakland, CA' }
-  ]);
+  ];
+
+  const jobs = apiJobs.length > 0 ? apiJobs : fallbackJobs;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuccess, setShowSuccess] = useState(null);

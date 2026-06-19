@@ -133,7 +133,7 @@ export default function ProposalComparisonPage() {
         {/* Header */}
         <div>
           <Link
-            to={`/client/jobs/${jobId}/pipeline`}
+            to={`/client/jobs/${jobId}`}
             className="inline-flex items-center gap-1.5 text-sm text-ink-tertiary hover:text-accent transition-colors mb-4"
           >
             <ChevronLeft className="w-4 h-4" /> Back to Pipeline
@@ -161,7 +161,7 @@ export default function ProposalComparisonPage() {
               {error ? 'Failed to load proposals.' : 'No proposals to compare yet.'}
             </p>
             <button
-              onClick={() => navigate(`/client/jobs/${jobId}/pipeline`)}
+              onClick={() => navigate(`/client/jobs/${jobId}`)}
               className="text-sm text-accent hover:underline"
             >
               Go to Pipeline

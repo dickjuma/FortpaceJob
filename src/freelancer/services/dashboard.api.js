@@ -1,4 +1,4 @@
-import { getToken } from '../../common/services/api.js';
+import { getToken } from '../../platform/common/services/api.js';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -43,7 +43,7 @@ export async function fetchFreelancerRecentActivity() {
 }
 
 export async function fetchFreelancerEarningsData() {
-  const response = await apiFetch('/escorow_wallet/wallet');
+  const response = await apiFetch('/escrow_wallet/wallet');
   const wallet = unwrapResponse(response);
   return {
     totalEarnings: (wallet?.availableBalance || 0) + (wallet?.lockedBalance || 0),

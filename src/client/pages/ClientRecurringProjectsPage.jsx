@@ -5,51 +5,66 @@ import {
   Settings, Play, Pause, Plus, AlertCircle, RefreshCw
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
-
-const RECURRING_JOBS = [
-  {
-    id: 'REC-001',
-    title: 'Weekly Blog Post Content',
-    freelancer: { name: 'Sarah Chen', avatar: 'https://i.pravatar.cc/150?u=s1' },
-    frequency: 'Weekly',
-    nextExecution: 'May 24, 2026',
-    budget: '$150/cycle',
-    status: 'Active',
-    completedCycles: 12
-  },
-  {
-    id: 'REC-002',
-    title: 'Monthly Server Maintenance',
-    freelancer: { name: 'David Kim', avatar: 'https://i.pravatar.cc/150?u=d2' },
-    frequency: 'Monthly',
-    nextExecution: 'June 1, 2026',
-    budget: '$500/cycle',
-    status: 'Active',
-    completedCycles: 3
-  },
-  {
-    id: 'REC-003',
-    title: 'Bi-weekly Podcast Editing',
-    freelancer: { name: 'Alex Rivera', avatar: 'https://i.pravatar.cc/150?u=a3' },
-    frequency: 'Bi-weekly',
-    nextExecution: 'May 28, 2026',
-    budget: '$300/cycle',
-    status: 'Paused',
-    completedCycles: 8
-  }
-];
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function ClientRecurringProjectsPage() {
-  const [jobs, setJobs] = useState(RECURRING_JOBS);
+  const queryClient = useQueryClient();
   const [showNewModal, setShowNewModal] = useState(false);
 
+  const { data: recurringJobsData } = useQuery({
+    queryKey: ['client', 'recurringProjects'],
+    queryFn: async () => {
+      return [
+        {
+          id: 'REC-001',
+          title: 'Weekly Blog Post Content',
+          freelancer: { name: 'Sarah Chen', avatar: 'https://i.pravatar.cc/150?u=s1' },
+          frequency: 'Weekly',
+          nextExecution: 'May 24, 2026',
+          budget: '$150/cycle',
+          status: 'Active',
+          completedCycles: 12
+        },
+        {
+          id: 'REC-002',
+          title: 'Monthly Server Maintenance',
+          freelancer: { name: 'David Kim', avatar: 'https://i.pravatar.cc/150?u=d2' },
+          frequency: 'Monthly',
+          nextExecution: 'June 1, 2026',
+          budget: '$500/cycle',
+          status: 'Active',
+          completedCycles: 3
+        },
+        {
+          id: 'REC-003',
+          title: 'Bi-weekly Podcast Editing',
+          freelancer: { name: 'Alex Rivera', avatar: 'https://i.pravatar.cc/150?u=a3' },
+          frequency: 'Bi-weekly',
+          nextExecution: 'May 28, 2026',
+          budget: '$300/cycle',
+          status: 'Paused',
+          completedCycles: 8
+        }
+      ];
+    }
+  });
+
+  const jobs = recurringJobsData || [];
+
+  const toggleMutation = useMutation({
+    mutationFn: async (id) => {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return id;
+    },
+    onSuccess: (id) => {
+      queryClient.setQueryData(['client', 'recurringProjects'], old => 
+        old?.map(j => j.id === id ? { ...j, status: j.status === 'Active' ? 'Paused' : 'Active' } : j)
+      );
+    }
+  });
+
   const toggleStatus = (id) => {
-    setJobs(jobs.map(j => {
-      if (j.id === id) {
-        return { ...j, status: j.status === 'Active' ? 'Paused' : 'Active' };
-      }
-      return j;
-    }));
+    toggleMutation.mutate(id);
   };
 
   return (

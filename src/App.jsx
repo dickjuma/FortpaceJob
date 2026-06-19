@@ -1,179 +1,178 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useAuthStore } from './common/authStore.js';
-import useChatStore from './store/chatStore';
+import { useAuthStore } from './platform/common/authStore.js';
+import useChatStore from './platform/store/chatStore';
 import LoginPage from './admin/pages/LoginPage';
 import AdminRoutes from './admin/AdminRoutes';
 
-import AgencyRoutes from './agency/AgencyRoutes';
-import SearchRoutes from './search/SearchRoutes';
-import VerificationRoutes from './verification/VerificationRoutes';
-import EscrowRoutes from './escrow/EscrowRoutes';
-import MarketplaceLayout from './layouts/MarketplaceLayout';
-import LandingPage from './pages/shared/LandingPage';
-import FindTalentLanding from './pages/FindTalentLanding';
-import PricingPage from './pages/PricingPage';
-import SubscriptionBootstrap from './common/components/SubscriptionBootstrap';
-import OnlineFreelancers from './pages/OnlineFreelancers';
+import AgencyRoutes from './freelancer/agency/AgencyRoutes';
+import SearchRoutes from './platform/search/SearchRoutes';
+import VerificationRoutes from './platform/verification/VerificationRoutes';
+import EscrowRoutes from './platform/escrow/EscrowRoutes';
+import MarketplaceLayout from './platform/layouts/MarketplaceLayout';
+import LandingPage from './platform/pages/shared/LandingPage';
+import FindTalentLanding from './platform/pages/FindTalentLanding';
+import PricingPage from './platform/pages/PricingPage';
+import SubscriptionBootstrap from './platform/common/components/SubscriptionBootstrap';
+import OnlineFreelancers from './platform/pages/OnlineFreelancers';
 
-import OnsiteProfessionals from './pages/OnsiteProfessionals';
-import HybridTalent from './pages/HybridTalent';
-import TalentCategories from './pages/TalentCategories';
-import CategoryDetailsOnline from './pages/CategoryDetailsOnline';
-import CategoryDetailsOnsite from './pages/CategoryDetailsOnsite';
-import SearchResults from './pages/SearchResults';
-import SavedSearches from './pages/SavedSearches';
-import RecommendedTalent from './pages/RecommendedTalent';
-import FreelancerProfile from './pages/FreelancerProfile';
-import PortfolioGallery from './pages/PortfolioGallery';
-import Reviews from './pages/Reviews';
-import ServiceCatalog from './pages/ServiceCatalog';
-import Availability from './pages/Availability';
-import Verification from './pages/Verification';
-import HireFreelancer from './pages/HireFreelancer';
-import InviteFreelancer from './pages/InviteFreelancer';
-import CreateOffer from './pages/CreateOffer';
-import ContractPreview from './pages/ContractPreview';
-import EnterpriseHiring from './pages/EnterpriseHiring';
-import ManagedTeams from './pages/ManagedTeams';
-import TalentShortlist from './pages/TalentShortlist';
-import NearbyProfessionals from './pages/NearbyProfessionals';
-import CityTalentDirectory from './pages/CityTalentDirectory';
-import EmergencyServices from './pages/EmergencyServices';
-import TalentComparison from './pages/TalentComparison';
-import SavedCollections from './pages/SavedCollections';
-import BookConsultation from './pages/BookConsultation';
-import PortfolioShowcase from './pages/PortfolioShowcase';
-import FreelancerVideoFeeds from './pages/FreelancerVideoFeeds';
-import MeetingsPage from './pages/MeetingsPage';
-import PublicProjectShowcase from './pages/PublicProjectShowcase';
-import TopRatedTalents from './pages/TopRatedTalents';
-import RisingTalents from './pages/RisingTalents';
-import VerifiedTalents from './pages/VerifiedTalents';
-import AgencyDirectory from './pages/AgencyDirectory';
-import AITalentMatching from './pages/AITalentMatching';
-import RecentlyViewedTalent from './pages/RecentlyViewedTalent';
-import CommunityRecommendations from './pages/CommunityRecommendations';
-import SuccessStories from './pages/SuccessStories';
-import InstantBooking from './pages/InstantBooking';
-import LiveAvailability from './pages/LiveAvailability';
-import SafetyTrustCenter from './pages/SafetyTrustCenter';
-import VerificationProcess from './pages/VerificationProcess';
-import TalentHiringHelpCenter from './pages/TalentHiringHelpCenter';
-import ClientHiringDashboard from './pages/ClientHiringDashboard';
-import FreelancerDiscoveryMap from './pages/FreelancerDiscoveryMap';
-import FreelancerLeaderboard from './pages/FreelancerLeaderboard';
-import ClientPublicProfile from './pages/ClientPublicProfile';
-import AgencyProfile from './pages/AgencyProfile';
-import SkillAssessment from './pages/SkillAssessment';
-import CertificationShowcase from './pages/CertificationShowcase';
-import TalentInsights from './pages/TalentInsights';
-import IndustryTalent from './pages/IndustryTalent';
-import FreelancerOnboardingLanding from './pages/FreelancerOnboardingLanding';
-import ClientOnboardingLanding from './pages/ClientOnboardingLanding';
-import FreelancerSuccessScore from './pages/FreelancerSuccessScore';
-import TrustScoreExplanation from './pages/TrustScoreExplanation';
-import ClientReviewsDirectory from './pages/ClientReviewsDirectory';
-import FreelancerDiscoveryAi from './pages/FreelancerDiscoveryAi';
-import MobileFindTalent from './pages/MobileFindTalent';
-import HiringPipeline from './pages/HiringPipeline';
+import OnsiteProfessionals from './platform/pages/OnsiteProfessionals';
+import HybridTalent from './platform/pages/HybridTalent';
+import TalentCategories from './platform/pages/TalentCategories';
+import CategoryDetailsOnline from './platform/pages/CategoryDetailsOnline';
+import CategoryDetailsOnsite from './platform/pages/CategoryDetailsOnsite';
+import SearchResults from './platform/pages/GlobalSearchPage';
+import SavedSearches from './platform/pages/SavedSearches';
+import RecommendedTalent from './platform/pages/RecommendedTalent';
+import FreelancerProfile from './freelancer/pages/ProfilePage';
+import PortfolioGallery from './freelancer/pages/PortfolioGallery';
+import Reviews from './platform/pages/Reviews';
+import ServiceCatalog from './platform/pages/ServiceCatalog';
+import Availability from './platform/pages/Availability';
+import Verification from './platform/pages/Verification';
+import HireFreelancer from './client/pages/HireFreelancer';
+import InviteFreelancer from './client/pages/InviteFreelancer';
+import CreateOffer from './client/pages/CreateOffer';
+import ContractPreview from './client/pages/ContractPreview';
+import EnterpriseHiring from './client/pages/EnterpriseHiring';
+import ManagedTeams from './client/pages/ManagedTeams';
+import TalentShortlist from './client/pages/TalentShortlist';
+import NearbyProfessionals from './platform/pages/NearbyProfessionals';
+import CityTalentDirectory from './platform/pages/CityTalentDirectory';
+import EmergencyServices from './platform/pages/EmergencyServices';
+import TalentComparison from './platform/pages/TalentComparison';
+import SavedCollections from './platform/pages/SavedCollections';
+import BookConsultation from './platform/pages/BookConsultation';
+import PortfolioShowcase from './freelancer/pages/PortfolioShowcase';
+import FreelancerVideoFeeds from './freelancer/pages/FreelancerVideoFeeds';
+import MeetingsPage from './platform/pages/MeetingsPage';
+import PublicProjectShowcase from './platform/pages/PublicProjectShowcase';
+import TopRatedTalents from './platform/pages/TopRatedTalents';
+import RisingTalents from './platform/pages/RisingTalents';
+import VerifiedTalents from './platform/pages/VerifiedTalents';
+import AgencyDirectory from './platform/pages/AgencyDirectory';
+import AITalentMatching from './platform/pages/AITalentMatching';
+import RecentlyViewedTalent from './platform/pages/RecentlyViewedTalent';
+import CommunityRecommendations from './platform/pages/CommunityRecommendations';
+import SuccessStories from './platform/pages/SuccessStories';
+import InstantBooking from './platform/pages/InstantBooking';
+import LiveAvailability from './platform/pages/LiveAvailability';
+import SafetyTrustCenter from './platform/pages/SafetyTrustCenter';
+import VerificationProcess from './platform/pages/VerificationProcess';
+import TalentHiringHelpCenter from './platform/pages/TalentHiringHelpCenter';
+import ClientHiringDashboard from './client/pages/ClientHiringDashboard';
+import FreelancerDiscoveryMap from './freelancer/pages/FreelancerDiscoveryMap';
+import FreelancerLeaderboard from './freelancer/pages/FreelancerLeaderboard';
+import ClientPublicProfile from './client/pages/ClientPublicProfile';
+import AgencyProfile from './platform/pages/AgencyProfile';
+import SkillAssessment from './platform/pages/SkillAssessment';
+import CertificationShowcase from './platform/pages/CertificationShowcase';
+import TalentInsights from './platform/pages/TalentInsights';
+import IndustryTalent from './platform/pages/IndustryTalent';
+import FreelancerOnboardingLanding from './freelancer/pages/FreelancerOnboardingLanding';
+import ClientOnboardingLanding from './client/pages/ClientOnboardingLanding';
+import FreelancerRegistrationWizard from './freelancer/pages/registration/FreelancerRegistrationWizard';
+import FreelancerSuccessScore from './freelancer/pages/FreelancerSuccessScore';
+import TrustScoreExplanation from './platform/pages/TrustScoreExplanation';
+import ClientReviewsDirectory from './client/pages/ClientReviewsDirectory';
+import FreelancerDiscoveryAi from './freelancer/pages/FreelancerDiscoveryAi';
+import MobileFindTalent from './platform/pages/MobileFindTalent';
+import HiringPipeline from './platform/pages/HiringPipeline';
 import TalentRoutes from './client/pages/hire-talent';
 
 // Find Work Module (Freelancer Side)
-import FindWorkHub from './pages/find-work/FindWorkHub';
-import OnlineWorkListings from './pages/find-work/OnlineWorkListings';
-import LocalWorkListings from './pages/find-work/LocalWorkListings';
-import WorkDetail from './pages/find-work/WorkDetail';
-import FindWorkSearchResults from './pages/find-work/SearchResults';
-import CategoryBrowse from './pages/find-work/CategoryBrowse';
-import SavedWork from './pages/find-work/SavedWork';
-import ClientPostedWork from './pages/find-work/ClientPostedWork';
-import ProviderApplications from './pages/find-work/ProviderApplications';
+import FindWorkHub from './freelancer/pages/find-work/FindWorkHub';
+import OnlineWorkListings from './freelancer/pages/find-work/OnlineWorkListings';
+import LocalWorkListings from './freelancer/pages/find-work/LocalWorkListings';
+import WorkDetail from './freelancer/pages/find-work/WorkDetail';
+import FindWorkSearchResults from './freelancer/pages/find-work/SearchResults';
+import CategoryBrowse from './freelancer/pages/find-work/CategoryBrowse';
+import SavedWork from './freelancer/pages/find-work/SavedWork';
+import ClientPostedWork from './freelancer/pages/find-work/ClientPostedWork';
+import ProviderApplications from './freelancer/pages/find-work/ProviderApplications';
 
 // New Find Work Modules (The 17 Pages Expansion)
-import WorkProposal from './pages/find-work/WorkProposal';
-import ViewApplications from './pages/find-work/ViewApplications';
-import WorkAgreement from './pages/find-work/WorkAgreement';
-import WorkProgress from './pages/find-work/WorkProgress';
-import WorkCompletion from './pages/find-work/WorkCompletion';
-import RatingReview from './pages/find-work/RatingReview';
-import WorkRevision from './pages/find-work/WorkRevision';
-import DisputeResolution from './pages/find-work/DisputeResolution';
-import WorkCancellation from './pages/find-work/WorkCancellation';
-import CounterOffer from './pages/find-work/CounterOffer';
-import ShortlistedApplicants from './pages/find-work/ShortlistedApplicants';
-import WorkHistory from './pages/find-work/WorkHistory';
-import ProviderManagement from './pages/find-work/ProviderManagement';
-import WithdrawApplication from './pages/find-work/WithdrawApplication';
-import WorkTemplates from './pages/find-work/WorkTemplates';
-import TeamCollaborators from './pages/find-work/TeamCollaborators';
-import WorkAnalytics from './pages/find-work/WorkAnalytics';
+import WorkProposal from './freelancer/pages/find-work/WorkProposal';
+import ViewApplications from './freelancer/pages/find-work/ViewApplications';
+import WorkAgreement from './freelancer/pages/find-work/WorkAgreement';
+import WorkProgress from './freelancer/pages/find-work/WorkProgress';
+import WorkCompletion from './freelancer/pages/find-work/WorkCompletion';
+import RatingReview from './freelancer/pages/find-work/RatingReview';
+import WorkRevision from './freelancer/pages/find-work/WorkRevision';
+import DisputeResolution from './freelancer/pages/find-work/DisputeResolution';
+import WorkCancellation from './freelancer/pages/find-work/WorkCancellation';
+import CounterOffer from './freelancer/pages/find-work/CounterOffer';
+import ShortlistedApplicants from './freelancer/pages/find-work/ShortlistedApplicants';
+import WorkHistory from './freelancer/pages/find-work/WorkHistory';
+import ProviderManagement from './freelancer/pages/find-work/ProviderManagement';
+import WithdrawApplication from './freelancer/pages/find-work/WithdrawApplication';
+import WorkTemplates from './freelancer/pages/find-work/WorkTemplates';
+import TeamCollaborators from './freelancer/pages/find-work/TeamCollaborators';
+import WorkAnalytics from './freelancer/pages/find-work/WorkAnalytics';
 
 // Gigs Module (Freelancer pre-packaged services)
-import GigsHub from './pages/gigs/GigsHub';
-import GigsByCategory from './pages/gigs/GigsByCategory';
-import GigDetail from './pages/gigs/GigDetail';
-import GigCheckoutPage from './pages/gigs/GigCheckoutPage';
-import GigSearchResults from './pages/gigs/GigSearchResults';
-import MyGigs from './pages/gigs/MyGigs';
-import CreateEditGig from './pages/gigs/CreateEditGig';
-import SellerOrders from './pages/gigs/SellerOrders';
-import BuyerPurchases from './pages/gigs/BuyerPurchases';
-import SellerProfile from './pages/gigs/SellerProfile';
-import TopSellers from './pages/gigs/TopSellers';
-import GigReviews from './pages/gigs/GigReviews';
+import GigsHub from './client/pages/gigs/GigsHub';
+import GigsByCategory from './client/pages/gigs/GigsByCategory';
+import GigDetail from './client/pages/gigs/GigDetail';
+import GigCheckoutPage from './client/pages/gigs/GigCheckoutPage';
+import GigSearchResults from './client/pages/gigs/GigSearchResults';
+import MyGigs from './client/pages/gigs/MyGigs';
+import CreateEditGig from './client/pages/gigs/CreateEditGig';
+import SellerOrders from './client/pages/gigs/SellerOrders';
+import BuyerPurchases from './client/pages/gigs/BuyerPurchases';
+import SellerProfile from './client/pages/gigs/SellerProfile';
+import GigReviews from './client/pages/gigs/GigReviews';
+import TopSellers from './client/pages/gigs/TopSellers';
 
-import GlobalHomepage from './public/pages/GlobalHomepage';
-import GlobalSearchPage from './public/pages/GlobalSearchPage';
-import StaticInfoPage from './public/pages/StaticInfoPage';
-import AboutPage from './public/pages/AboutPage';
-import ContactPage from './public/pages/ContactPage';
-import PublicClientProfilePage from './public/pages/PublicClientProfilePage';
-import GlobalJobsPage from './public/pages/GlobalJobsPage';
-import PublicFreelancerProfilePage from './public/pages/PublicFreelancerProfilePage';
-import PublicGigPage from './public/pages/PublicGigPage';
-import HelpCenterPage from './public/pages/HelpCenterPage';
-import MessagingCenterPage from './common/pages/MessagingCenterPage';
-import NotificationsCenterPage from './common/pages/NotificationsCenterPage';
-import DisputeResolutionCenterPage from './common/pages/DisputeResolutionCenterPage';
-import IdentityVerificationCenterPage from './common/pages/IdentityVerificationCenterPage';
-import AccountSecurityCenterPage from './common/pages/AccountSecurityCenterPage';
-import TrustScoreDashboardPage from './common/pages/TrustScoreDashboardPage';
-import FeaturedServicesMarketplacePage from './public/pages/FeaturedServicesMarketplacePage';
-import PromotionsCouponsCenterPage from './common/pages/PromotionsCouponsCenterPage';
-import AffiliateReferralDashboardPage from './common/pages/AffiliateReferralDashboardPage';
-import CommunityForumPage from './public/pages/CommunityForumPage';
-import SuccessStoriesPage from './public/pages/SuccessStoriesPage';
+import ProfilePage from './freelancer/pages/ProfilePage';
+import GlobalHomepage from './platform/pages/GlobalHomepage';
+import GlobalJobsPage from './platform/pages/GlobalJobsPage';
+import StaticInfoPage from './platform/pages/StaticInfoPage';
+import AboutPage from './platform/pages/AboutPage';
+import ContactPage from './platform/pages/ContactPage';
+import PublicGigPage from './platform/pages/PublicGigPage';
+import HelpCenterPage from './platform/pages/HelpCenterPage';
+import MessagingCenterPage from './platform/common/pages/MessagingCenterPage';
+import NotificationsCenterPage from './platform/common/pages/NotificationsCenterPage';
+import DisputeResolutionCenterPage from './platform/common/pages/DisputeResolutionCenterPage';
+import IdentityVerificationCenterPage from './platform/common/pages/IdentityVerificationCenterPage';
+import AccountSecurityCenterPage from './platform/common/pages/AccountSecurityCenterPage';
+import TrustScoreDashboardPage from './platform/common/pages/TrustScoreDashboardPage';
+import FeaturedServicesMarketplacePage from './platform/pages/FeaturedServicesMarketplacePage';
+import PromotionsCouponsCenterPage from './platform/common/pages/PromotionsCouponsCenterPage';
+import AffiliateReferralDashboardPage from './platform/common/pages/AffiliateReferralDashboardPage';
+import CommunityForumPage from './platform/pages/CommunityForumPage';
+import SuccessStoriesPage from './platform/pages/SuccessStoriesPage';
 import ClientLayout from './client/ClientLayout';
 import FreelancerLayout from './freelancer/FreelancerLayout';
 
-import AuthLoginPage from './pages/auth/Login';
-import RegisterPage from './pages/RegisterPage';
-import VerifyEmailPage from './auth/pages/VerifyEmailPage';
-import VerifyLoginOTPPage from './auth/pages/VerifyLoginOTPPage';
-import ForgotPasswordPage from './auth/pages/ForgotPasswordPage';
-import ResetPasswordPage from './auth/pages/ResetPasswordPage';
-import OTPVerificationPage from './auth/pages/OTPVerificationPage';
-import SessionExpiredPage from './auth/pages/SessionExpiredPage';
-import Verify2FAPage from './auth/pages/Verify2FAPage';
-import AccountRecoveryPage from './auth/pages/AccountRecoveryPage';
-import AdminLoginPage from './auth/pages/AdminLoginPage';
-import AdminSecurityVerificationPage from './auth/pages/AdminSecurityVerificationPage';
-import OAuthCallbackPage from './auth/pages/OAuthCallbackPage';
-import RoleSelectionPage from './auth/pages/RoleSelectionPage';
-import ExperienceLevelPage from './auth/pages/ExperienceLevelPage';
-import SkillSelectionPage from './auth/pages/SkillSelectionPage';
-import AvailabilitySetupPage from './auth/pages/AvailabilitySetupPage';
-import RateSetupPage from './auth/pages/RateSetupPage';
-import ProfileCompletionPage from './auth/pages/ProfileCompletionPage';
+import AuthLoginPage from './platform/auth/pages/Login';
+import RegisterPage from './platform/pages/RegisterPage';
+import VerifyEmailPage from './platform/auth/pages/VerifyEmailPage';
+import VerifyLoginOTPPage from './platform/auth/pages/VerifyLoginOTPPage';
+import ForgotPasswordPage from './platform/auth/pages/ForgotPasswordPage';
+import ResetPasswordPage from './platform/auth/pages/ResetPasswordPage';
+import OTPVerificationPage from './platform/auth/pages/OTPVerificationPage';
+import SessionExpiredPage from './platform/auth/pages/SessionExpiredPage';
+import Verify2FAPage from './platform/auth/pages/Verify2FAPage';
+import AccountRecoveryPage from './platform/auth/pages/AccountRecoveryPage';
+import AdminLoginPage from './platform/auth/pages/AdminLoginPage';
+import AdminSecurityVerificationPage from './platform/auth/pages/AdminSecurityVerificationPage';
+import OAuthCallbackPage from './platform/auth/pages/OAuthCallbackPage';
+import RoleSelectionPage from './platform/auth/pages/RoleSelectionPage';
+import ExperienceLevelPage from './platform/auth/pages/ExperienceLevelPage';
+import SkillSelectionPage from './platform/auth/pages/SkillSelectionPage';
+import AvailabilitySetupPage from './platform/auth/pages/AvailabilitySetupPage';
+import RateSetupPage from './platform/auth/pages/RateSetupPage';
+import ProfileCompletionPage from './platform/auth/pages/ProfileCompletionPage';
 
 // Security Dashboard Pages
-import SecurityDashboard from './auth/pages/SecurityDashboard';
-import ActiveSessionsPage from './auth/pages/ActiveSessionsPage';
-import ConnectedAccountsPage from './auth/pages/ConnectedAccountsPage';
-import SuspiciousActivityReviewPage from './auth/pages/SuspiciousActivityReviewPage';
-import AccessDeniedPage from "./auth/pages/AccessDeniedPage";
-import { getDashboardPathForRole } from './auth/utils/authRouting';
+import SecurityDashboard from './platform/auth/pages/SecurityDashboard';
+import ActiveSessionsPage from './platform/auth/pages/ActiveSessionsPage';
+import ConnectedAccountsPage from './platform/auth/pages/ConnectedAccountsPage';
+import SuspiciousActivityReviewPage from './platform/auth/pages/SuspiciousActivityReviewPage';
+import AccessDeniedPage from "./platform/auth/pages/AccessDeniedPage";
+import { getDashboardPathForRole } from './platform/auth/utils/authRouting';
 
 import ClientCompanyProfilePage from './client/pages/ClientCompanyProfilePage';
 import ClientProfileRouter from './client/pages/ClientProfileRouter';
@@ -275,17 +274,69 @@ import FreelancerWalletPage from './freelancer/pages/WalletPage';
 import FreelancerPaymentSetupPage from './freelancer/pages/PaymentSetupPage';
 import FreelancerWithdrawalPage from './freelancer/pages/WithdrawalPage';
 import FreelancerWorkHistoryPage from './freelancer/pages/WorkHistoryPage';
+import DeliverablesPage from './freelancer/pages/DeliverablesPage';
+import FreelancerConnectedAccountsPage from './freelancer/pages/ConnectedAccountsPage';
+import ApiKeysPage from './freelancer/pages/ApiKeysPage';
+import PreferencesPage from './freelancer/pages/PreferencesPage';
+import GigAnalyticsPage from './freelancer/pages/GigAnalyticsPage';
+import AgencyDashboardPage from './freelancer/agency/pages/AgencyDashboardPage';
+import RolesPermissionsPage from './freelancer/agency/pages/RolesPermissionsPage';
+import AgencyPortfolioPage from './freelancer/agency/pages/AgencyPortfolioPage';
+import TalentPoolPage from './freelancer/agency/pages/TalentPoolPage';
+import RecruitmentPage from './freelancer/agency/pages/RecruitmentPage';
+import EnterpriseContractsPage from './freelancer/agency/pages/EnterpriseContractsPage';
+import TeamAnalyticsPage from './freelancer/agency/pages/TeamAnalyticsPage';
+import BillingPage from './freelancer/agency/pages/OrganizationBillingPage';
 
 // Agency / Team workspace page imports
-import FreelancerTeamManagementPage from './agency/pages/TeamManagementPage';
-import FreelancerSharedProjectsPage from './agency/pages/SharedProjectsPage';
-import FreelancerAgencyWorkspacePage from './agency/pages/AgencyWorkspacePage';
-import FreelancerDepartmentsPage from './agency/pages/DepartmentsPage';
-import FreelancerTeamPermissionsPage from './agency/pages/TeamPermissionsPage';
-import FreelancerFileManagerPage from './agency/pages/FileManagerPage';
-import FreelancerUploadCenterPage from './agency/pages/UploadCenterPage';
-import FreelancerSharedAssetsPage from './agency/pages/SharedAssetsPage';
-import FreelancerDownloadsPage from './agency/pages/DownloadsPage';
+import FreelancerTeamManagementPage from './freelancer/agency/pages/TeamManagementPage';
+import FreelancerSharedProjectsPage from './freelancer/agency/pages/SharedProjectsPage';
+import FreelancerAgencyWorkspacePage from './freelancer/agency/pages/AgencyWorkspacePage';
+import FreelancerDepartmentsPage from './freelancer/agency/pages/DepartmentsPage';
+import FreelancerTeamPermissionsPage from './freelancer/agency/pages/TeamPermissionsPage';
+import FreelancerFileManagerPage from './freelancer/agency/pages/FileManagerPage';
+import FreelancerUploadCenterPage from './freelancer/agency/pages/UploadCenterPage';
+import FreelancerSharedAssetsPage from './freelancer/agency/pages/SharedAssetsPage';
+import FreelancerDownloadsPage from './freelancer/agency/pages/DownloadsPage';
+
+// Autogenerated Freelancer Imports
+import AvailabilitySchedulingPage from './freelancer/pages/AvailabilitySchedulingPage';
+import CreateGigPage from './freelancer/pages/CreateGigPage';
+import FeaturedGigShowcasePage from './freelancer/pages/FeaturedGigShowcasePage';
+import FreelancerBoostProfilePage from './freelancer/pages/FreelancerBoostProfilePage';
+import FreelancerDeliveryPage from './freelancer/pages/FreelancerDeliveryPage';
+import FreelancerDisputeHistoryPage from './freelancer/pages/FreelancerDisputeHistoryPage';
+import FreelancerLearningPage from './freelancer/pages/FreelancerLearningPage';
+import FreelancerPerformanceInsightsPage from './freelancer/pages/FreelancerPerformanceInsightsPage';
+import FreelancerPortfolioPage from './freelancer/pages/FreelancerPortfolioPage';
+import FreelancerSubscriptionsPage from './freelancer/pages/FreelancerSubscriptionsPage';
+import FreelancerSuccessScorePage from './freelancer/pages/FreelancerSuccessScorePage';
+import FreelancerWalletDashboard from './freelancer/pages/FreelancerWalletDashboard';
+import GigAnalyticsDashboard from './freelancer/pages/GigAnalyticsDashboard';
+import GigCategoryPage from './freelancer/pages/GigCategoryPage';
+import GigDeliveryPage from './freelancer/pages/GigDeliveryPage';
+import GigDescriptionFaqPage from './freelancer/pages/GigDescriptionFaqPage';
+import GigDuplicatePage from './freelancer/pages/GigDuplicatePage';
+import GigGalleryUploadPage from './freelancer/pages/GigGalleryUploadPage';
+import GigOrderTrackingPage from './freelancer/pages/GigOrderTrackingPage';
+import GigPerformanceInsightsPage from './freelancer/pages/GigPerformanceInsightsPage';
+import GigPreviewPage from './freelancer/pages/GigPreviewPage';
+import GigPricingPage from './freelancer/pages/GigPricingPage';
+import GigPublishSuccessPage from './freelancer/pages/GigPublishSuccessPage';
+import GigRequirementsPage from './freelancer/pages/GigRequirementsPage';
+import GigRequirementsSubmissionPage from './freelancer/pages/GigRequirementsSubmissionPage';
+import GigSearchPage from './freelancer/pages/GigSearchPage';
+import GigsPage from './freelancer/pages/GigsPage';
+import GigTitleSeoPage from './freelancer/pages/GigTitleSeoPage';
+import GigVideoUploadPage from './freelancer/pages/GigVideoUploadPage';
+import JobInvitationsPage from './freelancer/pages/JobInvitationsPage';
+import MilestonesPage from './freelancer/pages/MilestonesPage';
+import NotificationsPage from './freelancer/pages/NotificationsPage';
+import ProposalAnalyticsPage from './freelancer/pages/ProposalAnalyticsPage';
+import RankingDashboard from './freelancer/pages/RankingDashboard';
+import SkillsCertificationsPage from './freelancer/pages/SkillsCertificationsPage';
+import TrendingGigsPage from './freelancer/pages/TrendingGigsPage';
+import WithdrawalsPage from './freelancer/pages/WithdrawalsPage';
 
 const RoleProtectedRoute = ({ role, children }) => {
   const { isAuthenticated, user } = useAuthStore();
@@ -351,16 +402,16 @@ function App() {
 
         {/* Public Routes with Shared Navbar/Footer */}
         <Route element={<MarketplaceLayout />}>
-          <Route path="/freelancer/:username" element={<PublicFreelancerProfilePage />} />
+          <Route path="/freelancer/:username" element={<ProfilePage />} />
         <Route path="/agency/*" element={<AgencyRoutes />} />
-        <Route path="/search" element={<GlobalSearchPage />} />
+        <Route path="/search" element={<SearchResults />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/careers" element={<StaticInfoPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/terms" element={<StaticInfoPage />} />
         <Route path="/privacy" element={<StaticInfoPage />} />
         <Route path="/accessibility" element={<StaticInfoPage />} />
-        <Route path="/clients/:clientId" element={<PublicClientProfilePage />} />
+        <Route path="/clients/:clientId" element={<ClientPublicProfile />} />
         <Route path="/jobs" element={<GlobalJobsPage />} />
         <Route path="/search/*" element={<SearchRoutes />} />
         <Route path="/verification/*" element={<VerificationRoutes />} />
@@ -502,6 +553,7 @@ function App() {
         <Route path="/industries" element={<IndustryTalent />} />
         <Route path="/join-freelancer" element={<FreelancerOnboardingLanding />} />
         <Route path="/join-client" element={<ClientOnboardingLanding />} />
+        <Route path="/freelancer-registration" element={<FreelancerRegistrationWizard />} />
         <Route path="/success-score" element={<FreelancerSuccessScore />} />
         <Route path="/trust-score" element={<TrustScoreExplanation />} />
         <Route path="/reviews-directory" element={<ClientReviewsDirectory />} />
@@ -696,6 +748,60 @@ function App() {
         <Route path="/freelancer/upload" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerUploadCenterPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/assets" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerSharedAssetsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
         <Route path="/freelancer/downloads" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerDownloadsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        
+        {/* NEW SIDEBAR ROUTES */}
+        <Route path="/freelancer/deliverables" element={<FreelancerProtectedRoute><FreelancerLayout><DeliverablesPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/connected-accounts" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerConnectedAccountsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/api-keys" element={<FreelancerProtectedRoute><FreelancerLayout><ApiKeysPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/preferences" element={<FreelancerProtectedRoute><FreelancerLayout><PreferencesPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gig-analytics" element={<FreelancerProtectedRoute><FreelancerLayout><GigAnalyticsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/agency-dashboard" element={<FreelancerProtectedRoute><FreelancerLayout><AgencyDashboardPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/roles" element={<FreelancerProtectedRoute><FreelancerLayout><RolesPermissionsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/agency-portfolio" element={<FreelancerProtectedRoute><FreelancerLayout><AgencyPortfolioPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/talent-pool" element={<FreelancerProtectedRoute><FreelancerLayout><TalentPoolPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/recruitment" element={<FreelancerProtectedRoute><FreelancerLayout><RecruitmentPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/enterprise-contracts" element={<FreelancerProtectedRoute><FreelancerLayout><EnterpriseContractsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/team-analytics" element={<FreelancerProtectedRoute><FreelancerLayout><TeamAnalyticsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/billing" element={<FreelancerProtectedRoute><FreelancerLayout><BillingPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+              {/* Autogenerated Freelancer Routes */}
+        <Route path="/freelancer/availability-scheduling" element={<FreelancerProtectedRoute><FreelancerLayout><AvailabilitySchedulingPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/create-gig" element={<FreelancerProtectedRoute><FreelancerLayout><CreateGigPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/featured-gig-showcase" element={<FreelancerProtectedRoute><FreelancerLayout><FeaturedGigShowcasePage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/boost-profile" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerBoostProfilePage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/delivery" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerDeliveryPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/dispute-history" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerDisputeHistoryPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/learning" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerLearningPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/performance-insights" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerPerformanceInsightsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/portfolio" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerPortfolioPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/subscriptions" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerSubscriptionsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/success-score" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerSuccessScorePage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/wallet-dashboard" element={<FreelancerProtectedRoute><FreelancerLayout><FreelancerWalletDashboard /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/analytics-dashboard" element={<FreelancerProtectedRoute><FreelancerLayout><GigAnalyticsDashboard /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/category" element={<FreelancerProtectedRoute><FreelancerLayout><GigCategoryPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/delivery" element={<FreelancerProtectedRoute><FreelancerLayout><GigDeliveryPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/description-faq" element={<FreelancerProtectedRoute><FreelancerLayout><GigDescriptionFaqPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/duplicate" element={<FreelancerProtectedRoute><FreelancerLayout><GigDuplicatePage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/gallery-upload" element={<FreelancerProtectedRoute><FreelancerLayout><GigGalleryUploadPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/order-tracking" element={<FreelancerProtectedRoute><FreelancerLayout><GigOrderTrackingPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/performance-insights" element={<FreelancerProtectedRoute><FreelancerLayout><GigPerformanceInsightsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/preview" element={<FreelancerProtectedRoute><FreelancerLayout><GigPreviewPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/pricing" element={<FreelancerProtectedRoute><FreelancerLayout><GigPricingPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/publish-success" element={<FreelancerProtectedRoute><FreelancerLayout><GigPublishSuccessPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/requirements" element={<FreelancerProtectedRoute><FreelancerLayout><GigRequirementsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/requirements-submission" element={<FreelancerProtectedRoute><FreelancerLayout><GigRequirementsSubmissionPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/search" element={<FreelancerProtectedRoute><FreelancerLayout><GigSearchPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs" element={<FreelancerProtectedRoute><FreelancerLayout><GigsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/title-seo" element={<FreelancerProtectedRoute><FreelancerLayout><GigTitleSeoPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/gigs/video-upload" element={<FreelancerProtectedRoute><FreelancerLayout><GigVideoUploadPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/job-invitations" element={<FreelancerProtectedRoute><FreelancerLayout><JobInvitationsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/milestones" element={<FreelancerProtectedRoute><FreelancerLayout><MilestonesPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/notifications" element={<FreelancerProtectedRoute><FreelancerLayout><NotificationsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/proposal-analytics" element={<FreelancerProtectedRoute><FreelancerLayout><ProposalAnalyticsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/ranking-dashboard" element={<FreelancerProtectedRoute><FreelancerLayout><RankingDashboard /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/skills-certifications" element={<FreelancerProtectedRoute><FreelancerLayout><SkillsCertificationsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/trending-gigs" element={<FreelancerProtectedRoute><FreelancerLayout><TrendingGigsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+        <Route path="/freelancer/withdrawals" element={<FreelancerProtectedRoute><FreelancerLayout><WithdrawalsPage /></FreelancerLayout></FreelancerProtectedRoute>} />
+
       </Routes>
     </Router>
     </AuthBootstrap>

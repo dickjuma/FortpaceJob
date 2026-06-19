@@ -3,8 +3,9 @@
 // Uses Tailwind CSS, framer-motion, lucide-react. No external UI libraries.
 // All API calls are mocked with console logs and fallbacks.
 
-import React, { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState, useRef } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Camera,
   Link as LinkIcon,
@@ -18,18 +19,21 @@ import {
   Settings,
   Eye,
   Loader2,
-} from 'lucide-react';
-import { profileAPI } from '../../common/services/api';
+} from "lucide-react";
+import { profileAPI } from "../../platform/common/services/api";
 
 // ----------------------------------------------------------------------
 // Helpers
 // ----------------------------------------------------------------------
 const getProfileSummary = (user, profile) => {
   return {
-    companyName: profile.companyName || user.displayName,
-    website: profile.website,
-    location: profile.location,
-    bio: profile.companyDescription,
+    companyName: profile.companyName || user.displayName || user.name || '',
+    website: profile.website || '',
+    hqLocation: profile.hqLocation || '',
+    companyDescription: profile.companyDescription || '',
+    linkedin: profile.linkedin || '',
+    twitter: profile.twitter || '',
+    github: profile.github || '',
   };
 };
 
@@ -37,105 +41,132 @@ const getProfileSummary = (user, profile) => {
 // Main Component
 // ----------------------------------------------------------------------
 export default function ClientCompanyProfilePage() {
-  const [activeTab, setActiveTab] = useState('edit'); // 'edit' | 'preview'
+  const [activeTab, setActiveTab] = useState("edit"); // 'edit' | 'preview'
   const [formData, setFormData] = useState({
-    name: '',
+    companyName: '',
     industry: '',
-    size: '',
+    companySize: '',
     website: '',
-    location: '',
-    description: '',
-    logo: '',
-    banner: '',
+    hqLocation: '',
+    companyDescription: '',
+    avatar: '',
+    coverPhoto: '',
+    linkedin: '',
+    twitter: '',
+    github: '',
+    hiringType: '',
+    budget: '',
+    timezone: '',
+    preferredWorkingHours: '',
   });
   const [verification, setVerification] = useState({
-    businessRegistration: 'pending', // 'verified' | 'pending' | 'missing'
-    taxCertificate: 'pending',
+    businessRegistration: "pending", // 'verified' | 'pending' | 'missing'
+    taxCertificate: "pending",
   });
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveMessage, setSaveMessage] = useState(null); // { type, text }
+  const queryClient = useQueryClient();
+  
+  const [saveMessage, setSaveMessage] = useState(null);
   const [uploadingImage, setUploadingImage] = useState(null); // 'logo' | 'banner'
 
   const logoInputRef = useRef(null);
   const bannerInputRef = useRef(null);
   const taxInputRef = useRef(null);
 
-  // Load profile data
-  useEffect(() => {
-    let active = true;
-    const load = async () => {
-      setIsLoading(true);
-      try {
-        const res = await profileAPI.getMyProfile();
-        if (!active) return;
-        const userProfile = res?.user?.profile || res?.user || {};
-        const summary = getProfileSummary(res?.user || {}, userProfile);
-        setFormData({
-          name: summary.companyName || userProfile.companyName || '',
-          industry: userProfile.industry || '',
-          size: userProfile.companySize || userProfile.teamSize || '',
-          website: summary.website || '',
-          location: summary.location || '',
-          description: summary.bio || userProfile.companyDescription || '',
-          logo:
-            userProfile.companyLogo ||
-            userProfile.avatar ||
-            'https://ui-avatars.com/api/?name=Company&background=0F172A&color=fff&size=128',
-          banner:
-            userProfile.coverPhoto ||
-            'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=1200&h=300&fit=crop',
-        });
-        // Mock verification status from API (if exists)
-        setVerification({
-          businessRegistration: userProfile.businessVerified ? 'verified' : 'pending',
-          taxCertificate: userProfile.taxVerified ? 'verified' : 'pending',
-        });
-      } catch (error) {
-        console.error('Failed to load profile', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    load();
-    return () => {
-      active = false;
-    };
-  }, []);
+  const { data: profileData, isLoading } = useQuery({
+    queryKey: ["client", "companyProfile"],
+    queryFn: async () => {
+      const res = await profileAPI.getMyProfile();
+      // For client profiles, the backend returns a merged flat object.
+      const userProfile = res || {};
+      const summary = getProfileSummary(res || {}, userProfile);
+      return { userProfile, summary };
+    },
+  });
 
-  const handleSave = async () => {
-    setIsSaving(true);
-    setSaveMessage(null);
-    try {
-      await profileAPI.updateProfile(formData);
-      setSaveMessage({ type: 'success', text: 'Profile saved successfully' });
-      setTimeout(() => setSaveMessage(null), 3000);
-    } catch (error) {
-      setSaveMessage({ type: 'error', text: 'Failed to save. Please try again.' });
-      setTimeout(() => setSaveMessage(null), 3000);
-    } finally {
-      setIsSaving(false);
+  useEffect(() => {
+    if (profileData) {
+      const { userProfile, summary } = profileData;
+      setFormData({
+        companyName: summary.companyName || userProfile.companyName || '',
+        industry: userProfile.industry || '',
+        companySize: userProfile.companySize || userProfile.teamSize || '',
+        website: summary.website || '',
+        hqLocation: summary.hqLocation || userProfile.hqLocation || '',
+        companyDescription: summary.companyDescription || userProfile.companyDescription || '',
+        avatar: userProfile.avatar || userProfile.companyLogo || 'https://ui-avatars.com/api/?name=Company&background=0F172A&color=fff&size=128',
+        coverPhoto: userProfile.coverPhoto || 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=1200&h=300&fit=crop',
+        linkedin: summary.linkedin || userProfile.linkedin || '',
+        twitter: summary.twitter || userProfile.twitter || '',
+        github: summary.github || userProfile.github || '',
+        hiringType: userProfile.hiringType || '',
+        budget: userProfile.budget || '',
+        timezone: userProfile.timezone || '',
+        preferredWorkingHours: userProfile.preferredWorkingHours || '',
+      });
+      setVerification({
+        businessRegistration: userProfile.businessVerified
+          ? "verified"
+          : "pending",
+        taxCertificate: userProfile.taxVerified ? "verified" : "pending",
+      });
     }
+  }, [profileData]);
+
+  const updateProfileMutation = useMutation({
+    mutationFn: async (data) => profileAPI.updateMyProfile(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["client", "companyProfile"] });
+      setSaveMessage({ type: "success", text: "Profile saved successfully" });
+      setTimeout(() => setSaveMessage(null), 3000);
+    },
+    onError: () => {
+      setSaveMessage({
+        type: "error",
+        text: "Failed to save. Please try again.",
+      });
+      setTimeout(() => setSaveMessage(null), 3000);
+    },
+  });
+
+  const handleSave = () => {
+    // Only send fields that Prisma accepts
+    const payload = {
+      companyName: formData.companyName,
+      industry: formData.industry,
+      companySize: formData.companySize,
+      website: formData.website,
+      hqLocation: formData.hqLocation,
+      companyDescription: formData.companyDescription,
+      linkedin: formData.linkedin,
+      twitter: formData.twitter,
+      github: formData.github,
+      hiringType: formData.hiringType,
+      budget: formData.budget ? parseFloat(formData.budget) : null,
+      timezone: formData.timezone,
+      preferredWorkingHours: formData.preferredWorkingHours,
+    };
+    updateProfileMutation.mutate(payload);
   };
 
   const handleImageUpload = async (type, file) => {
     setUploadingImage(type);
     try {
       const response =
-        type === 'logo'
+        type === "logo"
           ? await profileAPI.uploadCompanyLogo(file)
           : await profileAPI.uploadCoverPhoto(file);
 
       const imageUrl =
         type === 'logo'
-          ? response?.user?.profile?.companyLogo || response?.user?.companyLogo || response?.url
+          ? response?.user?.profile?.avatar || response?.user?.avatar || response?.url
           : response?.user?.profile?.coverPhoto || response?.user?.coverPhoto || response?.url;
 
-      setFormData((prev) => ({ ...prev, [type]: imageUrl }));
+      const stateKey = type === 'logo' ? 'avatar' : 'coverPhoto';
+      setFormData((prev) => ({ ...prev, [stateKey]: imageUrl }));
       setSaveMessage({ type: 'success', text: `${type === 'logo' ? 'Logo' : 'Banner'} updated` });
       setTimeout(() => setSaveMessage(null), 3000);
     } catch (error) {
-      setSaveMessage({ type: 'error', text: `Failed to upload ${type}` });
+      setSaveMessage({ type: "error", text: `Failed to upload ${type}` });
       setTimeout(() => setSaveMessage(null), 3000);
     } finally {
       setUploadingImage(null);
@@ -145,23 +176,29 @@ export default function ClientCompanyProfilePage() {
   const handleTaxUpload = async (file) => {
     try {
       await profileAPI.uploadTaxCertificate(file);
-      setVerification((prev) => ({ ...prev, taxCertificate: 'pending' }));
-      setSaveMessage({ type: 'success', text: 'Tax certificate uploaded. Under review.' });
+      setVerification((prev) => ({ ...prev, taxCertificate: "pending" }));
+      setSaveMessage({
+        type: "success",
+        text: "Tax certificate uploaded. Under review.",
+      });
       setTimeout(() => setSaveMessage(null), 3000);
     } catch (error) {
-      setSaveMessage({ type: 'error', text: 'Upload failed. Please try again.' });
+      setSaveMessage({
+        type: "error",
+        text: "Upload failed. Please try again.",
+      });
       setTimeout(() => setSaveMessage(null), 3000);
     }
   };
 
   const onLogoChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) handleImageUpload('logo', file);
+    if (file) handleImageUpload("logo", file);
   };
 
   const onBannerChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) handleImageUpload('banner', file);
+    if (file) handleImageUpload("banner", file);
   };
 
   const onTaxChange = (e) => {
@@ -190,7 +227,7 @@ export default function ClientCompanyProfilePage() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.4, ease: 'easeOut' },
+      transition: { duration: 0.4, ease: "easeOut" },
     },
   };
   const buttonTap = { scale: 0.97 };
@@ -204,27 +241,29 @@ export default function ClientCompanyProfilePage() {
             <h1 className="font-display text-3xl lg:text-4xl font-bold text-brand-900 tracking-tight">
               Company Profile
             </h1>
-            <p className="text-ink-secondary mt-1">Build a trusted brand to attract the best freelancers.</p>
+            <p className="text-ink-secondary mt-1">
+              Build a trusted brand to attract the best freelancers.
+            </p>
           </div>
 
           <div className="flex bg-surface-muted p-1 rounded-xl">
             <button
-              onClick={() => setActiveTab('edit')}
+              onClick={() => setActiveTab("edit")}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                activeTab === 'edit'
-                  ? 'bg-white text-brand-900 shadow-sm'
-                  : 'text-ink-secondary hover:text-ink-primary'
+                activeTab === "edit"
+                  ? "bg-white text-brand-900 shadow-sm"
+                  : "text-ink-secondary hover:text-ink-primary"
               }`}
               aria-label="Edit profile mode"
             >
               <Settings size={18} /> Edit Profile
             </button>
             <button
-              onClick={() => setActiveTab('preview')}
+              onClick={() => setActiveTab("preview")}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                activeTab === 'preview'
-                  ? 'bg-white text-brand-900 shadow-sm'
-                  : 'text-ink-secondary hover:text-ink-primary'
+                activeTab === "preview"
+                  ? "bg-white text-brand-900 shadow-sm"
+                  : "text-ink-secondary hover:text-ink-primary"
               }`}
               aria-label="Public preview mode"
             >
@@ -241,9 +280,9 @@ export default function ClientCompanyProfilePage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               className={`fixed top-24 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-lg text-sm font-medium shadow-md ${
-                saveMessage.type === 'success'
-                  ? 'bg-accent-light text-accent-dark'
-                  : 'bg-danger-light text-danger'
+                saveMessage.type === "success"
+                  ? "bg-accent-light text-accent-dark"
+                  : "bg-danger-light text-danger"
               }`}
             >
               {saveMessage.text}
@@ -251,7 +290,7 @@ export default function ClientCompanyProfilePage() {
           )}
         </AnimatePresence>
 
-        {activeTab === 'edit' ? (
+        {activeTab === "edit" ? (
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -266,7 +305,7 @@ export default function ClientCompanyProfilePage() {
               {/* Banner */}
               <div className="absolute top-0 left-0 right-0 h-48 bg-surface-muted overflow-hidden group">
                 <img
-                  src={formData.banner}
+                  src={formData.coverPhoto}
                   alt="Company banner"
                   className="w-full h-full object-cover group-hover:opacity-80 transition-opacity"
                 />
@@ -291,7 +330,7 @@ export default function ClientCompanyProfilePage() {
               <div className="relative mt-28 flex items-center justify-between">
                 <div className="relative group">
                   <img
-                    src={formData.logo}
+                    src={formData.avatar}
                     alt="Company logo"
                     className="w-28 h-28 rounded-2xl border-4 border-white shadow-sm object-cover bg-white"
                   />
@@ -326,31 +365,44 @@ export default function ClientCompanyProfilePage() {
                   </label>
                   <input
                     type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    value={formData.companyName}
+                    onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                     className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
                     placeholder="Acme Inc."
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-ink-secondary mb-1.5">
-                    Industry
+                    Category (Industry)
                   </label>
-                  <input
-                    type="text"
+                  <select
                     value={formData.industry}
-                    onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-                    className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
-                    placeholder="Technology, Healthcare, etc."
-                  />
+                    onChange={(e) =>
+                      setFormData({ ...formData, industry: e.target.value })
+                    }
+                    className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent bg-white"
+                  >
+                    <option value="">Select Category</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Education">Education</option>
+                    <option value="E-commerce">E-commerce</option>
+                    <option value="Real Estate">Real Estate</option>
+                    <option value="Manufacturing">Manufacturing</option>
+                    <option value="Media & Entertainment">Media & Entertainment</option>
+                    <option value="Design & Creative">Design & Creative</option>
+                    <option value="Consulting">Consulting</option>
+                    <option value="Other">Other</option>
+                  </select>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-ink-secondary mb-1.5">
                     Company Size
                   </label>
                   <select
-                    value={formData.size}
-                    onChange={(e) => setFormData({ ...formData, size: e.target.value })}
+                    value={formData.companySize}
+                    onChange={(e) => setFormData({ ...formData, companySize: e.target.value })}
                     className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent bg-white"
                   >
                     <option value="">Select size</option>
@@ -367,8 +419,8 @@ export default function ClientCompanyProfilePage() {
                   </label>
                   <input
                     type="text"
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    value={formData.hqLocation}
+                    onChange={(e) => setFormData({ ...formData, hqLocation: e.target.value })}
                     className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
                     placeholder="New York, NY"
                   />
@@ -379,8 +431,8 @@ export default function ClientCompanyProfilePage() {
                   </label>
                   <textarea
                     rows={4}
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    value={formData.companyDescription}
+                    onChange={(e) => setFormData({ ...formData, companyDescription: e.target.value })}
                     className="w-full border border-border rounded-lg px-3 py-2 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent resize-none"
                     placeholder="Describe your company mission, culture, and values..."
                   />
@@ -392,10 +444,104 @@ export default function ClientCompanyProfilePage() {
                   <input
                     type="url"
                     value={formData.website}
-                    onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, website: e.target.value })
+                    }
                     className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
                     placeholder="https://acme.com"
                   />
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Hiring Type
+                  </label>
+                  <select
+                    value={formData.hiringType}
+                    onChange={(e) => setFormData({ ...formData, hiringType: e.target.value })}
+                    className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent bg-white"
+                  >
+                    <option value="">Select type</option>
+                    <option value="FREELANCE">Freelance</option>
+                    <option value="FULL_TIME">Full-Time</option>
+                    <option value="CONTRACT">Contract</option>
+                    <option value="HYBRID">Hybrid</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Hiring Budget (Total)
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.budget}
+                    onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                    className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
+                    placeholder="e.g. 50000"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Timezone
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.timezone}
+                    onChange={(e) => setFormData({ ...formData, timezone: e.target.value })}
+                    className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
+                    placeholder="e.g. EST, UTC+3"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Preferred Working Hours
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.preferredWorkingHours}
+                    onChange={(e) => setFormData({ ...formData, preferredWorkingHours: e.target.value })}
+                    className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
+                    placeholder="e.g. 9 AM - 5 PM EST"
+                  />
+                </div>
+
+                <div className="md:col-span-2 mt-4">
+                  <h3 className="text-sm font-semibold text-ink-primary mb-3">Social Profiles</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-ink-secondary mb-1.5">LinkedIn</label>
+                      <input
+                        type="url"
+                        value={formData.linkedin}
+                        onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
+                        className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
+                        placeholder="https://linkedin.com/company/acme"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-ink-secondary mb-1.5">Twitter</label>
+                      <input
+                        type="url"
+                        value={formData.twitter}
+                        onChange={(e) => setFormData({ ...formData, twitter: e.target.value })}
+                        className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
+                        placeholder="https://twitter.com/acme"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-ink-secondary mb-1.5">Github</label>
+                      <input
+                        type="url"
+                        value={formData.github}
+                        onChange={(e) => setFormData({ ...formData, github: e.target.value })}
+                        className="w-full h-10 border border-border rounded-lg px-3 text-sm font-body focus:outline-none focus:ring-2 focus:ring-brand-900 focus:border-transparent"
+                        placeholder="https://github.com/acme"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -404,11 +550,11 @@ export default function ClientCompanyProfilePage() {
                 <motion.button
                   whileTap={buttonTap}
                   onClick={handleSave}
-                  disabled={isSaving}
+                  disabled={updateProfileMutation.isPending}
                   className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-900 text-white rounded-lg font-medium text-sm hover:bg-brand-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  {isSaving && <Loader2 size={16} className="animate-spin" />}
-                  {isSaving ? 'Saving...' : 'Save Profile Info'}
+                  {updateProfileMutation.isPending && <Loader2 size={16} className="animate-spin" />}
+                  {updateProfileMutation.isPending ? "Saving..." : "Save Profile Info"}
                 </motion.button>
               </div>
             </motion.section>
@@ -419,7 +565,8 @@ export default function ClientCompanyProfilePage() {
               className="bg-white border border-border rounded-2xl p-6 shadow-sm"
             >
               <h2 className="text-xl font-display font-bold text-brand-900 mb-6 flex items-center gap-2">
-                <ShieldCheck size={24} className="text-accent" /> Verification Center
+                <ShieldCheck size={24} className="text-accent" /> Verification
+                Center
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -427,8 +574,10 @@ export default function ClientCompanyProfilePage() {
                 <div className="border border-border rounded-xl p-4 flex flex-col justify-between">
                   <div>
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-medium text-ink-primary">Business Registration</h3>
-                      {verification.businessRegistration === 'verified' ? (
+                      <h3 className="font-medium text-ink-primary">
+                        Business Registration
+                      </h3>
+                      {verification.businessRegistration === "verified" ? (
                         <CheckCircle2 size={20} className="text-accent" />
                       ) : (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warn-light text-warn">
@@ -437,9 +586,9 @@ export default function ClientCompanyProfilePage() {
                       )}
                     </div>
                     <p className="text-xs text-ink-tertiary mb-4">
-                      {verification.businessRegistration === 'verified'
-                        ? 'Verified on May 10, 2026'
-                        : 'Submit your business registration document to get verified'}
+                      {verification.businessRegistration === "verified"
+                        ? "Verified on May 10, 2026"
+                        : "Submit your business registration document to get verified"}
                     </p>
                   </div>
                   <button className="text-sm font-medium text-ink-tertiary hover:text-ink-primary transition-colors text-left">
@@ -451,8 +600,10 @@ export default function ClientCompanyProfilePage() {
                 <div className="border border-border rounded-xl p-4 flex flex-col justify-between bg-surface-soft">
                   <div>
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-medium text-ink-primary">Tax Certificate</h3>
-                      {verification.taxCertificate === 'verified' ? (
+                      <h3 className="font-medium text-ink-primary">
+                        Tax Certificate
+                      </h3>
+                      {verification.taxCertificate === "verified" ? (
                         <CheckCircle2 size={20} className="text-accent" />
                       ) : (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warn-light text-warn">
@@ -461,7 +612,8 @@ export default function ClientCompanyProfilePage() {
                       )}
                     </div>
                     <p className="text-xs text-ink-tertiary mb-4">
-                      Upload your VAT/Tax certificate to get the Verified Business badge.
+                      Upload your VAT/Tax certificate to get the Verified
+                      Business badge.
                     </p>
                   </div>
                   <button
@@ -497,7 +649,7 @@ export default function ClientCompanyProfilePage() {
             >
               <div className="h-48 w-full bg-surface-muted">
                 <img
-                  src={formData.banner}
+                  src={formData.coverPhoto}
                   alt="Company banner"
                   className="w-full h-full object-cover"
                 />
@@ -505,7 +657,7 @@ export default function ClientCompanyProfilePage() {
               <div className="px-6 lg:px-8 pb-6 relative">
                 <div className="flex flex-wrap justify-between items-end gap-4">
                   <img
-                    src={formData.logo}
+                    src={formData.avatar}
                     alt="Company logo"
                     className="w-28 h-28 rounded-2xl border-4 border-white shadow-sm object-cover bg-white -mt-14"
                   />
@@ -526,18 +678,18 @@ export default function ClientCompanyProfilePage() {
                 </div>
                 <div className="mt-4">
                   <h1 className="font-display text-3xl lg:text-4xl font-bold text-brand-900 flex items-center gap-2">
-                    {formData.name || 'Company Name'}
+                    {formData.companyName || 'Company Name'}
                     <CheckCircle2 size={24} className="text-accent" />
                   </h1>
                   <p className="text-lg text-ink-secondary mt-1">
-                    {formData.industry || 'Industry not specified'}
+                    {formData.industry || "Industry not specified"}
                   </p>
                   <div className="flex flex-wrap items-center gap-4 text-sm text-ink-tertiary mt-4">
                     <span className="flex items-center gap-1">
-                      <MapPin size={16} /> {formData.location || 'Location not specified'}
+                      <MapPin size={16} /> {formData.hqLocation || 'Location not specified'}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Users size={16} /> {formData.size || 'Size not specified'}
+                      <Users size={16} /> {formData.companySize || 'Size not specified'}
                     </span>
                     {formData.website && (
                       <a
@@ -562,9 +714,11 @@ export default function ClientCompanyProfilePage() {
                   variants={itemVariants}
                   className="bg-white border border-border rounded-2xl p-6 shadow-sm"
                 >
-                  <h2 className="font-display text-xl font-bold text-brand-900 mb-4">About</h2>
+                  <h2 className="font-display text-xl font-bold text-brand-900 mb-4">
+                    About
+                  </h2>
                   <p className="text-ink-primary whitespace-pre-wrap">
-                    {formData.description || 'No company description provided yet.'}
+                    {formData.companyDescription || 'No company description provided yet.'}
                   </p>
                 </motion.div>
 
@@ -573,7 +727,8 @@ export default function ClientCompanyProfilePage() {
                   className="bg-white border border-border rounded-2xl p-6 shadow-sm"
                 >
                   <h2 className="font-display text-xl font-bold text-brand-900 mb-4 flex items-center gap-2">
-                    <Briefcase size={20} className="text-accent" /> Open Roles (3)
+                    <Briefcase size={20} className="text-accent" /> Open Roles
+                    (3)
                   </h2>
                   <div className="space-y-4">
                     {[1, 2, 3].map((i) => (
@@ -584,7 +739,9 @@ export default function ClientCompanyProfilePage() {
                         <h3 className="font-medium text-ink-primary group-hover:text-accent transition-colors">
                           Senior React Developer
                         </h3>
-                        <p className="text-sm text-ink-tertiary mt-1">Full-time contract • $50-$80/hr</p>
+                        <p className="text-sm text-ink-tertiary mt-1">
+                          Full-time contract • $50-$80/hr
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -597,12 +754,18 @@ export default function ClientCompanyProfilePage() {
                   variants={itemVariants}
                   className="bg-white border border-border rounded-2xl p-6 shadow-sm"
                 >
-                  <h2 className="font-display text-xl font-bold text-brand-900 mb-4">Hiring Stats</h2>
+                  <h2 className="font-display text-xl font-bold text-brand-900 mb-4">
+                    Hiring Stats
+                  </h2>
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs font-medium text-ink-tertiary">Total Spent</span>
-                        <span className="text-sm font-semibold text-ink-primary">$45k+</span>
+                        <span className="text-xs font-medium text-ink-tertiary">
+                          Total Spent
+                        </span>
+                        <span className="text-sm font-semibold text-ink-primary">
+                          $45k+
+                        </span>
                       </div>
                       <div className="w-full bg-surface-muted h-1.5 rounded-full overflow-hidden">
                         <div className="w-[80%] bg-accent h-full rounded-full"></div>
@@ -610,8 +773,12 @@ export default function ClientCompanyProfilePage() {
                     </div>
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs font-medium text-ink-tertiary">Hire Rate</span>
-                        <span className="text-sm font-semibold text-ink-primary">72%</span>
+                        <span className="text-xs font-medium text-ink-tertiary">
+                          Hire Rate
+                        </span>
+                        <span className="text-sm font-semibold text-ink-primary">
+                          72%
+                        </span>
                       </div>
                       <div className="w-full bg-surface-muted h-1.5 rounded-full overflow-hidden">
                         <div className="w-[72%] bg-accent h-full rounded-full"></div>
@@ -621,10 +788,16 @@ export default function ClientCompanyProfilePage() {
                   <div className="mt-6 pt-6 border-t border-border">
                     <div className="flex items-center gap-2 mb-2">
                       <Star size={20} className="text-warn fill-warn" />
-                      <span className="text-lg font-bold text-ink-primary">4.9</span>
-                      <span className="text-xs font-medium text-ink-tertiary">(42 reviews)</span>
+                      <span className="text-lg font-bold text-ink-primary">
+                        4.9
+                      </span>
+                      <span className="text-xs font-medium text-ink-tertiary">
+                        (42 reviews)
+                      </span>
                     </div>
-                    <p className="text-xs text-ink-tertiary">Highly rated by freelancers.</p>
+                    <p className="text-xs text-ink-tertiary">
+                      Highly rated by freelancers.
+                    </p>
                   </div>
                 </motion.div>
               </div>

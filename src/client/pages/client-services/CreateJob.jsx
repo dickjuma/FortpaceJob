@@ -12,7 +12,7 @@ import {
   validateJobDescription,
   validateJobTitle,
   validateSelect,
-} from '../../../common/utils/validation';
+} from '../../../platform/common/utils/validation';
 
 const CATEGORIES = [
   'Software & Tech', 'Design & Creative', 'Writing & Content', 'Marketing & Sales',

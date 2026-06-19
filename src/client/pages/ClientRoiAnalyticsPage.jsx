@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { 
   TrendingUp, BarChart2, PieChart, Sparkles, Download, 
   RefreshCw, Bot, ShieldCheck, DollarSign, Activity 
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
+import Card from '../../platform/components/common/Card';
+import Button from '../../platform/components/common/Button';
 
 export default function ClientRoiAnalyticsPage() {
   const [roiForecast, setRoiForecast] = useState(87.5);
   const [activeSegment, setActiveSegment] = useState('overall');
+
+  const { data: roiData } = useQuery({
+    queryKey: ['client', 'roiAnalytics'],
+    queryFn: async () => {
+      return [
+        { name: 'Nairobi Pipeline Alignment QA', cost: 125000, target: 150000, savings: 25000, percentage: 83 },
+        { name: 'Forte Mobile CSS Flexbox Layouts', cost: 85000, target: 80000, savings: -5000, percentage: 106 },
+        { name: 'Mombasa Substation Fiber Splicing', cost: 160000, target: 200000, savings: 40000, percentage: 80 }
+      ];
+    }
+  });
+  const departments = roiData || [];
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans text-white bg-zinc-950/20 rounded-3xl animate-in fade-in duration-500">
@@ -65,11 +78,7 @@ export default function ClientRoiAnalyticsPage() {
             <h3 className="font-black text-sm uppercase tracking-wider mb-4">Department Spending Optimization</h3>
             
             <div className="space-y-4">
-              {[
-                { name: 'Nairobi Pipeline Alignment QA', cost: 125000, target: 150000, savings: 25000, percentage: 83 },
-                { name: 'Forte Mobile CSS Flexbox Layouts', cost: 85000, target: 80000, savings: -5000, percentage: 106 },
-                { name: 'Mombasa Substation Fiber Splicing', cost: 160000, target: 200000, savings: 40000, percentage: 80 }
-              ].map(dept => (
+              {departments.map(dept => (
                 <div key={dept.name} className="p-4 bg-white/5 border border-white/5 rounded-2xl space-y-3">
                   <div className="flex justify-between items-start">
                     <div>
@@ -113,3 +122,4 @@ export default function ClientRoiAnalyticsPage() {
     </div>
   );
 }
+

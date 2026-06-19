@@ -1,7 +1,9 @@
+import { useQuery } from '@tanstack/react-query';
 // ClientFinancialDashboard.jsx
 // Self-contained Financial Dashboard with mock data, framer-motion animations,
 // and design tokens. No external dependencies.
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   DollarSign,
@@ -20,80 +22,6 @@ import {
 } from 'lucide-react';
 import { getWallet, getTransactions, getMyContracts } from '../services/clientApi';
 
-// ----------------------------------------------------------------------
-// Mock API / Data
-// ----------------------------------------------------------------------
-const mockWallet = {
-  availableBalance: 245000,
-  lockedBalance: 75000,
-  balance: 320000,
-};
-
-const mockTransactions = [
-  {
-    id: 'TX-1001',
-    type: 'CREDIT',
-    amount: 50000,
-    description: 'Wallet deposit via M-Pesa',
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-    status: 'COMPLETED',
-  },
-  {
-    id: 'TX-1002',
-    type: 'ESCROW',
-    amount: 45000,
-    description: 'Escrow hold for contract #CT-202',
-    createdAt: new Date(Date.now() - 172800000).toISOString(),
-    status: 'PENDING',
-  },
-  {
-    id: 'TX-1003',
-    type: 'DEBIT',
-    amount: 25000,
-    description: 'Payment to freelancer Sarah Jenkins',
-    createdAt: new Date(Date.now() - 259200000).toISOString(),
-    status: 'COMPLETED',
-  },
-  {
-    id: 'TX-1004',
-    type: 'CREDIT',
-    amount: 15000,
-    description: 'Refund from milestone release',
-    createdAt: new Date(Date.now() - 345600000).toISOString(),
-    status: 'COMPLETED',
-  },
-  {
-    id: 'TX-1005',
-    type: 'ESCROW',
-    amount: 30000,
-    description: 'Escrow for new project',
-    createdAt: new Date(Date.now() - 432000000).toISOString(),
-    status: 'ACTIVE',
-  },
-];
-
-const mockContracts = [
-  {
-    id: 'CT-202',
-    status: 'ACTIVE',
-    freelancer: { name: 'Sarah Jenkins' },
-    totalAmount: 85000,
-  },
-  {
-    id: 'CT-203',
-    status: 'ACTIVE',
-    freelancer: { name: 'Michael Chen' },
-    totalAmount: 120000,
-  },
-  {
-    id: 'CT-204',
-    status: 'ACTIVE',
-    freelancer: { name: 'David Omondi' },
-    totalAmount: 45000,
-  },
-];
-
-// Helper
 const timeAgo = (dateStr) => {
   const diff = Date.now() - new Date(dateStr).getTime();
   const days = Math.floor(diff / 86400000);
@@ -106,36 +34,40 @@ const timeAgo = (dateStr) => {
 // Main Component
 // ----------------------------------------------------------------------
 export default function ClientFinancialDashboard() {
-  const [wallet, setWallet] = useState(null);
-  const [transactions, setTransactions] = useState([]);
-  const [contracts, setContracts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [txPage, setTxPage] = useState(1);
-  const [toast, setToast] = useState(null);
   const itemsPerPage = 5;
+  const { data: walletData, isLoading: walletLoading } = useQuery({
+    queryKey: ['client', 'wallet'],
+    queryFn: async () => {
+      const res = await getWallet();
+      return res?.data || res;
+    }
+  });
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const walletData = await getWallet();
-        const txData = await getTransactions({ limit: 50, sort: 'createdAt:desc' });
-        const contractData = await getMyContracts({ limit: 20 });
+  const { data: transactionsData, isLoading: txLoading } = useQuery({
+    queryKey: ['client', 'transactions'],
+    queryFn: async () => {
+      const res = await getTransactions({ limit: 50, sort: 'createdAt:desc' });
+      return res?.items || res || [];
+    }
+  });
 
-        setWallet(walletData?.data || walletData);
-        setTransactions(txData?.items || txData || []);
-        setContracts(contractData?.items || contractData || []);
-      } catch (err) {
-        showToast('error', err?.message || 'Failed to load financial data.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadData();
-  }, []);
+  const { data: contractsData, isLoading: contractsLoading } = useQuery({
+    queryKey: ['client', 'contracts', 'financial'],
+    queryFn: async () => {
+      const res = await getMyContracts({ limit: 20 });
+      return res?.items || res || [];
+    }
+  });
+
+  const wallet = walletData;
+  const transactions = transactionsData || [];
+  const contracts = contractsData || [];
+  const isLoading = walletLoading || txLoading || contractsLoading;
 
   const showToast = (type, message, duration = 3000) => {
-    setToast({ type, message });
-    setTimeout(() => setToast(null), duration);
+    console.log({ type, message });
+    setTimeout(() => console.log(null), duration);
   };
 
   const refetchWallet = () => {
@@ -456,3 +388,4 @@ export default function ClientFinancialDashboard() {
     </div>
   );
 }
+

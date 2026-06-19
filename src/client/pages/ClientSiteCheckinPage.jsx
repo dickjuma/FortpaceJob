@@ -4,8 +4,8 @@ import {
   Upload, Terminal, Navigation, AlertTriangle 
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
+import Card from '../../platform/components/common/Card';
+import Button from '../../platform/components/common/Button';
 
 export default function ClientSiteCheckinPage() {
   const [scanned, setScanned] = useState(false);

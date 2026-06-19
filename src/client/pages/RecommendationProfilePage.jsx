@@ -13,7 +13,7 @@ import {
   Clock,
   AlertCircle,
 } from 'lucide-react';
-import { profileAPI } from '../../common/services/api';
+import { profileAPI } from '../../platform/common/services/api';
 
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 

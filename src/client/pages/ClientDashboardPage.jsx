@@ -16,7 +16,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import { getClientDashboardStats } from '../services/clientApi';
-import { profileAPI } from '../../common/services/api';
+import { profileAPI } from '../../platform/common/services/api';
 
 // Helper to get initials
 const getInitials = (firstName, lastName, username, email) => {

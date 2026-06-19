@@ -4,13 +4,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, Briefcase, User, Star, Globe, ShieldCheck, ChevronRight, X, ArrowUpRight, Check
 } from 'lucide-react';
+import { useGlobalSearch } from '../services/freelancerHooks';
 
 export default function GlobalSearchResultsPage() {
   const [activeTab, setActiveTab] = useState('jobs');
   const [query, setQuery] = useState('React');
   const [showSuccess, setShowSuccess] = useState(null);
 
-  const results = {
+  const { data: response, isLoading } = useGlobalSearch(query);
+  const apiResults = response?.data || response;
+
+  const fallbackResults = {
     jobs: [
       { id: 1, title: 'Senior React Developer (Next.js focus)', client: 'Vercel Ecosystem', budget: 95, type: 'Hourly Rate' },
       { id: 2, title: 'Figma to React Frontend Specialist', client: 'Stripe Orchestrations', budget: 3500, type: 'Fixed Price' }
@@ -24,6 +28,8 @@ export default function GlobalSearchResultsPage() {
       { id: 2, name: 'Sarah Jenkins', title: 'Lead Developer & Architect', location: 'London, UK', success: '100%' }
     ]
   };
+
+  const results = apiResults && Object.keys(apiResults).length > 0 ? apiResults : fallbackResults;
 
   const handleAction = (name) => {
     setShowSuccess({ message: `Opening: ${name}` });

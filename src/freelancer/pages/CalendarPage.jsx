@@ -5,14 +5,18 @@ import {
   Calendar as CalendarIcon, Clock, ChevronLeft, ChevronRight,
   Video, Target, Briefcase, Plus, Filter, Check
 } from 'lucide-react';
+import { useGetCalendarEvents } from '../services/freelancerHooks';
 
 export default function CalendarPage() {
+  const { data: response, isLoading } = useGetCalendarEvents();
+  const apiEvents = response?.data || response || [];
+  
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showSuccess, setShowSuccess] = useState(null);
   const [filterType, setFilterType] = useState('all');
 
   // Mock events data
-  const [events] = useState([
+  const fallbackEvents = [
     {
       id: '1',
       title: 'Consultation with Sarah Johnson',
@@ -31,11 +35,10 @@ export default function CalendarPage() {
     },
     {
       id: '3',
-      title: 'Project Milestone: UI Design',
+      title: 'E-commerce Redesign Milestone 1',
       type: 'milestone',
-      time: 'All day',
-      date: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString().split('T')[0],
-      link: null
+      time: '11:59 PM',
+      date: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString().split('T')[0]
     },
     {
       id: '4',
@@ -45,7 +48,9 @@ export default function CalendarPage() {
       date: new Date(new Date().setDate(new Date().getDate() + 5)).toISOString().split('T')[0],
       link: null
     }
-  ]);
+  ];
+
+  const events = apiEvents.length > 0 ? apiEvents : fallbackEvents;
 
   const handleCreateEvent = () => {
     setShowSuccess({ message: 'Event creation modal would open here' });

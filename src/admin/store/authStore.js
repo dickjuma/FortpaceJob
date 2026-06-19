@@ -43,7 +43,7 @@ export const useAuthStore = create()(
         set({ isLoading: true });
         try {
           const data = await adminAuthAPI.login({ email, password });
-          return data.data;
+          return data;
         } finally {
           set({ isLoading: false });
         }
@@ -53,7 +53,7 @@ export const useAuthStore = create()(
         set({ isLoading: true });
         try {
           const data = await adminAuthAPI.setupStart({ email, password });
-          return data.data;
+          return data;
         } finally {
           set({ isLoading: false });
         }
@@ -63,7 +63,7 @@ export const useAuthStore = create()(
         set({ isLoading: true });
         try {
           const data = await adminAuthAPI.setupConfirm(payload);
-          return data.data;
+          return data;
         } finally {
           set({ isLoading: false });
         }
@@ -73,7 +73,7 @@ export const useAuthStore = create()(
         set({ isLoading: true });
         try {
           const data = await adminAuthAPI.verifyTotp(payload);
-          return data.data;
+          return data;
         } finally {
           set({ isLoading: false });
         }
@@ -83,7 +83,7 @@ export const useAuthStore = create()(
         set({ isLoading: true });
         try {
           const data = await adminAuthAPI.verifyEmailOtp(payload);
-          return data.data;
+          return data;
         } finally {
           set({ isLoading: false });
         }
@@ -93,7 +93,7 @@ export const useAuthStore = create()(
         set({ isLoading: true });
         try {
           const data = await adminAuthAPI.verifyRecoveryCode(payload);
-          return data.data;
+          return data;
         } finally {
           set({ isLoading: false });
         }
@@ -103,7 +103,7 @@ export const useAuthStore = create()(
         set({ isLoading: true });
         try {
           const data = await adminAuthAPI.createAdmin(userData);
-          return data.data;
+          return data;
         } finally {
           set({ isLoading: false });
         }

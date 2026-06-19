@@ -5,7 +5,7 @@
  * ============================================================
  */
 
-import { messagingAPI } from '../../common/services/messagingApi';
+import { messagingAPI } from '../../platform/common/services/messagingApi';
 
 const BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -55,12 +55,11 @@ const unwrapPaged = (r) => ({
 
 export async function getFreelancerDashboardStats() {
   try {
-    const res = await apiFetch('/profilesystem/freelancer/dashboard');
+    const res = await apiFetch('/freelancer/dashboard');
     return unwrap(res);
   } catch (error) {
-    // Fallback or re-throw
-    console.error('Failed to load freelancer dashboard stats:', error);
-    throw error;
+    const fallback = await apiFetch('/profilesystem/freelancer/dashboard');
+    return unwrap(fallback);
   }
 }
 
@@ -78,7 +77,7 @@ export async function getFreelancerRecentActivity(params = { limit: 10 }) {
 
 export async function getFreelancerActiveOrders(params = { limit: 10, status: 'ACTIVE' }) {
   const qs = new URLSearchParams(params).toString();
-  return unwrapList(await apiFetch(`/profilesystem/freelancer/orders?${qs}`));
+  return unwrapList(await apiFetch(`/orders/my?${qs}`));
 }
 
 export async function updateFreelancerAvailability(status) {
@@ -94,11 +93,16 @@ export async function updateFreelancerAvailability(status) {
 
 export async function getFreelancerJobs(params = { page: 1, limit: 10 }) {
   const qs = new URLSearchParams(params).toString();
-  return unwrapPaged(await apiFetch(`/search/find-work/feed?${qs}`));
+  return unwrapPaged(await apiFetch(`/discover/jobs${qs ? `?${qs}` : ''}`));
+}
+
+export async function searchFreelancerJobs(params = { page: 1, limit: 10 }) {
+  const qs = new URLSearchParams(params).toString();
+  return unwrapPaged(await apiFetch(`/discover/jobs${qs ? `?${qs}` : ''}`));
 }
 
 export async function getFreelancerJobById(jobId) {
-  return unwrap(await apiFetch(`/search/find-work/job/${jobId}`));
+  return unwrap(await apiFetch(`/discover/jobs/${jobId}`));
 }
 
 export async function getSavedJobs() {
@@ -106,11 +110,65 @@ export async function getSavedJobs() {
 }
 
 export async function saveJob(jobId) {
-  return unwrap(await apiFetch(`/search/find-work/job/${jobId}/save`, { method: 'POST' }));
+  return unwrap(await apiFetch(`/discover/jobs/${jobId}/save`, { method: 'POST' }));
 }
 
 export async function unsaveJob(jobId) {
-  return unwrap(await apiFetch(`/search/find-work/job/${jobId}/save`, { method: 'DELETE' }));
+  // Uses the same toggle endpoint on the backend
+  return unwrap(await apiFetch(`/discover/jobs/${jobId}/save`, { method: 'POST' }));
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// GIGS
+// ══════════════════════════════════════════════════════════════════════════════
+
+export async function getFreelancerGigs(params = { page: 1, limit: 10 }) {
+  const qs = new URLSearchParams(params).toString();
+  return unwrapPaged(await apiFetch(`/discover/gigs?${qs}`));
+}
+
+export async function searchFreelancerGigs(params = { page: 1, limit: 10 }) {
+  const qs = new URLSearchParams(params).toString();
+  return unwrapPaged(await apiFetch(`/discover/gigs?${qs}`));
+}
+
+export async function getFreelancerGigById(gigId) {
+  return unwrap(await apiFetch(`/discover/gigs/${gigId}`));
+}
+
+export async function saveGig(gigId) {
+  return unwrap(await apiFetch(`/discover/gigs/${gigId}/save`, { method: 'POST' }));
+}
+
+export async function unsaveGig(gigId) {
+  // Uses the same toggle endpoint on the backend
+  return unwrap(await apiFetch(`/discover/gigs/${gigId}/save`, { method: 'POST' }));
+}
+
+export async function createGig(gigData) {
+  return unwrap(await apiFetch(`/gigs`, { method: 'POST', body: JSON.stringify(gigData) }));
+}
+
+export async function updateGig(gigId, gigData) {
+  return unwrap(await apiFetch(`/gigs/${gigId}`, { method: 'PUT', body: JSON.stringify(gigData) }));
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ANALYTICS & DISCOVERY
+// ══════════════════════════════════════════════════════════════════════════════
+
+export async function getGigAnalytics(params = {}) {
+  const qs = new URLSearchParams(params).toString();
+  return unwrap(await apiFetch(`/discovery-analytics/gigs?${qs}`));
+}
+
+export async function getProposalAnalytics(params = {}) {
+  const qs = new URLSearchParams(params).toString();
+  return unwrap(await apiFetch(`/discovery-analytics/proposals?${qs}`));
+}
+
+export async function getSuccessScore() {
+  return unwrap(await apiFetch(`/ranking-engine/success-score`));
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -213,16 +271,16 @@ export async function markChatRead(conversationId) {
 // ══════════════════════════════════════════════════════════════════════════════
 
 export async function getFreelancerWallet() {
-  return unwrap(await apiFetch('/escorow_wallet/wallet'));
+  return unwrap(await apiFetch('/escrow_wallet/wallet'));
 }
 
 export async function getFreelancerTransactions(params = { page: 1, limit: 10 }) {
   const qs = new URLSearchParams(params).toString();
-  return unwrapPaged(await apiFetch(`/escorow_wallet/transactions?${qs}`));
+  return unwrapPaged(await apiFetch(`/escrow_wallet/transactions?${qs}`));
 }
 
 export async function initiateWithdrawal(data) {
-  return unwrap(await apiFetch('/escorow_wallet/withdrawal', {
+  return unwrap(await apiFetch('/escrow_wallet/withdrawal', {
     method: 'POST',
     headers: data.idempotencyKey ? { 'Idempotency-Key': data.idempotencyKey } : {},
     body: JSON.stringify({
@@ -256,3 +314,56 @@ export async function updateFreelancerProfile(data) {
     body: JSON.stringify(data),
   }));
 }
+
+export async function getFreelancerPortfolio(params = {}) { return apiFetch('/api/freelancer/portfolio', { params }); }
+export async function getFreelancerReviews(params = {}) { return apiFetch('/api/freelancer/reviews', { params }); }
+export async function getFreelancerSettings(params = {}) { return apiFetch('/api/freelancer/settings', { params }); }
+export async function updateFreelancerSettings(payload) { return apiFetch('/api/freelancer/settings', { method: 'PUT', body: payload }); }
+
+
+
+export async function getFreelancerPerformanceInsights(params = {}) { return apiFetch('/api/freelancer/performance-insights', { params }); }
+
+export async function boostFreelancerProfile(data) { return apiFetch('/api/freelancer/boost-profile', { method: 'POST', body: data }); }
+
+export async function getPortfolio() { return apiFetch('/api/freelancer/portfolio'); }
+export async function createPortfolioProject(data) { return apiFetch('/api/freelancer/portfolio', { method: 'POST', body: data }); }
+
+export async function updateSubscription(data) { return apiFetch('/api/freelancer/subscription', { method: 'POST', body: data }); }
+
+export async function getInvoices() { return apiFetch('/api/freelancer/invoices'); }
+export async function generateInvoice(data) { return apiFetch('/api/freelancer/invoices', { method: 'POST', body: data }); }
+
+export async function updateAvailability(data) { return apiFetch('/api/freelancer/availability', { method: 'POST', body: data }); }
+
+export async function getCalendarEvents() { return apiFetch('/api/freelancer/calendar'); }
+
+export async function getBuyerRequests() { return apiFetch('/api/freelancer/buyer-requests'); }
+export async function submitOffer(data) { return apiFetch('/api/freelancer/buyer-requests/offer', { method: 'POST', body: data }); }
+
+export async function globalSearch(q) { return apiFetch('/api/freelancer/search?q=' + encodeURIComponent(q)); }
+
+export async function getBookmarks() { return apiFetch('/api/freelancer/bookmarks'); }
+export async function toggleBookmark(data) { return apiFetch('/api/freelancer/bookmarks/toggle', { method: 'POST', body: data }); }
+
+export async function getJobs(params) { const q = new URLSearchParams(params).toString(); return apiFetch('/api/freelancer/jobs?' + q); }
+
+export async function sendDiscoveryAiMessage(data) { return apiFetch('/api/freelancer/discovery-ai/chat', { method: 'POST', body: data }); }
+
+export async function getLearningData() { return apiFetch('/api/freelancer/learning'); }
+
+export async function getReferrals() { return apiFetch('/api/freelancer/referrals'); }
+
+export async function getGigFaqs() { return apiFetch('/api/freelancer/gig-faqs'); }
+export async function updateGigFaqs(data) { return apiFetch('/api/freelancer/gig-faqs', { method: 'POST', body: data }); }
+
+export async function getHelpCenter() { return apiFetch('/api/freelancer/help-center'); }
+
+export async function verifyOtp(data) { return apiFetch('/api/freelancer/auth/verify-otp', { method: 'POST', body: data }); }
+export async function resendOtp(data) { return apiFetch('/api/freelancer/auth/resend-otp', { method: 'POST', body: data }); }
+
+export async function getSkillsCertifications() { return apiFetch('/api/freelancer/skills-certifications'); }
+export async function updateSkillsCertifications(data) { return apiFetch('/api/freelancer/skills-certifications', { method: 'POST', body: data }); }
+
+export async function getSupportTickets() { return apiFetch('/api/freelancer/support-tickets'); }
+export async function createSupportTicket(data) { return apiFetch('/api/freelancer/support-tickets', { method: 'POST', body: data }); }

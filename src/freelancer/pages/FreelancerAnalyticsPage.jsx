@@ -5,7 +5,7 @@ import {
   TrendingUp, Eye, MousePointer, DollarSign, Download, Filter, Zap,
   ArrowUpRight, ArrowDownRight, Target, Share2, Award, Calendar, BarChart2, Star, Check
 } from 'lucide-react';
-import { analyticsAPI } from '../../common/services/api';
+import { analyticsAPI } from '../../platform/common/services/api';
 import { useQuery } from '@tanstack/react-query';
 
 // Custom Progress Ring Component

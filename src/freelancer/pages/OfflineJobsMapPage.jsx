@@ -4,20 +4,26 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   MapPin, Star, Laptop, DollarSign, Clock, X, Navigation, Award, Briefcase, Eye, ChevronRight, SlidersHorizontal, Search, Check
 } from 'lucide-react';
+import { useGetJobs } from '../services/freelancerHooks';
 
 export default function OfflineJobsMapPage() {
+  const { data: response, isLoading } = useGetJobs({ type: 'offline' });
+  const apiJobs = response?.data || response || [];
+
   const [selectedPin, setSelectedPin] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [maxDistance, setMaxDistance] = useState(5.0);
   const [showSuccess, setShowSuccess] = useState(null);
 
-  const mapPins = [
+  const fallbackPins = [
     { id: 1, title: 'Server Room Configuration', x: '35%', y: '42%', client: 'Apex Holdings', distance: 1.2, budget: 1500, type: 'Fixed Price', duration: '2 days' },
     { id: 2, title: 'On-site Commercial Photography', x: '65%', y: '30%', client: 'Cloudfront Media', distance: 3.4, budget: 2800, type: 'Fixed Price', duration: '3 days' },
     { id: 3, title: 'Cybersecurity System Hardening', x: '48%', y: '68%', client: 'Bay Area Cyberlabs', distance: 0.5, budget: 140, type: 'Hourly Rate', duration: '15 hours' },
     { id: 4, title: 'Retail LAN Network Deployment', x: '20%', y: '72%', client: 'Downtown Retailers', distance: 6.8, budget: 3200, type: 'Fixed Price', duration: '5 days' },
     { id: 5, title: 'Fibre Optic Splice Inspection', x: '80%', y: '50%', client: 'Symmetric Telecom', distance: 8.5, budget: 450, type: 'Hourly Rate', duration: '5 hours' }
   ];
+
+  const mapPins = apiJobs.length > 0 ? apiJobs : fallbackPins;
 
   const filteredPins = useMemo(() => {
     return mapPins.filter(pin => {

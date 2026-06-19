@@ -2,17 +2,26 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
-  TrendingUp, Clock, CheckCircle2, Star,
+  TrendingUp, Clock, CheckCircle2,
   MessageSquare, Briefcase, Zap, BellRing, Target, ShieldCheck, ArrowRight,
-  Calendar, Award
+  Calendar, Award, Send as SendIcon
 } from 'lucide-react';
-import { useAuthStore } from '../../common/authStore';
+import { useAuthStore } from '../../platform/common/authStore';
 import {
   useFreelancerDashboard,
   useFreelancerActiveOrders,
   useFreelancerRecentActivity,
   useFreelancerProfile,
 } from '../services/freelancerHooks';
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from 'recharts';
 
 export default function DashboardOverview() {
   const navigate = useNavigate();
@@ -26,13 +35,22 @@ export default function DashboardOverview() {
   const availableFunds = stats?.wallet?.available ?? stats?.available ?? 0;
   const activeOrderCount = activeOrders?.length ?? 0;
   const responseRate = stats?.proposals?.successRate ?? 0;
-  const positiveRating = Math.round((stats?.overview?.averageRating ?? 0) * 20);
 
+  const earningsCurrent = stats?.overview?.totalEarnings ?? 0;
+  const earningsTarget = Math.max(1000000, earningsCurrent || 1000000);
+  const earningsProgress = earningsTarget > 0 ? Math.min((earningsCurrent / earningsTarget) * 100, 100) : 0;
+  const profileCompletion = profileData?.profileCompletion ?? 0;
   const displayStats = {
+    totalEarnings: `KES ${(stats?.overview?.totalEarnings ?? stats?.earnings?.total ?? 0).toLocaleString()}`,
+    pendingEarnings: `KES ${(stats?.wallet?.pending ?? stats?.pendingEarnings ?? 0).toLocaleString()}`,
     availableFunds: `KES ${availableFunds.toLocaleString()}`,
-    activeOrders: String(activeOrderCount),
-    responseRate: `${responseRate}%`,
-    positiveRating: `${positiveRating}%`
+    activeContracts: String(stats?.contracts?.active ?? stats?.activeContracts ?? activeOrderCount),
+    activeProjects: String(stats?.projects?.active ?? stats?.activeProjects ?? activeOrderCount),
+    activeGigOrders: String(stats?.orders?.active ?? stats?.activeGigOrders ?? activeOrderCount),
+    openProposals: String(stats?.proposals?.open ?? stats?.openProposals ?? 0),
+    profileCompletion: `${profileCompletion}%`,
+    recentNotifications: String((stats?.notifications?.unread ?? recentActivity.filter((activity) => !activity.read).length) || 0),
+    upcomingDeadlines: String(activeOrders.filter((order) => order.dueDate).length || 0),
   };
 
   const displayOrders = (activeOrders || []).map(order => ({
@@ -43,11 +61,6 @@ export default function DashboardOverview() {
     total: `KES ${(order?.totalAmount ?? order?.value ?? 0).toLocaleString()}`,
     status: order?.status === 'ACTIVE' ? 'In Progress' : order?.status || 'Pending'
   }));
-
-  const earningsCurrent = stats?.overview?.totalEarnings ?? 0;
-  const earningsTarget = Math.max(1000000, earningsCurrent || 1000000);
-  const earningsProgress = earningsTarget > 0 ? Math.min((earningsCurrent / earningsTarget) * 100, 100) : 0;
-  const profileCompletion = profileData?.profileCompletion ?? 0;
 
   const isLoading = statsLoading;
 
@@ -169,11 +182,17 @@ export default function DashboardOverview() {
       </motion.div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-        <StatCard title="Available funds" value={displayStats.availableFunds} icon={TrendingUp} trend="+12%" />
-        <StatCard title="Active orders" value={displayStats.activeOrders} icon={Briefcase} />
-        <StatCard title="Response rate" value={displayStats.responseRate} icon={Clock} />
-        <StatCard title="Satisfaction" value={displayStats.positiveRating} icon={Star} trend="+5%" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5 mb-8">
+        <StatCard title="Total earnings" value={displayStats.totalEarnings} icon={TrendingUp} />
+        <StatCard title="Pending earnings" value={displayStats.pendingEarnings} icon={Clock} />
+        <StatCard title="Active contracts" value={displayStats.activeContracts} icon={Briefcase} />
+        <StatCard title="Active projects" value={displayStats.activeProjects} icon={Zap} />
+        <StatCard title="Active gig orders" value={displayStats.activeGigOrders} icon={CheckCircle2} />
+        <StatCard title="Open proposals" value={displayStats.openProposals} icon={SendIcon} />
+        <StatCard title="Profile completion" value={displayStats.profileCompletion} icon={Award} />
+        <StatCard title="Recent notifications" value={displayStats.recentNotifications} icon={BellRing} />
+        <StatCard title="Upcoming deadlines" value={displayStats.upcomingDeadlines} icon={Calendar} />
+        <StatCard title="Available funds" value={displayStats.availableFunds} icon={ShieldCheck} trend="+12%" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -221,20 +240,22 @@ export default function DashboardOverview() {
           <div className="bg-white border border-border rounded-2xl shadow-sm p-6">
             <h2 className="font-display font-semibold text-lg text-brand-900 mb-4">Revenue analytics</h2>
             {stats?.earnings?.weeklyTrend && stats.earnings.weeklyTrend.length > 0 ? (
-              <div className="h-64 flex items-end gap-2 pt-4">
-                {stats.earnings.weeklyTrend.map((val, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
-                    <motion.div
-                      className="w-full bg-accent-light rounded-t-md overflow-hidden"
-                      initial={{ height: 0 }}
-                      animate={{ height: `${val}px` }}
-                      transition={{ duration: 0.6, delay: i * 0.05 }}
-                    >
-                      <div className="w-full bg-accent DEFAULT h-full" style={{ height: '100%' }} />
-                    </motion.div>
-                    <span className="text-xs font-mono text-ink-tertiary">W{i + 1}</span>
-                  </div>
-                ))}
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={stats.earnings.weeklyTrend.map((value, index) => ({ week: `W${index + 1}`, revenue: value }))}>
+                    <defs>
+                      <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#4C1D95" stopOpacity={0.35} />
+                        <stop offset="95%" stopColor="#4C1D95" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis dataKey="week" stroke="#64748b" fontSize={12} />
+                    <YAxis stroke="#64748b" fontSize={12} />
+                    <Tooltip formatter={(value) => [`KES ${Number(value).toLocaleString()}`, 'Revenue']} />
+                    <Area type="monotone" dataKey="revenue" stroke="#4C1D95" strokeWidth={3} fill="url(#revenueGradient)" />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
             ) : (
               <div className="h-64 flex items-center justify-center text-ink-secondary text-sm font-body">

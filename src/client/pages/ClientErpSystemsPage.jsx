@@ -2,6 +2,7 @@
 // Self-contained ERP & Business Systems Hub with design tokens,
 // framer-motion animations, and no AI references.
 import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Database,
@@ -62,29 +63,17 @@ export default function ClientErpSystemsPage() {
     { label: 'System Confidence', value: '94.2%', icon: Cpu, color: 'text-accent', bg: 'bg-accent-light' },
   ];
 
-  const assets = [
-    {
-      category: 'Geospatial Drones (DJI M300)',
-      assignedTo: 'Survey Team Alpha',
-      location: 'Site B, Nairobi',
-      status: 'Operational',
-      statusColor: 'text-accent',
-    },
-    {
-      category: 'Heavy Machinery Tools',
-      assignedTo: 'Construction Hub Y',
-      location: 'Mombasa Port',
-      status: 'Maintenance',
-      statusColor: 'text-warn',
-    },
-    {
-      category: 'MacBook Pro (M2) Fleet',
-      assignedTo: 'Remote Dev Agency',
-      location: 'Global Distributed',
-      status: 'Operational',
-      statusColor: 'text-accent',
-    },
-  ];
+  const { data: assetsData } = useQuery({
+    queryKey: ['client', 'erpAssets'],
+    queryFn: async () => {
+      return [
+        { category: 'Geospatial Drones (DJI M300)', assignedTo: 'Survey Team Alpha', location: 'Site B, Nairobi', status: 'Operational', statusColor: 'text-accent' },
+        { category: 'Heavy Machinery Tools', assignedTo: 'Construction Hub Y', location: 'Mombasa Port', status: 'Maintenance', statusColor: 'text-warn' },
+        { category: 'MacBook Pro (M2) Fleet', assignedTo: 'Remote Dev Agency', location: 'Global Distributed', status: 'Operational', statusColor: 'text-accent' }
+      ];
+    }
+  });
+  const assets = assetsData || [];
 
   return (
     <div className="min-h-screen bg-surface-soft font-body py-8 px-4 sm:px-6 lg:px-8">
@@ -270,3 +259,4 @@ export default function ClientErpSystemsPage() {
     </div>
   );
 }
+

@@ -5,6 +5,7 @@ import {
   CreditCard, CheckCircle2, Zap, Star,
   Crown, Receipt, Settings, Clock, AlertCircle, Check
 } from 'lucide-react';
+import { useUpdateSubscription } from '../services/freelancerHooks';
 
 const PLANS = [
   {
@@ -47,13 +48,20 @@ const BILLING_HISTORY = [
 ];
 
 export default function FreelancerSubscriptionsPage() {
-  const [billingCycle, setBillingCycle] = useState('monthly');
+  const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'annual'
   const [currentPlan, setCurrentPlan] = useState('Professional');
   const [showSuccess, setShowSuccess] = useState(null);
+  
+  const updateSubscription = useUpdateSubscription();
 
   const handleUpgrade = (planName) => {
-    setShowSuccess({ message: `Upgraded to ${planName} plan` });
-    setTimeout(() => setShowSuccess(null), 2000);
+    updateSubscription.mutate({ plan: planName, billingCycle }, {
+      onSuccess: () => {
+        setCurrentPlan(planName);
+        setShowSuccess({ message: `Upgraded to ${planName} plan` });
+        setTimeout(() => setShowSuccess(null), 2000);
+      }
+    });
   };
 
   const handleAddPaymentMethod = () => {
@@ -252,7 +260,7 @@ export default function FreelancerSubscriptionsPage() {
 
                 <button
                   onClick={() => handleUpgrade(plan.name)}
-                  disabled={isCurrent}
+                  disabled={isCurrent || updateSubscription.isPending}
                   className={`w-full py-2.5 rounded-lg font-body font-semibold text-sm transition-all focus:outline-none focus:ring-2 ${
                     isCurrent
                       ? 'bg-surface-muted text-ink-tertiary cursor-not-allowed'
@@ -263,7 +271,7 @@ export default function FreelancerSubscriptionsPage() {
                       : 'border border-border text-ink-primary hover:bg-surface-muted focus:ring-brand-900'
                   }`}
                 >
-                  {isCurrent ? 'Current plan' : `Upgrade to ${plan.name}`}
+                  {isCurrent ? 'Current plan' : updateSubscription.isPending ? 'Processing...' : 'Upgrade plan'}
                 </button>
               </motion.div>
             );

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -6,8 +7,8 @@ import {
   ChevronRight, ArrowLeft, Upload, Grid, Bot, Plus, Trash 
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
+import Card from '../../platform/components/common/Card';
+import Button from '../../platform/components/common/Button';
 
 export default function ClientSetupWizard() {
   const navigate = useNavigate();
@@ -24,6 +25,16 @@ export default function ClientSetupWizard() {
     { num: 4, title: 'Finalize Workspace', desc: 'AI customization', icon: Sparkles }
   ];
 
+  const setupMutation = useMutation({
+    mutationFn: async () => {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      return true;
+    },
+    onSuccess: () => {
+      navigate('/client/dashboard');
+    }
+  });
+
   const handleNext = () => {
     if (step === 1 && !companyInfo.name) {
       toast.error('Company Name is required.');
@@ -33,14 +44,11 @@ export default function ClientSetupWizard() {
       setStep(prev => prev + 1);
     } else {
       toast.promise(
-        new Promise(resolve => setTimeout(resolve, 1500)),
+        setupMutation.mutateAsync(),
         {
           loading: 'Provisioning cloud client workspace resources...',
-          success: () => {
-            setTimeout(() => navigate('/client/dashboard'), 1000);
-            return 'Provisioning completed successfully! 🚀';
-          },
-          error: 'Provisioning timed out.'
+          success: 'Provisioning completed successfully! ??',
+          error: 'Provisioning failed.'
         }
       );
     }
@@ -305,5 +313,6 @@ export default function ClientSetupWizard() {
     </div>
   );
 }
+
 
 

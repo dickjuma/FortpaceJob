@@ -1,6 +1,6 @@
 import React from "react";
 import ViewRequests from "../../freelancer/components/Findwork/BuyerRequests/ViewRequests";
-import WorkspaceToolLayout from "../../common/pages/WorkspaceToolLayout";
+import WorkspaceToolLayout from "../../platform/common/pages/WorkspaceToolLayout";
 
 export default function BuyerRequestsPage() {
   return (

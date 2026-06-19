@@ -5,11 +5,19 @@ import {
   Plus, Image as ImageIcon, Video, Link as LinkIcon, Edit, Trash2, FolderOpen, X, Sparkles, Eye, FileText, Check
 } from 'lucide-react';
 
+import { useFreelancerProfile, useUpdateFreelancerProfile } from '../services/freelancerHooks';
+
 export default function PortfolioManagementPage() {
-  const [projects, setProjects] = useState([
-    { id: 1, title: 'Enterprise SaaS Dashboard', type: 'React/Node', date: 'Oct 2023', image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80', description: 'A comprehensive management platform featuring visual analytics, role-based access control, and payment processing integration.' },
-    { id: 2, title: 'Fintech Payment Gateway', type: 'Full Stack', date: 'Aug 2023', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80', description: 'Highly secure payment orchestration engine processing multi-currency settlements with sub-second latency.' }
-  ]);
+  const { data: profile } = useFreelancerProfile();
+  const updateProfile = useUpdateFreelancerProfile();
+  
+  const [projects, setProjects] = useState([]);
+
+  React.useEffect(() => {
+    if (profile) {
+      setProjects(profile.portfolio || profile.portfolioItems || []);
+    }
+  }, [profile]);
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
@@ -51,24 +59,39 @@ export default function PortfolioManagementPage() {
     setActiveModal('delete');
   };
 
-  const saveProject = (e) => {
+  const saveProject = async (e) => {
     e.preventDefault();
+    let newProjects;
     if (activeModal === 'add') {
       const newProj = { id: Date.now(), ...projectForm };
-      setProjects([...projects, newProj]);
-      setShowSuccess({ message: 'Project added successfully' });
+      newProjects = [...projects, newProj];
     } else if (activeModal === 'edit' && selectedProject) {
-      setProjects(projects.map(p => p.id === selectedProject.id ? { ...p, ...projectForm } : p));
-      setShowSuccess({ message: 'Project updated successfully' });
+      newProjects = projects.map(p => p.id === selectedProject.id ? { ...p, ...projectForm } : p);
+    }
+    
+    if (newProjects) {
+      try {
+        await updateProfile.mutateAsync({ portfolio: newProjects });
+        setProjects(newProjects);
+        setShowSuccess({ message: activeModal === 'add' ? 'Project added successfully' : 'Project updated successfully' });
+      } catch (err) {
+        setShowSuccess({ message: 'Failed to save project', isError: true });
+      }
     }
     setActiveModal(null);
     setTimeout(() => setShowSuccess(null), 2000);
   };
 
-  const deleteProject = () => {
+  const deleteProject = async () => {
     if (selectedProject) {
-      setProjects(projects.filter(p => p.id !== selectedProject.id));
-      setShowSuccess({ message: 'Project removed from portfolio' });
+      const newProjects = projects.filter(p => p.id !== selectedProject.id);
+      try {
+        await updateProfile.mutateAsync({ portfolio: newProjects });
+        setProjects(newProjects);
+        setShowSuccess({ message: 'Project removed from portfolio' });
+      } catch (err) {
+        setShowSuccess({ message: 'Failed to delete project', isError: true });
+      }
     }
     setActiveModal(null);
     setTimeout(() => setShowSuccess(null), 2000);

@@ -12,6 +12,7 @@ import {
   Briefcase,
   AlertCircle,
 } from 'lucide-react';
+import { useFreelancerJobById, useCreateProposal } from '../services/freelancerHooks';
 
 // ---------- Shared UI Components (inline) ----------
 const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, ...props }) => {
@@ -135,11 +136,13 @@ const validateCoverLetter = (text, minLength = 50) => {
 // ---------- Main Component ----------
 export default function ProposalSubmissionPage() {
   const { jobId } = useParams();
+  const { data: job, isLoading } = useFreelancerJobById(jobId);
+  const submitProposalMutation = useCreateProposal();
+
   const [step, setStep] = useState(1);
   const [hourlyRate, setHourlyRate] = useState('85');
   const [duration, setDuration] = useState('less_1');
   const [coverLetter, setCoverLetter] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [toast, setToast] = useState(null);
 
@@ -171,16 +174,29 @@ export default function ProposalSubmissionPage() {
       setTimeout(() => setToast(null), 3000);
       return;
     }
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    }, 1500);
+    
+    submitProposalMutation.mutate(
+      { jobId, coverLetter, bidAmount: hourlyRateNum, deliveryDays: duration === 'less_1' ? 30 : 90 },
+      {
+        onSuccess: () => setIsSubmitted(true),
+        onError: (err) => {
+          setToast({ type: 'error', message: err.message || 'Failed to submit proposal' });
+          setTimeout(() => setToast(null), 3000);
+        }
+      }
+    );
   };
 
-  // Mock job data (in real app would come from API)
-  const jobTitle = "Senior React Developer for Enterprise Dashboard";
-  const clientBudget = "$80.00 - $120.00/hr";
+  if (isLoading) {
+    return <div className="max-w-4xl mx-auto py-20 text-center text-ink-secondary">Loading job...</div>;
+  }
+
+  if (!job) {
+    return <div className="max-w-4xl mx-auto py-20 text-center text-ink-secondary">Job not found</div>;
+  }
+
+  const jobTitle = job.title;
+  const clientBudget = job.budgetRange || (job.budgetMin && job.budgetMax ? `$${job.budgetMin} - $${job.budgetMax}` : 'Negotiable');
 
   return (
     <motion.div
@@ -345,12 +361,12 @@ export default function ProposalSubmissionPage() {
             <div className="mt-8 pt-6 border-t border-border flex justify-between">
               <button
                 onClick={() => setStep(Math.max(1, step - 1))}
-                disabled={isSubmitting}
+                disabled={submitProposalMutation.isPending}
                 className={`px-5 py-2.5 rounded-lg font-body font-medium text-sm transition-all ${
                   step === 1
                     ? 'invisible'
                     : 'text-ink-secondary hover:bg-surface-muted'
-                } ${isSubmitting ? 'opacity-40 cursor-not-allowed' : ''}`}
+                } ${submitProposalMutation.isPending ? 'opacity-40 cursor-not-allowed' : ''}`}
               >
                 Back
               </button>
@@ -363,10 +379,10 @@ export default function ProposalSubmissionPage() {
                 <Button
                   variant="success"
                   onClick={handleSubmit}
-                  disabled={isSubmitting}
+                  disabled={submitProposalMutation.isPending}
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit proposal'}
-                  {isSubmitting ? (
+                  {submitProposalMutation.isPending ? 'Submitting...' : 'Submit proposal'}
+                  {submitProposalMutation.isPending ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
                     <Send className="w-4 h-4" />

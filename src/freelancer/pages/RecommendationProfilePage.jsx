@@ -13,7 +13,7 @@ import {
   MapPin,
   DollarSign,
 } from 'lucide-react';
-import { profileAPI } from '../../common/services/api';
+import { profileAPI } from '../../platform/common/services/api';
 
 // ---------- Shared UI Components (inline) ----------
 const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, type = 'button' }) => {

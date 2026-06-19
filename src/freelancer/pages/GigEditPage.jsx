@@ -8,7 +8,7 @@ import {
   History, Settings, MoreHorizontal, FileText, Image as ImageIcon,
   DollarSign, AlignLeft, Info, Check as CheckIcon
 } from 'lucide-react';
-import { gigAPI } from '../../common/services/api';
+import { gigAPI } from '../../platform/common/services/api';
 
 const defaultGig = {
   title: '',

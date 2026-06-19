@@ -1,3 +1,4 @@
+import { useProposalsForJob } from '../services/clientHooks';
 // JobApplicantsScreen.jsx
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -6,11 +7,12 @@ import { Search, Filter, Star, CheckCircle, MessageSquare, Briefcase, Award, Che
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export default function JobApplicantsScreen({ jobId }) {
-  const [applicants] = useState([
-    { id: 1, name: 'Sarah Jenkins', role: 'Senior React Developer', rate: '$85/hr', score: 98, status: 'pending' },
-    { id: 2, name: 'David Chen', role: 'Full Stack Engineer', rate: '$65/hr', score: 92, status: 'shortlisted' },
-    { id: 3, name: 'Elena Rodriguez', role: 'Frontend Specialist', rate: '$75/hr', score: 88, status: 'pending' },
-  ]);
+  const { data: proposalsData } = useProposalsForJob(jobId);
+  const applicants = proposalsData?.items || [
+    { id: 1, name: 'Sarah Jenkins', role: 'Senior React Developer', rate: '/hr', score: 98, status: 'pending' },
+    { id: 2, name: 'David Chen', role: 'Full Stack Engineer', rate: '/hr', score: 92, status: 'shortlisted' },
+    { id: 3, name: 'Elena Rodriguez', role: 'Frontend Specialist', rate: '/hr', score: 88, status: 'pending' },
+  ];
 
   // Animation variants
   const containerVariants = {
@@ -112,3 +114,4 @@ export default function JobApplicantsScreen({ jobId }) {
     </div>
   );
 }
+

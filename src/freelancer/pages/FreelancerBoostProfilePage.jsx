@@ -5,6 +5,7 @@ import {
   Rocket, TrendingUp, Eye, MousePointerClick,
   Target, Zap, CheckCircle2, ChevronRight, DollarSign, Activity, Check
 } from 'lucide-react';
+import { useBoostProfile } from '../services/freelancerHooks';
 
 const PACKAGES = [
   {
@@ -40,22 +41,23 @@ const PACKAGES = [
 ];
 
 export default function FreelancerBoostProfilePage() {
-  const [selectedPkg, setSelectedPkg] = useState(PACKAGES[1]);
-  const [duration, setDuration] = useState(3);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedPkg, setSelectedPkg] = useState(PACKAGES[0]);
+  const [duration, setDuration] = useState(7);
   const [isSuccess, setIsSuccess] = useState(false);
   const [showSuccess, setShowSuccess] = useState(null);
+  
+  const boostProfile = useBoostProfile();
 
   const totalPrice = selectedPkg.basePrice * duration;
 
   const handlePromote = () => {
-    setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
-      setIsSuccess(true);
-      setShowSuccess({ message: 'Campaign launched successfully' });
-      setTimeout(() => setShowSuccess(null), 3000);
-    }, 1500);
+    boostProfile.mutate({ packageId: selectedPkg.id, duration, totalPrice }, {
+      onSuccess: () => {
+        setIsSuccess(true);
+        setShowSuccess({ message: 'Campaign launched successfully' });
+        setTimeout(() => setShowSuccess(null), 3000);
+      }
+    });
   };
 
   const handleViewAnalytics = () => {
@@ -344,10 +346,10 @@ export default function FreelancerBoostProfilePage() {
 
               <button
                 onClick={handlePromote}
-                disabled={isProcessing}
+                disabled={boostProfile.isPending}
                 className="w-full py-3 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-semibold text-sm transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-brand-900 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isProcessing ? (
+                {boostProfile.isPending ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     Processing...

@@ -33,37 +33,25 @@ export const ROLE_CONFIG = {
     modules: [
       { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
       {
-        id: 'operations',
-        label: 'Operations',
-        icon: Activity,
-        href: '/admin/activity',
-        children: [
-          { id: 'live_activity', label: 'Live Activity', path: '/admin/activity' },
-          { id: 'alerts_center', label: 'Alerts Center', path: '/admin/alerts' },
-          { id: 'message_oversight', label: 'Messages', path: '/admin/messages' },
-          { id: 'interview_oversight', label: 'Interviews', path: '/admin/interviews' },
-          { id: 'video_calls', label: 'Video Calls', path: '/admin/video-calls' },
-        ],
-      },
-      { 
-        id: 'users', 
-        label: 'Users & Identity', 
-        icon: Users, 
-        href: '/admin/users', 
+        id: 'users',
+        label: 'Users & Identity',
+        icon: Users,
+        href: '/admin/users',
         badge: 'New',
         children: [
           { id: 'all_users', label: 'All Users', path: '/admin/users' },
           { id: 'user_analytics', label: 'Analytics', path: '/admin/users/analytics' },
           { id: 'freelancers', label: 'Freelancers', path: '/admin/users/freelancers' },
           { id: 'clients', label: 'Clients', path: '/admin/users/clients' },
+          { id: 'organizations', label: 'Organizations', path: '/admin/users/orgs' },
           { id: 'admins', label: 'Admins', path: '/admin/users/admins' },
-          { id: 'user_audit', label: 'Security Audit', path: '/admin/audit/security' },
+          { id: 'user_audit', label: 'User Audit', path: '/admin/audit/security' },
         ]
       },
-      { 
-        id: 'marketplace', 
-        label: 'Marketplace', 
-        icon: Briefcase, 
+      {
+        id: 'marketplace',
+        label: 'Marketplace',
+        icon: Briefcase,
         href: '/admin/marketplace',
         children: [
           { id: 'overview', label: 'Overview', path: '/admin/marketplace' },
@@ -105,11 +93,11 @@ export const ROLE_CONFIG = {
       },
       {
         id: 'disputes',
-        label: 'Disputes',
+        label: 'Dispute Resolution',
         icon: Scale,
         href: '/admin/disputes',
         children: [
-          { id: 'disputes_hub', label: 'Disputes Hub', path: '/admin/disputes' },
+          { id: 'disputes_hub', label: 'Open Disputes', path: '/admin/disputes' },
           { id: 'disputes_review', label: 'In Review', path: '/admin/disputes/review' },
           { id: 'disputes_resolved', label: 'Resolved', path: '/admin/disputes/resolved' },
           { id: 'disputes_audit', label: 'Dispute Logs', path: '/admin/audit/disputes' },
@@ -131,13 +119,16 @@ export const ROLE_CONFIG = {
       },
       {
         id: 'chat',
-        label: 'Chat Intelligence',
+        label: 'Chat/Monitoring',
         icon: MessageSquare,
         href: '/admin/chat/list',
         children: [
-          { id: 'chat_list', label: 'Oversight', path: '/admin/chat/list' },
-          { id: 'chat_reports', label: 'Reported', path: '/admin/chat/reports' },
+          { id: 'chat_list', label: 'Conversations', path: '/admin/chat/list' },
+          { id: 'chat_reports', label: 'Reported Messages', path: '/admin/chat/reports' },
           { id: 'chat_automod', label: 'Auto-Mod Logs', path: '/admin/chat/automod' },
+          { id: 'messages', label: 'Messages', path: '/admin/messages' },
+          { id: 'interviews', label: 'Interview Queue', path: '/admin/interviews' },
+          { id: 'video_calls', label: 'Video Calls', path: '/admin/video-calls' },
         ]
       },
       {
@@ -153,8 +144,8 @@ export const ROLE_CONFIG = {
         ]
       },
       {
-        id: 'settings',
-        label: 'System Config',
+        id: 'system_config',
+        label: 'System Config / Audit',
         icon: Settings,
         href: '/admin/config/general',
         children: [
@@ -166,18 +157,11 @@ export const ROLE_CONFIG = {
           { id: 'config_trusted_companies', label: 'Trusted Companies', path: '/admin/config/trusted-companies' },
           { id: 'config_submissions', label: 'Form Submissions', path: '/admin/config/submissions' },
           { id: 'config_subscriptions', label: 'Subscriptions', path: '/admin/config/subscriptions' },
-          { 
-            id: 'audit_logs', 
-            label: 'System Audit', 
-            path: '/admin/audit',
-            children: [
-              { id: 'audit_security', label: 'Security Logs', path: '/admin/audit/security' },
-              { id: 'audit_finance', label: 'Financial Logs', path: '/admin/audit/finance' },
-              { id: 'audit_marketplace', label: 'Marketplace Logs', path: '/admin/audit/marketplace' },
-              { id: 'audit_disputes', label: 'Dispute Logs', path: '/admin/audit/disputes' },
-              { id: 'audit_all', label: 'Full Stream', path: '/admin/audit' },
-            ]
-          },
+          { id: 'audit_logs', label: 'Audit Logs', path: '/admin/audit' },
+          { id: 'audit_security', label: 'Security Logs', path: '/admin/audit/security' },
+          { id: 'audit_finance', label: 'Financial Logs', path: '/admin/audit/finance' },
+          { id: 'audit_marketplace', label: 'Marketplace Logs', path: '/admin/audit/marketplace' },
+          { id: 'audit_disputes', label: 'Dispute Logs', path: '/admin/audit/disputes' },
         ]
       }
     ],
@@ -264,10 +248,10 @@ export const ROLE_CONFIG = {
     ],
     modules: [
       { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
-      { 
-        id: 'users', 
-        label: 'Users & Identity', 
-        icon: Users, 
+      {
+        id: 'users',
+        label: 'Users & Identity',
+        icon: Users,
         href: '/admin/users',
         children: [
           { id: 'all_users', label: 'All Users', path: '/admin/users' },
@@ -278,7 +262,7 @@ export const ROLE_CONFIG = {
       },
       {
         id: 'disputes',
-        label: 'Disputes',
+        label: 'Dispute Resolution',
         icon: Scale,
         href: '/admin/disputes',
         children: [
@@ -289,7 +273,7 @@ export const ROLE_CONFIG = {
       },
       {
         id: 'chat',
-        label: 'Chat Intelligence',
+        label: 'Chat/Monitoring',
         icon: MessageSquare,
         href: '/admin/chat/list',
         children: [
@@ -321,10 +305,10 @@ export const ROLE_CONFIG = {
     ],
     modules: [
       { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
-      { 
-        id: 'marketplace', 
-        label: 'Marketplace', 
-        icon: Briefcase, 
+      {
+        id: 'marketplace',
+        label: 'Marketplace',
+        icon: Briefcase,
         href: '/admin/marketplace',
         children: [
           { id: 'overview', label: 'Overview', path: '/admin/marketplace' },

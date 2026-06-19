@@ -1,3 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -8,21 +10,35 @@ import {
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
 
-const FOLDERS = [
-  { id: 1, name: 'Brand Assets', files: 12, date: 'May 12, 2026', shared: 3 },
-  { id: 2, name: 'UI Mockups', files: 45, date: 'May 15, 2026', shared: 2 },
-  { id: 3, name: 'Source Code', files: 128, date: 'Today', shared: 4 },
-];
 
-const FILES = [
-  { id: 1, name: 'logo-final-v2.svg', type: 'image', size: '1.2 MB', date: 'May 18', uploader: 'Alex R.', version: 'v2', icon: ImageIcon, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
-  { id: 2, name: 'homepage-wireframe.pdf', type: 'pdf', size: '4.5 MB', date: 'May 17', uploader: 'Sarah M.', version: 'v1', icon: FileText, color: 'text-rose-500', bg: 'bg-rose-50' },
-  { id: 3, name: 'promo-animation.mp4', type: 'video', size: '24.8 MB', date: 'May 16', uploader: 'Alex R.', version: 'v3', icon: Video, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
-  { id: 4, name: 'brand-guidelines.pdf', type: 'pdf', size: '8.1 MB', date: 'May 10', uploader: 'Sarah M.', version: 'v1', icon: FileText, color: 'text-rose-500', bg: 'bg-rose-50' },
-];
+
+
 
 export default function ClientProjectFileManagerPage() {
+  const { projectId } = useParams();
   const [viewMode, setViewMode] = useState('grid');
+
+  const { data: projectFilesData } = useQuery({
+    queryKey: ['client', 'projectFiles', projectId],
+    queryFn: async () => {
+      return {
+        folders: [
+          { id: 1, name: 'Brand Assets', files: 12, date: 'May 12, 2026', shared: 3 },
+          { id: 2, name: 'UI Mockups', files: 45, date: 'May 15, 2026', shared: 2 },
+          { id: 3, name: 'Source Code', files: 128, date: 'Today', shared: 4 },
+        ],
+        files: [
+          { id: 1, name: 'logo-final-v2.svg', type: 'image', size: '1.2 MB', date: 'May 18', uploader: 'Alex R.', version: 'v2', icon: ImageIcon, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
+          { id: 2, name: 'homepage-wireframe.pdf', type: 'pdf', size: '4.5 MB', date: 'May 17', uploader: 'Sarah M.', version: 'v1', icon: FileText, color: 'text-rose-500', bg: 'bg-rose-50' },
+          { id: 3, name: 'promo-animation.mp4', type: 'video', size: '24.8 MB', date: 'May 16', uploader: 'Alex R.', version: 'v3', icon: Video, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
+          { id: 4, name: 'brand-guidelines.pdf', type: 'pdf', size: '8.1 MB', date: 'May 10', uploader: 'Sarah M.', version: 'v1', icon: FileText, color: 'text-rose-500', bg: 'bg-rose-50' }
+        ]
+      };
+    }
+  });
+
+  const FOLDERS = projectFilesData?.folders || [];
+  const FILES = projectFilesData?.files || [];
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
@@ -246,5 +262,6 @@ export default function ClientProjectFileManagerPage() {
     </div>
   );
 }
+
 
 

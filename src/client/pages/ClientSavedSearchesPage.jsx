@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -7,35 +8,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
 
-const SAVED_SEARCHES = [
-  {
-    id: 'S-01',
-    name: 'Senior React Devs (US)',
-    filters: ['React', 'Next.js', '$40-$80/hr', 'United States', 'Top Rated'],
-    frequency: 'Daily',
-    isActive: true,
-    newMatches: 4,
-    lastRun: '2 hours ago'
-  },
-  {
-    id: 'S-02',
-    name: 'UI Designers (Framer)',
-    filters: ['UI/UX', 'Framer', 'Portfolio Required', '< $50/hr'],
-    frequency: 'Weekly',
-    isActive: true,
-    newMatches: 12,
-    lastRun: '1 day ago'
-  },
-  {
-    id: 'S-03',
-    name: 'Backend Node Experts',
-    filters: ['Node.js', 'PostgreSQL', '5+ yrs exp'],
-    frequency: 'Never',
-    isActive: false,
-    newMatches: 0,
-    lastRun: '1 month ago'
-  }
-];
+
 
 const SUGGESTED = [
   { name: 'Sarah Mitchell', title: 'React Expert', match: '98%', avatar: 'https://i.pravatar.cc/150?u=s1' },
@@ -44,7 +17,22 @@ const SUGGESTED = [
 ];
 
 export default function ClientSavedSearchesPage() {
-  const [searches, setSearches] = useState(SAVED_SEARCHES);
+  const { data: savedSearchesData } = useQuery({
+    queryKey: ['client', 'savedSearches'],
+    queryFn: async () => [
+      { id: 'S-01', name: 'Senior React Devs (US)', filters: ['React', 'Next.js', '-/hr', 'United States', 'Top Rated'], frequency: 'Daily', isActive: true, newMatches: 4, lastRun: '2 hours ago' },
+      { id: 'S-02', name: 'UI Designers (Framer)', filters: ['UI/UX', 'Framer', 'Portfolio Required', '< /hr'], frequency: 'Weekly', isActive: true, newMatches: 12, lastRun: '1 day ago' },
+      { id: 'S-03', name: 'Backend Node Experts', filters: ['Node.js', 'PostgreSQL', '5+ yrs exp'], frequency: 'Never', isActive: false, newMatches: 0, lastRun: '1 month ago' }
+    ]
+  });
+  const initialSearches = savedSearchesData || [];
+  const [searches, setSearches] = useState(initialSearches);
+
+  // Note: we would use a useMutation to persist the toggle in a real app, 
+  // but since we keep the mock state local for the UI toggle:
+  React.useEffect(() => {
+    if (savedSearchesData) setSearches(savedSearchesData);
+  }, [savedSearchesData]);
 
   const toggleActive = (id) => {
     setSearches(searches.map(s => {
@@ -202,5 +190,6 @@ export default function ClientSavedSearchesPage() {
     </div>
   );
 }
+
 
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ProBadge from "./ProBadge";
-import { useAuthRedirect } from "../../../common/utils/authRedirect";
+import { useAuthRedirect } from "../../../platform/common/utils/authRedirect";
 
 const TalentCard = ({ talent }) => {
   const navigate = useNavigate();

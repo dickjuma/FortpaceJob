@@ -4,8 +4,8 @@ import {
   Terminal, ShieldCheck, Mail, Speaker, Play 
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
+import Card from '../../platform/components/common/Card';
+import Button from '../../platform/components/common/Button';
 
 export default function ClientAnnouncementsPage() {
   const [broadcasts, setBroadcasts] = useState([

@@ -8,7 +8,7 @@ import {
 import {
   useShortlist, useRemoveFromShortlist, useStartConversation
 } from '../services/clientHooks';
-import ConfirmModal from '../../components/ui/ConfirmModal';
+import ConfirmModal from '../../platform/components/ui/ConfirmModal';
 import toast, { Toaster } from 'react-hot-toast';
 
 export default function ClientShortlistPage() {

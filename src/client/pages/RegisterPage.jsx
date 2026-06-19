@@ -1,12 +1,13 @@
+import { useMutation } from '@tanstack/react-query';
 // RegisterPage.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { authAPI } from '../../common/services/api';
+import { authAPI } from '../../platform/common/services/api';
 import {
   validateEmail,
   validatePassword,
-} from '../../common/utils/validation';
+} from '../../platform/common/utils/validation';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -14,14 +15,41 @@ export default function RegisterPage() {
     password: '',
   });
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const registerMutation = useMutation({
+    mutationFn: async (formDataToSubmit) => {
+      return await authAPI.register({
+        email: formDataToSubmit.email,
+        password: formDataToSubmit.password,
+        role: 'CLIENT',
+        accountType: 'INDIVIDUAL',
+      });
+    },
+    onSuccess: (response, variables) => {
+      if (response?.requiresEmailVerification) {
+        navigate('/auth/verify-email', {
+          state: { email: variables.email, role: 'CLIENT' },
+          replace: true,
+        });
+        return;
+      }
+      navigate('/auth/verify-email', {
+        state: { email: variables.email, role: 'CLIENT' },
+        replace: true,
+      });
+    },
+    onError: (err) => {
+      setError(err.message || 'Registration failed');
+    }
+  });
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     const emailErr = validateEmail(formData.email);
     const passErr = validatePassword(formData.password);
@@ -31,20 +59,7 @@ export default function RegisterPage() {
       return;
     }
     setError('');
-    setIsLoading(true);
-    try {
-      await authAPI.register({
-        email: formData.email,
-        password: formData.password,
-        role: 'CLIENT',
-        accountType: 'INDIVIDUAL',
-      });
-      navigate('/client');
-    } catch (err) {
-      setError(err.message || 'Registration failed');
-    } finally {
-      setIsLoading(false);
-    }
+    registerMutation.mutate(formData);
   };
 
   // Animation variants
@@ -102,10 +117,10 @@ export default function RegisterPage() {
           <motion.button
             whileTap={buttonTap}
             type="submit"
-            disabled={isLoading}
+            disabled={registerMutation.isPending}
             className="w-full h-11 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? 'Registering...' : 'Register'}
+            {registerMutation.isPending ? 'Registering...' : 'Register'}
           </motion.button>
         </form>
 
@@ -121,3 +136,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+

@@ -7,31 +7,12 @@ import {
   Image as ImageIcon, MoreHorizontal, Send, X,
   CheckCircle
 } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
-const PROJECTS = [
-  { id: 'p1', name: 'E-Commerce App Redesign', status: 'In Progress', progress: 65, team: ['https://i.pravatar.cc/150?u=1', 'https://i.pravatar.cc/150?u=2', 'https://i.pravatar.cc/150?u=3'] },
-  { id: 'p2', name: 'Marketing Site Next.js', status: 'Review', progress: 90, team: ['https://i.pravatar.cc/150?u=4', 'https://i.pravatar.cc/150?u=5'] }
-];
 
-const TASKS = [
-  { id: 1, title: 'Finalize Figma mockups', assignee: 'Sarah M.', project: 'E-Commerce App', completed: true },
-  { id: 2, title: 'Implement Stripe Checkout', assignee: 'Alex R.', project: 'E-Commerce App', completed: false },
-  { id: 3, title: 'Optimize Core Web Vitals', assignee: 'David K.', project: 'Marketing Site', completed: false }
-];
-
-const CHAT = [
-  { id: 1, sender: 'Alex Rivera', role: 'Freelancer', avatar: 'https://i.pravatar.cc/150?u=2', text: 'I\'ve pushed the Stripe integration to staging.', time: '10:42 AM' },
-  { id: 2, sender: 'You', role: 'Client', avatar: 'https://i.pravatar.cc/150?u=you', text: 'Great, I will review it this afternoon. Were there any issues with the webhooks?', time: '10:45 AM', isYou: true },
-  { id: 3, sender: 'Alex Rivera', role: 'Freelancer', avatar: 'https://i.pravatar.cc/150?u=2', text: 'All smooth! The endpoints are verified.', time: '10:47 AM' }
-];
-
-const FILES = [
-  { name: 'Wireframes.pdf', type: 'pdf', icon: FileText, color: 'text-danger', bg: 'bg-danger-light' },
-  { name: 'Logo_Final.png', type: 'image', icon: ImageIcon, color: 'text-accent', bg: 'bg-accent-light' },
-  { name: 'Brand_Assets', type: 'folder', icon: Folder, color: 'text-accent', bg: 'bg-accent-light' }
-];
 
 // Animation variants
 const containerVariants = {
@@ -49,8 +30,41 @@ const cardHover = {
 const buttonTap = { scale: 0.97 };
 
 export default function ClientWorkspacePage() {
+  const { workspaceId } = useParams();
   const [activeTab, setActiveTab] = useState('overview'); // overview, tasks, chat, files
   const [chatInput, setChatInput] = useState('');
+
+  const { data: workspaceData } = useQuery({
+    queryKey: ['client', 'workspace', workspaceId],
+    queryFn: async () => {
+      return {
+        PROJECTS: [
+          { id: 'p1', name: 'E-Commerce App Redesign', status: 'In Progress', progress: 65, team: ['https://i.pravatar.cc/150?u=1', 'https://i.pravatar.cc/150?u=2', 'https://i.pravatar.cc/150?u=3'] },
+          { id: 'p2', name: 'Marketing Site Next.js', status: 'Review', progress: 90, team: ['https://i.pravatar.cc/150?u=4', 'https://i.pravatar.cc/150?u=5'] }
+        ],
+        TASKS: [
+          { id: 1, title: 'Finalize Figma mockups', assignee: 'Sarah M.', project: 'E-Commerce App', completed: true },
+          { id: 2, title: 'Implement Stripe Checkout', assignee: 'Alex R.', project: 'E-Commerce App', completed: false },
+          { id: 3, title: 'Optimize Core Web Vitals', assignee: 'David K.', project: 'Marketing Site', completed: false }
+        ],
+        CHAT: [
+          { id: 1, sender: 'Alex Rivera', role: 'Freelancer', avatar: 'https://i.pravatar.cc/150?u=2', text: "I've pushed the Stripe integration to staging.", time: '10:42 AM' },
+          { id: 2, sender: 'You', role: 'Client', avatar: 'https://i.pravatar.cc/150?u=you', text: 'Great, I will review it this afternoon. Were there any issues with the webhooks?', time: '10:45 AM', isYou: true },
+          { id: 3, sender: 'Alex Rivera', role: 'Freelancer', avatar: 'https://i.pravatar.cc/150?u=2', text: 'All smooth! The endpoints are verified.', time: '10:47 AM' }
+        ],
+        FILES: [
+          { name: 'Wireframes.pdf', type: 'pdf', icon: FileText, color: 'text-danger', bg: 'bg-danger-light' },
+          { name: 'Logo_Final.png', type: 'image', icon: ImageIcon, color: 'text-accent', bg: 'bg-accent-light' },
+          { name: 'Brand_Assets', type: 'folder', icon: Folder, color: 'text-accent', bg: 'bg-accent-light' }
+        ]
+      };
+    }
+  });
+
+  const PROJECTS = workspaceData?.PROJECTS || [];
+  const TASKS = workspaceData?.TASKS || [];
+  const CHAT = workspaceData?.CHAT || [];
+  const FILES = workspaceData?.FILES || [];
 
   const handleSendMessage = () => {
     if (!chatInput.trim()) return;

@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import { useMyJobs, useCancelJob } from "../../services/clientHooks";
 import toast from "react-hot-toast";
-import { useConfirm } from "../../../common/context/ConfirmContext";
+import { useConfirm } from "../../../platform/common/context/ConfirmContext";
 
 export default function MyJobs() {
   const navigate = useNavigate();

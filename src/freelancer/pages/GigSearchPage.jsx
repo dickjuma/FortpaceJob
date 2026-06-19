@@ -6,7 +6,7 @@ import {
   Search, SlidersHorizontal, Star, Heart,
   Clock, Check, Loader2, X
 } from 'lucide-react';
-import { gigAPI } from '../../common/services/api';
+import * as api from '../services/freelancerApi';
 
 const CATEGORIES = ['All Categories', 'Web Development', 'UI/UX Design', 'Digital Marketing', 'Writing', 'Video & Animation'];
 
@@ -42,7 +42,7 @@ export default function GigSearchPage() {
       if (deliveryFilter && deliveryFilter !== 'any') params.deliveryTime = deliveryFilter;
       if (onlineOnly) params.online = true;
       if (sortBy && sortBy !== 'recommended') params.sort = sortBy;
-      return gigAPI.getGigs(params);
+      return api.searchFreelancerGigs(params);
     },
     keepPreviousData: true,
     staleTime: 1000 * 60,

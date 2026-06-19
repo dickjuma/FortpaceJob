@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, ShieldCheck, Clock3, BadgeCheck, Star, MapPin } from "lucide-react";
-import { talentAPI } from "../../../common/services/talentAPI";
+import { talentAPI } from "../../../platform/common/services/talentAPI";
 
 const TalentProfile = () => {
   const { id } = useParams();

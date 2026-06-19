@@ -1,29 +1,20 @@
 // GigsPage.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Loader2, AlertCircle } from 'lucide-react';
-import { gigAPI } from '../../common/services/api';
+import { gigAPI } from '../../platform/common/services/api';
 
 export default function GigsPage() {
-  const [gigs, setGigs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-
-  useEffect(() => {
-    loadGigs();
-  }, []);
-
-  const loadGigs = async () => {
-    try {
+  const { data: gigsData, isLoading, error } = useQuery({
+    queryKey: ['client', 'gigs'],
+    queryFn: async () => {
       const data = await gigAPI.getGigs();
-      setGigs(data.gigs || data.data || []);
-    } catch (err) {
-      setError('Failed to load gigs');
-    } finally {
-      setIsLoading(false);
+      return data.gigs || data.data || [];
     }
-  };
+  });
+  const gigs = gigsData || [];
 
   const filteredGigs = gigs.filter(
     (gig) =>
@@ -73,7 +64,7 @@ export default function GigsPage() {
 
         {error && (
           <div className="mb-6 p-3 rounded-lg bg-danger-light text-danger text-sm flex items-center gap-2 border border-danger/20">
-            <AlertCircle className="w-4 h-4" /> {error}
+            <AlertCircle className="w-4 h-4" /> {error instanceof Error ? error.message : 'Failed to load gigs'}
           </div>
         )}
 
@@ -131,3 +122,4 @@ export default function GigsPage() {
     </div>
   );
 }
+

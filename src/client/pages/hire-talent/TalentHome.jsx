@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, ShieldCheck, Sparkles, Briefcase, Star, ArrowRight } from "lucide-react";
-import { talentAPI } from "../../../common/services/talentAPI";
+import { talentAPI } from "../../../platform/common/services/talentAPI";
 import TalentCard from "../../../client/components/Hiretalent/TalentCard";
-import CategoryNavBar from "../../../components/marketplace/CategoryNavBar";
-import { useTalentCategories } from "../../../common/services/talentHooks";
+import CategoryNavBar from "../../../platform/components/marketplace/CategoryNavBar";
+import { useTalentCategories } from "../../../platform/common/services/talentHooks";
 import { testimonials, faqs } from "./data";
 
 const statCards = [

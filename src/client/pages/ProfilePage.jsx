@@ -16,9 +16,9 @@ import {
   BadgeCheck,
   Settings,
 } from 'lucide-react';
-import { useAuthStore } from '../../common/authStore';
-import { profileAPI } from '../../common/services/api';
-import { getProfileSummary } from '../../common/utils/profile';
+import { useAuthStore } from '../../platform/common/authStore';
+import { useMyProfile } from '../services/clientHooks';
+import { getProfileSummary } from '../../platform/common/utils/profile';
 
 const Field = ({ label, value }) => (
   <div className="rounded-xl border border-border bg-white p-4 shadow-sm">
@@ -39,28 +39,8 @@ const buttonTap = { scale: 0.97 };
 
 export default function ProfilePage() {
   const { user } = useAuthStore();
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    let active = true;
-    const load = async () => {
-      try {
-        setLoading(true);
-        const res = await profileAPI.getMyProfile();
-        if (!active) return;
-        setProfile(res?.user || null);
-      } catch (err) {
-        if (!active) return;
-        setError(err?.message || 'Failed to load profile');
-      } finally {
-        if (active) setLoading(false);
-      }
-    };
-    load();
-    return () => { active = false; };
-  }, []);
+  const { data: profile, isLoading: loading, error: queryError } = useMyProfile();
+  const error = queryError?.message || '';
 
   const summary = useMemo(() => getProfileSummary(profile || user || {}, profile?.profile || profile || {}), [profile, user]);
   const stats = useMemo(() => [
@@ -130,7 +110,7 @@ export default function ProfilePage() {
 
           <div className="flex flex-wrap gap-3">
             <Link
-              to="/client/recommendation-profile"
+              to="/client/profile-intelligence"
               className="inline-flex items-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5 text-sm font-medium text-ink-primary transition-colors hover:bg-surface-soft"
             >
               <Settings className="h-4 w-4" /> Recommendation profile
@@ -291,3 +271,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

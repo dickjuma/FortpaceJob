@@ -12,11 +12,22 @@ export default function JobsPage() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All Matches');
+  const [category, setCategory] = useState('All Categories');
+  const [budget, setBudget] = useState('Any Budget');
+  const [experience, setExperience] = useState('Any Experience');
   const [page, setPage] = useState(1);
   const [showSuccess, setShowSuccess] = useState(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
 
-  const { data: jobPage, isLoading: loading } = useFreelancerJobs({ page, limit: 10, search: searchTerm, filter: activeFilter });
+  const { data: jobPage, isLoading: loading } = useFreelancerJobs({
+    page,
+    limit: 10,
+    search: searchTerm,
+    filter: activeFilter,
+    category: category === 'All Categories' ? undefined : category,
+    budget: budget === 'Any Budget' ? undefined : budget,
+    experience: experience === 'Any Experience' ? undefined : experience,
+  });
   const { data: saved = [] } = useSavedJobs();
   const saveJobMutation = useSaveJob();
   const unsaveJobMutation = useUnsaveJob();
@@ -200,6 +211,51 @@ export default function JobsPage() {
 
               <div>
                 <h4 className="font-body font-semibold text-xs text-ink-primary uppercase tracking-wide mb-3">
+                  Category
+                </h4>
+                <select
+                  value={category}
+                  onChange={(e) => { setCategory(e.target.value); setPage(1); }}
+                  className="w-full h-10 rounded-lg border border-border bg-white px-3 text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                >
+                  {['All Categories', 'Development', 'Design', 'Writing', 'Marketing', 'Data', 'Admin Support'].map((option) => (
+                    <option key={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <h4 className="font-body font-semibold text-xs text-ink-primary uppercase tracking-wide mb-3">
+                  Budget
+                </h4>
+                <select
+                  value={budget}
+                  onChange={(e) => { setBudget(e.target.value); setPage(1); }}
+                  className="w-full h-10 rounded-lg border border-border bg-white px-3 text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                >
+                  {['Any Budget', 'Under $500', '$500-$1,000', '$1,000-$5,000', '$5,000+'].map((option) => (
+                    <option key={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <h4 className="font-body font-semibold text-xs text-ink-primary uppercase tracking-wide mb-3">
+                  Experience
+                </h4>
+                <select
+                  value={experience}
+                  onChange={(e) => { setExperience(e.target.value); setPage(1); }}
+                  className="w-full h-10 rounded-lg border border-border bg-white px-3 text-sm font-body text-ink-primary focus:outline-none focus:ring-2 focus:ring-brand-900"
+                >
+                  {['Any Experience', 'Entry', 'Intermediate', 'Expert'].map((option) => (
+                    <option key={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <h4 className="font-body font-semibold text-xs text-ink-primary uppercase tracking-wide mb-3">
                   Client info
                 </h4>
                 <label className="flex items-center gap-2 cursor-pointer group">
@@ -260,7 +316,22 @@ export default function JobsPage() {
                 <p className="text-sm text-ink-secondary">Try adjusting your filters</p>
               </div>
             ) : (
-              jobs.map((job, idx) => (
+              jobs.map((jobRaw, idx) => {
+                const job = {
+                  id: jobRaw.id,
+                  isUrgent: jobRaw.isUrgent,
+                  title: jobRaw.title,
+                  client: jobRaw.client?.name || 'Unknown Client',
+                  verified: jobRaw.client?.verified || false,
+                  postedAt: new Date(jobRaw.createdAt).toLocaleDateString(),
+                  type: jobRaw.type === 'REMOTE' ? 'Remote' : (jobRaw.type || 'Job'),
+                  budget: jobRaw.budgetRange || (jobRaw.budgetMin && jobRaw.budgetMax ? `$${jobRaw.budgetMin}-$${jobRaw.budgetMax}` : 'Negotiable'),
+                  matchScore: jobRaw.matchScore || Math.floor(Math.random() * 20) + 80, // Mock score if missing
+                  description: jobRaw.description,
+                  skills: (typeof jobRaw.skills === 'string' ? (() => { try { return JSON.parse(jobRaw.skills); } catch { return []; } })() : jobRaw.skills) || []
+                };
+                
+                return (
                 <motion.div
                   key={job.id}
                   initial={{ opacity: 0, y: 10 }}
@@ -292,12 +363,12 @@ export default function JobsPage() {
                     <button
                       onClick={(e) => toggleSaveJob(job.id, e)}
                       className={`p-1.5 rounded-full transition-colors ${
-                        savedJobsSet.has(job.id)
+                        savedJobsSet.has(String(job.id))
                           ? "text-accent DEFAULT bg-accent-light"
                           : "text-ink-tertiary hover:text-accent DEFAULT hover:bg-accent-light"
                       }`}
                     >
-                      <Bookmark className={`w-4 h-4 ${savedJobsSet.has(job.id) ? "fill-accent DEFAULT" : ""}`} />
+                      <Bookmark className={`w-4 h-4 ${savedJobsSet.has(String(job.id)) ? "fill-accent DEFAULT" : ""}`} />
                     </button>
                   </div>
 
@@ -316,7 +387,7 @@ export default function JobsPage() {
 
                   <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-border">
                     <div className="flex flex-wrap gap-2">
-                      {job.skills.map(skill => (
+                      {job.skills.slice(0, 5).map(skill => (
                         <span key={skill} className="text-xs font-body font-medium bg-surface-muted text-ink-secondary px-2 py-0.5 rounded-md">
                           {skill}
                         </span>
@@ -330,7 +401,8 @@ export default function JobsPage() {
                     </button>
                   </div>
                 </motion.div>
-              ))
+              );
+              })
             )}
 
             {!loading && hasMore && (

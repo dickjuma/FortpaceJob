@@ -1,5 +1,6 @@
 // ClientCompliancePage.jsx
 import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FileText,
@@ -17,42 +18,25 @@ import {
 // ----------------------------------------------------------------------
 // Mock Data & Helpers
 // ----------------------------------------------------------------------
-const initialDocuments = [
-  {
-    id: 'DOC-001',
-    name: 'Master Services Agreement (MSA)',
-    type: 'Legal',
-    status: 'Signed & Active',
-    date: '2026-01-15',
-  },
-  {
-    id: 'DOC-002',
-    name: 'Standard Non-Disclosure Agreement (NDA)',
-    type: 'Compliance',
-    status: 'Signed & Active',
-    date: '2026-02-10',
-  },
-  {
-    id: 'DOC-003',
-    name: 'KRA Tax pin certification (Acme Solutions)',
-    type: 'Taxation',
-    status: 'Pending Verification',
-    date: '2026-05-20',
-  },
-  {
-    id: 'DOC-004',
-    name: 'Director ID verification payload',
-    type: 'Verification',
-    status: 'Signed & Active',
-    date: '2026-03-01',
-  },
-];
+
 
 // ----------------------------------------------------------------------
 // Main Component
 // ----------------------------------------------------------------------
 export default function ClientCompliancePage() {
-  const [documents, setDocuments] = useState(initialDocuments);
+    const queryClient = useQueryClient();
+  const { data: documentsData } = useQuery({
+    queryKey: ['client', 'compliance'],
+    queryFn: async () => {
+      return [
+        { id: 'DOC-001', name: 'Master Services Agreement (MSA)', type: 'Legal', status: 'Signed & Active', date: '2026-01-15' },
+        { id: 'DOC-002', name: 'Standard Non-Disclosure Agreement (NDA)', type: 'Compliance', status: 'Signed & Active', date: '2026-02-10' },
+        { id: 'DOC-003', name: 'KRA Tax pin certification (Acme Solutions)', type: 'Taxation', status: 'Pending Verification', date: '2026-05-20' },
+        { id: 'DOC-004', name: 'Director ID verification payload', type: 'Verification', status: 'Signed & Active', date: '2026-03-01' }
+      ];
+    }
+  });
+  const documents = documentsData || [];
   const [verifyingDocId, setVerifyingDocId] = useState(null);
   const [toast, setToast] = useState(null); // { type, message }
 
@@ -61,20 +45,21 @@ export default function ClientCompliancePage() {
     setTimeout(() => setToast(null), duration);
   };
 
-  const handleVerifyKra = async (docId) => {
+  const verifyMutation = useMutation({
+    mutationFn: async (docId) => {
+      await new Promise(resolve => setTimeout(resolve, 1800));
+      return docId;
+    },
+    onSuccess: (docId) => {
+      queryClient.setQueryData(['client', 'compliance'], old => old.map(d => d.id === docId ? { ...d, status: 'Signed & Active' } : d));
+      showToast('success', 'KRA Tax Certificate successfully validated! Compliance status: GREEN.');
+      setVerifyingDocId(null);
+    }
+  });
+
+  const handleVerifyKra = (docId) => {
     setVerifyingDocId(docId);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1800));
-    setDocuments((prev) =>
-      prev.map((doc) =>
-        doc.id === docId ? { ...doc, status: 'Signed & Active' } : doc
-      )
-    );
-    showToast(
-      'success',
-      'KRA Tax Certificate successfully validated! Compliance status: GREEN.'
-    );
-    setVerifyingDocId(null);
+    verifyMutation.mutate(docId);
   };
 
   const handleAddDocument = () => {
@@ -332,3 +317,4 @@ export default function ClientCompliancePage() {
     </div>
   );
 }
+

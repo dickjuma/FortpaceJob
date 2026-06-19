@@ -291,7 +291,7 @@ export default function ProposalsPage() {
                           {proposal.job?.title || proposal.jobTitle || 'Untitled job'}
                         </p>
                         <p className="text-xs text-ink-tertiary mt-0.5">
-                          Client: {proposal.job?.client?.companyName || proposal.client || 'Unknown'}
+                          Client: {proposal.job?.client?.name || proposal.client || 'Unknown'}
                         </p>
                       </div>
                     </td>

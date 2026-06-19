@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Zap, ArrowRight } from 'lucide-react';
-import { useMySubscription } from '../../common/hooks/useSubscription';
+import { useMySubscription } from '../../platform/common/hooks/useSubscription';
 
 export default function SubscriptionUsageBanner() {
   const { data: sub, isLoading } = useMySubscription();

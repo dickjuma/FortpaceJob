@@ -21,7 +21,7 @@ import {
   ArrowUpDown,
 } from 'lucide-react';
 import { useFreelancerWallet, useFreelancerTransactions, useInitiateWithdrawal, useFreelancerProfile } from '../services/freelancerHooks';
-import { useAuthStore } from '../../common/authStore';
+import { useAuthStore } from '../../platform/common/authStore';
 
 // ---------- Shared UI Components (inline) ----------
 const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, type = 'button', icon: Icon }) => {

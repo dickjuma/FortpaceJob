@@ -3,36 +3,17 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, MessageSquare, User, Calendar, ShieldCheck, ThumbsUp, MoreHorizontal, Filter, AlertCircle } from 'lucide-react';
-import { reviewAPI } from '../../common/services/api';
-import { useAuthStore } from '../../common/authStore';
+import { useMyReviews } from '../services/clientHooks';
+import { useAuthStore } from '../../platform/common/authStore';
 
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export default function ClientReviewsPage() {
-  const { user } = useAuthStore();
-  const [reviews, setReviews] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
   const [filter, setFilter] = useState('ALL');
-
-  useEffect(() => {
-    if (user?.id) {
-      loadReviews(user.id);
-    } else {
-      setIsLoading(false);
-    }
-  }, [user]);
-
-  const loadReviews = async (userId) => {
-    try {
-      const data = await reviewAPI.getReviews(userId);
-      setReviews(data.reviews || data.data || []);
-    } catch (err) {
-      setError('Failed to load reviews');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { user } = useAuthStore();
+  const { data, isLoading, error: queryError } = useMyReviews();
+  const reviews = data?.items || data?.reviews || [];
+  const error = queryError?.message || '';
 
   const filteredReviews = reviews.filter(r => {
     if (filter === 'ALL') return true;
@@ -229,3 +210,4 @@ export default function ClientReviewsPage() {
     </div>
   );
 }
+

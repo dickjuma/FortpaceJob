@@ -5,25 +5,33 @@ import {
   GraduationCap, BookOpen, Award, PlayCircle,
   CheckCircle2, Clock, Star, Trophy, Search, ChevronRight, Check
 } from 'lucide-react';
+import { useGetLearningData } from '../services/freelancerHooks';
 
-const COURSES = [
+const fallbackCourses = [
   { id: 1, title: 'Advanced Next.js Architecture', level: 'Expert', duration: '4h 30m', progress: 65, image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80', badge: 'Next.js Pro' },
   { id: 2, title: 'Mastering Tailwind Animations', level: 'Intermediate', duration: '2h 15m', progress: 0, image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80', badge: 'UI Specialist' },
   { id: 3, title: 'Client Communication 101', level: 'Beginner', duration: '1h 45m', progress: 100, image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80', badge: 'Top Rated Communicator' }
 ];
 
-const CERTIFICATIONS = [
+const fallbackCertifications = [
   { id: 1, name: 'React Native Expert', date: 'May 10, 2026', score: '98%', icon: Award, color: 'text-accent DEFAULT', bg: 'bg-accent-light' },
   { id: 2, name: 'AWS Cloud Practitioner', date: 'Apr 22, 2026', score: '92%', icon: Trophy, color: 'text-warn', bg: 'bg-warn-light' }
 ];
 
-const SKILL_RECOMMENDATIONS = [
+const fallbackSkillRecommendations = [
   { name: 'GraphQL API Design', growth: '+42% demand', diff: 'Intermediate', time: '3h' },
   { name: 'Framer Motion Animations', growth: '+28% demand', diff: 'Beginner', time: '1.5h' },
   { name: 'Stripe Integration', growth: '+15% demand', diff: 'Advanced', time: '5h' },
 ];
 
 export default function FreelancerLearningPage() {
+  const { data: response, isLoading } = useGetLearningData();
+  const apiData = response?.data || response;
+  
+  const COURSES = apiData?.courses || fallbackCourses;
+  const CERTIFICATIONS = apiData?.certifications || fallbackCertifications;
+  const SKILL_RECOMMENDATIONS = apiData?.skillRecommendations || fallbackSkillRecommendations;
+  
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showSuccess, setShowSuccess] = useState(null);
 

@@ -4,9 +4,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bookmark, Briefcase, User, Star, Trash2, Globe, ShieldCheck, ChevronRight, X, ArrowUpRight, Check
 } from 'lucide-react';
+import { useGetBookmarks, useToggleBookmark } from '../services/freelancerHooks';
 
 export default function GlobalBookmarksPage() {
-  const [bookmarks, setBookmarks] = useState({
+  const { data: response, isLoading } = useGetBookmarks();
+  const apiBookmarks = response?.data || response;
+  
+  const toggleBookmark = useToggleBookmark();
+
+  const fallbackBookmarks = {
     jobs: [
       { id: 1, title: 'Senior React Developer (Next.js focus)', client: 'Vercel Ecosystem', budget: 95, type: 'Hourly Rate' },
       { id: 2, title: 'Figma to React Frontend Specialist', client: 'Stripe Orchestrations', budget: 3500, type: 'Fixed Price' }
@@ -17,17 +23,20 @@ export default function GlobalBookmarksPage() {
     talent: [
       { id: 1, name: 'Elena Rodriguez', title: 'Lead Developer & PM', location: 'London, UK', success: '100%' }
     ]
-  });
+  };
+  
+  const bookmarks = apiBookmarks && Object.keys(apiBookmarks).length > 0 ? apiBookmarks : fallbackBookmarks;
+  
   const [activeTab, setActiveTab] = useState('jobs');
   const [showSuccess, setShowSuccess] = useState(null);
 
   const removeBookmark = (id, type, name) => {
-    setBookmarks(prev => ({
-      ...prev,
-      [type]: prev[type].filter(item => item.id !== id)
-    }));
-    setShowSuccess({ message: `Removed: ${name}` });
-    setTimeout(() => setShowSuccess(null), 2000);
+    toggleBookmark.mutate({ id, type, isBookmarked: false }, {
+      onSuccess: () => {
+        setShowSuccess({ message: `Removed: ${name}` });
+        setTimeout(() => setShowSuccess(null), 2000);
+      }
+    });
   };
 
   const handleAction = (name) => {

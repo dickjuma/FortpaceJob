@@ -5,7 +5,7 @@ import {
   Wallet, ArrowUpRight, ArrowDownRight, RefreshCcw, Download, Clock, CheckCircle2, AlertCircle, ShieldCheck, Send, Smartphone, Loader2, X,
 } from 'lucide-react';
 import { useFreelancerWallet, useFreelancerTransactions, useInitiateWithdrawal } from '../services/freelancerHooks';
-import { walletAPI } from '../../common/services/api';
+import { walletAPI } from '../../platform/common/services/api';
 
 // ---------- Shared UI Components (inline) ----------
 const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, type = 'button', icon: Icon }) => {

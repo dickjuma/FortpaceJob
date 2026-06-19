@@ -1,35 +1,47 @@
 // ClientTimeTrackingPage.jsx
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import toast, { Toaster } from 'react-hot-toast';
+import React from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
-  Clock, Eye, Play, Trash, CheckCircle,
-  Settings, AlertTriangle, RefreshCw, Zap, ArrowRight, Camera
+  Clock, CheckCircle,
+  AlertTriangle, Camera
 } from 'lucide-react';
 
-const cn = (...classes) => classes.filter(Boolean).join(' ');
-
 export default function ClientTimeTrackingPage() {
-  const [logs, setLogs] = useState([
-    { id: 'LOG-001', worker: 'Kiprotich Arap', task: 'Pipeline Site Alignment Survey', hours: 4.5, rate: 'KES 2,500/hr', amount: 11250, status: 'Approved', screenshot: 'GPS Verified Onsite Check-In' },
-    { id: 'LOG-002', worker: 'Sarah Jenkins', task: 'Interactive Framer Motion Dashboards', hours: 8.2, rate: 'KES 3,500/hr', amount: 28700, status: 'Pending Review', screenshot: 'screenshot_nairobi_flexbox.png' },
-    { id: 'LOG-003', worker: 'Grace Mutua', task: 'Fiber Cable Splicing Audits', hours: 6.0, rate: 'KES 3,200/hr', amount: 19200, status: 'Approved', screenshot: 'GPS Verified Onsite Check-In' }
-  ]);
-  const [toast, setToast] = useState(null);
+    const { contractId } = useParams();
+  const queryClient = useQueryClient();
+  const { data: logsData } = useQuery({
+    queryKey: ['client', 'timeLogs', contractId],
+    queryFn: async () => {
+      return [
+        { id: 'LOG-001', worker: 'Kiprotich Arap', task: 'Pipeline Site Alignment Survey', hours: 4.5, rate: 'KES 2,500/hr', amount: 11250, status: 'Approved', screenshot: 'GPS Verified Onsite Check-In' },
+        { id: 'LOG-002', worker: 'Sarah Jenkins', task: 'Interactive Framer Motion Dashboards', hours: 8.2, rate: 'KES 3,500/hr', amount: 28700, status: 'Pending Review', screenshot: 'screenshot_nairobi_flexbox.png' },
+        { id: 'LOG-003', worker: 'Grace Mutua', task: 'Fiber Cable Splicing Audits', hours: 6.0, rate: 'KES 3,200/hr', amount: 19200, status: 'Approved', screenshot: 'GPS Verified Onsite Check-In' }
+      ];
+    }
+  });
+  const logs = logsData || [];
 
-  const showToast = (type, message, duration = 3000) => {
-    setToast({ type, message });
-    setTimeout(() => setToast(null), duration);
-  };
+  const approveMutation = useMutation({
+    mutationFn: async (logId) => {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      return logId;
+    },
+    onSuccess: (logId) => {
+      queryClient.setQueryData(['client', 'timeLogs', contractId], old => old?.map(l => l.id === logId ? { ...l, status: 'Approved' } : l));
+      toast.success(`Time log approved! Payment scheduled.`);
+    }
+  });
 
   const handleApproveLog = async (logId, name, amount) => {
-    showToast('info', `Approving KES ${amount.toLocaleString()} for ${name}...`);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setLogs(prev => prev.map(l => l.id === logId ? { ...l, status: 'Approved' } : l));
-    showToast('success', `Time log approved! Payment scheduled.`);
+    console.log('Approving KES for...');
+    approveMutation.mutateAsync(logId);
   };
 
   const handleExport = () => {
-    showToast('success', 'Time log CSV spreadsheet downloaded.');
+    console.log('Approving KES for...');
   };
 
   // Animation variants
@@ -53,6 +65,7 @@ export default function ClientTimeTrackingPage() {
 
   return (
     <div className="min-h-screen bg-surface-soft font-body py-8 px-4 sm:px-6 lg:px-8">
+      <Toaster position="top-right" />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border pb-6 mb-8">
@@ -171,28 +184,7 @@ export default function ClientTimeTrackingPage() {
         </div>
       </div>
 
-      {/* Toast Notifications */}
-      <AnimatePresence>
-        {toast && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2 rounded-lg shadow-lg text-sm font-medium"
-            style={{
-              backgroundColor: toast.type === 'success' ? 'rgb(220, 252, 231)' :
-                               toast.type === 'error' ? 'rgb(254, 226, 226)' : 'rgb(219, 234, 254)',
-              color: toast.type === 'success' ? 'rgb(21, 128, 61)' :
-                     toast.type === 'error' ? 'rgb(185, 28, 28)' : 'rgb(29, 78, 216)'
-            }}
-          >
-            {toast.type === 'success' && <CheckCircle className="w-4 h-4" />}
-            {toast.type === 'error' && <AlertTriangle className="w-4 h-4" />}
-            {toast.type === 'info' && <Clock className="w-4 h-4" />}
-            {toast.message}
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
+

@@ -14,6 +14,7 @@ import {
   PlayCircle,
   AlertCircle,
 } from 'lucide-react';
+import { useFreelancerProfile, useUpdateFreelancerProfile } from '../services/freelancerHooks';
 
 // ---------- Shared UI Components (inline) ----------
 const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, type = 'button' }) => {
@@ -84,12 +85,35 @@ const TAXONOMY = [
 
 // ---------- Main Component ----------
 export default function SkillsManagementPage() {
-  const [skills, setSkills] = useState([
-    { name: 'React', level: 'Expert', verified: true, endorsedCount: 14 },
-    { name: 'Node.js', level: 'Expert', verified: true, endorsedCount: 8 },
-    { name: 'TypeScript', level: 'Intermediate', verified: false, endorsedCount: 3 },
-    { name: 'GraphQL', level: 'Intermediate', verified: false, endorsedCount: 0 },
-  ]);
+  const { data: profile } = useFreelancerProfile();
+  const updateProfile = useUpdateFreelancerProfile();
+  
+  const [skills, setSkills] = useState([]);
+
+  React.useEffect(() => {
+    if (profile?.skills) {
+      if (Array.isArray(profile.skills)) {
+        // Handle case where it's an array of strings or objects
+        const mappedSkills = profile.skills.map(s => 
+          typeof s === 'string' 
+            ? { name: s, level: 'Intermediate', verified: false, endorsedCount: 0 }
+            : s
+        );
+        setSkills(mappedSkills);
+      } else if (typeof profile.skills === 'string') {
+        try {
+          const parsed = JSON.parse(profile.skills);
+          setSkills(parsed.map(s => 
+            typeof s === 'string' 
+              ? { name: s, level: 'Intermediate', verified: false, endorsedCount: 0 }
+              : s
+          ));
+        } catch (e) {
+          setSkills([]);
+        }
+      }
+    }
+  }, [profile]);
 
   const [newSkillName, setNewSkillName] = useState('');
   const [newSkillLevel, setNewSkillLevel] = useState('Intermediate');
@@ -101,7 +125,7 @@ export default function SkillsManagementPage() {
   const [testStep, setTestStep] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
-  const addSkill = (e) => {
+  const addSkill = async (e) => {
     e.preventDefault();
     const cleanName = newSkillName.trim();
     if (!cleanName) return;
@@ -118,24 +142,41 @@ export default function SkillsManagementPage() {
       verified: false,
       endorsedCount: 0,
     };
-    setSkills([...skills, newSkill]);
-    setNewSkillName('');
-    setSearchQuery('');
-    setToast({ type: 'success', message: `Added ${cleanName}` });
+    
+    const newSkills = [...skills, newSkill];
+    try {
+      await updateProfile.mutateAsync({ skills: newSkills });
+      setSkills(newSkills);
+      setNewSkillName('');
+      setSearchQuery('');
+      setToast({ type: 'success', message: `Added ${cleanName}` });
+    } catch (err) {
+      setToast({ type: 'error', message: 'Failed to add skill' });
+    }
     setTimeout(() => setToast(null), 3000);
   };
 
-  const removeSkill = (name) => {
-    setSkills(skills.filter((s) => s.name !== name));
-    setToast({ type: 'success', message: `Removed ${name}` });
+  const removeSkill = async (name) => {
+    const newSkills = skills.filter((s) => s.name !== name);
+    try {
+      await updateProfile.mutateAsync({ skills: newSkills });
+      setSkills(newSkills);
+      setToast({ type: 'success', message: `Removed ${name}` });
+    } catch (err) {
+      setToast({ type: 'error', message: 'Failed to remove skill' });
+    }
     setTimeout(() => setToast(null), 3000);
   };
 
-  const handleEndorse = (name) => {
-    setSkills(
-      skills.map((s) => (s.name === name ? { ...s, endorsedCount: s.endorsedCount + 1 } : s))
-    );
-    setToast({ type: 'success', message: `Endorsed ${name}` });
+  const handleEndorse = async (name) => {
+    const newSkills = skills.map((s) => (s.name === name ? { ...s, endorsedCount: s.endorsedCount + 1 } : s));
+    try {
+      await updateProfile.mutateAsync({ skills: newSkills });
+      setSkills(newSkills);
+      setToast({ type: 'success', message: `Endorsed ${name}` });
+    } catch (err) {
+      setToast({ type: 'error', message: 'Failed to endorse skill' });
+    }
     setTimeout(() => setToast(null), 3000);
   };
 
@@ -145,16 +186,20 @@ export default function SkillsManagementPage() {
     setSelectedAnswer(null);
   };
 
-  const completeTest = () => {
+  const completeTest = async () => {
     // Correct answer index is 1 (second option)
     if (selectedAnswer === 1) {
-      setSkills(
-        skills.map((s) =>
-          s.name === testModalSkill.name ? { ...s, verified: true } : s
-        )
+      const newSkills = skills.map((s) =>
+        s.name === testModalSkill.name ? { ...s, verified: true } : s
       );
-      setTestStep(2);
-      setToast({ type: 'success', message: `${testModalSkill.name} verified!` });
+      try {
+        await updateProfile.mutateAsync({ skills: newSkills });
+        setSkills(newSkills);
+        setTestStep(2);
+        setToast({ type: 'success', message: `${testModalSkill.name} verified!` });
+      } catch (err) {
+        setToast({ type: 'error', message: 'Failed to save verification' });
+      }
       setTimeout(() => setToast(null), 3000);
     } else {
       setToast({ type: 'error', message: 'Incorrect answer. Please try again later.' });

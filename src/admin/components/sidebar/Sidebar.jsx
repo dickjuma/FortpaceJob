@@ -27,8 +27,8 @@ const Sidebar = () => {
 
   const { user, logout } = useAuthStore();
   const location = useLocation();
-  // Fallback to ADMIN config if user is null (for unprotected testing)
-  const config = user ? ROLE_CONFIG[user.role] : ROLE_CONFIG['ADMIN'] || ROLE_CONFIG['super_admin'];
+  const roleKey = user?.role?.toLowerCase();
+  const config = user ? ROLE_CONFIG[roleKey] || ROLE_CONFIG['super_admin'] : ROLE_CONFIG['ADMIN'] || ROLE_CONFIG['super_admin'];
 
   const [openGroups, setOpenGroups] = React.useState({});
   const [isCollapsed, setIsCollapsed] = React.useState(false);

@@ -6,7 +6,7 @@ import {
   Users, Briefcase, Building, Filter, Plus, Clock, MoreVertical,
   ArrowUpRight, ArrowDownRight, Loader2, AlertCircle, RefreshCw,
 } from 'lucide-react';
-import { workAPI } from '../../common/services/api';
+import { workAPI } from '../../platform/common/services/api';
 
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 

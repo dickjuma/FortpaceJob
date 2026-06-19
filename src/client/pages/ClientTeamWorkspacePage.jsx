@@ -7,7 +7,7 @@ import {
   Briefcase, Check, X, Trash2
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useConfirm } from '../../common/context/ConfirmContext';
+import { useConfirm } from '../../platform/common/context/ConfirmContext';
 import { 
   useClientTeamMembers, 
   useInviteTeamMember, 

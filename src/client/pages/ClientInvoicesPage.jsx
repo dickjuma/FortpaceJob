@@ -2,6 +2,8 @@
 // Self-contained Invoice Control & Tax Audits page with design tokens,
 // framer-motion animations, and local mock data. No external dependencies.
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FileText,
@@ -17,97 +19,47 @@ import {
 } from 'lucide-react';
 import { getInvoices, payInvoice } from '../services/clientApi';
 
-// ----------------------------------------------------------------------
-// Mock Data (replace with real API calls when backend is ready)
-// ----------------------------------------------------------------------
-const mockInvoices = [
-  {
-    id: 'INV-001',
-    dbId: 'inv_1',
-    amount: 125000,
-    taxWithheld: 12500,
-    date: '2026-05-15',
-    status: 'Paid',
-  },
-  {
-    id: 'INV-002',
-    dbId: 'inv_2',
-    amount: 85000,
-    taxWithheld: 8500,
-    date: '2026-05-20',
-    status: 'Awaiting Settlement',
-  },
-  {
-    id: 'INV-003',
-    dbId: 'inv_3',
-    amount: 45000,
-    taxWithheld: 4500,
-    date: '2026-05-25',
-    status: 'Awaiting Settlement',
-  },
-  {
-    id: 'INV-004',
-    dbId: 'inv_4',
-    amount: 200000,
-    taxWithheld: 20000,
-    date: '2026-05-10',
-    status: 'Paid',
-  },
-];
 
-// ----------------------------------------------------------------------
-// Main Component
-// ----------------------------------------------------------------------
 export default function ClientInvoicesPage() {
-  const [invoices, setInvoices] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [toast, setToast] = useState(null);
+  const queryClient = useQueryClient();
   const [payingInvoiceId, setPayingInvoiceId] = useState(null);
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const data = await getInvoices({ limit: 50 });
-        const items = data?.items || [];
-        setInvoices(
-          items.map((inv) => ({
-            ...inv,
-            dbId: inv.id || inv.dbId,
-            taxWithheld: inv.taxWithheld ?? Math.round((inv.amount || 0) * 0.1),
-          }))
-        );
-      } catch (err) {
-        showToast('error', err?.message || 'Failed to load invoices');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    load();
-  }, []);
+  const { data: invoicesData, isLoading } = useQuery({
+    queryKey: ['client', 'invoices'],
+    queryFn: async () => {
+      const data = await getInvoices({ limit: 50 });
+      const items = data?.items || [];
+      return items.map((inv) => ({
+        ...inv,
+        dbId: inv.id || inv.dbId,
+        taxWithheld: inv.taxWithheld ?? Math.round((inv.amount || 0) * 0.1),
+      }));
+    }
+  });
+  const invoices = invoicesData || [];
 
   const showToast = (type, message, duration = 3000) => {
-    setToast({ type, message });
-    setTimeout(() => setToast(null), duration);
+    console.log({ type, message });
+    setTimeout(() => console.log(null), duration);
   };
 
-  const handlePayInvoice = async (dbId, amount) => {
-    setPayingInvoiceId(dbId);
-    try {
-      await payInvoice(dbId);
-      setInvoices((prev) =>
-        prev.map((inv) =>
-          inv.dbId === dbId ? { ...inv, status: 'Paid' } : inv
-        )
-      );
-      showToast(
-        'success',
-        `Invoice KES ${amount.toLocaleString()} paid successfully! KRA Withholding tax reserved.`
-      );
-    } catch (err) {
+  const payMutation = useMutation({
+    mutationFn: async ({ dbId }) => payInvoice(dbId),
+    onSuccess: (_, { dbId, amount }) => {
+      queryClient.setQueryData(['client', 'invoices'], old => old?.map((inv) => inv.dbId === dbId ? { ...inv, status: 'Paid' } : inv));
+      showToast('success', "Invoice KES  paid successfully! KRA Withholding tax reserved.");
+    },
+    onError: (err) => {
       showToast('error', err?.message || 'Failed to pay invoice');
-    } finally {
+    },
+    onSettled: () => {
       setPayingInvoiceId(null);
     }
+  });
+
+  const handlePayInvoice = (dbId, amount) => {
+    setPayingInvoiceId(dbId);
+    payMutation.mutate({ dbId, amount });
   };
 
   const handleCreateInvoice = () => {
@@ -366,3 +318,4 @@ export default function ClientInvoicesPage() {
     </div>
   );
 }
+

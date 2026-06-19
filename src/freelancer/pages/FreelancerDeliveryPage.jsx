@@ -6,6 +6,7 @@ import {
   MessageSquare, FileText, FileBadge, Info,
   ChevronRight, Clock, AlertCircle, Check, X
 } from 'lucide-react';
+import { useDeliverOrder } from '../services/freelancerHooks';
 
 const HISTORY = [
   { id: 1, type: 'submission', title: 'Initial Draft', date: 'May 16, 2026', status: 'Revision Requested' },
@@ -17,8 +18,9 @@ export default function FreelancerDeliveryPage() {
   const [externalLink, setExternalLink] = useState('');
   const [checklist, setChecklist] = useState({ source: false, assets: false, instructions: false });
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(null);
+  
+  const deliverOrder = useDeliverOrder();
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -38,12 +40,12 @@ export default function FreelancerDeliveryPage() {
       return;
     }
 
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setShowSuccess({ message: 'Delivery submitted successfully!' });
-      setTimeout(() => setShowSuccess(null), 3000);
-    }, 1500);
+    deliverOrder.mutate({ message: deliveryMessage, files: uploadedFiles, link: externalLink }, {
+      onSuccess: () => {
+        setShowSuccess({ message: 'Delivery submitted successfully!' });
+        setTimeout(() => setShowSuccess(null), 3000);
+      }
+    });
   };
 
   const allChecked = checklist.source && checklist.assets && checklist.instructions;
@@ -234,10 +236,10 @@ export default function FreelancerDeliveryPage() {
             </button>
             <button
               onClick={handleSubmit}
-              disabled={isSubmitting}
+              disabled={deliverOrder.isPending}
               className="px-6 py-2.5 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-semibold text-sm transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-brand-900 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? (
+              {deliverOrder.isPending ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   Submitting...

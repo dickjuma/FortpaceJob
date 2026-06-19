@@ -1,5 +1,6 @@
 // ClientVerifyOtpPage.jsx
 import React, { useState, useEffect } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, Smartphone, Mail, RefreshCw, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
@@ -10,7 +11,7 @@ export default function ClientVerifyOtpPage() {
   const navigate = useNavigate();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [timer, setTimer] = useState(59);
-  const [isVerifying, setIsVerifying] = useState(false);
+  
   const [verified, setVerified] = useState(false);
   const [toast, setToast] = useState(null);
 
@@ -48,27 +49,35 @@ export default function ClientVerifyOtpPage() {
     showToast('success', 'A fresh OTP code has been dispatched via SMS.');
   };
 
-  const handleVerify = async (e) => {
+  const verifyMutation = useMutation({
+    mutationFn: async (code) => {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      if (code === '123456' || code === '000000') return true;
+      throw new Error('Invalid OTP code');
+    },
+    onSuccess: () => {
+      setVerified(true);
+      showToast('success', 'Access granted.');
+      setTimeout(() => {
+        navigate('/client/dashboard');
+      }, 1200);
+    },
+    onError: (err) => {
+      showToast('error', err.message || 'Invalid OTP code. Please try again.');
+    }
+  });
+
+  const handleVerify = (e) => {
     e.preventDefault();
     const code = otp.join('');
     if (code.length !== 6) {
       showToast('error', 'Please enter the 6-digit verification code.');
       return;
     }
-    setIsVerifying(true);
-    // Simulate verification
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    if (code === '123456' || code === '000000') {
-      setVerified(true);
-      showToast('success', 'Access granted.');
-      setTimeout(() => {
-        navigate('/client/dashboard');
-      }, 1200);
-    } else {
-      showToast('error', 'Invalid OTP code. Please try again.');
-    }
-    setIsVerifying(false);
+    verifyMutation.mutate(code);
   };
+
+  const isVerifying = verifyMutation.isPending;
 
   // Animation variants
   const containerVariants = {
@@ -234,3 +243,4 @@ export default function ClientVerifyOtpPage() {
     </div>
   );
 }
+

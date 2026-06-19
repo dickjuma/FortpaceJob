@@ -25,7 +25,7 @@ import {
   Area,
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
-import { analyticsAPI, walletAPI } from '../../common/services/api';
+import { analyticsAPI, walletAPI } from '../../platform/common/services/api';
 
 // ---------- Shared UI Components (inline) ----------
 const Button = ({ children, variant = 'primary', disabled = false, className = '', onClick, icon: Icon }) => {

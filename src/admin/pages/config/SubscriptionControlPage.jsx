@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CreditCard, Loader2, ToggleLeft, ToggleRight, Users, Zap } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { subscriptionAdminAPI } from '../../../common/services/subscriptionApi';
+import { subscriptionAdminAPI } from '../../../platform/common/services/subscriptionApi';
 
 export default function SubscriptionControlPage() {
   const [loading, setLoading] = useState(true);

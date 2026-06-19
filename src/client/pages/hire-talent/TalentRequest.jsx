@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { faqs, categories } from "./data";
-import { talentAPI } from "../../../common/services/talentAPI";
+import { talentAPI } from "../../../platform/common/services/talentAPI";
 import { createJob } from "../../services/clientApi";
 
 const TalentRequest = () => {

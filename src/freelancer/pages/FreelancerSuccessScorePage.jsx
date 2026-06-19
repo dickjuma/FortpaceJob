@@ -6,11 +6,14 @@ import {
   Target, MessageCircle, AlertTriangle, ArrowUpRight,
   Info, CheckCircle2
 } from 'lucide-react';
+import { useSuccessScore } from '../services/freelancerHooks';
 
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export default function FreelancerSuccessScorePage() {
-  const score = 94;
+  const { data: response, isLoading } = useSuccessScore();
+  const scoreData = response?.data || response || {};
+  const score = scoreData.score || 94;
 
   const getScoreColor = (val) => {
     if(val >= 90) return 'text-accent';

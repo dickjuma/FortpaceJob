@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useAuthStore } from '../../common/authStore';
-import { walletAPI } from '../../common/services/api';
+import { useAuthStore } from '../../platform/common/authStore';
+import { walletAPI } from '../../platform/common/services/api';
 import { useNavigate } from 'react-router-dom';
-import useChatStore from '../../store/chatStore';
+import useChatStore from '../../platform/store/chatStore';
 import {
   Search,
   Bell,

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { removeTokens } from '../../common/services/api';
+import { removeTokens } from '../../platform/common/services/api';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const ADMIN_API_BASE_PATH = process.env.REACT_APP_ADMIN_API_BASE_PATH || '/admin_rbc';

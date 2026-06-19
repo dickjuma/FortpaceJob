@@ -4,13 +4,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShieldCheck, ArrowRight, RefreshCw, X, MessageSquare, Key, AlertCircle, Check
 } from 'lucide-react';
+import { useVerifyOtp, useResendOtp } from '../services/freelancerHooks';
 
 export default function OtpVerificationPage() {
+  const verifyMutation = useVerifyOtp();
+  const resendMutation = useResendOtp();
+  
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [timer, setTimer] = useState(59);
   const [error, setError] = useState('');
-  const [isVerifying, setIsVerifying] = useState(false);
   const [showSuccess, setShowSuccess] = useState(null);
+  
+  const isVerifying = verifyMutation.isPending;
 
   useEffect(() => {
     if (timer > 0) {
@@ -46,24 +51,28 @@ export default function OtpVerificationPage() {
       return;
     }
 
-    setIsVerifying(true);
-    setTimeout(() => {
-      setIsVerifying(false);
-      if (joined === '123456') {
+    verifyMutation.mutate({ code: joined }, {
+      onSuccess: () => {
         setShowSuccess({ message: 'Identity verified! Redirecting...' });
         setTimeout(() => setShowSuccess(null), 2000);
-      } else {
+      },
+      onError: () => {
         setError('Invalid OTP code. Please try again.');
         setOtp(['', '', '', '', '', '']);
         document.getElementById('otp-input-0')?.focus();
       }
-    }, 1200);
+    });
   };
 
   const resendCode = () => {
-    setTimer(59);
-    setShowSuccess({ message: 'New code sent to your email' });
-    setTimeout(() => setShowSuccess(null), 2000);
+    if (timer > 0) return;
+    resendMutation.mutate({}, {
+      onSuccess: () => {
+        setTimer(59);
+        setShowSuccess({ message: 'New code sent!' });
+        setTimeout(() => setShowSuccess(null), 2000);
+      }
+    });
   };
 
   const handlePaste = (e) => {

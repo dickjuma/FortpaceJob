@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Briefcase, Plus, Search, MoreVertical, Star, Edit, PauseCircle, PlayCircle, Trash2, Eye, Check
+  Briefcase, Plus, Search, MoreVertical, Star, Edit, PauseCircle, PlayCircle, Trash2, Eye, BarChart2, Check
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useFreelancerGigs, usePauseGig, useActivateGig, useDeleteGig } from '../services/freelancerHooks';
@@ -47,6 +47,8 @@ export default function MyGigsDashboardPage() {
       } else if (action === 'delete') {
         await deleteMutation.mutateAsync(id);
         setShowSuccess({ message: 'Gig deleted' });
+      } else if (action === 'analytics') {
+        navigate(`/freelancer/gigs/${id}/analytics`);
       } else if (action === 'edit') {
         navigate(`/freelancer/gigs/${id}/edit`);
       } else if (action === 'view') {
@@ -166,7 +168,7 @@ export default function MyGigsDashboardPage() {
             >
               <div className="relative h-48 w-full overflow-hidden bg-surface-muted">
                 <img
-                  src={gig.image}
+                  src={gig.gallery?.[0]?.url || gig.image || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80'}
                   alt={gig.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   width={400}
@@ -198,6 +200,12 @@ export default function MyGigsDashboardPage() {
                           className="w-full text-left px-3 py-2 text-sm font-body font-medium text-ink-primary hover:bg-surface-muted flex items-center gap-2 transition-colors"
                         >
                           <Eye className="w-3.5 h-3.5" /> View
+                        </button>
+                        <button
+                          onClick={() => handleAction(gig.id, 'analytics')}
+                          className="w-full text-left px-3 py-2 text-sm font-body font-medium text-ink-primary hover:bg-surface-muted flex items-center gap-2 transition-colors"
+                        >
+                          <BarChart2 className="w-3.5 h-3.5" /> View Analytics
                         </button>
                         <button
                           onClick={() => handleAction(gig.id, 'edit')}

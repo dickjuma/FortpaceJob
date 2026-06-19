@@ -6,49 +6,54 @@ import {
   Mail, 
   Lock, 
   Eye, 
-  EyeOff
+  EyeOff,
+  AlertCircle
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { toast } from 'react-hot-toast';
-import { validateEmail, validateRequired } from '../../common/utils/validation';
+import { validateEmail, validateRequired } from '../../platform/common/utils/validation';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   
   const { login } = useAuthStore();
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError('');
     const emailErr = validateEmail(email);
     const passwordErr = validateRequired(password, 'Password');
     const validationError = emailErr || passwordErr;
     if (validationError) {
-      toast.error(validationError);
+      setError(validationError);
       return;
     }
 
     setIsLoading(true);
     try {
       const result = await login(email, password);
-      if (result?.requiresTwoFactor) {
-        navigate('/auth/admin/verify', {
-          state: {
-            purpose: 'admin_2fa',
-            userId: result.userId,
-            email,
-          },
-        });
+      if (!result?.challengeId) {
+        toast.error('Login failed. Please try again.');
         return;
       }
-
-      toast.success('Admin session started');
-      navigate('/admin');
-    } catch (error) {
-      toast.error(error.message || 'Login failed');
+      navigate('/auth/admin/verify', {
+        state: {
+          purpose: 'admin_2fa',
+          challengeId: result.challengeId,
+          email: email.trim().toLowerCase(),
+          admin: result.admin,
+        },
+      });
+      return;
+    } catch (err) {
+      const message = (err?.message || err?.error || 'Login failed. Please check your credentials.');
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -73,7 +78,13 @@ const LoginPage = () => {
 
       <div className="flex items-center justify-center p-8 lg:p-20 bg-white dark:bg-surface-dark">
          <div className="w-full max-w-md space-y-10 animate-in slide-up duration-700">
-            <div>
+            {error && (
+              <div className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 px-4 py-3 text-sm text-red-700 dark:text-red-400 font-medium flex items-center gap-2">
+                <AlertCircle size={16} className="shrink-0" />
+                {error}
+              </div>
+            )}
+             <div>
                <h2 className="text-4xl font-black text-zinc-900 dark:text-white tracking-tight mb-2">Welcome back</h2>
                <p className="text-zinc-500 font-medium italic">Authorized administrative access only.</p>
             </div>

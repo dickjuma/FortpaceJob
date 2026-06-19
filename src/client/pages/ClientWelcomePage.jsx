@@ -1,5 +1,6 @@
 // ClientWelcomePage.jsx
 import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -25,15 +26,24 @@ export default function ClientWelcomePage() {
     { id: 'corporate', title: 'Corporate Enterprise', desc: 'Enterprise management, cost centers, and budget chains.', icon: Building2 }
   ];
 
+  const welcomeMutation = useMutation({
+    mutationFn: async (role) => {
+      // simulate saving user role
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      return role;
+    },
+    onSuccess: (role) => {
+      showToast('success', "Role selected: . Redirecting to setup...");
+      setTimeout(() => navigate('/client/setup-wizard'), 1500);
+    }
+  });
+
   const handleContinue = () => {
     if (!selectedRole) {
       showToast('error', 'Please select an operational role tier to continue.');
       return;
     }
-    showToast('success', `Role selected: ${selectedRole.toUpperCase()}. Redirecting to setup...`);
-    setTimeout(() => {
-      navigate('/client/setup-wizard');
-    }, 1500);
+    welcomeMutation.mutate(selectedRole);
   };
 
   // Animation variants
@@ -158,3 +168,4 @@ export default function ClientWelcomePage() {
     </div>
   );
 }
+

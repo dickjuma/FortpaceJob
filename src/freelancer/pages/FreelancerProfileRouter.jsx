@@ -6,6 +6,7 @@ import {
   Settings, Eye, Heart, MessageSquare, MoreHorizontal,
   X, UploadCloud, Check
 } from 'lucide-react';
+import { useGetPortfolio, useCreatePortfolioProject } from '../services/freelancerHooks';
 
 const PROJECTS = [
   { id: 1, title: 'Fintech Mobile App UI', category: 'App Design', views: 1240, likes: 342, image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80', featured: true },
@@ -16,18 +17,28 @@ const PROJECTS = [
 ];
 
 export default function FreelancerPortfolioPage() {
+  const { data: response, isLoading } = useGetPortfolio();
+  const portfolioData = response?.data || response || [];
+  
+  const createProject = useCreatePortfolioProject();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('All');
   const [showSuccess, setShowSuccess] = useState(null);
 
   const categories = ['All', 'App Design', 'Web Development', 'Web Design', 'Branding', 'Backend'];
 
-  const filteredProjects = activeCategory === 'All' ? PROJECTS : PROJECTS.filter(p => p.category === activeCategory);
+  const projects = portfolioData.length > 0 ? portfolioData : PROJECTS;
+  const filteredProjects = activeCategory === 'All' ? projects : projects.filter(p => p.category === activeCategory);
 
   const handlePublishProject = () => {
-    setIsModalOpen(false);
-    setShowSuccess({ message: 'Project published successfully' });
-    setTimeout(() => setShowSuccess(null), 3000);
+    createProject.mutate({ title: 'New Project', category: 'Web Development' }, {
+      onSuccess: () => {
+        setIsModalOpen(false);
+        setShowSuccess({ message: 'Project published successfully' });
+        setTimeout(() => setShowSuccess(null), 3000);
+      }
+    });
   };
 
   return (
@@ -254,18 +265,19 @@ export default function FreelancerPortfolioPage() {
                 </div>
               </div>
 
-              <div className="sticky bottom-0 bg-white border-t border-border p-5 flex justify-end gap-3 rounded-b-2xl">
+              <div className="flex justify-end gap-3 mt-8">
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2 rounded-lg border border-border text-ink-primary hover:bg-surface-muted font-body font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-brand-900"
+                  className="px-6 py-2 rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50 font-body font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handlePublishProject}
-                  className="px-6 py-2 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-brand-900"
+                  disabled={createProject.isPending}
+                  className="px-6 py-2 rounded-lg bg-brand-900 text-white hover:bg-brand-800 font-body font-medium transition-colors"
                 >
-                  Publish project
+                  {createProject.isPending ? 'Publishing...' : 'Publish project'}
                 </button>
               </div>
             </motion.div>
