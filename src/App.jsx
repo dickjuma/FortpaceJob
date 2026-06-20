@@ -63,7 +63,25 @@ import TalentHiringHelpCenter from './platform/pages/TalentHiringHelpCenter';
 import ClientHiringDashboard from './client/pages/ClientHiringDashboard';
 import FreelancerDiscoveryMap from './freelancer/pages/FreelancerDiscoveryMap';
 import FreelancerLeaderboard from './freelancer/pages/FreelancerLeaderboard';
-import ClientPublicProfile from './client/pages/ClientPublicProfile';
+import ClientPublicProfile from './client/pages/ClientPublicProfileV2';
+import ClientBusinessWorkspaces from './client/pages/BusinessWorkspaces';
+import OrganizationSettings from './client/pages/OrganizationSettings';
+import CategoryTaxonomyAdmin from './admin/pages/CategoryTaxonomyAdmin';
+import AdminAuditLogsPage from './admin/pages/AdminAuditLogsPage';
+import AdminBillingDashboardPage from './admin/pages/AdminBillingDashboardPage';
+import AdminCmsDashboardPage from './admin/pages/AdminCmsDashboardPage';
+import AdminFraudDashboardPage from './admin/pages/AdminFraudDashboardPage';
+import AdminMarketingDashboardPage from './admin/pages/AdminMarketingDashboardPage';
+import AdminRankingEnginePage from './admin/pages/AdminRankingEnginePage';
+import AdminReportsDashboardPage from './admin/pages/AdminReportsDashboardPage';
+import ClientCalendarPage from './client/pages/ClientCalendarPage';
+import ClientComparePage from './client/pages/ClientComparePage';
+import TalentDiscoveryPage from './client/pages/TalentDiscoveryPage';
+import JobsPage from './client/pages/JobsPage';
+import ClientEnterpriseContractsPage from './client/pages/ClientEnterpriseContractsPage';
+import ClientProjectFileManagerPage from './client/pages/ClientProjectFileManagerPage';
+import ClientJobPostingPage from './client/pages/ClientJobPostingPage';
+import JobDetailsPage from './client/pages/JobDetailsPage';
 import AgencyProfile from './platform/pages/AgencyProfile';
 import SkillAssessment from './platform/pages/SkillAssessment';
 import CertificationShowcase from './platform/pages/CertificationShowcase';
@@ -74,7 +92,6 @@ import ClientOnboardingLanding from './client/pages/ClientOnboardingLanding';
 import FreelancerRegistrationWizard from './freelancer/pages/registration/FreelancerRegistrationWizard';
 import FreelancerSuccessScore from './freelancer/pages/FreelancerSuccessScore';
 import TrustScoreExplanation from './platform/pages/TrustScoreExplanation';
-import ClientReviewsDirectory from './client/pages/ClientReviewsDirectory';
 import FreelancerDiscoveryAi from './freelancer/pages/FreelancerDiscoveryAi';
 import MobileFindTalent from './platform/pages/MobileFindTalent';
 import HiringPipeline from './platform/pages/HiringPipeline';
@@ -174,7 +191,6 @@ import SuspiciousActivityReviewPage from './platform/auth/pages/SuspiciousActivi
 import AccessDeniedPage from "./platform/auth/pages/AccessDeniedPage";
 import { getDashboardPathForRole } from './platform/auth/utils/authRouting';
 
-import ClientCompanyProfilePage from './client/pages/ClientCompanyProfilePage';
 import ClientProfileRouter from './client/pages/ClientProfileRouter';
 import ClientInterviewManagementPage from './client/pages/ClientInterviewManagementPage';
 import ClientShortlistPage from './client/pages/ClientShortlistPage';
@@ -197,6 +213,14 @@ import ClientSiteCheckinPage from './client/pages/ClientSiteCheckinPage';
 import ClientApprovalChainsPage from './client/pages/ClientApprovalChainsPage';
 import ClientSecurityCenterPage from './client/pages/ClientSecurityCenterPage';
 import ClientCompliancePage from './client/pages/ClientCompliancePage';
+import ClientReviewsDirectory from './client/pages/ClientReviewsDirectory';
+import ClientVideoInterviewRoomPage from './client/pages/ClientVideoInterviewRoomPage';
+import ClientMarketplaceFeedPage from './client/pages/ClientMarketplaceFeedPage';
+import ClientProcurementDashboardPage from './client/pages/ClientProcurementDashboardPage';
+import ClientProposalPipelinePage from './client/pages/ClientProposalPipelinePage';
+import SavedTalentPipelinePage from './client/pages/SavedTalentPipelinePage';
+import ClientReferralProgramPage from './client/pages/ClientReferralProgramPage';
+import ClientReviewApprovalPage from './client/pages/ClientReviewApprovalPage';
 import ClientProcurementEcosystemPage from './client/pages/ClientProcurementEcosystemPage';
 import ClientWorkflowBuilderPage from './client/pages/ClientWorkflowBuilderPage';
 import ClientTimeTrackingPage from './client/pages/ClientTimeTrackingPage';
@@ -463,9 +487,8 @@ function App() {
         <Route path="/promotions" element={<PromotionsCouponsCenterPage />} />
         <Route path="/affiliates" element={<AffiliateReferralDashboardPage />} />
         <Route path="/community" element={<CommunityForumPage />} />
-        <Route path="/success-stories" element={<SuccessStoriesPage />} />
-
-        <Route path="/marketplace" element={<LandingPage />} />
+<Route path="/success-stories" element={<SuccessStoriesPage />} />
+         <Route path="/marketplace" element={<LandingPage />} />
         <Route path="/" element={<GlobalHomepage />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/find-talent" element={<FindTalentLanding />} />
@@ -546,6 +569,14 @@ function App() {
         <Route path="/client-profile" element={<ClientPublicProfile />} />
 
         {/* Phase 12-15: Agencies, Insights, AI & Pipeline */}
+        <Route path="/admin/category-taxonomy" element={<CategoryTaxonomyAdmin />} />
+        <Route path="/admin/audit-logs" element={<AdminAuditLogsPage />} />
+        <Route path="/admin/billing" element={<AdminBillingDashboardPage />} />
+        <Route path="/admin/cms" element={<AdminCmsDashboardPage />} />
+        <Route path="/admin/fraud" element={<AdminFraudDashboardPage />} />
+        <Route path="/admin/marketing" element={<AdminMarketingDashboardPage />} />
+        <Route path="/admin/ranking" element={<AdminRankingEnginePage />} />
+        <Route path="/admin/reports" element={<AdminReportsDashboardPage />} />
         <Route path="/agency/:id" element={<AgencyProfile />} />
         <Route path="/assessments" element={<SkillAssessment />} />
         <Route path="/certifications" element={<CertificationShowcase />} />
@@ -613,10 +644,40 @@ function App() {
         <Route path="/dashboard" element={<RoleDashboardRedirect />} />
         <Route path="/client-dashboard" element={<ClientHiringDashboard />} />
         <Route path="/client/dashboard" element={<ClientProtectedRoute><ClientLayout><ClientDashboardPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/workspaces" element={<ClientProtectedRoute><ClientLayout><ClientBusinessWorkspaces /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/organization-settings" element={<ClientProtectedRoute><ClientLayout><OrganizationSettings /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/calendar" element={<ClientProtectedRoute><ClientLayout><ClientCalendarPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/messages" element={<ClientProtectedRoute><ClientLayout><ClientMessagesPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/compare" element={<ClientProtectedRoute><ClientLayout><ClientComparePage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/search-talent" element={<ClientProtectedRoute><ClientLayout><ClientTalentSearchPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/discover/talent" element={<ClientProtectedRoute><ClientLayout><TalentDiscoveryPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/jobs" element={<ClientProtectedRoute><ClientLayout><JobsPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/jobs/post" element={<ClientProtectedRoute><ClientLayout><ClientJobPostingPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/jobs/:id" element={<ClientProtectedRoute><ClientLayout><JobDetailsPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/gigs" element={<ClientProtectedRoute><ClientLayout><GigsPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/enterprise-contracts" element={<ClientProtectedRoute><ClientLayout><ClientEnterpriseContractsPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/files" element={<ClientProtectedRoute><ClientLayout><ClientProjectFileManagerPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/interviews" element={<ClientProtectedRoute><ClientLayout><ClientInterviewManagementPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/interviews/room/:id" element={<ClientProtectedRoute><ClientLayout><ClientVideoInterviewRoomPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/wallet" element={<ClientProtectedRoute><ClientLayout><ClientWalletDashboard /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/financial" element={<ClientProtectedRoute><ClientLayout><ClientFinancialDashboard /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/feed" element={<ClientProtectedRoute><ClientLayout><ClientMarketplaceFeedPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/offline/checkin" element={<ClientProtectedRoute><ClientLayout><ClientSiteCheckinPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/offline/gps" element={<ClientProtectedRoute><ClientLayout><ClientGpsTrackingPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/offline/map" element={<ClientProtectedRoute><ClientLayout><ClientOfflineMapPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/procurement" element={<ClientProtectedRoute><ClientLayout><ClientProcurementDashboardPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/proposals-pipeline" element={<ClientProtectedRoute><ClientLayout><ClientProposalPipelinePage /></ClientLayout></ClientProtectedRoute>} />
+<Route path="/client/proposals" element={<ClientProtectedRoute><ClientLayout><ClientProposalsPage /></ClientLayout></ClientProtectedRoute>} />
+         <Route path="/client/contracts" element={<ClientProtectedRoute><ClientLayout><ClientContractsPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/contracts/build" element={<ClientProtectedRoute><ClientLayout><ClientContractBuilderPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/talent-pipeline" element={<ClientProtectedRoute><ClientLayout><SavedTalentPipelinePage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/referrals" element={<ClientProtectedRoute><ClientLayout><ClientReferralProgramPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/reviews" element={<ClientProtectedRoute><ClientLayout><ClientReviewsPage /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/reviews/directory" element={<ClientProtectedRoute><ClientLayout><ClientReviewsDirectory /></ClientLayout></ClientProtectedRoute>} />
+        <Route path="/client/reviews/approval" element={<ClientProtectedRoute><ClientLayout><ClientReviewApprovalPage /></ClientLayout></ClientProtectedRoute>} />
 <Route path="/client/profile-intelligence" element={<ClientProtectedRoute><ClientLayout><ClientRecommendationProfilePage /></ClientLayout></ClientProtectedRoute>} />
 <Route path="/client/profile" element={<ClientProtectedRoute><ClientLayout><ClientProfileRouter /></ClientLayout></ClientProtectedRoute>} />
-<Route path="/client/company-profile" element={<ClientProtectedRoute><ClientLayout><ClientCompanyProfilePage /></ClientLayout></ClientProtectedRoute>} />
-        <Route path="/client/verify-otp" element={<ClientVerifyOtpPage />} />
+<Route path="/client/verify-otp" element={<ClientVerifyOtpPage />} />;
         <Route path="/client/setup-wizard" element={<ClientProtectedRoute><ClientSetupWizard /></ClientProtectedRoute>} />
         <Route path="/client/financial-dashboard" element={<ClientProtectedRoute><ClientLayout><ClientFinancialDashboard /></ClientLayout></ClientProtectedRoute>} />
         <Route path="/client/wallet" element={<ClientProtectedRoute><ClientLayout><ClientWalletDashboard /></ClientLayout></ClientProtectedRoute>} />

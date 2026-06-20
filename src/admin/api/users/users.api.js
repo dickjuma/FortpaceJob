@@ -1,5 +1,7 @@
 import apiClient, { unwrapAdminResponse } from '../apiClient.js';
 
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 const normalizeListResponse = (response) => {
   const { data, meta } = unwrapAdminResponse(response);
   const list = Array.isArray(data) ? data : [];
@@ -33,6 +35,11 @@ export async function fetchUserActivity(userId, params = {}) {
 export async function fetchUserSessions(userId) {
   const response = await apiClient.get(`/users/${userId}/sessions`);
   return unwrapAdminResponse(response).data || [];
+}
+
+export async function revokeSessionApi(sessionId) {
+  const response = await apiClient.delete(`/sessions/${sessionId}`);
+  return unwrapAdminResponse(response).data;
 }
 
 export async function suspendUserApi(userId, data) {
@@ -85,5 +92,34 @@ export async function freezeWalletApi(userId, data) {
 
 export async function updateUserApi(userId, data) {
   const response = await apiClient.patch(`/users/${userId}`, data);
+  return unwrapAdminResponse(response).data;
+}
+
+export async function resetPasswordApi(userId, data) {
+  const response = await apiClient.post(`/users/${userId}/reset-password`, data);
+  return unwrapAdminResponse(response).data;
+}
+
+export async function restoreUserApi(userId) {
+  const response = await apiClient.patch(`/users/${userId}/restore`);
+  return unwrapAdminResponse(response).data;
+}
+
+export async function verifyUserApi(userId) {
+  const response = await apiClient.patch(`/users/${userId}/verify`);
+  return unwrapAdminResponse(response).data;
+}
+
+export async function createAdminApi(data) {
+  const response = await apiClient.request({
+    url: `${API_BASE}/admin/auth/admins`,
+    method: 'post',
+    data: {
+      email: data.email,
+      fullName: data.name || data.fullName,
+      role: data.role || 'ADMIN',
+      sendInvite: data.sendInvite !== false,
+    },
+  });
   return unwrapAdminResponse(response).data;
 }

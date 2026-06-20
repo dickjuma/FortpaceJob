@@ -4,7 +4,7 @@ import useMarketplaceStore from '../store/marketplaceStore';
 import { 
   fetchJobs, 
   fetchGigs,
-  fetchOrders,
+  fetchOrders, 
   fetchProposals, 
   fetchContracts, 
   fetchReviews, 
@@ -19,6 +19,13 @@ import {
   flagGig,
   refundOrder,
   resolveFlaggedContent,
+  hideGig,
+  suspendGig,
+  activateGig,
+  duplicateGig,
+  fetchFlaggedContent,
+  resolveFlaggedContentItem,
+  request,
 } from '../api/marketplace.api';
 
 // Queries
@@ -109,6 +116,14 @@ export function useMarketplaceStats() {
   });
 }
 
+export function useFlaggedContent() {
+  return useQuery({
+    queryKey: ['marketplace', 'flagged-content'],
+    queryFn: () => fetchFlaggedContent(),
+    staleTime: 30_000,
+  });
+}
+
 // Actions
 export function useMarketplaceActions() {
   const queryClient = useQueryClient();
@@ -118,13 +133,16 @@ export function useMarketplaceActions() {
   };
 
   const flagItem = useMutation({
-    mutationFn: async ({ id, type, reason, notes }) => {
+    mutationFn: async ({ id, type, reason }) => {
       if (type === 'review' || type === 'content') {
-        return resolveFlaggedContent(id, { action: 'FLAG', reason: notes || reason });
+        return resolveFlaggedContent(id, { type, action: 'FLAG', reason });
       }
-      if (type === 'gig') return flagGig(id, notes || reason);
+      if (type === 'gig') return flagGig(id, reason);
       if (type === 'job') {
-        return resolveFlaggedContent(id, { type: 'job', action: 'FLAG', reason: notes || reason });
+        return request(`/jobs/admin/${id}/intervene`, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'FLAG', notes: reason }),
+        });
       }
       throw new Error('Flagging this item type is not exposed by the current backend API.');
     },
@@ -140,7 +158,7 @@ export function useMarketplaceActions() {
       if (type === 'job') return approveJob(id);
       if (type === 'gig') return approveGig(id);
       if (type === 'review' || type === 'content') {
-        return resolveFlaggedContent(id, { action: 'ALLOW', reason });
+        return resolveFlaggedContent(id, { type, action: 'ALLOW', reason });
       }
       throw new Error('Approving this item type is not exposed by the current backend API.');
     },
@@ -157,7 +175,7 @@ export function useMarketplaceActions() {
       if (type === 'gig') return removeGig(id, { reason });
       if (type === 'order') return refundOrder(id, reason);
       if (type === 'review' || type === 'content') {
-        return resolveFlaggedContent(id, { action: 'REMOVE', reason });
+        return resolveFlaggedContent(id, { type, action: 'REMOVE', reason });
       }
       throw new Error('Removing this item type is not exposed by the current backend API.');
     },
@@ -166,6 +184,19 @@ export function useMarketplaceActions() {
       toast.success('Item successfully deleted');
     },
     onError: (error) => toast.error(error.message || 'Failed to delete item'),
+  });
+
+  const removeItem = useMutation({
+    mutationFn: async ({ id, type, reason }) => {
+      if (type === 'gig') return removeGig(id, { reason });
+      if (type === 'job') return rejectJob(id, { reason });
+      throw new Error('Removing this item type is not exposed by the current backend API.');
+    },
+    onSuccess: () => {
+      invalidateMarketplace();
+      toast.success('Item successfully removed');
+    },
+    onError: (error) => toast.error(error.message || 'Failed to remove item'),
   });
 
   const featureItem = useMutation({
@@ -205,14 +236,54 @@ export function useMarketplaceActions() {
     onError: (error) => toast.error(error.message || 'Failed to update item status'),
   });
 
+  const pauseGigMutation = useMutation({
+    mutationFn: suspendGig,
+    onSuccess: () => {
+      invalidateMarketplace();
+      toast.success('Gig paused successfully');
+    },
+    onError: (error) => toast.error(error.message || 'Failed to pause gig'),
+  });
+
+  const activateGigMutation = useMutation({
+    mutationFn: activateGig,
+    onSuccess: () => {
+      invalidateMarketplace();
+      toast.success('Gig activated successfully');
+    },
+    onError: (error) => toast.error(error.message || 'Failed to activate gig'),
+  });
+
+  const hideGigMutation = useMutation({
+    mutationFn: hideGig,
+    onSuccess: () => {
+      invalidateMarketplace();
+      toast.success('Gig hidden from search');
+    },
+    onError: (error) => toast.error(error.message || 'Failed to hide gig'),
+  });
+
+  const duplicateGigMutation = useMutation({
+    mutationFn: duplicateGig,
+    onSuccess: () => {
+      invalidateMarketplace();
+      toast.success('Gig duplicated successfully');
+    },
+    onError: (error) => toast.error(error.message || 'Failed to duplicate gig'),
+  });
+
   return {
     flagItem,
     approveItem,
     deleteItem,
-    removeItem: deleteItem,
+    removeItem,
     featureItem,
     unfeatureItem,
     forceStatus,
+    pauseGig: pauseGigMutation,
+    activateGig: activateGigMutation,
+    hideGig: hideGigMutation,
+    duplicateGig: duplicateGigMutation,
     invalidateMarketplace
   };
 }

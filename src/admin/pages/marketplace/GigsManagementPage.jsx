@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { 
   ShoppingBag, Search, MoreVertical, 
   Star, Activity, AlertTriangle, 
-  ArrowUpDown, Zap, Eye, Edit3, ShieldOff
+  ArrowUpDown, Zap, Eye, Edit3, ShieldOff,
+  Pause, Play, Flag, Archive, Trash2, CheckCircle, XCircle, TrendingUp
 } from 'lucide-react';
 import { useGigs, useMarketplaceActions } from '../../hooks/useMarketplace';
 import useMarketplaceStore from '../../store/marketplaceStore';
@@ -16,6 +17,7 @@ import MarketplaceActionModal from '../../components/marketplace/MarketplaceActi
 import UserProfileModal from '../../components/users/UserProfileModal';
 import UserRankingModal from '../../components/users/UserRankingModal';
 import UserFlagModal from '../../components/users/UserFlagModal';
+import EscrowActionModal from '../../components/financial/EscrowActionModal';
 
 // Status Badge Component
 const StatusBadge = ({ status }) => {

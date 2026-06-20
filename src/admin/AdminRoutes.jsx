@@ -4,24 +4,28 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AdminLayout from "./layouts/AdminLayout";
 import AdminAuthGuard from "./components/AdminAuthGuard";
 import DashboardPage from "./pages/DashboardPage";
-import {
-  FinancialHubPage,
-  FeeStructurePage,
-  TaxCompliancePage
-} from "./finance";
+import FinancialHubPage from "./finance/pages/FinancialHubPage";
+import LedgerPage from "./finance/pages/LedgerPage";
+import WithdrawalsPage from "./finance/pages/WithdrawalsPage";
+import RefundsPage from "./finance/pages/RefundsPage";
+import SubscriptionsPage from "./finance/pages/SubscriptionsPage";
+import FeeStructurePage from "./finance/pages/FeeStructurePage";
+import FeeCollectionPage from "./finance/pages/FeeCollectionPage";
+import ReconciliationPage from "./finance/pages/ReconciliationPage";
+import PayoutReportsPage from "./finance/pages/PayoutReportsPage";
+import DepositsPage from "./finance/pages/DepositsPage";
+import TaxCompliancePage from "./finance/pages/TaxCompliancePage";
+import EscrowManagementPage from "./finance/pages/EscrowManagementPage";
 import DisputeResolution from "./pages/DisputeResolution";
-import AdminMessagesPage from "./pages/Messages";
 import { UserManagementRoutes } from "./UserManagementModule";
 import UserRiskPage from "./pages/marketplace/UserRiskPage";
 import MarketplaceDashboardPage from "./pages/marketplace/MarketplaceDashboardPage";
 import ProductionDataPage from "./pages/ProductionDataPage";
 import AuditLogsPage from "./pages/audit/AuditLogsPage";
-import ModuleAuditPage from "./pages/audit/ModuleAuditPage";
 import GeneralSettingsPage from "./pages/config/GeneralSettingsPage";
 import FormSubmissionsPage from "./pages/config/FormSubmissionsPage";
 import SecuritySettingsPage from "./pages/config/SecuritySettingsPage";
 import PaymentGatewaysPage from "./pages/config/PaymentGatewaysPage";
-import SubscriptionControlPage from "./pages/config/SubscriptionControlPage";
 import AdminRolesPage from "./pages/config/AdminRolesPage";
 import FeatureFlagsPage from "./pages/config/FeatureFlagsPage";
 import TrustedCompaniesAdminPage from "./pages/config/TrustedCompaniesAdminPage";
@@ -30,22 +34,19 @@ import ChatAutomodPage from "./pages/chat/ChatAutomodPage";
 import SecurityAuditPage from "./pages/audit/SecurityAuditPage";
 import DisputeAuditPage from "./pages/audit/DisputeAuditPage";
 import MarketplaceAuditPage from "./pages/audit/MarketplaceAuditPage";
+import ModuleAuditPage from "./pages/audit/ModuleAuditPage";
 import GigsManagementPage from "./pages/marketplace/GigsManagementPage";
-import ProposalsReviewPage from "./pages/marketplace/ProposalsReviewPage";
-import ModerationDashboard from "./pages/marketplace/ModerationDashboard";
 import MarketplaceContractsPage from "./pages/marketplace/ContractsPage";
-import MarketplaceReviewsPage from "./pages/marketplace/ReviewsPage";
 import FraudDetectionCenter from "./pages/FraudDetectionCenter";
-import PlatformAnalyticsPage from "./pages/PlatformAnalyticsPage";
-import FinancialControl from "./pages/FinancialControl";
-import AuditSecurityMonitoringPage from "./pages/AuditSecurityMonitoringPage";
-import ProposalAuditLogsPage from "./pages/ProposalAuditLogsPage";
-import ProposalModerationDashboard from "./pages/ProposalModerationDashboard";
 import SystemAnalyticsDashboard from "./pages/SystemAnalyticsDashboard";
-import QualityPage from "./pages/marketplace/QualityPage";
-import AlgorithmControlPanel from "./pages/ranking/AlgorithmControlPanel";
+import DisputeEvidencePage from "./pages/disputes/DisputeEvidencePage";
+import FraudCaseManagementPage from "./pages/fraud/FraudCaseManagementPage";
+import FlaggedContentPage from "./pages/marketplace/FlaggedContentPage";
+import UserSessionsPage from "./pages/users/UserSessionsPage";
+import UserActivityPage from "./pages/users/UserActivityPage";
+import WalletManagementPage from "./pages/financial/WalletManagementPage";
+import UserAnalyticsPage from "./pages/users/UserAnalyticsPage";
 
-// Create a client for React Query
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -55,52 +56,21 @@ const queryClient = new QueryClient({
   },
 });
 
-// ─── Marketplace Action Configs ────────────────────────────────────────────────
 const marketplaceJobActions = [
   {
     label: "Feature",
-    endpoint: (row) => `/jobs/admin/${row.id || row._id}/feature`,
+    endpoint: (row) => `/marketplace/jobs`,
     method: "post",
     successMessage: "Job featured.",
     confirmMessage: "Feature this job?",
-  },
-  {
-    label: "Flag",
-    endpoint: (row) => `/jobs/admin/${row.id || row._id}/intervene`,
-    method: "post",
-    variant: "warning",
-    requireReason: true,
-    body: (_row, reason) => ({ action: "FLAG", notes: reason }),
-    successMessage: "Job flagged.",
-    confirmMessage: "Flag this job?",
-  },
-  {
-    label: "Reject",
-    endpoint: (row) => `/jobs/admin/${row.id || row._id}/intervene`,
-    method: "post",
-    variant: "danger",
-    requireReason: true,
-    body: (_row, reason) => ({ action: "REJECT", notes: reason }),
-    successMessage: "Job rejected.",
-    confirmMessage: "Reject this job?",
-  },
-  {
-    label: "Close",
-    endpoint: (row) => `/jobs/admin/${row.id || row._id}/force-status`,
-    method: "patch",
-    variant: "warning",
-    requireReason: true,
-    body: (_row, reason) => ({ status: "CLOSED", reason }),
-    successMessage: "Job closed.",
-    confirmMessage: "Force-close this job?",
-  },
+  }
 ];
 
 const marketplaceCategoryActions = [
   {
     label: "Delete",
     endpoint: (row) => `/marketplace/categories/${row.id || row._id}`,
-    method: "delete",
+    method: "patch",
     variant: "danger",
     successMessage: "Category deleted.",
     confirmMessage: "Delete this marketplace category?",
@@ -117,58 +87,11 @@ const addMarketplaceCategoryAction = {
   successMessage: "Category added.",
 };
 
-const flaggedContentActions = [
-  {
-    label: "Resolve",
-    endpoint: (row) => `/marketplace/content/${row.id || row._id || row.contentId}/resolve`,
-    method: "patch",
-    requireReason: true,
-    body: (_row, reason) => ({ resolution: "RESOLVED", reason }),
-    successMessage: "Flagged content resolved.",
-    confirmMessage: "Resolve this flagged content item?",
-  },
-  {
-    label: "Dismiss",
-    endpoint: (row) => `/marketplace/content/${row.id || row._id || row.contentId}/resolve`,
-    method: "patch",
-    variant: "warning",
-    requireReason: true,
-    body: (_row, reason) => ({ resolution: "DISMISSED", reason }),
-    successMessage: "Flagged content dismissed.",
-    confirmMessage: "Dismiss this flagged content report?",
-  },
-];
-
-const fraudCaseActions = [
-  {
-    label: "Restrict",
-    endpoint: (row) => `/fraud/cases/${row.id || row._id || row.caseId}/restrict`,
-    variant: "warning",
-    requireReason: true,
-    body: (_row, reason) => ({ reason, restrictions: ["MARKETPLACE_ACTIONS", "WITHDRAWALS"] }),
-    successMessage: "Fraud case restricted.",
-  },
-  {
-    label: "Escalate",
-    endpoint: (row) => `/fraud/cases/${row.id || row._id || row.caseId}/escalate`,
-    variant: "warning",
-    requireReason: true,
-    successMessage: "Fraud case escalated.",
-  },
-  {
-    label: "Resolve",
-    endpoint: (row) => `/fraud/cases/${row.id || row._id || row.caseId}/resolve`,
-    requireReason: true,
-    body: (_row, reason) => ({ resolution: "RESOLVED", reason }),
-    successMessage: "Fraud case resolved.",
-  },
-];
-
 const blacklistActions = [
   {
     label: "Remove",
-    endpoint: (row) => `/fraud/blacklist/${row.id || row._id}`,
-    method: "delete",
+    endpoint: (row) => `/fraud/blacklist`,
+    method: "post",
     variant: "danger",
     successMessage: "Removed from blacklist.",
     confirmMessage: "Remove this entry from the blacklist?",
@@ -189,8 +112,8 @@ const addToBlacklistAction = {
 const fraudRuleActions = [
   {
     label: "Toggle",
-    endpoint: (row) => `/fraud/rules/${row.id || row._id}/toggle`,
-    method: "patch",
+    endpoint: (row) => `/fraud/rules`,
+    method: "post",
     successMessage: "Fraud rule toggled.",
     confirmMessage: "Toggle this fraud rule?",
   },
@@ -208,122 +131,51 @@ const addFraudRuleAction = {
   successMessage: "Fraud rule created.",
 };
 
-const withdrawalActions = [
+const userActions = [
   {
-    label: "Approve",
-    endpoint: (row) => `/financial/withdrawals/${row.id || row._id || row.wdId}/approve`,
-    method: "post",
-    successMessage: "Withdrawal approved.",
-    confirmMessage: "Approve this withdrawal? MFA may be required by the backend.",
-  },
-  {
-    label: "Reject",
-    endpoint: (row) => `/financial/withdrawals/${row.id || row._id || row.wdId}/reject`,
-    method: "post",
-    variant: "danger",
-    requireReason: true,
-    successMessage: "Withdrawal rejected.",
-    confirmMessage: "Reject this withdrawal?",
-  },
-];
-
-const refundActions = [
-  {
-    label: "Process",
-    endpoint: (row) => `/financial/refunds/${row.id || row._id}/process`,
-    method: "post",
-    requireReason: true,
-    body: (_row, reason) => ({ reason }),
-    successMessage: "Refund processed.",
-    confirmMessage: "Process this refund?",
-  },
-];
-
-const orderActions = [
-  {
-    label: "Refund",
-    endpoint: (row) => `/orders/admin/${row.id || row._id || row.orderId}/refund`,
-    method: "post",
-    requireReason: true,
-    body: (_row, reason) => ({ reason }),
-    successMessage: "Order refunded.",
-    confirmMessage: "Refund this order?",
-  },
-];
-
-const subscriptionActions = [
-  {
-    label: "Cancel",
-    endpoint: (row) => `/financial/subscriptions/${row.id || row._id}/cancel`,
-    method: "post",
-    variant: "danger",
-    requireReason: true,
-    successMessage: "Subscription cancelled.",
-    confirmMessage: "Cancel this subscription?",
-  },
-];
-
-const walletActions = [
-  {
-    label: "Freeze",
-    endpoint: (row) => `/financial/wallets/${row.id || row._id}/freeze`,
-    method: "post",
-    variant: "danger",
-    successMessage: "Wallet frozen.",
-    confirmMessage: "Freeze this wallet?",
-  },
-  {
-    label: "Unfreeze",
-    endpoint: (row) => `/financial/wallets/${row.id || row._id}/unfreeze`,
-    method: "post",
-    variant: "warning",
-    successMessage: "Wallet unfrozen.",
-    confirmMessage: "Unfreeze this wallet?",
-  },
-];
-
-const chatMessageActions = [
-  {
-    label: "Remove",
-    endpoint: (row) => `/chat/reports/${row.id || row._id}/resolve`,
+    label: "Suspend",
+    endpoint: (row) => `/users/${row.id || row._id}/suspend`,
     method: "patch",
     variant: "danger",
-    requireReason: true,
-    body: (_row, reason) => ({ action: "REMOVE", reason }),
-    successMessage: "Message removed.",
-    confirmMessage: "Remove this reported message?",
+    successMessage: "User suspended.",
+    confirmMessage: "Suspend this user?",
   },
   {
-    label: "Dismiss",
-    endpoint: (row) => `/chat/reports/${row.id || row._id}/resolve`,
+    label: "Restore",
+    endpoint: (row) => `/users/${row.id || row._id}/restore`,
     method: "patch",
     variant: "warning",
-    requireReason: true,
-    body: (_row, reason) => ({ action: "DISMISS", reason }),
-    successMessage: "Report dismissed.",
-    confirmMessage: "Dismiss this report?",
+    successMessage: "User restored.",
+    confirmMessage: "Restore this user?",
   },
+  {
+    label: "Verify",
+    endpoint: (row) => `/users/${row.id || row._id}/verify`,
+    method: "patch",
+    successMessage: "User verified.",
+    confirmMessage: "Manually verify this user?",
+  },
+  {
+    label: "Delete",
+    endpoint: (row) => `/users/${row.id || row._id}`,
+    method: "delete",
+    variant: "danger",
+    successMessage: "User deleted.",
+    confirmMessage: "Delete this user forever?",
+  }
 ];
 
-const disputeActions = [
-  {
-    label: "Escalate",
-    endpoint: (row) => `/disputes/${row.id || row._id || row.disputeId}/escalate`,
-    method: "post",
-    variant: "warning",
-    requireReason: true,
-    successMessage: "Dispute escalated.",
-  },
-  {
-    label: "Assign Outcome",
-    endpoint: (row) => `/disputes/${row.id || row._id || row.disputeId}/outcome`,
-    method: "post",
-    requireReason: true,
-    body: (_row, reason) => ({ outcome: "ADMIN_RESOLUTION", reason }),
-    successMessage: "Dispute outcome assigned.",
-    confirmMessage: "Assign an admin resolution outcome to this dispute?",
-  },
-];
+const createAdminAction = {
+  label: "Create Admin",
+  endpoint: "/auth/admins",
+  method: "post",
+  fields: [
+    { name: "email", label: "Email", prompt: "Enter admin email", required: true },
+    { name: "fullName", label: "Name", prompt: "Enter full name", required: true },
+    { name: "role", label: "Role", prompt: "Enter role (ADMIN, SUPER_ADMIN)", required: true },
+  ],
+  successMessage: "Admin invitation sent successfully.",
+};
 
 const AdminRoutes = () => {
   return (
@@ -333,220 +185,80 @@ const AdminRoutes = () => {
 
         <Route element={<AdminAuthGuard />}>
         <Route element={<AdminLayout />}>
-          {/* Dashboard */}
           <Route index element={<DashboardPage />} />
           <Route path="activity" element={<SystemAnalyticsDashboard />} />
-          <Route
-            path="alerts"
-            element={<ProductionDataPage title="Alerts Center" endpoint="/fraud/reports" actions={fraudCaseActions} />}
-          />
 
-          {/* User Management Module - MOUNTED HERE */}
-          <Route path="users/*" element={<UserManagementRoutes />} />
-
-          {/* Marketplace Management System */}
-          <Route path="marketplace" element={<MarketplaceDashboardPage />} />
-          <Route
-            path="marketplace/jobs"
-            element={<ProductionDataPage title="Project Review Queue" endpoint="/jobs/admin/all" actions={marketplaceJobActions} />}
-          />
-          <Route path="marketplace/gigs" element={<GigsManagementPage />} />
-          <Route path="marketplace/orders" element={<ProductionDataPage title="Gig Orders" endpoint="/orders/admin/all" actions={orderActions} />} />
-          <Route path="marketplace/proposals" element={<ProposalsReviewPage />} />
-          <Route path="marketplace/contracts" element={<MarketplaceContractsPage />} />
-          <Route
-            path="marketplace/reports"
-            element={<ProductionDataPage title="Reported Marketplace Content" endpoint="/marketplace/content/flagged" actions={flaggedContentActions} />}
-          />
-          <Route
-            path="marketplace/categories"
-            element={
-              <ProductionDataPage
-                title="Marketplace Categories"
-                endpoint="/marketplace/categories"
-                actions={marketplaceCategoryActions}
-                primaryAction={addMarketplaceCategoryAction}
-              />
-            }
-          />
-          <Route path="marketplace/rankings" element={<AlgorithmControlPanel />} />
-          <Route path="marketplace/reviews" element={<MarketplaceReviewsPage />} />
-          <Route path="marketplace/quality" element={<QualityPage />} />
-          <Route path="marketplace/proposal-moderation" element={<ProposalModerationDashboard />} />
-          <Route path="marketplace/fraud-center" element={<FraudDetectionCenter />} />
-          <Route path="marketplace/proposal-audit" element={<ProposalAuditLogsPage />} />
-
-          {/* Legacy/Specific Marketplace Pages */}
-          <Route path="marketplace/user-risk" element={<UserRiskPage />} />
-          <Route path="marketplace/moderation" element={<ModerationDashboard />} />
-          <Route
-            path="marketplace/fraud"
-            element={<ProductionDataPage title="Fraud Analytics" endpoint="/fraud/reports" actions={fraudCaseActions} />}
-          />
-          <Route
-            path="marketplace/payments"
-            element={<ProductionDataPage title="Escrow Oversight" endpoint="/financial/reports/escrow-summary" />}
-          />
-          <Route
-            path="marketplace/chat"
-            element={<ProductionDataPage title="Chat Intelligence" endpoint="/chat/conversations" />}
-          />
-
-          {/* Financial Control */}
-          <Route path="finance">
-            <Route index element={<FinancialHubPage />} />
-            <Route path="control" element={<FinancialControl />} />
-            <Route
-              path="transactions"
-              element={<ProductionDataPage title="Ledger Transactions" endpoint="/financial/transactions" />}
-            />
-            <Route
-              path="escrow"
-              element={<ProductionDataPage title="Escrow Summary" endpoint="/financial/reports/escrow-summary" />}
-            />
-            <Route
-              path="withdrawals"
-              element={<ProductionDataPage title="Pending Withdrawals" endpoint="/financial/withdrawals/pending" actions={withdrawalActions} />}
-            />
-            <Route
-              path="deposits"
-              element={<ProductionDataPage title="Deposits" endpoint="/financial/deposits" />}
-            />
-            <Route
-              path="refunds"
-              element={<ProductionDataPage title="Refunds" endpoint="/financial/refunds" actions={refundActions} />}
-            />
-            <Route path="fees" element={<FeeStructurePage />} />
-            <Route
-              path="fee-collection"
-              element={<ProductionDataPage title="Fee Collection Report" endpoint="/financial/fee-collection" />}
-            />
-            <Route
-              path="subscriptions"
-              element={<ProductionDataPage title="Subscriptions" endpoint="/financial/subscriptions" actions={subscriptionActions} />}
-            />
-            <Route
-              path="reconciliation"
-              element={<ProductionDataPage title="Reconciliation History" endpoint="/financial/reconciliation/history" />}
-            />
-            <Route
-              path="payouts"
-              element={<ProductionDataPage title="Payout Reports" endpoint="/financial/payouts" />}
-            />
-            <Route path="tax" element={<TaxCompliancePage />} />
-            <Route
-              path="wallets"
-              element={<ProductionDataPage title="Wallet Controls" endpoint="/financial/wallets" actions={walletActions} />}
-            />
+          <Route path="users/*">
+            <Route index element={<UserManagementRoutes />} />
+            <Route path="list" element={<ProductionDataPage title="All Users" endpoint="/users" actions={userActions} role="super_admin" />} />
+            <Route path="analytics" element={<UserAnalyticsPage />} />
+            <Route path="freelancers" element={<ProductionDataPage title="Freelancers" endpoint="/users?role=freelancer" columns={[{ key: "type", label: "Type" }]} />} />
+            <Route path="clients" element={<ProductionDataPage title="Clients" endpoint="/users?role=client" columns={[{ key: "type", label: "Type" }]} />} />
+            <Route path="admins" element={<ProductionDataPage title="Admins" endpoint="/users?role=admin" actions={userActions} primaryAction={createAdminAction} role="super_admin" />} />
+            <Route path=":userId/profile" element={<UserRiskPage />} />
+            <Route path=":userId/sessions" element={<UserSessionsPage />} />
+            <Route path=":userId/activity" element={<UserActivityPage />} />
+            <Route path=":userId/wallet" element={<WalletManagementPage />} />
           </Route>
 
-          {/* Disputes */}
+          <Route path="marketplace" element={<MarketplaceDashboardPage />} />
+          <Route path="marketplace/jobs" element={<ProductionDataPage title="Marketplace Jobs" endpoint="/marketplace/jobs" actions={marketplaceJobActions} />} />
+          <Route path="marketplace/gigs" element={<GigsManagementPage />} />
+          <Route path="marketplace/proposals" element={<ProductionDataPage title="Marketplace Proposals" endpoint="/marketplace/proposals" />} />
+          <Route path="marketplace/contracts" element={<MarketplaceContractsPage />} />
+          <Route path="marketplace/reports" element={<FlaggedContentPage />} />
+          <Route path="marketplace/categories" element={<ProductionDataPage title="Marketplace Categories" endpoint="/marketplace/categories" actions={marketplaceCategoryActions} primaryAction={addMarketplaceCategoryAction} />} />
+          <Route path="marketplace/rankings" element={<ProductionDataPage title="Top Ranked Profiles" endpoint="/marketplace/rankings" />} />
+
+          <Route path="finance">
+            <Route index element={<FinancialHubPage />} />
+            <Route path="transactions" element={<LedgerPage />} />
+            <Route path="escrow" element={<EscrowManagementPage />} />
+            <Route path="escrow/:escrowId" element={<EscrowManagementPage />} />
+            <Route path="withdrawals" element={<WithdrawalsPage />} />
+            <Route path="refunds" element={<RefundsPage />} />
+            <Route path="subscriptions" element={<SubscriptionsPage />} />
+            <Route path="wallets" element={<ProductionDataPage title="Wallets" endpoint="/financial/wallets" />} />
+            <Route path="wallets/:walletId" element={<WalletManagementPage />} />
+            <Route path="fees" element={<FeeStructurePage />} />
+            <Route path="fee-collection" element={<FeeCollectionPage />} />
+            <Route path="reconciliation" element={<ReconciliationPage />} />
+            <Route path="payouts" element={<PayoutReportsPage />} />
+            <Route path="deposits" element={<DepositsPage />} />
+            <Route path="tax-compliance" element={<TaxCompliancePage />} />
+            <Route path="tax" element={<TaxCompliancePage />} />
+          </Route>
+
           <Route path="disputes" element={<DisputeResolution />} />
-          <Route
-            path="disputes/review"
-            element={<ProductionDataPage title="Disputes In Review" endpoint="/disputes?status=IN_REVIEW" actions={disputeActions} />}
-          />
-          <Route
-            path="disputes/resolved"
-            element={<ResolvedDisputesPage />}
-          />
+          <Route path="disputes/review" element={<ProductionDataPage title="Active Disputes" endpoint="/disputes" />} />
+          <Route path="disputes/resolved" element={<ResolvedDisputesPage />} />
+          <Route path="disputes/:disputeId/evidence" element={<DisputeEvidencePage />} />
 
-          {/* Fraud & Security */}
-          <Route path="fraud/alerts" element={<ProductionDataPage title="Security Alerts" endpoint="/fraud/reports" actions={fraudCaseActions} />} />
-          <Route path="fraud/risky" element={<ProductionDataPage title="Risky Users" endpoint="/fraud/flagged-accounts" actions={fraudCaseActions} />} />
-          <Route
-            path="fraud/blacklist"
-            element={
-              <ProductionDataPage
-                title="Blacklist Management"
-                endpoint="/fraud/blacklist"
-                actions={blacklistActions}
-                primaryAction={addToBlacklistAction}
-              />
-            }
-          />
-          <Route
-            path="fraud/rules"
-            element={
-              <ProductionDataPage
-                title="Fraud Rules Engine"
-                endpoint="/fraud/rules"
-                actions={fraudRuleActions}
-                primaryAction={addFraudRuleAction}
-              />
-            }
-          />
-          <Route path="fraud/ips" element={<ProductionDataPage title="IP Monitoring" endpoint="/fraud/anomalies" />} />
+          <Route path="fraud/alerts" element={<ProductionDataPage title="Fraud Reports" endpoint="/fraud/reports" />} />
+          <Route path="fraud/blacklist" element={<ProductionDataPage title="Blacklist Management" endpoint="/fraud/blacklist" actions={blacklistActions} primaryAction={addToBlacklistAction} />} />
+          <Route path="fraud/rules" element={<ProductionDataPage title="Fraud Rules Engine" endpoint="/fraud/rules" actions={fraudRuleActions} primaryAction={addFraudRuleAction} />} />
+          <Route path="fraud/ips" element={<ProductionDataPage title="Anomalies" endpoint="/fraud/anomalies" />} />
+          <Route path="fraud/cases/:caseId" element={<FraudCaseManagementPage />} />
 
-          {/* Chat */}
-          <Route
-            path="chat/list"
-            element={<ProductionDataPage title="Chat Conversations" endpoint="/chat/conversations" />}
-          />
-          <Route
-            path="chat/reports"
-            element={<ProductionDataPage title="Reported Messages" endpoint="/chat/reports" actions={chatMessageActions} />}
-          />
-          <Route
-            path="chat/automod"
-            element={<ChatAutomodPage />}
-          />
-          <Route path="messages" element={<AdminMessagesPage />} />
-          <Route
-            path="interviews"
-            element={<ProductionDataPage title="Interview Oversight" endpoint="/hiring/interviews" />}
-          />
-          <Route
-            path="video-calls"
-            element={<ProductionDataPage title="Video Call Oversight" endpoint="/hiring/interviews" />}
-          />
+          <Route path="chat/list" element={<ProductionDataPage title="Chat Conversations" endpoint="/chat/conversations" />} />
+          <Route path="chat/automod" element={<ChatAutomodPage />} />
+          <Route path="content/faqs" element={<ProductionDataPage title="FAQs" endpoint="/faqs" />} />
+          <Route path="content/favorites" element={<ProductionDataPage title="Platform Favorites" endpoint="/favorites" />} />
+          <Route path="content/articles" element={<ProductionDataPage title="Articles" endpoint="/articles" />} />
 
-          {/* Analytics */}
-          <Route path="analytics" element={<PlatformAnalyticsPage />} />
-          <Route path="analytics/system" element={<SystemAnalyticsDashboard />} />
-          <Route path="analytics/revenue" element={<ProductionDataPage title="Revenue Analytics" endpoint="/financial/reports/revenue" />} />
-          <Route path="analytics/growth" element={<ProductionDataPage title="Growth Analytics" endpoint="/users" />} />
-          <Route path="analytics/fraud" element={<ProductionDataPage title="Fraud Analytics" endpoint="/fraud/reports" actions={fraudCaseActions} />} />
-
-          {/* Audit & Settings */}
           <Route path="audit" element={<AuditLogsPage />} />
-          <Route path="audit/monitoring" element={<AuditSecurityMonitoringPage />} />
           <Route path="audit/security" element={<SecurityAuditPage />} />
           <Route path="audit/disputes" element={<DisputeAuditPage />} />
           <Route path="audit/marketplace" element={<MarketplaceAuditPage />} />
-          <Route path="audit/:moduleName" element={<ModuleAuditPage />} />
-          <Route
-            path="config/general"
-            element={<GeneralSettingsPage />}
-          />
-          <Route
-            path="config/submissions"
-            element={<FormSubmissionsPage />}
-          />
-          <Route
-            path="config/security"
-            element={<SecuritySettingsPage />}
-          />
-          <Route
-            path="config/gateways"
-            element={<PaymentGatewaysPage />}
-          />
-          <Route
-            path="config/subscriptions"
-            element={<SubscriptionControlPage />}
-          />
-          <Route
-            path="config/roles"
-            element={<AdminRolesPage />}
-          />
-          <Route
-            path="config/flags"
-            element={<FeatureFlagsPage />}
-          />
-          <Route
-            path="config/trusted-companies"
-            element={<TrustedCompaniesAdminPage />}
-          />
+          <Route path="audit/finance" element={<ModuleAuditPage module="FINANCE" title="Financial Audit" />} />
+
+          <Route path="config/roles" element={<AdminRolesPage />} />
+          <Route path="config/feature-flags" element={<FeatureFlagsPage />} />
+          <Route path="config/payment-gateways" element={<PaymentGatewaysPage />} />
+          <Route path="config/security" element={<SecuritySettingsPage />} />
+          <Route path="config/general" element={<GeneralSettingsPage />} />
+          <Route path="config/submissions" element={<FormSubmissionsPage />} />
+          <Route path="config/companies" element={<TrustedCompaniesAdminPage />} />
 
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Route>

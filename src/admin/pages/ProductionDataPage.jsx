@@ -17,29 +17,28 @@ const formatValue = (value) => {
     : <span className="inline-flex items-center gap-1 rounded-full bg-zinc-700/60 px-2 py-0.5 text-[10px] font-black uppercase text-zinc-400">No</span>;
   if (typeof value === "number") return value.toLocaleString();
   if (typeof value === "string") {
-    // Status badges
     const statusColors = {
       ACTIVE: "bg-emerald-500/15 text-emerald-400", active: "bg-emerald-500/15 text-emerald-400",
       PENDING: "bg-amber-500/15 text-amber-400", pending: "bg-amber-500/15 text-amber-400",
       RESOLVED: "bg-sky-500/15 text-sky-400", resolved: "bg-sky-500/15 text-sky-400",
-      REJECTED: "bg-red-500/15 text-red-400", rejected: "bg-red-500/15 text-red-400",
+      REJECTED: "bg-red-500/15 text-red-300", rejected: "bg-red-500/15 text-red-300",
       CANCELLED: "bg-zinc-500/15 text-zinc-400", cancelled: "bg-zinc-500/15 text-zinc-400",
       COMPLETED: "bg-emerald-500/15 text-emerald-400", completed: "bg-emerald-500/15 text-emerald-400",
-      FLAGGED: "bg-red-500/15 text-red-400", flagged: "bg-red-500/15 text-red-400",
+      FLAGGED: "bg-red-500/15 text-red-300", flagged: "bg-red-500/15 text-red-300",
       BLACKLISTED: "bg-red-600/20 text-red-300", blacklisted: "bg-red-600/20 text-red-300",
       open: "bg-amber-500/15 text-amber-400", OPEN: "bg-amber-500/15 text-amber-400",
       ENABLED: "bg-emerald-500/15 text-emerald-400", DISABLED: "bg-zinc-500/15 text-zinc-400",
+      INDIVIDUAL: "bg-sky-500/15 text-sky-400", individual: "bg-sky-500/15 text-sky-400",
+      BUSINESS: "bg-violet-500/15 text-violet-400", business: "bg-violet-500/15 text-violet-400",
     };
     if (statusColors[value]) {
       return <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-wider ${statusColors[value]}`}>{value}</span>;
     }
-    // Long strings truncate
     if (value.length > 40) return <span title={value}>{value.slice(0, 40)}…</span>;
     return value;
   }
   if (Array.isArray(value)) return `${value.length} item${value.length === 1 ? "" : "s"}`;
   if (typeof value === "object") {
-    // Nested objects like { amount, currency }
     if (value.amount !== undefined) return `${value.currency || ""} ${Number(value.amount / 100).toLocaleString()}`;
     if (value.name !== undefined) return value.name;
     return JSON.stringify(value).slice(0, 50);
@@ -48,7 +47,20 @@ const formatValue = (value) => {
 };
 
 const getRows = (data) => {
-  if (Array.isArray(data)) return data;
+  if (Array.isArray(data)) {
+    return data.map((row) => {
+      if (row?.accountType && !row?.type) {
+        return { ...row, type: row.accountType };
+      }
+      if (row?.clientProfile && !row?.type) {
+        return { ...row, type: "BUSINESS" };
+      }
+      if (row?.freelancerProfile && !row?.type) {
+        return { ...row, type: "INDIVIDUAL" };
+      }
+      return row;
+    });
+  }
   const keys = [
     "items", "results", "records", "data",
     "transactions", "users", "jobs", "gigs", "orders", "proposals",
@@ -58,7 +70,14 @@ const getRows = (data) => {
     "reports", "anomalies", "accounts",
   ];
   for (const key of keys) {
-    if (Array.isArray(data?.[key])) return data[key];
+    if (Array.isArray(data?.[key])) {
+      return data[key].map((row) => {
+        if (row?.accountType && !row?.type) return { ...row, type: row.accountType };
+        if (row?.clientProfile && !row?.type) return { ...row, type: "BUSINESS" };
+        if (row?.freelancerProfile && !row?.type) return { ...row, type: "INDIVIDUAL" };
+        return row;
+      });
+    }
   }
   if (data && typeof data === "object") return [data];
   return [];

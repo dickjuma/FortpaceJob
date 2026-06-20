@@ -5,7 +5,7 @@ const readAdminToken = () =>
   localStorage.getItem('accessToken') ||
   null;
 
-const request = async (path, options = {}) => {
+export const request = async (path, options = {}) => {
   const token = readAdminToken();
   const response = await fetch(`${PUBLIC_API_BASE}${path}`, {
     ...options,
@@ -196,6 +196,63 @@ export async function featureGig(gigId) {
 
 export async function unfeatureGig(gigId) {
   return request(`/gigs/admin/${gigId}/unfeature`, { method: 'POST' });
+}
+
+export async function hideGig(gigId, data = {}) {
+  return request(`/gigs/admin/${gigId}/hide`, {
+    method: 'POST',
+    body: JSON.stringify({ reason: data.reason }),
+  });
+}
+
+export async function suspendGig(gigId, data = {}) {
+  return request(`/gigs/admin/${gigId}/suspend`, {
+    method: 'POST',
+    body: JSON.stringify({ reason: data.reason }),
+  });
+}
+
+export async function activateGig(gigId) {
+  return request(`/gigs/admin/${gigId}/resume`, { method: 'POST' });
+}
+
+export async function duplicateGig(gigId) {
+  return request(`/gigs/admin/${gigId}/duplicate`, { method: 'POST' });
+}
+
+export async function fetchFlaggedContent(params = {}) {
+  const response = await request(`/marketplace/content/flagged?${qs(params)}`);
+  return normalizeListPayload(response);
+}
+
+export async function resolveFlaggedContentItem(contentId, data) {
+  return request(`/marketplace/content/${contentId}/resolve`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function fetchCategories(params = {}) {
+  const response = await request(`/marketplace/categories?${qs(params)}`);
+  return normalizeListPayload(response, 'categories');
+}
+
+export async function createCategory(data) {
+  return request('/marketplace/categories', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateCategory(categoryId, data) {
+  return request(`/marketplace/categories/${categoryId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteCategory(categoryId) {
+  return request(`/marketplace/categories/${categoryId}`, { method: 'DELETE' });
 }
 
 export async function refundOrder(orderId, reason) {

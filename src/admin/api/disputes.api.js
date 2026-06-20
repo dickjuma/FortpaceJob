@@ -49,3 +49,8 @@ export async function fetchDisputeAuditTrail(disputeId) {
   const { data } = unwrapAdminResponse(response);
   return Array.isArray(data) ? data : [];
 }
+
+export async function resolveDispute(disputeId, data = {}) {
+  const response = await apiClient.patch(`/disputes/${disputeId}/resolve`, data);
+  return unwrapAdminResponse(response).data;
+}

@@ -7,6 +7,8 @@ import AdminsPage from './pages/users/AdminsPage';
 import UserProfilePage from './pages/users/UserProfilePage';
 import ProductionDataPage from './pages/ProductionDataPage';
 import UserAnalyticsPage from './pages/users/UserAnalyticsPage';
+import UserSessionsPage from './pages/users/UserSessionsPage';
+import UserActivityPage from './pages/users/UserActivityPage';
 
 // Modals
 import SuspendUserModal from './components/users/modals/SuspendUserModal';
@@ -25,7 +27,9 @@ export function UserManagementRoutes() {
         <Route path="clients" element={<ClientsPage />} />
         <Route path="orgs" element={<ProductionDataPage title="Organizations" endpoint="/users?role=organization" />} />
         <Route path="admins" element={<AdminsPage />} />
-        <Route path=":userId/*" element={<UserProfilePage />} />
+        <Route path=":userId/profile" element={<UserProfilePage />} />
+        <Route path=":userId/sessions" element={<UserSessionsPage />} />
+        <Route path=":userId/activity" element={<UserActivityPage />} />
       </Routes>
 
       {/* Global Modals for this Module */}

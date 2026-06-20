@@ -2,8 +2,9 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import AuditLogViewer from '../../components/audit/AuditLogViewer';
 
-export default function ModuleAuditPage() {
-  const { moduleName } = useParams();
+export default function ModuleAuditPage({ module, title }) {
+  const params = useParams();
+  const moduleName = params.moduleName || module || 'FINANCE';
   
   const getModuleConfig = (name) => {
     switch (name?.toUpperCase()) {
@@ -27,14 +28,14 @@ export default function ModuleAuditPage() {
         };
       case 'DISPUTES':
         return {
-          filter: 'DISPUTES',
+          filter: 'DISPUTE',
           title: 'Dispute Resolution Audit',
           description: 'Forensic records of all dispute lifecycle events and arbitration actions.'
         };
       default:
         return {
           filter: name?.toUpperCase(),
-          title: `${name} Activity Log`,
+          title: title || `${name} Activity Log`,
           description: `Specific activity stream for the ${name} module.`
         };
     }

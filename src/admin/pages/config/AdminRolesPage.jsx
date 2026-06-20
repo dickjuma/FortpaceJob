@@ -16,8 +16,8 @@ export default function AdminRolesPage() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['admin', 'roles'],
     queryFn: async () => {
-      const res = await apiClient.get('/settings/roles');
-      return unwrapAdminResponse(res).data || [];
+      const res = await apiClient.get('/team');
+      return unwrapAdminResponse(res).data?.team || unwrapAdminResponse(res).data?.items || [];
     },
     staleTime: 60_000,
   });

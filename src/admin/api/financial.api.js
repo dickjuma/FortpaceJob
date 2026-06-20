@@ -69,6 +69,16 @@ export async function unfreezeWallet(walletId, mfaToken) {
   return unwrapAdminResponse(response).data;
 }
 
+export async function fetchEscrow(escrowId) {
+  const response = await apiClient.get(`/financial/escrow/${escrowId}`);
+  return unwrapAdminResponse(response).data;
+}
+
+export async function fetchWallet(walletId) {
+  const response = await apiClient.get(`/financial/wallets/${walletId}`);
+  return unwrapAdminResponse(response).data;
+}
+
 export async function fetchRevenueReport(fromDate, toDate) {
   const response = await apiClient.get(`/financial/reports/revenue?fromDate=${fromDate}&toDate=${toDate}`);
   return unwrapAdminResponse(response).data;

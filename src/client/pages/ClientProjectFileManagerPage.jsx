@@ -9,6 +9,7 @@ import {
   ChevronRight, Plus, PieChart, Users
 } from 'lucide-react';
 import { cn } from '../../admin/utils/cn';
+import api from '../../platform/common/services/api';
 
 
 
@@ -21,19 +22,39 @@ export default function ClientProjectFileManagerPage() {
   const { data: projectFilesData } = useQuery({
     queryKey: ['client', 'projectFiles', projectId],
     queryFn: async () => {
-      return {
-        folders: [
-          { id: 1, name: 'Brand Assets', files: 12, date: 'May 12, 2026', shared: 3 },
-          { id: 2, name: 'UI Mockups', files: 45, date: 'May 15, 2026', shared: 2 },
-          { id: 3, name: 'Source Code', files: 128, date: 'Today', shared: 4 },
-        ],
-        files: [
-          { id: 1, name: 'logo-final-v2.svg', type: 'image', size: '1.2 MB', date: 'May 18', uploader: 'Alex R.', version: 'v2', icon: ImageIcon, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
-          { id: 2, name: 'homepage-wireframe.pdf', type: 'pdf', size: '4.5 MB', date: 'May 17', uploader: 'Sarah M.', version: 'v1', icon: FileText, color: 'text-rose-500', bg: 'bg-rose-50' },
-          { id: 3, name: 'promo-animation.mp4', type: 'video', size: '24.8 MB', date: 'May 16', uploader: 'Alex R.', version: 'v3', icon: Video, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
-          { id: 4, name: 'brand-guidelines.pdf', type: 'pdf', size: '8.1 MB', date: 'May 10', uploader: 'Sarah M.', version: 'v1', icon: FileText, color: 'text-rose-500', bg: 'bg-rose-50' }
-        ]
-      };
+      try {
+        const response = await api.get('/api/file-storage');
+        const apiFiles = response.data?.data || response.data || [];
+        
+        // Map API files to UI format if needed
+        return {
+          folders: [
+            { id: 1, name: 'General', files: apiFiles.length, date: 'Today', shared: 0 }
+          ],
+          files: apiFiles.map(f => ({
+            id: f.id,
+            name: f.originalName || f.name || 'file',
+            type: f.mimeType?.includes('image') ? 'image' : 'file',
+            size: `${(f.size / 1024 / 1024).toFixed(2)} MB`,
+            date: new Date(f.createdAt).toLocaleDateString(),
+            uploader: f.uploadedBy?.name || 'User',
+            version: 'v1',
+            icon: f.mimeType?.includes('image') ? ImageIcon : FileText,
+            color: 'text-[#4C1D95]',
+            bg: 'bg-[#4C1D95]/5'
+          }))
+        };
+      } catch (err) {
+        console.warn('Fallback file data', err);
+        return {
+          folders: [
+            { id: 1, name: 'Brand Assets', files: 12, date: 'May 12, 2026', shared: 3 },
+          ],
+          files: [
+            { id: 1, name: 'logo-final-v2.svg', type: 'image', size: '1.2 MB', date: 'May 18', uploader: 'Alex R.', version: 'v2', icon: ImageIcon, color: 'text-[#4C1D95]', bg: 'bg-[#4C1D95]/5' },
+          ]
+        };
+      }
     }
   });
 

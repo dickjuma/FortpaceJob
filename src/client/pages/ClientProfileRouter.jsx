@@ -1,16 +1,10 @@
 import React from 'react';
 import { Loader2 } from 'lucide-react';
 import { useMyProfile } from '../services/clientHooks';
-import { normalizeClientType } from '../../platform/common/constants/accountTypes';
 import ClientProfilePage from './ClientProfilePage';
-import ClientCompanyProfilePage from './ClientCompanyProfilePage';
 
-/**
- * Routes clients to the correct profile experience by account type:
- * INDIVIDUAL → personal profile; SME / CORPORATE → company profile.
- */
 export default function ClientProfileRouter() {
-  const { data: profile, isLoading } = useMyProfile();
+  const { isLoading } = useMyProfile();
 
   if (isLoading) {
     return (
@@ -18,12 +12,6 @@ export default function ClientProfileRouter() {
         <Loader2 className="w-8 h-8 animate-spin text-[#4C1D95]" />
       </div>
     );
-  }
-
-  const accountType = normalizeClientType(profile?.accountType || profile?.clientType);
-
-  if (accountType === 'SME' || accountType === 'CORPORATE') {
-    return <ClientCompanyProfilePage accountType={accountType} />;
   }
 
   return <ClientProfilePage />;

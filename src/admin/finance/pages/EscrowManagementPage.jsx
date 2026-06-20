@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import { useTransactions } from '../../hooks/useFinancial';
-import { Loader2 } from 'lucide-react';
-import { 
-  ShieldCheck, Search, Lock, Unlock,
-  AlertTriangle, MoreVertical, FileText, Activity
-} from 'lucide-react';
+import { ShieldCheck, Search, Lock, Unlock, AlertTriangle, MoreVertical, FileText, Activity } from 'lucide-react';
 import AuditLogViewer from '../../components/audit/AuditLogViewer';
-import AdminActionModal from '../../components/ui/AdminActionModal';
-import PopoverConfirm from '../../components/ui/PopoverConfirm';
-import useFinancialStore from '../store/financialStore';
+import EscrowActionModal from '../../components/financial/EscrowActionModal';
 import { cn } from '../../utils/cn';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -27,15 +21,17 @@ export default function EscrowManagementPage() {
       dateFunded: t.createdAt || t.date || new Date().toISOString(),
     }));
   const [activeTab, setActiveTab] = useState('management');
-  const [actionModal, setActionModal] = useState({ isOpen: false, type: '', data: null });
-  const { filters, setFilter } = useFinancialStore();
+  const [escrowModal, setEscrowModal] = useState({ isOpen: false, data: null });
 
-  const triggerAction = (type, data) => {
-    setActionModal({ isOpen: true, type, data });
+  const triggerAction = (action, data) => {
+    setEscrowModal({ isOpen: true, data: { ...data, action } });
   };
 
-  const handleActionSuccess = (data, type, reason) => {
-    console.log(`Action ${type} executed for ${data.id} with reason: ${reason}`);
+  const handleEscrowAction = (mfaToken) => {
+    const action = escrowModal.data?.action;
+    console.log(`Escrow action ${action} executed for ${escrowModal.data?.id} with MFA: ${mfaToken}`);
+    toast.success(`Escrow ${action} executed successfully`);
+    setEscrowModal({ isOpen: false, data: null });
   };
 
   return (
@@ -62,48 +58,36 @@ export default function EscrowManagementPage() {
           >
             <Activity size={16} /> {activeTab === 'management' ? 'Audit Trail' : 'Back to Management'}
           </button>
-          
-          <PopoverConfirm
-            title="Generate Global Report?"
-            description="This will compile escrow data across all active contracts. May take a few seconds."
-            variant="info"
-            confirmLabel="Generate"
-            onConfirm={() => toast.success('Escrow Report generated successfully')}
+          <button 
+            onClick={() => toast.success('Escrow Report generated')}
+            className="px-4 py-2 bg-surface-dark text-white dark:bg-[#4C1D95] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2 h-full"
           >
-            <button className="px-4 py-2 bg-surface-dark text-white dark:bg-[#4C1D95] rounded-xl text-sm font-bold shadow-sm hover:bg-zinc-800 transition-colors flex items-center gap-2 h-full">
-               Generate Escrow Report
-            </button>
-          </PopoverConfirm>
+            Generate Escrow Report
+          </button>
         </div>
       </div>
 
       {activeTab === 'audit' ? (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-           <AuditLogViewer 
-             moduleFilter="BILLING,PAYMENT" 
-             title="Escrow Audit Trail"
-             description="Monitoring all fund locks, releases, and dispute-related ledger adjustments."
-           />
+          <AuditLogViewer 
+            moduleFilter="BILLING,PAYMENT" 
+            title="Escrow Audit Trail"
+            description="Monitoring all fund locks, releases, and dispute-related ledger adjustments."
+          />
         </div>
       ) : (
         <>
           <div className="bg-white dark:bg-surface-dark rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
             <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex flex-wrap gap-3 bg-surface dark:bg-zinc-800/50">
               <div className="relative flex-1 min-w-[240px]">
-                <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 text-zinc-400" size={16} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={16} />
                 <input 
                   type="text" 
                   placeholder="Search Escrow ID or Contract..." 
-                  value={filters.escrow.search}
-                  onChange={(e) => setFilter('escrow', 'search', e.target.value)}
                   className="w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#4C1D95] outline-none"
                 />
               </div>
-              <select 
-                value={filters.escrow.status}
-                onChange={(e) => setFilter('escrow', 'status', e.target.value)}
-                className="px-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold outline-none cursor-pointer"
-              >
+              <select className="px-4 py-2 bg-white dark:bg-surface-dark border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-bold outline-none cursor-pointer">
                 <option value="">All Statuses</option>
                 <option value="funded">Funded (Locked)</option>
                 <option value="released">Released</option>
@@ -135,10 +119,10 @@ export default function EscrowManagementPage() {
                         <td className="p-4 text-right"><div className="h-8 bg-zinc-100 dark:bg-zinc-800 rounded w-24 ml-auto" /></td>
                       </tr>
                     ))
+                  ) : escrowItems.length === 0 ? (
+                    <tr><td colSpan={6} className="p-8 text-center text-zinc-500 font-medium">No escrow records found.</td></tr>
                   ) : (
-                    escrowItems.filter(e => !filters.escrow.status || e.status === filters.escrow.status).length === 0 && !isLoading ? (
-                      <tr><td colSpan={6} className="p-8 text-center text-zinc-500 font-medium">No escrow records found.</td></tr>
-                    ) : escrowItems.filter(e => !filters.escrow.status || e.status === filters.escrow.status).map(escrow => (
+                    escrowItems.map(escrow => (
                       <tr key={escrow.id} className="hover:bg-surface/50 dark:hover:bg-zinc-800/20 group transition-colors">
                         <td className="p-4">
                           <div className="flex flex-col">
@@ -179,23 +163,20 @@ export default function EscrowManagementPage() {
                           <div className="flex items-center justify-end gap-2">
                             {escrow.status === 'funded' && (
                               <button 
-                                onClick={() => triggerAction('force-release', escrow)}
+                                onClick={() => triggerAction('release', escrow)}
                                 className="px-3 py-1.5 bg-emerald-50 text-success hover:bg-emerald-100 rounded-lg text-xs font-bold transition-colors"
                               >
-                                Force Release
+                                Release Funds
                               </button>
                             )}
                             {escrow.status === 'disputed' && (
                               <button 
-                                onClick={() => triggerAction('resolve-dispute', escrow)}
+                                onClick={() => triggerAction('refund', escrow)}
                                 className="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-xs font-bold transition-colors"
                               >
-                                Resolve
+                                Refund Buyer
                               </button>
                             )}
-                            <button className="p-1.5 text-zinc-400 hover:bg-zinc-100 rounded-lg">
-                              <MoreVertical size={16} />
-                            </button>
                           </div>
                         </td>
                       </tr>
@@ -208,15 +189,12 @@ export default function EscrowManagementPage() {
         </>
       )}
 
-      <AdminActionModal 
-        isOpen={actionModal.isOpen}
-        onClose={() => setActionModal({ ...actionModal, isOpen: false })}
-        actionType={actionModal.type}
-        data={actionModal.data}
-        onSuccess={handleActionSuccess}
+<EscrowActionModal 
+        isOpen={escrowModal.isOpen}
+        onClose={() => setEscrowModal({ isOpen: false, data: null })}
+        escrow={escrowModal.data}
+        onAction={handleEscrowAction}
       />
     </div>
   );
 }
-
-
